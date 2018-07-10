@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.service.impl;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.StatisticsTzjProducer;
 import com.hyjf.cs.market.service.TzjDataCollectService;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author xiasq
@@ -26,44 +28,60 @@ import com.hyjf.cs.market.service.TzjDataCollectService;
  */
 @Service
 public class TzjDataCollectServiceImpl implements TzjDataCollectService {
-    private Logger logger = LoggerFactory.getLogger(TzjDataCollectServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(TzjDataCollectServiceImpl.class);
 
 	@Autowired
 	AmUserClient amUserClient;
 	@Autowired
 	AmTradeClient amTradeClient;
 	@Autowired
-    StatisticsTzjProducer statisticsTzjProducer;
+	StatisticsTzjProducer statisticsTzjProducer;
 
 	@Override
 	public void queryTzjDayReport() {
 		TzjDayReportVO tzjDayReportVO = new TzjDayReportVO();
 		tzjDayReportVO.setDay(GetDate.formatDate());
-
+		// T日到T+1日之间
+		Date startTime = GetDate.getDayStartOfSomeDay(new Date());
+		Date endTime = GetDate.countDate(startTime, 5, 1);
+		startTime = GetDate.countDate(startTime,1,-5 );
 		// 1. 查询投之家当天注册人数、开户人数、绑卡人数
-        TzjDayReportVO tzjUserVO = amUserClient.queryUserDataOnToday();
-        Assert.notNull(tzjUserVO, "投之家日报查询新用户数据不能空...");
-        BeanUtils.copyProperties(tzjUserVO,tzjDayReportVO);
+		TzjDayReportVO tzjUserVO = amUserClient.queryUserDataOnToday(startTime, endTime);
+		Assert.notNull(tzjUserVO, "投之家日报查询新用户数据不能空...");
+		tzjDayReportVO.setRegistCount(tzjUserVO.getRegistCount());
+		tzjDayReportVO.setOpenCount(tzjUserVO.getOpenCount());
+		tzjDayReportVO.setCardBindCount(tzjUserVO.getCardBindCount());
 
-        //2. 投之家当天注册人数
-        Set<Integer> registerUserIds = amUserClient.queryRegisterUsersOnToday();
-        //2.1 新充人数 新投人数  （前提开户，所以用开户的用户ids）
-        TzjDayReportVO tzjTradeNewVO = amTradeClient.queryTradeNewDataOnToday(registerUserIds);
-        Assert.notNull(tzjTradeNewVO, "投之家日报查询新用户投资数据不能空...");
-        BeanUtils.copyProperties(tzjTradeNewVO,tzjDayReportVO);
+		// 2. 投之家当天注册人数
+		Set<Integer> registerUserIds = amUserClient.queryRegisterUsersOnToday(startTime, endTime);
+		if (!CollectionUtils.isEmpty(registerUserIds)) {
+			// 2.1 新充人数 新投人数 （前提开户，所以用开户的用户ids）
+			TzjDayReportVO tzjTradeNewVO = amTradeClient.queryTradeNewDataOnToday(registerUserIds, startTime, endTime);
+			Assert.notNull(tzjTradeNewVO, "投之家日报查询新用户投资数据不能空...");
+			tzjDayReportVO.setRechargeNewCount(tzjTradeNewVO.getRechargeNewCount());
+			tzjDayReportVO.setTenderNewCount(tzjTradeNewVO.getTenderNewCount());
+		}
 
 		// 3. 查询投之家所有的用户
 		Set<Integer> tzjUserIds = amUserClient.queryAllTzjUsers();
-        // 3.1 查询投之家每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
-        TzjDayReportVO tzjTradeVO = amTradeClient.queryTradeDataOnToday(tzjUserIds);
-        Assert.notNull(tzjTradeVO, "投之家日报查询用户投资数据不能空...");
-        BeanUtils.copyProperties(tzjTradeVO,tzjDayReportVO);
+		if (!CollectionUtils.isEmpty(tzjUserIds)) {
+			// 3.1 查询投之家每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+			TzjDayReportVO tzjTradeVO = amTradeClient.queryTradeDataOnToday(tzjUserIds, startTime, endTime);
+			Assert.notNull(tzjTradeVO, "投之家日报查询用户投资数据不能空...");
+			tzjDayReportVO.setRechargeCount(tzjTradeVO.getRechargeCount());
+			tzjDayReportVO.setTenderCount(tzjTradeVO.getTenderCount());
+			tzjDayReportVO.setTenderMoney(tzjTradeVO.getTenderMoney());
+			tzjDayReportVO.setTenderFirstCount(tzjTradeVO.getTenderFirstCount());
+			tzjDayReportVO.setTenderFirstMoney(tzjTradeVO.getTenderFirstMoney());
+			tzjDayReportVO.setTenderAgainCount(tzjTradeVO.getTenderAgainCount());
+		}
 
-        //4.mq通知
-        try {
-            statisticsTzjProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC, System.currentTimeMillis()+"", JSON.toJSONBytes(tzjDayReportVO)));
-        } catch (MQException e) {
-            logger.error("投之家日报表发送mq失败...", e);
-        }
-    }
+		// 4.mq通知
+		try {
+			statisticsTzjProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC,
+					System.currentTimeMillis() + "", JSON.toJSONBytes(tzjDayReportVO)));
+		} catch (MQException e) {
+			logger.error("投之家日报表发送mq失败...", e);
+		}
+	}
 }

@@ -2,14 +2,9 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.AccountChinapnrResponse;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +151,38 @@ public class AmUserClientImpl implements AmUserClient {
 	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
 		String url = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
+		if(response != null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户名获取自定义属性的user信息
+	 * @auth sunpeikai
+	 * @param userName 用户名
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO getUserInfoCustomizeByUserName(String userName) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserName/" + userName;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if(response != null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户id查询自定义用户信息
+	 * @auth sunpeikai
+	 * @param userId 用户名
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO getUserInfoCustomizeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
 		if(response != null){
 			return response.getResult();
 		}

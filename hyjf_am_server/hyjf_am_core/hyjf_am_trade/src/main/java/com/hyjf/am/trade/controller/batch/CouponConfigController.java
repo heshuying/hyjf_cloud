@@ -196,6 +196,22 @@ public class CouponConfigController extends BaseController {
     }
 
 
+    /**
+     * 根据优惠券编号查询已发行数量
+     * @param couponCode
+     * @return
+     */
+    @GetMapping("/checkCouponSendExcess/{couponCode}")
+    public CouponConfigCustomizeResponse checkCouponSendExcess(@PathVariable String couponCode) {
+        CouponConfigCustomizeResponse response = new CouponConfigCustomizeResponse();
+        int remain = couponConfigService.checkCouponSendExcess(couponCode);
+        if (remain > 0) {
+            response.setCount(remain);
+            return response;
+        }
+        response.setMessage(Response.FAIL_MSG);
+        return response;
+    }
 
 
     /**

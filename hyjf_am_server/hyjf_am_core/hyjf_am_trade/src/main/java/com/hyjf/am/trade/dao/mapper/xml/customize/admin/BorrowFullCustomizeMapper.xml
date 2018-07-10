@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFullCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+			(
+				( b.`status` = 2 AND ( b.verify_time + ( bi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW())))
+				OR (b.`status` = 3)
+			)
+				AND (habt.auto_record != 1 OR habt.auto_record IS NULL)
+			<if test="borrowNidSrch != null and borrowNidSrch != ''">
+				AND b.borrow_nid LIKE CONCAT('%', #{borrowNidSrch}, '%')
+			</if>
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND b.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
+			</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND b.create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND b.create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
+			</if>
+		</where>
+	</sql>
+
+	<select id="countBorrowFull" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.BorrowFullRequest">
+		SELECT
+			COUNT(1)
+		FROM
+			ht_borrow b
+		LEFT JOIN ht_borrow_info bi ON
+			bi.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_hjh_asset_borrowtype habt ON
+			bi.project_type = habt.borrow_cd
+			AND bi.inst_code = habt.inst_code
+			AND bi.asset_type = habt.asset_type
+			AND habt.is_open = 1
+		<include refid="Where_Clause" />
+	</select>
+
+	<resultMap id="selectBorrowFullListMap" type="com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="account_flag" property="accountFlag" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="status_name" property="statusName" jdbcType="VARCHAR" />
+		<result column="reverify_status" property="reverifyStatus" jdbcType="VARCHAR" />
+		<result column="reverify_status_name" property="reverifyStatusName" jdbcType="VARCHAR" />
+		<result column="borrow_account_yes" property="borrowAccountYes" jdbcType="VARCHAR" />
+		<result column="service_scale" property="serviceScale" jdbcType="VARCHAR" />
+		<result column="over_time" property="overTime" jdbcType="VARCHAR" />
+		<result column="isEngineUsed" property="isEngineUsed" />
+	</resultMap>
+	<select id="selectBorrowFullList" resultMap="selectBorrowFullListMap" parameterType="com.hyjf.am.resquest.admin.BorrowFullRequest">
+		SELECT
+			b.id,
+			b.borrow_nid,
+			bi.`name` AS borrow_name,
+			b.borrow_user_name AS username,
+			b.account,
+			CONCAT(b.borrow_apr, '%') borrow_apr,
+			CASE
+			WHEN b.borrow_style = 'endday' THEN
+			CONCAT(b.borrow_period, '天')
+			ELSE
+			CONCAT(b.borrow_period, '个月')
+			END borrow_period,
+			CASE WHEN b.borrow_account_yes > b.account THEN 1 ELSE 0 END AS account_flag,
+			b.borrow_account_yes AS borrow_account_yes,
+			CASE
+			WHEN b.borrow_service IS NULL
+			OR b.borrow_service = '' THEN
+			''
+			ELSE
+			b.borrow_service
+			END service_scale,
+			CASE
+			WHEN b.borrow_full_time IS NOT NULL
+			AND b.borrow_full_status = 1 THEN
+			FROM_UNIXTIME(
+			b.borrow_full_time,
+			'%Y-%m-%d %H:%i:%s'
+			)
+			ELSE
+			FROM_UNIXTIME(
+			b.verify_time + (borrow_valid_time * 24 * 60 * 60),
+			'%Y-%m-%d %H:%i:%s'
+			)
+			END AS over_time,
+			b.create_time,
+			b.reverify_status,
+			b.is_engine_used AS isEngineUsed,
+			b.`status`
+		FROM
+			ht_borrow b
+		LEFT JOIN ht_borrow_info bi ON
+			bi.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_hjh_asset_borrowtype habt ON
+			bi.project_type = habt.borrow_cd
+			AND bi.inst_code = habt.inst_code
+			AND bi.asset_type = habt.asset_type
+			AND habt.is_open = 1
+		<include refid="Where_Clause" />
+		ORDER BY
+			b.create_time DESC, b.id DESC
+	    <if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+	<select id="countFullList" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT
+			COUNT(1)
+		FROM ht_borrow b
+		INNER JOIN ht_borrow_tender bt ON bt.borrow_nid = b.borrow_nid
+		WHERE
+			b.borrow_nid = #{borrowNid}
+	</select>
+
+	<resultMap id="selectFullListMap" type="com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize">
+		<result column="investor" property="investor" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="investment_amount" property="investmentAmount" jdbcType="VARCHAR" />
+		<result column="loan_amount" property="loanAmount" jdbcType="VARCHAR" />
+		<result column="service_charge" property="serviceCharge" jdbcType="VARCHAR" />
+		<result column="operating_deck" property="operatingDeck" jdbcType="VARCHAR" />
+		<result column="operating_time" property="operatingTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectFullList" resultMap="selectFullListMap" parameterType="java.lang.String">
+		SELECT
+			b.borrow_nid AS investor,
+			bt.user_name AS username,
+			FORMAT(bt.account, 2) AS investment_amount,
+			FORMAT(bt.account - bt.loan_fee, 2) AS loan_amount,
+			FORMAT(bt.loan_fee, 2) AS service_charge,
+			bt.client AS operating_deck,
+			FROM_UNIXTIME( bt.create_time, '%Y-%m-%d %H:%i:%s' ) AS operating_time
+		FROM ht_borrow b
+		INNER JOIN ht_borrow_tender bt ON bt.borrow_nid = b.borrow_nid
+		WHERE
+		    b.borrow_nid = #{borrowNid}
+		ORDER BY 
+		   bt.create_time DESC, bt.id DESC
+	    <if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+	<resultMap id="selectFullInfoMap" type="com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
+		<result column="borrow_valid_time" property="borrowValidTime" jdbcType="VARCHAR" />
+		<result column="borrow_manager_scale" property="managerScale" jdbcType="VARCHAR" />
+		<result column="borrow_service_scale" property="serviceScale" jdbcType="VARCHAR" />
+		<result column="borrow_manager_scale_end" property="managerScaleEnd" jdbcType="VARCHAR" />
+		<result column="ontime" property="ontime" jdbcType="VARCHAR" />
+		<result column="over_time" property="overTime" jdbcType="VARCHAR" />
+		<result column="borrow_account_yes" property="borrowAccountYes" jdbcType="VARCHAR" />
+		<result column="project_type" property="projectType" jdbcType="VARCHAR" />
+		<result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectFullInfo" resultMap="selectFullInfoMap" parameterType="java.lang.String">
+		SELECT
+			b.borrow_nid,
+			bi.`name` AS borrow_name,
+			b.borrow_user_name AS username,
+			FORMAT(b.account, 2) AS account,
+			CASE WHEN b.borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
+			CONCAT(b.borrow_apr, '%') borrow_apr,
+			b.borrow_style,
+			bs.`name` AS borrow_style_name,
+			bi.borrow_valid_time,
+			b.service_fee_rate AS borrow_service_scale,
+			b.manage_fee_rate AS borrow_manager_scale,
+			bi.borrow_manager_scale_end AS borrow_manager_scale_end,
+			CASE WHEN verify_time IS NOT NULL AND verify_time != '0' THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' )  ELSE '' END AS ontime,
+			CASE WHEN b.borrow_full_time IS NOT NULL AND b.borrow_full_time != '' THEN FROM_UNIXTIME( b.borrow_full_time, '%Y-%m-%d %H:%i:%s' ) ELSE FROM_UNIXTIME(b.verify_time + (borrow_valid_time * 24 * 60 * 60), '%Y-%m-%d %H:%i:%s') END AS over_time,
+			FORMAT(b.borrow_account_yes, 2) AS borrow_account_yes,
+			bi.project_type,
+			bpt.borrow_name AS project_type_name
+		FROM ht_borrow b
+			LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
+			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+		WHERE
+		    b.borrow_nid = #{borrowNid}
+	</select>	
+
+	<resultMap id="sumMap" type="com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize">
+		<result column="investment_amount" property="investmentAmount" jdbcType="VARCHAR" />
+		<result column="loan_amount" property="loanAmount" jdbcType="VARCHAR" />
+		<result column="service_charge" property="serviceCharge" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="sumAmount" resultMap="sumMap" parameterType="java.lang.String">
+		SELECT
+			FORMAT(SUM(bt.account), 2) AS investment_amount,
+			FORMAT(SUM(bt.account) - SUM(bt.loan_fee), 2) AS loan_amount,
+			FORMAT(SUM(bt.loan_fee), 2) AS service_charge
+		FROM
+			ht_borrow_tender bt
+		WHERE
+		    bt.borrow_nid = #{borrowNid}
+	</select>
+
+	<resultMap id="selectAutoFullListMap" type="com.hyjf.am.trade.dao.model.auto.Borrow">
+		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="user_id" property="userId" jdbcType="INTEGER" />
+	    <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+	    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="borrow_apr" property="borrowApr" jdbcType="DECIMAL" />
+	    <result column="account" property="account" jdbcType="DECIMAL" />
+	    <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+	    <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+	    <result column="borrow_full_status" property="borrowFullStatus" jdbcType="INTEGER" />
+	    <result column="borrow_full_time" property="borrowFullTime" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectAutoFullList" resultMap="selectAutoFullListMap" parameterType="com.hyjf.am.resquest.admin.BorrowFullRequest">
+		SELECT
+			b.id,
+			b.user_id,
+			b.borrow_user_name,
+			b.borrow_nid,
+			bi.`name`,
+			b.borrow_apr,
+			b.account,
+			b.borrow_period,
+			b.borrow_style,
+			b.borrow_full_status,
+			b.borrow_full_time
+		FROM
+			ht_borrow b
+		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
+		WHERE
+			b.`status` = 2 AND b.borrow_full_status = 1
+		ORDER BY
+			b.create_time DESC
+	</select>
+	
+	<select id="selectFeeMapByParams"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT
+		hbfnc.man_charge_cd,
+		hbfnc.man_charge_rate,
+		hbfnc.return_rate
+		FROM
+			ht_borrow_finman_new_charge hbfnc LEFT JOIN ht_borrow_project_type hbpt ON hbfnc.project_type=hbpt.borrow_class
+		WHERE
+			hbfnc.status = 0
+			and hbfnc.man_charge_time=#{borrowPeriod}
+			<if test="borrowStyle != null and borrowStyle == 'endday'">
+				and hbfnc.man_charge_time_type=#{borrowStyle}
+			</if>
+			<if test="borrowStyle != null and borrowStyle != 'endday'">
+				and hbfnc.man_charge_time_type='month'
+			</if>
+			and hbpt.borrow_cd=#{projectType}
+		ORDER BY
+			hbfnc.create_time
+		LIMIT 1
+	</select>
+
+	<select id="selectServiceRateByParams" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT
+			hbfnc.charge_rate
+		FROM
+			ht_borrow_finman_new_charge hbfnc
+		LEFT JOIN ht_borrow_project_type hbpt ON hbfnc.project_type=hbpt.borrow_class
+		WHERE
+		hbfnc.status = 0
+		and hbfnc.man_charge_time=#{borrowPeriod}
+		and hbfnc.inst_code = #{instCode}
+		and hbfnc.asset_type = #{assetType}
+		<if test="borrowStyle != null and borrowStyle == 'endday'">
+			and hbfnc.man_charge_time_type=#{borrowStyle}
+		</if>
+		<if test="borrowStyle != null and borrowStyle != 'endday'">
+			and hbfnc.man_charge_time_type='month'
+		</if>
+		and hbpt.borrow_cd = #{projectType}
+		ORDER BY
+		hbfnc.create_time
+		LIMIT 1
+	</select>
+
+	<select id="selectManChargeRateByParams" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT
+			hbfnc.man_charge_rate
+		FROM
+			ht_borrow_finman_new_charge hbfnc
+		LEFT JOIN ht_borrow_project_type hbpt ON hbfnc.project_type=hbpt.borrow_class
+		WHERE
+			hbfnc.status = 0
+		and hbfnc.man_charge_time=#{borrowPeriod}
+		and hbfnc.inst_code = #{instCode}
+		and hbfnc.asset_type = #{assetType}
+		<if test="borrowStyle != null and borrowStyle == 'endday'">
+			and hbfnc.man_charge_time_type=#{borrowStyle}
+		</if>
+		<if test="borrowStyle != null and borrowStyle != 'endday'">
+			and hbfnc.man_charge_time_type='month'
+		</if>
+		and hbpt.borrow_cd = #{projectType}
+		ORDER BY
+		hbfnc.create_time
+		LIMIT 1
+	</select>
+
+	<select id="selectReturnRateByParams" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT
+			hbfnc.return_rate
+		FROM
+		ht_borrow_finman_new_charge hbfnc
+		LEFT JOIN ht_borrow_project_type hbpt ON hbfnc.project_type=hbpt.borrow_class
+		WHERE
+		hbfnc.status = 0
+		and hbfnc.man_charge_time=#{borrowPeriod}
+		and hbfnc.inst_code = #{instCode}
+		and hbfnc.asset_type = #{assetType}
+		<if test="borrowStyle != null and borrowStyle == 'endday'">
+			and hbfnc.man_charge_time_type=#{borrowStyle}
+		</if>
+		<if test="borrowStyle != null and borrowStyle != 'endday'">
+			and hbfnc.man_charge_time_type='month'
+		</if>
+		and hbpt.borrow_cd = #{projectType}
+		ORDER BY
+		hbfnc.create_time
+		LIMIT 1
+	</select>
+
+	<select id="sumAccount" resultType="com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize" parameterType="com.hyjf.am.resquest.admin.BorrowFullRequest">
+		SELECT
+			SUM(b.account) AS sumAccount,
+			SUM(b.borrow_account_yes) AS sumBorrowAccountYes,
+			SUM(b.borrow_service) AS sumServiceScale
+		FROM
+			ht_borrow b
+		LEFT JOIN ht_borrow_info bi ON
+			bi.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_hjh_asset_borrowtype habt ON
+			bi.project_type = habt.borrow_cd
+			AND bi.inst_code = habt.inst_code
+			AND bi.asset_type = habt.asset_type
+			AND habt.is_open = 1
+		<include refid="Where_Clause" />
+	</select>
+
+	<select id="selectLateInterestRateByParams" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT
+			hbfnc.late_interest
+		FROM
+			ht_borrow_finman_new_charge hbfnc
+		LEFT JOIN ht_borrow_project_type hbpt ON hbfnc.project_type=hbpt.borrow_class
+		WHERE
+			hbfnc.status = 0
+		and hbfnc.man_charge_time=#{borrowPeriod}
+		and hbfnc.inst_code = #{instCode}
+		and hbfnc.asset_type = #{assetType}
+		<if test="borrowStyle != null and borrowStyle == 'endday'">
+			and hbfnc.man_charge_time_type=#{borrowStyle}
+		</if>
+		<if test="borrowStyle != null and borrowStyle != 'endday'">
+			and hbfnc.man_charge_time_type='month'
+		</if>
+		and hbpt.borrow_cd = #{projectType}
+		ORDER BY
+		hbfnc.create_time
+		LIMIT 1
+	</select>
+
+	<select id="selectLateFreeDaysByParams" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT
+			hbfnc.late_free_days
+		FROM
+			ht_borrow_finman_new_charge hbfnc
+		LEFT JOIN ht_borrow_project_type hbpt ON hbfnc.project_type=hbpt.borrow_class
+		WHERE
+			hbfnc.status = 0
+		and hbfnc.man_charge_time=#{borrowPeriod}
+		and hbfnc.inst_code = #{instCode}
+		and hbfnc.asset_type = #{assetType}
+		<if test="borrowStyle != null and borrowStyle == 'endday'">
+			and hbfnc.man_charge_time_type=#{borrowStyle}
+		</if>
+		<if test="borrowStyle != null and borrowStyle != 'endday'">
+			and hbfnc.man_charge_time_type='month'
+		</if>
+		and hbpt.borrow_cd = #{projectType}
+		ORDER BY
+		hbfnc.create_time
+		LIMIT 1
+	</select>
+
+	<select id="getUserNameByUserId" resultType="java.lang.String" parameterType="java.lang.Integer">
+		SELECT
+			username
+		FROM
+			ht_r_user
+		WHERE
+		    user_id = #{userId}
+	</select>
+	
+</mapper>

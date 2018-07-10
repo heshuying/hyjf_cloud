@@ -36,7 +36,7 @@ public class HjhPlanVO extends BaseVO implements Serializable {
     private BigDecimal repayWaitAll;
 
     private Integer planInvestStatus;
-    
+
     private Integer planDisplayStatus;
 
     private Integer addTime;
@@ -57,15 +57,17 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     private BigDecimal planRepayCapital;
 
-    private Integer createUser;
+    private Integer minInvestCounts;
 
-    private Date createTime;
+    private Integer delFlag;
+
+    private Integer createUser;
 
     private Integer updateUser;
 
-    private Date updateTime;
+    private Date createTime;
 
-    private Integer delFlag;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -165,6 +167,14 @@ public class HjhPlanVO extends BaseVO implements Serializable {
         this.planInvestStatus = planInvestStatus;
     }
 
+    public Integer getPlanDisplayStatus() {
+        return planDisplayStatus;
+    }
+
+    public void setPlanDisplayStatus(Integer planDisplayStatus) {
+        this.planDisplayStatus = planDisplayStatus;
+    }
+
     public Integer getAddTime() {
         return addTime;
     }
@@ -237,36 +247,12 @@ public class HjhPlanVO extends BaseVO implements Serializable {
         this.planRepayCapital = planRepayCapital;
     }
 
-    public Integer getCreateUser() {
-        return createUser;
+    public Integer getMinInvestCounts() {
+        return minInvestCounts;
     }
 
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setMinInvestCounts(Integer minInvestCounts) {
+        this.minInvestCounts = minInvestCounts;
     }
 
     public Integer getDelFlag() {
@@ -277,11 +263,35 @@ public class HjhPlanVO extends BaseVO implements Serializable {
         this.delFlag = delFlag;
     }
 
-	public Integer getPlanDisplayStatus() {
-		return planDisplayStatus;
-	}
+    public Integer getCreateUser() {
+        return createUser;
+    }
 
-	public void setPlanDisplayStatus(Integer planDisplayStatus) {
-		this.planDisplayStatus = planDisplayStatus;
-	}
+    public void setCreateUser(Integer createUser) {
+        this.createUser = createUser;
+    }
+
+    public Integer getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(Integer updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

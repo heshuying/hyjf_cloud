@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -9,6 +10,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.RechargeClient;
@@ -16,6 +18,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.netflix.discovery.converters.Auto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,9 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
 
     @Autowired
     public AmTradeClient amTradeClient;
+
+    @Autowired
+    AccountClient accountClient;
 
     /**
      * @param token
@@ -133,6 +139,16 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         } else {
             return false;
         }
+    }
+
+    /**
+     * 获取account信息
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public AccountVO getAccountByUserId(Integer userId){
+        return accountClient.getAccountByUserId(userId);
     }
 
 

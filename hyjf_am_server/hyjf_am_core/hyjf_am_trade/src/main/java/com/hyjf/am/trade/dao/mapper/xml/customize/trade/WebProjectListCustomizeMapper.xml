@@ -606,20 +606,20 @@
 	</sql>
 
     <!--web端查询计划专区上部统计数据-->
-    <select id="searchPlanData" resultType="int" >
+    <select id="searchPlanData" resultType="Map" >
 				SELECT
 			count(hha.id) + (
 				SELECT
 					count(dpa.id) AS total_record
 				FROM
-					hyjf_debt_plan_accede dpa
+					ht_debt_plan_accede dpa
 			) AS accedeTimes,
 			FORMAT(
 				(IFNULL(sum(hha.accede_account), 0) + (
 					SELECT
 						IFNULL(sum(dpa.accede_account), 0)
 					FROM
-						hyjf_debt_plan_accede dpa
+						ht_debt_plan_accede dpa
 				))/10000,
 				2
 			) AS accedeAccountTotal,
@@ -634,12 +634,12 @@
 							0
 						)
 					FROM
-						hyjf_debt_plan_accede dpa
+						ht_debt_plan_accede dpa
 				))/10000,
 				2
 			) AS interestTotal
 		FROM
-			hyjf_hjh_accede hha
+			ht_hjh_accede hha
 
 	</select>
 
@@ -689,13 +689,13 @@
         SELECT
         count(hp.id) AS recordTotal
         FROM
-        hyjf_hjh_plan hp
+        ht_hjh_plan hp
         <include refid="Web_Plan_Where_Clause" />
     </select>
 
     <sql id="Web_Plan_Where_Clause">
         <where>
-            hp.del_flg = 0
+            hp.del_flag = 0
             AND hp.plan_display_status = 1
             <if test="isHome != null" >
                 AND hp.is_month = 1
@@ -1062,7 +1062,7 @@
         ELSE ''
         END AS plan_invest_status_name
         FROM
-        hyjf_hjh_plan hp
+        ht_hjh_plan hp
         <include refid="App_PLan_Where_Clause" />
         ORDER BY
         <if test="isHome != null" >
@@ -1084,14 +1084,14 @@
         SELECT
         count(hp.id) AS recordTotal
         FROM
-        hyjf_hjh_plan hp
+        ht_hjh_plan hp
         <include refid="App_PLan_Where_Clause" />
     </select>
 
     <!--app计划where-->
     <sql id="App_PLan_Where_Clause">
         <where>
-            hp.del_flg = 0
+            hp.del_flag = 0
             AND hp.plan_display_status = 1
             <if test="isHome != null" >
                 AND hp.is_month = 1

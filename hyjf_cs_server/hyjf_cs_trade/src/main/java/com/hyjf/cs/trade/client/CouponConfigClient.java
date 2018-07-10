@@ -20,5 +20,23 @@ public interface CouponConfigClient {
 
    Integer countAvaliableCoupon(MyCouponListRequest request);
 
+   /**
+    * 查询汇计划最优优惠券
+    * @param request
+    * @return
+    */
+   BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
 
+   /**
+    *
+    * @param couponCode
+    * @return
+    */
+   Integer checkCouponSendExcess(String couponCode);
+   /**
+    * 查询HJH可用优惠券数量
+    * @param request
+    * @return
+    */
+   Integer countHJHAvaliableCoupon(MyCouponListRequest request);
 }

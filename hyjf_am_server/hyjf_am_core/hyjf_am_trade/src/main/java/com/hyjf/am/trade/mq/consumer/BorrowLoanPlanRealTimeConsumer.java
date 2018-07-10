@@ -38,6 +38,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
+ * 计划类标的放款消费处理
  * @author dxj
  * @version BorrowLoanPlanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
@@ -75,7 +76,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	    
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("计划放款请求 收到消息，开始处理....");
+			logger.info("计划放款请求 收到消息，开始处理...."+msgs.size());
 	        BorrowApicron borrowApicron;
 	        
 	        try {

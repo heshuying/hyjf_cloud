@@ -107,6 +107,18 @@ public class UserInfoController extends BaseController{
 		return response;
 	}
 
+	/**
+	 * 获取用户详细信息
+	 */
+	@GetMapping("/queryUserInfoCustomizeByUserName/{userName}")
+	public UserInfoCustomizeResponse queryUserInfoCustomizeByUserName(@PathVariable String userName){
+		UserInfoCustomizeResponse response = new UserInfoCustomizeResponse();
+		UserInfoCustomize userInfoCustomize=userInfoService.queryUserInfoCustomizeByUserName(userName);
+		if (userInfoCustomize!=null){
+			response.setResult(CommonUtils.convertBean(userInfoCustomize,UserInfoCustomizeVO.class));
+		}
+		return response;
+	}
 
 	@GetMapping("/querySpreadsUsersByUserId/{userId}")
 	public SpreadsUserResponse querySpreadsUsersByUserId(@PathVariable Integer userId){

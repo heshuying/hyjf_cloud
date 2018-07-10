@@ -111,4 +111,9 @@ public class RedisConstants {
 
     // 汇计划自动债转中的标志 redis key
     public static final String HJH_DEBT_SWAPING = "DebtSwaping";
+
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // _tmp
+    public static final String HJH_SLASH_TMP = "_tmp";
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 }

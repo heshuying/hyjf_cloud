@@ -9,8 +9,12 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -447,6 +451,101 @@ public class AmTradeClientImpl implements AmTradeClient{
     public boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
         String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowasset/" + status;
         Boolean response = restTemplate.postForEntity(url,borrowVO,Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 更新账户信息
+     * @auth sunpeikai
+     * @param accountVO 账户信息
+     * @return
+     */
+    @Override
+    public Integer updateAccount(AccountVO accountVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updateaccount";
+        Integer response = restTemplate.postForEntity(url,accountVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountRechargeVO 充值表
+     * @return
+     */
+    @Override
+    public Integer insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountrecharge";
+        Integer response = restTemplate.postForEntity(url,accountRechargeVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountListVO 收支明细
+     * @return
+     */
+    @Override
+    public Integer insertAccountList(AccountListVO accountListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountlist";
+        Integer response = restTemplate.postForEntity(url,accountListVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountWebListVO 网站收支表
+     * @return
+     */
+    @Override
+    public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountlist";
+        Integer response = restTemplate.postForEntity(url,accountWebListVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据账户id查询BankMerchantAccount
+     * @auth sunpeikai
+     * @param accountId 账户id
+     * @return
+     */
+    @Override
+    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
+        BankMerchantAccountResponse response = restTemplate.getForEntity(url,BankMerchantAccountResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新红包账户信息
+     * @auth sunpeikai
+     * @param bankMerchantAccountVO 红包账户信息
+     * @return
+     */
+    @Override
+    public Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updatebankmerchantaccount";
+        Integer response = restTemplate.postForEntity(url,bankMerchantAccountVO,Integer.class).getBody();
+        return response;
+    }
+
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param bankMerchantAccountListVO 红包明细表
+     * @return
+     */
+    @Override
+    public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
+        Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
         return response;
     }
 

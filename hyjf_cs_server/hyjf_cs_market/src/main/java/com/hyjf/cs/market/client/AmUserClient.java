@@ -2,6 +2,7 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -11,15 +12,19 @@ import java.util.Set;
 public interface AmUserClient {
     /**
      * 查询投之家当天注册人数、开户人数、绑卡人数
+     * @param startTime
+     * @param endTime
      * @return
      */
-    TzjDayReportVO queryUserDataOnToday();
+    TzjDayReportVO queryUserDataOnToday(Date startTime,Date endTime);
 
     /**
      * 查询投之家当天注册用户
+     * @param startTime
+     * @param endTime
      * @return
      */
-    Set<Integer> queryRegisterUsersOnToday();
+    Set<Integer> queryRegisterUsersOnToday(Date startTime,Date endTime);
     /**
      * 查询投之家所有注册用户
      * @return
