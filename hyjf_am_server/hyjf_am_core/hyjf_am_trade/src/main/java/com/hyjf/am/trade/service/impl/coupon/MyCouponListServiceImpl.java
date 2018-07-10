@@ -2,15 +2,20 @@ package com.hyjf.am.trade.service.impl.coupon;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
+import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.MyCouponListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
+import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.service.BorrowInfoService;
 import com.hyjf.am.trade.service.BorrowProjectTypeService;
 import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.trade.service.HjhPlanService;
+import com.hyjf.am.trade.service.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,7 +27,7 @@ import java.util.*;
  * @version MyCouponListServiceImpl, v0.1 2018/6/22 19:15
  */
 @Service
-public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon.MyCouponListService {
+public class MyCouponListServiceImpl implements MyCouponListService {
     @Resource
     MyCouponListCustomizeMapper myCouponListCustomizeMapper;
 
@@ -37,6 +42,9 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
 
     @Resource
     BorrowInfoService borrowInfoService;
+
+    @Autowired
+    private HjhPlanService hjhPlanService;
 
     /**
      * 检索我的优惠券列表
@@ -379,6 +387,253 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
         }
         // System.out.println("~~~~~~~~~~~~~~~~统计结束~~~~~~~~~~~~~~~~~~"+availableCouponList.size());
         return count;
+    }
+
+    /**
+     * 查询汇计划最优优惠券
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BestCouponListVO selectHJHBestCoupon(MyCouponListRequest requestBean) {
+        {
+            Map<String, Object> map = new HashMap<String, Object>();
+            String userId = requestBean.getUserId();
+            String borrowNid = requestBean.getBorrowNid();
+            String money = requestBean.getMoney();
+            String platform = requestBean.getPlatform();
+            map.put("userId", userId);
+            // 查询项目信息
+            HjhPlan plan = hjhPlanService.getHjhPlanByNid(borrowNid);
+            String style = plan.getBorrowStyle();
+            String couponConfig = plan.getCouponConfig();
+            List<BestCouponListVO> couponConfigs = myCouponListCustomizeMapper.getCouponConfigList(map);
+            // 排序
+            Collections.sort(couponConfigs, new ComparatorCouponBean());
+            for (BestCouponListVO bestCoupon : couponConfigs) {
+                // 验证项目加息券或体验金是否可用
+                if (couponConfig.indexOf("3") == -1) {
+                    if (bestCoupon.getCouponType() == 3) {
+                        continue;
+                    }
+                }
+                if (couponConfig.indexOf("2") == -1) {
+                    if (bestCoupon.getCouponType() == 2) {
+                        continue;
+                    }
+                }
+                if (couponConfig.indexOf("1") == -1) {
+                    if (bestCoupon.getCouponType() == 1) {
+                        continue;
+                    }
+                }
+                // 验证项目期限
+                Integer type = bestCoupon.getProjectExpirationType();
+                if ("endday".equals(style)) {
+                    if (type == 1) {
+                        if ((bestCoupon.getProjectExpirationLength() * 30) != plan.getLockPeriod()) {
+                            continue;
+                        }
+                    } else if (type == 3) {
+                        if ((bestCoupon.getProjectExpirationLength() * 30) > plan.getLockPeriod()) {
+                            continue;
+                        }
+                    } else if (type == 4) {
+                        if ((bestCoupon.getProjectExpirationLength() * 30) < plan.getLockPeriod()) {
+                            continue;
+                        }
+                    } else if (type == 2) {
+                        if ((bestCoupon.getProjectExpirationLengthMin() * 30) > plan.getLockPeriod()
+                                || (bestCoupon.getProjectExpirationLengthMax() * 30) < plan.getLockPeriod()) {
+                            continue;
+                        }
+                    }
+                } else {
+                    if (type == 1) {
+                        if (!bestCoupon.getProjectExpirationLength().equals(plan.getLockPeriod())) {
+                            continue;
+                        }
+                    } else if (type == 3) {
+                        if (bestCoupon.getProjectExpirationLength() > plan.getLockPeriod()) {
+                            continue;
+                        }
+                    } else if (type == 4) {
+                        if (bestCoupon.getProjectExpirationLength() < plan.getLockPeriod()) {
+                            continue;
+                        }
+                    } else if (type == 2) {
+                        if (bestCoupon.getProjectExpirationLengthMin() > plan.getLockPeriod() || bestCoupon.getProjectExpirationLengthMax() < plan.getLockPeriod()) {
+                            continue;
+                        }
+                    }
+                }
+
+                // 验证项目金额
+                Integer tenderQuota = bestCoupon.getTenderQuotaType();
+                if (tenderQuota == 1) {
+                    if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
+                        continue;
+                    }
+                } else if (tenderQuota == 2) {
+                    if (bestCoupon.getTenderQuota() > new Double(money)) {
+                        continue;
+                    }
+                }
+                // 验证优惠券适用的项目 新逻辑 pcc20160715
+                String projectType = bestCoupon.getProjectType();
+                boolean ifprojectType = true;
+                if (projectType.indexOf("6") != -1) {
+                    ifprojectType = false;
+                }
+                if (ifprojectType) {
+                    continue;
+                }
+                //是否与本金公用
+                boolean addFlg = false;
+                if (bestCoupon.getAddFlg() == 1 && !"0".equals(money)) {
+                    addFlg = true;
+                }
+                if (addFlg) {
+                    continue;
+                }
+                // 验证使用平台
+                String couponSystem = bestCoupon.getCouponSystem();
+                String[] couponSystemArr = couponSystem.split(",");
+                for (String couponSystemString : couponSystemArr) {
+                    if ("-1".equals(couponSystemString)) {
+                        return bestCoupon;
+                    }
+                    if ((couponSystemString).equals(platform)) {
+                        return bestCoupon;
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * 查询hjh可用优惠券数量
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer getHJHUserCouponAvailableCount(MyCouponListRequest requestBean) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String userId = requestBean.getUserId();
+        String borrowNid = requestBean.getBorrowNid();
+        String money = requestBean.getMoney();
+        String platform = requestBean.getPlatform();
+        map.put("userId", userId);
+        // 查询项目信息
+        HjhPlan plan = hjhPlanService.getHjhPlanByNid(borrowNid);
+        String style = plan.getBorrowStyle();
+        String couponConfig = plan.getCouponConfig();
+        List<BestCouponListVO> couponConfigs = myCouponListCustomizeMapper.getCouponConfigList(map);
+        Integer allCount = 0;
+        for (BestCouponListVO bestCoupon : couponConfigs) {
+            // 验证项目加息券或体验金是否可用
+            if (couponConfig.indexOf("3") == -1) {
+                if (bestCoupon.getCouponType() == 3) {
+                    continue;
+                }
+            }
+            if (couponConfig.indexOf("2") == -1) {
+                if (bestCoupon.getCouponType() == 2) {
+                    continue;
+                }
+            }
+            if (couponConfig.indexOf("1") == -1) {
+                if (bestCoupon.getCouponType() == 1) {
+                    continue;
+                }
+            }
+            // 验证项目期限
+            Integer type = bestCoupon.getProjectExpirationType();
+            if ("endday".equals(style)) {
+                if (type == 1) {
+                    if ((bestCoupon.getProjectExpirationLength() * 30) != plan.getLockPeriod()) {
+                        continue;
+                    }
+                } else if (type == 3) {
+                    if ((bestCoupon.getProjectExpirationLength() * 30) > plan.getLockPeriod()) {
+                        continue;
+                    }
+                } else if (type == 4) {
+                    if ((bestCoupon.getProjectExpirationLength() * 30) < plan.getLockPeriod()) {
+                        continue;
+                    }
+                } else if (type == 2) {
+                    if ((bestCoupon.getProjectExpirationLengthMin() * 30) > plan.getLockPeriod()
+                            || (bestCoupon.getProjectExpirationLengthMax() * 30) < plan.getLockPeriod()) {
+                        continue;
+                    }
+                }
+            } else {
+                if (type == 1) {
+                    if (!bestCoupon.getProjectExpirationLength().equals(plan.getLockPeriod())) {
+                        continue;
+                    }
+                } else if (type == 3) {
+                    if (bestCoupon.getProjectExpirationLength() > plan.getLockPeriod()) {
+                        continue;
+                    }
+                } else if (type == 4) {
+                    if (bestCoupon.getProjectExpirationLength() < plan.getLockPeriod()) {
+                        continue;
+                    }
+                } else if (type == 2) {
+                    if (bestCoupon.getProjectExpirationLengthMin() > plan.getLockPeriod() || bestCoupon.getProjectExpirationLengthMax() < plan.getLockPeriod()) {
+                        continue;
+                    }
+                }
+            }
+
+            // 验证项目金额
+            Integer tenderQuota = bestCoupon.getTenderQuotaType();
+            if (tenderQuota == 1) {
+                if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
+                    continue;
+                }
+            } else if (tenderQuota == 2) {
+                if (bestCoupon.getTenderQuota() > new Double(money)) {
+                    continue;
+                }
+            }
+            // 验证优惠券适用的项目 新逻辑 pcc20160715
+            String projectType = bestCoupon.getProjectType();
+            boolean ifprojectType = true;
+            if (projectType.indexOf("6") != -1) {
+                ifprojectType = false;
+            }
+            if (ifprojectType) {
+                continue;
+            }
+            //是否与本金公用
+            boolean addFlg = false;
+            if (bestCoupon.getAddFlg() == 1 && !"0".equals(money)) {
+                addFlg = true;
+            }
+            if (addFlg) {
+                continue;
+            }
+            // 验证使用平台
+            String couponSystem = bestCoupon.getCouponSystem();
+            String[] couponSystemArr = couponSystem.split(",");
+            for (String couponSystemString : couponSystemArr) {
+                if ("-1".equals(couponSystemString)) {
+                    allCount++;
+                    continue;
+                }
+                if ((couponSystemString).equals(platform)) {
+                    allCount++;
+                    continue;
+                }
+            }
+        }
+        return allCount;
     }
 
 

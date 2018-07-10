@@ -4,10 +4,16 @@
 package com.hyjf.cs.trade.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.cs.trade.bean.TenderInfoResult;
+import com.hyjf.cs.trade.client.*;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -42,11 +48,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CouponClient;
-import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.CouponService;
 import com.hyjf.cs.trade.service.HjhTenderService;
@@ -82,6 +83,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private CouponConfigClient couponConfigClient;
+
+    @Autowired
+    private CouponUserClient couponUserClient;
 
     /**
      * @param request
@@ -143,6 +150,114 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         // 开始投资------------------------------------------------------------------------------------------------------------------------------------------
         return tender(request, plan, account, cuc, tenderAccount);
+    }
+
+    /**
+     * 根据投资项目id历史回报
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender) {
+        TenderInfoResult investInfo = new TenderInfoResult();
+        String planNid = tender.getBorrowNid();
+        String money = tender.getAccount();
+        // 获取优惠券编号
+        Integer couponId = tender.getCouponGrantId();
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        df.setRoundingMode(RoundingMode.FLOOR);
+        HjhPlanVO plan = amBorrowClient.getPlanByNid(planNid);
+        if (null == plan) {
+            // 计划不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
+        }
+        WebViewUserVO loginUser = RedisUtils.getObj(tender.getToken(), WebViewUserVO.class);
+        tender.setUser(loginUser);
+        BigDecimal couponInterest = BigDecimal.ZERO;
+        BestCouponListVO couponConfig = new BestCouponListVO();
+        if (!"0".equals(plan.getCouponConfig()) && loginUser != null) {
+            BigDecimal borrowApr = plan.getExpectApr();
+            /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
+            MyCouponListRequest request = new MyCouponListRequest();
+            request.setBorrowNid(tender.getBorrowNid());
+            request.setUserId(String.valueOf(loginUser.getUserId()));
+            request.setPlatform(tender.getPlatform());
+            if (couponId == null || couponId == 0) {
+                couponConfig = couponConfigClient.selectHJHBestCoupon(request);
+            }
+            if (couponConfig != null) {
+                investInfo.setIsThereCoupon(1);
+                if (couponConfig != null) {
+                    if (couponConfig.getCouponType() == 1) {
+                        couponInterest = couponService.getInterestDj(couponConfig.getCouponQuota(), couponConfig.getCouponProfitTime().intValue(), plan.getExpectApr());
+                    } else {
+                        couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponConfig.getCouponType(), plan.getExpectApr(), couponConfig.getCouponQuota(), money, plan.getLockPeriod());
+                    }
+
+                    couponConfig.setCouponInterest(df.format(couponInterest));
+                    if (couponConfig.getCouponType() == 2) {
+                        borrowApr = borrowApr.add(couponConfig.getCouponQuota());
+                    }
+                    if (couponConfig.getCouponType() == 3) {
+                        money = new BigDecimal(money).add(couponConfig.getCouponQuota()).toString();
+                    }
+                }
+                couponConfig.setCouponInterest(df.format(couponInterest));
+            } else {
+                investInfo.setIsThereCoupon(0);
+            }
+            investInfo.setCouponConfig(couponConfig);
+            /** 计算最优优惠券结束 */
+
+            /** 可用优惠券张数开始 */
+            int availableCouponListCount = couponConfigClient.countHJHAvaliableCoupon(request);
+            investInfo.setCouponAvailableCount(availableCouponListCount);
+            /** 可用优惠券张数结束 */
+
+            /** 获取用户优惠券总张数开始 */
+            int recordTotal = couponUserClient.getUserCouponCount(tender.getUser().getUserId(), "0");
+            investInfo.setRecordTotal(recordTotal);
+            /** 获取用户优惠券总张数结束 */
+            investInfo.setCouponCapitalInterest(df.format(couponInterest));
+        } else {
+            investInfo.setCouponAvailableCount(0);
+        }
+
+        BigDecimal earnings = new BigDecimal("0");
+        // 如果投资金额不为空
+        if (!StringUtils.isBlank(money) && new BigDecimal(money).compareTo(BigDecimal.ZERO) == 1 ||!(StringUtils.isEmpty(money) && couponConfig != null && couponConfig.getCouponType() == 1 && couponConfig.getAddFlg() == 1)) {
+            // 收益率
+            BigDecimal borrowApr = plan.getExpectApr();
+            // 周期
+            Integer borrowPeriod = plan.getLockPeriod();
+            // 还款方式
+            String borrowStyle = plan.getBorrowStyle();
+
+            if (StringUtils.isNotEmpty(borrowStyle)) {
+
+                if (StringUtils.equals("endday", borrowStyle)){
+                    // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷365*锁定期；
+                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+                    investInfo.setEarnings(df.format(earnings));
+                } else {
+                    // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
+                    investInfo.setEarnings(df.format(earnings));
+                }
+            }
+        } else {
+            // 投资金额错误
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_FORMAT);
+        }
+        if(couponConfig!=null && couponConfig.getCouponType()==3){
+            investInfo.setCapitalInterest(df.format(earnings.add(couponInterest).subtract(couponConfig.getCouponQuota())));
+        }else{
+            investInfo.setCapitalInterest(df.format(earnings.add(couponInterest)));
+        }
+        WebResult<TenderInfoResult> result = new WebResult<TenderInfoResult>();
+        result.setData(investInfo);
+        return result;
     }
 
     /**

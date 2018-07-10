@@ -18,4 +18,18 @@ public interface MyCouponListService {
     BestCouponListVO selectBestCouponList(MyCouponListRequest request);
 
     Integer countAvaliableCoupon(MyCouponListRequest request);
+
+    /**
+     * 查询汇计划最优优惠券
+     * @param requestBean
+     * @return
+     */
+    BestCouponListVO selectHJHBestCoupon(MyCouponListRequest requestBean);
+
+    /**
+     * 查询hjh可用优惠券数量
+     * @param requestBean
+     * @return
+     */
+    Integer getHJHUserCouponAvailableCount(MyCouponListRequest requestBean);
 }

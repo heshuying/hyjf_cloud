@@ -82,4 +82,28 @@ public class MyCouponListController extends BaseController {
         MyCouponListResponse responseBean = new MyCouponListResponse();
         return myCouponListService.countUserCouponList(requestBean.getUserId(),requestBean.getUsedFlag());
     }
+
+    /**
+     * 查询汇计划最优优惠券
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/selectHJHBestCoupon", method = RequestMethod.POST)
+    public MyBestCouponListResponse selectHJHBestCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
+
+        BestCouponListVO result = myCouponListService.selectHJHBestCoupon(requestBean);
+        responseBean.setResult(result);
+        return responseBean;
+    }
+
+    /**
+     * 获取当前标的可用优惠券数量
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/getHJHUserCouponAvailableCount", method = RequestMethod.POST)
+    public Integer getHJHUserCouponAvailableCount(@RequestBody @Valid MyCouponListRequest requestBean) {
+        return myCouponListService.getHJHUserCouponAvailableCount(requestBean);
+    }
 }
