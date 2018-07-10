@@ -9,8 +9,12 @@ import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.service.BorrowInfoService;
 import com.hyjf.am.trade.service.BorrowProjectTypeService;
 import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.common.cache.CacheUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -381,6 +385,143 @@ public class MyCouponListServiceImpl implements com.hyjf.am.trade.service.coupon
         return count;
     }
 
+    @Override
+    public List<CouponUserForAppCustomizeVO> getMyCouponByPage(MyCouponListRequest requestBean) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("usedFlag", requestBean.getUsedFlag());
+        param.put("userId", requestBean.getUserId());
+
+        if (null != requestBean.getLimitStart()) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (null != requestBean.getLimitEnd()) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+        List<MyCouponListCustomizeVO> list = myCouponListCustomizeMapper.selectMyCouponList(param);
+        List<CouponUserForAppCustomizeVO> couponList = new ArrayList<>();
+        for(MyCouponListCustomizeVO myCouponListCustomizeVO:list){
+            CouponUserForAppCustomizeVO couponUserForAppCustomizeVO = new CouponUserForAppCustomizeVO();
+
+            //根据项目类型处理转换项目
+            String projectString = this.dealProjectType(myCouponListCustomizeVO.getProjectType());
+            couponUserForAppCustomizeVO.setProjectType(projectString);
+
+            //处理选中的操作平台
+            String clientString = dealOperation(myCouponListCustomizeVO.getCouponSystem());
+            couponUserForAppCustomizeVO.setOperationPlatform(clientString);
+            //处理优惠券面额
+            couponUserForAppCustomizeVO.setCouponQuota(myCouponListCustomizeVO.getCouponQuota() + dealCouponQuota(myCouponListCustomizeVO.getCouponType()));
+            couponUserForAppCustomizeVO.setId(myCouponListCustomizeVO.getId());
+            couponUserForAppCustomizeVO.setCouponType(myCouponListCustomizeVO.getCouponTypeName());
+            couponUserForAppCustomizeVO.setCouponTypeOrigin(myCouponListCustomizeVO.getCouponType());
+            couponUserForAppCustomizeVO.setCouponQuotaOrigin(myCouponListCustomizeVO.getCouponQuota());
+            couponUserForAppCustomizeVO.setEndTime(myCouponListCustomizeVO.getAddTime() + "-" + myCouponListCustomizeVO.getEndTime());
+            couponUserForAppCustomizeVO.setInvestQuota(myCouponListCustomizeVO.getTenderQuota());
+            couponUserForAppCustomizeVO.setInvestTime(myCouponListCustomizeVO.getProjectExpirationType());
+            couponUserForAppCustomizeVO.setCouponName(myCouponListCustomizeVO.getCouponName());
+            couponList.add(couponUserForAppCustomizeVO);
+        }
+        return couponList;
+    }
+
+    /**
+     * 处理优惠券面额
+     * @param couponType 优惠券类型
+     * @return String
+     */
+    public String dealCouponQuota(String couponType){
+        String couponQuota = "";
+        if("2".equals(couponType)){
+            couponQuota = "%";
+        }
+        return couponQuota;
+    }
+
+    /**
+     * 处理选中的操作平台
+     * @param operationPlatform
+     * @return
+     */
+    public String dealOperation(String operationPlatform){
+        String clientString = "";
+        // 操作平台
+        //操作平台
+        Map<String, String> map =  CacheUtil.getParamNameMap("CLIENT");
+        // 被选中操作平台
+        String clientSed[] = StringUtils.split(operationPlatform, ",");
+        for (int i = 0; i < clientSed.length; i++) {
+            if ("-1".equals(clientSed[i])) {
+                clientString = clientString + "全部平台";
+                break;
+            } else {
+                for (String key : map.keySet()) {
+                    if (clientSed[i].equals(key)) {
+                        if (i != 0 && clientString.length() != 0) {
+                            clientString = clientString + "、";
+                        }
+                        clientString = clientString + map.get(key);
+                    }
+                }
+            }
+        }
+        if(clientString.contains("Android、iOS")){
+            clientString = clientString.replace("Android、iOS", "APP");
+        }
+        return clientString;
+    }
+
+    /**
+     * 根据项目类型转换中文项目类型
+     * @param projectType 项目类型
+     * @return
+     */
+    public String dealProjectType(String projectType){
+        String projectString = ",";
+        //勾选汇直投，尊享汇，融通宝
+        if (projectType.indexOf("1")!=-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")!=-1) {
+            projectString = projectString + "债权,";
+        }
+        //勾选汇直投  未勾选尊享汇，融通宝
+        if (projectType.indexOf("1")!=-1&&projectType.indexOf("4")==-1&&projectType.indexOf("7")==-1) {
+            projectString = projectString + "债权(尊享,优选除外),";
+        }
+        //勾选汇直投，融通宝  未勾选尊享汇
+        if(projectType.indexOf("1")!=-1&&projectType.indexOf("4")==-1&&projectType.indexOf("7")!=-1){
+            projectString = projectString + "债权(尊享除外),";
+        }
+        //勾选汇直投，选尊享汇 未勾选融通宝
+        if(projectType.indexOf("1")!=-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")==-1){
+            projectString = projectString + "债权(优选除外),";
+        }
+        //勾选尊享汇，融通宝  未勾选直投
+        if(projectType.indexOf("1")==-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")!=-1){
+            projectString = projectString + "债权(仅限尊享,优选),";
+        }
+        //勾选尊享汇  未勾选直投，融通宝
+        if(projectType.indexOf("1")==-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")==-1){
+            projectString = projectString + "债权(仅限尊享),";
+        }
+        //勾选尊享汇  未勾选直投，融通宝
+        if(projectType.indexOf("1")==-1&&projectType.indexOf("4")==-1&&projectType.indexOf("7")!=-1){
+            projectString = projectString + "债权(仅限优选),";
+        }
+
+        if (projectType.indexOf("3")!=-1) {
+            projectString = projectString + "新手,";
+        }
+    		/*if (projectType.indexOf("5")!=-1) {
+            projectString = projectString + "汇添金,";
+        }*/
+        if (projectType.indexOf("6")!=-1) {
+            projectString = projectString + "汇计划,";
+        }
+
+        return  projectString.substring(1,projectString.length() -1);
+    }
 
     /**
      * 比较器

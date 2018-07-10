@@ -2,6 +2,10 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.trade.BorrowAuthRequest;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.resquest.trade.*;
@@ -11,6 +15,7 @@ import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -516,5 +521,15 @@ public class AmTradeClientImpl implements AmTradeClient {
             return 0;
         }
         return response.getResult().intValue();
+    }
+
+    @Override
+    public List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/getmycouponbypage";
+        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
     }
 }

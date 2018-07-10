@@ -148,4 +148,60 @@ public interface CouponTenderClient {
      * @return CouponTenderResponse
      */
     CouponTenderResponse getRecordListHztJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划代金券汇款总数
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse countRecordHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划代金券汇款列表分页数据
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse getRecordListHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划应还本息总额
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse queryHjhInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     *  汇计划优惠券回款应回款总金额
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse queryHjhRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划体验金汇款总数
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse countRecordHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划体验金汇款列表分页数据
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse getRecordListHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划加息券汇款总数
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 汇计划加息券汇款列表分页数据
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    CouponTenderResponse getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
 }
