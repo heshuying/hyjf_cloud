@@ -1,7 +1,5 @@
 package com.hyjf.common.util;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
