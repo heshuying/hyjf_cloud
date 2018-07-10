@@ -1,20 +1,26 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 public class BorrowCreditRequest extends BaseRequest {
 
-    //用户名
+    @ApiModelProperty(value = "用户名")
     private String userName;
-    // 债转编号
+
+    @ApiModelProperty(value = "债转编号")
     private String creditNid;
-    // 项目编号
+
+    @ApiModelProperty(value = "项目编号")
     private String bidNid;
-    // 债转状态
+
+    @ApiModelProperty(value = "债转状态")
     private String creditStatus;
-    // 添加时间 开始
+
+    @ApiModelProperty(value = "添加时间 开始")
     private String timeStart;
-    // 添加时间 结束
+
+    @ApiModelProperty(value = "添加时间 结束")
     private String timeEnd;
 
     /**

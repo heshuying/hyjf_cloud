@@ -8,14 +8,13 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -239,6 +238,20 @@ public interface AmTradeClient {
     boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
 
     /**
+     * 转账列表
+     * @param form
+     * @return
+     */
+    BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form);
+
+    /**
+     * 查询红包明细分页
+     * @param request
+     * @return
+     */
+    BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request);
+
+    /**
      * 更新账户信息
      * @auth sunpeikai
      * @param accountVO 账户信息
@@ -293,5 +306,78 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO);
+    /**
+     * 获取发起账户分佣所需的详细信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<SubCommissionListConfigVO> searchSubCommissionListConfig();
 
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param subCommissionVO 平台账户分佣
+     * @return
+     */
+    boolean insertSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询分佣数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    SubCommissionVO searchSubCommissionByOrderId(String orderId);
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param subCommissionVO 待更新的数据参数
+     * @return
+     */
+    Integer updateSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询是否存在重复的AccountWebList数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    Integer accountWebListByOrderId(String orderId);
+
+    /**
+     *  获取银行转账异常列表 jijun 20180710
+     * @param request
+     * @return
+     */
+    List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+
+    /**
+     *  获取银行转账异常总数 jijun 20180710
+     * @param request
+     * @return
+     */
+    Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request);
+
+    /**
+     * 更改银行转账信息
+     * @param request
+     * @return
+     */
+    int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
+
+    /**
+     * 更改银行转账信息
+     * @param transferExceptionLog
+     * @return
+     */
+    int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+
+    /**
+     * 通过uuid银行转账异常
+     * @param uuid
+     * @return
+     */
+    TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid);
 }

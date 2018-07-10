@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.repay;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -213,6 +214,20 @@ public class RepayManageController extends BaseTradeController {
         resultMap.put("repayAuthStatus", "");
         resultMap.put("repayProject", projectBean);
         result.setData(resultMap);
+
+        return result;
+    }
+
+    /**
+     * 还款申请
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @ApiOperation(value = "还款申请", notes = "还款申请")
+    @PostMapping(value = "/repay_detail", produces = "application/json; charset=utf-8")
+    public WebResult repayRequest(@RequestHeader(value = "token", required = true) String token, RepayRequest requestBean, HttpServletRequest request){
+        WebResult result = new WebResult();
+
 
         return result;
     }

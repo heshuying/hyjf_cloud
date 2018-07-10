@@ -12,6 +12,8 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.am.response.user.AdminPreRegistListResponse;
+import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -103,21 +105,17 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "用户画像", notes = "修改用户画像")
     @PostMapping(value = "/updateUserPortrait")
     @ResponseBody
-    public JSONObject updateUserPortrait(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject result = new JSONObject();
-        String status = Response.FAIL;
-
-        if(StringUtils.isBlank(map.get("userId").toString())){
-            result.put("status", status);
-            result.put("msg", "请输入用户id");
-            return result;
+    public AdminResult updateUserPortrait(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
+        if (StringUtils.isNotBlank(userPortraitRequestBean.getUserId())) {
+            return new AdminResult<>(FAIL, "请输入用户id");
         }
-        int updFlg = userPortraitService.updateUserPortrait(map);
-        if (updFlg > 0) {
-            status = Response.SUCCESS;
+        UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
+        BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
+        int updFlg = userPortraitService.updateUserPortrait(userPortraitRequest);
+        if(updFlg<=0){
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        result.put("status", status);
-        return result;
+        return new AdminResult<>();
     }
 
     /**

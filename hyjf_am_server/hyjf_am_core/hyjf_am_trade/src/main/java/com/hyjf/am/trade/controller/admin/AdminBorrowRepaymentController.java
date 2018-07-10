@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.trade.controller.AssetManageController;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentCustomize;
@@ -39,9 +40,8 @@ import java.util.List;
 @Api(value = "产品中心-汇直投-还款信息查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRepayment")
-public class AdminBorrowRepaymentController {
+public class AdminBorrowRepaymentController extends BaseController {
 
-    private static Logger logger = LoggerFactory.getLogger(AssetManageController.class);
     @Autowired
     AdminBorrowRepaymentService adminBorrowRepaymentService;
 

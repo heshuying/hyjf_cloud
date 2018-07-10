@@ -1,0 +1,58 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.trade.service.admin.finance;
+
+import com.hyjf.am.trade.dao.model.auto.SubCommission;
+import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
+import com.hyjf.am.vo.admin.SubCommissionVO;
+
+import java.util.List;
+
+/**
+ * @author: sunpeikai
+ * @version: SubCommissionService, v0.1 2018/7/10 10:15
+ */
+public interface SubCommissionService {
+
+    /**
+     * 查询发起账户分佣所需的detail信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<SubCommissionListConfig> searchSubCommissionListConfig();
+
+    /**
+     * 插入发起账户分佣数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean insertSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询分佣信息
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    List<SubCommission> searchSubCommissionByOrderId(String orderId);
+
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Integer updateSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询是否存在重复的AccountWebList数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    Integer accountWebListByOrderId(String orderId);
+}

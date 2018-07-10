@@ -97,7 +97,7 @@ public class WebProjectListClientImpl implements WebProjectListClient {
      */
     @Override
     public Integer countPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/planData",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countPlanList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countProjectList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getCount();

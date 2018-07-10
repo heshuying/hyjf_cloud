@@ -1,24 +1,30 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.bean.repay.*;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayManageService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -3164,6 +3170,87 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         borrowRepayPlan.setRepayFee(repayManageFee);
         borrowRepayPlan.setChargeDays(interestDay);
         borrowRepayPlan.setAdvanceStatus(0);
+    }
+
+    /**
+     * 还款申请校验
+     * @param requestBean
+     */
+    @Override
+    public RepayBean checkForRepayRequest(RepayRequest requestBean, WebViewUser user){
+        RepayBean repayByTerm = null;
+        if(StringUtils.isBlank(requestBean.getBorrowNid()) || StringUtils.isBlank(requestBean.getPassword())){
+            throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
+        }
+        // 开户校验
+        if(!user.isOpenAccount()){
+            throw  new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        BorrowVO borrow = amBorrowClient.getBorrowByNid(requestBean.getBorrowNid());
+        if(borrow == null){
+            throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+
+        AccountVO accountVO = getAccountByUserId(user.getUserId());
+
+        try {
+            // 一次性还款余额校验
+            if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
+                BigDecimal repayTotal = this.searchRepayTotal(user.getUserId(), borrow);
+                if (repayTotal.compareTo(accountVO.getBalance()) == 0 || repayTotal.compareTo(accountVO.getBalance()) == -1) {
+                    // 查询用户在银行电子账户的余额
+                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                        // ** 用户符合还款条件，可以还款 *//*
+                        repayByTerm = this.calculateRepay(user.getUserId(), borrow);
+                    } else {
+                        throw new ReturnMessageException(MsgEnum.STATUS_CE000016);
+                    }
+                } else {
+                    throw new ReturnMessageException(MsgEnum.STATUS_CE000015);
+                }
+            } // 分期还款余额校验
+            else {
+                BigDecimal repayTotal = this.searchRepayByTermTotal(borrow, borrow.getBorrowPeriod());
+                if (repayTotal.compareTo(accountVO.getBalance()) == 0 || repayTotal.compareTo(accountVO.getBalance()) == -1) {
+                    // 查询用户在银行电子账户的可用余额
+                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                        // ** 用户符合还款条件，可以还款 *//*
+                        repayByTerm = this.calculateRepayByTerm(user.getUserId(), borrow);
+                    } else {
+                        throw new ReturnMessageException(MsgEnum.STATUS_CE000016);
+                    }
+                } else {
+                    throw new ReturnMessageException(MsgEnum.STATUS_CE000015);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("还款申请可用余额校验异常", e);
+            throw new ReturnMessageException(MsgEnum.STATUS_CE999999);
+        }
+
+        return repayByTerm;
+    }
+
+    public BigDecimal searchRepayTotal(int userId, BorrowVO borrow) throws ParseException {
+        RepayBean RepayBean = this.calculateRepay(userId, borrow);
+        return RepayBean.getRepayAccountAll();
+    }
+
+    public BigDecimal searchRepayByTermTotal(BorrowVO borrow, int periodTotal) throws ParseException {
+        BorrowRepayVO borrowRepay = borrowRepayClient.getBorrowRepay(borrow.getBorrowNid());
+        BigDecimal repayPlanTotal = new BigDecimal(0);
+        // 判断用户的余额是否足够还款
+        if (borrowRepay != null) {
+            RepayBean repayByTerm = new RepayBean();
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repayByTerm);
+            // 计算当前还款期数
+            int period = periodTotal - borrowRepay.getRepayPeriod() + 1;
+            repayPlanTotal = calculateRepayPlan(repayByTerm, borrow, period);
+        }
+        return repayPlanTotal;
     }
 
     /**
