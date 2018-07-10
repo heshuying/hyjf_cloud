@@ -1,5 +1,6 @@
 package com.hyjf.common.util;
 
+import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
 //数值格式判断工具类
@@ -45,4 +46,30 @@ public class DigitalUtils {
 		if (str != null && !str.isEmpty()){result = Integer.valueOf(str);}
 		return result;
 	}
+
+	// add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+	public static int min(int a, int b) {
+		return (a < b) ? a : b;
+	}
+
+	public static int max(int a, int b) {
+		return (a > b) ? a : b;
+	}
+
+	public static long min(long a, long b) {
+		return (a < b) ? a : b;
+	}
+
+	public static long max(long a, long b) {
+		return (a > b) ? a : b;
+	}
+
+	public static BigDecimal min(BigDecimal a, BigDecimal b) {
+		return (a.compareTo(b) < 0) ? a : b;
+	}
+
+	public static BigDecimal max(BigDecimal a, BigDecimal b) {
+		return (a.compareTo(b) > 0) ? a : b;
+	}
+	// add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 }

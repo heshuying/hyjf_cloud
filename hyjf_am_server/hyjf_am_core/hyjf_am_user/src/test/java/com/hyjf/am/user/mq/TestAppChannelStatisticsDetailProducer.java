@@ -1,19 +1,21 @@
 package com.hyjf.am.user.mq;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.AmUserApplication;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.user.AmUserApplication;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author xiasq
@@ -38,7 +40,7 @@ public class TestAppChannelStatisticsDetailProducer {
 		detail.setRegisterTime(new Date());
 		detail.setCumulativeInvest(BigDecimal.ZERO);
 		// 发送
-		producer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+		producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
 				MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, JSON.toJSONBytes(detail)));
 
 	}
@@ -49,7 +51,7 @@ public class TestAppChannelStatisticsDetailProducer {
 		Integer userId = 123;
 
 		// 发送
-        producer.messageSend(new Producer.MassageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+        producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG, JSON.toJSONBytes(userId)));
 	}
 }

@@ -3,15 +3,47 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.mapper.customize.trade.AccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.mq.Producer;
-import com.hyjf.am.trade.mq.SmsProducer;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowSendType;
+import com.hyjf.am.trade.dao.model.auto.BorrowSendTypeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
+import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpinfo;
+import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
+import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
+import com.hyjf.am.trade.dao.model.auto.FreezeList;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -27,13 +59,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DateUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * @author fuqiang
@@ -434,7 +459,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 发送短信验证码
             SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try{
-                smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,
+                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                         UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
             }catch (Exception e){
 
@@ -492,5 +517,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
         return result;
     }
+
+    @Override
+    public Integer getTotalInverestCount(Integer userId) {
+       return borrowCustomizeMapper.getTotalInverestCount(userId);
+    }
+
 
 }

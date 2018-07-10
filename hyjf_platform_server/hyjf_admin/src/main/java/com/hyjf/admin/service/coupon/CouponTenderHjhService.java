@@ -47,4 +47,12 @@ public interface CouponTenderHjhService {
      * @return List<CouponRecoverVo>
      */
     List<CouponRecoverVo> getCouponRecoverCustomize(Map<String,Object> paramMap);
+
+    /**
+     * 处理优惠券使用平台，使用项目
+     * @param detail CouponTenderDetailVo
+     * @param map //操作平台
+     * @return
+     */
+    CouponTenderDetailVo dealDetail(CouponTenderDetailVo detail,Map<String, String> map);
 }

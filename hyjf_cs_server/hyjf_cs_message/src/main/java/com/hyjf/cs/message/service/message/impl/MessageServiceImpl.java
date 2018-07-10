@@ -23,8 +23,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.SmsOntime;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.SmsOntimeMongoDao;
-import com.hyjf.cs.message.mq.Producer;
-import com.hyjf.cs.message.mq.SmsProducer;
+import com.hyjf.cs.message.mq.base.MessageContent;
+import com.hyjf.cs.message.mq.producer.SmsProducer;
 import com.hyjf.cs.message.service.message.MessageService;
 
 /**
@@ -104,7 +104,7 @@ public class MessageServiceImpl implements MessageService {
 						SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
 								MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 						smsProducer.messageSend(
-								new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+								new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 					} catch (Exception e) {
 						logger.error("发送短信失败......", e);
 						errorCnt++;
@@ -126,7 +126,7 @@ public class MessageServiceImpl implements MessageService {
 					SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
 							MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 					smsProducer.messageSend(
-							new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
 				}
 			} catch (Exception e) {
 				sbError.append(e.getMessage()).append("<br/>");

@@ -3,6 +3,17 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -13,21 +24,12 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.trade.mq.AppMessageProducer;
-import com.hyjf.cs.trade.mq.Producer;
-import com.hyjf.cs.trade.mq.SmsProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
+import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BorrowCreditService;
-import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author PC-LIUSHOUYI
@@ -37,7 +39,7 @@ import java.util.UUID;
 @RequestMapping(value = "/batch/borrowCredit")
 public class BorrowCreditExpiresController {
 
-    Logger logger = LoggerFactory.getLogger(BatchBankInvestExceptionController.class);
+    Logger logger = LoggerFactory.getLogger(BorrowCreditExpiresController.class);
 
     @Autowired
     private BorrowCreditService borrowCreditService;
@@ -105,7 +107,7 @@ public class BorrowCreditExpiresController {
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                                 CustomConstants.PARAM_TPL_ZZBFZRCG, CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("债转部分转让发送短信失败：userId:"+borrowCreditVO.getCreditUserId()+",trueName:"+userInfo.getTruename(), e);
                 }
@@ -117,14 +119,14 @@ public class BorrowCreditExpiresController {
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                                 CustomConstants.PARAM_TPL_ZZDQ, CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new Producer.MassageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
                 } catch (MQException e) {
                     logger.error("债转0转让发送短信失败：userId:"+borrowCreditVO.getCreditUserId()+",trueName:"+userInfo.getTruename(), e);
                 }
             }
             AppMsMessage appMsMessage = new AppMsMessage(borrowCreditVO.getCreditUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
             try {
-                appMessageProducer.messageSend(new Producer.MassageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
             } catch (MQException e) {
                 logger.error("债转转让结束发送消息失败：userId:"+borrowCreditVO.getCreditUserId()+",trueName:"+userInfo.getTruename(), e);
             }

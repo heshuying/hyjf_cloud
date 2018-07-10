@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
@@ -47,6 +48,15 @@ public class CouponConfigClientImpl implements CouponConfigClient {
         MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCouponCount();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer checkCouponSendExcess(String couponCode) {
+        CouponConfigCustomizeResponse cccr = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/checkCouponSendExcess/"+couponCode,CouponConfigCustomizeResponse.class).getBody();
+        if (Response.isSuccess(cccr)) {
+            return cccr.getCount();
         }
         return null;
     }

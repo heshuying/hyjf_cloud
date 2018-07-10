@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 
 import java.util.List;

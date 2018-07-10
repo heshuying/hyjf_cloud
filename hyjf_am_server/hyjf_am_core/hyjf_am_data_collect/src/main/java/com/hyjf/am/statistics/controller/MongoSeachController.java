@@ -3,16 +3,14 @@ package com.hyjf.am.statistics.controller;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.statistics.bean.AccountWebList;
 import com.hyjf.am.statistics.bean.AppChannelStatisticsDetail;
 import com.hyjf.am.statistics.bean.BankSmsAuthCode;
 import com.hyjf.am.statistics.bean.DirectionalTransferAssociatedRecords;
-import com.hyjf.am.statistics.mongo.AccountWebListDao;
-import com.hyjf.am.statistics.mongo.AppChannelStatisticsDetailDao;
-import com.hyjf.am.statistics.mongo.BankSmsAuthCodeDao;
-import com.hyjf.am.statistics.mongo.DirectionalTransferAssociatedRecordsDao;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
+import com.hyjf.am.statistics.mongo.*;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -43,6 +42,9 @@ public class MongoSeachController {
 
     @Autowired
     AccountWebListDao accountWebListDao;
+
+    @Autowired
+    private CalculateInvestInterestDao calculateInvestInterestDao;
 
     /**
      * 根据userId查询渠道投资信息
@@ -129,4 +131,17 @@ public class MongoSeachController {
         DecimalFormat df = new DecimalFormat("#.00");
         return df.format(total);
     }
+
+    /**
+     * 获取累计投资金额
+     *
+     * @return
+     */
+	@RequestMapping(value = "/gettotalinvestmentamount")
+	public CalculateInvestInterestResponse getTotalInvestmentAmount() {
+		CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
+		BigDecimal totalInvestmentAmount = calculateInvestInterestDao.getTotalInvestmentAmount();
+		response.setInterestSum(totalInvestmentAmount);
+		return response;
+	}
 }

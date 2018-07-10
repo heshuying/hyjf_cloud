@@ -3,9 +3,12 @@
  */
 package com.hyjf.am.trade.service.task;
 
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminCouponRepayMonitorCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
@@ -18,6 +21,8 @@ public interface CouponRepayMonitorService {
      * @return
      */
     List<CouponRepayMonitor> selectCouponRepayMonitor(String nowDay);
+
+    List<AdminCouponRepayMonitorCustomize> selectCouponRepayMonitorPage(Map<String, Object> paraMap);
 
     /**
      * 插入表
@@ -32,4 +37,13 @@ public interface CouponRepayMonitorService {
      * @return
      */
     int updateCouponRepayMonitor(CouponRepayMonitor couponRepayMonitor);
+
+    /**
+     * 加息卷统计
+     * @param form
+     * @return
+     */
+    Integer countRecordTotal(CouponRepayRequest form);
+
+    List<AdminCouponRepayMonitorCustomize> selectInterestSum(Map<String, Object> paraMap);
 }

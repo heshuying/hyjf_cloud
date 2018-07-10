@@ -35,7 +35,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
         logger.info("searchBankOpenAccount:::::::::userId=[{}]",userId);
-        User user = this.findUserByUserId(userId);// 借款人用户
+        // 借款人用户
+        User user = this.findUserByUserId(userId);
         if (Validator.isNotNull(user)) {
             BankOpenAccountExample bankOpenAccountExample = new BankOpenAccountExample();
             BankOpenAccountExample.Criteria cra = bankOpenAccountExample.createCriteria();

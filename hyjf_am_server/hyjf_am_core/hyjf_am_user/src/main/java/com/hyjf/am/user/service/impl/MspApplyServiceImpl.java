@@ -274,4 +274,24 @@ public class MspApplyServiceImpl implements MspApplyService {
 		return mspAbnormalCreditMapper.selectByExample(me);
 	}
 
+	@Override
+	public int countByExample(MspApply mspApply) {
+		MspApplyExample example = new MspApplyExample();
+
+		MspApplyExample.Criteria criteria = example.createCriteria();
+		// 条件查询
+		if (StringUtils.isNotEmpty(mspApply.getName())) {
+			criteria.andNameEqualTo(mspApply.getName());
+		}
+		if (StringUtils.isNotEmpty(mspApply.getCreateUser())) {
+			criteria.andCreateUserEqualTo(mspApply.getCreateUser());
+		}
+		if (StringUtils.isNotEmpty(mspApply.getIdentityCard())) {
+			criteria.andIdentityCardEqualTo(mspApply.getIdentityCard());
+		}
+
+
+		return mspApplyMapper.countByExample(example);
+	}
+
 }

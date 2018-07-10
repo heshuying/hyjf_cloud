@@ -5,7 +5,9 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.BorrowRegistExceptionClient;
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BorrowRegistExceptionService;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
@@ -47,7 +49,13 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     private String BANK_BANKCODE;
 
     @Autowired
-    private BorrowRegistExceptionClient borrowRegistExceptionClient;
+    private AmUserClient amUserClient;
+
+    @Autowired
+    private AmTradeClient amTradeClient;
+
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     /**
      * 获取项目类型list,用于筛选条件展示
@@ -57,7 +65,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectList(){
-        return borrowRegistExceptionClient.selectBorrowProjectList();
+        return amTradeClient.selectBorrowProjectList();
     }
 
     /**
@@ -68,7 +76,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public List<BorrowStyleVO> selectBorrowStyleList(){
-        return borrowRegistExceptionClient.selectBorrowStyleList();
+        return amTradeClient.selectBorrowStyleList();
     }
 
     /**
@@ -79,7 +87,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest){
-        return borrowRegistExceptionClient.getRegistCount(borrowRegistListRequest);
+        return amTradeClient.getRegistCount(borrowRegistListRequest);
     }
 
     /**
@@ -90,7 +98,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      */
     @Override
     public List <BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
-        return borrowRegistExceptionClient.selectBorrowRegistList(borrowRegistListRequest);
+        return amTradeClient.selectBorrowRegistList(borrowRegistListRequest);
     }
 
     /**
@@ -103,9 +111,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public JSONObject handleBorrowRegistException(String borrowNid, Integer loginUserId) {
         JSONObject result = new JSONObject();
-        BorrowVO borrowVO = borrowRegistExceptionClient.searchBorrowByBorrowNid(borrowNid);
+        BorrowVO borrowVO = amTradeClient.searchBorrowByBorrowNid(borrowNid);
         if(null != borrowVO){
-            AdminSystemVO adminSystemVO = borrowRegistExceptionClient.getUserInfoById(loginUserId);
+            AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
             // 操作用户id
             borrowVO.setRegistUserId(Integer.valueOf(adminSystemVO.getId()));
             // 操作用户userName
@@ -113,10 +121,11 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
 
             Integer borrowUserId = borrowVO.getUserId();
             logger.info("handleBorrowRegistException::::::::borrowUserId=======[{}]",borrowUserId);
-            BankOpenAccountVO bankOpenAccountVO = borrowRegistExceptionClient.searchBankOpenAccount(borrowUserId);
+            BankOpenAccountVO bankOpenAccountVO = amUserClient.searchBankOpenAccount(borrowUserId);
             if(null != bankOpenAccountVO){
                 logger.info("查询出来借款人银行账户::::::::[{}]",bankOpenAccountVO.getAccount());
-                String borrowStyle = borrowVO.getBorrowStyle();// 項目还款方式
+                // 項目还款方式
+                String borrowStyle = borrowVO.getBorrowStyle();
                 // 是否月标(true:月标, false:天标)
                 boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                         || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
@@ -150,7 +159,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                             result.put("msg", "备案成功！");
                                                             // 更新标的资产信息如果关联计划的话
                                                             //受托支付传4
-                                                            borrowRegistExceptionClient.updateBorrowAsset(borrowVO,4);
+                                                            amTradeClient.updateBorrowAsset(borrowVO,4);
                                                         } else {
                                                             result.put("success", "1");
                                                             result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
@@ -162,7 +171,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                             result.put("msg", "备案成功！");
                                                             // 更新标的资产信息如果关联计划的话
                                                             //非受托支付5
-                                                            borrowRegistExceptionClient.updateBorrowAsset(borrowVO,5);
+                                                            amTradeClient.updateBorrowAsset(borrowVO,5);
 
                                                         } else {
                                                             result.put("success", "1");
@@ -222,7 +231,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                 result.put("success", "0");
                                                 result.put("msg", "备案成功！");
                                                 //受托支付传4
-                                                borrowRegistExceptionClient.updateBorrowAsset(borrowVO,4);
+                                                amTradeClient.updateBorrowAsset(borrowVO,4);
                                             } else {
                                                 result.put("success", "1");
                                                 result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
@@ -234,7 +243,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                 result.put("msg", "备案成功！");
                                                 // 更新标的资产信息如果关联计划的话
                                                 // 非受托支付传5
-                                                borrowRegistExceptionClient.updateBorrowAsset(borrowVO,5);
+                                                amTradeClient.updateBorrowAsset(borrowVO,5);
                                             } else {
                                                 result.put("success", "1");
                                                 result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
@@ -392,7 +401,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         debtRegistBean.setTxAmount(String.valueOf(borrow.getAccount()));// 交易金额
         debtRegistBean.setRate(String.valueOf(borrow.getBorrowApr()));// 年华利率
         if (Validator.isNotNull(borrow.getRepayOrgUserId())) {
-            BankOpenAccountVO account = borrowRegistExceptionClient.searchBankOpenAccount(borrow.getRepayOrgUserId());
+            BankOpenAccountVO account = amUserClient.searchBankOpenAccount(borrow.getRepayOrgUserId());
             if (Validator.isNotNull(account)) {
                 debtRegistBean.setBailAccountId(account.getAccount());
             }
@@ -404,7 +413,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         debtRegistBean.setLogClient(0);
         //备案接口(EntrustFlag和ReceiptAccountId要么都传，要么都不传)
         if(borrow.getEntrustedFlg()==1){
-            String stAccountId = borrowRegistExceptionClient.getStAccountIdByEntrustedUserId(borrow.getEntrustedUserId());
+            String stAccountId = amTradeClient.getStAccountIdByEntrustedUserId(borrow.getEntrustedUserId());
             debtRegistBean.setEntrustFlag(borrow.getEntrustedFlg().toString());
             debtRegistBean.setReceiptAccountId(stAccountId);
         }
@@ -427,6 +436,6 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         borrow.setRegistStatus(registStatus);
         borrow.setStatus(status);
         borrow.setRegistTime(nowDate);
-        return borrowRegistExceptionClient.updateBorrowRegist(borrow,type);
+        return amTradeClient.updateBorrowRegist(borrow,type);
     }
 }

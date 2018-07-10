@@ -115,5 +115,5 @@ public interface MspApplyService {
 	public List<MspAbnormalcreditdetail> getAbnormalCreditDetail(String applyId);
 	public List<MspAbnormalcredit> getAbnormalCredit(String applyId);
 	
-	
+	 public int countByExample(MspApply record);
 }

@@ -93,4 +93,13 @@ public class CouponUserController extends BaseController {
     }
 
 
+    @PostMapping("/insertCouponUser")
+    public CouponUserResponse insertCouponUser(@RequestBody @Valid CouponUserVO couponUserVO) {
+        CouponUserResponse response = new CouponUserResponse();
+        CouponUser couponUser = new CouponUser();
+        BeanUtils.copyProperties(couponUserVO,couponUser);
+        int count = couponUserService.insertCouponUser(couponUser);
+        response.setCount(count);
+        return response;
+    }
 }

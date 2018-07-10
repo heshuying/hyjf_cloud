@@ -2,7 +2,6 @@ package com.hyjf.am.trade.service.impl.coupon;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.MyCouponListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
@@ -14,7 +13,10 @@ import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.trade.service.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.common.cache.CacheUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import java.util.*;
 
 /**
  * 我的优惠券列表
+ *
  * @author hesy
  * @version MyCouponListServiceImpl, v0.1 2018/6/22 19:15
  */
@@ -48,23 +51,24 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
     /**
      * 检索我的优惠券列表
+     *
      * @auther: hesy
      * @date: 2018/6/22
      */
     @Override
-    public List<MyCouponListCustomizeVO> selectUserCouponList(String userId, String usedFlag, Integer limitStart, Integer limitEnd){
+    public List<MyCouponListCustomizeVO> selectUserCouponList(String userId, String usedFlag, Integer limitStart, Integer limitEnd) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("usedFlag", usedFlag);
         param.put("userId", userId);
 
         if (limitStart != null) {
             param.put("limitStart", limitStart);
-        }else {
+        } else {
             param.put("limitStart", -1);
         }
         if (limitEnd != null) {
             param.put("limitEnd", limitEnd);
-        }else {
+        } else {
             param.put("limitEnd", -1);
         }
 
@@ -73,18 +77,19 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
     /**
      * 统计总记录数
+     *
      * @param userId
      * @param usedFlag
      * @return
      */
     @Override
-    public Integer countUserCouponList(String userId, String usedFlag){
+    public Integer countUserCouponList(String userId, String usedFlag) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("usedFlag", usedFlag);
         param.put("userId", userId);
 
-        Integer result =  myCouponListCustomizeMapper.countMyCouponList(param);
-        if(result == null){
+        Integer result = myCouponListCustomizeMapper.countMyCouponList(param);
+        if (result == null) {
             result = 0;
         }
         return result;
@@ -92,6 +97,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
     /**
      * 查询最优优惠券
+     *
      * @author zhangyk
      * @date 2018/6/25 9:58
      */
@@ -227,6 +233,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
 
     /**
      * 可用的优惠券数
+     *
      * @author zhangyk
      * @date 2018/6/25 13:54
      */
@@ -356,10 +363,10 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             /**************逻辑修改 pcc start***************/
             //是否与本金公用
             boolean addFlg = false;
-            if(bestCoupon.getAddFlg()==1&&!"0".equals(money)){
+            if (bestCoupon.getAddFlg() == 1 && !"0".equals(money)) {
                 addFlg = true;
             }
-            if(addFlg){
+            if (addFlg) {
                 continue;
             }
             /**************逻辑修改 pcc end***************/
@@ -381,8 +388,8 @@ public class MyCouponListServiceImpl implements MyCouponListService {
                 continue;
             } else {
                 //CouponBean couponBean = createCouponBean(userCouponConfigCustomize, new CouponBean(), null);
-               // availableCouponList.add(couponBean);
-                count ++;
+                // availableCouponList.add(couponBean);
+                count++;
             }
         }
         // System.out.println("~~~~~~~~~~~~~~~~统计结束~~~~~~~~~~~~~~~~~~"+availableCouponList.size());
@@ -636,9 +643,150 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         return allCount;
     }
 
+    @Override
+    public List<CouponUserForAppCustomizeVO> getMyCouponByPage(MyCouponListRequest requestBean) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("usedFlag", requestBean.getUsedFlag());
+        param.put("userId", requestBean.getUserId());
+
+        if (null != requestBean.getLimitStart()) {
+            param.put("limitStart", requestBean.getLimitStart());
+        } else {
+            param.put("limitStart", -1);
+        }
+        if (null != requestBean.getLimitEnd()) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        } else {
+            param.put("limitEnd", -1);
+        }
+        List<MyCouponListCustomizeVO> list = myCouponListCustomizeMapper.selectMyCouponList(param);
+        List<CouponUserForAppCustomizeVO> couponList = new ArrayList<>();
+        for (MyCouponListCustomizeVO myCouponListCustomizeVO : list) {
+            CouponUserForAppCustomizeVO couponUserForAppCustomizeVO = new CouponUserForAppCustomizeVO();
+
+            //根据项目类型处理转换项目
+            String projectString = this.dealProjectType(myCouponListCustomizeVO.getProjectType());
+            couponUserForAppCustomizeVO.setProjectType(projectString);
+
+            //处理选中的操作平台
+            String clientString = dealOperation(myCouponListCustomizeVO.getCouponSystem());
+            couponUserForAppCustomizeVO.setOperationPlatform(clientString);
+            //处理优惠券面额
+            couponUserForAppCustomizeVO.setCouponQuota(myCouponListCustomizeVO.getCouponQuota() + dealCouponQuota(myCouponListCustomizeVO.getCouponType()));
+            couponUserForAppCustomizeVO.setId(myCouponListCustomizeVO.getId());
+            couponUserForAppCustomizeVO.setCouponType(myCouponListCustomizeVO.getCouponTypeName());
+            couponUserForAppCustomizeVO.setCouponTypeOrigin(myCouponListCustomizeVO.getCouponType());
+            couponUserForAppCustomizeVO.setCouponQuotaOrigin(myCouponListCustomizeVO.getCouponQuota());
+            couponUserForAppCustomizeVO.setEndTime(myCouponListCustomizeVO.getAddTime() + "-" + myCouponListCustomizeVO.getEndTime());
+            couponUserForAppCustomizeVO.setInvestQuota(myCouponListCustomizeVO.getTenderQuota());
+            couponUserForAppCustomizeVO.setInvestTime(myCouponListCustomizeVO.getProjectExpirationType());
+            couponUserForAppCustomizeVO.setCouponName(myCouponListCustomizeVO.getCouponName());
+            couponList.add(couponUserForAppCustomizeVO);
+        }
+        return couponList;
+    }
+
+    /**
+     * 处理优惠券面额
+     *
+     * @param couponType 优惠券类型
+     * @return String
+     */
+    public String dealCouponQuota(String couponType) {
+        String couponQuota = "";
+        if ("2".equals(couponType)) {
+            couponQuota = "%";
+        }
+        return couponQuota;
+    }
+
+    /**
+     * 处理选中的操作平台
+     *
+     * @param operationPlatform
+     * @return
+     */
+    public String dealOperation(String operationPlatform) {
+        String clientString = "";
+        // 操作平台
+        //操作平台
+        Map<String, String> map = CacheUtil.getParamNameMap("CLIENT");
+        // 被选中操作平台
+        String clientSed[] = StringUtils.split(operationPlatform, ",");
+        for (int i = 0; i < clientSed.length; i++) {
+            if ("-1".equals(clientSed[i])) {
+                clientString = clientString + "全部平台";
+                break;
+            } else {
+                for (String key : map.keySet()) {
+                    if (clientSed[i].equals(key)) {
+                        if (i != 0 && clientString.length() != 0) {
+                            clientString = clientString + "、";
+                        }
+                        clientString = clientString + map.get(key);
+                    }
+                }
+            }
+        }
+        if (clientString.contains("Android、iOS")) {
+            clientString = clientString.replace("Android、iOS", "APP");
+        }
+        return clientString;
+    }
+
+    /**
+     * 根据项目类型转换中文项目类型
+     *
+     * @param projectType 项目类型
+     * @return
+     */
+    public String dealProjectType(String projectType) {
+        String projectString = ",";
+        //勾选汇直投，尊享汇，融通宝
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "债权,";
+        }
+        //勾选汇直投  未勾选尊享汇，融通宝
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") == -1) {
+            projectString = projectString + "债权(尊享,优选除外),";
+        }
+        //勾选汇直投，融通宝  未勾选尊享汇
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "债权(尊享除外),";
+        }
+        //勾选汇直投，选尊享汇 未勾选融通宝
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
+            projectString = projectString + "债权(优选除外),";
+        }
+        //勾选尊享汇，融通宝  未勾选直投
+        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "债权(仅限尊享,优选),";
+        }
+        //勾选尊享汇  未勾选直投，融通宝
+        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
+            projectString = projectString + "债权(仅限尊享),";
+        }
+        //勾选尊享汇  未勾选直投，融通宝
+        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "债权(仅限优选),";
+        }
+
+        if (projectType.indexOf("3") != -1) {
+            projectString = projectString + "新手,";
+        }
+    		/*if (projectType.indexOf("5")!=-1) {
+            projectString = projectString + "汇添金,";
+        }*/
+        if (projectType.indexOf("6") != -1) {
+            projectString = projectString + "汇计划,";
+        }
+
+        return projectString.substring(1, projectString.length() - 1);
+    }
 
     /**
      * 比较器
+     *
      * @author zhangyk
      * @date 2018/6/25 11:18
      */

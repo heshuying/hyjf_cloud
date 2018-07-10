@@ -5,25 +5,22 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
-import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.BindLogResponse;
-import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
-import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.BindLogVO;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,7 +235,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     @Override
     public List<AccountTradeVO> selectTradeTypes() {
-        String url = "http://AM-TRADE/am-trade/accounttrade/selectTradeTypes";
+        String url = tradeService + "/accounttrade/selectTradeTypes";
         AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -274,4 +271,284 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+    @Override
+    public  List<AdminCouponRepayMonitorCustomizeVO> selectRecordList(CouponRepayRequest form) {
+        String url = tradeService + "/couponRepayMonitor/selectCouponRepayMonitorPage";
+        AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url,form,AdminCouponRepayMonitorCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public AdminCouponRepayMonitorCustomizeResponse couponRepayMonitorCreatePage(CouponRepayRequest form) {
+        String url = tradeService + "/couponRepayMonitor/CouponRepayMonitorCreatePage";
+        AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url,form,AdminCouponRepayMonitorCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<AdminCouponRepayMonitorCustomizeVO> selectInterestSum(CouponRepayRequest form) {
+        String url = tradeService + "/couponRepayMonitor/selectInterestSum";
+        AdminCouponRepayMonitorCustomizeResponse response = restTemplate.postForEntity(url,form,AdminCouponRepayMonitorCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public UserTransferResponse getRecordList(TransferListRequest form) {
+        UserTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/customertransfer/getRecordList", form, UserTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getPlatformTransferCount(PlatformTransferListRequest request) {
+        Integer count = restTemplate.postForEntity(tradeService + "/platformtransfer/getplatformtransfercount", request, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询平台转账list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> searchPlatformTransferList(PlatformTransferListRequest request) {
+        PlatformTransferResponse response = restTemplate
+                .postForEntity(tradeService + "/platformtransfer/searchplatformtransferlist", request, PlatformTransferResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取项目类型list,用于筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<BorrowProjectTypeVO> selectBorrowProjectList(){
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_project";
+        BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取还款方式list,用于筛选条件展示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<BorrowStyleVO> selectBorrowStyleList(){
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_style";
+        BorrowStyleResponse response = restTemplate.getForEntity(url,BorrowStyleResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取标的列表count,用于前端分页显示条数
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest){
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/get_regist_count";
+        return restTemplate.postForEntity(url,borrowRegistListRequest,Integer.class).getBody();
+    }
+
+    /**
+     * 获取标的备案异常列表
+     * @auth sunpeikai
+     * @param borrowRegistListRequest 筛选条件
+     * @return
+     */
+    @Override
+    public List <BorrowRegistCustomizeVO> selectBorrowRegistList(BorrowRegistListRequest borrowRegistListRequest){
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/select_borrow_regist_list";
+        BorrowRegistCustomizeResponse response = restTemplate.postForEntity(url,borrowRegistListRequest,BorrowRegistCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据borrowNid查询出来异常标
+     * @auth sunpeikai
+     * @param borrowNid 借款编号
+     * @return
+     */
+    @Override
+    public BorrowVO searchBorrowByBorrowNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/search_borrow_by_borrownid/" + borrowNid;
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据受托支付userId查询stAccountId
+     * @auth sunpeikai
+     * @param entrustedUserId 受托支付userId
+     * @return stAccountId
+     */
+    @Override
+    public String getStAccountIdByEntrustedUserId(Integer entrustedUserId) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/get_staccountid_by_entrusteduserid/" + entrustedUserId;
+        String response = restTemplate.getForEntity(url,String.class).getBody();
+        return response;
+    }
+
+    /**
+     * 更新标
+     * @auth sunpeikai
+     * @param borrowVO 标信息
+     * @param type 1更新标的备案 2更新受托支付标的备案
+     * @return
+     */
+    @Override
+    public boolean updateBorrowRegist(BorrowVO borrowVO,Integer type) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowregist_by_type/" + type;
+        Boolean response = restTemplate.postForEntity(url,borrowVO,Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 备案成功看标的是否关联计划，如果关联则更新对应资产表
+     * @auth sunpeikai
+     * @param borrowVO 标信息
+     * @return
+     */
+    @Override
+    public boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
+        String url = "http://AM-TRADE/am-trade/borrow_regist_exception/update_borrowasset/" + status;
+        Boolean response = restTemplate.postForEntity(url,borrowVO,Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 更新账户信息
+     * @auth sunpeikai
+     * @param accountVO 账户信息
+     * @return
+     */
+    @Override
+    public Integer updateAccount(AccountVO accountVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updateaccount";
+        Integer response = restTemplate.postForEntity(url,accountVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountRechargeVO 充值表
+     * @return
+     */
+    @Override
+    public Integer insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountrecharge";
+        Integer response = restTemplate.postForEntity(url,accountRechargeVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountListVO 收支明细
+     * @return
+     */
+    @Override
+    public Integer insertAccountList(AccountListVO accountListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountlist";
+        Integer response = restTemplate.postForEntity(url,accountListVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountWebListVO 网站收支表
+     * @return
+     */
+    @Override
+    public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountlist";
+        Integer response = restTemplate.postForEntity(url,accountWebListVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据账户id查询BankMerchantAccount
+     * @auth sunpeikai
+     * @param accountId 账户id
+     * @return
+     */
+    @Override
+    public BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/searchbankmerchantaccount/" + accountId;
+        BankMerchantAccountResponse response = restTemplate.getForEntity(url,BankMerchantAccountResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新红包账户信息
+     * @auth sunpeikai
+     * @param bankMerchantAccountVO 红包账户信息
+     * @return
+     */
+    @Override
+    public Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updatebankmerchantaccount";
+        Integer response = restTemplate.postForEntity(url,bankMerchantAccountVO,Integer.class).getBody();
+        return response;
+    }
+
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param bankMerchantAccountListVO 红包明细表
+     * @return
+     */
+    @Override
+    public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
+        Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
+        return response;
+    }
 }

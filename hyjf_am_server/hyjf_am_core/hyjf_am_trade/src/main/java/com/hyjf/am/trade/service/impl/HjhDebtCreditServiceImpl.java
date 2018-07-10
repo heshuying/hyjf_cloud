@@ -13,9 +13,12 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +100,34 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         AppCreditDetailCustomizeVO appCreditDetailCustomizeVO = borrowCreditCustomizeMapper.getAppCreditDetailByCreditNid(params);
         return appCreditDetailCustomizeVO;
     }
+
+    /**
+     * 根据债转编号查询债转信息
+     * @param creditNid
+     * @return
+     * @author liubin
+     */
+    @Override
+    public HjhDebtCredit selectHjhDebtCreditByCreditNid(String creditNid) {
+        HjhDebtCreditExample example = new HjhDebtCreditExample();
+        example.createCriteria().andCreditNidEqualTo(creditNid);
+        List<HjhDebtCredit> list = this.hjhDebtCreditMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据PK更新hjhDebtCredit
+     * @param hjhDebtCredit
+     * @return
+     */
+    @Override
+    public int updateHjhDebtCreditByPK(HjhDebtCredit hjhDebtCredit) {
+        return this.hjhDebtCreditMapper.updateByPrimaryKeySelective(hjhDebtCredit);
+    }
+
 
 
 }

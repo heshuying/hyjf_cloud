@@ -28,6 +28,12 @@ public interface CouponConfigClient {
    BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
 
    /**
+    *
+    * @param couponCode
+    * @return
+    */
+   Integer checkCouponSendExcess(String couponCode);
+   /**
     * 查询HJH可用优惠券数量
     * @param request
     * @return

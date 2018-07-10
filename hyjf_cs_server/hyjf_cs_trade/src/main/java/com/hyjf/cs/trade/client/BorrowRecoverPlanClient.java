@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.trade.repay.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 
 import java.util.List;
 

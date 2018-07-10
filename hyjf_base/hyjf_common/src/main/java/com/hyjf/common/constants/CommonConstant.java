@@ -5,19 +5,25 @@ package com.hyjf.common.constants;
  * @version CommonConstant, v0.1 2018/4/25 17:09
  */
 public class CommonConstant {
-    // PC
+
+    /**
+     * 状态
+     */
+    public static final String SUCCESS = "success";
+
+    /**PC*/
     public static final String CLIENT_PC = "0";
 
-    // 微官网
+    /**微官网*/
     public static final String CLIENT_WECHAT = "1";
 
-    // 安卓
+     /**安卓*/
     public static final String CLIENT_ANDROID = "2";
 
-    // IOS
+     /**IOS*/
     public static final String CLIENT_IOS = "3";
 
-    // 其他
+     /** 其他*/
     public static final String CLIENT_OTHER = "4";
 
     /** 短信验证码状态,新验证码 */

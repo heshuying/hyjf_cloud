@@ -9,7 +9,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 逾期還款短信提醒
+ * 标的还款逾期短信提醒
  * @author jijun
  * @version HjhSmsNoticeTask, v0.1 2018/6/26 9:21
  */

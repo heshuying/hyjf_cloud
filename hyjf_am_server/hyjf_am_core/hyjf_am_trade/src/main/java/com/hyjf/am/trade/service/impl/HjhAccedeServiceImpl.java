@@ -8,10 +8,13 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.service.HjhAccedeService;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,5 +99,8 @@ public class HjhAccedeServiceImpl implements HjhAccedeService {
         return null;
     }
 
-
+    @Override
+    public int updateHjhAccedeByPrimaryKey(HjhAccede hjhAccede) {
+        return this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
+    }
 }

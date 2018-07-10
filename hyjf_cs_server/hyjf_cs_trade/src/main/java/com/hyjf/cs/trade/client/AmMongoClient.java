@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.statistics.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 
 /**
  * @Description mongo查询类

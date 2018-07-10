@@ -1,27 +1,28 @@
 package com.hyjf.common.cache;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang.StringUtils;
-
-import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 /**
  * redis工具类
  * @author dxj
  * @version RedisUtils, v0.1 2018/3/27 15:43
  */
 public class RedisUtils {
+    private static final Logger logger = LoggerFactory.getLogger(RedisUtils.class);
     private static JedisPool pool = null;
 
     private static ThreadLocal<JedisPool> poolThreadLocal = new ThreadLocal<JedisPool>();
@@ -916,4 +917,31 @@ public class RedisUtils {
         return result;
     }
 
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    /**
+     * Redis中From队列中的成员移动到To队列中（队头→队尾）
+     * @param queueNameFrom
+     * @param queueNameTo
+     * @return moveCount
+     */
+    public static long lpoprpush(String queueNameFrom, String queueNameTo) {
+        String queueValue;
+        long moveCount = 0;//移动成员数
+        // from队列 → to队列
+        while(true){
+            queueValue = RedisUtils.lpop(queueNameFrom);//队头取出成员
+            if (queueValue == null) {
+                break;//退出循环
+            }
+            RedisUtils.rightpush(queueNameTo, queueValue);//队尾压入成员
+            moveCount += 1;//移动成员数+1
+            // 队列中无From成员时
+            if (moveCount == 1) {
+                logger.info("l[" + queueNameFrom + "]→[" + queueNameTo + "]r" + " : ");
+            }
+            logger.info("   (" + moveCount + ") " + queueValue);
+        }
+        return moveCount;
+    }
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 }

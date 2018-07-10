@@ -1,8 +1,7 @@
 package com.hyjf.am.user.mq.transactionmq;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.service.UserService;
+import java.util.List;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.mq.base.Consumer;
+import com.hyjf.am.user.service.UserService;
 
 /**
  * @author xiasq

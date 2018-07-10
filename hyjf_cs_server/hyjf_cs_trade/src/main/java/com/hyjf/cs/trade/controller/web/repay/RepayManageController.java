@@ -45,7 +45,7 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "用户待还款列表", notes = "用户待还款列表")
     @PostMapping(value = "/repay_wait_list", produces = "application/json; charset=utf-8")
     public WebResult<List<RepayListCustomizeVO>> selectRepayWaitList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
-        WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
+        WebResult<List<RepayListCustomizeVO>> result = new WebResult<>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("用户待还款列表开始，userId:{}", userVO.getUserId());
 
@@ -183,6 +183,11 @@ public class RepayManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 还款详情页面数据
+     * @auther: hesy
+     * @date: 2018/7/9
+     */
     @ApiOperation(value = "还款详情页面数据", notes = "还款详情页面数据")
     @PostMapping(value = "/repay_detail", produces = "application/json; charset=utf-8")
     public WebResult repayDetail(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){

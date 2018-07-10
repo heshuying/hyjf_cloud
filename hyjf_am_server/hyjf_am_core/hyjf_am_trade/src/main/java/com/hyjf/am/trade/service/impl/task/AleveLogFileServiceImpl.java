@@ -3,6 +3,18 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
@@ -12,10 +24,16 @@ import com.hyjf.am.trade.dao.mapper.auto.EveLogMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.AleveCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.ManualReverseCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
+import com.hyjf.am.trade.dao.model.auto.AleveLog;
+import com.hyjf.am.trade.dao.model.auto.AleveLogExample;
+import com.hyjf.am.trade.dao.model.auto.EveLog;
+import com.hyjf.am.trade.dao.model.auto.EveLogExample;
 import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
-import com.hyjf.am.trade.mq.DownloadFileProducer;
-import com.hyjf.am.trade.mq.Producer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.task.AleveLogFileService;
 import com.hyjf.am.trade.utils.FileUtil;
@@ -25,17 +43,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author wangjun
@@ -113,12 +120,12 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
                     params.put("filePathEve", systemConfig.getEveFileName());
                     params.put("filePathAleve", systemConfig.getAleveFileName());
                     try {
-                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        downloadFileProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
                     }
                     try {
-                        downloadFileProducer.messageSend(new Producer.MassageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                        downloadFileProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
                     }

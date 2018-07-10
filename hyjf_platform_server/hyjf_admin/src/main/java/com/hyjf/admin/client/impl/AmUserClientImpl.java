@@ -2,17 +2,13 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.user.AccountChinapnrResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,6 +25,9 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Value("${am.user.service.name}")
+	private String userService;
 
 	/**
 	 * 根据userName查询user信息
@@ -84,10 +83,37 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public UserVO getUserByUserName(String loginUserName) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/findByCondition/" + loginUserName, UserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据userId查询用户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserVO findUserById(final int userId) {
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 	/**
 	 * 根据userId查询用户信息
-	 * @auth sunpeikai
-	 * @param
+	 *
+	 * @param userId
 	 * @return
 	 */
 	@Override
@@ -99,21 +125,67 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
 	/**
-	 * 根据userId查询用户
+	 * 根据userId列表查询user列表
 	 * @auth sunpeikai
-	 * @param
+	 * @param userIds 用户id列表
 	 * @return
 	 */
 	@Override
-	public UserVO findUserById(int userId) {
+	public List<UserVO> findUserListByUserIds(String userIds) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+				.postForEntity("http://AM-USER/am-user/platformtransfer/finduserlistbyuserids",userIds, UserResponse.class).getBody();
 		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 利用borrowNid查询出来的异常标的借款人userId查询银行账户
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
+		String url = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
+		if(response != null){
 			return response.getResult();
 		}
 		return null;
 	}
 
+	/**
+	 * 根据用户名获取自定义属性的user信息
+	 * @auth sunpeikai
+	 * @param userName 用户名
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO getUserInfoCustomizeByUserName(String userName) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserName/" + userName;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if(response != null){
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户id查询自定义用户信息
+	 * @auth sunpeikai
+	 * @param userId 用户名
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeVO getUserInfoCustomizeByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
+		if(response != null){
+			return response.getResult();
+		}
+		return null;
+	}
 }

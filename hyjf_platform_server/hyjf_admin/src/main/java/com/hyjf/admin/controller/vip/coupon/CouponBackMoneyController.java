@@ -110,4 +110,79 @@ public class CouponBackMoneyController extends BaseController {
         }
         return new AdminResult<ListResult<CouponTenderVo>>(lrs);
     }
+
+    @ApiOperation(value = "页面初始化", notes = "汇计划体验金回款使用列表")
+    @PostMapping("/backmoneyty/hjh/init")
+    public AdminResult<ListResult<CouponTenderVo>> couponHjhTyListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderVo couponTenderHztVo = new CouponTenderVo();
+        ListResult<CouponTenderVo> lrs = new ListResult<CouponTenderVo>();
+        // 项目状态
+        Map<String, String> list =  CacheUtil.getParamNameMap(CustomConstants.COUPON_RECIVE_STATUS);
+        couponTenderHztVo.setCouponReciveStatusList(list);
+        couponBackMoneyCustomize.setCouponType("1");
+        Integer count = this.couponBackMoneyService.countRecordHjhTY(couponBackMoneyCustomize);
+        if (count != null && count > 0) {
+            Integer start = couponBackMoneyCustomize.getLimitStart();
+            Integer end = couponBackMoneyCustomize.getLimitEnd();
+            couponBackMoneyCustomize.setLimitStart(start);
+            couponBackMoneyCustomize.setLimitEnd(end);
+            List<CouponBackMoneyCustomize>  recordList = this.couponBackMoneyService.getRecordListHjhTY(couponBackMoneyCustomize);
+            String recoverInterest = this.couponBackMoneyService.queryHjhRecoverInterestTotle(couponBackMoneyCustomize);
+            String investTotal = this.couponBackMoneyService.queryHjhInvestTotal(couponBackMoneyCustomize);
+            couponTenderHztVo.setRecoverInterest(recoverInterest);
+            couponTenderHztVo.setInvestTotal(investTotal);
+            couponTenderHztVo.setRecordList(recordList);
+        }
+        return new AdminResult<ListResult<CouponTenderVo>>(lrs);
+    }
+
+    @ApiOperation(value = "页面初始化", notes = "汇计划代金券回款使用列表")
+    @PostMapping("/backmoneydj/hjh/init")
+    public AdminResult<ListResult<CouponTenderVo>> coupontHjhDjListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderVo couponTenderHztVo = new CouponTenderVo();
+        ListResult<CouponTenderVo> lrs = new ListResult<CouponTenderVo>();
+        // 项目状态
+        Map<String, String> list =  CacheUtil.getParamNameMap(CustomConstants.COUPON_RECIVE_STATUS);
+        couponTenderHztVo.setCouponReciveStatusList(list);
+        couponBackMoneyCustomize.setCouponType("3");
+        Integer count = this.couponBackMoneyService.countRecordHjhDJ(couponBackMoneyCustomize);
+        if (count != null && count > 0) {
+            Integer start = couponBackMoneyCustomize.getLimitStart();
+            Integer end = couponBackMoneyCustomize.getLimitEnd();
+            couponBackMoneyCustomize.setLimitStart(start);
+            couponBackMoneyCustomize.setLimitEnd(end);
+            List<CouponBackMoneyCustomize>  recordList = this.couponBackMoneyService.getRecordListHjhDJ(couponBackMoneyCustomize);
+            String recoverInterest = this.couponBackMoneyService.queryHjhRecoverInterestTotle(couponBackMoneyCustomize);
+            String investTotal = this.couponBackMoneyService.queryHjhInvestTotal(couponBackMoneyCustomize);
+            couponTenderHztVo.setRecoverInterest(recoverInterest);
+            couponTenderHztVo.setInvestTotal(investTotal);
+            couponTenderHztVo.setRecordList(recordList);
+        }
+        return new AdminResult<ListResult<CouponTenderVo>>(lrs);
+    }
+
+    @ApiOperation(value = "页面初始化", notes = "汇计划加息券回款使用列表")
+    @PostMapping("/backmoneyjx/hjh/init")
+    public AdminResult<ListResult<CouponTenderVo>> couponHjhJxListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderVo couponTenderHztVo = new CouponTenderVo();
+        ListResult<CouponTenderVo> lrs = new ListResult<CouponTenderVo>();
+        // 项目状态
+        Map<String, String> list =  CacheUtil.getParamNameMap(CustomConstants.COUPON_RECIVE_STATUS);
+        couponTenderHztVo.setCouponReciveStatusList(list);
+        couponBackMoneyCustomize.setCouponType("2");
+        Integer count = this.couponBackMoneyService.countRecordHjhJX(couponBackMoneyCustomize);
+        if (count != null && count > 0) {
+            Integer start = couponBackMoneyCustomize.getLimitStart();
+            Integer end = couponBackMoneyCustomize.getLimitEnd();
+            couponBackMoneyCustomize.setLimitStart(start);
+            couponBackMoneyCustomize.setLimitEnd(end);
+            List<CouponBackMoneyCustomize>  recordList = this.couponBackMoneyService.getRecordListHjhJX(couponBackMoneyCustomize);
+            String recoverInterest = this.couponBackMoneyService.queryHjhRecoverInterestTotle(couponBackMoneyCustomize);
+            String investTotal = this.couponBackMoneyService.queryHjhInvestTotal(couponBackMoneyCustomize);
+            couponTenderHztVo.setRecoverInterest(recoverInterest);
+            couponTenderHztVo.setInvestTotal(investTotal);
+            couponTenderHztVo.setRecordList(recordList);
+        }
+        return new AdminResult<ListResult<CouponTenderVo>>(lrs);
+    }
 }

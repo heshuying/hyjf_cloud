@@ -4,7 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.vo.statistics.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 
 import java.util.List;
@@ -20,4 +20,6 @@ public interface WebsiteService {
     AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList);
 
     String selectBorrowInvestAccount(AccountWebListVO accountWebList);
+
+    double getCompanyYuE(String companyId);
 }
