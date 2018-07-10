@@ -6,6 +6,7 @@ package com.hyjf.admin.client.impl;
 import java.util.List;
 
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.resquest.admin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +21,6 @@ import com.hyjf.am.response.trade.AccountTradeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
-import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
-import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
-import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
-import com.hyjf.am.resquest.admin.CustomerTransferRequest;
-import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
-import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
-import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
-import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
-import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
@@ -732,6 +718,35 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url = "http://AM-TRADE/am-trade/subcommission/accountweblistbyorderid/" + orderId;
         Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
         return response;
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getSubCommissionCount(SubCommissionRequest request) {
+        String url = "http://AM-TRADE/am-trade/subcommission/getsubcommissioncount";
+        Integer response = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request) {
+        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionlist";
+        SubCommissionResponse response = restTemplate.postForEntity(url,request,SubCommissionResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
     }
 
 }

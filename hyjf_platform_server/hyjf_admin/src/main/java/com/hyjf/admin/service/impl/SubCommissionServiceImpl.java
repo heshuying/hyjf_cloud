@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
 import com.hyjf.am.vo.admin.SubCommissionVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -86,7 +87,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         }
         //校验参数
         this.checkParam(request);
-// 调用江西银行接口分佣
+        // 调用江西银行接口分佣
         try {
             BankCallBean bean = new BankCallBean();
             String channel = BankCallConstant.CHANNEL_PC;
@@ -155,19 +156,51 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 if (!updateFlag) {
                     logger.info("调用银行成功后,更新数据失败");
                     // 转账成功，更新状态失败
-                    //ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "txAmount", "feeshare.transfer.success", "调用银行成功后,更新数据失败");
-                    //modelAndView.addObject(SubCommissionDefine.FORM, form);
+                    CheckUtil.check(false,MsgEnum.ERR_BANK_UPDATE_AFTER_CALL);
                     return jsonObject;
                 }
             }
         } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
-            //ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "txAmount", "feeshare.transfer.exception", "转账发生异常");
+            CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
         }
-        return null;
+        return jsonObject;
     }
 
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getSubCommissionCount(SubCommissionRequest request) {
+        return amTradeClient.getSubCommissionCount(request);
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request) {
+        return amTradeClient.searchSubCommissionList(request);
+    }
+
+    /**
+     * 根据nameClass获取数据字典表的下拉列表
+     *
+     * @param
+     * @return
+     * @auth sunpeikai
+     */
+    @Override
+    public List<ParamNameVO> searchParamNameList(String nameClass) {
+        return amConfigClient.getParamNameList(nameClass);
+    }
     /**
      * 查询账户可用余额
      * @auth sunpeikai
@@ -403,33 +436,32 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     // 如果是线上员工或线下员工，推荐人的userId和username不插
                     if (userVO != null && (attribute == 2 || attribute == 3)) {
                         // 查找用户信息
-                        //EmployeeCustomizeVO employeeCustomizeVO =
-                        //EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(receiveUserId);
-  /*                      if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }*/
+                        EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
+                        if (employeeCustomizeVO != null) {
+                            accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
+                            accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
+                            accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
+                        }
                     }
                     // 如果是无主单，全插
                     else if (userVO != null && (attribute == 1)) {
                         // 查找用户推荐人
-/*                        EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }*/
+                        EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
+                        if (employeeCustomizeVO != null) {
+                            accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
+                            accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
+                            accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
+                        }
                     }
                     // 如果是有主单
                     else if (userVO != null && (attribute == 0)) {
                         // 查找用户推荐人
-/*                        EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }*/
+                        EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
+                        if (employeeCustomizeVO != null) {
+                            accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
+                            accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
+                            accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
+                        }
                     }
                 }
                 accountWebList.setTruename(userInfo.getTruename());
