@@ -1,12 +1,16 @@
 package com.hyjf.admin.service.impl.coupon;
 
 import com.hyjf.admin.client.CouponTenderClient;
+import com.hyjf.admin.controller.vip.coupon.CouponTenderHjhController;
 import com.hyjf.admin.service.coupon.CouponTenderHjhService;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,7 @@ import java.util.Map;
  */
 @Service
 public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
+    private Logger logger = LoggerFactory.getLogger(CouponTenderHjhServiceImpl.class);
     @Autowired
     private CouponTenderClient couponTenderClient;
 
@@ -90,5 +95,69 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
             return couponTenderResponse.getCouponRecoverList();
         }
         return null;
+    }
+
+    @Override
+    public CouponTenderDetailVo dealDetail(CouponTenderDetailVo detail, Map<String, String> map) {
+
+        //被选中操作平台
+        String clientString = "";
+        if(null != detail){
+
+            //被选中操作平台
+            String clientSed[] = StringUtils.split(detail.getCouponSystem(), ",");
+            for(int i=0 ; i< clientSed.length;i++){
+                if("-1".equals(clientSed[i])){
+                    clientString=clientString+"不限";
+                    break;
+                }else{
+                    for (String key : map.keySet()) {
+                        logger.info("key= "+ key + " and value= " + map.get(key));
+                        if(clientSed[i].equals(key)){
+                            if(i!=0&&clientString.length()!=0){
+                                clientString=clientString+"/";
+                            }
+                            clientString=clientString+map.get(key);
+
+                        }
+                    }
+                }
+            }
+            detail.setCouponSystem(clientString);
+            //被选中项目类型
+            String projectString = "";
+            //被选中项目类型
+            String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
+            if(detail.getProjectType().indexOf("-1")!=-1){
+                projectString="所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+            }else{
+                projectString="所有";
+                for (String project : projectSed) {
+                    if("1".equals(project)){
+                        projectString=projectString+"汇直投/";
+                    }
+                    if("2".equals(project)){
+                        projectString=projectString+"汇消费/";
+                    }
+                    if("3".equals(project)){
+                        projectString=projectString+"新手汇/";
+                    }
+                    if("4".equals(project)){
+                        projectString=projectString+"尊享汇/";
+                    }
+                    if("5".equals(project)){
+                        projectString=projectString+"汇添金/";
+                    }
+                    if("6".equals(project)){
+                        projectString=projectString+"汇计划/";
+                    }
+                }
+                projectString = StringUtils.removeEnd(
+                        projectString, "/");
+                projectString=projectString+"项目";
+            }
+            detail.setProjectType("适用"+projectString);
+        }
+        return detail;
     }
 }

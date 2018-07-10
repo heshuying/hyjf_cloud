@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.coupon;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 
 import java.util.List;
@@ -18,4 +19,11 @@ public interface MyCouponListService {
     BestCouponListVO selectBestCouponList(MyCouponListRequest request);
 
     Integer countAvaliableCoupon(MyCouponListRequest request);
+
+    /**
+     * APP获取我的优惠券分页数据
+     * @param requestBean 参数
+     * @return list
+     */
+    List<CouponUserForAppCustomizeVO> getMyCouponByPage(MyCouponListRequest requestBean);
 }
