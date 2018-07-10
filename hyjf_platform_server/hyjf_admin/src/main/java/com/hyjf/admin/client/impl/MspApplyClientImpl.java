@@ -55,7 +55,7 @@ public class MspApplyClientImpl implements MspApplyClient{
 	@Override
 	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/updateAction" ,mspApplytRequest,
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -163,7 +163,7 @@ public class MspApplyClientImpl implements MspApplyClient{
 	@Override
 	public MspResponse updateAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/updateAction" ,mspRequest,
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/insertAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
