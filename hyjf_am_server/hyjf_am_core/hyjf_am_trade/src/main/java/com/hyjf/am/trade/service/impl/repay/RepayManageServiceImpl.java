@@ -9,6 +9,8 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.repay.BankRepayFreezeLogService;
 import com.hyjf.am.trade.service.repay.RepayManageService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -18,8 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +38,8 @@ import java.util.Map;
 @Service
 public class RepayManageServiceImpl extends BaseServiceImpl implements RepayManageService {
     private static final Logger logger = LoggerFactory.getLogger(RepayManageServiceImpl.class);
+
+    public static JedisPool pool = RedisUtils.getPool();
 
     @Autowired
     BankRepayFreezeLogService bankRepayFreezeLogService;
@@ -974,6 +982,119 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         AccountListExample accountListExample = new AccountListExample();
         accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("repay_success");
         return this.accountListMapper.countByExample(accountListExample);
+    }
+
+    @Override
+    public boolean updateBorrowCreditStautus(String borrowNid) {
+        Borrow borrow = getBorrow(borrowNid);
+        String planNid = borrow.getPlanNid();
+        BigDecimal rollBackAccount = BigDecimal.ZERO;
+        if (StringUtils.isNotBlank(planNid)) {//计划标的
+            HjhDebtCreditExample example = new HjhDebtCreditExample();
+            List<Integer> list = new ArrayList<>();
+            list.add(0);
+            list.add(1);
+            example.createCriteria().andBorrowNidEqualTo(borrowNid).andCreditStatusIn(list);
+            List<HjhDebtCredit> hjhDebtCreditList = hjhDebtCreditMapper.selectByExample(example);
+            String rollBackPlanNid = null;
+            if (hjhDebtCreditList != null && hjhDebtCreditList.size() > 0) {
+                for (HjhDebtCredit hjhDebtCredit : hjhDebtCreditList) {
+                    logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "===================");
+                    BigDecimal creditPrice = hjhDebtCredit.getCreditPrice();//已承接金额
+                    BigDecimal liquidationFairValue = hjhDebtCredit.getLiquidationFairValue();//清算时债权价值
+                    BigDecimal resultAmount = liquidationFairValue.subtract(creditPrice);//回滚金额
+                    rollBackAccount = rollBackAccount.add(resultAmount);
+                    hjhDebtCredit.setCreditStatus(3);
+                    //更新债权结束时间 add by cwyang 2018-4-2
+                    hjhDebtCredit.setEndTime(GetDate.getNowTime10());
+                    rollBackPlanNid = hjhDebtCredit.getPlanNidNew();
+                    this.hjhDebtCreditMapper.updateByPrimaryKey(hjhDebtCredit);
+                    String planOrderId = hjhDebtCredit.getPlanOrderId();//获得订单号
+                    HjhAccedeExample accedeExample = new HjhAccedeExample();
+                    accedeExample.createCriteria().andAccedeOrderIdEqualTo(planOrderId);
+                    List<HjhAccede> accedeList = this.hjhAccedeMapper.selectByExample(accedeExample);
+                    HjhAccede hjhAccede = accedeList.get(0);
+                    hjhAccede.setCreditCompleteFlag(2);//将清算状态置为2,以便2次清算
+                    this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
+                    logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "，订单号：" + planOrderId + "===================");
+                }
+            }
+            //回滚开放额度 add by cwyang 2017-12-25
+            if (StringUtils.isNotBlank(rollBackPlanNid)) {
+                rollBackAccedeAccount(rollBackPlanNid, rollBackAccount);
+            }
+        } else {//直投标的
+            BorrowCreditExample example = new BorrowCreditExample();
+            BorrowCreditExample.Criteria cra = example.createCriteria();
+            cra.andBidNidEqualTo(borrowNid);
+            cra.andCreditStatusEqualTo(0);
+            List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(example);
+            if (borrowCreditList != null && borrowCreditList.size() > 0) {
+                for (BorrowCredit borrowCredit : borrowCreditList) {
+                    borrowCredit.setCreditStatus(3);
+                    this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 回滚开放额度
+     */
+    private void rollBackAccedeAccount(String planNid, BigDecimal rollBackAccount) {
+        HjhPlanExample example = new HjhPlanExample();
+        example.createCriteria().andPlanNidEqualTo(planNid);
+        List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
+        if (planList != null && planList.size() > 0) {
+            for (HjhPlan hjhPlan : planList) {
+                HjhPlan hjhPlanParam = new HjhPlan();
+                hjhPlanParam.setPlanNid(hjhPlan.getPlanNid());
+                hjhPlanParam.setAvailableInvestAccount(rollBackAccount);
+                this.hjhPlanCustomizeMapper.updateRepayPlanAccount(hjhPlanParam);
+                redisSub(RedisConstants.HJH_PLAN + hjhPlan.getPlanNid(), rollBackAccount.toString());//增加redis相应计划可投金额
+            }
+        }
+
+    }
+
+    /**
+     * 并发情况下保证设置一个值
+     *
+     * @param key
+     * @param value
+     */
+    private void redisSub(String key, String value) {
+
+        Jedis jedis = pool.getResource();
+
+        while ("OK".equals(jedis.watch(key))) {
+            List<Object> results = null;
+
+            String balance = jedis.get(key);
+            BigDecimal bal = new BigDecimal(0);
+            if (balance != null) {
+                bal = new BigDecimal(balance);
+            }
+            BigDecimal val = new BigDecimal(value);
+
+            Transaction tx = jedis.multi();
+            String valbeset = bal.subtract(val).toString();
+            tx.set(key, valbeset);
+            results = tx.exec();
+            if (results == null || results.isEmpty()) {
+                jedis.unwatch();
+            } else {
+                String ret = (String) results.get(0);
+                if (ret != null && ret.equals("OK")) {
+                    // 成功后
+                    break;
+                } else {
+                    jedis.unwatch();
+                }
+            }
+        }
     }
 
 }

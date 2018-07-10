@@ -52,6 +52,17 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         return user;
     }
+
+    /**
+     * 根据userid查询用户
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public UserVO getUserByUserId(Integer userId){
+        return amUserClient.findUserById(userId);
+    }
+
     /**
      * 获取用户在银行的开户信息
      * @param userId

@@ -1,29 +1,37 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.trade.BankRepayFreezeLogRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.bean.repay.*;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayManageService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +74,8 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     HjhDebtCreditRepayClient hjhDebtCreditRepayClient;
     @Autowired
     HjhDebtCreditClient hjhDebtCreditClient;
+    @Autowired
+    BankRepayFreezeLogClient bankRepayFreezeLogClient;
 
     /**
      * 请求参数校验
@@ -191,7 +201,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         // 还款总期数
         int periodTotal = borrow.getBorrowPeriod();
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
-            RepayBean repay = this.calculateRepay(Integer.parseInt(userId), borrow);
+            RepayBean repay = this.calculateRepay(borrow);
             form.setRepayPeriod("0");
             form.setManageFee(repay.getRepayFee().toString());
             form.setRepayTotal(repay.getRepayAccountAll().toString()); // 计算的是还款总额
@@ -348,7 +358,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             form.setUserRepayList(userRepayList);
         } else {
             // 计算分期的项目还款信息
-            RepayBean repayByTerm = this.calculateRepayByTerm(Integer.parseInt(userId), borrow);
+            RepayBean repayByTerm = this.calculateRepayByTerm(borrow);
             // 计算当前还款期数
             int repayPeriod = periodTotal - repayByTerm.getRepayPeriod() + 1;
             // 如果用户不是还款最后一期
@@ -555,7 +565,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     }
 
-    public RepayBean calculateRepay(int userId, BorrowVO borrow) throws ParseException {
+    public RepayBean calculateRepay(BorrowVO borrow) throws ParseException {
 
         RepayBean repay = new RepayBean();
         // 获取还款总表数据
@@ -1596,11 +1606,9 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     /**
      * 计算多期的总的还款信息
      *
-     * @param userId
-     * @return
      * @throws ParseException
      */
-    public RepayBean calculateRepayByTerm(int userId, BorrowVO borrow) throws ParseException {
+    public RepayBean calculateRepayByTerm(BorrowVO borrow) throws ParseException {
 
         RepayBean repay = new RepayBean();
         // 获取还款总表数据
@@ -3172,16 +3180,24 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         borrowRepayPlan.setAdvanceStatus(0);
     }
 
-    /**
-     * 还款申请校验
-     * @param requestBean
-     */
+   /**
+    * 还款申请校验
+    * @auther: hesy
+    * @date: 2018/7/10
+    */
     @Override
-    public RepayBean checkForRepayRequest(RepayRequest requestBean, WebViewUser user){
+    public RepayBean checkForRepayRequest(RepayRequest requestBean, WebViewUserVO user, int flag){
         RepayBean repayByTerm = null;
         if(StringUtils.isBlank(requestBean.getBorrowNid()) || StringUtils.isBlank(requestBean.getPassword())){
             throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
         }
+        // 平台密码校验
+        UserVO userVO = getUserByUserId(user.getUserId());
+        String mdPassword = MD5.toMD5Code(requestBean.getPassword() + userVO.getSalt());
+        if (!mdPassword.equals(userVO.getPassword())) {
+            throw  new ReturnMessageException(MsgEnum.ERR_PASSWORD_INVALID);
+        }
+
         // 开户校验
         if(!user.isOpenAccount()){
             throw  new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -3191,20 +3207,33 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             throw  new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
 
-        AccountVO accountVO = getAccountByUserId(user.getUserId());
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
+        if (!tranactionSetFlag) {//设置失败
+            repayByTerm = new RepayBean();
+            repayByTerm.setFlag(1);//校验失败
+            repayByTerm.setMessage("系统繁忙,请5分钟后重试.......");
+            return repayByTerm;
+        }
 
+        AccountVO accountVO = getAccountByUserId(user.getUserId());
         try {
             // 一次性还款余额校验
             if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
                 BigDecimal repayTotal = this.searchRepayTotal(user.getUserId(), borrow);
                 if (repayTotal.compareTo(accountVO.getBalance()) == 0 || repayTotal.compareTo(accountVO.getBalance()) == -1) {
-                    // 查询用户在银行电子账户的余额
-                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
-                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
-                        // ** 用户符合还款条件，可以还款 *//*
-                        repayByTerm = this.calculateRepay(user.getUserId(), borrow);
-                    } else {
-                        throw new ReturnMessageException(MsgEnum.STATUS_CE000016);
+                    if(flag == 1){
+                        repayByTerm = this.calculateRepay(borrow);
+                        repayByTerm.setRepayUserId(user.getUserId());
+                    }else{
+                        // 查询用户在银行电子账户的余额
+                        BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+                        if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                            // ** 用户符合还款条件，可以还款 *//*
+                            repayByTerm = this.calculateRepay(borrow);
+                            repayByTerm.setRepayUserId(user.getUserId());
+                        } else {
+                            throw new ReturnMessageException(MsgEnum.STATUS_CE000016);
+                        }
                     }
                 } else {
                     throw new ReturnMessageException(MsgEnum.STATUS_CE000015);
@@ -3213,13 +3242,20 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             else {
                 BigDecimal repayTotal = this.searchRepayByTermTotal(borrow, borrow.getBorrowPeriod());
                 if (repayTotal.compareTo(accountVO.getBalance()) == 0 || repayTotal.compareTo(accountVO.getBalance()) == -1) {
-                    // 查询用户在银行电子账户的可用余额
-                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
-                    if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
-                        // ** 用户符合还款条件，可以还款 *//*
-                        repayByTerm = this.calculateRepayByTerm(user.getUserId(), borrow);
-                    } else {
-                        throw new ReturnMessageException(MsgEnum.STATUS_CE000016);
+                    if(flag == 1){
+                        repayByTerm = this.calculateRepayByTerm(borrow);
+                        repayByTerm.setRepayUserId(user.getUserId());
+                    }else{
+                        // 查询用户在银行电子账户的可用余额
+                        BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+                        if (repayTotal.compareTo(userBankBalance) == 0 || repayTotal.compareTo(userBankBalance) == -1) {
+                            // ** 用户符合还款条件，可以还款 *//*
+                            repayByTerm = this.calculateRepayByTerm(borrow);
+                            repayByTerm.setRepayUserId(user.getUserId());
+                        } else {
+                            throw new ReturnMessageException(MsgEnum.STATUS_CE000016);
+                        }
+
                     }
                 } else {
                     throw new ReturnMessageException(MsgEnum.STATUS_CE000015);
@@ -3233,11 +3269,35 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         return repayByTerm;
     }
 
+    /**
+     * 还款申请回调数据更新
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean){
+        RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
+        requestBean.setRepayBeanData(JSON.toJSONString(requestBean));
+        requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
+
+        return repayManageClient.repayRequestUpdate(requestBean);
+    }
+
+    /**
+     * 统计待还款总额（不分期）
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
     public BigDecimal searchRepayTotal(int userId, BorrowVO borrow) throws ParseException {
-        RepayBean RepayBean = this.calculateRepay(userId, borrow);
+        RepayBean RepayBean = this.calculateRepay(borrow);
         return RepayBean.getRepayAccountAll();
     }
 
+    /**
+     * 统计待还款总额（分期）
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
     public BigDecimal searchRepayByTermTotal(BorrowVO borrow, int periodTotal) throws ParseException {
         BorrowRepayVO borrowRepay = borrowRepayClient.getBorrowRepay(borrow.getBorrowNid());
         BigDecimal repayPlanTotal = new BigDecimal(0);
@@ -3289,5 +3349,51 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             }
         }
         return false;
+    }
+
+    /**
+     * 校验重复还款
+     * @param userId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public boolean checkRepayInfo(Integer userId, String borrowNid) {
+        BankRepayFreezeLogVO log = bankRepayFreezeLogClient.getFreezeLogValid(userId, borrowNid);
+        if(log == null){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 添加冻结日志
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public Integer addFreezeLog(Integer userId, String orderId, String account, String borrowNid, BigDecimal repayTotal,
+                                String userName){
+        BankRepayFreezeLogRequest requestBean = new BankRepayFreezeLogRequest();
+        requestBean.setBorrowNid(borrowNid);
+        requestBean.setAccount(account);
+        requestBean.setAmount(repayTotal);
+        requestBean.setOrderId(orderId);
+        requestBean.setUserId(userId);
+        requestBean.setUserName(userName);
+        return bankRepayFreezeLogClient.addFreezeLog(requestBean);
+    }
+
+    /**
+     * 删除冻结日志
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public Integer deleteFreezeLogByOrderId(String orderId){
+        if(StringUtils.isBlank(orderId)){
+            return 0;
+        }
+        return bankRepayFreezeLogClient.deleteFreezeLogByOrderId(orderId);
     }
 }
