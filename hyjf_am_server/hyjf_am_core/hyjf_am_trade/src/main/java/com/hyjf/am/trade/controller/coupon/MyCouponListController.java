@@ -2,8 +2,8 @@ package com.hyjf.am.trade.controller.coupon;
 
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
@@ -98,5 +98,29 @@ public class MyCouponListController extends BaseController {
         responseBean.setResultList(resultList);
 
         return responseBean;
+    }
+
+    /**
+     * 查询汇计划最优优惠券
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/selectHJHBestCoupon", method = RequestMethod.POST)
+    public MyBestCouponListResponse selectHJHBestCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
+
+        BestCouponListVO result = myCouponListService.selectHJHBestCoupon(requestBean);
+        responseBean.setResult(result);
+        return responseBean;
+    }
+
+    /**
+     * 获取当前标的可用优惠券数量
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/getHJHUserCouponAvailableCount", method = RequestMethod.POST)
+    public Integer getHJHUserCouponAvailableCount(@RequestBody @Valid MyCouponListRequest requestBean) {
+        return myCouponListService.getHJHUserCouponAvailableCount(requestBean);
     }
 }

@@ -3,11 +3,16 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.admin.AdminBorrowCreditResponse;
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
 import com.hyjf.am.response.trade.BorrowCreditResponse;
+import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
 import com.hyjf.am.trade.service.BorrowCreditService;
+import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.common.util.CommonUtils;
@@ -80,6 +85,38 @@ public class BorrowCreditController extends BaseController{
     		response.setResultList(CommonUtils.convertBeanList(borrowCredits, BorrowCreditVO.class));
     	}
     	return response;
+    }
+
+    /**
+     * admin: 查询汇转让列表
+     * @author zhangyk
+     * @date 2018/7/9 16:50
+     */
+    @PostMapping("/getBorrowCreditList4admin")
+    public AdminBorrowCreditResponse getBorrowCreditList4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditResponse response = new AdminBorrowCreditResponse();
+        List<AdminBorrowCreditCustomize> list = borrowCreditService.getBorrowCreditList4Admin(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            List<com.hyjf.am.vo.admin.BorrowCreditVO> res = CommonUtils.convertBeanList(list, com.hyjf.am.vo.admin.BorrowCreditVO.class);
+            response.setResultList(res);
+        }
+        return response;
+    }
+
+    @PostMapping("/countBorrowCreditList4admin")
+    public AdminBorrowCreditResponse countBorrowCreditList4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditResponse response = new AdminBorrowCreditResponse();
+        Integer count = borrowCreditService.countBorrowCreditList4Admin(request);
+        response.setRecordTotal(count);
+        return response;
+    }
+
+    @PostMapping("/getBorrowCreditTotalCount")
+    public  AdminBorrowCreditResponse getBorrowCreditTotalCount(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditResponse response = new AdminBorrowCreditResponse();
+        BorrowCreditSumVO sumVO = borrowCreditService.getBorrowCreditTotalCount(request);
+        response.setSumVO(sumVO);
+        return response;
     }
 
     

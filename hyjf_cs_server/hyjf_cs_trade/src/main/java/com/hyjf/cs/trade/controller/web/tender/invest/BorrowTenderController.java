@@ -9,6 +9,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -89,6 +90,15 @@ public class BorrowTenderController extends BaseTradeController {
         logger.info("web端散标投资获取投资成功结果，logOrdId{}", logOrdId);
         WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
         return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
+    }
+
+    @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")
+    @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
+    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        logger.info("web端获取投资信息");
+        tender.setToken(token);
+        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        return borrowTenderService.getInvestInfo(tender);
     }
 
 }

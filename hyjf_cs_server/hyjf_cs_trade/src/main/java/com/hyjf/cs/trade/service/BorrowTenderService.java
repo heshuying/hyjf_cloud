@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 
@@ -48,4 +49,11 @@ public interface BorrowTenderService extends BaseTradeService{
      * @return
      */
     WebResult<Map<String,Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId);
+
+    /**
+     * 获取投资信息
+     * @param tender
+     * @return
+     */
+    WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender);
 }

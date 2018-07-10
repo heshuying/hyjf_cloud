@@ -36,7 +36,7 @@ public class CouponConfigClientImpl implements CouponConfigClient {
 
     @Override
     public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", MyBestCouponListResponse.class).getBody();
+        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
         }
@@ -45,7 +45,7 @@ public class CouponConfigClientImpl implements CouponConfigClient {
 
     @Override
     public Integer countAvaliableCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon", MyBestCouponListResponse.class).getBody();
+        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCouponCount();
         }
@@ -59,6 +59,33 @@ public class CouponConfigClientImpl implements CouponConfigClient {
             return cccr.getCount();
         }
         return null;
+    }
+
+    /**
+     * 查询汇计划最优优惠券
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request) {
+        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/selectHJHBestCoupon",request, MyBestCouponListResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 查询HJH可用优惠券数量
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer countHJHAvaliableCoupon(MyCouponListRequest request) {
+        Integer response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/getHJHUserCouponAvailableCount", request,Integer.class).getBody();
+        return response;
     }
 
 
