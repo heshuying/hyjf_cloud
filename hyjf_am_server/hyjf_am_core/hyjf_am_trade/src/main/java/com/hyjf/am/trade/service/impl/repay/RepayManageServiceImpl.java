@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.impl.repay;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
@@ -379,7 +380,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         return null;
     }
 
-    public boolean updateRepayMoney(RepayBean repay, BankCallBean bean, Integer roleId, Integer repayUserId, String userName) throws Exception {
+    /**
+     * 还款申请更新
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public boolean updateRepayMoney(RepayBean repay, BankCallBean bean) throws Exception {
 
         String borrowNid = repay.getBorrowNid();
         String periodTotal = repay.getBorrowPeriod();
@@ -389,6 +396,12 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String nid = "";
         Boolean repayFlag = false;
         int errorCount = 0;
+        // 获取还款人用户信息
+        RUser repayUser = getRUser(repay.getRepayUserId());
+        Integer roleId = repayUser.getRoleId();
+        Integer repayUserId = repayUser.getUserId();
+        String userName = repayUser.getUsername();
+
         Borrow borrow = this.getBorrow(borrowNid);
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
         /** 标的基本数据 */
@@ -851,6 +864,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
     }
 
+    /**
+     * 设置还款表推荐人信息
+     * @param recover
+     * @param tenderUserId
+     */
     private void setRecommendInfo(BorrowRecover recover, Integer tenderUserId) {
         RUser rUser = getRUser(tenderUserId);
         // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
@@ -899,6 +917,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
     }
 
+    /**
+     * 设置还款计划表推荐人信息
+     * @param recoverPlan
+     * @param tenderUserId
+     */
     private void setRecommendInfo(BorrowRecoverPlan recoverPlan, Integer tenderUserId) {
         RUser rUser = getRUser(tenderUserId);
         // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工

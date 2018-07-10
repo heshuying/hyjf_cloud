@@ -1,8 +1,11 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayBean;
 
 import java.text.ParseException;
 import java.util.List;
@@ -27,4 +30,6 @@ public interface RepayManageService extends BaseTradeService{
     Integer selectOrgRepayedCount(RepayListRequest requestBean);
 
     ProjectBean searchRepayProjectDetail(ProjectBean form) throws NumberFormatException, ParseException;
+
+    RepayBean checkForRepayRequest(RepayRequest requestBean, WebViewUser user);
 }

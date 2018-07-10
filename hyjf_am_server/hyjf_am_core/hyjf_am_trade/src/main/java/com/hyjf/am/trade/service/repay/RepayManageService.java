@@ -2,9 +2,11 @@ package com.hyjf.am.trade.service.repay;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 
@@ -25,4 +27,6 @@ public interface RepayManageService {
     List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean);
 
     Integer selectOrgRepayedCount(RepayListRequest requestBean);
+
+    boolean updateRepayMoney(RepayBean repay, BankCallBean bean) throws Exception;
 }
