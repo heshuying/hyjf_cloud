@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.hyjf.am.vo.trade.*;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -251,6 +252,23 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             }
         }
         return null;
+    }
+
+    /**
+     * 债转投资获取投资失败结果
+     *
+     * @param userVO
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
+        String errorMsg = creditClient.getFailResult(logOrdId,userVO.getUserId());
+        Map<String, Object> data = new HashedMap();
+        data.put("errorMsg",errorMsg);
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setData(data);
+        return result;
     }
 
     /**

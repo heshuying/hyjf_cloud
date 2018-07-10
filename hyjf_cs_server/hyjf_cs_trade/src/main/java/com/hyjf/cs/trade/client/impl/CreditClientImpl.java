@@ -218,4 +218,17 @@ public class CreditClientImpl implements CreditClient {
         return restTemplate.getForEntity(url, Integer.class).getBody();
     }
 
+    /**
+     * 查询债转失败原因
+     *
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    @Override
+    public String getFailResult(String logOrdId, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/getFaileResult/" + logOrdId+"/"+userId ;
+        return restTemplate.getForEntity(url, String.class).getBody();
+    }
+
 }

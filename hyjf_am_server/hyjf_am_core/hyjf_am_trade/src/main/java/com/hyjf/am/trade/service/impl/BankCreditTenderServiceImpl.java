@@ -1537,10 +1537,30 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		List<CreditTenderLog> list = this.creditTenderLogMapper.selectByExample(example);
 		if(!CollectionUtils.isEmpty(list)){
 			CreditTenderLog log = list.get(0);
-			//log.setAccountId();
+			log.setRetCode(retCode);
+			log.setRetMsg(retMsg);
 			this.creditTenderLogMapper.updateByPrimaryKeySelective(log);
 		}
-		return null;
+		return 1;
+	}
+
+	/**
+	 * 查询债转失败原因
+	 *
+	 * @param logOrderId
+	 * @param logUserId
+	 * @return
+	 */
+	@Override
+	public String getFailResult(String logOrderId, String logUserId) {
+		CreditTenderLogExample example = new CreditTenderLogExample();
+		CreditTenderLogExample.Criteria cra = example.createCriteria();
+		cra.andLogOrderIdEqualTo(logOrderId).andUserIdEqualTo(Integer.parseInt(logUserId));
+		List<CreditTenderLog> list = this.creditTenderLogMapper.selectByExample(example);
+		if(!CollectionUtils.isEmpty(list)){
+			return list.get(0).getRetMsg();
+		}
+		return "";
 	}
 
 

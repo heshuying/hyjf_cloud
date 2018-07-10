@@ -28,4 +28,12 @@ public interface BorrowCreditTenderService extends BaseTradeService{
      * @return
      */
     BankCallResult borrowCreditTenderBgReturn(BankCallBean bean);
+
+    /**
+     * 债转投资获取投资失败结果
+     * @param userVO
+     * @param logOrdId
+     * @return
+     */
+    WebResult<Map<String,Object>> getFaileResult(WebViewUserVO userVO, String logOrdId);
 }
