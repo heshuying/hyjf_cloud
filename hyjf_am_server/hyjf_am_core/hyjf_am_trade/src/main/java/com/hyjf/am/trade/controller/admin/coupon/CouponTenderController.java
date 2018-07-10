@@ -276,4 +276,116 @@ public class CouponTenderController {
         couponTenderResponse.setBackMoneyCustomizeList(backmoneyList);
         return couponTenderResponse;
     }
+
+    /**
+     * 汇计划代金券回款总数
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/countrecordhjhdj", method = RequestMethod.POST)
+    public CouponTenderResponse countRecordHjhDJ(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---countrecordhjhdj by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        Integer investTotal = couponTenderService.countRecordHjhDJ(couponBackMoneyCustomize);
+        couponTenderResponse.setRecordTotal(investTotal);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划代金券回款列表分页数据
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/getrecordlisthjhdj", method = RequestMethod.POST)
+    public CouponTenderResponse getRecordListHjhDJ(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---getrecordlisthjhdj by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        List<CouponBackMoneyCustomize> backmoneyList = couponTenderService.getRecordListHjhDJ(couponBackMoneyCustomize);
+        couponTenderResponse.setBackMoneyCustomizeList(backmoneyList);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划应还本息总额
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/queryhjhinvesttotal", method = RequestMethod.POST)
+    public CouponTenderResponse queryHjhInvestTotal(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---queryhjhinvesttotal by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        String backmoney = couponTenderService.queryHjhInvestTotal(couponBackMoneyCustomize);
+        couponTenderResponse.setAttrbute(backmoney);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划优惠券回款应回款总金额
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/queryhjhrecoverinteresttotle", method = RequestMethod.POST)
+    public CouponTenderResponse queryHjhRecoverInterestTotle(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---queryhjhrecoverinteresttotle by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        String amount = couponTenderService.queryHjhRecoverInterestTotle(couponBackMoneyCustomize);
+        couponTenderResponse.setAmountTotal(amount);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划体验金回款总数
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/countrecordhjhty", method = RequestMethod.POST)
+    public CouponTenderResponse countRecordHjhTY(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---countrecordhjhty by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        Integer investTotal = couponTenderService.countRecordHjhTY(couponBackMoneyCustomize);
+        couponTenderResponse.setRecordTotal(investTotal);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划体验金回款列表分页数据
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/getrecordlisthjhty", method = RequestMethod.POST)
+    public CouponTenderResponse getRecordListHjhTY(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---getrecordlisthjhty by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        List<CouponBackMoneyCustomize> backmoneyList = couponTenderService.getRecordListHjhTY(couponBackMoneyCustomize);
+        couponTenderResponse.setBackMoneyCustomizeList(backmoneyList);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划加息券回款总数
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/countrecordhjhjx", method = RequestMethod.POST)
+    public CouponTenderResponse countRecordHjhJX(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---countrecordhjhjx by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        Integer investTotal = couponTenderService.countRecordHjhJX(couponBackMoneyCustomize);
+        couponTenderResponse.setRecordTotal(investTotal);
+        return couponTenderResponse;
+    }
+
+    /**
+     * 汇计划加息券回款列表分页数据
+     * @param couponBackMoneyCustomize
+     * @return CouponTenderResponse
+     */
+    @RequestMapping(value = "/getrecordlisthjhjx", method = RequestMethod.POST)
+    public CouponTenderResponse getRecordListHjhJX(@RequestBody @Valid CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        logger.info("---getrecordlisthjhjx by param---  " + JSONObject.toJSON(couponBackMoneyCustomize));
+        CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
+        List<CouponBackMoneyCustomize> backmoneyList = couponTenderService.getRecordListHjhJX(couponBackMoneyCustomize);
+        couponTenderResponse.setBackMoneyCustomizeList(backmoneyList);
+        return couponTenderResponse;
+    }
 }

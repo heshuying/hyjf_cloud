@@ -37,6 +37,6 @@ public interface UserPortraitService {
     /**
      * 修改用户画像
      */
-    int updateUserPortrait(Map<String,Object>mapParam);
+    int updateUserPortrait(UserPortraitRequest userPortraitRequest);
 
 }

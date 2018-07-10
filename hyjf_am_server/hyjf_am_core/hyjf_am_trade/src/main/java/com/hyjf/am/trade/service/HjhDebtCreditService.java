@@ -30,4 +30,20 @@ public interface HjhDebtCreditService {
      * @date 2018/6/30 11:22
      */
     AppCreditDetailCustomizeVO selectCreditDetailByCreditNid(String creditNid);
+
+    /**
+     * 根据债转编号查询债转信息
+     * @param creditNid
+     * @author liubin
+     * @return
+     */
+    HjhDebtCredit selectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
+     * 根据PK更新hjhDebtCredit
+     * @param hjhDebtCredit
+     * @author liubin
+     * @return
+     */
+    int updateHjhDebtCreditByPK(HjhDebtCredit hjhDebtCredit);
 }

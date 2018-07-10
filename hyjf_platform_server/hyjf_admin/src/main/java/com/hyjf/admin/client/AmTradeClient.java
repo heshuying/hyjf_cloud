@@ -6,12 +6,15 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -233,4 +236,164 @@ public interface AmTradeClient {
      * @return
      */
     boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
+
+    /**
+     * 转账列表
+     * @param form
+     * @return
+     */
+    BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form);
+
+    /**
+     * 查询红包明细分页
+     * @param request
+     * @return
+     */
+    BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request);
+
+    /**
+     * 更新账户信息
+     * @auth sunpeikai
+     * @param accountVO 账户信息
+     * @return
+     */
+    Integer updateAccount(AccountVO accountVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountRechargeVO 充值表
+     * @return
+     */
+    Integer insertAccountRecharge(AccountRechargeVO accountRechargeVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountListVO 收支明细
+     * @return
+     */
+    Integer insertAccountList(AccountListVO accountListVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param accountWebListVO 网站收支表
+     * @return
+     */
+    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
+
+    /**
+     * 根据账户id查询BankMerchantAccount
+     * @auth sunpeikai
+     * @param accountId 账户id
+     * @return
+     */
+    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+
+    /**
+     * 更新红包账户信息
+     * @auth sunpeikai
+     * @param bankMerchantAccountVO 红包账户信息
+     * @return
+     */
+    Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param bankMerchantAccountListVO 红包明细表
+     * @return
+     */
+    Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO);
+    /**
+     * 获取发起账户分佣所需的详细信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<SubCommissionListConfigVO> searchSubCommissionListConfig();
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param subCommissionVO 平台账户分佣
+     * @return
+     */
+    boolean insertSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询分佣数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    SubCommissionVO searchSubCommissionByOrderId(String orderId);
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param subCommissionVO 待更新的数据参数
+     * @return
+     */
+    Integer updateSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询是否存在重复的AccountWebList数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    Integer accountWebListByOrderId(String orderId);
+
+    /**
+     *  获取银行转账异常列表 jijun 20180710
+     * @param request
+     * @return
+     */
+    List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+
+    /**
+     *  获取银行转账异常总数 jijun 20180710
+     * @param request
+     * @return
+     */
+    Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request);
+
+    /**
+     * 更改银行转账信息
+     * @param request
+     * @return
+     */
+    int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
+
+    /**
+     * 更改银行转账信息
+     * @param transferExceptionLog
+     * @return
+     */
+    int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+
+    /**
+     * 通过uuid银行转账异常
+     * @param uuid
+     * @return
+     */
+    TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid);
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getSubCommissionCount(SubCommissionRequest request);
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request);
 }

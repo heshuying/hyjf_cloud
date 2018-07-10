@@ -107,6 +107,16 @@ public class UserInfoServiceImpl implements UserInfoService {
 		return userInfoCustomizeMapper.queryUserInfoByUserId(userId);
 	}
 
+	/**
+	 * 根据用户名查询用户详情
+	 * @auth sunpeikai
+	 * @param userName 用户名
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomize queryUserInfoCustomizeByUserName(String userName) {
+		return userInfoCustomizeMapper.queryUserInfoByEmployeeName(userName);
+	}
 
 	@Override
 	public List<SpreadsUser> querySpreadsUsersByUserId(Integer userId) {

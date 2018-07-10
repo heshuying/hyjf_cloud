@@ -89,4 +89,76 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
         }
         return null;
     }
+
+    @Override
+    public Integer countRecordHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.countRecordHjhDJ(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getRecordTotal();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponBackMoneyCustomize> getRecordListHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.getRecordListHjhDJ(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getBackMoneyCustomizeList();
+        }
+        return null;
+    }
+
+    @Override
+    public String queryHjhInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.queryHjhInvestTotal(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getAttrbute();
+        }
+        return null;
+    }
+
+    @Override
+    public String queryHjhRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.queryHjhRecoverInterestTotle(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getAmountTotal();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer countRecordHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.countRecordHjhTY(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getRecordTotal();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponBackMoneyCustomize> getRecordListHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.getRecordListHjhTY(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getBackMoneyCustomizeList();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.countRecordHjhJX(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getRecordTotal();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        CouponTenderResponse couponTenderResponse = couponTenderClient.getRecordListHjhJX(couponBackMoneyCustomize);
+        if(null != couponTenderResponse){
+            return couponTenderResponse.getBackMoneyCustomizeList();
+        }
+        return null;
+    }
 }

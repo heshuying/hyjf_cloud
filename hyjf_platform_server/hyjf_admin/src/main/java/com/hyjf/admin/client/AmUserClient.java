@@ -1,9 +1,7 @@
 package com.hyjf.admin.client;
 
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.user.*;
 
 import java.util.List;
 
@@ -76,5 +74,37 @@ public interface AmUserClient {
      */
     BankOpenAccountVO searchBankOpenAccount(Integer userId);
 
+    /**
+     * 根据用户名查询自定义用户信息
+     * @auth sunpeikai
+     * @param userName 用户名
+     * @return
+     */
+    UserInfoCustomizeVO getUserInfoCustomizeByUserName(String userName);
+
+    /**
+     * 根据用户id查询自定义用户信息
+     * @auth sunpeikai
+     * @param userId 用户名
+     * @return
+     */
+    UserInfoCustomizeVO getUserInfoCustomizeByUserId(Integer userId);
+
+    /**
+     * 根据用户id查询推荐人表信息
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    SpreadsUserVO searchSpreadsUserByUserId(Integer userId);
+
+
+    /**
+     * 根据用户id查询employee
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId);
 
 }

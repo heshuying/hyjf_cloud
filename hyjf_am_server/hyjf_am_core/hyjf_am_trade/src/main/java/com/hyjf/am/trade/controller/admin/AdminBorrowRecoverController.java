@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowRecoverResponse;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.trade.controller.AssetManageController;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
 import com.hyjf.am.trade.service.admin.AdminBorrowRecoverService;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
@@ -27,8 +28,7 @@ import java.util.List;
 @Api(value = "产品中心-汇直投-放款明细查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRecover")
-public class AdminBorrowRecoverController {
-    private static Logger logger = LoggerFactory.getLogger(AssetManageController.class);
+public class AdminBorrowRecoverController extends BaseController {
     @Autowired
     AdminBorrowRecoverService adminBorrowRecoverService;
 

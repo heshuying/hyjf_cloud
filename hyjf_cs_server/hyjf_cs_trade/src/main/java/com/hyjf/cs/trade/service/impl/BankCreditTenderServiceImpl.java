@@ -1,17 +1,5 @@
 package com.hyjf.cs.trade.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
@@ -19,13 +7,7 @@ import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.EmployeeCustomizeVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
@@ -37,13 +19,26 @@ import com.hyjf.cs.trade.client.AmMongoClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankCreditTenderClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.base.Producer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.FddProducer;
+import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.BankCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 债转投资异常Service实现类
@@ -66,6 +61,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     private AmMongoClient amMongoClient;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
+    @Autowired
+    private UtmRegProducer utmRegProducer;
 
     /**
      * 处理债转投资异常
@@ -212,7 +209,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         // 首次投标项目期限
                                         String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
                                         params.put("investProjectPeriod", investProjectPeriod);
-                                        params.put("investFlag",investUser.getInvestflag());
+
                                         //推送mq
                                         this.appChannelStatisticsDetailProducer.messageSend(
                                                 new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
@@ -235,17 +232,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                             // 首次投标项目期限
                                             params.put("investProjectPeriod", investProjectPeriod);
                                             //首次投标标志位
-                                            if (investUser.getInvestflag() == 0){
-                                            	this.amUserClient.updateFirstUtmReg(params);
-                                            }
-                                        }
-                                    }
+                                            this.utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
 
-                                    // 更新新手标志位
-                                    investUser.setInvestflag(1);
-                                    boolean userFlag=this.amUserClient.updateByPrimaryKeySelective(investUser);
-                                    if (!userFlag) {
-                                        logger.info("更新相应的用户新手标志位失败!" + "[用户userId：" + userId + "]");
+                                        }
                                     }
 
                                     // 查询相应的承接记录，如果相应的承接记录存在，则承接成功

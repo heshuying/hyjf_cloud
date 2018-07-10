@@ -3,6 +3,10 @@
  */
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+
+import java.util.List;
+
 /**
  * 自动投资
  * @author liubin
@@ -10,5 +14,7 @@ package com.hyjf.cs.trade.service;
  */
 public interface AutoTenderService extends BaseTradeService{
 
-    void AutoTender();
+    List<HjhAccedeVO> selectPlanJoinList();
+
+    boolean AutoTenderForOneAccede(HjhAccedeVO hjhAccede);
 }
