@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
 import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
@@ -63,9 +62,9 @@ public class AutoTenderClientImpl implements AutoTenderClient {
     public Map<String, Object> saveCreditTenderLog(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
         String url = urlBase + "autoTenderController/saveCreditTenderLog";
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
-        MapResponse response = restTemplate.postForEntity(url, request, MapResponse.class).getBody();
+        Response<Map<String, Object>> response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (response != null) {
-            return response.getResultMap();
+            return response.getResult();
         }
         return null;
     }

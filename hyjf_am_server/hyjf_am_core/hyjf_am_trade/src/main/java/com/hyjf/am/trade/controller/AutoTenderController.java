@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
 import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
