@@ -373,4 +373,11 @@ public interface AmTradeClient {
      * @return
      */
     int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+
+    /**
+     * 通过uuid银行转账异常
+     * @param uuid
+     * @return
+     */
+    TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid);
 }

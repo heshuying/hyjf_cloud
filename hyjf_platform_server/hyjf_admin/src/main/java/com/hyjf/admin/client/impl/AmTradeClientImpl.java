@@ -5,6 +5,7 @@ package com.hyjf.admin.client.impl;
 
 import java.util.List;
 
+import com.hyjf.am.response.admin.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
-import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
-import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
-import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.BankMerchantAccountListCustomizeResponse;
-import com.hyjf.am.response.admin.BankMerchantAccountResponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.BindLogResponse;
-import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
-import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.admin.PlatformTransferResponse;
-import com.hyjf.am.response.admin.SubCommissionListConfigResponse;
-import com.hyjf.am.response.admin.SubCommissionResponse;
-import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.AccountTradeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
@@ -660,6 +646,21 @@ public class AmTradeClientImpl implements AmTradeClient{
     public int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog) {
         String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID1";
         return restTemplate.postForEntity(url,transferExceptionLog,Integer.class).getBody();
+    }
+
+    /**
+     * 获取银行转账异常通过uuid
+     * @param uuid
+     * @return
+     */
+    @Override
+    public TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/"+uuid;
+        TransferExceptionLogResponse response =restTemplate.getForEntity(url, TransferExceptionLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
     }
 
     /**
