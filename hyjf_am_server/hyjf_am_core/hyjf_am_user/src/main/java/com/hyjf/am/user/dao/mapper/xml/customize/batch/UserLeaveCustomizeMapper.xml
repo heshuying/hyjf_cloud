@@ -39,9 +39,9 @@
 			ou.user_realname AS truename,
 			od.cuttype AS cuttype
 		FROM
-			huiyingdai_users hu
-		LEFT JOIN hyjf_crm.oa_users ou ON hu.user_id = ou.hyd_id
-		LEFT JOIN hyjf_crm.oa_department od ON ou.departmentid = od.id
+			ht_user hu
+		LEFT JOIN ht_r_oa_users ou ON hu.user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department od ON ou.departmentid = od.id
 		WHERE
 			hyd_id IS NOT NULL
 		AND ou.hyd_id = #{userId} 
