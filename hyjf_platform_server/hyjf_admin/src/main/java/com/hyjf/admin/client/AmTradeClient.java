@@ -305,5 +305,44 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO);
+    /**
+     * 获取发起账户分佣所需的详细信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<SubCommissionListConfigVO> searchSubCommissionListConfig();
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param subCommissionVO 平台账户分佣
+     * @return
+     */
+    boolean insertSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询分佣数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    SubCommissionVO searchSubCommissionByOrderId(String orderId);
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param subCommissionVO 待更新的数据参数
+     * @return
+     */
+    Integer updateSubCommission(SubCommissionVO subCommissionVO);
+
+    /**
+     * 根据订单号查询是否存在重复的AccountWebList数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    Integer accountWebListByOrderId(String orderId);
 
 }

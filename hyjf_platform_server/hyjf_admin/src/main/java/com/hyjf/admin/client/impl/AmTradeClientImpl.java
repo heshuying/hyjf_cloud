@@ -568,4 +568,76 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+
+    /**
+     * 获取发起账户分佣所需的详细信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<SubCommissionListConfigVO> searchSubCommissionListConfig() {
+        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionlistconfig";
+        SubCommissionListConfigResponse response = restTemplate.getForEntity(url,SubCommissionListConfigResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param subCommissionVO 平台账户分佣
+     * @return
+     */
+    @Override
+    public boolean insertSubCommission(SubCommissionVO subCommissionVO) {
+        String url = "http://AM-TRADE/am-trade/subcommission/insertsubcommission";
+        Boolean response = restTemplate.postForEntity(url,subCommissionVO,Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据订单号查询分佣数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public SubCommissionVO searchSubCommissionByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionbyorderid/" + orderId;
+        SubCommissionResponse response = restTemplate.getForEntity(url,SubCommissionResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param subCommissionVO 待更新的数据参数
+     * @return
+     */
+    @Override
+    public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
+        String url = "http://AM-TRADE/am-trade/subcommission/updatesubcommission";
+        Integer response = restTemplate.postForEntity(url,subCommissionVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据订单号查询是否存在重复的AccountWebList数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public Integer accountWebListByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/subcommission/accountweblistbyorderid/" + orderId;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
 }
