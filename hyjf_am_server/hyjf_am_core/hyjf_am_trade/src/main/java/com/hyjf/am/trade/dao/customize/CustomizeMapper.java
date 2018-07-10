@@ -61,6 +61,10 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
 
+    @Autowired
+    protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
+
+
     @Resource
     protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
 
