@@ -1,7 +1,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.service.BaseAdminServiceImpl;
 import com.hyjf.admin.service.TransferExceptionLogService;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
