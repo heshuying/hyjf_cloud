@@ -4,12 +4,13 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author walter.limeng
  * @version CouponService, v0.1 2018/7/9 14:08
  */
-public interface CouponService extends BaseTradeService {
+public interface AppCouponService extends BaseTradeService {
     /**
      * 获取我的优惠券分页数据
      * @param userId 用户ID
@@ -27,4 +28,14 @@ public interface CouponService extends BaseTradeService {
      * @return Integer
      */
     Integer countMyCoupon(Integer userId,String couponStatus);
+
+    /**
+     * 散标投资根据标的编号，投资金额等查询优惠券
+     * @param userId 用户ID
+     * @param borrowNid 标的编号
+     * @param money 投资金额
+     * @param platform 投资平台
+     * @return Map<String,Object>
+     */
+    Map<String,Object> getBorrowCoupon(Integer userId, String borrowNid, String money, String platform);
 }
