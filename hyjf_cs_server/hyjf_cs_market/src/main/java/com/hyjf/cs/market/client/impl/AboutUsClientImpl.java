@@ -3,11 +3,13 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.config.RecruitResponse;
 import com.hyjf.am.response.config.TeamResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.am.vo.config.JobsVo;
 import com.hyjf.am.vo.config.TeamVO;
 import com.hyjf.cs.market.client.AboutUsClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +74,37 @@ public class AboutUsClientImpl implements AboutUsClient {
     @Override
     public ContentArticleVO getNoticeInfo(Integer id) {
         return null;
+    }
+
+    /**
+     * 获取招贤纳士列表
+     * @return
+     */
+    @Override
+    public List<JobsVo> getJobsList() {
+        RecruitResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/job/getJobs", RecruitResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public ContentArticleVO contactUs() {
+        ContentArticleResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/article/getContentArticle", ContentArticleResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ContentArticleVO> getknowsList() {
+        ContentArticleResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/article/getKnowsList", ContentArticleResponse.class);
+            if (response != null){
+            return response.getResultList();
+        }
+        return null;
+
     }
 }

@@ -3,10 +3,8 @@
  */
 package com.hyjf.cs.market.controller.web.aboutus;
 
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.config.LinkVO;
-import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.am.vo.config.*;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.market.service.AboutUsService;
@@ -37,6 +35,7 @@ public class AboutUsController extends BaseController {
 
 	@Autowired
 	private AboutUsService aboutUsService;
+
 
 	@ApiOperation(value = "信息披露", notes = "关于我们")
 	@RequestMapping("/about")
@@ -148,5 +147,44 @@ public class AboutUsController extends BaseController {
 			result.setStatusDesc(WebResult.ERROR_DESC);
 			return result;
 		}
+	}
+
+
+	/**
+	 * 查询招贤纳士信息
+	 * @return
+	 */
+	@ApiOperation(value = "招贤纳士", notes = "招贤纳士列表查询")
+	@RequestMapping("/recurit")
+	public WebResult<List<JobsVo>> getRecurit(){
+		List<JobsVo> jobsList = aboutUsService.getJobsList();
+		WebResult webResult = new WebResult(jobsList);
+		return webResult;
+	}
+
+
+	/**
+	 * 联系我们
+	 * @return
+	 */
+
+	@ApiOperation(value = "联系我们", notes = "联系我们查询")
+	@RequestMapping("/contactus")
+	public WebResult<List<JobsVo>> contactus(){
+		ContentArticleVO contactUs = aboutUsService.getContactUs();
+		WebResult webResult = new WebResult(contactUs);
+		return webResult;
+	}
+
+	/**
+	 * 查询网贷知识信息
+	 * @return
+	 */
+	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
+	@RequestMapping("/getKnowReportList")
+	public WebResult<List<JobsVo>> get(){
+		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList();
+		WebResult webResult = new WebResult(homeNoticeList);
+		return webResult;
 	}
 }
