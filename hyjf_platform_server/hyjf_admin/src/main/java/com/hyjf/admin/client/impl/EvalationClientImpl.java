@@ -8,16 +8,13 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EvalationResponse;
 import com.hyjf.am.response.user.UserEvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 /**
- * @author Administrator
+ * @author nxl
  * @version EvaluationClientImpl, v0.1 2018/6/25 17:28
  */
 @Service
@@ -33,12 +30,12 @@ public class EvalationClientImpl implements EvalationClient {
      * @return
      */
     @Override
-    public List<EvalationVO> selectUserEvalationResultList(EvalationRequest request) {
+    public EvalationResponse selectUserEvalationResultList(EvalationRequest request) {
         EvalationResponse response = restTemplate.
                 postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request, EvalationResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }

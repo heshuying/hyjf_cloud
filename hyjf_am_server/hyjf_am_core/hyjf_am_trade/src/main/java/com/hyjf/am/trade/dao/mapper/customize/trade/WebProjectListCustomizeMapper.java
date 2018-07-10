@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
-import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -63,14 +63,14 @@ public interface WebProjectListCustomizeMapper {
      * @author zhangyk
      * @date 2018/6/21 15:54
      */
-    int countWebPlanList(ProjectListRequest request);
+    int countWebPlanList(Map<String,Object> params);
 
     /**
      * web端获取计划专区计划列表list
      * @author zhangyk
      * @date 2018/6/21 15:55
      */
-    List<Object> searchWebPlanList(ProjectListRequest request);
+    List<WebProjectListCustomizeVO> searchWebPlanList(Map<String, Object> params);
 
 
     // ----------------------------------web end -----------------------------------------------

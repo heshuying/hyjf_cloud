@@ -3,23 +3,25 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.EvalationRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.EvalationResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.vo.user.EvalationResultVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,24 +31,26 @@ import java.util.Map;
 @Api(value = "用户测评")
 @RestController
 @RequestMapping("/hyjf-admin/evaluation")
-public class EvalationController {
+public class EvalationController extends BaseController {
     @Autowired
     private EvalationService evalationService;
 
     @ApiOperation(value = "用户测评", notes = "用户测评列表显示")
     @PostMapping(value = "/evalationRecord")
     @ResponseBody
-    public JSONObject getUserEvaluation(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
-        JSONObject jsonObject = new JSONObject();
-        EvalationRequest evalationRequest = serParamRequest(map);
-        List<EvalationVO> listRgistRecord = evalationService.selectUserEvalationResultList(evalationRequest);
+    public AdminResult<ListResult<EvalationVO>> getUserEvaluation(HttpServletRequest request, HttpServletResponse response, @RequestBody EvalationRequestBean evalationRequestBean){
+        EvalationRequest evalationRequest = new EvalationRequest();
+        BeanUtils.copyProperties(evalationRequest,evalationRequestBean);
+        EvalationResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
         String status = Response.FAIL;
-        if (null != listRgistRecord && listRgistRecord.size() > 0) {
-            jsonObject.put("record", listRgistRecord);
-            status = Response.SUCCESS;
+        if(evalationResponse==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status", status);
-        return jsonObject;
+        if (!Response.isSuccess(evalationResponse)) {
+            return new AdminResult<>(FAIL, evalationResponse.getMessage());
+
+        }
+        return new AdminResult<ListResult<EvalationVO>>(ListResult.build(evalationResponse.getResultList(), evalationResponse.getCount())) ;
     }
     private EvalationRequest serParamRequest(Map<String, Object> mapParam) {
         EvalationRequest request = new EvalationRequest();
@@ -82,16 +86,12 @@ public class EvalationController {
     @ApiOperation(value = "用户测评", notes = "用户测评结果显示")
     @PostMapping(value = "/selectEvaluationDetailById")
     @ResponseBody
-    public JSONObject selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
-        JSONObject jsonObject = new JSONObject();
-        String userId = map.get("userId").toString();
+    public AdminResult<UserEvalationResultVO> selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response,@RequestBody String  userId){
         UserEvalationResultVO userEvalationResultVO = evalationService.selectUserEvalationResultByUserId(userId);
-        String status = Response.FAIL;
         if (null != userEvalationResultVO) {
-            jsonObject.put("record", userEvalationResultVO);
-            status = Response.SUCCESS;
+            return new AdminResult<UserEvalationResultVO>(userEvalationResultVO);
         }
-        jsonObject.put("status", status);
-        return jsonObject;
+        return new AdminResult<>(FAIL, FAIL_DESC);
     }
+
 }

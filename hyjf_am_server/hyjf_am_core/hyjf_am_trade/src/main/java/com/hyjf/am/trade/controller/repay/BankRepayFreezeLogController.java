@@ -1,8 +1,13 @@
 package com.hyjf.am.trade.controller.repay;
 
+import com.hyjf.am.response.trade.BankRepayFreezeLogResponse;
 import com.hyjf.am.resquest.trade.BankRepayFreezeLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.BankRepayFreezeLog;
 import com.hyjf.am.trade.service.repay.BankRepayFreezeLogService;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,5 +48,20 @@ public class BankRepayFreezeLogController extends BaseController {
         }
 
         return bankRepayFreezeLogService.deleteFreezeLogsByOrderId(orderId);
+    }
+
+    /**
+     * 获取当前有效的冻结记录
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @RequestMapping("/get_logvalid/{userId}/{borrowNid}")
+    public BankRepayFreezeLogResponse getFreezeLogValid(@PathVariable Integer userId, @PathVariable String borrowNid){
+        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+        BankRepayFreezeLog log = bankRepayFreezeLogService.getFreezeLog(userId, borrowNid);
+        if (Validator.isNotNull(log)){
+            response.setResult(CommonUtils.convertBean(log,BankRepayFreezeLogVO.class));
+        }
+        return response;
     }
 }

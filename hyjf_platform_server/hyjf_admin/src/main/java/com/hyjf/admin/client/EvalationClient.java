@@ -3,16 +3,11 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.user.EvalationResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserManagerVO;
-
-import java.util.List;
-
 /**
- * @author Administrator
+ * @author nxl
  * @version EvaluationClient, v0.1 2018/6/25 17:27
  */
 public interface EvalationClient {
@@ -22,7 +17,7 @@ public interface EvalationClient {
      * @param request
      * @return
      */
-    List<EvalationVO> selectUserEvalationResultList(EvalationRequest request);
+    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
     /**
      * 查找用户测评结果
      * @param userId

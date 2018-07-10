@@ -60,8 +60,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
      * 修改用户画像
      */
     @Override
-    public int updateUserPortrait(Map<String,Object>mapParam){
-        UserPortraitRequest userPortraitRequest =  setParamRequest(mapParam);
+    public int updateUserPortrait(UserPortraitRequest userPortraitRequest){
         int updFlg = userPortraitClient.updateUserPortrait(userPortraitRequest);
         return updFlg;
     }
