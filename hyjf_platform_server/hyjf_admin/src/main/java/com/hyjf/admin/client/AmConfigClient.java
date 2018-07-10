@@ -43,4 +43,12 @@ public interface AmConfigClient {
      */
     SmsMailTemplateVO findSmsMailTemplateByCode(String mailCode);
 
+    /**
+     * 根据银行错误码查询错误信息
+     * @auth sunpeikai
+     * @param retCode 错误码
+     * @return
+     */
+    String getBankRetMsg(String retCode);
+
 }

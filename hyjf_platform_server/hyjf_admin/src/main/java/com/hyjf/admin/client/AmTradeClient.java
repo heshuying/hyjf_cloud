@@ -288,7 +288,7 @@ public interface AmTradeClient {
      * @param accountId 账户id
      * @return
      */
-    com.hyjf.am.vo.admin.BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
 
     /**
      * 更新红包账户信息

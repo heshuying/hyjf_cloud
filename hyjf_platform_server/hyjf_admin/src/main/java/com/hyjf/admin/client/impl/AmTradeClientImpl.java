@@ -6,7 +6,6 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
