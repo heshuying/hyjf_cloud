@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
 import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.resquest.trade.UpdateCreditForAutoTenderRequest;
@@ -43,8 +45,8 @@ public class AutoTenderController extends BaseController {
     private AutoTenderService autoTenderService;
 
     @RequestMapping("/selectPlanJoinList")
-    public Response<HjhAccedeVO> selectPlanJoinList() {
-        Response response = new Response();
+    public HjhAccedeResponse selectPlanJoinList() {
+        HjhAccedeResponse response = new HjhAccedeResponse();
         List<HjhAccedeCustomize> list = autoTenderService.selectPlanJoinList();
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(CommonUtils.convertBeanList(list, HjhAccedeVO.class));
@@ -53,14 +55,16 @@ public class AutoTenderController extends BaseController {
     }
 
     @RequestMapping("/saveCreditTenderLog")
-    public Response<Map<String, Object>> saveCreditTenderLog(@RequestBody SaveCreditTenderLogRequest request) {
-        return new Response(this.autoTenderService.saveCreditTenderLog(
+    public MapResponse saveCreditTenderLog(@RequestBody SaveCreditTenderLogRequest request) {
+        MapResponse response = new MapResponse();
+        response.setResultMap(this.autoTenderService.saveCreditTenderLog(
                                                         request.getCredit(),
                                                         request.getHjhAccede(),
                                                         request.getOrderId(),
                                                         request.getOrderDate(),
                                                         request.getYujiAmoust(),
                                                         request.isLast()));
+        return response;
     }
 
     @RequestMapping("/getPreCreditCapital")
