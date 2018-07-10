@@ -6,8 +6,7 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
@@ -16,11 +15,9 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -525,6 +522,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+
     /**
      * 更新红包账户信息
      * @auth sunpeikai
@@ -550,5 +548,25 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
         Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
         return response;
+    }
+
+    @Override
+    public BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form) {
+        BankMerchantAccountResponse response = restTemplate
+                .postForEntity(tradeService + "/bankMerchantAccount/selectBankMerchantAccount", form, BankMerchantAccountResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request) {
+        BankMerchantAccountListCustomizeResponse response = restTemplate
+                .postForEntity(tradeService + "/bankRedPacketAccount/selectBankMerchantAccountList", request, BankMerchantAccountListCustomizeResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response;
+        }
+        return null;
     }
 }

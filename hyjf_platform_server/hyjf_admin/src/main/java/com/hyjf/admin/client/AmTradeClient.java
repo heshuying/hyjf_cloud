@@ -11,11 +11,9 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
 
 import java.util.List;
 
@@ -239,6 +237,20 @@ public interface AmTradeClient {
     boolean updateBorrowAsset(BorrowVO borrowVO,Integer status);
 
     /**
+     * 转账列表
+     * @param form
+     * @return
+     */
+    BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form);
+
+    /**
+     * 查询红包明细分页
+     * @param request
+     * @return
+     */
+    BankMerchantAccountListCustomizeResponse selectBankMerchantAccountList(BankRedPacketAccountListRequest request);
+
+    /**
      * 更新账户信息
      * @auth sunpeikai
      * @param accountVO 账户信息
@@ -276,7 +288,7 @@ public interface AmTradeClient {
      * @param accountId 账户id
      * @return
      */
-    BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
+    com.hyjf.am.vo.admin.BankMerchantAccountVO searchBankMerchantAccountByAccountId(Integer accountId);
 
     /**
      * 更新红包账户信息
