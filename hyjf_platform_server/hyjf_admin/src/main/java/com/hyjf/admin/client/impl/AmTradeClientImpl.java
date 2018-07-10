@@ -3,20 +3,8 @@
  */
 package com.hyjf.admin.client.impl;
 
-import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.trade.*;
-import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +12,65 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
+import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
+import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
+import com.hyjf.am.response.admin.AssociatedRecordListResponse;
+import com.hyjf.am.response.admin.BankMerchantAccountListCustomizeResponse;
+import com.hyjf.am.response.admin.BankMerchantAccountResponse;
+import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
+import com.hyjf.am.response.admin.BindLogResponse;
+import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
+import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.response.admin.PlatformTransferResponse;
+import com.hyjf.am.response.admin.SubCommissionListConfigResponse;
+import com.hyjf.am.response.admin.SubCommissionResponse;
+import com.hyjf.am.response.admin.UserTransferResponse;
+import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
+import com.hyjf.am.response.trade.BorrowResponse;
+import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
+import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
+import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
+import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.BindLogListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
+import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
+import com.hyjf.am.resquest.admin.CustomerTransferRequest;
+import com.hyjf.am.resquest.admin.DirectionalTransferListRequest;
+import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
+import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
+import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
+import com.hyjf.am.resquest.admin.TransferListRequest;
+import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
+import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
+import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
+import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
+import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
+import com.hyjf.am.vo.admin.SubCommissionVO;
+import com.hyjf.am.vo.admin.UserTransferVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author zhangqingqing
@@ -521,7 +567,6 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
-
     /**
      * 更新红包账户信息
      * @auth sunpeikai
@@ -532,20 +577,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     public Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO) {
         String url = "http://AM-TRADE/am-trade/platformtransfer/updatebankmerchantaccount";
         Integer response = restTemplate.postForEntity(url,bankMerchantAccountVO,Integer.class).getBody();
-        return response;
-    }
-
-
-    /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param bankMerchantAccountListVO 红包明细表
-     * @return
-     */
-    @Override
-    public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
-        Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
         return response;
     }
 
@@ -567,6 +598,68 @@ public class AmTradeClientImpl implements AmTradeClient{
             return response;
         }
         return null;
+    }
+
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param bankMerchantAccountListVO 红包明细表
+     * @return
+     */
+    @Override
+    public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
+        Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 银行转账异常
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
+        AdminTransferExceptionLogResponse response=restTemplate.postForEntity(url,request,AdminTransferExceptionLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 银行转账异常
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getCountRecord";
+        return restTemplate.postForEntity(url,request,Integer.class).getBody();
+    }
+
+    /**
+     * 更新银行转账信息
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
+        return restTemplate.postForEntity(url,request,Integer.class).getBody();
+    }
+
+    /**
+     * 更新银行转账信息
+     * @param transferExceptionLog
+     * @return
+     */
+    @Override
+    public int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID1";
+        return restTemplate.postForEntity(url,transferExceptionLog,Integer.class).getBody();
     }
 
     /**
