@@ -266,4 +266,17 @@ public class CreditTenderController extends BaseController{
         }
     }
 
+    /**
+     * 修改债转结果
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     * @return
+     */
+    @PostMapping("/updateCreditTenderResult/{logOrderId}/{logUserId}/{retCode}/{retMsg}")
+    public Integer updateCreditTenderResult( @PathVariable String logOrderId,@PathVariable String logUserId,@PathVariable String retCode,@PathVariable String retMsg){
+        return bankCreditTenderService.updateCreditTenderResult(logOrderId,logUserId,retCode,retMsg);
+    }
+
 }

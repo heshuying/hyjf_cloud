@@ -90,4 +90,21 @@ public interface AmUserClient {
      */
     UserInfoCustomizeVO getUserInfoCustomizeByUserId(Integer userId);
 
+    /**
+     * 根据用户id查询推荐人表信息
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    SpreadsUserVO searchSpreadsUserByUserId(Integer userId);
+
+
+    /**
+     * 根据用户id查询employee
+     * @auth sunpeikai
+     * @param userId 用户id
+     * @return
+     */
+    EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId);
+
 }

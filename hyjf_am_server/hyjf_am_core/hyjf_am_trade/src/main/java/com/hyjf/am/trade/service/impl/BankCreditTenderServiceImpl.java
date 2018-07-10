@@ -1520,5 +1520,28 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 		this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
 	}
 
+	/**
+	 * 修改债转结果
+	 *
+	 * @param logOrderId
+	 * @param logUserId
+	 * @param retCode
+	 * @param retMsg
+	 * @return
+	 */
+	@Override
+	public Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg) {
+		CreditTenderLogExample example = new CreditTenderLogExample();
+		CreditTenderLogExample.Criteria cra = example.createCriteria();
+		cra.andLogOrderIdEqualTo(logOrderId).andUserIdEqualTo(Integer.parseInt(logUserId));
+		List<CreditTenderLog> list = this.creditTenderLogMapper.selectByExample(example);
+		if(!CollectionUtils.isEmpty(list)){
+			CreditTenderLog log = list.get(0);
+			//log.setAccountId();
+			this.creditTenderLogMapper.updateByPrimaryKeySelective(log);
+		}
+		return null;
+	}
+
 
 }
