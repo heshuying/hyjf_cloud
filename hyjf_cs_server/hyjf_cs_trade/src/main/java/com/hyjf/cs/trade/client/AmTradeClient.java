@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
@@ -199,4 +200,18 @@ public interface AmTradeClient {
      * @return List<CouponUserForAppCustomizeVO>
      */
     List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
+
+    /**
+     * APP,PC,wechat散标投资获取优惠券列表
+     * @param requestBean
+     * @return
+     */
+    CouponResponse getBorrowCoupon(MyCouponListRequest requestBean);
+
+    /**
+     * APP,PC,wechat加入计划获取优惠券列表
+     * @param requestBean
+     * @return
+     */
+    CouponResponse getPlanCoupon(MyCouponListRequest requestBean);
 }

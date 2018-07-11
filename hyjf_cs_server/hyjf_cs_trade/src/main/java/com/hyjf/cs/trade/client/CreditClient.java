@@ -108,4 +108,20 @@ public interface CreditClient {
      * @param retMsg
      */
     Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg);
+
+    /**
+     * 查询债转失败原因
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    String getFailResult(String logOrdId, Integer userId);
+
+    /**
+     * 根据logOrdId和userId 查询债转信息
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId);
 }

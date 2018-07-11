@@ -1,27 +1,19 @@
 package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecover;
 
-import com.hyjf.am.common.ConvertUtils;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminHjhDebtCreditCustomize;
 import com.hyjf.am.trade.service.admin.productcenter.batchcenter.borrowRecover.BatchCenterBorrowRecoverService;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
-import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther:yangchangwei
@@ -61,13 +53,23 @@ public class AdminBatchBorrowRecoverController extends BaseController {
         int limitStart = paginator.getOffset();
         int limitEnd = paginator.getLimit();
 
+
         List<BatchBorrowRecoverVo> list =  batchBorrowRecoverService.getList(request,limitStart,limitEnd);
-        //TODO 获取列表后循环列表设置状态显示描述
         reponse.setRecordTotal(total);
         reponse.setResultList(list);
         return reponse;
     }
 
-    //TODO 获取列表求和用于显示
+    @ApiOperation(value = "获取列表求和用于显示")
+    @PostMapping("/getListSum")
+    public BatchBorrowRecoverReponse getListSum(BatchBorrowRecoverRequest request){
+
+        BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
+
+        BatchBorrowRecoverVo result =  batchBorrowRecoverService.getListSum(request);
+        reponse.setResult(result);
+        return reponse;
+    }
+
 
 }

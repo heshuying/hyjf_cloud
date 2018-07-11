@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
 import com.hyjf.am.trade.service.BorrowCreditService;
+import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
@@ -91,7 +92,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
        params.put("bidNid",request.getBidNid());
        params.put("creditStatus",request.getCreditStatus());
        params.put("timeStart",request.getTimeStart());
-       params.put("limitEnd",request.getLimitEnd());
+       params.put("timeEnd",request.getTimeEnd());
        return borrowCreditCustomizeMapper.getBorrowCreditList4Admin(params);
     }
 
@@ -125,6 +126,37 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         params.put("timeStart",request.getTimeStart());
         params.put("timeEnd",request.getTimeEnd());
         return borrowCreditCustomizeMapper.getBorrowCreditTotalCount(params);
+    }
+
+    /**
+     * 债权转让详情count
+     * @author zhangyk
+     * @date 2018/7/10 17:51
+     */
+    @Override
+    public Integer countBorrowCreditInfo4Admin(BorrowCreditAmRequest request) {
+        return borrowCreditCustomizeMapper.countBorrowCreditInfo4Admin(request);
+    }
+
+
+    /**
+     * 债权转让详情list
+     * @author zhangyk
+     * @date 2018/7/10 17:51
+     */
+    @Override
+    public List<AdminBorrowCreditCustomize> getBorrowCreditInfo4Admin(BorrowCreditAmRequest request) {
+        return  borrowCreditCustomizeMapper.searchBorrowCreditInfo4Admin(request);
+    }
+
+    /**
+     * 债权转让详情合计行
+     * @author zhangyk
+     * @date 2018/7/10 20:29
+     */
+    @Override
+    public BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request) {
+        return borrowCreditCustomizeMapper.sumBorrowCreditInfoData(request);
     }
 
 

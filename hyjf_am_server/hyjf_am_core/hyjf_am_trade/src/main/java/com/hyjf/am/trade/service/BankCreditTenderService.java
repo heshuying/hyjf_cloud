@@ -140,4 +140,20 @@ public interface BankCreditTenderService {
      * @return
      */
     Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg);
+
+    /**
+     * 查询债转失败原因
+     * @param logOrderId
+     * @param logUserId
+     * @return
+     */
+    String getFailResult(String logOrderId, String logUserId);
+
+    /**
+     * 查询债转信息
+     * @param logOrderId
+     * @param logUserId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByUserIdOrdId(String logOrderId, String logUserId);
 }

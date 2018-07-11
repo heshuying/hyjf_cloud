@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.hyjf.am.vo.trade.*;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,7 @@ import com.hyjf.cs.trade.client.CreditClient;
 import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.base.Producer;
 import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
@@ -145,6 +147,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Autowired
     private UtmRegProducer utmRegProducer;
 
+    @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 
@@ -251,6 +254,43 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             }
         }
         return null;
+    }
+
+    /**
+     * 债转投资获取投资失败结果
+     *
+     * @param userVO
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
+        String errorMsg = creditClient.getFailResult(logOrdId,userVO.getUserId());
+        Map<String, Object> data = new HashedMap();
+        data.put("errorMsg",errorMsg);
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setData(data);
+        return result;
+    }
+
+    /**
+     * 获取债转成功的信息
+     *
+     * @param userId
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
+        CreditTenderVO bean = creditClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
+        Map<String, Object> data = new HashedMap();
+        // 投资金额
+        data.put("assignCapital",bean.getAssignCapital());
+        // 历史回报
+        data.put("assignInterest",bean.getAssignInterest());
+        WebResult<Map<String, Object>> result = new WebResult();
+        result.setData(data);
+        return result;
     }
 
     /**

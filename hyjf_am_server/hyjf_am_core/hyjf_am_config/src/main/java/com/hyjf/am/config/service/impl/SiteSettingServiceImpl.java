@@ -3,19 +3,20 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-import java.util.Random;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.config.dao.mapper.auto.SiteSettingMapper;
 import com.hyjf.am.config.dao.model.auto.SiteSetting;
 import com.hyjf.am.config.dao.model.auto.SiteSettingExample;
 import com.hyjf.am.config.service.SiteSettingService;
+import com.hyjf.am.resquest.admin.SitesettingRequest;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author fuqiang
@@ -28,17 +29,17 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 
 	@Override
 	public SiteSetting findOne() {
-		SiteSetting SiteSetting = null;
-		if (SiteSetting == null) {
+		SiteSetting siteSetting = null;
+		if (siteSetting == null) {
 			SiteSettingExample example = new SiteSettingExample();
 			List<SiteSetting> SiteSettingList = siteSettingMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(SiteSettingList)) {
-				SiteSetting = SiteSettingList.get(0);
-				RedisUtils.setObjEx(RedisKey.SITE_SETTINGS, SiteSetting, 24 * 60 * 60);
-				return SiteSetting;
+				siteSetting = SiteSettingList.get(0);
+				RedisUtils.setObjEx(RedisKey.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
+				return siteSetting;
 			}
 		}
-		return SiteSetting;
+		return siteSetting;
 	}
 	
 	
@@ -72,8 +73,18 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 	    
 	    
 	}
-	
-    public void updateTest2() {
+
+	@Override
+	public void update(SitesettingRequest request) {
+		SiteSetting siteSetting = new SiteSetting();
+		BeanUtils.copyProperties(request, siteSetting);
+		int result = siteSettingMapper.updateByPrimaryKey(siteSetting);
+		if (result > 0) {
+			RedisUtils.setObjEx(RedisKey.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
+		}
+	}
+
+	public void updateTest2() {
         SiteSettingExample example = new SiteSettingExample();
         
 //      example.createCriteria();

@@ -11,6 +11,7 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.mq.MailProducer;
 import com.hyjf.admin.mq.Producer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
@@ -220,7 +221,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         MailMessage mailMessage = new MailMessage(null, replaceMap, "用户转账",null,null, email, CustomConstants.PARAM_TPL_TRANSFER, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
         // 发送
         try {
-            mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+            mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
         } catch (MQException e) {
             e.printStackTrace();
         }

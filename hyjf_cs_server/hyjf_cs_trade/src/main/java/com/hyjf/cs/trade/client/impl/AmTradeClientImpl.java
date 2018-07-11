@@ -1,11 +1,9 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.resquest.trade.BorrowAuthRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.resquest.trade.*;
@@ -292,7 +290,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<HjhAccedeVO> selectPlanJoinList() {
         String url = urlBase + "autoTenderController/selectPlanJoinList";
-        Response<HjhAccedeVO> response = restTemplate.getForEntity(url, Response.class).getBody();
+        HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -309,9 +307,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     public Map<String, Object> saveCreditTenderLog(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
         String url = urlBase + "autoTenderController/saveCreditTenderLog";
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
-        Response<Map<String, Object>> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        MapResponse response = restTemplate.postForEntity(url, request, MapResponse.class).getBody();
         if (response != null) {
-            return response.getResult();
+            return response.getResultMap();
         }
         return null;
     }
@@ -529,6 +527,26 @@ public class AmTradeClientImpl implements AmTradeClient {
         CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public CouponResponse getBorrowCoupon(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/getborrowcoupon";
+        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CouponResponse getPlanCoupon(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/getplancoupon";
+        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        if (response != null) {
+            return response;
         }
         return null;
     }

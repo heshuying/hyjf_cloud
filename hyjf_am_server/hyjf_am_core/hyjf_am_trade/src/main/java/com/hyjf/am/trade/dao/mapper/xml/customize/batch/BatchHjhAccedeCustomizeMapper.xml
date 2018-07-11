@@ -18,13 +18,14 @@
 		<result column="already_invest" property="alreadyInvest" jdbcType="DECIMAL" />
 		<result column="client" property="client" jdbcType="TINYINT" />
 		<result column="order_status" property="orderStatus" jdbcType="TINYINT" />
-		<result column="add_time" property="addTime" jdbcType="INTEGER" />
 		<result column="count_interest_time" property="countInterestTime" jdbcType="INTEGER" />
 		<result column="send_status" property="sendStatus" jdbcType="TINYINT" />
 		<result column="lock_period" property="lockPeriod" jdbcType="INTEGER" />
 		<result column="commission_status" property="commissionStatus" jdbcType="TINYINT" />
 		<result column="commission_count_time" property="commissionCountTime" jdbcType="INTEGER" />
 		<result column="available_invest_account" property="availableInvestAccount" jdbcType="DECIMAL" />
+		<result column="end_date" property="endDate" jdbcType="DATE" />
+		<result column="credit_complete_flag" property="creditCompleteFlag" jdbcType="TINYINT" />
 		<result column="frost_account" property="frostAccount" jdbcType="DECIMAL" />
 		<result column="wait_total" property="waitTotal" jdbcType="DECIMAL" />
 		<result column="wait_captical" property="waitCaptical" jdbcType="DECIMAL" />
@@ -32,8 +33,6 @@
 		<result column="received_total" property="receivedTotal" jdbcType="DECIMAL" />
 		<result column="received_interest" property="receivedInterest" jdbcType="DECIMAL" />
 		<result column="received_capital" property="receivedCapital" jdbcType="DECIMAL" />
-		<result column="end_date" property="endDate" jdbcType="DATE" />
-		<result column="credit_complete_flag" property="creditCompleteFlag" jdbcType="TINYINT" />
 		<result column="quit_time" property="quitTime" jdbcType="INTEGER" />
 		<result column="last_payment_time" property="lastPaymentTime" jdbcType="INTEGER" />
 		<result column="acctual_payment_time" property="acctualPaymentTime" jdbcType="INTEGER" />
@@ -45,28 +44,28 @@
 		<result column="liquidation_fair_value" property="liquidationFairValue" jdbcType="DECIMAL" />
 		<result column="actual_apr" property="actualApr" jdbcType="DECIMAL" />
 		<result column="invest_counts" property="investCounts" jdbcType="INTEGER" />
-		<result column="match_dates" property="matchDates" jdbcType="INTEGER" />
+		<result column="match_dates" property="matchDates" jdbcType="TINYINT" />
 		<result column="lqd_service_fee" property="lqdServiceFee" jdbcType="DECIMAL" />
 		<result column="lqd_service_apr" property="lqdServiceApr" jdbcType="DECIMAL" />
 		<result column="invest_service_apr" property="investServiceApr" jdbcType="DECIMAL" />
 		<result column="lqd_progress" property="lqdProgress" jdbcType="DECIMAL" />
 		<result column="create_user" property="createUser" jdbcType="INTEGER" />
-		<result column="create_time" property="createTime" jdbcType="INTEGER" />
 		<result column="update_user" property="updateUser" jdbcType="INTEGER" />
-		<result column="update_time" property="updateTime" jdbcType="INTEGER" />
-		<result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+		<result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="Base_Column_List" >
 		id, accede_order_id, plan_nid, user_id, user_name, user_attribute, invite_user_id,
 		invite_user_name, invite_user_attribute, invite_user_regionname, invite_user_branchname,
 		invite_user_departmentname, accede_account, already_invest, client, order_status,
-		add_time, count_interest_time, send_status, lock_period, commission_status, commission_count_time,
-		available_invest_account, frost_account, wait_total, wait_captical, wait_interest,
-		received_total, received_interest, received_capital, end_date, credit_complete_flag,
+		count_interest_time, send_status, lock_period, commission_status, commission_count_time,
+		available_invest_account, end_date, credit_complete_flag, frost_account, wait_total,
+		wait_captical, wait_interest, received_total, received_interest, received_capital,
 		quit_time, last_payment_time, acctual_payment_time, should_pay_total, should_pay_capital,
 		should_pay_interest, expect_apr, fair_value, liquidation_fair_value, actual_apr,
 		invest_counts, match_dates, lqd_service_fee, lqd_service_apr, invest_service_apr,
-		lqd_progress, create_user, create_time, update_user, update_time, del_flg
+		lqd_progress, create_user, update_user, del_flag, create_time, update_time
 	</sql>
 	<select id="selectHjhAutoTenderList" resultMap="BaseResultMap" parameterType="java.util.Map">
 		<!--   	自动投资成功的回款复投 -->
@@ -74,7 +73,7 @@
 		SELECT
 		<include refid="Base_Column_List"/>
 		FROM
-		hyjf_hjh_accede
+		ht_hjh_accede
 		WHERE
 		Order_Status = 2
 		AND Available_Invest_Account <![CDATA[>=]]> #{minRetenderAccount}
@@ -87,7 +86,7 @@
 		SELECT
 		<include refid="Base_Column_List"/>
 		FROM
-		hyjf_hjh_accede
+		ht_hjh_accede
 		WHERE
 		Order_Status = 0
 		<!-- 		AND Available_Invest_Account <![CDATA[>=]]> #{minTenderAccount} -->
@@ -100,7 +99,7 @@
 		SELECT
 		<include refid="Base_Column_List"/>
 		FROM
-		hyjf_hjh_accede
+		ht_hjh_accede
 		WHERE
 		Order_Status = 3
 		AND Available_Invest_Account <![CDATA[>=]]> #{minRetenderAccount}
@@ -113,7 +112,7 @@
 
 	<!-- 计划放款后计划订单冻结金额变化  -->
 	<update id="updateOfPlanLoansTender" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-		update hyjf_hjh_accede
+		update ht_hjh_accede
 		set
 		frost_account = IFNULL(frost_account,0) - #{frostAccount,jdbcType=DECIMAL}
 		where
@@ -122,7 +121,7 @@
 
 	<!-- 更新待收收益  -->
 	<update id="updateInterest" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-		update hyjf_hjh_accede
+		update ht_hjh_accede
 		set
 		wait_total = IFNULL(wait_total,0) + #{waitTotal,jdbcType=DECIMAL},
 		wait_captical = IFNULL(wait_captical,0) + #{waitCaptical,jdbcType=DECIMAL},
@@ -134,7 +133,7 @@
 	<!--add 汇计划三期 计算匹配期处理 liubin 20180515 start-->
 	<!-- 更新匹配期  -->
 	<update id="updateMatchDates" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-		UPDATE hyjf_hjh_accede
+		UPDATE ht_hjh_accede
 		SET
 		match_dates = IF(datediff(now(),FROM_UNIXTIME(add_time)) >= 99,99,datediff(now(),FROM_UNIXTIME(add_time)))
 		WHERE

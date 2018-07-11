@@ -319,5 +319,27 @@
 		) as total
 	</select>
 
+	<resultMap id="borrowCustomizeMap" type="com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
+		<result column="borrow_pre_nid" property="borrowPreNid" jdbcType="VARCHAR" />
+		<result column="borrow_pre_nid_new" property="borrowPreNidNew" jdbcType="VARCHAR" />
 
+	</resultMap>
+	<select id="getBorrowCustomize" resultMap="borrowCustomizeMap" parameterType="String">
+		SELECT
+				a.id,
+				a.user_id,
+				a.borrow_nid,
+				b.borrow_valid_time,
+				b.borrow_pre_nid,
+				b.borrow_pre_nid_new
+			FROM ht_borrow a, ht_borrow_info b
+
+			WHERE a.id = b.id
+			  AND a.borrow_nid = #{borrowNid}
+
+	</select>
 </mapper>

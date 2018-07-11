@@ -45,4 +45,24 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         }
         return new ContentArticle();
     }
+
+    /**
+     * 获取联系我们
+     *
+     * @return
+     * @author Michael
+     */
+    @Override
+    public ContentArticle getContactUs() {
+        ContentArticleExample example = new ContentArticleExample();
+        ContentArticleExample.Criteria cra = example.createCriteria();
+        cra.andTypeEqualTo("8");// 联系我们
+        cra.andStatusEqualTo(1);// 启用状态
+
+        List<ContentArticle> conlist = contentArticleMapper.selectByExample(example);
+        if (conlist != null && conlist.size() > 0) {
+            return conlist.get(0);
+        }
+        return new ContentArticle();
+    }
 }

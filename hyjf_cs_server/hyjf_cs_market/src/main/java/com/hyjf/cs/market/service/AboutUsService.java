@@ -3,10 +3,7 @@
  */
 package com.hyjf.cs.market.service;
 
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.config.LinkVO;
-import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.am.vo.config.*;
 
 import java.util.List;
 
@@ -65,4 +62,22 @@ public interface AboutUsService extends BaseMarketService {
      * @return
      */
     ContentArticleVO getNoticeInfo(Integer id);
+
+    /**
+     * 获取招贤纳士列表
+     * @return
+     */
+    public List<JobsVo> getJobsList();
+
+    /**
+     * 获取联系我们
+     * @return
+     */
+    public ContentArticleVO getContactUs();
+
+    /**
+     * 获取网贷知识
+     * @return
+     */
+    public List<ContentArticleVO> getHomeNoticeList();
 }

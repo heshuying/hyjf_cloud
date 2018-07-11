@@ -17,6 +17,9 @@ public interface BaseTradeService extends BaseService{
      * @Date 2018/6/12 10:34
      */
     WebViewUserVO getUsersByToken(String token);
+
+    UserVO getUserByUserId(Integer userId);
+
     /**
      * 获取银行开户信息
      *

@@ -1,12 +1,12 @@
 package com.hyjf.admin.service.coupon;
 
-import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
-import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
-
 import java.util.List;
 import java.util.Map;
+
+import com.hyjf.am.resquest.admin.CouponTenderRequest;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
+import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 
 /**
  * @author walter.limeng
@@ -46,7 +46,7 @@ public interface CouponTenderHjhService {
      * @param paramMap couponUserId 优惠券发放编号，userFlag ：1
      * @return List<CouponRecoverVo>
      */
-    List<CouponRecoverVo> getCouponRecoverCustomize(Map<String,Object> paramMap);
+    List<CouponRecoverVO> getCouponRecoverCustomize(Map<String,Object> paramMap);
 
     /**
      * 处理优惠券使用平台，使用项目

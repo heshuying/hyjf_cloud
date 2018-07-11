@@ -127,7 +127,13 @@ public class RepayManageController extends BaseController {
             RepayBean repayBean = JSON.parseObject(requestBean.getRepayBeanData(), RepayBean.class);
             BankCallBean bankCallBean = JSON.parseObject(requestBean.getBankCallBeanData(), BankCallBean.class);
 
-            return repayManageService.updateRepayMoney(repayBean, bankCallBean);
+            boolean result = repayManageService.updateRepayMoney(repayBean, bankCallBean);
+            if(!result){
+                return false;
+            }else {
+                repayManageService.updateBorrowCreditStautus(repayBean.getBorrowNid());
+            }
+            return true;
         } catch (Exception e) {
             logger.error("还款申请更新数据库失败", e);
             return false;
