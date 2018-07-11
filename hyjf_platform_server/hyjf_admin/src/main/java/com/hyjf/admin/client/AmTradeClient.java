@@ -3,11 +3,9 @@
  */
 package com.hyjf.admin.client;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
@@ -16,7 +14,6 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 
@@ -386,13 +383,6 @@ public interface AmTradeClient {
     TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid);
 
     /**
-     * 转账成功后续处理
-     * @param jsonObject
-     * @return
-     */
-    boolean transferAfter(JSONObject jsonObject);
-    /**
-     *
      * 根据筛选条件查询分佣数据count
      * @auth sunpeikai
      * @param request 筛选条件
@@ -415,21 +405,4 @@ public interface AmTradeClient {
     List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd);
 
     Integer getFreezeLogValidAllCount();
-
-
-    /**
-     * 根据主键获取优惠券还款记录
-     * @param recoverId
-     * @return
-     */
-    CouponRecoverVO getCouponRecoverByPrimaryKey(Integer recoverId);
-
-    /**
-     *取得优惠券投资信息
-     * @param nid
-     * @return
-     */
-    BorrowTenderCpnVO getCouponTenderInfoByNid(String nid);
-
-
 }
