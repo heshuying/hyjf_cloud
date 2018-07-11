@@ -68,6 +68,9 @@ public class QuartzConfig {
 		prop.put("org.quartz.dataSource.quartzDataSource.user", user);
 		prop.put("org.quartz.dataSource.quartzDataSource.password", password);
 		prop.put("org.quartz.dataSource.quartzDataSource.maxConnections", maxConnections);
+		prop.put("org.quartz.dataSource.quartzDataSource.validateOnCheckout", true);
+		prop.put("org.quartz.dataSource.quartzDataSource.validationQuery", "select 1");
+
 		return prop;
 	}
 }
