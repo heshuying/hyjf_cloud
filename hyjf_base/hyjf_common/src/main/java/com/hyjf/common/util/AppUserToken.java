@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author renxingchen
  * @version hyjf 1.0
  * @since hyjf 1.0 2016年2月18日
- * @see 上午11:32:14
+ * @see上午11:32:14
  */
 public class AppUserToken implements Serializable {
 
@@ -27,6 +27,13 @@ public class AppUserToken implements Serializable {
         super();
         this.userId = userId;
         this.username = username;
+    }
+
+    public AppUserToken(Integer userId, String username,String accountId) {
+        super();
+        this.userId = userId;
+        this.username = username;
+        this.accountId = accountId;
     }
 
     public Integer getUserId() {
@@ -49,4 +56,13 @@ public class AppUserToken implements Serializable {
 
     private String username;
 
+    private String accountId;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 }

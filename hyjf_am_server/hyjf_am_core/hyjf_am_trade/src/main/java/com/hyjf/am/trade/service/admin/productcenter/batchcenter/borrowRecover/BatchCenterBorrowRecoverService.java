@@ -28,4 +28,11 @@ public interface BatchCenterBorrowRecoverService extends BaseService{
      * @return
      */
     List<BatchBorrowRecoverVo> getList(BatchBorrowRecoverRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取列表求和
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverVo getListSum(BatchBorrowRecoverRequest request);
 }

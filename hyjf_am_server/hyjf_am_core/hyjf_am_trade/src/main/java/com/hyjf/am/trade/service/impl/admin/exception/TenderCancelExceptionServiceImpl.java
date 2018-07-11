@@ -16,6 +16,7 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -96,6 +97,7 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteBorrowTenderTmpById(Integer id) {
         return borrowTenderTmpMapper.deleteByPrimaryKey(id);
     }
@@ -107,6 +109,7 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO) {
         FreezeHistory freezeHistory = CommonUtils.convertBean(freezeHistoryVO,FreezeHistory.class);
         return freezeHistoryMapper.insertSelective(freezeHistory);

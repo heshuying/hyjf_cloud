@@ -35,6 +35,7 @@ public class BaseClientImpl implements BaseClient {
                 return t;
             }
             logger.error("调用原子层异常, 请求路径url : {} ", url);
+            // 后期抛出自定义异常，使用拦截器定向拦截，向页面返回调用失败的类似错误信息
             throw new RuntimeException("调用原子层服务异常");
         }  catch (Exception e) {
             logger.error("调用原子层异常, 请求路径url : {} ", url);

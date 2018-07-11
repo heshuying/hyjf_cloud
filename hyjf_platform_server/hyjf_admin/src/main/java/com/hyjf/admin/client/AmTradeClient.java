@@ -469,4 +469,52 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
+
+    /**
+     * 查询批次中心的批次列表的求和
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
+
+
+    /**
+     * 根据筛选条件查询汇付对账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getAccountExceptionCount(AccountExceptionRequest request);
+
+    /**
+     * 根据筛选条件查询汇付对账列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<AccountExceptionVO> searchAccountExceptionList(AccountExceptionRequest request);
+
+    /**
+     * 根据id查询AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    AccountExceptionVO searchAccountExceptionById(Integer id);
+
+    /**
+     * 更新AccountException
+     * @auth sunpeikai
+     * @param accountExceptionVO 更新参数
+     * @return
+     */
+    Integer updateAccountException(AccountExceptionVO accountExceptionVO);
+
+    /**
+     * 根据id删除AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    Integer deleteAccountExceptionById(Integer id);
 }

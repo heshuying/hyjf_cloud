@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.service.regist;
 
+import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -39,8 +41,9 @@ public interface RegistService extends BaseUserService {
      */
     UserVO apiRegister(RegisterRequest registerRequest, String ipAddr);
 
-    abstract boolean checkActivityIfAvailable(Integer activityId);
+    boolean checkActivityIfAvailable(Integer activityId);
 
     int countUserByRecommendName(String recommend);
 
+    AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
 }
