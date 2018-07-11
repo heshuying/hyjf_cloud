@@ -3,10 +3,14 @@
  */
 package com.hyjf.admin.client.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +20,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
-import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
-import com.hyjf.am.response.trade.BorrowResponse;
-import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
@@ -749,4 +748,58 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+    /**
+     * 根据id删除冻结记录
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
+    @Override
+    public Integer deleteFreezeLogById(Integer id){
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/deleteby_id/" + id;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
+    /**
+     * 根据orderId获取冻结记录
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
+    @Override
+    public BankRepayFreezeLogVO getBankFreezeLogByOrderId(String orderId){
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid_byorderid/" + orderId;
+        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url,BankRepayFreezeLogResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 分页获取所有有效的冻结记录
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
+    @Override
+    public List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd){
+        Map<String,Integer> params = new HashMap<>();
+        params.put("limitStart",limitStart);
+        params.put("limitEnd",limitEnd);
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid_all";
+        BankRepayFreezeLogResponse response = restTemplate.postForEntity(url,params,BankRepayFreezeLogResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 有效冻结记录总数
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
+    @Override
+    public Integer getFreezeLogValidAllCount(){
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid_all_count";
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
 }

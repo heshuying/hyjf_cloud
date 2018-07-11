@@ -18,9 +18,11 @@ public class BaseClientImpl implements BaseClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    public static final  String SUCCESS_METHOD_NAME = "isSuccess";
+
 
     /**
-     * 调用原子层,并反射出调用结果
+     * POST调用原子层,并反射出调用结果
      * @author zhangyk
      * @date 2018/7/11 10:34
      */
@@ -29,29 +31,56 @@ public class BaseClientImpl implements BaseClient {
         try {
             T t = restTemplate.postForEntity(url, param, clazz).getBody();
             logger.info("调用原子层返回结果response = {}", JSON.toJSON(t));
-            if (t != null) {
-                Object parent = clazz.getSuperclass().newInstance();
-                Method isSuccess = clazz.getMethod("isSuccess", parent.getClass());
-                if ((Boolean) isSuccess.invoke(parent, t)) {
-                    return t;
-                }
+            if (checkSuccess(t,clazz)){
+                return t;
             }
             logger.error("调用原子层异常, 请求路径url : {} ", url);
             throw new RuntimeException("调用原子层服务异常");
-            // 多个catch 可以用Exception 统一代替
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        }  catch (Exception e) {
             logger.error("调用原子层异常, 请求路径url : {} ", url);
             logger.error("调用原子层异常, errorStack : {} ", e);
             throw new RuntimeException("调用原子层服务异常");
         }
-        return null;
     }
+
+
+    /**
+     * GET调用
+     * @author zhangyk
+     * @date 2018/7/11 11:14
+     */
+    @Override
+    public <T> T getExe(String url, Class<T> clazz) {
+        try {
+            T t = restTemplate.getForEntity(url,  clazz).getBody();
+            logger.info("调用原子层返回结果response = {}", JSON.toJSON(t));
+            if (checkSuccess(t,clazz)){
+                return t;
+            }
+            logger.error("调用原子层异常, 请求路径url : {} ", url);
+            throw new RuntimeException("调用原子层服务异常");
+        }  catch (Exception e) {
+            logger.error("调用原子层异常, 请求路径url : {} ", url);
+            logger.error("调用原子层异常, errorStack : {} ", e);
+            throw new RuntimeException("调用原子层服务异常");
+        }
+    }
+
+    /**
+     * 校验调用是否成功
+     * @author zhangyk
+     * @date 2018/7/11 11:25
+     */
+    private <T> Boolean checkSuccess(T t, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        if (t != null) {
+            Object parent = clazz.getSuperclass().newInstance();
+            Method isSuccess = clazz.getMethod(SUCCESS_METHOD_NAME, parent.getClass());
+            if ((Boolean) isSuccess.invoke(parent, t)) {
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+
 }

@@ -10,10 +10,9 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 还款冻结表操作
@@ -37,7 +36,7 @@ public class BankRepayFreezeLogController extends BaseController {
     }
 
     /**
-     * 删除
+     * 根据orderId删除（逻辑删）
      * @param orderId
      * @return
      */
@@ -48,6 +47,16 @@ public class BankRepayFreezeLogController extends BaseController {
         }
 
         return bankRepayFreezeLogService.deleteFreezeLogsByOrderId(orderId);
+    }
+
+    /**
+     * 根据id删除（物理删）
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
+    @RequestMapping("/deleteby_id/{id}")
+    public Integer deleteFreezeLogById(Integer id) {
+        return bankRepayFreezeLogService.deleteFreezeLogById(id);
     }
 
     /**
@@ -63,5 +72,45 @@ public class BankRepayFreezeLogController extends BaseController {
             response.setResult(CommonUtils.convertBean(log,BankRepayFreezeLogVO.class));
         }
         return response;
+    }
+
+    /**
+     * 根据orderId获取冻结记录
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
+    @RequestMapping("/get_logvalid_byorderid/{orderId}")
+    public BankRepayFreezeLogResponse getBankFreezeLogByOrderId(String orderId) {
+        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+        BankRepayFreezeLog log = bankRepayFreezeLogService.getBankFreezeLogByOrderId(orderId);
+        if (Validator.isNotNull(log)){
+            response.setResult(CommonUtils.convertBean(log,BankRepayFreezeLogVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 分页获取所有有效的冻结记录
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @RequestMapping("/get_logvalid_all")
+    public BankRepayFreezeLogResponse getFreezeLogValidAll(@RequestParam Integer limitStart, @RequestParam Integer limitEnd){
+        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+        List<BankRepayFreezeLog> logList = bankRepayFreezeLogService.getFreezeLogValidAll(limitStart,limitEnd);
+        if (Validator.isNotNull(logList)){
+            response.setResultList(CommonUtils.convertBeanList(logList,BankRepayFreezeLogVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 有效冻结记录总数
+     * @return
+     */
+    @RequestMapping("/get_logvalid_all_count")
+    public Integer getFreezeLogValidAllCount() {
+        return bankRepayFreezeLogService.getFreezeLogValidAllCount();
     }
 }

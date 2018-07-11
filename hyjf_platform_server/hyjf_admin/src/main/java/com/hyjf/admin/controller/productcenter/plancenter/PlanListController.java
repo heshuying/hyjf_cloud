@@ -57,10 +57,10 @@ public class PlanListController extends BaseController{
      * 画面初始化
      *
      * @param request
-     * @return 标的分配规则引擎列表          已测试
+     * @return 计划列表         已测试
      */
     @ApiOperation(value = "计划列表", notes = "计划列表初始化")
-    @PostMapping(value = "/search")
+    @PostMapping(value = "/searchAction")
     @ResponseBody
     /*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW) */   
     public AdminResult<ListResult<HjhPlanVO>> search(HttpServletRequest request, @RequestBody @Valid PlanListRequest form) {

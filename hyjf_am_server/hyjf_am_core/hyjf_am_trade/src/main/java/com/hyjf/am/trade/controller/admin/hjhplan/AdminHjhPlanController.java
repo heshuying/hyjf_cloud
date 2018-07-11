@@ -14,17 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.admin.HjhPlanSumResponse;
-import com.hyjf.am.resquest.admin.AllocationEngineRuquest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanService;
-import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
-import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
