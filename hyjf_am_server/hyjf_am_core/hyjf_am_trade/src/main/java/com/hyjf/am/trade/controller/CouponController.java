@@ -1,12 +1,17 @@
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
+import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -61,6 +66,28 @@ public class CouponController extends BaseController{
             BorrowTenderCpnVO borrowTenderCpnVO = new BorrowTenderCpnVO();
             BeanUtils.copyProperties(cpn,borrowTenderCpnVO);
             response.setResult(borrowTenderCpnVO);
+        }
+        return response;
+    }
+
+    @ApiOperation(value = "获取优惠券还款记录")
+    @GetMapping("/getCouponRecoverByPrimaryKey/{id}")
+    public CouponRecoverResponse getCouponRecoverByPrimaryKey(@PathVariable Integer id){
+        CouponRecoverResponse response = new CouponRecoverResponse();
+        CouponRecover recover=couponService.getCouponRecoverByPrimaryKey(id);
+        if (Validator.isNotNull(recover)){
+            response.setResult(CommonUtils.convertBean(recover,CouponRecoverVO.class));
+        }
+        return response;
+    }
+
+    @ApiOperation(value = "获取优惠券投资信息")
+    @GetMapping("/getCouponTenderInfoByNid/{nid}")
+    public BorrowTenderCpnResponse getCouponTenderInfoByNid(@PathVariable String nid){
+        BorrowTenderCpnResponse response=new BorrowTenderCpnResponse();
+        BorrowTenderCpn borrowTenderCpn=couponService.getCouponTenderInfoByNid(nid);
+        if (Validator.isNotNull(borrowTenderCpn)){
+            response.setResult(CommonUtils.convertBean(borrowTenderCpn,BorrowTenderCpnVO.class));
         }
         return response;
     }

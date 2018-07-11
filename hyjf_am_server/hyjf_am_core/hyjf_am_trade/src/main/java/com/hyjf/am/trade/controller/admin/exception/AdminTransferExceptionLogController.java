@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.exception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
@@ -67,6 +68,22 @@ public class AdminTransferExceptionLogController extends BaseController {
             response.setResult(CommonUtils.convertBean(transferExceptionLog,TransferExceptionLogVO.class));
         }
         return response;
+    }
+
+
+    @PostMapping("/transferAfter")
+    public boolean transferAfter(@RequestBody JSONObject jsonObject){
+        boolean ret = false;
+        try {
+            ret = adminTransferExceptionLogService.transferAfter(jsonObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ret = false;
+        }finally {
+            return ret;
+        }
+
+
     }
 
 }

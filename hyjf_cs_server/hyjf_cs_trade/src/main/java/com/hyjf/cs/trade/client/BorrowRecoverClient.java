@@ -3,12 +3,10 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.trade.TenderAgreementRequest;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-
 import java.util.List;
+
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 
 /**
  * @author jijun

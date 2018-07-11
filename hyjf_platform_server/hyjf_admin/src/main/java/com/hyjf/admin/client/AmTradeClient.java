@@ -3,9 +3,11 @@
  */
 package com.hyjf.admin.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
@@ -405,13 +407,32 @@ public interface AmTradeClient {
     Integer getFreezeLogValidAllCount();
 
     /**
+     * 转账成功后续处理
+     * @param jsonObject
+     * @return
+     */
+    boolean transferAfter(JSONObject jsonObject);
+
+    /**
+     * 根据主键获取优惠券还款记录
+     * @param recoverId
+     * @return
+     */
+    CouponRecoverVO getCouponRecoverByPrimaryKey(Integer recoverId);
+
+    /**
+     *取得优惠券投资信息
+     * @param nid
+     * @return
+     */
+    BorrowTenderCpnVO getCouponTenderInfoByNid(String nid);
+    /**
      * 根据筛选条件查询银行投资撤销异常的数据count
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
      */
     Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request);
-
     /**
      * 根据筛选条件查询银行投资撤销异常list
      * @auth sunpeikai
@@ -419,7 +440,6 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowTenderTmpVO> searchTenderCancelExceptionList(TenderCancelExceptionRequest request);
-
     /**
      * 根据orderId查询BorrowTender
      * @auth sunpeikai
@@ -427,7 +447,6 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowTenderVO> searchBorrowTenderByOrderId(String orderId);
-
     /**
      * 根据orderId查询BorrowTenderTmp
      * @auth sunpeikai
@@ -435,7 +454,6 @@ public interface AmTradeClient {
      * @return
      */
     BorrowTenderTmpVO searchBorrowTenderTmpByOrderId(String orderId);
-
     /**
      * 根据id删除BorrowTenderTmp
      * @auth sunpeikai
@@ -451,5 +469,4 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
-
 }
