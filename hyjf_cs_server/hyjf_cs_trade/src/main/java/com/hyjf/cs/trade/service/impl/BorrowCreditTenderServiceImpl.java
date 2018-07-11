@@ -146,6 +146,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Autowired
     private UtmRegProducer utmRegProducer;
 
+    @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 
