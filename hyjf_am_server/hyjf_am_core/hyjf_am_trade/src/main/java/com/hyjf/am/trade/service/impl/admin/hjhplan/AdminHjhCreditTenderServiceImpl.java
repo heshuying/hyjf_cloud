@@ -106,4 +106,44 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		return list;
 	}
 
+	@Override
+	public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest request) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		// 是否从加入明细表来
+		param.put("isAccedelist", request.getIsAccedelist());
+		if (StringUtils.isNotEmpty(request.getAssignPlanNid())) {
+			param.put("assignPlanNid", request.getAssignPlanNid());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignPlanOrderId())) {
+			param.put("assignPlanOrderId", request.getAssignPlanOrderId());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignUserName())) {
+			param.put("assignUserName", request.getAssignUserName());
+		}
+		if (StringUtils.isNotEmpty(request.getCreditUserName())) {
+			param.put("creditUserName", request.getCreditUserName());
+		}
+		if (StringUtils.isNotEmpty(request.getCreditNid())) {
+			param.put("creditNid", request.getCreditNid());
+		}
+		if (StringUtils.isNotEmpty(request.getBorrowNid())) {
+			param.put("borrowNid", request.getBorrowNid());
+		}
+		if (StringUtils.isNotEmpty(request.getRepayStyle())) {
+			param.put("repayStyle", request.getRepayStyle());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignType())) {
+			param.put("assignType", request.getAssignType());
+		}
+		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
+		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
+		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderCustomizeMapper.selectDebtCreditTenderList(param);
+		if(!CollectionUtils.isEmpty(list)){
+			Map<String, String> map = CacheUtil.getParamNameMap("PLAN_ASSIGN_TYPE");
+			 for(HjhCreditTenderCustomizeVO hjhCreditTenderCustomizeVO : list){
+				 hjhCreditTenderCustomizeVO.setAssignTypeName(map.getOrDefault(hjhCreditTenderCustomizeVO.getAssignTypeName(),null));
+			 }
+		}
+		return list;
+	}
 }

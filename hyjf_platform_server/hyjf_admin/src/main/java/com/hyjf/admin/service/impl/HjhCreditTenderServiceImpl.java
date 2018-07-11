@@ -4,6 +4,8 @@
 package com.hyjf.admin.service.impl;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.hyjf.admin.client.HjhCreditTenderClient;
 import com.hyjf.admin.service.HjhCreditTenderService;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 
 /**
  * @author libin
@@ -32,6 +35,12 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 	public HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form) {
 		HjhCreditTenderResponse response = hjhCreditTenderClient.getHjhCreditTenderListByParam(form);
 		return response;
+	}
+
+	@Override
+	public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form) {
+		List<HjhCreditTenderCustomizeVO> list = hjhCreditTenderClient.getHjhCreditTenderListByParamWithOutPage(form);
+		return list;
 	}
 
 }
