@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.dao.model.customize.trade;
 
+import java.math.BigDecimal;
+
 /**
  * @author xiasq
  * @version BorrowCustomize, v0.1 2018/7/10 16:06
@@ -18,6 +20,12 @@ public class BorrowCustomize {
     private String borrowPreNid;
     /** 新的标的编号排序 */
     private String borrowPreNidNew;
+    /** 标的名称 */
+    private String name;
+    /** 定时发标时间 */
+    private int ontime;
+    /** 标的金额 */
+    private BigDecimal account;
 
     public int getId() {
         return id;
@@ -65,5 +73,29 @@ public class BorrowCustomize {
 
     public void setBorrowPreNidNew(String borrowPreNidNew) {
         this.borrowPreNidNew = borrowPreNidNew;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getOntime() {
+        return ontime;
+    }
+
+    public void setOntime(int ontime) {
+        this.ontime = ontime;
+    }
+
+    public BigDecimal getAccount() {
+        return account;
+    }
+
+    public void setAccount(BigDecimal account) {
+        this.account = account;
     }
 }

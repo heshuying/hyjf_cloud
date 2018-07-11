@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 定时发标
  */
 @RestController
-@RequestMapping("/am-trade/timing/borrow/issue")
+@RequestMapping("/am-trade/timing_borrow/issue")
 public class IssueBorrowOfTimingController extends BaseController {
 
     @Autowired

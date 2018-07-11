@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MessageConstant;
@@ -37,65 +38,28 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	SmsProducer smsProducer;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void issueBorrowOfTiming() throws Exception {
-		// 待发标的列表(status=1/VerifyStatus=3/is_engine_used=0)
-		List<Borrow> borrowOntimes = this.ontimeTenderCustomizeMapper.queryOntimeTenderList(GetDate.getNowTime10());
-		if (!CollectionUtils.isEmpty(borrowOntimes)) {
-			for (Borrow borrow : borrowOntimes) {
-				try {
-					// a.标的自动投资
-					String borrowNid = borrow.getBorrowNid();
-					logger.info("定时发标项目标的:[" + borrowNid + "]");
+		// 待发标的列表(status=1 VerifyStatus=3 is_engine_used=0)
+		List<BorrowCustomize> list = this.ontimeTenderCustomizeMapper.queryOntimeTenderList(GetDate.getNowTime10());
+		if (!CollectionUtils.isEmpty(list)) {
+			for (BorrowCustomize borrowCustomize : list) {
 
-					// 已被客户端触发修改 开标成功
-					String status = RedisUtils
-							.get(borrowNid + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_STATUS);
-					if (status != null && status.equals("0")) {
-						continue;
-					}
+				String borrowNid = borrowCustomize.getBorrowNid();
+				logger.info("定时发标项目标的:[" + borrowNid + "]");
 
-					// 修改标的状态被占用(有效期10秒)
-					if (!RedisUtils.tranactionSet(
-							borrowNid + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_LOCK, 10)) {
-						continue;
-					}
-
-					// 设定 redis的标的定时状态 为 1 锁定更改中(有效期同batch执行周期，5分钟)
-					RedisUtils.set(borrowNid + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_STATUS, "1",
-							300);
-					// Redis的投资余额校验
-					if (RedisUtils.get(borrowNid) != null) {
-						logger.info(borrowNid + " 定时发标异常：标的编号在redis已经存在");
-						throw new RuntimeException("定时发标异常，redis已经存在 标号：" + borrowNid);
-					}
-					// b.标的自动发标
-					boolean flag = this.updateOntimeSendBorrow(borrow.getId(),
-							this.borrowInfoMapper.selectByPrimaryKey(borrow.getId()));
-					if (!flag) {
-						// 删除 redis的标的定时独占锁
-						RedisUtils.del(borrowNid + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_LOCK);
-						throw new Exception("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
-					}
-					logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
-
-					// 设定 redis的标的定时状态 为 0 标的状态修改成功开标(有效期同batch执行周期，5分钟)
-					RedisUtils.set(borrowNid + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_STATUS, "0",
-							300);
-
-					// 删除 redis的标的定时独占锁
-					RedisUtils.del(borrowNid + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_LOCK);
-
-				} catch (Exception e) {
-					// 删除 redis的标的定时独占锁
-					RedisUtils.del(
-							borrow.getBorrowNid() + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME_LOCK);
-					e.printStackTrace();
+				// 标的自动发标
+				boolean flag = this.updateOntimeSendBorrow(borrowCustomize);
+				if (!flag) {
+					throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 				}
+				logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
 			}
 		}
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void issueSplitBorrowOfTiming() throws Exception {
 		logger.info("拆分标的的自动发标 OntimeSplitTenderTask.run Start... ");
 		// 当前时间
@@ -103,7 +67,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		// 获取所有待发布的标的
 		List<Borrow> unSendBorrows = this.queryAllSplitSend();
 		// 判断待发标列表
-		if (unSendBorrows != null && unSendBorrows.size() > 0) {
+		if (!CollectionUtils.isEmpty(unSendBorrows)) {
 			// 延期自动发标时间（单位：分钟）
 			int afterTime = this.getAfterTime(BorrowSendTypeEnum.FABIAO_CD);
 			for (Borrow unSendBorrow : unSendBorrows) {
@@ -123,7 +87,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 						long compareDateLong = compareDate.getTime() / 1000;
 						// 如果当前时间 >= 等待发标时间 + 上期标的满标时间
 						if (nowTime >= compareDateLong) {
-							// 开始发标吧
+							// 开始发标
 							this.updateFireBorrow(unSendBorrow, nowTime);
 						}
 					}
@@ -138,24 +102,25 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		logger.info("汇计划定时发标 run ... ");
 
 		// 待发标的列表(status=1/VerifyStatus=3/is_engine_used=1)
-		List<Borrow> borrowOntimes = this.ontimeTenderCustomizeMapper.queryHjhOntimeTenderList(GetDate.getNowTime10());
+		List<BorrowCustomize> borrowOntimes = this.ontimeTenderCustomizeMapper
+				.queryHjhOntimeTenderList(GetDate.getNowTime10());
 
 		if (!CollectionUtils.isEmpty(borrowOntimes)) {
-			for (Borrow borrow : borrowOntimes) {
-				String borrowNid = borrow.getBorrowNid();
+			for (BorrowCustomize borrowCustomize : borrowOntimes) {
+				String borrowNid = borrowCustomize.getBorrowNid();
 				logger.info("汇计划定时发标项目标的:[" + borrowNid + "]");
 
-				BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrow.getId());
+				BorrowInfo borrowInfo = this.borrowInfoMapper.selectByPrimaryKey(borrowCustomize.getId());
 
 				// b.标的自动发标
-				boolean flag = this.updateHjhOntimeSendBorrow(borrow.getId(), borrowInfo);
+				boolean flag = this.updateHjhOntimeSendBorrow(borrowCustomize);
 				if (!flag) {
 					throw new RuntimeException("汇计划标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 				}
 
 				if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
 					// 更新资产表
-					boolean result = this.updatePlanAsset(borrow.getBorrowNid());
+					boolean result = this.updatePlanAsset(borrowCustomize.getBorrowNid());
 					if (!result) {
 						throw new RuntimeException("汇计划标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 					}
@@ -165,13 +130,9 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				// this.hjhOntimeSendService.sendToMQ(borrow,
 				// RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE);
 				logger.info(borrowNid + "已发送至MQ");
+
 				// 发送发标短信
-				Map<String, String> params = new HashMap<>();
-				params.put("val_title", borrow.getBorrowNid());
-				SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMSSENDFORMANAGER,
-						"【汇盈金服】", CustomConstants.PARAM_TPL_DSFB, CustomConstants.CHANNEL_TYPE_NORMAL);
-				smsProducer.messageSend(
-						new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+				this.AfterIssueBorrowSuccessSendSms(borrowCustomize.getBorrowNid(), "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB);
 
 				logger.info("汇计划定时标的【" + borrowNid + "】发标完成。（batch）");
 			}
@@ -179,11 +140,17 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 	}
 
-	private boolean updateOntimeSendBorrow(int borrowId, BorrowInfo borrowInfo) throws MQException {
-
+	/**
+	 * 自动发标更新标的状态 - 不拆分标的
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 * @throws MQException
+	 */
+	private boolean updateOntimeSendBorrow(BorrowCustomize borrowCustomize) throws MQException {
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
-		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowId);
+		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
 		// DB验证
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
@@ -194,7 +161,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			return false;
 		}
 
-		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowInfo.getBorrowValidTime() * 86400));
+		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowCustomize.getBorrowValidTime() * 86400));
 		// 是否可以进行借款
 		borrow.setBorrowStatus(1);
 		// 是否可以进行借款
@@ -203,20 +170,16 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setStatus(2);
 		// 初审时间
 		borrow.setVerifyTime(nowTime);
-		// 剩余可投资金额
+		// 可投资金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
-			RedisUtils.del(borrow.getBorrowNid() + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME);
-			// 写入redis
+			// 可投金额写入redis
 			RedisUtils.set(borrow.getBorrowNid(), borrow.getBorrowAccountWait().toString());
+
+			logger.info("发标成功短信发送....");
 			// 发送发标短信
-			Map<String, String> params = new HashMap<String, String>();
-			params.put("val_title", borrow.getBorrowNid());
-			SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMSSENDFORMANAGER,
-					"【汇盈金服】", CustomConstants.PARAM_TPL_DSFB, CustomConstants.CHANNEL_TYPE_NORMAL);
-			smsProducer.messageSend(
-					new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+			this.AfterIssueBorrowSuccessSendSms(borrow.getBorrowNid(), "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB);
 			return true;
 		} else {
 			return false;
@@ -224,17 +187,16 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	}
 
 	/**
-	 * 修改borrow表
+	 * 自动发标更新标的状态 - 计划标的
 	 * 
-	 * @param borrowId
-	 * @param borrowInfo
+	 * @param borrowCustomize
 	 * @return
 	 */
-	private boolean updateHjhOntimeSendBorrow(int borrowId, BorrowInfo borrowInfo) {
+	private boolean updateHjhOntimeSendBorrow(BorrowCustomize borrowCustomize) {
 
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
-		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowId);
+		Borrow borrow = this.borrowMapper.selectByPrimaryKey(borrowCustomize.getId());
 
 		// 有投资金额发生异常
 		BigDecimal zero = new BigDecimal("0");
@@ -245,7 +207,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 			return false;
 		}
 
-		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowInfo.getBorrowValidTime() * 86400));
+		borrow.setBorrowEndTime(String.valueOf(nowTime + borrowCustomize.getBorrowValidTime() * 86400));
 		// 是否可以进行借款
 		borrow.setBorrowStatus(1);
 		// 是否可以进行借款
@@ -286,6 +248,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew) > 0 ? true : false;
 	}
 
+	/**
+	 * 查询所有未发布的标的
+	 * 
+	 * @return
+	 */
 	private List<Borrow> queryAllSplitSend() {
 		BorrowExample example = new BorrowExample();
 		BorrowExample.Criteria crt = example.createCriteria();
@@ -294,17 +261,24 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		return borrows;
 	}
 
+	/**
+	 * 查询AUTO_BAIL-自动发标时间间隔 或者 AUTO_FULL-自动复审时间间隔
+	 * 
+	 * @param BorrowSendType
+	 * @return
+	 * @throws Exception
+	 */
 	public Integer getAfterTime(BorrowSendTypeEnum BorrowSendType) throws Exception {
 		BorrowSendTypeExample sendTypeExample = new BorrowSendTypeExample();
 		BorrowSendTypeExample.Criteria sendTypeCriteria = sendTypeExample.createCriteria();
 		sendTypeCriteria.andSendCdEqualTo(BorrowSendType.getValue());
 		List<BorrowSendType> sendTypeList = borrowSendTypeMapper.selectByExample(sendTypeExample);
-		if (sendTypeList == null || sendTypeList.size() == 0) {
-			throw new Exception("数据库查不到" + BorrowSendType.class);
+		if (CollectionUtils.isEmpty(sendTypeList)) {
+			throw new RuntimeException("数据库查不到" + BorrowSendType.class);
 		}
 		BorrowSendType sendType = sendTypeList.get(0);
 		if (sendType.getAfterTime() == null) {
-			throw new Exception("sendType.getAfterTime()==null");
+			throw new RuntimeException("sendType.getAfterTime()==null");
 		}
 		return sendType.getAfterTime();
 	}
@@ -319,7 +293,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		example.setLimitStart(0);
 		example.setLimitEnd(1);
 		List<BorrowInfo> list = this.borrowInfoMapper.selectByExample(example);
-		if (list != null && list.size() == 1) {
+		if (!CollectionUtils.isEmpty(list)) {
 			BorrowInfo borrowInfo = list.get(0);
 			return this.borrowMapper.selectByPrimaryKey(borrowInfo.getId());
 		}
@@ -342,26 +316,20 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyUserid("auto");
 		// 初审用户
 		borrow.setVerifyUserName("auto");
-		// 剩余可投资金额
+		// 可投资金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
-		boolean fireFlag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
-		if (fireFlag) {
+		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
+		if (flag) {
 			if ("0".equals(borrow.getIsEngineUsed())) {
 				// borrowNid，借款的borrowNid,account借款总额
 				if (RedisUtils.get(borrow.getBorrowNid()) != null) {
-					logger.info(borrow.getBorrowNid() + " 拆分标自动发标异常：redis已经存在");
+					logger.error(borrow.getBorrowNid() + " 拆分标自动发标异常：redis已经存在");
 					throw new RuntimeException("拆分标自动发标异常，redis已经存在 标号：" + borrow.getBorrowNid());
 				}
 
 				RedisUtils.set(String.valueOf(borrow.getBorrowNid()), String.valueOf(borrow.getAccount()));
-				// 短信参数
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("val_title", borrow.getBorrowNid());
-				SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMSSENDFORMANAGER,
-						null, CustomConstants.PARAM_TPL_ZDFB, CustomConstants.CHANNEL_TYPE_NORMAL);
-
-				smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrow.getBorrowNid(),
-						JSON.toJSONBytes(smsMessage)));
+				// 发送发标短信
+				this.AfterIssueBorrowSuccessSendSms(borrow.getBorrowNid(), null, CustomConstants.PARAM_TPL_ZDFB);
 				logger.info("定时发标自动任务 " + String.valueOf(borrow.getBorrowNid()) + "标的已经自动发标！");
 			} else if ("1".equals(borrow.getIsEngineUsed())) {
 				// 进计划的拆分标发送加入计划消息队列 todo 加入计划mq
@@ -371,6 +339,23 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		} else {
 			throw new RuntimeException("自动发标失败，标号：" + borrow.getBorrowNid());
 		}
+	}
+
+	/**
+	 * 开标成功发送短信
+	 * @param borrowNid
+	 * @param sender
+	 * @param tplCode
+	 * @throws MQException
+	 */
+	private void AfterIssueBorrowSuccessSendSms(String borrowNid, String sender, String tplCode) throws MQException {
+		// 短信参数
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("val_title", borrowNid);
+		SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMSSENDFORMANAGER, sender,
+				tplCode, CustomConstants.CHANNEL_TYPE_NORMAL);
+
+		smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
 	}
 
 }

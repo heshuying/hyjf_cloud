@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper">
-	<resultMap id="TenderMapResult" type="com.hyjf.am.trade.dao.model.auto.Borrow">
+	<resultMap id="TenderMapResult" type="com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize">
 		<result column="id" property="id" />
 		<!-- 用户ID -->
 		<result column="user_id" property="userId" /> 

@@ -1,9 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize.batch;
 
-import com.hyjf.am.trade.dao.model.auto.Borrow;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize;
 
 /**
  * @author xiasq
@@ -26,7 +27,7 @@ public interface OntimeTenderCustomizeMapper {
      * @param ontime
      * @return
      */
-    List<Borrow> queryOntimeTenderList(@Param("ontime") Integer ontime);
+    List<BorrowCustomize> queryOntimeTenderList(@Param("ontime") Integer ontime);
 
     /**
      * 查询符合条件的定时汇计划投标 列表
@@ -34,43 +35,6 @@ public interface OntimeTenderCustomizeMapper {
      * @param ontime
      * @return
      */
-    List<Borrow> queryHjhOntimeTenderList(@Param("ontime") Integer ontime);
+    List<BorrowCustomize> queryHjhOntimeTenderList(@Param("ontime") Integer ontime);
 
-    /**
-     * 查询所有未复审的标
-     *
-     * @return
-     */
-    List<Borrow> queryAllunrecheckTenders();
-
-    /**
-     * 查询分期发标的标的拆分总期数
-     *
-     * @param borrowPreNid
-     * @return
-     */
-    Integer querySplitTenderCount(@Param("borrowPreNid") Integer borrowPreNid);
-
-    /**
-     * 查询相应的定时预约开始标的
-     * @param onTime
-     * @return
-     */
-
-    List<Borrow> selectBorrowAppointStart(@Param("ontime") Integer ontime);
-
-    /**
-     * 查询相应的定时预约结束标的
-     * @param onTime
-     * @return
-     */
-
-    List<Borrow> selectBorrowAppointEnd(@Param("ontime") Integer ontime);
-
-    /**
-     * 查询标的是否达定时发标时间
-     * @param onTime
-     * @return
-     */
-    Integer queryOntimeIdByNid(@Param("borrowNid") String borrowNid, @Param("ontime") Integer ontime);
 }
