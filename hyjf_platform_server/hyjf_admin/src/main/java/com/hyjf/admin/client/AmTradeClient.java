@@ -3,18 +3,18 @@
  */
 package com.hyjf.admin.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 
 import java.util.List;
@@ -405,4 +405,68 @@ public interface AmTradeClient {
     List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd);
 
     Integer getFreezeLogValidAllCount();
+
+    /**
+     * 转账成功后续处理
+     * @param jsonObject
+     * @return
+     */
+    boolean transferAfter(JSONObject jsonObject);
+
+    /**
+     * 根据主键获取优惠券还款记录
+     * @param recoverId
+     * @return
+     */
+    CouponRecoverVO getCouponRecoverByPrimaryKey(Integer recoverId);
+
+    /**
+     *取得优惠券投资信息
+     * @param nid
+     * @return
+     */
+    BorrowTenderCpnVO getCouponTenderInfoByNid(String nid);
+    /**
+     * 根据筛选条件查询银行投资撤销异常的数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request);
+    /**
+     * 根据筛选条件查询银行投资撤销异常list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<BorrowTenderTmpVO> searchTenderCancelExceptionList(TenderCancelExceptionRequest request);
+    /**
+     * 根据orderId查询BorrowTender
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    List<BorrowTenderVO> searchBorrowTenderByOrderId(String orderId);
+    /**
+     * 根据orderId查询BorrowTenderTmp
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    BorrowTenderTmpVO searchBorrowTenderTmpByOrderId(String orderId);
+    /**
+     * 根据id删除BorrowTenderTmp
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    Integer deleteBorrowTenderTmpById(Integer id);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param freezeHistoryVO 冻结历史
+     * @return
+     */
+    Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
 }

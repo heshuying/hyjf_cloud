@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import org.slf4j.Logger;
@@ -21,18 +24,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
-import com.hyjf.am.vo.admin.AccountRechargeVO;
-import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
-import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.admin.BindLogVO;
-import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
-import com.hyjf.am.vo.admin.SubCommissionVO;
-import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
@@ -889,4 +880,49 @@ public class AmTradeClientImpl implements AmTradeClient{
         Integer response = restTemplate.postForEntity(url,freezeHistoryVO,Integer.class).getBody();
         return response;
     }
+
+
+    /**
+     * 转账成功后续处理
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public boolean transferAfter(JSONObject jsonObject) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/transferAfter";
+        return restTemplate.postForEntity(url,jsonObject,Boolean.class).getBody();
+    }
+
+
+
+    /**
+     * 根据主键获取优惠券还款记录
+     * @param recoverId
+     * @return
+     */
+    @Override
+    public CouponRecoverVO getCouponRecoverByPrimaryKey(Integer id) {
+        String url = "http://AM-TRADE/am-trade/coupon/getCouponRecoverByPrimaryKey/"+id;
+        CouponRecoverResponse response=restTemplate.getForEntity(url,CouponRecoverResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 取得优惠券投资信息
+     * @param nid
+     * @return
+     */
+    @Override
+    public BorrowTenderCpnVO getCouponTenderInfoByNid(String nid) {
+        String url="http://AM-TRADE/am-trade/coupon/getCouponTenderInfoByNid/"+nid;
+        BorrowTenderCpnResponse response = restTemplate.getForEntity(url,BorrowTenderCpnResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 }
