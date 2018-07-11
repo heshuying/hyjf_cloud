@@ -4,6 +4,7 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.SiteSetting;
+import com.hyjf.am.resquest.admin.SitesettingRequest;
 
 /**
  * @author fuqiang
@@ -19,4 +20,12 @@ public interface SiteSettingService {
 
 
     void updateTest1() throws Exception;
+
+    /**
+     * 邮件配置
+     *
+     * @param request
+     * @return
+     */
+    void update(SitesettingRequest request);
 }

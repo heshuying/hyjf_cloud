@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 
 import java.util.List;
 
@@ -396,4 +397,12 @@ public interface AmTradeClient {
      * @return
      */
     List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request);
+
+    Integer deleteFreezeLogById(Integer id);
+
+    BankRepayFreezeLogVO getBankFreezeLogByOrderId(String orderId);
+
+    List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd);
+
+    Integer getFreezeLogValidAllCount();
 }

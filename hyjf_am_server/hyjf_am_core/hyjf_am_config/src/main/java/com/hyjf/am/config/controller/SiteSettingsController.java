@@ -3,14 +3,17 @@
  */
 package com.hyjf.am.config.controller;
 
+import com.hyjf.am.response.AdminResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.config.dao.model.auto.SiteSetting;
 import com.hyjf.am.config.service.SiteSettingService;
 import com.hyjf.am.response.config.SiteSettingsResponse;
+import com.hyjf.am.resquest.admin.SitesettingRequest;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 
 /**
@@ -41,6 +44,20 @@ public class SiteSettingsController extends BaseConfigController{
         }
         logger.info("siteSettingsVO is {}", siteSettingsVO);
         response.setResult(siteSettingsVO);
+        return response;
+    }
+
+    /**
+     * 修改件配置
+     *
+     * @return
+     */
+    @RequestMapping("/update")
+    public SiteSettingsResponse update(@RequestBody SitesettingRequest request) {
+        logger.info("修改邮件配置开始...");
+        SiteSettingsResponse response = new SiteSettingsResponse();
+        siteSettingsService.update(request);
+        response.setRtn(AdminResponse.SUCCESS);
         return response;
     }
 }
