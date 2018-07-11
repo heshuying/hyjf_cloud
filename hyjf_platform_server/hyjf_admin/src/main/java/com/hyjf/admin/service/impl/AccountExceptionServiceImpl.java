@@ -13,6 +13,7 @@ import com.hyjf.pay.lib.chinapnr.util.ChinapnrUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 @Service
 public class AccountExceptionServiceImpl extends BaseAdminServiceImpl implements AccountExceptionService {
 
-    @Value("${}")
+    @Value("${hyjf.chinapnr.mercustid}")
     private String PROP_MERCUSTID;
 
     /**
@@ -56,6 +57,7 @@ public class AccountExceptionServiceImpl extends BaseAdminServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void syncAccount(Integer id) {
         AccountExceptionVO accountExceptionVO = amTradeClient.searchAccountExceptionById(id);
         //获取账户实时余额信息

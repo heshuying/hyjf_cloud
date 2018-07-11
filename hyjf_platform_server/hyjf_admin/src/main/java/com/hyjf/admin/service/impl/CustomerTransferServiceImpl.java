@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +105,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject searchBalanceByUsername(String userName) {
         JSONObject jsonObject = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
@@ -140,6 +142,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject checkCustomerTransferParam(CustomerTransferRequest request) {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isNotEmpty(request.getOutUserName())) {
@@ -192,6 +195,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertTransfer(CustomerTransferRequest request) {
         return amTradeClient.insertUserTransfer(request);
     }
