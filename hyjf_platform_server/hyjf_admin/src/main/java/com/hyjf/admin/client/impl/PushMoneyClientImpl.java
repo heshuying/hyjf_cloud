@@ -3,7 +3,9 @@
  */
 package com.hyjf.admin.client.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.client.PushMoneyClient;
@@ -15,18 +17,23 @@ import com.hyjf.am.response.trade.PushMoneyResponse;
  */
 @Service
 public class PushMoneyClientImpl implements PushMoneyClient {
+	@Autowired
+	private RestTemplate restTemplate;
+
 	@Override
 	public PushMoneyResponse getRecordList() {
-		return null;
+		return restTemplate.getForObject("http://AM-TRADE/am-trade/pushmoney/getrecordlist", PushMoneyResponse.class);
 	}
 
 	@Override
 	public PushMoneyResponse insertPushMoney(PushMoneyRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/insertpushmoney", requestBean,
+				PushMoneyResponse.class);
 	}
 
 	@Override
 	public PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-TRADE/am-trade/pushmoney/updatepushmoney", requestBean,
+				PushMoneyResponse.class);
 	}
 }

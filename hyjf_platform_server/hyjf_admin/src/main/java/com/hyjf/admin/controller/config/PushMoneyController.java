@@ -36,7 +36,7 @@ public class PushMoneyController extends BaseController {
 
 	@ApiOperation(value = "提成配置", notes = "获取提成配置列表")
 	@RequestMapping("/init")
-	public AdminResult<ListResult<PushMoneyVO>> init() {
+	public AdminResult<ListResult<PushMoneyVO>> getRecordList() {
 		PushMoneyResponse response = pushMoneyService.getRecordList();
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
