@@ -47,6 +47,9 @@ public class BorrowCreditRepayVO  extends BaseVO implements Serializable {
     /*下次还款时间*/
     private String assignRepayNextTime;
 
+    /*还款状态*/
+    private String status;
+
 
     public String getUserName() {
         return userName;
@@ -142,5 +145,13 @@ public class BorrowCreditRepayVO  extends BaseVO implements Serializable {
 
     public void setAssignRepayNextTime(String assignRepayNextTime) {
         this.assignRepayNextTime = assignRepayNextTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

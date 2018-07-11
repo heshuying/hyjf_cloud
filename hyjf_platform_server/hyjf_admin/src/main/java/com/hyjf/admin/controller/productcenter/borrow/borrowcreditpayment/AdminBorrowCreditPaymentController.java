@@ -1,9 +1,7 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowcreditpayment;
 
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
-import com.hyjf.admin.beans.request.BorrowCreditRequest;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.service.BorrowCreditService;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,14 +33,14 @@ public class AdminBorrowCreditPaymentController {
         return result;
     }
 
-   /* @ApiOperation(value = "债权转让导出", notes = "债权转让导出")
+    @ApiOperation(value = "还款信息导出", notes = "还款信息导出")
     @PostMapping("/exportData")
     @ResponseBody
-    public void  exportBorrowCreditList(@RequestBody BorrowCreditRequest request,HttpServletResponse response){
-        borrowCreditService.exportBorrowCreditList(request,response);
+    public void  exportBorrowCreditList(@RequestBody BorrowCreditRepayRequest request,HttpServletResponse response){
+        borrowCreditTenderService.exprotBorrowCreditRepayList(request,response);
     }
 
-    @ApiOperation(value = "债权转让明细", notes = "债权转让明细")
+   /* @ApiOperation(value = "债权转让明细", notes = "债权转让明细")
     @PostMapping("/infoDetail")
     @ResponseBody
     public Object getCreditInfoDetail(@RequestBody BorrowCreditRequest request){
