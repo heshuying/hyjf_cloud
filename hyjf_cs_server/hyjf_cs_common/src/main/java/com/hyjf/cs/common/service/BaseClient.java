@@ -1,11 +1,16 @@
 package com.hyjf.cs.common.service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+/**
+ * 统一client调用接口
+ * @author zhangyk
+ * @date 2018/7/11 11:37
+ */
 public interface BaseClient {
 
 
-    public   <T> T postExe(String url,Object param, Class<T> clazz)  ;
+    <T> T postExe(String url,Object param, Class<T> clazz)  ;
+
+
+    <T> T getExe(String url, Class<T> clazz);
 
 }
