@@ -4,7 +4,6 @@ import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * * @Description 配置中心 保障金配置
@@ -23,7 +22,7 @@ public interface InstConfigService {
     /*
       *根据id查询保证金配置
       * */
-    public HjhInstConfig getInstConfigRecordById(Map mapParam);
+    public HjhInstConfig getInstConfigRecordById(String userId);
 
     /**
      * 添加保证金配置
@@ -39,6 +38,6 @@ public interface InstConfigService {
      * 删除保证金配置
      * @param recordList
      */
-    public void deleteInstConfig( List<Integer> recordList) ;
+    public void deleteInstConfig( AdminInstConfigListRequest recordList) ;
 
 }

@@ -59,9 +59,9 @@ public class InstConfigController extends BaseController {
     @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody String ids) {
+    public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody InstConfigRequestBean adminInstConfigListRequest) {
         AdminInstConfigListRequest adminRequest= new AdminInstConfigListRequest();
-        adminRequest.setIds(ids);
+        adminRequest.setIds(adminInstConfigListRequest.getIds());
         AdminInstConfigDetailResponse adminResponse= instConfigService.searchInstConfigInfo(adminRequest);
         if (adminResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -78,7 +78,8 @@ public class InstConfigController extends BaseController {
     public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody InstConfigRequestBean from) {
         AdminInstConfigListRequest req = new AdminInstConfigListRequest();
         BeanUtils.copyProperties(from, req);
-        req.setUserId(Integer.valueOf(this.getUser(request).getId()));
+        //测试联调需要放开
+//        req.setUserId(Integer.valueOf(this.getUser(request).getId()));
         AdminInstConfigListResponse prs = instConfigService.saveInstConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -95,7 +96,8 @@ public class InstConfigController extends BaseController {
     public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody InstConfigRequestBean from) {
         AdminInstConfigListRequest req = new AdminInstConfigListRequest();
         BeanUtils.copyProperties(from, req);
-        req.setUserId(Integer.valueOf(this.getUser(request).getId()));
+        //测试联调需要放开
+//        req.setUserId(Integer.valueOf(this.getUser(request).getId()));
         AdminInstConfigListResponse prs = instConfigService.updateInstConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -109,11 +111,11 @@ public class InstConfigController extends BaseController {
     @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteInstConfig( @RequestBody String ids) {
+    public AdminResult deleteInstConfig( @RequestBody InstConfigRequestBean adminInstConfigListRequest) {
         AdminInstConfigListRequest req = new AdminInstConfigListRequest();
         AdminInstConfigListResponse prs =new AdminInstConfigListResponse();
-        if(StringUtils.isNotBlank(ids)){
-            req.setIds(ids);
+        if(StringUtils.isNotBlank(adminInstConfigListRequest.getIds())){
+            req.setIds(adminInstConfigListRequest.getIds());
             prs = instConfigService.deleteInstConfig(req);
         }
         if(prs==null) {

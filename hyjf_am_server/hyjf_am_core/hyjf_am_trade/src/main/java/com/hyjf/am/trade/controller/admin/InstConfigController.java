@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.controller.admin;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
@@ -29,9 +28,7 @@ import redis.clients.jedis.Transaction;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/5.
@@ -77,10 +74,8 @@ public class InstConfigController {
     @RequestMapping("/info")
     public AdminInstConfigDetailResponse instConfigInfoById(@RequestBody @Valid AdminInstConfigListRequest adminRequest) {
         AdminInstConfigDetailResponse response = new AdminInstConfigDetailResponse();
-        Map<String, Object> mapParam = new HashMap<>();
         if (StringUtils.isNotEmpty(adminRequest.getIds())) {
-            mapParam.put("userId", adminRequest.getIds());
-            HjhInstConfig record = this.instConfigService.getInstConfigRecordById(mapParam);
+            HjhInstConfig record = this.instConfigService.getInstConfigRecordById(adminRequest.getIds());
             HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
             if(null != record){
                 BeanUtils.copyProperties(record, recordWrap);
@@ -134,12 +129,10 @@ public class InstConfigController {
     @RequestMapping("/update")
     public AdminInstConfigListResponse updateInstConfig(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
-        Map<String, Object> mapParam = new HashMap<>();
         try{
             HjhInstConfig instConfig = null;
             if(StringUtils.isNotBlank(req.getIds()) ){
-                mapParam.put("userId", req.getIds());
-                instConfig = this.instConfigService.getInstConfigRecordById(mapParam);
+                instConfig = this.instConfigService.getInstConfigRecordById(req.getIds());
             }
             int result = instConfigService.updateInstConfigRecordById(req);
             // 更新redis中的可用余额
@@ -170,9 +163,7 @@ public class InstConfigController {
     public AdminInstConfigListResponse deleteInstConfigById(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
         try{
-            // 解析json字符串
-            List<Integer> recordList = JSONArray.parseArray(req.getIds(), Integer.class);
-            this.instConfigService.deleteInstConfig(recordList);
+            this.instConfigService.deleteInstConfig(req);
             resp.setRtn("SUCCESS");
         }catch (Exception e){
             resp.setRtn("FAIL");

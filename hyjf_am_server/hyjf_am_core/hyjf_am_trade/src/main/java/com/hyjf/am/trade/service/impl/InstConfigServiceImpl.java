@@ -6,13 +6,12 @@ import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.service.InstConfigService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author by xiehuili on 2018/7/6.
@@ -45,8 +44,8 @@ public class InstConfigServiceImpl extends BaseServiceImpl implements InstConfig
      *根据id查询保证金配置
      * */
     @Override
-    public HjhInstConfig  getInstConfigRecordById(Map map){
-        Integer id=(Integer)map.get("userId");
+    public HjhInstConfig  getInstConfigRecordById(String userId){
+        Integer id = Integer.valueOf(userId);
        return hjhInstConfigMapper.selectByPrimaryKey(id);
     }
     /**
@@ -78,21 +77,19 @@ public class InstConfigServiceImpl extends BaseServiceImpl implements InstConfig
     }
     /**
      * 删除保证金配置
-     * @param recordList
+     * @param req
      */
     @Override
-    public void deleteInstConfig( List<Integer> recordList) {
-        for (Integer id : recordList) {
-            Map<String,Integer> map = new HashMap();
-            map.put("userId",id);
-            HjhInstConfig record = this.getInstConfigRecordById(map);
+    public void deleteInstConfig( AdminInstConfigListRequest req) {
+        HjhInstConfig record =null;
+        if(StringUtils.isNotBlank(req.getIds())){
+            record = this.getInstConfigRecordById(req.getIds());
             record.setDelFlag(1);
             int result = hjhInstConfigMapper.updateByPrimaryKeySelective(record);
             if(result > 0 && RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode())){
                 RedisUtils.del(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode());
             }
         }
-
     }
 
 }
