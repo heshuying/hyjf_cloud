@@ -3,9 +3,13 @@
  */
 package com.hyjf.admin.mq;
 
+import org.springframework.stereotype.Component;
+
+import com.hyjf.admin.mq.base.MessageContent;
+import com.hyjf.admin.mq.base.Producer;
+import com.hyjf.admin.mq.base.ProducerFieldsWrapper;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import org.springframework.stereotype.Component;
 
 /**
  * @author fuqiang
@@ -22,7 +26,7 @@ public class MailProducer extends Producer {
     }
 
     @Override
-    public boolean messageSend(MassageContent messageContent) throws MQException {
+    public boolean messageSend(MessageContent messageContent) throws MQException {
         return super.messageSend(messageContent);
     }
 }
