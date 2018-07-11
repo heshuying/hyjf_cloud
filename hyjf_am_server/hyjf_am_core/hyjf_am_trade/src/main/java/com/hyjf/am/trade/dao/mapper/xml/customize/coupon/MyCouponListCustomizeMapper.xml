@@ -15,6 +15,13 @@
 	   <result column="tender_quota" property="tenderQuota" />
 	   <result column="project_expiration_type" property="projectExpirationType" />
 	   <result column="used_flag" property="usedFlag" />
+	   <result column="tender_quota_min" property="tenderQuotaMin" />
+	   <result column="tender_quota_max" property="tenderQuotaMax" />
+	   <result column="expiration_type" property="expirationType" />
+	   <result column="project_expiration_length" property="projectExpirationLength" />
+	   <result column="project_expiration_length_min" property="projectExpirationLengthMin" />
+	   <result column="project_expiration_length_max" property="projectExpirationLengthMax" />
+	   <result column="add_flag" property="addFlag" />
     </resultMap>
 
     <select id="selectMyCouponList" resultMap="MyCouponListResultMap" parameterType="java.util.Map">
@@ -24,6 +31,9 @@
 			cu.coupon_user_code,
 			cu.used_flag,
 			cc.coupon_type,
+			cc.tender_quota_min,
+			cc.add_flag add_flag,
+			cc.tender_quota_max,
 			CASE cc.coupon_type
 		WHEN 1 THEN
 			'体验金'
@@ -143,14 +153,17 @@
 			)
 		ELSE
 			'不限'
-		END project_expiration_type
+		END project_expiration_type,
+		cc.project_expiration_type expiration_type,
+		cc.project_expiration_length,
+		cc.project_expiration_length_min,
+		cc.project_expiration_length_max
 		FROM
 			ht_coupon_user cu
-		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
+		LEFT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		<include refid="Where_Clause" />
 		ORDER BY cu.update_time DESC, cu.coupon_code ASC
-		<if test="limitStart >= 0" >
+		<if test="limitStart != null and limitStart >= 0" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
     </select>

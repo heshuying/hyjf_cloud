@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.controller.app.coupon;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -66,7 +67,7 @@ public class CouponController extends BaseTradeController {
     }
 
     /**
-     * APP散标投资获取我的优惠券列表
+     * APP,PC散标投资获取我的优惠券列表
      * @param request
      * @return
      */
@@ -76,8 +77,30 @@ public class CouponController extends BaseTradeController {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         if(null != user && null != user.getUserId()){
-            Map<String,Object> resultMap = new HashMap<String,Object>();
+            JSONObject resultMap = new JSONObject();
             resultMap = appCouponService.getBorrowCoupon(user.getUserId(),borrowNid,money,platform);
+            result.setData(resultMap);
+        }else{
+            result.setStatus(WebResult.FAIL);
+            result.setStatusDesc("用户未登录");
+            logger.info("用户未登录！");
+        }
+        return result;
+    }
+
+    /**
+     * APP,PC加入计划获取我的优惠券列表
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "APP加入计划获取我的优惠券列表", notes = "APP加入计划获取我的优惠券列表")
+    @PostMapping("/getplancoupon")
+    public WebResult<Map<String,Object>> getPlanCoupon(@RequestHeader(value = "token") String token, HttpServletRequest request,String planNid,String money,String platform) throws Exception {
+        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        if(null != user && null != user.getUserId()){
+            JSONObject resultMap = new JSONObject();
+            resultMap = appCouponService.getPlanCoupon(user.getUserId(),planNid,money,platform);
             result.setData(resultMap);
         }else{
             result.setStatus(WebResult.FAIL);

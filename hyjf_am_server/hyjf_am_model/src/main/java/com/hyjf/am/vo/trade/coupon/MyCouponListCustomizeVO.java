@@ -34,6 +34,20 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     private String projectExpirationType;
 
+    private Double tenderQuotaMin;
+
+    private Double tenderQuotaMax;
+
+    private Integer expirationType;
+
+    private Integer projectExpirationLength;
+
+    private Integer projectExpirationLengthMin;
+
+    private Integer projectExpirationLengthMax;
+
+    private Integer addFlag;
+
     //优惠券使用标识 0：未使用，1：已使用，2：审核不通过，3：待审核，4：已失效
     private Integer usedFlag;
 
@@ -147,5 +161,61 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setUsedFlag(Integer usedFlag) {
         this.usedFlag = usedFlag;
+    }
+
+    public Double getTenderQuotaMin() {
+        return tenderQuotaMin;
+    }
+
+    public void setTenderQuotaMin(Double tenderQuotaMin) {
+        this.tenderQuotaMin = tenderQuotaMin;
+    }
+
+    public Double getTenderQuotaMax() {
+        return tenderQuotaMax;
+    }
+
+    public void setTenderQuotaMax(Double tenderQuotaMax) {
+        this.tenderQuotaMax = tenderQuotaMax;
+    }
+
+    public Integer getExpirationType() {
+        return expirationType;
+    }
+
+    public void setExpirationType(Integer expirationType) {
+        this.expirationType = expirationType;
+    }
+
+    public Integer getProjectExpirationLength() {
+        return projectExpirationLength;
+    }
+
+    public void setProjectExpirationLength(Integer projectExpirationLength) {
+        this.projectExpirationLength = projectExpirationLength;
+    }
+
+    public Integer getProjectExpirationLengthMin() {
+        return projectExpirationLengthMin;
+    }
+
+    public void setProjectExpirationLengthMin(Integer projectExpirationLengthMin) {
+        this.projectExpirationLengthMin = projectExpirationLengthMin;
+    }
+
+    public Integer getProjectExpirationLengthMax() {
+        return projectExpirationLengthMax;
+    }
+
+    public void setProjectExpirationLengthMax(Integer projectExpirationLengthMax) {
+        this.projectExpirationLengthMax = projectExpirationLengthMax;
+    }
+
+    public Integer getAddFlag() {
+        return addFlag;
+    }
+
+    public void setAddFlag(Integer addFlag) {
+        this.addFlag = addFlag;
     }
 }
