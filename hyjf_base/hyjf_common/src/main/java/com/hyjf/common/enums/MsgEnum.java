@@ -129,6 +129,9 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_RECHARGE_MONEY_REQUIRED("EAM000302","充值金额不能为空"),
 	ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL("EAM000303","充值值金额不能大于两位小数"),
 
+	//资金-转账相关错误信息ERR_AMT_TRANSFER_
+	ERR_AMT_TRANSFER("EAM000401","转账发生异常"),
+
 	//授权相关错误信息ERR_AUTHORIZE_
 	ERR_AUTHORIZE_REPEAT("EAU000001","用户已授权,无需重复授权"),
 	ERR_AUTHORIZE_STATE("EAU000002","授权状态查询接口失败"),
@@ -139,6 +142,7 @@ public enum MsgEnum implements MsgCode {
 
 	// 银行相关错误信息ERR_BANK_
 	ERR_BANK_CALL("EBK000001", "调用银行接口失败"),
+	ERR_BANK_UPDATE_AFTER_CALL("EBK000002", "调用银行成功后,更新数据失败"),
 	// 开户相关ERR_BANK_ACCOUNT_
 	ERR_BANK_ACCOUNT_OPEN("EBK000002", "开户失败"),
 	ERR_BANK_ACCOUNT_NOT_OPEN("EBK000003", "用户未开户"),
@@ -194,6 +198,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_PASSWORD_OLD_INCORRECT("EPW000007","旧密码不正确"),
 	ERR_PASSWORD_MODIFY("EPW000008","修改密码失败,未作任何操作"),
 	ERR_PASSWORD_OLD_REQUIRED("EPW000009","原始登录密码不能为空"),
+	ERR_PASSWORD_INVALID("EPW000010","输入的密码不正确"),
 	//交易密码相关错误信息ERR_TRADE_PASSWORD_
 	ERR_TRADE_PASSWORD_NOT_SET("EPW000101", "未设置交易密码"),
 	ERR_TRADE_PASSWORD_ALREADY_SET("EPW000102","已设置交易密码"),

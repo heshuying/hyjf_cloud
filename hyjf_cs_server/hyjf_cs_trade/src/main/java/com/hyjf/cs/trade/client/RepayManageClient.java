@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
@@ -22,4 +23,6 @@ public interface RepayManageClient {
     int orgRepayCount(RepayListRequest requestBean);
 
     int orgRepayedCount(RepayListRequest requestBean);
+
+    Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
 }

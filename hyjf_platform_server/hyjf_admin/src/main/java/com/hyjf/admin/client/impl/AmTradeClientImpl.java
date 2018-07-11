@@ -3,21 +3,10 @@
  */
 package com.hyjf.admin.client.impl;
 
-import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.am.response.Response;
+import java.util.List;
+
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.BankMerchantAccountResponse;
-import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +14,35 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
+import com.hyjf.am.response.trade.BorrowResponse;
+import com.hyjf.am.response.trade.BorrowStyleResponse;
+import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
+import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
+import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
+import com.hyjf.am.vo.admin.AssociatedRecordListVo;
+import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
+import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
+import com.hyjf.am.vo.admin.SubCommissionVO;
+import com.hyjf.am.vo.admin.UserTransferVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author zhangqingqing
@@ -522,7 +539,6 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
-
     /**
      * 更新红包账户信息
      * @auth sunpeikai
@@ -533,20 +549,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     public Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO) {
         String url = "http://AM-TRADE/am-trade/platformtransfer/updatebankmerchantaccount";
         Integer response = restTemplate.postForEntity(url,bankMerchantAccountVO,Integer.class).getBody();
-        return response;
-    }
-
-
-    /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param bankMerchantAccountListVO 红包明细表
-     * @return
-     */
-    @Override
-    public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
-        Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
         return response;
     }
 
@@ -569,4 +571,182 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param bankMerchantAccountListVO 红包明细表
+     * @return
+     */
+    @Override
+    public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/insertbankmerchantaccountlist";
+        Integer response = restTemplate.postForEntity(url,bankMerchantAccountListVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 银行转账异常
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
+        AdminTransferExceptionLogResponse response=restTemplate.postForEntity(url,request,AdminTransferExceptionLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 银行转账异常
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getCountRecord";
+        return restTemplate.postForEntity(url,request,Integer.class).getBody();
+    }
+
+    /**
+     * 更新银行转账信息
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID";
+        return restTemplate.postForEntity(url,request,Integer.class).getBody();
+    }
+
+    /**
+     * 更新银行转账信息
+     * @param transferExceptionLog
+     * @return
+     */
+    @Override
+    public int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/updateTransferExceptionLogByUUID1";
+        return restTemplate.postForEntity(url,transferExceptionLog,Integer.class).getBody();
+    }
+
+    /**
+     * 获取银行转账异常通过uuid
+     * @param uuid
+     * @return
+     */
+    @Override
+    public TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/getTransferExceptionLogByUUID/"+uuid;
+        TransferExceptionLogResponse response =restTemplate.getForEntity(url, TransferExceptionLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取发起账户分佣所需的详细信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<SubCommissionListConfigVO> searchSubCommissionListConfig() {
+        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionlistconfig";
+        SubCommissionListConfigResponse response = restTemplate.getForEntity(url,SubCommissionListConfigResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param subCommissionVO 平台账户分佣
+     * @return
+     */
+    @Override
+    public boolean insertSubCommission(SubCommissionVO subCommissionVO) {
+        String url = "http://AM-TRADE/am-trade/subcommission/insertsubcommission";
+        Boolean response = restTemplate.postForEntity(url,subCommissionVO,Boolean.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据订单号查询分佣数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public SubCommissionVO searchSubCommissionByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionbyorderid/" + orderId;
+        SubCommissionResponse response = restTemplate.getForEntity(url,SubCommissionResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param subCommissionVO 待更新的数据参数
+     * @return
+     */
+    @Override
+    public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
+        String url = "http://AM-TRADE/am-trade/subcommission/updatesubcommission";
+        Integer response = restTemplate.postForEntity(url,subCommissionVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据订单号查询是否存在重复的AccountWebList数据
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public Integer accountWebListByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/subcommission/accountweblistbyorderid/" + orderId;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getSubCommissionCount(SubCommissionRequest request) {
+        String url = "http://AM-TRADE/am-trade/subcommission/getsubcommissioncount";
+        Integer response = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request) {
+        String url = "http://AM-TRADE/am-trade/subcommission/searchsubcommissionlist";
+        SubCommissionResponse response = restTemplate.postForEntity(url,request,SubCommissionResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
 }

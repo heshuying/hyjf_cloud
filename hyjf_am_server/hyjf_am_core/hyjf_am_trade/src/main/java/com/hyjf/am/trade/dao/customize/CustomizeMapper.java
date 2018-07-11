@@ -77,6 +77,12 @@ public class CustomizeMapper extends AutoMapper {
 
     @Resource
     protected TzjCustomizeMapper tzjCustomizeMapper;
+
+    @Autowired
+    protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
+
+
+
 }
 
 

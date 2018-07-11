@@ -3,13 +3,11 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.config.LinkVO;
-import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.am.vo.config.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.market.client.AboutUsClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
@@ -60,4 +58,20 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     public ContentArticleVO getNoticeInfo(Integer id) {
         return aboutUsClient.getNoticeInfo(id);
     }
+
+    @Override
+    public List<JobsVo> getJobsList() {
+        return aboutUsClient.getJobsList();
+    }
+
+    @Override
+    public ContentArticleVO getContactUs() {
+        return aboutUsClient.contactUs();
+    }
+
+    @Override
+    public List<ContentArticleVO> getHomeNoticeList() {
+        return aboutUsClient.getknowsList();
+    }
+
 }

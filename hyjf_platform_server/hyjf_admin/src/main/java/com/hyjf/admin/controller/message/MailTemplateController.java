@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.controller.config;
+package com.hyjf.admin.controller.message;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.MailTemplateService;
@@ -21,7 +21,7 @@ import java.util.List;
  * @version MailTemplateController, v0.1 2018/6/25 14:46
  */
 @RestController
-@RequestMapping("/mail/template")
+@RequestMapping("/hyjf-admin/mail/template")
 public class MailTemplateController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());

@@ -72,7 +72,7 @@ public class AdminBorrowCreditCustomize  {
     /**
      * 出让人
      */
-    private String creditUsername;
+    private String creditUserName;
 
     /**
      * 转让本金
@@ -318,12 +318,12 @@ public class AdminBorrowCreditCustomize  {
         this.assignNid = assignNid;
     }
 
-    public String getCreditUsername() {
-        return creditUsername;
+    public String getCreditUserName() {
+        return creditUserName;
     }
 
-    public void setCreditUsername(String creditUsername) {
-        this.creditUsername = creditUsername;
+    public void setCreditUserName(String creditUserName) {
+        this.creditUserName = creditUserName;
     }
 
     public String getAssignCapital() {
