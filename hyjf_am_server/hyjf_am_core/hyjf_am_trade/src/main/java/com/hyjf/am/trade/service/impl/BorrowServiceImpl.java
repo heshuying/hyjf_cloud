@@ -416,15 +416,15 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             throw new RuntimeException("borrow表更新失败");
         }
 
-        // 投资、收益统计表
-        List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
+        // 投资、收益统计表  改为组合层调用
+       /* List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
         if (calculates != null && calculates.size() > 0) {
             CalculateInvestInterest calculateNew = new CalculateInvestInterest();
             calculateNew.setTenderSum(tenderBg.getAccountDecimal());
             calculateNew.setId(calculates.get(0).getId());
             calculateNew.setCreateTime(GetDate.getDate(GetDate.getNowTime10()));
             this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
-        }
+        }*/
 
         // 计算此时的剩余可投资金额
         BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
@@ -464,8 +464,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             }catch (Exception e){
 
             }
-            // 增加redis防重校验 2017-08-02
-           // RedisUtils.tranactionSet("tendersuccess_orderid" + orderId, 20);
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
         }

@@ -4,7 +4,6 @@
 package com.hyjf.admin.client;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
@@ -17,8 +16,6 @@ import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
  */
 public interface UserauthClient {
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest);
-	public JSONObject synUserAuth(Integer userId, Integer type);
-	public String getBankRetMsg(String retCode);
 	public AdminUserAuthListResponse cancelInvestAuth(int userId, String ordId);
 	public AdminUserAuthListResponse cancelCreditAuth( int userId,  String ordId);
 	public HjhAccedeResponse canCancelAuth(Integer userId);

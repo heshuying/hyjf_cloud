@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.coupon;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
@@ -30,12 +31,22 @@ public interface AppCouponService extends BaseTradeService {
     Integer countMyCoupon(Integer userId,String couponStatus);
 
     /**
-     * 散标投资根据标的编号，投资金额等查询优惠券
+     * APP,PC,wechat散标投资根据标的编号，投资金额等查询优惠券
      * @param userId 用户ID
      * @param borrowNid 标的编号
      * @param money 投资金额
      * @param platform 投资平台
      * @return Map<String,Object>
      */
-    Map<String,Object> getBorrowCoupon(Integer userId, String borrowNid, String money, String platform);
+    JSONObject getBorrowCoupon(Integer userId, String borrowNid, String money, String platform);
+
+    /**
+     * APP,PC,wechat加入计划获取我的优惠券列表
+     * @param userId 用户ID
+     * @param planNid 计划编号
+     * @param money 投资金额
+     * @param platform 投资平台
+     * @return Map<String,Object>
+     */
+    JSONObject getPlanCoupon(Integer userId, String planNid, String money, String platform);
 }

@@ -1786,5 +1786,9 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
+        <table tableName="ht_account_exception" domainObjectName="AccountException">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
     </context>
 </generatorConfiguration>

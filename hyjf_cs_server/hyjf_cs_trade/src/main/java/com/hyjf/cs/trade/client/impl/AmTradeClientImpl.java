@@ -530,4 +530,24 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public CouponResponse getBorrowCoupon(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/getborrowcoupon";
+        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public CouponResponse getPlanCoupon(MyCouponListRequest requestBean) {
+        String url = urlBase + "coupon/getplancoupon";
+        CouponResponse response = restTemplate.postForEntity(url, requestBean, CouponResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }

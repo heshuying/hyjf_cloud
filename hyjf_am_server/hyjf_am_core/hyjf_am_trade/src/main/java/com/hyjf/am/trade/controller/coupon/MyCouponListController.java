@@ -1,11 +1,13 @@
 package com.hyjf.am.trade.controller.coupon;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.trade.MyCouponListResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.coupon.MyCouponListService;
+import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
@@ -122,5 +124,33 @@ public class MyCouponListController extends BaseController {
     @RequestMapping(value = "/getHJHUserCouponAvailableCount", method = RequestMethod.POST)
     public Integer getHJHUserCouponAvailableCount(@RequestBody @Valid MyCouponListRequest requestBean) {
         return myCouponListService.getHJHUserCouponAvailableCount(requestBean);
+    }
+
+    /**
+     * APP,PC,wechat散标投资查询优惠券列表
+     * @author walter.limeng
+     * @date 2018/7/10 10:36
+     */
+    @RequestMapping(value = "/getborrowcoupon", method = RequestMethod.POST)
+    public CouponResponse getBorrowCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        CouponResponse responseBean = new CouponResponse();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject = myCouponListService.getBorrowCoupon(requestBean);
+        responseBean.setResult(jsonObject);
+        return responseBean;
+    }
+
+    /**
+     * APP,PC,wechat加入计划查询优惠券列表
+     * @author walter.limeng
+     * @date 2018/7/10 14:36
+     */
+    @RequestMapping(value = "/getplancoupon", method = RequestMethod.POST)
+    public CouponResponse getPlanCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
+        CouponResponse responseBean = new CouponResponse();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject = myCouponListService.getPlanCouponoupon(requestBean);
+        responseBean.setResult(jsonObject);
+        return responseBean;
     }
 }
