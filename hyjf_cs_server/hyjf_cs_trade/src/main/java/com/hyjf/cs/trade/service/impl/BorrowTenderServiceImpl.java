@@ -116,6 +116,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private UtmRegProducer utmRegProducer;
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
+    @Autowired
+    private CouponTenderProducer couponTenderProducer;
 
     /**
      * @param request
@@ -715,7 +717,29 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
         // 如果用了优惠券
         if (StringUtils.isNotEmpty(couponGrantId)) {
-            couponService.borrowTenderCouponUse(couponGrantId, borrow, bean);
+            // 开始使用优惠券
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mqMsgId", GetCode.getRandomCode(10));
+            // 真实投资金额
+            params.put("money", bean.getTxAmount());
+            // 借款项目编号
+            params.put("borrowNid", borrowNid);
+            // 平台
+            params.put("platform", bean.getLogClient()+"");
+            // 优惠券id
+            params.put("couponGrantId", couponGrantId);
+            // ip
+            params.put("ip", bean.getLogIp());
+            // 真实投资订单号
+            params.put("ordId", bean.getLogOrderId());
+            // 用户编号
+            params.put("userId", userId+"");
+            try {
+                couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,bean.getLogOrderId(),couponGrantId,borrowNid);
+                e.printStackTrace();
+            }
         }
     }
 
