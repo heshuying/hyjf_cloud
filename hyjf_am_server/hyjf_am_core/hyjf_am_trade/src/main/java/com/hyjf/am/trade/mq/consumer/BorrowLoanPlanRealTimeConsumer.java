@@ -48,9 +48,18 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanPlanRealTimeConsumer.class);
 
+    @Autowired
+    RealTimeBorrowLoanPlanService realTimeBorrowLoanPlanService;
+
+    @Autowired
+    SystemConfig systemConfig;
+    
+	@Autowired
+	private MailProducer mailProducer;
+
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+//		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, "*");
@@ -63,6 +72,8 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 		// 设置并发数
 		defaultMQPushConsumer.setConsumeThreadMin(1);
 		defaultMQPushConsumer.setConsumeThreadMax(1);
+		defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
+		defaultMQPushConsumer.setConsumeTimeout(30);
 		
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
 		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
@@ -71,15 +82,6 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {
-
-	    @Autowired
-	    RealTimeBorrowLoanPlanService batchLoanService;
-	    
-		@Autowired
-		private MailProducer mailProducer;
-
-	    @Autowired
-	    SystemConfig systemConfig;
 	    
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
@@ -114,15 +116,15 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 				// 如果放款状态为请求中
 				if (loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDING ) {
 					//发送放款
-					BankCallBean requestLoanBean = this.batchLoanService.requestLoans(borrowApicron);
+					BankCallBean requestLoanBean = realTimeBorrowLoanPlanService.requestLoans(borrowApicron);
 					if (requestLoanBean == null) {
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 放款失败处理
-						boolean batchDetailFlag = this.batchLoanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
+						boolean batchDetailFlag = realTimeBorrowLoanPlanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
 						if (!batchDetailFlag) {
-							throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
+							throw new Exception("放款银行接口失败后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
 						}
-						boolean apicronResultFlag = this.batchLoanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
+						boolean apicronResultFlag = realTimeBorrowLoanPlanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
 						if (apicronResultFlag) {
 							throw new Exception("更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 						} else {
@@ -130,7 +132,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 						}
 					}else{//放款成功
 						// 进行后续操作
-						boolean batchDetailFlag = this.batchLoanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
+						boolean batchDetailFlag = realTimeBorrowLoanPlanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
 						if (!batchDetailFlag) {
 							throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
 						}
@@ -162,7 +164,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 						MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
 
 				try {
-					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailmessage)));
+					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, JSON.toJSONBytes(mailmessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}
@@ -170,7 +172,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	            logger.error("放款请求系统异常....");
 	            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
-			logger.info("--------------------------------------放款任务结束，项目编号：" + borrowNid + "=============");
+			logger.info("--------------------放款任务结束，项目编号：" + borrowNid + "=============");
 			RedisUtils.del(redisKey);
 			logger.info("----------------------------计划放款结束--------------------------------");
 
