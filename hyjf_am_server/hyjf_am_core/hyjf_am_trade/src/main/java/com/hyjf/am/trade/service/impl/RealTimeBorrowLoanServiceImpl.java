@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.common.GetOrderIdUtils;
@@ -86,6 +87,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @author dxj
  * @version RealTimeBorrowLoanServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
+@Service
 public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RealTimeBorrowLoanServiceImpl.class);
@@ -156,15 +158,9 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		try {
 			// 取得借款人账户信息
 			Account borrowAccount = this.getAccountByUserId(borrowUserId);
-			if (borrowAccount == null) {
+			if (borrowAccount == null || StringUtils.isBlank(borrowAccount.getAccountId())) {
 				throw new Exception("借款人账户不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 			}
-			// 借款人在汇付的账户信息
-//			BankOpenAccount borrowerAccount = this.getBankOpenAccount(borrowUserId);
-//			if (borrowerAccount == null) {
-//				throw new Exception("借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-//			}
-			//TODO:确认电子账号是否正确
 			
 			String borrowAccountId = borrowAccount.getAccountId();// 借款人相应的银行账号
 			// 取得借款详情
@@ -413,11 +409,11 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 						throw new Exception("放款后，更新相应的标的状态失败,项目编号：" + borrowNid);
 					}
 				} catch (Exception e) {
-					logger.info("==========cwyang 变更借款人数据信息异常!异常:" + e.getMessage());
+					logger.info(" 变更借款人数据信息异常!异常:" + e.getMessage());
 				}
 			}
 		} catch (Exception e1) {
-			logger.info("==========cwyang 还款数据变更异常!异常:" + e1.getMessage());
+			logger.info(" 还款数据变更异常!异常:" + e1.getMessage());
 		}
 		return false;
 	}

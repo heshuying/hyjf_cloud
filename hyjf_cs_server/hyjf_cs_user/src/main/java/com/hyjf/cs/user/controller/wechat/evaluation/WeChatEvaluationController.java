@@ -3,13 +3,15 @@
  */
 package com.hyjf.cs.user.controller.wechat.evaluation;
 
+import com.google.common.collect.Lists;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.WeChatResult;
+import com.hyjf.cs.user.bean.BaseResultBean;
+import com.hyjf.cs.user.bean.SimpleResultBean;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
 import io.swagger.annotations.Api;
@@ -36,9 +38,9 @@ public class WeChatEvaluationController {
 
     @ApiOperation(value = "查询测评结果", notes = "查询测评结果")
     @GetMapping(value = "/value")
-    public WeChatResult queryEvaluationResult(@RequestHeader(value = "userId") Integer userId) {
-        WeChatResult<Object> result = new WeChatResult<>();
-        CheckUtil.check(userId == null, MsgEnum.STATUS_CE000001);
+    public BaseResultBean queryEvaluationResult(@RequestHeader(value = "userId") Integer userId) {
+        SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean<>();
+        CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //测评结果
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         CheckUtil.check(null != userEvalationResult, MsgEnum.STATUS_EV000003);
@@ -47,15 +49,15 @@ public class WeChatEvaluationController {
         //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
         Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
         CheckUtil.check(lCreate > lNow, MsgEnum.STATUS_EV000004);
-        result.setData(userEvalationResult);
-        return result;
+        resultBean.setObject(userEvalationResult);
+        return resultBean;
     }
 
     @ApiOperation(value = "用户测评",notes = "用户测评")
-    @GetMapping(value = "/question")
-    public WeChatResult queryQuestions(@RequestHeader(value = "userId") Integer userId) {
-        WeChatResult<Object> result = new WeChatResult<>();
-        CheckUtil.check(userId == null, MsgEnum.STATUS_CE000001);
+    @GetMapping(value = "/queryquestion")
+    public BaseResultBean queryQuestions(@RequestHeader(value = "userId") Integer userId) {
+        SimpleResultBean<List<QuestionCustomizeVO>> resultBean = new SimpleResultBean<>();
+        CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
         if (userEvalationResult != null) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
@@ -65,19 +67,24 @@ public class WeChatEvaluationController {
             CheckUtil.check(lCreate > lNow, MsgEnum.STATUS_EV000003);
         }
         //已过期需要重新评测或者未测评
-        List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
-        result.setData(list);
-        return result;
+        List<QuestionCustomizeVO> lstQuestion = evaluationService.getNewQuestionList();
+        List<QuestionCustomizeVO> vo = Lists.newArrayList();
+        vo.addAll(lstQuestion);
+        resultBean.setObject(vo);
+        return resultBean;
     }
 
+    @ApiOperation(value = "计算测评结果",notes = "计算测评结果")
     @PostMapping(value = "/calculation", produces = "application/json; charset=utf-8")
-    public WeChatResult sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
-        WeChatResult result = new WeChatResult();
+    public BaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
+        SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean();
         CheckUtil.check(userId == null, MsgEnum.STATUS_CE000001);
         //答案 "13_48,14_52"
         String userAnswer = qo.getUserAnswer();
         Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId, CustomConstants.CLIENT_WECHAT,null);
-        result.setData(returnMap.get("userEvalationResult"));
-        return result;
+        if (null!=returnMap) {
+            resultBean.setObject((UserEvalationResultVO) returnMap.get("userEvalationResult"));
+        }
+        return resultBean;
     }
 }

@@ -5,6 +5,8 @@ package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
@@ -55,8 +57,7 @@ public class BorrowTenderController extends BaseTradeController {
         }catch (CheckException e){
             throw e;
         }finally {
-            // TODO: 2018/6/25  删除redis校验
-            //RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
+            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + tender.getUser().getUserId());
         }
         return result;
     }
@@ -66,7 +67,14 @@ public class BorrowTenderController extends BaseTradeController {
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
         logger.info("web端散标投资异步处理start,userId:{}", bean.getLogUserId());
-        BankCallResult result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
+        BankCallResult result ;
+        try{
+            result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
+        }catch (CheckException e){
+            throw e;
+        }finally {
+            RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + bean.getLogUserId());
+        }
         return result;
     }
 

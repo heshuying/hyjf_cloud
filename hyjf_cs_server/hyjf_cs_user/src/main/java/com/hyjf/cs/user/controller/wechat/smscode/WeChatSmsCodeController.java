@@ -1,14 +1,12 @@
 package com.hyjf.cs.user.controller.wechat.smscode;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -67,18 +65,22 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 */
 	@ApiOperation(value = "短信验证码校验", notes = "短信验证码校验")
 	@PostMapping(value = "/checkcode", produces = "application/json; charset=utf-8")
-	public WebResult checkode(@RequestBody SmsCodeVO request) {
+	public JSONObject checkode(HttpServletRequest request) {
 		logger.info("WeChat端短信验证码校验接口,SmsCodeVO  is :{}",JSONObject.toJSONString(request));
-		WebResult result = new WebResult();
-		String verificationType = request.getVerificationType();
-		// 短信验证码
-		String code = request.getVerificationCode();
-		// 手机号码(必须,数字,最大长度)
-		String mobile = request.getMobile();
-		sendSmsCode.checkParam(verificationType,code,mobile);
-		int cnt = sendSmsCode.updateCheckMobileCode(mobile, code, verificationType, CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+		JSONObject ret = new JSONObject();
+		ret.put("request", "/checkcode");
+		// 验证方式
+		String verificationType = request.getParameter("verificationType");
+		// 验证码
+		String verificationCode = request.getParameter("verificationCode");
+		// 手机号
+		String mobile = request.getParameter("mobile");
+		sendSmsCode.checkParam(verificationType,verificationCode,mobile);
+		int cnt = sendSmsCode.updateCheckMobileCode(mobile, verificationCode, verificationType, CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
 		CheckUtil.check(cnt > 0,MsgEnum.STATUS_ZC000015);
-		return  result;
+		ret.put("status", "000");
+		ret.put("statusDesc", "验证验证码成功");
+		return  ret;
 	}
 
 }

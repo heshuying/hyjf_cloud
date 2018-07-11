@@ -28,4 +28,17 @@ public interface CouponRecoverCustomizeMapper {
     List<CouponTenderCustomize> selectCouponRecoverAll(Map<String, Object> paramMap);
 
     CouponRecoverCustomize selectCurrentCouponRecover(Map<String, Object> paramMap);
+
+    /**
+     * 获取优惠券投资还款列表(还款失败)
+     * @param paramMap
+     * @return
+     */
+    CouponRecoverCustomize selectCurrentCouponRecoverFailed(Map<String,Object> paramMap);
+
+    /**
+     * 更新还款期
+     * @param paramMapAll
+     */
+    void crRecoverPeriod(Map<String,Object> paramMapAll);
 }

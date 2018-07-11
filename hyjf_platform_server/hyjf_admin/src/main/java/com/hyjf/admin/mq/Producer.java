@@ -1,7 +1,7 @@
 package com.hyjf.admin.mq;
 
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import javax.annotation.PostConstruct;
+
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
+import com.hyjf.admin.mq.base.MessageContent;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author xiasq
@@ -54,7 +54,7 @@ public abstract class Producer {
 		}
 	}
 
-	protected boolean messageSend(MassageContent messageContent) throws MQException {
+	protected boolean messageSend(MessageContent messageContent) throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
@@ -64,25 +64,7 @@ public abstract class Producer {
 		}
 	}
 
-	public static class MassageContent implements Serializable {
-		private static final long serialVersionUID = -6846413929342308237L;
-		public final String topic;
-		public final String tag;
-		public final String keys;
-		public final byte[] body;
-
-		public MassageContent(String topic, String tag, String keys, byte[] body) {
-			this.topic = topic;
-			this.tag = tag;
-			this.keys = keys;
-			this.body = body;
-		}
-
-		public MassageContent(String topic, String keys, byte[] body) {
-			this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
-		}
-	}
-
+	
 	protected static class ProducerFieldsWrapper {
 		private String group;
 		private String instanceName;

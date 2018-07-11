@@ -43,4 +43,10 @@ public class BatchCenterBorrowRecoverServiceImpl extends BaseServiceImpl impleme
         List<BatchBorrowRecoverVo> recoverVoList = this.batchCenterCustomizeMapper.queryBatchCenterList(request);
         return recoverVoList;
     }
+
+    @Override
+    public BatchBorrowRecoverVo getListSum(BatchBorrowRecoverRequest request) {
+        this.batchCenterCustomizeMapper.sumBatchCenter(request);
+        return null;
+    }
 }
