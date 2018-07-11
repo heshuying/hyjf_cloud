@@ -23,7 +23,15 @@ public class SystemConfig {
 
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
-
+    
+    @Value("${hyjf.makepdf.temppath}")
+    public String HYJF_MAKEPDF_TEMPPATH;
+    
+    @Value("${hyjf.ftp.url}")
+    public String ftpurl;
+    
+    @Value("${hyjf.ftp.basepath.img}")
+    public String ftpbasepathimg; 
     /** 商户客户号 */
     @Value("${hyjf.chinapnr.mercustid}")
     private String merCustId;
@@ -83,4 +91,30 @@ public class SystemConfig {
     public void setForgetpassword(String forgetpassword) {
         this.forgetpassword = forgetpassword;
     }
+
+	public String getHYJF_MAKEPDF_TEMPPATH() {
+		return HYJF_MAKEPDF_TEMPPATH;
+	}
+
+	public void setHYJF_MAKEPDF_TEMPPATH(String hYJF_MAKEPDF_TEMPPATH) {
+		HYJF_MAKEPDF_TEMPPATH = hYJF_MAKEPDF_TEMPPATH;
+	}
+
+	public String getFtpurl() {
+		return ftpurl;
+	}
+
+	public void setFtpurl(String ftpurl) {
+		this.ftpurl = ftpurl;
+	}
+
+	public String getFtpbasepathimg() {
+		return ftpbasepathimg;
+	}
+
+	public void setFtpbasepathimg(String ftpbasepathimg) {
+		this.ftpbasepathimg = ftpbasepathimg;
+	}
+	
+    
 }
