@@ -1,5 +1,7 @@
 package com.hyjf.cs.trade.service.impl.coupon;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
@@ -35,7 +37,32 @@ public class AppCouponServiceImpl extends BaseTradeServiceImpl implements AppCou
     }
 
     @Override
-    public Map<String, Object> getBorrowCoupon(Integer userId, String borrowNid, String money, String platform) {
-        return null;
+    public JSONObject getBorrowCoupon(Integer userId, String borrowNid, String money, String platform) {
+        JSONObject jsonObject = new JSONObject();
+        MyCouponListRequest requestBean = new MyCouponListRequest();
+        requestBean.setUserId(userId+"");
+        requestBean.setBorrowNid(borrowNid);
+        requestBean.setMoney(money);
+        requestBean.setPlatform(platform);
+        CouponResponse couponResponse = amTradeClient.getBorrowCoupon(requestBean);
+        if (null != couponResponse){
+            jsonObject = (JSONObject)couponResponse.getResult();
+        }
+        return jsonObject;
+    }
+
+    @Override
+    public JSONObject getPlanCoupon(Integer userId, String planNid, String money, String platform) {
+        JSONObject jsonObject = new JSONObject();
+        MyCouponListRequest requestBean = new MyCouponListRequest();
+        requestBean.setUserId(userId+"");
+        requestBean.setBorrowNid(planNid);
+        requestBean.setMoney(money);
+        requestBean.setPlatform(platform);
+        CouponResponse couponResponse = amTradeClient.getPlanCoupon(requestBean);
+        if (null != couponResponse){
+            jsonObject = (JSONObject)couponResponse.getResult();
+        }
+        return jsonObject;
     }
 }

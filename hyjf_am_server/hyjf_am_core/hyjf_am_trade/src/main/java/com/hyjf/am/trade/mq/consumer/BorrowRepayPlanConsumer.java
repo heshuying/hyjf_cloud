@@ -18,6 +18,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -44,6 +45,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @author dxj
  * @version BorrowRepayPlanConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
+//@Component
 public class BorrowRepayPlanConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayPlanConsumer.class);
@@ -57,12 +59,17 @@ public class BorrowRepayPlanConsumer extends Consumer{
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+		
+		// 设置并发数
+		defaultMQPushConsumer.setConsumeThreadMin(1);
+		defaultMQPushConsumer.setConsumeThreadMax(1);
+		
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
 		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
 		defaultMQPushConsumer.start();
-		logger.info("====还款业务消费结束=====");
+		logger.info("====计划还款业务消费启动=====");
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {

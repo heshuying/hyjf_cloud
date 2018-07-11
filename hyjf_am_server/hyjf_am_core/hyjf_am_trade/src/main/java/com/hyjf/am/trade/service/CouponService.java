@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
+import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 
@@ -38,4 +39,18 @@ public interface CouponService {
      * @return
      */
     BorrowTenderCpn getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId);
+
+    /**
+     * 获取优惠券还款记录
+     * @param id
+     * @return
+     */
+    CouponRecover getCouponRecoverByPrimaryKey(Integer id);
+
+    /**
+     * 取得优惠券投资信息
+     * @param nid
+     * @return
+     */
+    BorrowTenderCpn getCouponTenderInfoByNid(String nid);
 }

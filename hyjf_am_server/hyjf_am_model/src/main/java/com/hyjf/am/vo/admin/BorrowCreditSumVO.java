@@ -12,12 +12,16 @@ import java.io.Serializable;
 public class BorrowCreditSumVO  extends BaseVO implements Serializable {
 
 
+    /*债权本金总计*/
     private String sumCreditCapital;
 
+    /*转让本金*/
     private String sumCreditCapitalPrice;
 
+    /*转让价格*/
     private String sumCreditPrice;
 
+    /*已转让金额总计*/
     private String sumCreditCapitalAssigned;
 
 
