@@ -64,4 +64,22 @@ public class AdminHjhCreditTenderController {
         }
         return response;
 	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :汇计划承接记录列表不分页
+	 */
+	@RequestMapping(value = "/getHjhCreditTenderListByParamWithOutPage",method = RequestMethod.POST)
+	public HjhCreditTenderResponse getHjhCreditTenderListByParamWithOutPage(@RequestBody @Valid HjhCreditTenderRequest request){
+		HjhCreditTenderResponse response = new HjhCreditTenderResponse();
+		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderService.getHjhCreditTenderListByParamWithOutPage(request);
+        if(list.size() > 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                //代表成功
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+        return response;
+	}
 }

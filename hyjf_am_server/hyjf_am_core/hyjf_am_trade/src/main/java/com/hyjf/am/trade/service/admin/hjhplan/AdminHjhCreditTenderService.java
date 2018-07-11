@@ -28,5 +28,13 @@ public interface AdminHjhCreditTenderService {
 	 * @return
 	 */
 	List<HjhCreditTenderCustomizeVO> selectHjhCreditTenderList(HjhCreditTenderRequest request,int limitStart, int limitEnd);
+	
+	/**
+	 * 获取详细列表未分页
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest request);
 
 }
