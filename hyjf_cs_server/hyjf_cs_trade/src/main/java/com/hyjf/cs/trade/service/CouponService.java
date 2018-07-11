@@ -24,11 +24,9 @@ public interface CouponService {
      * 加入计划  体验金投资
      * @param request
      * @param plan
-     * @param account
      * @param cuc
-     * @param tenderAccount
      */
-    void couponTender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount);
+    void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc,Integer userId);
 
     /**
      * 优惠券投资校验
