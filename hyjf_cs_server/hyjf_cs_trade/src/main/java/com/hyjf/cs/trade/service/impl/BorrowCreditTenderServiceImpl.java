@@ -67,6 +67,7 @@ import com.hyjf.cs.trade.client.CreditClient;
 import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.base.Producer;
 import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;

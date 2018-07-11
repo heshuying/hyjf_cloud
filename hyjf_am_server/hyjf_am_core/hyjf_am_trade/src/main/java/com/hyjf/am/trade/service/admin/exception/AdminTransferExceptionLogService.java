@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.exception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminTransferExceptionLogCustomize;
@@ -49,4 +50,11 @@ public interface AdminTransferExceptionLogService {
      * @return
      */
     TransferExceptionLog getTransferExceptionLogByUUID(String uuid);
+
+    /**
+     * 转账成功后续处理
+     * @param jsonObject
+     * @return
+     */
+    boolean transferAfter(JSONObject jsonObject) throws Exception;
 }
