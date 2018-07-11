@@ -22,6 +22,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,6 +80,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject handleTenderCancelException(TenderCancelExceptionRequest request,Integer loginUserId) {
         AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
         JSONObject jsonObject = new JSONObject();
@@ -151,7 +153,8 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
      * @param txAmount
      * @return
      */
-    private BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount,AdminSystemVO adminSystemVO) {
+    @Transactional(rollbackFor = Exception.class)
+    public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount,AdminSystemVO adminSystemVO) {
         // 标的投资撤销
         BankCallBean bean = new BankCallBean();
         String orderId = GetOrderIdUtils.getOrderId2(userId);
@@ -178,7 +181,8 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         return result;
     }
 
-    private boolean updateBidCancelRecord(BorrowTenderTmpVO tenderTmp,AdminSystemVO adminSystemVO) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateBidCancelRecord(BorrowTenderTmpVO tenderTmp,AdminSystemVO adminSystemVO) throws Exception {
 
         boolean tenderTmpFlag = amTradeClient.deleteBorrowTenderTmpById(tenderTmp.getId()) > 0;
         if (!tenderTmpFlag) {

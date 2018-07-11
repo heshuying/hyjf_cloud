@@ -576,6 +576,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 银行转账异常
+     * @auth jijun
      * @param request
      * @return
      */
@@ -591,6 +592,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 银行转账异常
+     * @auth jijun
      * @param request
      * @return
      */
@@ -602,6 +604,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 更新银行转账信息
+     * @auth jijun
      * @param request
      * @return
      */
@@ -613,6 +616,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 更新银行转账信息
+     * @auth jijun
      * @param transferExceptionLog
      * @return
      */
@@ -624,6 +628,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 获取银行转账异常通过uuid
+     * @auth jijun
      * @param uuid
      * @return
      */
@@ -884,6 +889,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 转账成功后续处理
+     * @auth jijun
      * @param jsonObject
      * @return
      */
@@ -897,6 +903,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 根据主键获取优惠券还款记录
+     * @auth jijun
      * @param recoverId
      * @return
      */
@@ -912,6 +919,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 取得优惠券投资信息
+     * @auth jijun
      * @param nid
      * @return
      */
@@ -941,5 +949,77 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+
+    /**
+     * 根据筛选条件查询汇付对账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getAccountExceptionCount(AccountExceptionRequest request) {
+        String url="http://AM-TRADE/am-trade/accountexception/getaccountexceptioncount";
+        Integer count = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询汇付对账列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<AccountExceptionVO> searchAccountExceptionList(AccountExceptionRequest request) {
+        String url="http://AM-TRADE/am-trade/accountexception/searchaccountexceptionlist";
+        AccountExceptionResponse response = restTemplate.postForEntity(url,request,AccountExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据id查询AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public AccountExceptionVO searchAccountExceptionById(Integer id) {
+        String url="http://AM-TRADE/am-trade/accountexception/searchaccountexceptionbyid/" + id;
+        AccountExceptionResponse response = restTemplate.getForEntity(url,AccountExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新AccountException
+     * @auth sunpeikai
+     * @param accountExceptionVO 更新参数
+     * @return
+     */
+    @Override
+    public Integer updateAccountException(AccountExceptionVO accountExceptionVO) {
+        String url="http://AM-TRADE/am-trade/accountexception/updateaccountexception";
+        Integer response = restTemplate.postForEntity(url,accountExceptionVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据id删除AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public Integer deleteAccountExceptionById(Integer id) {
+        String url="http://AM-TRADE/am-trade/accountexception/deleteaccountexceptionbyid/" + id;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
 
 }

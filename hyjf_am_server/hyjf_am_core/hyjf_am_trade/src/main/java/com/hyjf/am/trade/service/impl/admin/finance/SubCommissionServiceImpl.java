@@ -16,6 +16,7 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertSubCommission(SubCommissionVO subCommissionVO) {
         SubCommission subCommission = CommonUtils.convertBean(subCommissionVO,SubCommission.class);
         return subCommissionMapper.insertSelective(subCommission)>0;
@@ -83,6 +85,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
         SubCommission subCommission = CommonUtils.convertBean(subCommissionVO,SubCommission.class);
         return subCommissionMapper.updateByPrimaryKeySelective(subCommission);

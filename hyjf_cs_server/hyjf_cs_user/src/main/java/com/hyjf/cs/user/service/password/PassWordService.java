@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.password;
 
-import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -63,7 +62,7 @@ public interface PassWordService extends BaseUserService {
      */
     void weChatCheckParam(UserVO userVO,String newPassword, String oldPassword);
 
-    void backCheck(SmsCodeRequest request, String newPassword);
+    void backCheck(SendSmsVO sendSmsVo);
 
     /**
      * api参数检查
@@ -103,4 +102,8 @@ public interface PassWordService extends BaseUserService {
      * @param oldPassword
      */
     void appCheckParam(String key,UserVO userVO, String version, String netStatus, String platform, String sign, String token, String randomString, String order, String newPassword,String oldPassword);
+
+    String getBankRetMsg(String retCode);
+
+    Map<String,Object> checkStatus(String token, String sign);
 }

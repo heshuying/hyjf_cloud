@@ -142,7 +142,7 @@
                 <version>2.4</version>
                <!-- <configuration>
                     <excludes>
-                        <exclude>**/application.yml</exclude>
+                        <exclude>**/application.yml.bak</exclude>
                         <exclude>**/bootstrap.yml</exclude>
                     </excludes>
                 </configuration>-->

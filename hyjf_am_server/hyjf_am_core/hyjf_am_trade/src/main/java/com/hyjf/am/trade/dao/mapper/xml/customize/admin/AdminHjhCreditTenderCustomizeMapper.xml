@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhCreditTenderCustomizeMapper">
+
+	<select id="countDebtCreditTender" resultType="java.lang.Integer" parameterType="map">
+		SELECT
+		  COUNT(1)
+		FROM
+			ht_hjh_debt_credit_tender ct
+		INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
+		INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		<include refid="Where_Clause" />
+	</select>
+	<sql id="Where_Clause">
+		<where>
+			<!-- 承接人用户名 -->
+			<if test="assignUserName != null and assignUserName != ''">
+				AND ct.user_name LIKE CONCAT('%', #{assignUserName}, '%')
+			</if>
+			<!-- 承接人计划编号 -->
+			<if test="assignPlanNid != null and assignPlanNid != ''">
+				AND ct.assign_plan_nid LIKE CONCAT('%', #{assignPlanNid}, '%')
+			</if>
+			<!-- 承接人计划订单号 -->
+			<if test="assignPlanOrderId != null and assignPlanOrderId != ''">
+				AND ct.assign_plan_order_id LIKE CONCAT('%', #{assignPlanOrderId}, '%')
+			</if>
+			<!-- 用户名 -->
+			<if test="creditUserName != null and creditUserName != ''">
+				AND ct.credit_user_name LIKE CONCAT('%', #{creditUserName}, '%')
+			</if>
+			<!-- 债转编号 -->
+			<if test="creditNid != null and creditNid != ''">
+				AND ct.credit_nid LIKE CONCAT('%', #{creditNid}, '%')
+			</if>
+			<!-- 原始项目编号 -->
+			<if test="borrowNid != null and borrowNid != ''">
+				AND ct.borrow_nid LIKE CONCAT('%', #{borrowNid}, '%')
+			</if>
+			<!-- 承接类型 0 自动承接 1手动承接 -->
+			<if test="assignType != null and assignType != ''">
+				AND ct.assign_type LIKE CONCAT('%', #{assignType}, '%')
+			</if>
+			<!-- 原始项目编号 -->
+			<if test="repayStyle != null and repayStyle != ''">
+				AND bs.nid = #{repayStyle}
+			</if>
+			<!-- 时间 -->
+			<if test="assignTimeStart != null and assignTimeStart != ''">
+				AND ct.create_time<![CDATA[>=]]> unix_timestamp(CONCAT(#{assignTimeStart},' 00:00:00'))
+			</if>
+			<if test="assignTimeEnd != null and assignTimeEnd != ''">
+				AND ct.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{assignTimeEnd},' 23:59:59'))
+			</if>
+		</where>
+	</sql>
+	
+	
+	<resultMap id="DebtCreditTenderMap" type="com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="assign_user_name" property="assignUserName" jdbcType="VARCHAR" />
+		<result column="assign_user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="assign_plan_nid" property="assignPlanNid" jdbcType="VARCHAR" />
+		<result column="assign_plan_order_id" property="assignPlanOrderId" jdbcType="VARCHAR" />
+		<result column="assign_order_id" property="assignOrderId" jdbcType="VARCHAR" />
+		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
+		<result column="credit_nid" property="creditNid" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="repay_style_name" property="repayStyleName" jdbcType="VARCHAR" />
+		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+		<result column="assign_interest_advance" property="assignInterestAdvance" jdbcType="VARCHAR" />
+		<result column="assign_pay" property="assignPay" jdbcType="VARCHAR" />
+		<result column="assign_type_name" property="assignTypeName" jdbcType="VARCHAR" />
+		<result column="assign_time" property="assignTime" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="assign_period" property="assignPeriod" jdbcType="VARCHAR" />
+		<!--合同状态-->
+		<result column="contractStatus" property="contractStatus"  />
+		<!--合同编号-->
+		<result column="contract_number" property="contractNumber"  />
+		<!--合同下载地址-->
+		<result column="download_url" property="downloadUrl"  />
+		<!--合同查看地址-->
+		<result column="viewpdf_url" property="viewpdfUrl"  />
+		<!--脱敏后合同查看地址-->
+		<result column="img_url" property="imgUrl"  />
+	</resultMap>
+	
+	<select id="selectDebtCreditTenderList" resultMap="DebtCreditTenderMap" parameterType="map">
+		SELECT
+			ct.id,
+			ct.user_name AS assign_user_name,
+			ct.user_id AS assign_user_id,
+			ct.assign_plan_nid,
+			ct.assign_plan_order_id,
+			ct.assign_order_id,
+			ct.credit_user_name,
+			ct.credit_nid,
+			ct.borrow_nid,
+			bs.`name` AS repay_style_name,
+			ct.assign_capital,
+			ct.assign_interest_advance,
+			ct.assign_pay,
+			ct.assign_type AS assign_type_name,
+			FROM_UNIXTIME(
+				ct.create_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS assign_time,
+			CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
+ 			bc.assign_period,
+		    hta.status AS contractStatus,
+			hta.contract_number AS contract_number,
+			hta.download_url AS download_url,
+			hta.viewpdf_url AS viewpdf_url,
+			hta.img_url AS img_url
+		FROM
+			ht_hjh_debt_credit_tender ct
+		INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
+		INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = ct.assign_order_id
+	   <include refid="Where_Clause" />
+		ORDER BY ct.create_time DESC
+	   <if  test="limitStart != null and limitEnd != null">
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+</mapper>

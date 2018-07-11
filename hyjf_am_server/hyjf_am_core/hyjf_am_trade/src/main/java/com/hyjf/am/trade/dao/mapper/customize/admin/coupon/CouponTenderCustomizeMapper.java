@@ -2,7 +2,7 @@ package com.hyjf.am.trade.dao.mapper.customize.admin.coupon;
 
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 
@@ -46,7 +46,7 @@ public interface CouponTenderCustomizeMapper {
      * @param paramMap couponUserId 优惠券发放编号，userFlag ：1
      * @return List<CouponRecoverVo>
      */
-    List<CouponRecoverVo> getCouponRecoverCustomize(Map<String,Object> paramMap);
+    List<CouponRecoverVO> getCouponRecoverCustomize(Map<String,Object> paramMap);
 
     /**
      * 汇计划根据条件获取总条数
@@ -80,7 +80,7 @@ public interface CouponTenderCustomizeMapper {
      * @param paramMap couponUserId 优惠券发放编号，userFlag ：1
      * @return List<CouponRecoverVo>
      */
-    List<CouponRecoverVo> getHjhCouponRecoverCustomize(Map<String,Object> paramMap);
+    List<CouponRecoverVO> getHjhCouponRecoverCustomize(Map<String,Object> paramMap);
 
     /**
      * 汇直投代金券回款总数

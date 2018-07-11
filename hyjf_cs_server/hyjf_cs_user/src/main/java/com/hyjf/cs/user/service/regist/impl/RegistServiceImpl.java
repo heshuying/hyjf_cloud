@@ -3,34 +3,15 @@
  */
 package com.hyjf.cs.user.service.regist.impl;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UsersContactVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -58,13 +39,27 @@ import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author zhangqingqing
  * @version RegistServiceImpl, v0.1 2018/6/11 15:10
  */
 @Service
-public class RegistServiceImpl extends BaseUserServiceImpl implements RegistService{
+public class RegistServiceImpl extends BaseUserServiceImpl implements RegistService {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistServiceImpl.class);
 
@@ -118,28 +113,29 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.STATUS_ZC000003);
         CheckUtil.check(!existUser(mobile), MsgEnum.STATUS_ZC000005);
         // TODO: 2018/6/23 原代码平台推荐人未作处理
-        if(StringUtils.isNotEmpty(reffer)){
+        if (StringUtils.isNotEmpty(reffer)) {
             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
     }
 
     /**
      * 参数校验
+     *
      * @param registerRequest
      */
     @Override
     public void checkParam(RegisterRequest registerRequest) {
         String mobile = registerRequest.getMobile();
         //手机号未填写
-        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_OBJECT_BLANK,"手机号");
+        CheckUtil.check(StringUtils.isNotEmpty(mobile), MsgEnum.ERR_OBJECT_BLANK, "手机号");
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_MOBILE_IS_NOT_REAL);
         CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
         String smsCode = registerRequest.getVerificationCode();
         //验证码不能为空
-        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_OBJECT_REQUIRED,"验证码");
+        CheckUtil.check(StringUtils.isNotEmpty(smsCode), MsgEnum.ERR_OBJECT_REQUIRED, "验证码");
         String password = registerRequest.getPassword();
         //密码不能为空
-        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_OBJECT_REQUIRED,"密码");
+        CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_OBJECT_REQUIRED, "密码");
         CheckUtil.check(password.length() >= 6 && password.length() <= 16, MsgEnum.ERR_PASSWORD_LENGTH);
         boolean hasNumber = false;
         for (int i = 0; i < password.length(); i++) {
@@ -158,14 +154,15 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
         CheckUtil.check(cnt != 0, MsgEnum.STATUS_ZC000015);
         String reffer = registerRequest.getReffer();
-        if(StringUtils.isNotEmpty(reffer)){
+        if (StringUtils.isNotEmpty(reffer)) {
             //无效推荐人
-            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID, "推荐人");
         }
     }
 
     /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
+     *
      * @param registerRequest
      * @param
      * @param
@@ -188,6 +185,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
     /**
      * api注册
+     *
      * @param
      * @param ipAddr
      * @return
@@ -205,10 +203,10 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         //CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
         registerUserRequest.setInstCode(registerRequest.getInstCode());
         // 验签
-        CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER),MsgEnum.STATUS_CE000002);
+        CheckUtil.check(this.verifyRequestSign(registerVO, BaseDefine.METHOD_SERVER_REGISTER), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
-        CheckUtil.check(null!=utmPlat,MsgEnum.STATUS_ZC000020);
+        CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
@@ -228,19 +226,20 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         webViewUserVO.setToken(token);
         RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
         // 2. 注册送188元新手红包
-        if (!checkActivityIfAvailable(systemConfig.getActivity888Id())) {
+        // 活动有效期校验
+        Integer activityId = systemConfig.getActivity888Id();
+        if (!checkActivityIfAvailable(activityId)) {
             sendCoupon(userVO);
         }
         return webViewUserVO;
     }
 
-
-
     /**
      * 发送消息
+     *
      * @param userVO
      */
-    private void sendCoupon(UserVO userVO){
+    private void sendCoupon(UserVO userVO) {
         int userId = userVO.getUserId();
         try {
             JSONObject params = new JSONObject();
@@ -258,7 +257,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
             smsProducer.messageSend(
-                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
             logger.error("短信发送失败...", e);
         }
@@ -278,16 +277,16 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         webViewUserVO.setIconUrl(this.assembleIconUrl(userVO));
         webViewUserVO.setOpenAccount(false);
         webViewUserVO.setBankOpenAccount(false);
-        if(null != userVO.getOpenAccount()&&userVO.getOpenAccount()==1){
+        if (null != userVO.getOpenAccount() && userVO.getOpenAccount() == 1) {
             AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(userVO.getUserId());
             webViewUserVO.setOpenAccount(true);
             //咱们平台的汇付账号
             webViewUserVO.setChinapnrUsrid(chinapnr.getChinapnrUsrid());
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
-        if(null!=userVO.getBankOpenAccount()&&userVO.getBankOpenAccount()==1){
+        if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
             List<BankCardVO> bankCardVOList = amUserClient.getBankOpenAccountById(userVO);
-            if(null!=bankCardVOList&&bankCardVOList.size()>0){
+            if (null != bankCardVOList && bankCardVOList.size() > 0) {
                 BankCardVO bankCardVO = bankCardVOList.get(0);
                 webViewUserVO.setBankOpenAccount(true);
                 webViewUserVO.setBankAccount(bankCardVO.getCardNo());
@@ -356,10 +355,15 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         return true;
     }
 
-   @Override
-   public int countUserByRecommendName(String reffer){
+    @Override
+    public int countUserByRecommendName(String reffer) {
         int cnt = amUserClient.countUserByRecommendName(reffer);
         return cnt;
+    }
+
+    @Override
+    public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest) {
+        return amMarketClient.searchBanner(adsRequest);
     }
 
 }
