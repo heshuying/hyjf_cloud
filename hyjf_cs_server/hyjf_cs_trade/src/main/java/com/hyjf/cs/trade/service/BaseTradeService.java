@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -16,6 +17,9 @@ public interface BaseTradeService extends BaseService{
      * @Date 2018/6/12 10:34
      */
     WebViewUserVO getUsersByToken(String token);
+
+    UserVO getUserByUserId(Integer userId);
+
     /**
      * 获取银行开户信息
      *
@@ -46,4 +50,6 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     public boolean checkIsNewUserCanInvest(Integer userId);
+
+    AccountVO getAccountByUserId(Integer userId);
 }

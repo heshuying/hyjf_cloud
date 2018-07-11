@@ -112,4 +112,44 @@ public class CouponTenderServiceImpl implements CouponTenderService {
     public List<CouponBackMoneyCustomize> getRecordListHztJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
         return couponTenderCustomizeMapper.getRecordListHztJX(couponBackMoneyCustomize);
     }
+
+    @Override
+    public Integer countRecordHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.countRecordHjhDJ(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public List<CouponBackMoneyCustomize> getRecordListHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.getRecordListHjhDJ(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public String queryHjhInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.queryHjhInvestTotal(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public String queryHjhRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.queryHjhRecoverInterestTotle(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public Integer countRecordHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.countRecordHjhTY(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public List<CouponBackMoneyCustomize> getRecordListHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.getRecordListHjhTY(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public Integer countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.countRecordHjhJX(couponBackMoneyCustomize);
+    }
+
+    @Override
+    public List<CouponBackMoneyCustomize> getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize) {
+        return couponTenderCustomizeMapper.getRecordListHjhJX(couponBackMoneyCustomize);
+    }
 }

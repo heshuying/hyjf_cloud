@@ -266,4 +266,42 @@ public class CreditTenderController extends BaseController{
         }
     }
 
+    /**
+     * 修改债转结果
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     * @return
+     */
+    @GetMapping("/updateCreditTenderResult/{logOrderId}/{logUserId}/{retCode}/{retMsg}")
+    public Integer updateCreditTenderResult( @PathVariable String logOrderId,@PathVariable String logUserId,@PathVariable String retCode,@PathVariable String retMsg){
+        return bankCreditTenderService.updateCreditTenderResult(logOrderId,logUserId,retCode,retMsg);
+    }
+
+    /**
+     * 查询债转失败原因
+     * @param logOrderId
+     * @param logUserId
+     * @return
+     */
+    @GetMapping("/getFailResult/{logOrderId}/{logUserId}")
+    public String getFailResult( @PathVariable String logOrderId,@PathVariable String logUserId){
+        return bankCreditTenderService.getFailResult(logOrderId,logUserId);
+    }
+
+    /**
+     * 查询债转信息
+     * @param logOrderId
+     * @param logUserId
+     * @return
+     */
+    @GetMapping("/getCreditTenderByUserIdOrdId/{logOrderId}/{logUserId}")
+    public CreditTenderResponse getCreditTenderByUserIdOrdId( @PathVariable String logOrderId,@PathVariable String logUserId){
+        CreditTenderResponse response = new CreditTenderResponse();
+        CreditTenderVO bean =bankCreditTenderService.getCreditTenderByUserIdOrdId(logOrderId,logUserId);
+        response.setResult(bean);
+        return response;
+    }
+
 }

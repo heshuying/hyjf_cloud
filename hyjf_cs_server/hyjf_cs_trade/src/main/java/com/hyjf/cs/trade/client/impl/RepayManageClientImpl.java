@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.cs.trade.client.RepayManageClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,5 +103,17 @@ public class RepayManageClientImpl implements RepayManageClient {
         int count = restTemplate
                 .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepayedcount", requestBean, Integer.class).getBody();
         return count;
+    }
+
+    /**
+     * 还款申请更新
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean){
+        Boolean result = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/update", requestBean, Boolean.class).getBody();
+        return result;
     }
 }

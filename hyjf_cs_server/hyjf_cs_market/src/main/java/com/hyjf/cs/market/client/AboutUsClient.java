@@ -5,6 +5,7 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.am.vo.config.JobsVo;
 import com.hyjf.am.vo.config.TeamVO;
 
 import java.util.List;
@@ -56,4 +57,22 @@ public interface AboutUsClient {
      * @return
      */
     ContentArticleVO getNoticeInfo(Integer id);
+
+    /**
+     * 获取招贤纳士列表
+     * @return
+     */
+    public List<JobsVo> getJobsList();
+
+    /**
+     * 获取关于联系我们信息
+     * @return
+     */
+    public ContentArticleVO contactUs();
+
+    /**
+     * 获取网贷知识
+     * @return
+     */
+    public List<ContentArticleVO> getknowsList();
 }

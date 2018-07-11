@@ -46,8 +46,6 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     private Integer orderStatus;
 
-    private Integer addTime;
-
     private Integer countInterestTime;
 
     private Integer sendStatus;
@@ -90,17 +88,37 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     private BigDecimal shouldPayInterest;
 
-    private Integer createUser;
+    private BigDecimal expectApr;
 
-    private Date createTime;
+    private BigDecimal fairValue;
+
+    private BigDecimal liquidationFairValue;
+
+    private BigDecimal actualApr;
+
+    private Integer investCounts;
+
+    private Integer matchDates;
+
+    private BigDecimal lqdServiceFee;
+
+    private BigDecimal lqdServiceApr;
+
+    private BigDecimal investServiceApr;
+
+    private BigDecimal lqdProgress;
+
+    private Integer createUser;
 
     private Integer updateUser;
 
-    private Date updateTime;
-
     private Integer delFlag;
 
+    private Date createTime;
+
+    private Date updateTime;
     private TenderRequest request;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -230,14 +248,6 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
 
     public void setOrderStatus(Integer orderStatus) {
         this.orderStatus = orderStatus;
-    }
-
-    public Integer getAddTime() {
-        return addTime;
-    }
-
-    public void setAddTime(Integer addTime) {
-        this.addTime = addTime;
     }
 
     public Integer getCountInterestTime() {
@@ -408,20 +418,92 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
         this.shouldPayInterest = shouldPayInterest;
     }
 
+    public BigDecimal getExpectApr() {
+        return expectApr;
+    }
+
+    public void setExpectApr(BigDecimal expectApr) {
+        this.expectApr = expectApr;
+    }
+
+    public BigDecimal getFairValue() {
+        return fairValue;
+    }
+
+    public void setFairValue(BigDecimal fairValue) {
+        this.fairValue = fairValue;
+    }
+
+    public BigDecimal getLiquidationFairValue() {
+        return liquidationFairValue;
+    }
+
+    public void setLiquidationFairValue(BigDecimal liquidationFairValue) {
+        this.liquidationFairValue = liquidationFairValue;
+    }
+
+    public BigDecimal getActualApr() {
+        return actualApr;
+    }
+
+    public void setActualApr(BigDecimal actualApr) {
+        this.actualApr = actualApr;
+    }
+
+    public Integer getInvestCounts() {
+        return investCounts;
+    }
+
+    public void setInvestCounts(Integer investCounts) {
+        this.investCounts = investCounts;
+    }
+
+    public Integer getMatchDates() {
+        return matchDates;
+    }
+
+    public void setMatchDates(Integer matchDates) {
+        this.matchDates = matchDates;
+    }
+
+    public BigDecimal getLqdServiceFee() {
+        return lqdServiceFee;
+    }
+
+    public void setLqdServiceFee(BigDecimal lqdServiceFee) {
+        this.lqdServiceFee = lqdServiceFee;
+    }
+
+    public BigDecimal getLqdServiceApr() {
+        return lqdServiceApr;
+    }
+
+    public void setLqdServiceApr(BigDecimal lqdServiceApr) {
+        this.lqdServiceApr = lqdServiceApr;
+    }
+
+    public BigDecimal getInvestServiceApr() {
+        return investServiceApr;
+    }
+
+    public void setInvestServiceApr(BigDecimal investServiceApr) {
+        this.investServiceApr = investServiceApr;
+    }
+
+    public BigDecimal getLqdProgress() {
+        return lqdProgress;
+    }
+
+    public void setLqdProgress(BigDecimal lqdProgress) {
+        this.lqdProgress = lqdProgress;
+    }
+
     public Integer getCreateUser() {
         return createUser;
     }
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public Integer getUpdateUser() {
@@ -432,20 +514,28 @@ public class HjhAccedeVO extends BaseVO implements Serializable {
         this.updateUser = updateUser;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Integer getDelFlag() {
         return delFlag;
     }
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public TenderRequest getRequest() {

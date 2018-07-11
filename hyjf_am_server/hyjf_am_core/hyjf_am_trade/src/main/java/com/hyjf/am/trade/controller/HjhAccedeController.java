@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
@@ -14,11 +15,9 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -93,5 +92,10 @@ public class HjhAccedeController extends BaseController{
     }
 
 
-
+    @RequestMapping("/updateHjhAccedeByPrimaryKey")
+    public Response<Integer> updateHjhAccedeByPrimaryKey(@RequestBody HjhAccedeVO hjhAccedeVO) {
+        HjhAccede hjhAccede = new HjhAccede();
+        BeanUtils.copyProperties(hjhAccedeVO,hjhAccede);
+        return new Response(this.hjhAccedeService.updateHjhAccedeByPrimaryKey(hjhAccede));
+    }
 }

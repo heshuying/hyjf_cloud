@@ -43,4 +43,5 @@ public interface HjhAccedeService {
 
     List<PlanDetailCustomize> getPlanDetail(String planNid);
 
+    int updateHjhAccedeByPrimaryKey(HjhAccede hjhAccede);
 }

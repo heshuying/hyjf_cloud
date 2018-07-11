@@ -3,11 +3,19 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.admin.AdminBorrowCreditInfoResponse;
+import com.hyjf.am.response.admin.AdminBorrowCreditResponse;
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
 import com.hyjf.am.response.trade.BorrowCreditResponse;
+import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
 import com.hyjf.am.trade.service.BorrowCreditService;
+import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
+import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
+import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.common.util.CommonUtils;
@@ -81,6 +89,97 @@ public class BorrowCreditController extends BaseController{
     	}
     	return response;
     }
+
+    /**
+     * admin: 查询汇转让列表
+     * @author zhangyk
+     * @date 2018/7/9 16:50
+     */
+    @PostMapping("/getBorrowCreditList4admin")
+    public AdminBorrowCreditResponse getBorrowCreditList4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditResponse response = new AdminBorrowCreditResponse();
+        List<AdminBorrowCreditCustomize> list = borrowCreditService.getBorrowCreditList4Admin(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            List<com.hyjf.am.vo.admin.BorrowCreditVO> res = CommonUtils.convertBeanList(list, com.hyjf.am.vo.admin.BorrowCreditVO.class);
+            response.setResultList(res);
+        }
+        return response;
+    }
+
+
+    /**
+     * admin: 查询汇转让count
+     * @author zhangyk
+     * @date 2018/7/9 16:50
+     */
+    @PostMapping("/countBorrowCreditList4admin")
+    public AdminBorrowCreditResponse countBorrowCreditList4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditResponse response = new AdminBorrowCreditResponse();
+        Integer count = borrowCreditService.countBorrowCreditList4Admin(request);
+        response.setRecordTotal(count);
+        return response;
+    }
+
+    /**
+     * admin: 查询汇转让合计行
+     * @author zhangyk
+     * @date 2018/7/10 17:36
+     */
+    @PostMapping("/getBorrowCreditTotalCount")
+    public  AdminBorrowCreditResponse getBorrowCreditTotalCount(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditResponse response = new AdminBorrowCreditResponse();
+        BorrowCreditSumVO sumVO = borrowCreditService.getBorrowCreditTotalCount(request);
+        response.setSumVO(sumVO);
+        return response;
+    }
+
+
+    /**
+     * admin: 查询汇转让明细count
+     * @author zhangyk
+     * @date 2018/7/10 17:37
+     */
+    @PostMapping("/countBorrowCreditInfo4admin")
+    public AdminBorrowCreditInfoResponse countBorrowCreditInfo4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditInfoResponse response = new AdminBorrowCreditInfoResponse();
+        Integer count = borrowCreditService.countBorrowCreditInfo4Admin(request);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * admin: 查询汇转让明细list
+     * @author zhangyk
+     * @date 2018/7/10 19:17
+     */
+    @PostMapping("/searchBorrowCreditInfo4admin")
+    public AdminBorrowCreditInfoResponse searchBorrowCreditInfo4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditInfoResponse response = new AdminBorrowCreditInfoResponse();
+        List<AdminBorrowCreditCustomize> list = borrowCreditService.getBorrowCreditInfo4Admin(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,BorrowCreditInfoVO.class));
+        }
+        return response;
+    }
+
+
+    /**
+     * admin: 查询汇转让明细list
+     * @author zhangyk
+     * @date 2018/7/10 19:17
+     */
+    @PostMapping("/sumBorrowCreditInfo4admin")
+    public AdminBorrowCreditInfoResponse sumBorrowCreditInfo4admin(@RequestBody BorrowCreditAmRequest request){
+        AdminBorrowCreditInfoResponse response = new AdminBorrowCreditInfoResponse();
+        BorrowCreditInfoSumVO sumVO = borrowCreditService.sumBorrowCreditInfoData(request);
+        response.setSumData(sumVO);
+        return response;
+    }
+
+
+
+
+
 
     
 }

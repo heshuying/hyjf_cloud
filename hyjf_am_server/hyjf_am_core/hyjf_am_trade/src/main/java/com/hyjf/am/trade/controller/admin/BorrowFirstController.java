@@ -57,7 +57,7 @@ public class BorrowFirstController {
     }
 
     /**
-     * 获取借款初审列表count
+     * 获取借款初审列表合计
      *
      * @return
      */

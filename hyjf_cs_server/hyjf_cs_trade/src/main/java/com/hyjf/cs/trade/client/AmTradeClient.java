@@ -8,6 +8,7 @@ import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -192,6 +193,10 @@ public interface AmTradeClient {
      */
     int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 
-
-
+    /**
+     * APP获取我的优惠券分页数据
+     * @param requestBean 参数
+     * @return List<CouponUserForAppCustomizeVO>
+     */
+    List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
 }

@@ -3,12 +3,16 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
+import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
 import com.hyjf.am.trade.service.BorrowCreditService;
+import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
+import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import org.springframework.beans.BeanUtils;
@@ -74,6 +78,86 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         List<BorrowCredit> borrowCredit = this.borrowCreditMapper.selectByExample(borrowCreditExample);
 		return borrowCredit;
 	}
+
+    /**
+     * 获取债权转让列表
+     */
+    @Override
+    public List<AdminBorrowCreditCustomize> getBorrowCreditList4Admin(BorrowCreditAmRequest request) {
+       Map<String,Object> params = new HashMap<>();
+       params.put("limitStart",request.getLimitStart());
+       params.put("limitEnd",request.getLimitEnd());
+       params.put("userName",request.getUserName());
+       params.put("creditNid",request.getCreditNid());
+       params.put("bidNid",request.getBidNid());
+       params.put("creditStatus",request.getCreditStatus());
+       params.put("timeStart",request.getTimeStart());
+       params.put("timeEnd",request.getTimeEnd());
+       return borrowCreditCustomizeMapper.getBorrowCreditList4Admin(params);
+    }
+
+
+    /**
+     * 获取债权转让count
+     */
+    @Override
+    public Integer countBorrowCreditList4Admin(BorrowCreditAmRequest request) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("creditNid",request.getCreditNid());
+        params.put("userName",request.getUserName());
+        params.put("bidNid",request.getBidNid());
+        params.put("creditStatus",request.getCreditStatus());
+        params.put("timeStart",request.getTimeStart());
+        params.put("timeEnd",request.getTimeEnd());
+        return borrowCreditCustomizeMapper.countBorrowCreditList4Admin(params);
+    }
+
+    /**
+     * 统计债权转让统计数据
+     * @date 2018/7/9 17:56
+     */
+    @Override
+    public BorrowCreditSumVO getBorrowCreditTotalCount(BorrowCreditAmRequest request) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("creditNid",request.getCreditNid());
+        params.put("userName",request.getUserName());
+        params.put("bidNid",request.getBidNid());
+        params.put("creditStatus",request.getCreditStatus());
+        params.put("timeStart",request.getTimeStart());
+        params.put("timeEnd",request.getTimeEnd());
+        return borrowCreditCustomizeMapper.getBorrowCreditTotalCount(params);
+    }
+
+    /**
+     * 债权转让详情count
+     * @author zhangyk
+     * @date 2018/7/10 17:51
+     */
+    @Override
+    public Integer countBorrowCreditInfo4Admin(BorrowCreditAmRequest request) {
+        return borrowCreditCustomizeMapper.countBorrowCreditInfo4Admin(request);
+    }
+
+
+    /**
+     * 债权转让详情list
+     * @author zhangyk
+     * @date 2018/7/10 17:51
+     */
+    @Override
+    public List<AdminBorrowCreditCustomize> getBorrowCreditInfo4Admin(BorrowCreditAmRequest request) {
+        return  borrowCreditCustomizeMapper.searchBorrowCreditInfo4Admin(request);
+    }
+
+    /**
+     * 债权转让详情合计行
+     * @author zhangyk
+     * @date 2018/7/10 20:29
+     */
+    @Override
+    public BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request) {
+        return borrowCreditCustomizeMapper.sumBorrowCreditInfoData(request);
+    }
 
 
 }

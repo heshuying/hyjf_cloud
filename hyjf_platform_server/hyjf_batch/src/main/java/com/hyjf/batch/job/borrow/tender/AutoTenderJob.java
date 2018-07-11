@@ -24,7 +24,8 @@ public class AutoTenderJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("AutoTenderJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://CS-TRADE/batch/tender/autotender", String.class);
+        Boolean result = restTemplate.getForEntity(
+                "http://CS-TRADE/batch/tender/autotender", Boolean.class).getBody();
 
         logger.info("AutoTenderJob execute end...");
     }

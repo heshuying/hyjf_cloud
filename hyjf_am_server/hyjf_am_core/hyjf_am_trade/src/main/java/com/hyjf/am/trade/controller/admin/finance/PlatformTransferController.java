@@ -4,19 +4,19 @@
 package com.hyjf.am.trade.controller.admin.finance;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.admin.PlatformTransferResponse;
-import com.hyjf.am.response.trade.BankMerchantAccountResponse;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.trade.service.admin.finance.PlatformTransferService;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

@@ -10,6 +10,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import io.swagger.annotations.Api;
@@ -54,6 +55,14 @@ public class HjhPlanController extends BaseTradeController {
             RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
         return result;
+    }
+
+    @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
+    @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
+    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender) {
+        tender.setToken(token);
+        tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        return  hjhTenderService.getInvestInfo(tender);
     }
 
 }
