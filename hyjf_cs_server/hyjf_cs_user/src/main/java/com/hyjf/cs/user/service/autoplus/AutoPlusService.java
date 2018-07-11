@@ -97,4 +97,6 @@ public interface AutoPlusService extends BaseUserService {
     void insertUserAuthLog(UserVO user, BankCallBean bean, Integer client, String authType);
 
     String getBankRetMsg(String retCode);
+
+    BankCallBean weChatGetCommonBankCallBean(UserVO users, int i, String srvAuthCode, String code, String sign);
 }

@@ -1,17 +1,18 @@
 package com.hyjf.admin.service.impl.coupon;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.admin.client.CouponTenderClient;
 import com.hyjf.admin.service.coupon.CouponTenderHztService;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author walter.limeng
@@ -83,7 +84,7 @@ public class CouponTenderHztServiceImpl implements CouponTenderHztService {
     }
 
     @Override
-    public List<CouponRecoverVo> getCouponRecoverCustomize(Map<String, Object> paramMap) {
+    public List<CouponRecoverVO> getCouponRecoverCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse couponTenderResponse = couponTenderClient.getCouponRecoverCustomize(paramMap);
         if(null != couponTenderResponse){
             return couponTenderResponse.getCouponRecoverList();

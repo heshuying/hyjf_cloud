@@ -125,10 +125,8 @@
         SUM(hba.fail_amount) AS fail_amount,
         SUM(hba.fail_counts) AS fail_counts
         FROM
-        huiyingdai_borrow_apicron hba
-        LEFT JOIN hyjf_param_name hpn ON cast(hba.`status` AS CHAR)  = hpn.name_cd
-        AND hpn.name_class = #{nameClass}
-        LEFT JOIN huiyingdai_borrow b ON hba.borrow_nid = b.borrow_nid
+        ht_borrow_apicron hba
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
         <include refid="Where_Clause"/>
     </select>
 

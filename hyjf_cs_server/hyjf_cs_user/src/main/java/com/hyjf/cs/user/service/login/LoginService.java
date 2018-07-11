@@ -19,7 +19,7 @@ public interface LoginService extends BaseUserService {
      * @param loginPassword
      * @param ip
      */
-    WebViewUserVO login(String loginUserName, String loginPassword, String ip);
+    WebViewUserVO login(String loginUserName, String loginPassword, String ip,String channel);
 
     void checkForApp(String version,String platform,String netStatus);
 

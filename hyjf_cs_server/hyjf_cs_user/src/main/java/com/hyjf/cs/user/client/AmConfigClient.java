@@ -48,4 +48,6 @@ public interface AmConfigClient {
      * @return
      */
     List<ParamNameVO> getParamNameList(String nameClass);
+
+    String getBankRetMsg(String retCode);
 }

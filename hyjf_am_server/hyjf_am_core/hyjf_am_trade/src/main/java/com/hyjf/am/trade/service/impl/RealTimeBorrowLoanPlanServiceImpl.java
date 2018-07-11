@@ -183,12 +183,8 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 			if (borrowAccount == null || borrowAccount.getAccountId() == null) {
 				throw new Exception("借款人账户不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 			}
-			// 借款人在汇付的账户信息 //TODO:确认是测试时电子账户的正确性
-//			BankOpenAccount borrowerAccount = this.getBankOpenAccount(borrowUserId);
-//			if (borrowerAccount == null) {
-//				throw new Exception("借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-//			}
-			String borrowAccountId = borrowAccount.getAccountId();// 借款人相应的银行账号
+			// 借款人相应的银行账号
+			String borrowAccountId = borrowAccount.getAccountId();
 			// 取得借款详情
 			Borrow borrow = this.getBorrowByNid(borrowNid);
 			// 取得借款详情
@@ -198,7 +194,8 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 				throw new Exception("借款详情不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 			}
 			String queryBorrowStyle = null;
-			if ("endday".equals(borrow.getBorrowStyle())) {//天标
+			//天标
+			if ("endday".equals(borrow.getBorrowStyle())) {
 				queryBorrowStyle  = "endday";
 			}else {
 				queryBorrowStyle = "month";

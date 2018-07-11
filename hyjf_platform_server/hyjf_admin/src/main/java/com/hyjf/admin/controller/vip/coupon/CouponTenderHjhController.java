@@ -1,20 +1,12 @@
 package com.hyjf.admin.controller.vip.coupon;
 
-import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.BaseResult;
-import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.coupon.CouponTenderHjhService;
-import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
-import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
-import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.util.CustomConstants;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.coupon.CouponTenderHjhService;
+import com.hyjf.am.resquest.admin.CouponTenderRequest;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
+import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
+import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CustomConstants;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author walter.limeng
@@ -75,7 +77,7 @@ public class CouponTenderHjhController extends BaseController {
             CouponTenderDetailVo detail=new CouponTenderDetailVo();
             detail=couponTenderHjhService.getCouponTenderDetailCustomize(paramMap);
             //回款列表
-            List<CouponRecoverVo> list=
+            List<CouponRecoverVO> list=
                     couponTenderHjhService.getCouponRecoverCustomize(paramMap);
             //操作平台
             Map<String, String> map =  CacheUtil.getParamNameMap("CLIENT");

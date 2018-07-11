@@ -44,7 +44,7 @@ public class AppSafeController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping(value = "/uploadAvatarAction", produces = "application/json; charset=utf-8")
-    public JSONObject uploadAvatarAction(@RequestHeader String key, @RequestHeader(value = "token") String token, HttpServletRequest request) {
+    public JSONObject uploadAvatarAction(@RequestHeader(value = "key") String key, @RequestHeader(value = "token") String token, HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/user/appUser/uploadAvatarAction");
         // 转型为MultipartHttpRequest(重点的所在)
@@ -61,5 +61,4 @@ public class AppSafeController extends BaseUserController {
         }
         return ret;
     }
-
 }

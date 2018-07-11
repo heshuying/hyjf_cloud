@@ -1,12 +1,12 @@
 package com.hyjf.am.response.admin;
 
+import java.util.List;
+
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
-
-import java.util.List;
 
 /**
  * @author walter.limeng
@@ -15,7 +15,7 @@ import java.util.List;
 public class CouponTenderResponse extends AdminResponse<CouponTenderCustomize> {
     private String amountTotal;
     private CouponTenderDetailVo detail;
-    private List<CouponRecoverVo> couponRecoverList;
+    private List<CouponRecoverVO> couponRecoverList;
     private String attrbute;
     private List<CouponBackMoneyCustomize> backMoneyCustomizeList;
 
@@ -35,11 +35,11 @@ public class CouponTenderResponse extends AdminResponse<CouponTenderCustomize> {
         this.detail = detail;
     }
 
-    public List<CouponRecoverVo> getCouponRecoverList() {
+    public List<CouponRecoverVO> getCouponRecoverList() {
         return couponRecoverList;
     }
 
-    public void setCouponRecoverList(List<CouponRecoverVo> couponRecoverList) {
+    public void setCouponRecoverList(List<CouponRecoverVO> couponRecoverList) {
         this.couponRecoverList = couponRecoverList;
     }
 

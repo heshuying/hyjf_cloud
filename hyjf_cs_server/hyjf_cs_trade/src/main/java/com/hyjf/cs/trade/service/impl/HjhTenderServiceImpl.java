@@ -102,6 +102,17 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
+        String key = RedisConstants.HJH_TENDER_REPEAT + userId;
+        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
+        if(!checkTender){
+            // 用户正在投资
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
+        }
+        if (StringUtils.isEmpty(request.getBorrowNid())) {
+            // 项目编号不能为空
+            throw new ReturnMessageException(MsgEnum.STATUS_CE000013);
+        }
+
         if(request.getPlatform()==null){
             // 投资平台不能为空
             throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
@@ -123,15 +134,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
         }
         logger.info("加入计划投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        // 先检查redis  看用户是否重复投资
-        boolean checkToken = checkRedisToken(request);
-        if (!checkToken) {
-            // 用户正在加入计划
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
-        // 设置redis 的值  防重校验
-        String redisValue = GetDate.getCalendar().getTimeInMillis() + GetCode.getRandomCode(5);
-        RedisUtils.set(RedisConstants.HJH_TENDER_REPEAT + userId, redisValue, 300);
         // 查询用户信息
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         UserVO user = amUserClient.findUserById(userId);
@@ -776,23 +778,4 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         this.checkEvaluation(user);
     }
 
-    /**
-     * @Description 检查redis里面的缓存  用户是否能投资
-     * @Author sunss
-     * @Version v0.1
-     * @Date 2018/6/19 10:38
-     */
-    private boolean checkRedisToken(TenderRequest request) {
-        String token_ = "";
-        if (RedisUtils.exists(RedisConstants.HJH_TENDER_REPEAT + request.getUser().getUserId())) {
-            // 如果已经有了
-            String redisTenderToken = RedisUtils.get(token_ + request.getUser().getUserId());
-            if (!redisTenderToken.equals(request.getTenderToken())) {
-                logger.info("用户已经加入计划userId:{},ip:{},ip{},平台{}", request.getUser().getUserId(), request.getIp(), request.getPlatform());
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

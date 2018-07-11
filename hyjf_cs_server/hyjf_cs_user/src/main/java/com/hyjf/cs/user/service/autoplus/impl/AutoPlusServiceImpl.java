@@ -196,7 +196,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.error("userAuthInvesBgreturn", e);
+                logger.error("bgReturn", e);
             }
         }
         logger.info("[用户授权完成后,回调结束]");
@@ -834,5 +834,57 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         } else {
             return "操作失败！";
         }
+    }
+
+    @Override
+    public BankCallBean weChatGetCommonBankCallBean(UserVO users, int type, String srvAuthCode, String code, String sign) {
+        String remark = "";
+        String txcode = "";
+        // 同步调用路径
+        String retUrl = systemConfig.getWeChatHost()+"/user/autoplus";
+        // 异步调用路
+        String bgRetUrl = systemConfig.getWeChatHost()+"/user/autoplus";
+        String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL + "?sign=" + sign;
+
+        BankCallBean bean = new BankCallBean();
+        if (type == 1) {
+            // 2.4.4.投资人自动投标签约增强
+            retUrl += "/userAuthInvesReturn";
+            bgRetUrl += "/userAuthInvesBgreturn";
+            remark = "投资人自动投标签约增强";
+            txcode = BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS;
+            // 签约到期时间
+            bean.setDeadline(GetDate.date2Str(GetDate.countDate(1,5),new SimpleDateFormat("yyyyMMdd")));
+            // 单笔投标金额的上限
+            bean.setTxAmount("1000000");
+            // 自动投标总金额上限（不算已还金额）
+            bean.setTotAmount("1000000000");
+        } else if (type == 2) {
+            // 2.4.8.投资人自动债权转让签约增强
+            retUrl += "/userAuthCreditReturn";
+            bgRetUrl += "/userAuthCreditBgreturn";
+            remark = "投资人自动债权转让签约增强";
+            txcode = BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
+        }
+        String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
+        // 取得用户在江西银行的客户号
+        BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(users.getUserId());
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
+        bean.setTxCode(txcode);
+        bean.setChannel(BankCallConstant.CHANNEL_WEI);
+        bean.setAccountId(bankOpenAccount.getAccount());
+        bean.setOrderId(orderId);
+        bean.setForgotPwdUrl(forgetPassworedUrl);
+        bean.setRetUrl(retUrl+"?sign="+sign);
+        bean.setNotifyUrl(bgRetUrl);
+        bean.setLastSrvAuthCode(srvAuthCode);
+        bean.setSmsCode(code);
+
+        // 操作者ID
+        bean.setLogUserId(String.valueOf(users.getUserId()));
+        bean.setLogOrderId(orderId);
+        bean.setLogRemark(remark);
+        bean.setLogClient(0);
+        return bean;
     }
 }
