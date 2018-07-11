@@ -3,20 +3,7 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -32,15 +19,11 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
@@ -48,6 +31,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
@@ -57,6 +41,17 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wangc
@@ -329,14 +324,18 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public void backCheck(SmsCodeRequest request, String newPassword) {
+    public void backCheck(SendSmsVO sendSmsVo) {
+        if(StringUtils.isBlank(sendSmsVo.getMobile())){
+            throw new CheckException("99","手机号不能为空");
+        }
+        if(StringUtils.isBlank(sendSmsVo.getSmscode())){
+            throw new CheckException("99","验证码不能为空");
+        }
         // 检查参数正确性
-        CheckUtil.check(StringUtils.isNotBlank(newPassword) ||StringUtils.isNotBlank(request.getVerificationCode()),MsgEnum.STATUS_CE000001);
-        checkPassword(newPassword);
-        CheckUtil.check(StringUtils.isNotBlank(request.getMobile()),MsgEnum.ERR_OBJECT_REQUIRED,"手机号");
-        CheckUtil.check(StringUtils.isNotBlank(request.getVerificationCode()),MsgEnum.ERR_OBJECT_REQUIRED,"验证码");
-        int cnt = amUserClient.checkMobileCode( request.getMobile(),request.getVerificationCode(),request.getVerificationType(),request.getPlatform(), CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
-        CheckUtil.check(cnt > 0,MsgEnum.STATUS_ZC000015);
+        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,BankCallConstant.CHANNEL_WEI, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        if (cnt<=0){
+            throw new CheckException("99","验证码不正确");
+        }
     }
 
     @Override
@@ -509,5 +508,55 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             RedisUtils.set(sendSmsVo.getMobile() + ":MaxPhoneCount", "0");
         }
         CheckUtil.check(Integer.valueOf(count) <= smsConfig.getMaxPhoneCount(),MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
+    }
+
+    @Override
+    public String getBankRetMsg(String retCode) {
+        String msg = amConfigClient.getBankRetMsg(retCode);
+        return msg;
+    }
+
+    @Override
+    public Map<String,Object> checkStatus(String token, String sign){
+        Map<String,Object> result = new HashMap<>();
+        BaseMapBean baseMapBean=new BaseMapBean();
+        if(token==null){
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
+            baseMapBean.setCallBackAction(systemConfig.getAppHost()+ CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        //判断用户是否登录
+        Integer userId = SecretUtil.getUserId(sign);
+        if(userId==null||userId<=0){
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
+            baseMapBean.setCallBackAction(systemConfig.getAppHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        //判断用户是否开户
+        UserVO user= this.getUsersById(userId);
+        if (user.getBankOpenAccount().intValue() != 1) {
+            //未开户
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未开户！");
+            baseMapBean.setCallBackAction(systemConfig.getAppHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        //判断用户是否设置过交易密码
+        Integer passwordFlag = user.getIsSetPassword();
+        if (passwordFlag == 1) {
+            //已设置交易密码
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "已设置交易密码！");
+            baseMapBean.setCallBackAction(systemConfig.getAppHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            result.put("baseMapBean",baseMapBean);
+            return result;
+        }
+        result.put("user",user);
+        return result;
     }
 }

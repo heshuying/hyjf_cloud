@@ -5,10 +5,10 @@ spring:
     config:
       server:
         git:
-          uri: http://10.10.2.12/java_new/configRepository.git
-          ##searchPaths: config_files
-          username: xiashuqing@shizitegong.com
-          password: xsq123456
+          uri: http://10.10.2.12/java_new/micro-deploy.git
+          searchPaths: src/main/resources
+          username: zhangqingqing
+          password: zqq123456
 
 eureka:
   client:

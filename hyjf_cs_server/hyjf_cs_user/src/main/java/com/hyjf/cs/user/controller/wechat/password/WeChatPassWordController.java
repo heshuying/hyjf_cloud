@@ -3,16 +3,14 @@
  */
 package com.hyjf.cs.user.controller.wechat.password;
 
-import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.vo.PasswordRequest;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author wangc
@@ -38,16 +36,19 @@ public class WeChatPassWordController {
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/updateLoginPassword", produces = "application/json; charset=utf-8")
-    public WebResult updateLoginPassWD(@RequestHeader(value = "token") String token,PasswordRequest passwordRequest){
-        UserVO userVO = passWordService.getUsers(token);
-        WebResult<String> result = new WebResult<>();
-        String oldPassword = passwordRequest.getOldPassword();
-        String newPassword = passwordRequest.getNewPassword();
+    public WeChatResult updateLoginPassWD(HttpServletRequest request){
+        WeChatResult<String> result = new WeChatResult<>();
+        Integer userId = (Integer) request.getAttribute("userId");
+        // 新密码
+        String newPassword = request.getParameter("newPassword");
+        // 旧密码
+        String oldPassword = request.getParameter("oldPassword");
+        UserVO user = passWordService.getUsersById(userId);
         CheckUtil.check(StringUtils.isNotBlank(oldPassword)&&StringUtils.isNotBlank(newPassword), MsgEnum.STATUS_CE000001);
         newPassword = RSAJSPUtil.rsaToPassword(newPassword);
         oldPassword = RSAJSPUtil.rsaToPassword(oldPassword);
-        passWordService.weChatCheckParam(userVO,newPassword,oldPassword);
-        passWordService.updatePassWd(userVO,newPassword);
+        passWordService.weChatCheckParam(user,newPassword,oldPassword);
+        passWordService.updatePassWd(user,newPassword);
         return result;
     }
 
@@ -83,23 +84,44 @@ public class WeChatPassWordController {
     /**
      * 找回登录密码
      *
-     * @param
+     * @param request
      * @return
      */
+    @ApiOperation(value = "找回密码",notes = "找回密码")
     @PostMapping(value = "/reset", produces = "application/json; charset=utf-8")
-    public WeChatResult resetPassword(@RequestBody SmsCodeRequest request, @RequestBody Map<String,String> param) {
-        WeChatResult result = new WeChatResult();
-        String mobile = request.getMobile();
+    public JSONObject resetPassword(HttpServletRequest request, SendSmsVO sendSmsVo) {
+        JSONObject ret = new JSONObject();
+        String mobile = request.getParameter("mobile");
         UserVO user = passWordService.getUsersByMobile(mobile);
-        CheckUtil.check(null!=user&&null!=user.getUserId(),MsgEnum.ERR_USER_NOT_EXISTS);
+        Integer userId = user.getUserId();
+        if (userId==null) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "用户不存在");
+            return ret;
+        }
         // 新密码
-        String newPassword = param.get("newPassword");
+        String newPassword = request.getParameter("newPassword");
         //密码解密
         newPassword = RSAJSPUtil.rsaToPassword(newPassword);
-        String verificationType = CustomConstants.PARAM_TPL_ZHAOHUIMIMA;
-        request.setVerificationType(verificationType);
-        passWordService.backCheck(request,newPassword);
-        passWordService.updatePassWd(user,newPassword);
-        return result;
+
+        // 检查参数正确性
+        if (Validator.isNull(userId) || Validator.isNull(newPassword) || Validator.isNull(sendSmsVo.getSmscode())) {
+            ret.put("status", "997");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 校验验证码
+        passWordService.backCheck(sendSmsVo);
+        // 业务逻辑
+        try {
+            passWordService.updatePassWd(user,newPassword);
+            ret.put("status", "000");
+            ret.put("statusDesc", "修改密码成功");
+        } catch (Exception e) {
+            logger.info("修改密码失败...");
+            ret.put("status", "99");
+            ret.put("statusDesc", "失败");
+        }
+        return ret;
     }
 }
