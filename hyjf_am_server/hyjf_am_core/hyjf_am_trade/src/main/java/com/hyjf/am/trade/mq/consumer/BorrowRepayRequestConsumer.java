@@ -47,7 +47,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @author dxj
  * @version BorrowRepayRequestConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-@Component
+//@Component
 public class BorrowRepayRequestConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayRequestConsumer.class);
@@ -61,6 +61,11 @@ public class BorrowRepayRequestConsumer extends Consumer{
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+		
+		// 设置并发数
+		defaultMQPushConsumer.setConsumeThreadMin(1);
+		defaultMQPushConsumer.setConsumeThreadMax(1);
+		
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());

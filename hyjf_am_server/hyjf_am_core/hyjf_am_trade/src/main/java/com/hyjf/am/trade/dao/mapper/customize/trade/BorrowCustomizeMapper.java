@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -35,5 +36,12 @@ public interface BorrowCustomizeMapper {
     WebProjectPersonDetailVO  getProjectPsersonDetail(String borrowNid);
 
     Integer getTotalInverestCount(Integer userId);
+
+    /**
+     * 集成borrow、 boorow_info表的自定义查询
+     * @param borrowNid
+     * @return
+     */
+    BorrowCustomize getBorrowCustomize(String borrowNid);
 
 }
