@@ -19,12 +19,8 @@ import org.springframework.stereotype.Service;
  * 自动投资债转授权异常
  */
 @Service
-public class UserAuthExceptionServiceImpl implements UserAuthExceptionService {
+public class UserAuthExceptionServiceImpl extends BaseAdminServiceImpl implements UserAuthExceptionService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private UserauthClient userauthClient;
     /**
      * 查询自动投资债转授权异常列表
      * @auth sunpeikai
@@ -33,7 +29,7 @@ public class UserAuthExceptionServiceImpl implements UserAuthExceptionService {
      */
     @Override
     public AdminUserAuthListResponse selectUserAuthList(AdminUserAuthListRequest request) {
-        AdminUserAuthListResponse response = userauthClient.userauthlist(request);
+        AdminUserAuthListResponse response = amUserClient.userAuthList(request);
         return response;
     }
     /**
@@ -46,7 +42,7 @@ public class UserAuthExceptionServiceImpl implements UserAuthExceptionService {
     @Override
     public AdminUserAuthListResponse synUserAuth(Integer userId,Integer type) {
         AdminUserAuthListResponse response = new AdminUserAuthListResponse();
-        JSONObject jsonObject = userauthClient.synUserAuth(userId, type);
+        JSONObject jsonObject = amUserClient.synUserAuth(userId, type);
         // 返回值jsonObject不为空
         if(null != jsonObject && jsonObject.containsKey("status")){
             String status = jsonObject.get("status").toString();
@@ -54,7 +50,7 @@ public class UserAuthExceptionServiceImpl implements UserAuthExceptionService {
             // 如果status != 00   且返回值中有retCode，说明调用银行接口出现错误
             if(!"00".equals(status) && jsonObject.containsKey("retCode")){
                 String retCode = jsonObject.get("retCode").toString();
-                msg = userauthClient.getBankRetMsg(retCode);
+                msg = amConfigClient.getBankRetMsg(retCode);
             }
             response.setRtn(status);
             response.setMessage(msg);
