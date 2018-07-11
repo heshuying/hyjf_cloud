@@ -28,6 +28,9 @@ public class BorrowCreditRequest extends BaseRequest {
      */
     private String isSearch;
 
+    @ApiModelProperty(value = "是否是导出 1:是;0:否")
+    private String isExport;
+
     public String getIsSearch() {
         return isSearch;
     }
@@ -82,5 +85,13 @@ public class BorrowCreditRequest extends BaseRequest {
 
     public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
+    }
+
+    public String getIsExport() {
+        return isExport;
+    }
+
+    public void setIsExport(String isExport) {
+        this.isExport = isExport;
     }
 }

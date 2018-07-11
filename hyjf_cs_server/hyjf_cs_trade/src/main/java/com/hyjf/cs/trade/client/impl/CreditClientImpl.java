@@ -204,4 +204,48 @@ public class CreditClientImpl implements CreditClient {
         return null;
     }
 
+    /**
+     * 债转修改日志表状态
+     *
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     */
+    @Override
+    public Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg) {
+        String url = "http://AM-TRADE/am-trade/creditTender/updateCreditTenderResult/" + logOrderId+"/"+logUserId+"/"+retCode+"/"+retMsg ;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
+    /**
+     * 查询债转失败原因
+     *
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    @Override
+    public String getFailResult(String logOrdId, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/getFaileResult/" + logOrdId+"/"+userId ;
+        return restTemplate.getForEntity(url, String.class).getBody();
+    }
+
+    /**
+     * 根据logOrdId和userId 查询债转信息
+     *
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    @Override
+    public CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderByUserIdOrdId/" + logOrdId + "/" + userId;
+        CreditTenderResponse response = restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 }

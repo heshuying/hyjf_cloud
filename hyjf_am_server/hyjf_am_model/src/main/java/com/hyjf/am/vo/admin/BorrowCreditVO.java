@@ -12,7 +12,7 @@ public class BorrowCreditVO extends BaseVO implements Serializable {
 
     private String bidNid;
 
-    private String username;
+    private String userName;
 
     private String creditCapital;
 
@@ -61,12 +61,12 @@ public class BorrowCreditVO extends BaseVO implements Serializable {
         this.bidNid = bidNid;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String userName) {
+        this.userName = userName;
     }
 
     public String getCreditCapital() {

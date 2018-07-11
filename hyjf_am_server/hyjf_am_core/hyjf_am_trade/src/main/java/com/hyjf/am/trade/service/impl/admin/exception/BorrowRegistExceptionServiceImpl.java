@@ -52,8 +52,6 @@ import com.hyjf.common.util.GetDate;
 @Service
 public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements BorrowRegistExceptionService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private BorrowProjectTypeMapper borrowProjectTypeMapper;
 

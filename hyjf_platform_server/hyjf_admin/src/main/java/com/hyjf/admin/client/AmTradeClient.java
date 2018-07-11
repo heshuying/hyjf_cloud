@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -345,4 +346,54 @@ public interface AmTradeClient {
      */
     Integer accountWebListByOrderId(String orderId);
 
+    /**
+     *  获取银行转账异常列表 jijun 20180710
+     * @param request
+     * @return
+     */
+    List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+
+    /**
+     *  获取银行转账异常总数 jijun 20180710
+     * @param request
+     * @return
+     */
+    Integer getAdminTransferExceptionLogCustomizeCountRecord(AdminTransferExceptionLogRequest request);
+
+    /**
+     * 更改银行转账信息
+     * @param request
+     * @return
+     */
+    int updateTransferExceptionLogByUUID(AdminTransferExceptionLogRequest request);
+
+    /**
+     * 更改银行转账信息
+     * @param transferExceptionLog
+     * @return
+     */
+    int updateTransferExceptionLogByUUID(TransferExceptionLogVO transferExceptionLog);
+
+    /**
+     * 通过uuid银行转账异常
+     * @param uuid
+     * @return
+     */
+    TransferExceptionLogVO getTransferExceptionLogByUUID(String uuid);
+
+    /**
+     * 根据筛选条件查询分佣数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getSubCommissionCount(SubCommissionRequest request);
+
+    /**
+     * 根据筛选条件查询分佣数据list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request);
 }

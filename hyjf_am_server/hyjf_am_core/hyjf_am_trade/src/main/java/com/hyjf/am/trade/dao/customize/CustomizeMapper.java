@@ -80,6 +80,9 @@ public class CustomizeMapper extends AutoMapper {
     protected TzjCustomizeMapper tzjCustomizeMapper;
 
     @Resource
+    protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
+
+    @Resource
     protected OntimeTenderCustomizeMapper ontimeTenderCustomizeMapper;
 }
 

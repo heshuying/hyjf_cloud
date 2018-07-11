@@ -20,4 +20,11 @@ public interface ContentArticleService {
      * @return
      */
     ContentArticle getAboutUs();
+
+
+    /**
+     * 获取联系我们
+     * @return
+     */
+    public ContentArticle getContactUs();
 }

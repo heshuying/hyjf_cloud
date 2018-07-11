@@ -1,9 +1,10 @@
-package com.hyjf.admin.service;
+package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.service.BaseAdminService;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import org.slf4j.Logger;
