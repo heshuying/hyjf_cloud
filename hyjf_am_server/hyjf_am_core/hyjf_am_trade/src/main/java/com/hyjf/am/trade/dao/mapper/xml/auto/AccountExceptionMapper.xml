@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.AccountExceptionMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.AccountException" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="CHAR" />
+    <result column="custom_id" property="customId" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="balance_plat" property="balancePlat" jdbcType="DECIMAL" />
+    <result column="frost_plat" property="frostPlat" jdbcType="DECIMAL" />
+    <result column="balance_huifu" property="balanceHuifu" jdbcType="DECIMAL" />
+    <result column="frost_huifu" property="frostHuifu" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="role" property="role" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, username, custom_id, mobile, balance_plat, frost_plat, balance_huifu, 
+    frost_huifu, create_time, `role`
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.AccountExceptionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_account_exception
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_account_exception
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_account_exception
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountExceptionExample" >
+    delete from ht_account_exception
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.AccountException" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account_exception (user_id, username, custom_id, 
+      mobile, balance_plat, frost_plat, 
+      balance_huifu, frost_huifu, create_time, 
+      `role`)
+    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=CHAR}, #{customId,jdbcType=BIGINT}, 
+      #{mobile,jdbcType=VARCHAR}, #{balancePlat,jdbcType=DECIMAL}, #{frostPlat,jdbcType=DECIMAL}, 
+      #{balanceHuifu,jdbcType=DECIMAL}, #{frostHuifu,jdbcType=DECIMAL}, #{createTime,jdbcType=INTEGER}, 
+      #{role,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountException" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_account_exception
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="customId != null" >
+        custom_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="balancePlat != null" >
+        balance_plat,
+      </if>
+      <if test="frostPlat != null" >
+        frost_plat,
+      </if>
+      <if test="balanceHuifu != null" >
+        balance_huifu,
+      </if>
+      <if test="frostHuifu != null" >
+        frost_huifu,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="role != null" >
+        `role`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=CHAR},
+      </if>
+      <if test="customId != null" >
+        #{customId,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="balancePlat != null" >
+        #{balancePlat,jdbcType=DECIMAL},
+      </if>
+      <if test="frostPlat != null" >
+        #{frostPlat,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceHuifu != null" >
+        #{balanceHuifu,jdbcType=DECIMAL},
+      </if>
+      <if test="frostHuifu != null" >
+        #{frostHuifu,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.AccountExceptionExample" resultType="java.lang.Integer" >
+    select count(*) from ht_account_exception
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_account_exception
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=CHAR},
+      </if>
+      <if test="record.customId != null" >
+        custom_id = #{record.customId,jdbcType=BIGINT},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.balancePlat != null" >
+        balance_plat = #{record.balancePlat,jdbcType=DECIMAL},
+      </if>
+      <if test="record.frostPlat != null" >
+        frost_plat = #{record.frostPlat,jdbcType=DECIMAL},
+      </if>
+      <if test="record.balanceHuifu != null" >
+        balance_huifu = #{record.balanceHuifu,jdbcType=DECIMAL},
+      </if>
+      <if test="record.frostHuifu != null" >
+        frost_huifu = #{record.frostHuifu,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.role != null" >
+        `role` = #{record.role,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_account_exception
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=CHAR},
+      custom_id = #{record.customId,jdbcType=BIGINT},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      balance_plat = #{record.balancePlat,jdbcType=DECIMAL},
+      frost_plat = #{record.frostPlat,jdbcType=DECIMAL},
+      balance_huifu = #{record.balanceHuifu,jdbcType=DECIMAL},
+      frost_huifu = #{record.frostHuifu,jdbcType=DECIMAL},
+      create_time = #{record.createTime,jdbcType=INTEGER},
+      `role` = #{record.role,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.AccountException" >
+    update ht_account_exception
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=CHAR},
+      </if>
+      <if test="customId != null" >
+        custom_id = #{customId,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="balancePlat != null" >
+        balance_plat = #{balancePlat,jdbcType=DECIMAL},
+      </if>
+      <if test="frostPlat != null" >
+        frost_plat = #{frostPlat,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceHuifu != null" >
+        balance_huifu = #{balanceHuifu,jdbcType=DECIMAL},
+      </if>
+      <if test="frostHuifu != null" >
+        frost_huifu = #{frostHuifu,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="role != null" >
+        `role` = #{role,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.AccountException" >
+    update ht_account_exception
+    set user_id = #{userId,jdbcType=INTEGER},
+      username = #{username,jdbcType=CHAR},
+      custom_id = #{customId,jdbcType=BIGINT},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      balance_plat = #{balancePlat,jdbcType=DECIMAL},
+      frost_plat = #{frostPlat,jdbcType=DECIMAL},
+      balance_huifu = #{balanceHuifu,jdbcType=DECIMAL},
+      frost_huifu = #{frostHuifu,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=INTEGER},
+      `role` = #{role,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -50,9 +50,18 @@ public class BorrowRepayPlanConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayPlanConsumer.class);
 
+    @Autowired
+    BatchBorrowRepayPlanService batchBorrowRepayPlanService;
+
+    @Autowired
+    SystemConfig systemConfig;
+    
+	@Autowired
+	private MailProducer mailProducer;
+
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+//		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC, "*");
@@ -63,6 +72,8 @@ public class BorrowRepayPlanConsumer extends Consumer{
 		// 设置并发数
 		defaultMQPushConsumer.setConsumeThreadMin(1);
 		defaultMQPushConsumer.setConsumeThreadMax(1);
+		defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
+		defaultMQPushConsumer.setConsumeTimeout(30);
 		
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
@@ -73,20 +84,11 @@ public class BorrowRepayPlanConsumer extends Consumer{
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {
-
-	    @Autowired
-	    BatchBorrowRepayPlanService batchBorrowRepayPlanService;
-
-	    @Autowired
-	    SystemConfig systemConfig;
-	    
-		@Autowired
-		private MailProducer mailProducer;
 		
 		
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("计划还款请求 收到消息，开始处理....");
+			logger.info("计划还款请求 收到消息，开始处理...."+msgs.size());
 			BorrowApicron borrowApicron = null;
 	        try {
 				
@@ -123,7 +125,7 @@ public class BorrowRepayPlanConsumer extends Consumer{
 				}
 				String bankSeqNo = borrowApicron.getBankSeqNo();// 还款序列号
 				// 查询批次还款状态
-				BankCallBean batchResult = this.batchBorrowRepayPlanService.batchQuery(borrowApicron);
+				BankCallBean batchResult = batchBorrowRepayPlanService.batchQuery(borrowApicron);
 				if (Validator.isNull(batchResult)) {
 					throw new Exception("还款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
 				}
@@ -149,13 +151,13 @@ public class BorrowRepayPlanConsumer extends Consumer{
 						borrowApicron.setData(failMsg);
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 更新任务API状态
-						boolean apicronResultFlag = this.batchBorrowRepayPlanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
+						boolean apicronResultFlag = batchBorrowRepayPlanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
 						if (!apicronResultFlag) {
 							throw new Exception("更新状态为（还款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 						}
 					} else {
 						// 查询批次交易明细，进行后续操作
-						boolean batchDetailFlag = this.batchBorrowRepayPlanService.updateBatchDetailsQuery(borrowApicron);
+						boolean batchDetailFlag = batchBorrowRepayPlanService.updateBatchDetailsQuery(borrowApicron);
 						// 进行后续失败的还款的还款请求
 						if (!batchDetailFlag) {
 							throw new Exception("还款失败后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
@@ -166,7 +168,7 @@ public class BorrowRepayPlanConsumer extends Consumer{
 				else if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_SUCCESS)) {
 					logger.info("标的编号："+borrowNid+"，批次处理成功");
 					// 查询批次交易明细，进行后续操作
-					boolean batchDetailFlag = this.batchBorrowRepayPlanService.updateBatchDetailsQuery(borrowApicron);
+					boolean batchDetailFlag = batchBorrowRepayPlanService.updateBatchDetailsQuery(borrowApicron);
 					logger.info("标的编号："+borrowNid+"，查询批次交易明细，进行后续操作，操作结果："+batchDetailFlag);
 					if (!batchDetailFlag) {
 						throw new Exception("还款成功后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
@@ -197,7 +199,7 @@ public class BorrowRepayPlanConsumer extends Consumer{
 	        			MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
 
 				try {
-					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(mailMessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}

@@ -1,8 +1,10 @@
 package com.hyjf.admin.client.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -220,4 +222,34 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
+	/**
+	 * 查询自动投资债转异常列表
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public AdminUserAuthListResponse userAuthList(AdminUserAuthListRequest adminUserAuthListRequest) {
+		AdminUserAuthListResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/userauth/userauthlist",adminUserAuthListRequest, AdminUserAuthListResponse.class)
+				.getBody();
+
+		return response;
+	}
+
+	/**
+	 * 同步用户授权状态
+	 * @auth sunpeikai
+	 * @param type 1自动投资授权  2债转授权
+	 * @return
+	 */
+	@Override
+	public JSONObject synUserAuth(Integer userId, Integer type) {
+		JSONObject jsonObject = restTemplate
+				.getForEntity("http://AM-USER/am-user/userauth/synuserauth/" + userId + "/" + type, JSONObject.class)
+				.getBody();
+
+		return jsonObject;
+	}
 }

@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import org.slf4j.Logger;
@@ -790,6 +792,8 @@ public class AmTradeClientImpl implements AmTradeClient{
         return restTemplate.getForEntity(url, Integer.class).getBody();
     }
 
+
+
     /**
      * 根据筛选条件查询银行投资撤销异常的数据count
      * @auth sunpeikai
@@ -876,5 +880,138 @@ public class AmTradeClientImpl implements AmTradeClient{
         Integer response = restTemplate.postForEntity(url,freezeHistoryVO,Integer.class).getBody();
         return response;
     }
+
+
+    /**
+     * 转账成功后续处理
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public boolean transferAfter(JSONObject jsonObject) {
+        String url = "http://AM-TRADE/am-trade/transferExceptionLog/transferAfter";
+        return restTemplate.postForEntity(url,jsonObject,Boolean.class).getBody();
+    }
+
+
+
+    /**
+     * 根据主键获取优惠券还款记录
+     * @param recoverId
+     * @return
+     */
+    @Override
+    public CouponRecoverVO getCouponRecoverByPrimaryKey(Integer id) {
+        String url = "http://AM-TRADE/am-trade/coupon/getCouponRecoverByPrimaryKey/"+id;
+        CouponRecoverResponse response=restTemplate.getForEntity(url,CouponRecoverResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 取得优惠券投资信息
+     * @param nid
+     * @return
+     */
+    @Override
+    public BorrowTenderCpnVO getCouponTenderInfoByNid(String nid) {
+        String url="http://AM-TRADE/am-trade/coupon/getCouponTenderInfoByNid/"+nid;
+        BorrowTenderCpnResponse response = restTemplate.getForEntity(url,BorrowTenderCpnResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
+     * 查询批次中心的批次列表求和
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getListSum", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据筛选条件查询汇付对账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getAccountExceptionCount(AccountExceptionRequest request) {
+        String url="http://AM-TRADE/am-trade/accountexception/getaccountexceptioncount";
+        Integer count = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 根据筛选条件查询汇付对账列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<AccountExceptionVO> searchAccountExceptionList(AccountExceptionRequest request) {
+        String url="http://AM-TRADE/am-trade/accountexception/searchaccountexceptionlist";
+        AccountExceptionResponse response = restTemplate.postForEntity(url,request,AccountExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据id查询AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public AccountExceptionVO searchAccountExceptionById(Integer id) {
+        String url="http://AM-TRADE/am-trade/accountexception/searchaccountexceptionbyid/" + id;
+        AccountExceptionResponse response = restTemplate.getForEntity(url,AccountExceptionResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新AccountException
+     * @auth sunpeikai
+     * @param accountExceptionVO 更新参数
+     * @return
+     */
+    @Override
+    public Integer updateAccountException(AccountExceptionVO accountExceptionVO) {
+        String url="http://AM-TRADE/am-trade/accountexception/updateaccountexception";
+        Integer response = restTemplate.postForEntity(url,accountExceptionVO,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据id删除AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public Integer deleteAccountExceptionById(Integer id) {
+        String url="http://AM-TRADE/am-trade/accountexception/deleteaccountexceptionbyid/" + id;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
 
 }

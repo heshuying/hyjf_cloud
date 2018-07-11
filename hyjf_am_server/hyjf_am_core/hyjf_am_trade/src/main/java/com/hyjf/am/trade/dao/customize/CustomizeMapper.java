@@ -79,10 +79,13 @@ public class CustomizeMapper extends AutoMapper {
     @Resource
     protected TzjCustomizeMapper tzjCustomizeMapper;
 
-    @Resource
+    @Autowired
     protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
 
-    @Resource
+    @Autowired
+    protected CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
+
+    @Autowired
     protected OntimeTenderCustomizeMapper ontimeTenderCustomizeMapper;
 }
 

@@ -3,17 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmConfigClient;
@@ -21,6 +10,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.mq.MailProducer;
+import com.hyjf.admin.mq.Producer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
@@ -38,6 +28,16 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: sunpeikai
