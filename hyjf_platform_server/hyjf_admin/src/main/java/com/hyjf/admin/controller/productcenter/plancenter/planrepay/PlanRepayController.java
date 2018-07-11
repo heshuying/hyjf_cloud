@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.productcenter.plancenter.planrepay;
 
-import com.hyjf.admin.beans.HjhRepayBean;
 import com.hyjf.admin.beans.request.HjhRepayRequestBean;
 import com.hyjf.admin.beans.response.HjhRepayResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -13,7 +12,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -49,7 +47,7 @@ public class PlanRepayController extends BaseController {
 
     @ApiOperation(value = "还款明细", notes = "订单退出->还款明细")
     @PostMapping(value = "/repaymentDetails")
-    public AdminResult<HjhRepayBean> repaymentDetails(@RequestBody HjhRepayRequestBean repayRequestBean){
+    public AdminResult repaymentDetails(@RequestBody HjhRepayRequestBean repayRequestBean){
 
         HjhRepayRequest repayRequest = new HjhRepayRequest();
         BeanUtils.copyProperties(repayRequestBean, repayRequest);
