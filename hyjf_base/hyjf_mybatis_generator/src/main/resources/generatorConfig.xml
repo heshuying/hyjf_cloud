@@ -1781,6 +1781,10 @@
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
+        
+         <table tableName="ht_content_environment" domainObjectName="ContentEnvironment">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
 
     </context>
 </generatorConfiguration>

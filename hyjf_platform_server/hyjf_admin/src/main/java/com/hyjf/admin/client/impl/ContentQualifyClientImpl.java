@@ -23,21 +23,29 @@ public class ContentQualifyClientImpl implements ContentQualifyClient {
 
 	@Override
 	public ContentQualifyResponse searchAction(ContentQualifyRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG//am-config/content/contentqualify/searchaction",
+				requestBean, ContentQualifyResponse.class);
 	}
 
 	@Override
 	public ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentqualify/insertaction", requestBean,
+				ContentQualifyResponse.class);
 	}
 
 	@Override
 	public ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentqualify/updateaction", requestBean,
+				ContentQualifyResponse.class);
 	}
 
 	@Override
 	public ContentQualifyVO getRecord(Integer id) {
+		ContentQualifyResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/content/contentqualify/getrecord/" + id, ContentQualifyResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
 		return null;
 	}
 }

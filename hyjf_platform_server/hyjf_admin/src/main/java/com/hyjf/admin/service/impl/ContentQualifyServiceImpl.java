@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,7 @@ public class ContentQualifyServiceImpl implements ContentQualifyService {
 			} else {
 				record.setStatus(1);
 			}
+			BeanUtils.copyProperties(record, requestBean);
 			return contentQualifyClient.updateAction(requestBean);
 		}
 		return null;
