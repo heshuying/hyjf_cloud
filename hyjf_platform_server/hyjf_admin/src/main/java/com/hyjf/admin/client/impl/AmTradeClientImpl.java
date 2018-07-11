@@ -925,4 +925,21 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+
+    /**
+     * 查询批次中心的批次列表求和
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response =  restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getListSum", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
 }

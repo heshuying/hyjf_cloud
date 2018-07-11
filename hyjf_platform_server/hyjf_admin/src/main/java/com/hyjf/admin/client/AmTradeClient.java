@@ -469,4 +469,11 @@ public interface AmTradeClient {
      * @return
      */
     Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
+
+    /**
+     * 查询批次中心的批次列表的求和
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
 }

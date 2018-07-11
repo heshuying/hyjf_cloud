@@ -51,10 +51,13 @@ public class BatchBorrowRecoverController extends BaseController{
             List<BatchBorrowRecoverVo> listAccountDetail = BatchBorrowRecovertReponse.getResultList();
             Integer recordCount = BatchBorrowRecovertReponse.getRecordTotal();
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
+                batchBorrowRecoverService.queryBatchCenterStatusName(listAccountDetail,"REVERIFY_STATUS");
                 batchBorrowRecoverVoList.addAll(listAccountDetail);
             }
             if (null != batchBorrowRecoverVoList) {
+                BatchBorrowRecoverVo sumVo = batchBorrowRecoverService.queryBatchCenterListSum(request);
                 jsonObject = this.success(String.valueOf(recordCount), batchBorrowRecoverVoList);
+                jsonObject.put("sumObject",sumVo);
             } else {
                 jsonObject = this.fail("暂无符合条件数据");
             }
