@@ -10,6 +10,8 @@ import java.util.Map;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,27 +22,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
-import com.hyjf.am.vo.admin.AccountRechargeVO;
-import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
-import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
-import com.hyjf.am.vo.admin.AssociatedRecordListVo;
-import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.admin.BindLogVO;
-import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
-import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
-import com.hyjf.am.vo.admin.SubCommissionVO;
-import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.validator.Validator;
 
 /**
@@ -802,4 +789,92 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid_all_count";
         return restTemplate.getForEntity(url, Integer.class).getBody();
     }
+
+    /**
+     * 根据筛选条件查询银行投资撤销异常的数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request) {
+        String url = "http://AM-TRADE/am-trade/tendercancelexception/gettendercancelexceptioncount";
+        Integer response = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 根据筛选条件查询银行投资撤销异常list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    @Override
+    public List<BorrowTenderTmpVO> searchTenderCancelExceptionList(TenderCancelExceptionRequest request) {
+        String url = "http://AM-TRADE/am-trade/tendercancelexception/searchtendercancelexceptionlist";
+        BorrowTenderTmpResponse response = restTemplate.postForEntity(url,request,BorrowTenderTmpResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据orderId查询BorrowTender
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> searchBorrowTenderByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/tendercancelexception/searchborrowtenderbyorderid/" + orderId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if(response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据orderId查询BorrowTenderTmp
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    @Override
+    public BorrowTenderTmpVO searchBorrowTenderTmpByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/tendercancelexception/searchborrowtendertmpbyorderid/" + orderId;
+        BorrowTenderTmpResponse response = restTemplate.getForEntity(url,BorrowTenderTmpResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据id删除BorrowTenderTmp
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    @Override
+    public Integer deleteBorrowTenderTmpById(Integer id) {
+        String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteborrowtendertmpbyid/" + id;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param freezeHistoryVO 冻结历史
+     * @return
+     */
+    @Override
+    public Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO) {
+        String url = "http://AM-TRADE/am-trade/tendercancelexception/insertfreezehistory";
+        Integer response = restTemplate.postForEntity(url,freezeHistoryVO,Integer.class).getBody();
+        return response;
+    }
+
 }
