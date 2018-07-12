@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.web.bankopen;
+package com.hyjf.cs.user.controller.web.bankopenassure;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
@@ -36,10 +36,10 @@ import java.util.Map;
  * @author sunss
  *
  */
-@Api(value = "web端用户开户接口")
+@Api(value = "web端担保账户开户")
 @CrossOrigin(origins = "*")
 @Controller
-@RequestMapping("/web/user/secure/open")
+@RequestMapping("/web/user/secure/assurebankopen")
 public class BankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
 
@@ -73,11 +73,11 @@ public class BankOpenController extends BaseUserController {
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "web端用户开户", notes = "用户开户")
+    @ApiOperation(value = "web端担保账户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
     @ResponseBody
 	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
-        logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
+        logger.info("web  担保账户开户 start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         if (token == null) {
@@ -98,10 +98,10 @@ public class BankOpenController extends BaseUserController {
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
-        // 开户角色
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_3);
+
         // 组装参数
-        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getAssureOpenAccountMV(openBean);
         result.setData(data);
         //保存开户日志
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"");

@@ -13,6 +13,7 @@ package com.hyjf.pay.lib.bank.util;
 import java.io.Serializable;
 
 public class BankCallConstant extends BankCallStatusConstant implements Serializable {
+
 	/**
 	 * 序列化id
 	 */
@@ -187,5 +188,12 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
     public static final String PARAM_CANCELDATE = "cancelTime";
     /**3.12.客户授权功能查询 */
     public static final String TXCODE_TERMS_AUTH_QUERY = "termsAuthQuery";
+
+
+	/** 开户角色属性   1：出借角色2：借款角色3：代偿角色*/
+	public static final String ACCOUNT_USER_IDENTITY_3 = "3";
+	public static final String ACCOUNT_USER_IDENTITY_2 = "2";
+	public static final String ACCOUNT_USER_IDENTITY_1 = "1";
+
 
 }
