@@ -4145,7 +4145,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		replaceStrs.put("val_title", borrowNid);
 		replaceStrs.put("val_time", GetDate.formatTime());
 		SmsMessage smsMessage =
-                new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null,
+                new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null,
                 		CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 		
         try {
