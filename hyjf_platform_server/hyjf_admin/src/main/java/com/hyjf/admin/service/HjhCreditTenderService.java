@@ -7,7 +7,9 @@ import java.util.List;
 
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 /**
  * @author libin
@@ -29,4 +31,21 @@ public interface HjhCreditTenderService {
 	 * @return
 	 */
 	List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form);
+	
+	/**
+	 * 传参查询承接债转表
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form);
+	
+	/**
+	 * PDF下载加脱敏
+	 * @param tenderAgreement
+	 * @param borrowNid
+	 * @param transType
+	 * @param instCode
+	 */
+	void updateSaveSignInfo(TenderAgreementVO tenderAgreement,String borrowNid, Integer transType, String instCode);
 }
