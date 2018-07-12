@@ -5,7 +5,7 @@ spring:
     config:
       server:
         git:
-          uri: http://10.10.2.12/java_new/micro-deploy.git
+          uri: http://219.147.28.242:3333/java_new/micro-deploy.git
           searchPaths: src/main/resources
           username: zhangqingqing
           password: zqq123456
