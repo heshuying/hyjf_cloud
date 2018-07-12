@@ -1600,6 +1600,7 @@
 
         <table tableName="ht_event" domainObjectName="Event">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_fee_config" domainObjectName="FeeConfig">

@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +120,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 				//测评到期日
 				Long lCreate = users.getEvaluationExpiredTime().getTime();
 				//当前日期
-				Long lNow = new Date().getTime();
+				Long lNow = System.currentTimeMillis();
 				if (lCreate <= lNow) {
 					//已过期需要重新评测
 					userAccountInfo.setEvaluated("2");

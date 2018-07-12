@@ -55,9 +55,13 @@ public class BankRepayFreezeServiceImpl extends BaseServiceImpl implements com.h
         return amTradeClient.deleteFreezeLogById(freezeLogVO.getId()) > 0 ? true : false;
     }
 
+    /**
+     * 申请冻结撤销
+     * @auther: hesy
+     * @date: 2018/7/11
+     */
     @Override
     public boolean repayUnfreeze(BankRepayFreezeLogVO repayFreezeFlog) {
-
         BankCallBean bean = new BankCallBean();
         bean.setAccountId(repayFreezeFlog.getAccount());// 电子账号
         bean.setOrderId(GetOrderIdUtils.getUsrId(repayFreezeFlog.getUserId()));// 订单号

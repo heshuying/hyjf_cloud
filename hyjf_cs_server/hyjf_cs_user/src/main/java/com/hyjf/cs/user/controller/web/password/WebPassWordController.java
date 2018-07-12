@@ -185,16 +185,16 @@ public class WebPassWordController {
         UserVO userVO = passWordService.getUsersById(userId);
         String name = param.get("name");
         if (StringUtils.isNotBlank(name)) {
-            if (name.equals("oldpass")) {
+            if ("oldpass".equals(name)) {
                 String password = param.get("oldpass");
                 password = MD5Utils.MD5(MD5Utils.MD5(password) + userVO.getSalt());
                 CheckUtil.check(password.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
                 return true;
-            } else if (name.equals("password")) {
+            } else if ("password".equals(name)) {
                 String password = param.get("password");
                 passWordService.checkPassword(password);
                 return true;
-            } else if (name.equals("repassword")) {
+            } else if ("repassword".equals(name)) {
                 String passwrod = param.get("password");
                 String passwrod2 = param.get("repassword");
                 passWordService.checkPassword(passwrod2);
@@ -203,14 +203,14 @@ public class WebPassWordController {
                 } else {
                     return true;
                 }
-            } else if (name.equals("rlName")) {
+            } else if ("rlName".equals(name)) {
                 String rlName = param.get("rlName");
                 if (rlName.length() < 2 || rlName.length() > 4) {
                     return false;
                 } else {
                     return true;
                 }
-            } else if (name.equals("rlPhone")) {
+            } else if ("rlPhone".equals(name)) {
                 String rlPhone = param.get("rlPhone");
                 if (rlPhone.length() != 11 || !Validator.isMobile(rlPhone)) {
                     return false;

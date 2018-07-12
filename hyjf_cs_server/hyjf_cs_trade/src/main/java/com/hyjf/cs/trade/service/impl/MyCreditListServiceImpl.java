@@ -568,7 +568,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         request.setCreditEndTime(borrowCredit.getEndTime());
         request.setCreditPrice(DF_COM_VIEW.format(borrowCredit.getCreditPrice().setScale(2, BigDecimal.ROUND_DOWN)));
         if (borrow != null) {
-            if (borrow.getBorrowStyle().equals("endmonth")) {
+            if ("endmonth".equals(borrow.getBorrowStyle())) {
                 // 从第几期开始
                 borrowCredit.setRecoverPeriod(borrow.getBorrowPeriod() - recover.getRecoverPeriod());
             } else {

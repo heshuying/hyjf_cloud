@@ -587,7 +587,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         // 银行成功后，如果标的可投金额非0，推回队列的尾部，标的可投金额为0，不再推回队列
         if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) != 0) {
             String redisStr = JSON.toJSONString(redisBorrow);
-            if (pushFlag.toUpperCase().equals("R")) {
+            if ("R".equals(pushFlag.toUpperCase())) {
                 RedisUtils.rightpush(queueName, redisStr);
                 logger.info("推回队列的尾部[" + queueName + "]r" + " : " + redisStr);
             } else {

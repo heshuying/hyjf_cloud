@@ -14,6 +14,7 @@ import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class AccountExceptionServiceImpl extends BaseServiceImpl implements Acco
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateAccountException(AccountExceptionVO accountExceptionVO) {
         AccountException accountException = CommonUtils.convertBean(accountExceptionVO,AccountException.class);
         return accountExceptionMapper.updateByPrimaryKeySelective(accountException);
@@ -83,6 +85,7 @@ public class AccountExceptionServiceImpl extends BaseServiceImpl implements Acco
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer deleteAccountExceptionById(Integer id) {
         return accountExceptionMapper.deleteByPrimaryKey(id);
     }

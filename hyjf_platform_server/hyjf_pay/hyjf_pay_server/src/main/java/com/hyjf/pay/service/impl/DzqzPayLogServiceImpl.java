@@ -34,7 +34,7 @@ public class DzqzPayLogServiceImpl implements DzqzPayLogService {
         sendLog.setTxDate(bean.getTxDate());
         sendLog.setTxTime(bean.getTxTime());
         sendLog.setContent(bean.getAllParams());
-        sendLogDao.insert(sendLog,this.SENDLOG);
+        sendLogDao.insert(sendLog,SENDLOG);
 
     }
 
@@ -49,6 +49,6 @@ public class DzqzPayLogServiceImpl implements DzqzPayLogService {
         returnLog.setTxDate(bean.getTxDate());
         returnLog.setTxTime(bean.getTxTime());
         returnLog.setContent(bean.getAllParams());
-        returnLogDao.insert(returnLog,this.BACKLOG);
+        returnLogDao.insert(returnLog,BACKLOG);
     }
 }

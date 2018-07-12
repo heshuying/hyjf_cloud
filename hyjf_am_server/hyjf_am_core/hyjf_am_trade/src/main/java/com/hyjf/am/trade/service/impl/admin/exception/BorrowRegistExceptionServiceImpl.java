@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -95,7 +96,6 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         BorrowStyleExample example = new BorrowStyleExample();
         BorrowStyleExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
-
         return borrowStyleMapper.selectByExample(example);
     }
 
@@ -173,6 +173,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateBorrowRegistByType(BorrowVO borrowVO,Integer type) {
         Borrow borrow = CommonUtils.convertBean(borrowVO,Borrow.class);
         BorrowExample example = new BorrowExample();
@@ -194,6 +195,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateBorrowAsset(BorrowVO borrowVO, Integer status) {
         boolean borrowFlag = false;
 

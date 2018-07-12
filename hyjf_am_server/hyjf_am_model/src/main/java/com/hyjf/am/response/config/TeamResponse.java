@@ -11,4 +11,13 @@ import com.hyjf.am.vo.config.TeamVO;
  * @version TeamResponse, v0.1 2018/7/9 16:43
  */
 public class TeamResponse extends Response<TeamVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

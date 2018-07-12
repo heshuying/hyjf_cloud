@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -143,6 +144,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean insertUserTransfer(CustomerTransferRequest request) {
         Date nowTime = new Date();
         UserTransfer userTransfer = new UserTransfer();

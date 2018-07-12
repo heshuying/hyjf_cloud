@@ -63,13 +63,10 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      *
      * @param request
      * @param plan
-     * @param account
      * @param cuc
-     * @param tenderAccount
      */
     @Override
-    public void couponTender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
-        Integer userId = request.getUser().getUserId();
+    public void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc,Integer userId) {
         String accountStr = request.getAccount();
         Map<String, String> validateMap = this.validateCoupon(userId, accountStr, cuc.getId(), request.getPlatform(), plan.getLockPeriod(), plan.getCouponConfig());
         if (MapUtils.isEmpty(validateMap)) {
@@ -108,7 +105,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         int nowTime = GetDate.getNowTime10();
         CouponUserVO couponUser = couponClient.getCouponUser(couponGrantId, userId);
         //汇计划只支持按天和按月
-        if (!borrowStyle.equals("endday")) {
+        if (!"endday".equals(borrowStyle)) {
             borrowStyle = "end";
         }
         // 优惠券类别

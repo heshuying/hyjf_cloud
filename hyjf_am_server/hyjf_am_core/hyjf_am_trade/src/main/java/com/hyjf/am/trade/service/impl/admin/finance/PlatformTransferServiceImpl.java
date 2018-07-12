@@ -19,6 +19,7 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -80,6 +81,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateAccount(AccountVO accountVO) {
         Account account = CommonUtils.convertBean(accountVO,Account.class);
         return accountMapper.updateByPrimaryKeySelective(account);
@@ -92,6 +94,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer insertAccountRecharge(AccountRechargeVO accountRechargeVO) {
         AccountRecharge accountRecharge = CommonUtils.convertBean(accountRechargeVO,AccountRecharge.class);
         return accountRechargeMapper.insertSelective(accountRecharge);
@@ -104,6 +107,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer insertAccountList(AccountListVO accountListVO) {
         AccountList accountList = CommonUtils.convertBean(accountListVO,AccountList.class);
         return accountListMapper.insertSelective(accountList);
@@ -116,6 +120,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
         AccountWebList accountWebList = CommonUtils.convertBean(accountWebListVO,AccountWebList.class);
         return accountWebListMapper.insertSelective(accountWebList);
@@ -140,6 +145,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer updateBankMerchantAccount(BankMerchantAccountVO bankMerchantAccountVO) {
         BankMerchantAccount bankMerchantAccount = CommonUtils.convertBean(bankMerchantAccountVO,BankMerchantAccount.class);
         return bankMerchantAccountMapper.insertSelective(bankMerchantAccount);
@@ -152,6 +158,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO) {
         BankMerchantAccountList bankMerchantAccountList = CommonUtils.convertBean(bankMerchantAccountListVO,BankMerchantAccountList.class);
         return bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);

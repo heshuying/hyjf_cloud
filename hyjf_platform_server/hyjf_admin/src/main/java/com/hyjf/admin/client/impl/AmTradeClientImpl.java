@@ -576,6 +576,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 银行转账异常
+     * @auth jijun
      * @param request
      * @return
      */
@@ -591,6 +592,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 银行转账异常
+     * @auth jijun
      * @param request
      * @return
      */
@@ -602,6 +604,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 更新银行转账信息
+     * @auth jijun
      * @param request
      * @return
      */
@@ -613,6 +616,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 更新银行转账信息
+     * @auth jijun
      * @param transferExceptionLog
      * @return
      */
@@ -624,6 +628,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 获取银行转账异常通过uuid
+     * @auth jijun
      * @param uuid
      * @return
      */
@@ -884,6 +889,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 转账成功后续处理
+     * @auth jijun
      * @param jsonObject
      * @return
      */
@@ -897,6 +903,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 根据主键获取优惠券还款记录
+     * @auth jijun
      * @param recoverId
      * @return
      */
@@ -912,6 +919,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 取得优惠券投资信息
+     * @auth jijun
      * @param nid
      * @return
      */

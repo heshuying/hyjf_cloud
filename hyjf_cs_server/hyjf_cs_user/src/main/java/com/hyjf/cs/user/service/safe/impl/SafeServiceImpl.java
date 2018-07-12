@@ -422,19 +422,19 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
     @Override
     public boolean updateSmsConfig(Integer userId, String smsKey, Integer smsValue, UserVO user) {
-        if (smsKey.equals("rechargeSms")) {
+        if ("rechargeSms".equals(smsKey)) {
             //充值成功短信
             user.setRechargeSms(smsValue);
         }
-        if (smsKey.equals("withdrawSms")) {
+        if ("withdrawSms".equals(smsKey)) {
             //提现成功短信
             user.setWithdrawSms(smsValue);
         }
-        if (smsKey.equals("investSms")) {
+        if ("investSms".equals(smsKey)) {
             //投资成功短信
             user.setInvestSms(smsValue);
         }
-        if (smsKey.equals("recieveSms")) {
+        if ("recieveSms".equals(smsKey)) {
             //回收成功短信
             user.setRecieveSms(smsValue);
         }
@@ -525,7 +525,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         fileRealName = "appIconImg_" + userId + fileRealName + UploadFileUtils.getSuffix(iconImg.getOriginalFilename());
         // 上传至服务器
         String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
-        if (!returnMessage.equals("上传文件成功！")) {
+        if (!"上传文件成功！".equals(returnMessage)) {
             throw new CheckException(returnMessage);
         }
         // 保存到数据库的路径=上传文件的CDNURL+图片的文件名

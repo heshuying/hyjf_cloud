@@ -29,6 +29,11 @@ public class BankRepayFreezeController extends BaseController {
     @Autowired
     BankRepayFreezeService bankRepayFreezeService;
 
+    /**
+     * 冻结异常列表
+     * @param requestBean
+     * @return
+     */
     @ApiOperation(value = "冻结异常列表", notes = "冻结异常列表")
     @RequestMapping("/list")
     public JSONObject getList(@RequestBody BankRepayFreezeRequest requestBean){
@@ -42,6 +47,11 @@ public class BankRepayFreezeController extends BaseController {
         return jsonObject;
     }
 
+    /**
+     * 冻结撤销
+     * @param orderId
+     * @return
+     */
     @ApiOperation(value = "冻结撤销", notes = "冻结撤销")
     @RequestMapping("/cancel/{orderId}")
     public JSONObject repayFreezeCancel(@PathVariable String orderId){

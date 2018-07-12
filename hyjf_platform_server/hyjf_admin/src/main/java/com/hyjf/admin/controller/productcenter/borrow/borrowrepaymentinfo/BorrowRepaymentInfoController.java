@@ -198,11 +198,11 @@ public class BorrowRepaymentInfoController extends BaseController {
                     // 借款金额
                     else if (celLength == 9) {
                         cell.setCellValue(
-                                record.getBorrowAccount().equals("") ? 0 : Double.valueOf(record.getBorrowAccount()));
+                                "".equals(record.getBorrowAccount()) ? 0 : Double.valueOf(record.getBorrowAccount()));
                     }
                     // 借到金额
                     else if (celLength == 10) {
-                        cell.setCellValue(record.getBorrowAccountYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getBorrowAccountYes()) ? 0
                                 : Double.valueOf(record.getBorrowAccountYes()));
                     }
                     // 还款方式
@@ -264,62 +264,62 @@ public class BorrowRepaymentInfoController extends BaseController {
                     // 投资金额
                     else if (celLength == 23) {
                         cell.setCellValue(
-                                record.getRecoverTotal().equals("") ? 0 : Double.valueOf(record.getRecoverTotal()));
+                                "".equals(record.getRecoverTotal()) ? 0 : Double.valueOf(record.getRecoverTotal()));
                     }
                     // 应还本金
                     else if (celLength == 24) {
                         cell.setCellValue(
-                                record.getRecoverCapital().equals("") ? 0 : Double.valueOf(record.getRecoverCapital()));
+                                "".equals(record.getRecoverCapital()) ? 0 : Double.valueOf(record.getRecoverCapital()));
                     }
                     // 应还利息
                     else if (celLength == 25) {
-                        cell.setCellValue(record.getRecoverInterest().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverInterest()) ? 0
                                 : Double.valueOf(record.getRecoverInterest()));
                     }
                     // 应还本息
                     else if (celLength == 26) {
                         cell.setCellValue(
-                                record.getRecoverAccount().equals("") ? 0 : Double.valueOf(record.getRecoverAccount()));
+                                "".equals(record.getRecoverAccount()) ? 0 : Double.valueOf(record.getRecoverAccount()));
                     }
                     // 管理费
                     else if (celLength == 27) {
                         cell.setCellValue(
-                                record.getRecoverFee().equals("") ? 0 : Double.valueOf(record.getRecoverFee()));
+                                "".equals(record.getRecoverFee()) ? 0 : Double.valueOf(record.getRecoverFee()));
                     }
                     // 已还本金
                     else if (celLength == 28) {
-                        cell.setCellValue(record.getRecoverCapitalYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverCapitalYes()) ? 0
                                 : Double.valueOf(record.getRecoverCapitalYes()));
                     }
                     // 已还利息
                     else if (celLength == 29) {
-                        cell.setCellValue(record.getRecoverInterestYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverInterestYes()) ? 0
                                 : Double.valueOf(record.getRecoverInterestYes()));
                     }
                     // 已还本息
                     else if (celLength == 30) {
-                        cell.setCellValue(record.getRecoverAccountYes().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverAccountYes()) ? 0
                                 : Double.valueOf(record.getRecoverAccountYes()));
                     }
                     // 未还本金
                     else if (celLength == 31) {
-                        cell.setCellValue(record.getRecoverCapitalWait().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverCapitalWait()) ? 0
                                 : Double.valueOf(record.getRecoverCapitalWait()));
                     }
                     // 未还利息
                     else if (celLength == 32) {
-                        cell.setCellValue(record.getRecoverInterestWait().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverInterestWait()) ? 0
                                 : Double.valueOf(record.getRecoverInterestWait()));
                     }
                     // 未还本息
                     else if (celLength == 33) {
-                        cell.setCellValue(record.getRecoverAccountWait().equals("") ? 0
+                        cell.setCellValue("".equals(record.getRecoverAccountWait()) ? 0
                                 : Double.valueOf(record.getRecoverAccountWait()));
                     }
                     // 还款状态
                     else if (celLength == 34) {
                         if (StringUtils.isNotEmpty(record.getStatus())) {
-                            cell.setCellValue(record.getStatus().equals("0") ? "还款中" : "已还款");
+                            cell.setCellValue("0".equals(record.getStatus()) ? "还款中" : "已还款");
                         }
                     }
                     // 最后还款日

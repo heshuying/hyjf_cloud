@@ -28,6 +28,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -70,6 +71,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject subCommission(Integer loginUserId, SubCommissionRequest request) {
         JSONObject jsonObject = new JSONObject();
         //当前登录用户信息
@@ -204,7 +206,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
      * @param
      * @return
      */
-    private BigDecimal getBankBalance(Integer userId, String accountId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BigDecimal getBankBalance(Integer userId, String accountId) {
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
         BankCallBean bean = new BankCallBean();
@@ -246,7 +249,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
      * @param
      * @return
      */
-    private void checkParam(SubCommissionRequest request){
+    @Transactional(rollbackFor = Exception.class)
+    public void checkParam(SubCommissionRequest request){
         CheckUtil.check(request.getAccountId()!=null, MsgEnum.ERR_OBJECT_REQUIRED,"电子账户号");
         CheckUtil.check(request.getReceiveUserId()!=null, MsgEnum.ERR_OBJECT_REQUIRED,"转入用户ID");
         CheckUtil.check(StringUtils.isNotEmpty(request.getReceiveUserName()), MsgEnum.ERR_OBJECT_REQUIRED,"转入用户名");
@@ -260,7 +264,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         CheckUtil.check(request.getRemark().length()<50,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"说明");
     }
 
-    private boolean insertSubCommissionLog(BankCallBean bean, SubCommissionRequest form, AdminSystemVO adminSystemVO) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean insertSubCommissionLog(BankCallBean bean, SubCommissionRequest form, AdminSystemVO adminSystemVO) {
         // 当前时间
         Date nowTime = GetDate.getNowTime();
         SubCommissionVO subCommission = new SubCommissionVO();
@@ -288,7 +293,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
      *
      * @param bean
      */
-    private void updateSubCommission(BankCallBean bean,AdminSystemVO adminSystemVO) {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateSubCommission(BankCallBean bean,AdminSystemVO adminSystemVO) {
         Date nowTime = GetDate.getNowTime();
         SubCommissionVO subCommission = amTradeClient.searchSubCommissionByOrderId(bean.getLogOrderId());
         if (subCommission != null) {
@@ -303,8 +309,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         }
     }
 
-
-    private boolean updateSubCommissionSuccess(BankCallBean resultBean, SubCommissionRequest request,AdminSystemVO adminSystemVO) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateSubCommissionSuccess(BankCallBean resultBean, SubCommissionRequest request,AdminSystemVO adminSystemVO) {
         Integer nowTime = GetDate.getNowTime10();
         Date date = new Date();
         // 转账订单号
