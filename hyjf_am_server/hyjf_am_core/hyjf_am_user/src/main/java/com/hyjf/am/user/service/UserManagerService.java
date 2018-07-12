@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
@@ -199,4 +200,17 @@ public interface UserManagerService extends BaseService{
      * @return
      */
     UserRecommendCustomize searchUserRecommend(int userId);
+
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    int updateUserRe(AdminUserRecommendRequest request);
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    int updateUserIdCard(AdminUserRecommendRequest request);
 }

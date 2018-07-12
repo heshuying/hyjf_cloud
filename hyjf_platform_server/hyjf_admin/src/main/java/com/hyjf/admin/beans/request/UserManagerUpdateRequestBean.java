@@ -1,31 +1,42 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.request;
 
+import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author nxl
  * @version UserManagerUpdateRequest, v0.1 2018/6/22 11:36
  */
-public class UserManagerUpdateRequest extends BaseVO{
+public class UserManagerUpdateRequestBean{
     /** 用户id */
+    @ApiModelProperty(value = "用户id")
     public String userId;
     /** 用户名 */
+    @ApiModelProperty(value = "用户名")
     public String userName;
     /** 用户邮箱 */
+    @ApiModelProperty(value = "用户邮箱")
     public String email;
     /** 手机号 */
+    @ApiModelProperty(value = "手机号")
     public String mobile;
     /** 用户角色 */
+    @ApiModelProperty(value = "用户角色")
     public String userRole;
     /** 修改说明*/
+    @ApiModelProperty(value = "修改说明")
     public String remark;
     /** 用户状态 */
+    @ApiModelProperty(value = "用户状态")
     public String status;
     /** 借款人类型*/
+    @ApiModelProperty(value = "借款人类型")
     public Integer borrowerType;
+
     //当前登陆用户信息
     private String logingUserId;
     private String loginUserName;

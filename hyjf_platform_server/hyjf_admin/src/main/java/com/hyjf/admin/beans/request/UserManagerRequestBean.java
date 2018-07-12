@@ -1,16 +1,17 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author NXL
  * @version UserMemberParamVO, v0.1 2018/6/19 17:41
  *          会员中心->会员管理(请求参数）
  */
-public class UserManagerRequest extends BasePage {
+public class UserManagerRequestBean extends BasePage {
     //注册开始时间
     public String regTimeStart;
     // 注册结束时间
@@ -152,4 +153,5 @@ public class UserManagerRequest extends BasePage {
     public void setInstCodeSrch(String instCodeSrch) {
         this.instCodeSrch = instCodeSrch;
     }
+
 }
