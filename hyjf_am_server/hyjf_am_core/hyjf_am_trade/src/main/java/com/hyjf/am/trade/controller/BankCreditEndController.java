@@ -75,7 +75,7 @@ public class BankCreditEndController {
      * @date: 2018/7/12
      */
     @RequestMapping("/getby_orderid/{orderId}")
-    public BankCreditEndResponse getCreditEndList(@PathVariable String orderId){
+    public BankCreditEndResponse getCreditEndByOrderId(@PathVariable String orderId){
         BankCreditEndResponse response = new BankCreditEndResponse();
         BankCreditEnd record = bankCreditEndService.selectByOrderId(orderId);
         if (Validator.isNotNull(record)){

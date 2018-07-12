@@ -6,11 +6,13 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -532,4 +534,14 @@ public interface AmTradeClient {
      * @return
      */
     List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request);
+
+    List<BankCreditEndVO> getCreditEndList(BankCreditEndRequest requestBean);
+
+    int getCreditEndCount(BankCreditEndRequest requestBean);
+
+    BankCreditEndVO getCreditEndByOrderId(String orderId);
+
+    int updateBankCreditEnd(BankCreditEndVO requestBean);
+
+    int updateCreditEndForInitial(BankCreditEndVO requestBean);
 }
