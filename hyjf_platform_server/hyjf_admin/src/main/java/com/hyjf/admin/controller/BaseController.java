@@ -83,7 +83,7 @@ public class BaseController {
 	//返回失败
 	public JSONObject  fail(String failmsg) {
 		JSONObject info = new JSONObject();
-		if(failmsg.equals("")) {
+		if("".equals(failmsg)) {
 			info.put(MSG, "失败");
 		}else {
 			info.put(MSG, failmsg);

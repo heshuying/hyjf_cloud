@@ -128,4 +128,9 @@ public class RedisConstants {
      * 投资防重校验过期时间
      */
     public static final Integer TENDER_OUT_TIME = 300;
+
+    /**
+     * 短信模板缓存
+     */
+    public static final String SMS_TEMPLATE_TPLCODE = "sms_template_tplCode_";
 }

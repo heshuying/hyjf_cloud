@@ -912,7 +912,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                                     jedis.unwatch();
                                 } else {
                                     String ret = (String) result.get(0);
-                                    if (ret != null && ret.equals("OK")) {
+                                    if (ret != null && "OK".equals(ret)) {
                                         logger.info("redis操作成功  用户:{},***冻结前减redis：{}" ,userId, accountDecimal);
                                         break;
                                     } else {

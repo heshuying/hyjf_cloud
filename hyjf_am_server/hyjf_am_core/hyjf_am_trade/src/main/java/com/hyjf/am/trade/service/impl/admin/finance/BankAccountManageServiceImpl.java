@@ -485,6 +485,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @param userId
      * @return
      */
+    @Override
     public Account getAccount(Integer userId) {
         AccountExample example = new AccountExample();
         AccountExample.Criteria criteria = example.createCriteria();

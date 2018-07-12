@@ -172,8 +172,9 @@ public class IdCard15To18 {
             String birth = id.length() == 15 ? "19" + id.substring(6, 12) : id.substring(6, 14);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             Date birthDate = sdf.parse(birth);
-            if (!birth.equals(sdf.format(birthDate)))
+            if (!birth.equals(sdf.format(birthDate))) {
                 return false;
+            }
         }catch (ParseException e){
             return false;
         }

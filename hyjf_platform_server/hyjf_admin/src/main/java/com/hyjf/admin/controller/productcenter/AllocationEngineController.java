@@ -566,7 +566,7 @@ public class AllocationEngineController extends BaseController{
 				//取自DB的LabelSort
 				Integer planLabelSort = object.getLabelSort();
 				//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
-				if(planLabelSort !=null && planLabelSort == Integer.valueOf(labelSort)){
+				if(planLabelSort !=null && planLabelSort.equals(Integer.valueOf(labelSort))){
 					jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
 					jsonObject.put("status", "n");
 					return jsonObject;

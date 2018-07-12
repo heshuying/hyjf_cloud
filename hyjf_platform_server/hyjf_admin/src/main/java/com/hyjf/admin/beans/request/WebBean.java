@@ -29,14 +29,16 @@ public class WebBean extends AccountWebListVO implements Serializable {
 	 */
 	private Paginator paginator;
 
-	public int getPaginatorPage() {
+	@Override
+    public int getPaginatorPage() {
 		if (paginatorPage == 0) {
 			paginatorPage = 1;
 		}
 		return paginatorPage;
 	}
 
-	public void setPaginatorPage(int paginatorPage) {
+	@Override
+    public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}
 

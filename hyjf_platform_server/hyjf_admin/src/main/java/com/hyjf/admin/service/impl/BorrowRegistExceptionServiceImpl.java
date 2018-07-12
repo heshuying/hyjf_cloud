@@ -204,7 +204,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                 else if (debtDetails.size() == 1) {
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
                                     String state = debtDetail.getString(BankCallConstant.PARAM_STATE);
-                                    if (state.equals("9")) {
+                                    if ("9".equals(state)) {
                                         // 2备案状态已撤销直接更改标的状态为:流标,撤销备案
                                         boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 6, 3,1);
                                         if (debtRegistedNewFlag) {
@@ -214,7 +214,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                             result.put("success", "1");
                                             result.put("msg", "备案已经撤销后，更新相应的状态失败,请联系客服！");
                                         }
-                                    } else if (state.equals("8")) {
+                                    } else if ("8".equals(state)) {
                                         // 2备案处理中更改备案状态为备案中
                                         boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 0, 1,1);
                                         if (debtRegistedNewFlag) {
@@ -224,7 +224,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                             result.put("success", "1");
                                             result.put("msg", "银行备案处理中，更新相应的状态失败,请联系客服！");
                                         }
-                                    } else if (state.equals("1")) {
+                                    } else if ("1".equals(state)) {
                                         // 2备案成功直接更改备案状态:银行确认state为1的情况,银行标的备案成功
                                         //new added by 受托支付备案
                                         if(borrowVO.getEntrustedFlg()==1){

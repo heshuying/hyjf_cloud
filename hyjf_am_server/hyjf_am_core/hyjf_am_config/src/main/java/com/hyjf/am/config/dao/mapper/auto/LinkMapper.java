@@ -10,7 +10,7 @@ public interface LinkMapper {
 
     int deleteByExample(LinkExample example);
 
-    int deleteByPrimaryKey(Short id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Link record);
 
@@ -18,7 +18,7 @@ public interface LinkMapper {
 
     List<Link> selectByExample(LinkExample example);
 
-    Link selectByPrimaryKey(Short id);
+    Link selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") Link record, @Param("example") LinkExample example);
 

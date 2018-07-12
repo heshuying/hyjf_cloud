@@ -224,9 +224,9 @@ public class LoanCoverController extends BaseController {
                     } else if (celLength == 6) {
                         cell.setCellValue(pInfo.getCustomerId());
                     } else if (celLength == 7) {
-                        if (pInfo.getStatus().equals("success")) {
+                        if ("success".equals(pInfo.getStatus())) {
                             cell.setCellValue("成功");
-                        } else if (pInfo.getStatus().equals("error")) {
+                        } else if ("error".equals(pInfo.getStatus())) {
                             cell.setCellValue("失败");
                         } else {
                             cell.setCellValue(pInfo.getStatus());

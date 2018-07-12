@@ -195,7 +195,7 @@ public class WebsiteController extends BaseController {
                     }
                     // 收支类型
                     else if (celLength == 7) {
-                        cell.setCellValue(bean.getTrade().equals("1")?"收入":"支出");
+                        cell.setCellValue("1".equals(bean.getTrade()) ?"收入":"支出");
                     }
                     // 交易金额
                     else if (celLength == 8) {

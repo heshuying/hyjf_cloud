@@ -98,6 +98,8 @@ public class BankOpenController extends BaseUserController {
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
+        // 开户角色
+        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_3);
         // 组装参数
         Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
         result.setData(data);
