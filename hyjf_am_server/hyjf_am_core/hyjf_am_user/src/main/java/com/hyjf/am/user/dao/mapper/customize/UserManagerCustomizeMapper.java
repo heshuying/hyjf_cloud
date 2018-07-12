@@ -70,4 +70,12 @@ public interface UserManagerCustomizeMapper {
      * @return
      */
     List<UserRecommendCustomize> searchUserRecommend(int userId);
+
+    /**
+     * 根据用户id查询用户一条用户信息（添加用户更新日志用）
+     *
+     * @param userId
+     * @return
+     */
+    List<UserInfoForLogCustomize> selectUserInfoByUserId(int userId);
 }

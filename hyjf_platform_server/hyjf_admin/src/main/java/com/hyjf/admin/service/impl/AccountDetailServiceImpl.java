@@ -46,7 +46,7 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     }
 
     /**
-     * 查询出20170120还款后,交易明细有问题的用户ID
+     * 查询出还款后,交易明细有问题的用户ID
      */
     @Override
     public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
@@ -54,25 +54,40 @@ public class AccountDetailServiceImpl implements AccountDetailService {
         return accountResponse;
     }
 
-    // 根据Id查询此条交易明细
+    /**
+     * 根据Id查询此条交易明细
+     */
     @Override
     public AccountListResponse selectAccountById(int accountId) {
         return accountDetailClient.selectAccountById(accountId);
     }
 
-    // 查询此用户的下一条交易明细
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @param userId
+     * @return
+     */
     @Override
     public AccountListResponse selectNextAccountList(int accountId, int userId) {
         return accountDetailClient.selectNextAccountList(accountId, userId);
     }
 
-    // 根据查询用交易类型查询用户操作金额
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @return
+     */
     @Override
     public AccountTradeResponse selectAccountTradeByValue(String tradeValue) {
         return accountDetailClient.selectAccountTradeByValue(tradeValue);
     }
 
-    // 更新用户的交易明细
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @return
+     */
     @Override
     public int updateAccountList(AccountListRequest accountListRequest) {
         return accountDetailClient.updateAccountList(accountListRequest);

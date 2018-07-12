@@ -1,5 +1,10 @@
 package com.hyjf.pay.service.impl;
 
+import java.util.TreeMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.entity.DzqzReturnLog;
 import com.hyjf.pay.entity.DzqzSendLog;
@@ -7,17 +12,9 @@ import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.mongo.DzqzReturnLogDao;
 import com.hyjf.pay.mongo.DzqzSendLogDao;
 import com.hyjf.pay.service.DzqzPayLogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.TreeMap;
 
 @Service
 public class DzqzPayLogServiceImpl implements DzqzPayLogService {
-
-
-    private static final String SENDLOG = "dzqzsendlog";
-    private static final String BACKLOG = "dzqzreturnlog";
 
     @Autowired
     private DzqzSendLogDao sendLogDao;
@@ -34,7 +31,7 @@ public class DzqzPayLogServiceImpl implements DzqzPayLogService {
         sendLog.setTxDate(bean.getTxDate());
         sendLog.setTxTime(bean.getTxTime());
         sendLog.setContent(bean.getAllParams());
-        sendLogDao.insert(sendLog,this.SENDLOG);
+        sendLogDao.insert(sendLog);
 
     }
 
@@ -49,6 +46,6 @@ public class DzqzPayLogServiceImpl implements DzqzPayLogService {
         returnLog.setTxDate(bean.getTxDate());
         returnLog.setTxTime(bean.getTxTime());
         returnLog.setContent(bean.getAllParams());
-        returnLogDao.insert(returnLog,this.BACKLOG);
+        returnLogDao.insert(returnLog);
     }
 }

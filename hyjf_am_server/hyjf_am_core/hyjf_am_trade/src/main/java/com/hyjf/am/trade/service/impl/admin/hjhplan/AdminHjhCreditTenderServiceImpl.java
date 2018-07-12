@@ -3,19 +3,25 @@
  */
 package com.hyjf.am.trade.service.impl.admin.hjhplan;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
+import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhCreditTenderCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.common.cache.CacheUtil;
 
 /**
@@ -26,6 +32,8 @@ import com.hyjf.common.cache.CacheUtil;
 public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderService{
 	@Autowired
 	private AdminHjhCreditTenderCustomizeMapper adminHjhCreditTenderCustomizeMapper;
+	@Autowired
+	private HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
 	
 	@Override
 	public Integer countHjhCreditTenderTotal(HjhCreditTenderRequest request) {
@@ -106,4 +114,69 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		return list;
 	}
 
+	@Override
+	public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest request) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		// 是否从加入明细表来
+		param.put("isAccedelist", request.getIsAccedelist());
+		if (StringUtils.isNotEmpty(request.getAssignPlanNid())) {
+			param.put("assignPlanNid", request.getAssignPlanNid());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignPlanOrderId())) {
+			param.put("assignPlanOrderId", request.getAssignPlanOrderId());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignUserName())) {
+			param.put("assignUserName", request.getAssignUserName());
+		}
+		if (StringUtils.isNotEmpty(request.getCreditUserName())) {
+			param.put("creditUserName", request.getCreditUserName());
+		}
+		if (StringUtils.isNotEmpty(request.getCreditNid())) {
+			param.put("creditNid", request.getCreditNid());
+		}
+		if (StringUtils.isNotEmpty(request.getBorrowNid())) {
+			param.put("borrowNid", request.getBorrowNid());
+		}
+		if (StringUtils.isNotEmpty(request.getRepayStyle())) {
+			param.put("repayStyle", request.getRepayStyle());
+		}
+		if (StringUtils.isNotEmpty(request.getAssignType())) {
+			param.put("assignType", request.getAssignType());
+		}
+		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
+		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
+		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderCustomizeMapper.selectDebtCreditTenderList(param);
+		if(!CollectionUtils.isEmpty(list)){
+			Map<String, String> map = CacheUtil.getParamNameMap("PLAN_ASSIGN_TYPE");
+			 for(HjhCreditTenderCustomizeVO hjhCreditTenderCustomizeVO : list){
+				 hjhCreditTenderCustomizeVO.setAssignTypeName(map.getOrDefault(hjhCreditTenderCustomizeVO.getAssignTypeName(),null));
+			 }
+		}
+		return list;
+	}
+
+	@Override
+	public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest request) {
+		HjhDebtCreditTenderVO vo = null;
+		HjhDebtCreditTender tender;
+		HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
+		HjhDebtCreditTenderExample.Criteria cra = example.createCriteria();
+		cra.andUserIdEqualTo(Integer.parseInt(request.getUserIdHidden()));
+		cra.andBorrowNidEqualTo(request.getBorrowNidHidden());
+		cra.andAssignOrderIdEqualTo(request.getAssignNidHidden());
+		cra.andCreditNidEqualTo(request.getCreditNidHidden());
+		List<HjhDebtCreditTender> list = this.hjhDebtCreditTenderMapper.selectByExample(example);
+		if (CollectionUtils.isNotEmpty(list)){
+			tender = list.get(0);
+			try {
+				BeanUtils.copyProperties(tender, vo);
+				return vo;
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
 }

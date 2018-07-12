@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 /**
  * @author libin
@@ -28,5 +29,19 @@ public interface AdminHjhCreditTenderService {
 	 * @return
 	 */
 	List<HjhCreditTenderCustomizeVO> selectHjhCreditTenderList(HjhCreditTenderRequest request,int limitStart, int limitEnd);
+	
+	/**
+	 * 获取详细列表未分页
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest request);
+	
+	/**
+	 * @Author: libin
+	 * @Desc :汇计划承接记录详情
+	 */
+	HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest request);
 
 }

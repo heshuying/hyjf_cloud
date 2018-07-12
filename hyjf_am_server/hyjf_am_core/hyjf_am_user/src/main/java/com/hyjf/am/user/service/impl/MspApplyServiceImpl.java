@@ -86,8 +86,9 @@ public class MspApplyServiceImpl implements MspApplyService {
 	 * 
 	 * @return
 	 */
-	public List<MspApply> getRecordList(MspApply mspApply, int limitStart, int limitEnd, int createStart,
-			int createEnd) {
+	@Override
+    public List<MspApply> getRecordList(MspApply mspApply, int limitStart, int limitEnd, int createStart,
+                                        int createEnd) {
 		MspApplyExample example = new MspApplyExample();
 		example.setOrderByClause(" id desc");
 		if (limitStart != -1) {
@@ -117,7 +118,8 @@ public class MspApplyServiceImpl implements MspApplyService {
 	 * 
 	 * @return
 	 */
-	public MspApply getRecord(Integer record) {
+	@Override
+    public MspApply getRecord(Integer record) {
 		MspApply FeeConfig = mspApplyMapper.selectByPrimaryKey(record);
 		return FeeConfig;
 	}
@@ -127,7 +129,8 @@ public class MspApplyServiceImpl implements MspApplyService {
 	 * 
 	 * @return
 	 */
-	public boolean isExistsRecord(MspApply record) {
+	@Override
+    public boolean isExistsRecord(MspApply record) {
 		if (record.getId() == null) {
 			return false;
 		}
@@ -146,7 +149,8 @@ public class MspApplyServiceImpl implements MspApplyService {
 	 * 
 	 * @param record
 	 */
-	public void insertRecord(MspApply record) {
+	@Override
+    public void insertRecord(MspApply record) {
 		mspApplyMapper.insertSelective(record);
 	}
 
@@ -155,7 +159,8 @@ public class MspApplyServiceImpl implements MspApplyService {
 	 * 
 	 * @param record
 	 */
-	public void updateRecord(MspApply record) {
+	@Override
+    public void updateRecord(MspApply record) {
 		record.setUpdateTime(1);
 		// record.setLogo("1");
 		mspApplyMapper.updateByPrimaryKeySelective(record);
@@ -226,7 +231,8 @@ public class MspApplyServiceImpl implements MspApplyService {
 		return mspZhixinginfosMapper.selectByExample(me);
 	}
 
-	public MspTitle getTitle(String applyId) {
+	@Override
+    public MspTitle getTitle(String applyId) {
 		MspTitleExample me = new MspTitleExample();
 		me.or().andApplyIdEqualTo(applyId);
 		return mspTitleMapper.selectByExample(me).get(0);

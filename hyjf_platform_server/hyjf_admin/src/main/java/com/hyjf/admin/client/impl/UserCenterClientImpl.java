@@ -37,12 +37,12 @@ public class UserCenterClientImpl implements UserCenterClient {
      * @return
      */
     @Override
-    public List<UserManagerVO> selectUserMemberList(UserManagerRequest request) {
+    public UserManagerResponse selectUserMemberList(UserManagerRequest request) {
         UserManagerResponse response = restTemplate
                 .postForEntity("http://AM-USER/am-user/userManager/userslist", request, UserManagerResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }
@@ -514,5 +514,27 @@ public class UserCenterClientImpl implements UserCenterClient {
             return response.getResult();
         }
         return null;
+    }
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateUserRecommend(AdminUserRecommendRequest request){
+        int response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/updateUserRecommend",request, Integer.class).getBody();
+        return response;
+    }
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateUserIdCard(AdminUserRecommendRequest request){
+        int response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/updateUserIdCard",request, Integer.class).getBody();
+        return response;
     }
 }

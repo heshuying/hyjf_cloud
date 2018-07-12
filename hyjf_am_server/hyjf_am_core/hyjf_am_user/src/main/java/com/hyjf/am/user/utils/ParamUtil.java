@@ -65,7 +65,7 @@ public class ParamUtil {
         parm.put("checkResultTime", form.getApprovalDate());
         parm.put("checkResult", form.getApprovalResult());
         
-        if(form.getApprovalResult().equals("01")) {
+        if("01".equals(form.getApprovalResult())) {
         	parm.put("loanMoney", form.getLoanMoney()==null?"":form.getLoanMoney().toString());
             parm.put("loanStartDate", form.getContractBegin());
             parm.put("loanEndDate", form.getContractEnd());

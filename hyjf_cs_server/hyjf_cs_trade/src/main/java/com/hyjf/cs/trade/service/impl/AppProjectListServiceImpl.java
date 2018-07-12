@@ -355,7 +355,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 List<BorrowRepayPlanCsVO> repayPlanLists = repayPlanService.getRepayPlan(borrowNid);
                 BorrowRepayPlanCsVO borrowRepayPlan = repayPlanLists.get(0);
                 BorrowRepayPlanBean borrowRepayPlanBean = new BorrowRepayPlanBean();
-                if (borrowRepayPlan.getRepayTime().equals("-")) {
+                if ("-".equals(borrowRepayPlan.getRepayTime())) {
                     borrowRepayPlanBean.setTime("-");
                 } else {
                     borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
@@ -370,7 +370,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     for (int i = 0; i < repayPlanLists.size(); i++) {
                         borrowRepayPlan = repayPlanLists.get(i);
                         BorrowRepayPlanBean borrowRepayPlanBean = new BorrowRepayPlanBean();
-                        if (borrowRepayPlan.getRepayTime().equals("-")) {
+                        if ("-".equals(borrowRepayPlan.getRepayTime())) {
                             borrowRepayPlanBean.setTime("-");
                         } else {
                             borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
@@ -419,8 +419,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             } else {
                 // 原始标
                 // 复审中，还款中和已还款状态投资者(可看)
-                if (borrow.getStatus().equals("3") || borrow.getStatus().equals("4")
-                        || borrow.getStatus().equals("5")) {
+                if ("3".equals(borrow.getStatus()) || "4".equals(borrow.getStatus())
+                        || "5".equals(borrow.getStatus())) {
                     if (count > 0) {
                         // 可以查看标的详情
                         viewableFlag = true;

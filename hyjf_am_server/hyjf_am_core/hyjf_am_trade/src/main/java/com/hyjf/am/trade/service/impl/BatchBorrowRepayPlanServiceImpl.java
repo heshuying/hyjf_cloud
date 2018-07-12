@@ -1594,9 +1594,9 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 			if (BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)) {
 				String state = StringUtils.isNotBlank(debtQuery.getState()) ? debtQuery.getState() : "";
 				if (StringUtils.isNotBlank(state)) {
-					if (state.equals("4")) {
+					if ("4".equals(state)) {
 						return true;
-					} else if (state.equals("2")) {
+					} else if ("2".equals(state)) {
 						try {
 							String logOrderId = GetOrderIdUtils.getOrderId2(userId);
 							String orderDate = GetOrderIdUtils.getOrderDate();
@@ -4092,7 +4092,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 	                jedis.unwatch();
 	            } else {
 	                String ret = (String) results.get(0);
-	                if (ret != null && ret.equals("OK")) {
+	                if (ret != null && "OK".equals(ret)) {
 	                    // 成功后
 	                    result = true;
 	                    break;
@@ -4145,7 +4145,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		replaceStrs.put("val_title", borrowNid);
 		replaceStrs.put("val_time", GetDate.formatTime());
 		SmsMessage smsMessage =
-                new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null,
+                new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null,
                 		CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 		
         try {

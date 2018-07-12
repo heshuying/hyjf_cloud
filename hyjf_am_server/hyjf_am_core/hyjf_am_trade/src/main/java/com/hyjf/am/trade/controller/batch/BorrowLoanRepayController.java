@@ -17,14 +17,13 @@ import com.hyjf.am.trade.service.task.BorrowLoanRepayToMQService;
  */
 @RestController
 @RequestMapping("/am-trade/batch")
-public class BorrowLoadRepayController extends BaseController {
+public class BorrowLoanRepayController extends BaseController {
 
     @Autowired
     private BorrowLoanRepayToMQService borrowLoanRepayToMQService;
 
     @GetMapping("/taskAssign")
     public String taskAssign() {
-
         
        borrowLoanRepayToMQService.taskAssign();
         

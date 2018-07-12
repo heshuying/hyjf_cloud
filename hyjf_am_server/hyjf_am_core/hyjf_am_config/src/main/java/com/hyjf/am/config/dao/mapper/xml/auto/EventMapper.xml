@@ -4,10 +4,13 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.Event" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="event_time" property="eventTime" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="event_year" property="eventYear" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="add_admin" property="addAdmin" jdbcType="VARCHAR" />
     <result column="act_time" property="actTime" jdbcType="INTEGER" />
+    <result column="thumb" property="thumb" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -72,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, event_time, content, event_year, add_admin, act_time, create_user_id, update_user_id, 
-    create_time, update_time
+    id, event_time, title, content, event_year, `status`, add_admin, act_time, thumb, 
+    create_user_id, update_user_id, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.EventExample" >
     select
@@ -112,12 +115,14 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_event (event_time, content, event_year, 
-      add_admin, act_time, create_user_id, 
+    insert into ht_event (event_time, title, content, 
+      event_year, `status`, add_admin, 
+      act_time, thumb, create_user_id, 
       update_user_id, create_time, update_time
       )
-    values (#{eventTime,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{eventYear,jdbcType=INTEGER}, 
-      #{addAdmin,jdbcType=VARCHAR}, #{actTime,jdbcType=INTEGER}, #{createUserId,jdbcType=INTEGER}, 
+    values (#{eventTime,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{eventYear,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{addAdmin,jdbcType=VARCHAR}, 
+      #{actTime,jdbcType=INTEGER}, #{thumb,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -130,17 +135,26 @@
       <if test="eventTime != null" >
         event_time,
       </if>
+      <if test="title != null" >
+        title,
+      </if>
       <if test="content != null" >
         content,
       </if>
       <if test="eventYear != null" >
         event_year,
       </if>
+      <if test="status != null" >
+        `status`,
+      </if>
       <if test="addAdmin != null" >
         add_admin,
       </if>
       <if test="actTime != null" >
         act_time,
+      </if>
+      <if test="thumb != null" >
+        thumb,
       </if>
       <if test="createUserId != null" >
         create_user_id,
@@ -159,17 +173,26 @@
       <if test="eventTime != null" >
         #{eventTime,jdbcType=VARCHAR},
       </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
       </if>
       <if test="eventYear != null" >
         #{eventYear,jdbcType=INTEGER},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
       <if test="addAdmin != null" >
         #{addAdmin,jdbcType=VARCHAR},
       </if>
       <if test="actTime != null" >
         #{actTime,jdbcType=INTEGER},
+      </if>
+      <if test="thumb != null" >
+        #{thumb,jdbcType=VARCHAR},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=INTEGER},
@@ -200,17 +223,26 @@
       <if test="record.eventTime != null" >
         event_time = #{record.eventTime,jdbcType=VARCHAR},
       </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
       <if test="record.content != null" >
         content = #{record.content,jdbcType=VARCHAR},
       </if>
       <if test="record.eventYear != null" >
         event_year = #{record.eventYear,jdbcType=INTEGER},
       </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
       <if test="record.addAdmin != null" >
         add_admin = #{record.addAdmin,jdbcType=VARCHAR},
       </if>
       <if test="record.actTime != null" >
         act_time = #{record.actTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.thumb != null" >
+        thumb = #{record.thumb,jdbcType=VARCHAR},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -233,10 +265,13 @@
     update ht_event
     set id = #{record.id,jdbcType=INTEGER},
       event_time = #{record.eventTime,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=VARCHAR},
       event_year = #{record.eventYear,jdbcType=INTEGER},
+      `status` = #{record.status,jdbcType=TINYINT},
       add_admin = #{record.addAdmin,jdbcType=VARCHAR},
       act_time = #{record.actTime,jdbcType=INTEGER},
+      thumb = #{record.thumb,jdbcType=VARCHAR},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
       update_user_id = #{record.updateUserId,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -251,17 +286,26 @@
       <if test="eventTime != null" >
         event_time = #{eventTime,jdbcType=VARCHAR},
       </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
       </if>
       <if test="eventYear != null" >
         event_year = #{eventYear,jdbcType=INTEGER},
       </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
       <if test="addAdmin != null" >
         add_admin = #{addAdmin,jdbcType=VARCHAR},
       </if>
       <if test="actTime != null" >
         act_time = #{actTime,jdbcType=INTEGER},
+      </if>
+      <if test="thumb != null" >
+        thumb = #{thumb,jdbcType=VARCHAR},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=INTEGER},
@@ -281,10 +325,13 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.Event" >
     update ht_event
     set event_time = #{eventTime,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       event_year = #{eventYear,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=TINYINT},
       add_admin = #{addAdmin,jdbcType=VARCHAR},
       act_time = #{actTime,jdbcType=INTEGER},
+      thumb = #{thumb,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=INTEGER},
       update_user_id = #{updateUserId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

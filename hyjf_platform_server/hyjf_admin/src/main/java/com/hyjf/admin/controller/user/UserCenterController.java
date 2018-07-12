@@ -4,22 +4,41 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
+import com.hyjf.admin.beans.request.UserManagerRequestBean;
+import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
+import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +51,9 @@ import java.util.Map;
 @Api(value = "会员管理接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersManager")
-public class UserCenterController {
+public class UserCenterController extends BaseController {
 
-    //public static final String PERMISSIONS = "userslist";
+    public static final String PERMISSIONS = "userslist";
     private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
@@ -52,26 +71,31 @@ public class UserCenterController {
     @ApiOperation(value = "会员管理", notes = "会员管理列表查询")
     @PostMapping(value = "/userslist")
     @ResponseBody
-    public JSONObject getUserslist(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        UserManagerRequest managerRequest = serParamRequest(map);
-        jsonObject = userCenterService.selectUserMemberList(managerRequest);
-        return jsonObject;
+    public AdminResult<ListResult<UserManagerVO>> getUserslist(HttpServletRequest request, HttpServletResponse response, @RequestBody UserManagerRequestBean userManagerRequestBean) {
+        UserManagerRequest managerRequest = new UserManagerRequest();
+        BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
+        UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
+        if(userManagerResponse==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(userManagerResponse)) {
+            return new AdminResult<>(FAIL, userManagerResponse.getMessage());
+        }
+        return new AdminResult<ListResult<UserManagerVO>>(ListResult.build(userManagerResponse.getResultList(), userManagerResponse.getCount())) ;
     }
 
     //会员详情
     @ApiOperation(value = "会员管理", notes = "会员详情")
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
-    public JSONObject getUserdetail(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
+    public JSONObject getUserdetail(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
         JSONObject jsonObject = new JSONObject();
-        String strUserId = map.get("userId");
-        UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(strUserId);
+        UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         jsonObject.put("userDetailInfo", userManagerDetailVO);
         //vip
 
         // 获取测评信息
-        UserEvalationResultVO userEvalationResultInfo = userCenterService.getUserEvalationResult(strUserId);
+        UserEvalationResultVO userEvalationResultInfo = userCenterService.getUserEvalationResult(userId);
         if (null != userEvalationResultInfo && null != userEvalationResultInfo.getCreateTime()) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResultInfo.getCreateTime(), 1, 1).getTime();
@@ -86,16 +110,16 @@ public class UserCenterController {
         }
         jsonObject.put("userEvalationResult", userEvalationResultInfo);
         //用户开户信息
-        UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(strUserId);
+        UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(userId);
         jsonObject.put("userBankOpenAccount", userBankOpenAccountVO);
         //公司信息
-        CorpOpenAccountRecordVO corpOpenAccountRecordVO = userCenterService.selectCorpOpenAccountRecordByUserId(strUserId);
+        CorpOpenAccountRecordVO corpOpenAccountRecordVO = userCenterService.selectCorpOpenAccountRecordByUserId(userId);
         jsonObject.put("enterpriseInformation", corpOpenAccountRecordVO);
         //第三方平台绑定信息
-        BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(strUserId);
+        BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(userId);
         jsonObject.put("bindUsers", bindUserVo);
         //电子签章
-        CertificateAuthorityVO certificateAuthorityVO = userCenterService.selectCertificateAuthorityByUserId(strUserId);
+        CertificateAuthorityVO certificateAuthorityVO = userCenterService.selectCertificateAuthorityByUserId(userId);
         jsonObject.put("certificateAuthority", certificateAuthorityVO);
         //文件服务器
 
@@ -108,7 +132,7 @@ public class UserCenterController {
 //    @RequestMapping(value = "/initUserUpdate")
     @PostMapping(value = "/initUserUpdate")
     @ResponseBody
-    public JSONObject initUserUpdate(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
+    public JSONObject initUserUpdate(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
 
         String status = Response.FAIL;
         JSONObject jsonObject = new JSONObject();
@@ -121,17 +145,18 @@ public class UserCenterController {
         jsonObject.put("userRoles", userRoles);
         jsonObject.put("userStatus", userStatus);
         jsonObject.put("borrowerType", borrowerType);*/
-        String strUserId = map.get("userId");
+
         // 根据用户id查询用户详情信息
-        UserManagerUpdateVO userManagerUpdateVo = userCenterService.selectUserUpdateInfoByUserId(strUserId);
+        UserManagerUpdateVO userManagerUpdateVo = userCenterService.selectUserUpdateInfoByUserId(userId);
+
         if(null!=userManagerUpdateVo){
             status = Response.SUCCESS;
             jsonObject.put("usersUpdateForm", userManagerUpdateVo);
         }
         // 加载修改日志 userChageLog
         UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
-        if(StringUtils.isNotEmpty(strUserId)){
-            int intUserId = Integer.parseInt(strUserId);
+        if(StringUtils.isNotEmpty(userId)){
+            int intUserId = Integer.parseInt(userId);
             userChangeLogRequest.setUserId(intUserId);
             userChangeLogRequest.setChangeType(CHANGELOG_TYPE_RECOMMEND);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
@@ -142,13 +167,18 @@ public class UserCenterController {
     }
 
     @ApiOperation(value = "修改更新用户信息", notes = "会员管理")
-//    @RequestMapping(value = "/updateUser")
     @PostMapping(value = "/updateUser")
     @ResponseBody
-    public JSONObject updataUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
+    public JSONObject updataUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserManagerUpdateRequestBean requestBean) {
         JSONObject jsonObject = new JSONObject();
+        UserManagerUpdateRequest userRequest = new UserManagerUpdateRequest();
+        BeanUtils.copyProperties(requestBean, request);
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        requestBean.setLoginUserName(adminSystemVO.getUsername());
+        requestBean.setLogingUserId(adminSystemVO.getId());
         //1代表更新成功，0为失败
-        int intUpdFlg = userCenterService.updataUserInfo(map);
+        int intUpdFlg = userCenterService.updataUserInfo(userRequest);
+        //todo 修改手机号后 发送更新客户信息
         if (intUpdFlg == 1) {
             jsonObject.put("status", Response.SUCCESS);
         } else {
@@ -158,7 +188,6 @@ public class UserCenterController {
     }
 
     @ApiOperation(value = "会员管理", notes = "获取推荐人信息")
-//    @RequestMapping(value = "/initmodifyre")
     @PostMapping(value = "/initModifyre")
     @ResponseBody
     public JSONObject initModifyre(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
@@ -172,7 +201,6 @@ public class UserCenterController {
         if(StringUtils.isNotEmpty(userIdStr)){
             int intUserId = Integer.parseInt(userIdStr);
             userChangeLogRequest.setUserId(intUserId);
-            //userChangeLogRequest.setChangeType(CHANGELOG_TYPE_RECOMMEND);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
             jsonObject.put("usersChangeLogForm", userChangeLogVOList);
         }
@@ -180,12 +208,74 @@ public class UserCenterController {
         return jsonObject;
     }
 
-/*
     @ApiOperation(value = "会员管理", notes = "修改用户推荐人")
     @RequestMapping(value = "/updateModifyre")
     @ResponseBody
-    public JSONObject updateRe() {
-        return null;
+    public AdminResult updateRe(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminUserRecommendRequestBean requestBean) {
+        AdminUserRecommendRequest adminUserRecommendRequest = new AdminUserRecommendRequest();
+        BeanUtils.copyProperties(requestBean, adminUserRecommendRequest);
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        if(null!=adminSystemVO){
+            //当前登陆用户
+            adminUserRecommendRequest.setLoginUserId(adminSystemVO.getId());
+            adminUserRecommendRequest.setLoginUserName(adminSystemVO.getUsername());
+        }
+        int updFlg = userCenterService.updateUserRecommend(adminUserRecommendRequest);
+        if(updFlg<=0){
+            return new AdminResult<>(FAIL, "修改用户推荐人失败");
+        }
+        return new AdminResult<>();
+    }
+
+    /**
+     * 获取用户身份证信息
+     *
+     * @param request
+     * @return 进入用户详情页面
+     */
+    @ApiOperation(value = "会员管理", notes = "获取用户身份证信息")
+    @RequestMapping(value = "/searchIdCard")
+    @ResponseBody
+    public JSONObject searchIdCard(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+        JSONObject jsonObject = new JSONObject();
+        //根据用户id查询用户详情信息
+        UserRecommendCustomizeVO userRecommendVO = userCenterService.selectUserRecommendByUserId(userId);
+        jsonObject.put("modifyReForm", userRecommendVO);
+        //加载修改日志 userChageLog
+        UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
+        if(StringUtils.isNotEmpty(userId)){
+            int intUserId = Integer.parseInt(userId);
+            userChangeLogRequest.setUserId(intUserId);
+            List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
+            jsonObject.put("usersChangeLogForm", userChangeLogVOList);
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 修改用户身份证
+     *
+     * @param request
+     * @return 进入用户详情页面
+     */
+    @ApiOperation(value = "会员管理", notes = "修改用户身份证")
+    @RequestMapping(value = "/modifyIdCard")
+    @ResponseBody
+    public AdminResult modifyIdCard(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminUserRecommendRequestBean requestBean) {
+        AdminUserRecommendRequest adminUserRecommendRequest = new AdminUserRecommendRequest();
+        BeanUtils.copyProperties(requestBean, adminUserRecommendRequest);
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        if(null!=adminSystemVO){
+            //当前登陆用户
+            adminUserRecommendRequest.setLoginUserId(adminSystemVO.getId());
+            adminUserRecommendRequest.setLoginUserName(adminSystemVO.getUsername());
+        }
+        int updFlg = userCenterService.updateUserIdCard(adminUserRecommendRequest);
+        if(updFlg<=0){
+            return new AdminResult<>(FAIL, "修改用户身份证失败");
+        }
+        //todo 修改身份证号后 发送更新客户信息MQ
+        return new AdminResult<>();
     }
 
     /**
@@ -258,162 +348,114 @@ public class UserCenterController {
      * @param response
      * @throws Exception
      */
-  /*  @RequestMapping(value = "exportusers")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) throws Exception {
+    @RequestMapping(value = "/exportusers")
+    public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "会员列表";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        // 需要输出的结果列表
-        // 封装查询条件
-        Map<String, Object> userMap = new HashMap<String, Object>();
-        String regionName = StringUtils.isNotEmpty(map.get("regionName")) ? map.get("regionName") : null;
-        String branchName = StringUtils.isNotEmpty(form.getBranchName()) ? form.getBranchName() : null;
-        String departmentName = StringUtils.isNotEmpty(form.getDepartmentName()) ? form.getDepartmentName() : null;
-        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-        String realName = StringUtils.isNotEmpty(form.getRealName()) ? form.getRealName() : null;
-        String mobile = StringUtils.isNotEmpty(form.getMobile()) ? form.getMobile() : null;
-        String recommendName = StringUtils.isNotEmpty(form.getRecommendName()) ? form.getRecommendName() : null;
-        String userRole = StringUtils.isNotEmpty(form.getUserRole()) ? form.getUserRole() : null;
-        String userProperty = StringUtils.isNotEmpty(form.getUserProperty()) ? form.getUserProperty() : null;
-        String accountStatusStr = StringUtils.isNotEmpty(form.getAccountStatus()) ? form.getAccountStatus() : null;
-        String userStatusStr = StringUtils.isNotEmpty(form.getUserStatus()) ? form.getUserStatus() : null;
-        String registPlatStr = StringUtils.isNotEmpty(form.getRegistPlat()) ? form.getRegistPlat() : null;
-        String is51Str = StringUtils.isNotEmpty(form.getIs51()) ? form.getIs51() : null;
-        String vipType = StringUtils.isNotEmpty(form.getVipType()) ? form.getVipType() : null;
-        String regTimeStart = StringUtils.isNotEmpty(form.getRegTimeStart()) ? form.getRegTimeStart() : null;
-        String regTimeEnd = StringUtils.isNotEmpty(form.getRegTimeEnd()) ? form.getRegTimeEnd() : null;
-
-        String instCodeSrch = StringUtils.isNotEmpty(form.getInstCodeSrch()) ? form.getInstCodeSrch() : null;
-
-        // 部门
-        String[] list = new String[] {};
-        if (Validator.isNotNull(form.getCombotreeSrch())) {
-            if (form.getCombotreeSrch().contains(StringPool.COMMA)) {
-                list = form.getCombotreeSrch().split(StringPool.COMMA);
-                form.setCombotreeListSrch(list);
-            } else {
-                list = new String[] { form.getCombotreeSrch() };
-                form.setCombotreeListSrch(list);
-            }
-        }
-        String[] combotreeListSrchStr = form.getCombotreeListSrch();
-        if (form.getRegTimeStart() != null) {
-            userMap.put("regTimeStart", regTimeStart);
-        }
-        if (form.getRegTimeEnd() != null) {
-            userMap.put("regTimeEnd", regTimeEnd);
-        }
-        userMap.put("regionName", regionName);
-        userMap.put("branchName", branchName);
-        userMap.put("departmentName", departmentName);
-        userMap.put("userName", userName);
-        userMap.put("realName", realName);
-        userMap.put("mobile", mobile);
-        userMap.put("recommendName", recommendName);
-        userMap.put("userRole", userRole);
-        userMap.put("userProperty", userProperty);
-        userMap.put("accountStatus", accountStatusStr);
-        userMap.put("userStatus", userStatusStr);
-        userMap.put("registPlat", registPlatStr);
-        userMap.put("is51", is51Str);
-        userMap.put("vipType", vipType);
-
-        userMap.put("instCodeSrch", instCodeSrch);
-
-        userMap.put("combotreeListSrch", combotreeListSrchStr);
-        List<AdminUserListCustomize> recordList = this.usersService.getRecordList(userMap, -1, -1);
+        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户来源", "用户名", "姓名", "性别", "年龄", "生日","身份证号", "户籍所在地", "手机号码", "会员类型", "用户角色", "用户属性", "推荐人", "51老用户", "用户状态","银行开户状态","银行开户时间","汇付开户状态", "注册平台", "注册时间", "注册所在地" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
         HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (recordList != null && recordList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < recordList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AdminUserListCustomize user = recordList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) { // 大区
-                        cell.setCellValue(user.getRegionName());
-                    } else if (celLength == 2) { // 分公司
-                        cell.setCellValue(user.getBranchName());
-                    } else if (celLength == 3) { // 团队
-                        cell.setCellValue(user.getDepartmentName());
-                    } else if (celLength == 4) { // 用户来源
-                        cell.setCellValue(user.getInstName());
-                    } else if (celLength == 5) {// 用户名
-                        cell.setCellValue(user.getUserName());
-                    } else if (celLength == 6) {// 姓名
-                        cell.setCellValue(user.getRealName());
-                    } else if (celLength == 7) {// 性别
-                        if ("1".equals(user.getSex())) {
-                            cell.setCellValue("男");
-                        } else if ("2".equals(user.getSex())) {
-                            cell.setCellValue("女");
-                        } else {
-                            cell.setCellValue("未知");
+        UserManagerRequest managerRequest = new UserManagerRequest();
+        BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
+        UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
+        if(null!=userManagerResponse){
+            List<UserManagerVO>recordList = userManagerResponse.getResultList();
+            if (recordList != null && recordList.size() > 0) {
+                int sheetCount = 1;
+                int rowNum = 0;
+                for (int i = 0; i < recordList.size(); i++) {
+                    rowNum++;
+                    if (i != 0 && i % 60000 == 0) {
+                        sheetCount++;
+                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                        rowNum = 1;
+                    }
+                    // 新建一行
+                    Row row = sheet.createRow(rowNum);
+                    // 循环数据
+                    for (int celLength = 0; celLength < titles.length; celLength++) {
+                        UserManagerVO user = recordList.get(i);
+                        // 创建相应的单元格
+                        Cell cell = row.createCell(celLength);
+                        if (celLength == 0) {// 序号
+                            cell.setCellValue(i + 1);
+                        } else if (celLength == 1) { // 大区
+                            cell.setCellValue(user.getRegionName());
+                        } else if (celLength == 2) { // 分公司
+                            cell.setCellValue(user.getBranchName());
+                        } else if (celLength == 3) { // 团队
+                            cell.setCellValue(user.getDepartmentName());
+                        } else if (celLength == 4) { // 用户来源
+                            cell.setCellValue(user.getInstName());
+                        } else if (celLength == 5) {// 用户名
+                            cell.setCellValue(user.getUserName());
+                        } else if (celLength == 6) {// 姓名
+                            cell.setCellValue(user.getRealName());
+                        } else if (celLength == 7) {// 性别
+                            if ("1".equals(user.getSex())) {
+                                cell.setCellValue("男");
+                            } else if ("2".equals(user.getSex())) {
+                                cell.setCellValue("女");
+                            } else {
+                                cell.setCellValue("未知");
+                            }
+                        } else if (celLength == 8) {// 年龄
+                            cell.setCellValue(this.getAge(user.getBirthday()));
+                        } else if (celLength == 9) {// 生日
+                            cell.setCellValue(user.getBirthday());
+                        } else if (celLength == 10) {// 身份证号
+                            cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdcard(),7));
+                        } else if (celLength == 11) {// 户籍所在地
+//                            cell.setCellValue(usersService.getAreaByIdCard(user.getIdcard()));
+                        } else if (celLength == 12) {// 手机号码
+                            cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getMobile(),3));
+                        } else if (celLength == 13) {// 会员类型
+//                            cell.setCellValue(user.getVipType());
+                        } else if (celLength == 14) {// 用户角色
+                            cell.setCellValue(user.getUserRole());
+                        } else if (celLength == 15) {// 用户属性
+                            cell.setCellValue(user.getUserProperty());
+                        } else if (celLength == 16) {// 推荐人
+                            cell.setCellValue(user.getRecommendName());
+                        } else if (celLength == 17) {// 51老用户
+//                            cell.setCellValue(user.getIs51());
+                        } else if (celLength == 18) {// 用户状态
+                            cell.setCellValue(user.getUserStatus());
+                        } else if (celLength == 19) {// 银行开户状态
+                            cell.setCellValue("1".equals(user.getBankOpenAccount())?"已开户":"未开户");
+                        } else if (celLength == 20) {// 银行开户时间
+                            cell.setCellValue(user.getBankOpenTime());
+                        } else if (celLength == 21) {// 开户状态
+                            cell.setCellValue("1".equals(user.getOpenAccount())?"已开户":"未开户");
+                        } else if (celLength == 22) {// 注册平台
+                            cell.setCellValue(user.getRegistPlat());
+                        } else if (celLength == 23) {// 注册时间
+                            cell.setCellValue(user.getRegTime());
+                        } else if (celLength == 24) {// 注册所在地
+                            cell.setCellValue(user.getRegistArea());
                         }
-                    } else if (celLength == 8) {// 年龄
-                        cell.setCellValue(this.getAge(user.getBirthday()));
-                    } else if (celLength == 9) {// 生日
-                        cell.setCellValue(user.getBirthday());
-                    } else if (celLength == 10) {// 身份证号
-                        cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdcard(), ManageUsersDefine.PERMISSION_HIDE_SHOW));
-                    } else if (celLength == 11) {// 户籍所在地
-                        cell.setCellValue(usersService.getAreaByIdCard(user.getIdcard()));
-                    } else if (celLength == 12) {// 手机号码
-                        cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getMobile(), ManageUsersDefine.PERMISSION_HIDE_SHOW));
-                    } else if (celLength == 13) {// 会员类型
-                        cell.setCellValue(user.getVipType());
-                    } else if (celLength == 14) {// 用户角色
-                        cell.setCellValue(user.getUserRole());
-                    } else if (celLength == 15) {// 用户属性
-                        cell.setCellValue(user.getUserProperty());
-                    } else if (celLength == 16) {// 推荐人
-                        cell.setCellValue(user.getRecommendName());
-                    } else if (celLength == 17) {// 51老用户
-                        cell.setCellValue(user.getIs51());
-                    } else if (celLength == 18) {// 用户状态
-                        cell.setCellValue(user.getUserStatus());
-                    } else if (celLength == 19) {// 银行开户状态
-                        cell.setCellValue("1".equals(user.getBankOpenAccount())?"已开户":"未开户");
-                    } else if (celLength == 20) {// 银行开户时间
-                        cell.setCellValue(user.getBankOpenTime());
-                    } else if (celLength == 21) {// 开户状态
-                        cell.setCellValue("1".equals(user.getOpenAccount())?"已开户":"未开户");
-                    } else if (celLength == 22) {// 注册平台
-                        cell.setCellValue(user.getRegistPlat());
-                    } else if (celLength == 23) {// 注册时间
-                        cell.setCellValue(user.getRegTime());
-                    } else if (celLength == 24) {// 注册所在地
-                        cell.setCellValue(user.getRegistArea());
                     }
                 }
             }
         }
-        // 导出
+         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-        LogUtil.endLog(ManageUsersDefine.THIS_CLASS, ManageUsersDefine.EXPORT_USERS_ACTION);*//*
-    }*/
+    }
 
+    public String getAge(String birthday) {
+        if (StringUtils.isBlank(birthday)) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        Date date = new Date();
+        String formatDate = sdf.format(date);
+        int age = Integer.parseInt(formatDate) - Integer.parseInt(birthday.substring(0, 4));
+        return String.valueOf(age);
+    }
     /**
      * 企业用户信息补录
      *
@@ -496,59 +538,5 @@ public class UserCenterController {
         ret = userCenterService.saveCompanyInfo(map);
         return ret;
     }
-
-
-    private UserManagerRequest serParamRequest(Map<String, Object> mapParam) {
-        UserManagerRequest request = new UserManagerRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-            if (mapParam.containsKey("regTimeStart")) {
-                request.setRegTimeStart(mapParam.get("regTimeStart").toString());
-            }
-            if (mapParam.containsKey("regTimeEnd")) {
-                request.setRegTimeEnd(mapParam.get("regTimeEnd").toString());
-            }
-            if (mapParam.containsKey("userName")) {
-                request.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("realName")) {
-                request.setRealName(mapParam.get("realName").toString());
-            }
-            if (mapParam.containsKey("mobile")) {
-                request.setMobile(mapParam.get("mobile").toString());
-            }
-            if (mapParam.containsKey("recommendName")) {
-                request.setRecommendName(mapParam.get("recommendName").toString());
-            }
-            if (mapParam.containsKey("userRole")) {
-                request.setUserRole(mapParam.get("userRole").toString());
-            }
-            if (mapParam.containsKey("userType")) {
-                request.setUserType(mapParam.get("userType").toString());
-            }
-            if (mapParam.containsKey("userProperty")) {
-                request.setUserProperty(mapParam.get("userProperty").toString());
-            }
-            if (mapParam.containsKey("accountStatus")) {
-                request.setAccountStatus(mapParam.get("accountStatus").toString());
-            }
-            if (mapParam.containsKey("userStatus")) {
-                request.setUserStatus(mapParam.get("userStatus").toString());
-            }
-            if (mapParam.containsKey("combotreeListSrch")) {
-                request.setCombotreeListSrch(mapParam.get("combotreeListSrch").toString());
-            }
-            if (mapParam.containsKey("customerId")) {
-                request.setCustomerId(mapParam.get("customerId").toString());
-            }
-            if (mapParam.containsKey("instCodeSrch")) {
-                request.setInstCodeSrch(mapParam.get("instCodeSrch").toString());
-            }
-            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                request.setLimit((Integer)mapParam.get("limit"));
-            }
-        }
-        return request;
-    }
-
 
 }

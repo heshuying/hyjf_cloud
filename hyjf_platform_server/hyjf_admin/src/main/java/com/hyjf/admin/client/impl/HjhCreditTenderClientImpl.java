@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.client.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,7 +12,10 @@ import org.springframework.web.client.RestTemplate;
 import com.hyjf.admin.client.HjhCreditTenderClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
+import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 /**
  * @author libin
@@ -28,6 +33,26 @@ public class HjhCreditTenderClientImpl implements HjhCreditTenderClient{
                 .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderListByParam", form, HjhCreditTenderResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
+        }
+		return null;
+	}
+
+	@Override
+	public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form) {
+		HjhCreditTenderResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/getHjhCreditTenderListByParamWithOutPage", form, HjhCreditTenderResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form) {
+		HjhDebtCreditTenderResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhcredittender/selectHjhCreditTenderRecord", form, HjhDebtCreditTenderResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
         }
 		return null;
 	}

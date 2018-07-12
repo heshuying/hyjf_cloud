@@ -344,7 +344,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 List<BorrowRepayPlanCsVO> repayPlanLists = repayPlanService.getRepayPlan(borrowNid);
                 BorrowRepayPlanCsVO borrowRepayPlan = repayPlanLists.get(0);
                 BorrowRepayPlanBean borrowRepayPlanBean = new BorrowRepayPlanBean();
-                if (borrowRepayPlan.getRepayTime().equals("-")) {
+                if ("-".equals(borrowRepayPlan.getRepayTime())) {
                     borrowRepayPlanBean.setTime("--");
                 } else {
                     borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
@@ -359,7 +359,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     for (int i = 0; i < repayPlanLists.size(); i++) {
                         borrowRepayPlan = repayPlanLists.get(i);
                         BorrowRepayPlanBean borrowRepayPlanBean = new BorrowRepayPlanBean();
-                        if (borrowRepayPlan.getRepayTime().equals("-")) {
+                        if ("-".equals(borrowRepayPlan.getRepayTime())) {
                             borrowRepayPlanBean.setTime("--");
                         } else {
                             borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());

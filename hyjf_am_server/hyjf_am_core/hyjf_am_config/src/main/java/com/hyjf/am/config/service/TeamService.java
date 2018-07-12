@@ -3,7 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
+import java.util.List;
+
 import com.hyjf.am.config.dao.model.auto.Team;
+import com.hyjf.am.resquest.admin.TeamRequest;
 
 /**
  * @author fuqiang
@@ -16,4 +19,34 @@ public interface TeamService {
      * @return
      */
     Team getFounder();
+
+    /**
+     * 根据条件查询公司管理-团队介绍
+     *
+     * @param request
+     * @return
+     */
+    List<Team> searchAction(TeamRequest request);
+
+    /**
+     * 添加公司管理-团队介绍
+     *
+     * @param request
+     */
+    void insertAction(TeamRequest request);
+
+    /**
+     * 修改公司管理-团队介绍
+     *
+     * @param request
+     */
+    void updateAction(TeamRequest request);
+
+    /**
+     * 根据id查询公司管理-团队介绍
+     *
+     * @param id
+     * @return
+     */
+    Team getRecord(Integer id);
 }

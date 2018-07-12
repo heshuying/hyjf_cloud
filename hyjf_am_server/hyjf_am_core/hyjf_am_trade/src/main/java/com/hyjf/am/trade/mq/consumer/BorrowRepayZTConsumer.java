@@ -194,7 +194,7 @@ public class BorrowRepayZTConsumer extends Consumer{
 	        		toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com","zhangjinpeng@hyjf.com" };
 	        	}
 	        	MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
-	        			MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+	        			MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 
 				try {
 					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(mailMessage)));

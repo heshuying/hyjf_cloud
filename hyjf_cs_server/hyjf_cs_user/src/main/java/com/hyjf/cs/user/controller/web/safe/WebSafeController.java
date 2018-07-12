@@ -243,8 +243,8 @@ public class WebSafeController extends BaseUserController {
         String value = param.get("value");
         // 加入验证
         CheckUtil.check(StringUtils.isNotBlank(key), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(key.equals("rechargeSms") || key.equals("withdrawSms") || key.equals("investSms") || key.equals("recieveSms"), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(value.equals("0") || value.equals("1"), MsgEnum.STATUS_CE000001);
+        CheckUtil.check("rechargeSms".equals(key) || "withdrawSms".equals(key) || "investSms".equals(key) || "recieveSms".equals(key), MsgEnum.STATUS_CE000001);
+        CheckUtil.check("0".equals(value) || "1".equals(value), MsgEnum.STATUS_CE000001);
         UserVO user = safeService.getUsersById(userId);
         safeService.updateSmsConfig(userId, key, Integer.parseInt(value), user);
         /**

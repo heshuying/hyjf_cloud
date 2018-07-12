@@ -6,7 +6,7 @@ import com.hyjf.am.resquest.admin.CouponTenderRequest;
 import com.hyjf.am.trade.controller.admin.AdminAccountDetailController;
 import com.hyjf.am.trade.service.admin.coupon.CouponTenderService;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import org.slf4j.Logger;
@@ -93,7 +93,7 @@ public class CouponTenderController {
     public CouponTenderResponse getCouponRecoverCustomize(@RequestBody @Valid Map<String, Object> paramMap) {
         logger.info("---hztcouponrecover by param---  " + JSONObject.toJSON(paramMap));
         CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
-        List<CouponRecoverVo> list = couponTenderService.getCouponRecoverCustomize(paramMap);
+        List<CouponRecoverVO> list = couponTenderService.getCouponRecoverCustomize(paramMap);
         couponTenderResponse.setCouponRecoverList(list);
         return couponTenderResponse;
     }
@@ -160,7 +160,7 @@ public class CouponTenderController {
     public CouponTenderResponse getHjhCouponRecoverCustomize(@RequestBody @Valid Map<String, Object> paramMap) {
         logger.info("---hjhcouponrecover by param---  " + JSONObject.toJSON(paramMap));
         CouponTenderResponse couponTenderResponse = new CouponTenderResponse();
-        List<CouponRecoverVo> list = couponTenderService.getHjhCouponRecoverCustomize(paramMap);
+        List<CouponRecoverVO> list = couponTenderService.getHjhCouponRecoverCustomize(paramMap);
         couponTenderResponse.setCouponRecoverList(list);
         return couponTenderResponse;
     }

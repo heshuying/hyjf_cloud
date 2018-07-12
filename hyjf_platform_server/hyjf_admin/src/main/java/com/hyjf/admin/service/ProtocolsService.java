@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.service.impl;
+package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
