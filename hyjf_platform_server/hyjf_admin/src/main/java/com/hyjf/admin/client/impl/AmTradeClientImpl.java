@@ -11,9 +11,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import org.apache.commons.collections.CollectionUtils;
@@ -1050,5 +1052,84 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+    /**
+     * 结束债权列表
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public List<BankCreditEndVO> getCreditEndList(BankCreditEndRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/getlist";
+        BankCreditEndResponse response=restTemplate.postForEntity(url,requestBean,BankCreditEndResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 结束债权总记录数
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int getCreditEndCount(BankCreditEndRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/getcount";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * 根据orderId获取
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public BankCreditEndVO getCreditEndByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/getby_orderid" + orderId;
+        BankCreditEndResponse response=restTemplate.getForEntity(url,BankCreditEndResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新结束债权记录
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateBankCreditEnd(BankCreditEndVO requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/update";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * 批次恢复为初始状态
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateCreditEndForInitial(BankCreditEndVO requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/update_initial";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * yangchangwei
+     * 根据Borrownid 获取放款任务表
+     * @param id
+     * @return
+     */
+    @Override
+    public BorrowApicronResponse getBorrowApicronByID(String id) {
+        BorrowApicronResponse response = restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID", id, BorrowApicronResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
 
 }

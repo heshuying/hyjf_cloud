@@ -30,11 +30,23 @@ public interface AdminAccountDetailCustomizeMapper {
      * @return
      */
     int queryAccountDetailCount(Map<String,Object> mapParam);
-    //查询出20170120还款后,交易明细有问题的用户ID
+    /**
+     * 查询出20170120还款后,交易明细有问题的用户ID
+     */
     List<AdminAccountDetailDataRepairCustomize> queryAccountDetailErrorUserList();
-    // 查询交易明细最小的id
+
+    /**
+     * 查询交易明细最小的id
+     * @param userId
+     * @return
+     */
     List<AdminAccountDetailDataRepairCustomize> queryAccountDetailIdByUserId(int userId);
-    // 根据查询用交易类型查询用户操作金额
+
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradValue
+     * @return
+     */
     List<AccountTrade> selectAccountTrade(String tradValue);
 
 }
