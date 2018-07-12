@@ -353,7 +353,7 @@ public class BankCardManagerController extends BaseController {
         return new AdminResult<ListResult<BankCardLogVO>>(ListResult.build(bankCardLogResponse.getResultList(), bankCardLogResponse.getCount()));
     }
     @ApiOperation(value = "銀行卡管理", notes = "用户银行卡操作记录导出")
-    @PostMapping(value = "/exportnewbankcard")
+    @PostMapping(value = "/exportbankcardlog")
     public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
 
         // 表格sheet名称

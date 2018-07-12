@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;
 
 import java.util.List;
 
@@ -29,4 +31,8 @@ public interface AccountWithdrawService {
     int getBorrowTender(Integer userId);
 
     List<AccountRecharge> getTodayRecharge(Integer userId);
+
+    int getWithdrawRecordCount(WithdrawBeanRequest request);
+
+    List<WithdrawCustomize> getWithdrawRecordList(WithdrawBeanRequest request);
 }

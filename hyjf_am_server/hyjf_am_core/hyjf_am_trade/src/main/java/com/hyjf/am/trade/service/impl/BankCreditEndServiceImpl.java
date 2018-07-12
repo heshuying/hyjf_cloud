@@ -3,16 +3,17 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BankCreditEndService;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author liubin
@@ -60,4 +61,112 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
 
         return this.bankCreditEndMapper.insertSelective(record);
     }
+
+    /**
+     * 债权结束异常列表
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public List<BankCreditEnd> getCreditEndList(BankCreditEndRequest requestBean){
+        BankCreditEndExample example = new BankCreditEndExample();
+        BankCreditEndExample.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
+            criteria.andUserIdEqualTo(Integer.parseInt(requestBean.getUserIdSrch()));
+        }
+        if(StringUtils.isNotBlank(requestBean.getTenderUserIdSrch())){
+            criteria.andTenderUserIdEqualTo(Integer.parseInt(requestBean.getTenderUserIdSrch()));
+        }
+        if(StringUtils.isNotBlank(requestBean.getBatchNoSrch())){
+            criteria.andBatchNoEqualTo(requestBean.getBatchNoSrch());
+        }
+        if(StringUtils.isNotBlank(requestBean.getOrderIdSrch())){
+            criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
+        }
+        if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
+            criteria.andStateEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
+        }
+        if(requestBean.getLimitStart() != null && requestBean.getLimitStart() >=0){
+            example.setLimitStart(requestBean.getLimitStart());
+        }
+        if(requestBean.getLimitEnd() != null && requestBean.getLimitEnd() >=0){
+            example.setLimitEnd(requestBean.getLimitEnd());
+        }
+
+        return bankCreditEndMapper.selectByExample(example);
+    }
+
+    /**
+     * 债权结束异常总记录数
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public Integer getCreditEndCount(BankCreditEndRequest requestBean){
+        BankCreditEndExample example = new BankCreditEndExample();
+        BankCreditEndExample.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
+            criteria.andUserIdEqualTo(Integer.parseInt(requestBean.getUserIdSrch()));
+        }
+        if(StringUtils.isNotBlank(requestBean.getTenderUserIdSrch())){
+            criteria.andTenderUserIdEqualTo(Integer.parseInt(requestBean.getTenderUserIdSrch()));
+        }
+        if(StringUtils.isNotBlank(requestBean.getBatchNoSrch())){
+            criteria.andBatchNoEqualTo(requestBean.getBatchNoSrch());
+        }
+        if(StringUtils.isNotBlank(requestBean.getOrderIdSrch())){
+            criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
+        }
+        if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
+            criteria.andStateEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
+        }
+
+        return bankCreditEndMapper.countByExample(example);
+    }
+
+    /**
+     * 更新
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateBankCreditEnd(BankCreditEnd bankCreditEnd) {
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andOrderIdEqualTo(bankCreditEnd.getOrderId());
+        bankCreditEnd.setUpdateTime(GetDate.getNowTime());
+        return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
+    }
+
+    /**
+     * 通过orderId检索
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public BankCreditEnd selectByOrderId(String orderId) {
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);//订单号
+        List<BankCreditEnd> list = this.bankCreditEndMapper.selectByExample(example);
+        if (list != null && list.size() == 1){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 批次恢复为初始状态
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateCreditEndForInitial(BankCreditEnd bankCreditEnd) {
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andOrderIdEqualTo(bankCreditEnd.getOrderId());//订单号
+        example.createCriteria().andStatusGreaterThanOrEqualTo(10);//订单状态为失败
+        bankCreditEnd.setStatus(0);//批次状态
+        bankCreditEnd.setOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(bankCreditEnd.getTenderUserId())));//批次状态
+        bankCreditEnd.setUpdateTime(GetDate.getNowTime());
+        return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
+    }
+
 }

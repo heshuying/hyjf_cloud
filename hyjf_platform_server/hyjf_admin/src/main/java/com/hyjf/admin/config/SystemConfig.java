@@ -36,7 +36,20 @@ public class SystemConfig {
     @Value("${hyjf.chinapnr.mercustid}")
     private String merCustId;
 
-    public String getMerCustId() {
+    @Value("${hyjf.bank.merrp.account}")
+    private String BANK_MERRP_ACCOUNT;
+    
+    
+    
+    public String getBANK_MERRP_ACCOUNT() {
+		return BANK_MERRP_ACCOUNT;
+	}
+
+	public void setBANK_MERRP_ACCOUNT(String bANK_MERRP_ACCOUNT) {
+		BANK_MERRP_ACCOUNT = bANK_MERRP_ACCOUNT;
+	}
+
+	public String getMerCustId() {
         return merCustId;
     }
 

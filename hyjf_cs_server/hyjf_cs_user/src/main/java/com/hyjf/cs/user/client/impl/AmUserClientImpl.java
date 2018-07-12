@@ -14,6 +14,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -550,7 +551,9 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setTrueName(bean.getName());
 		request.setIdNo(bean.getIdNo());
 		request.setMobile(bean.getMobile());
-
+		// 设置角色
+		/** 开户角色属性   1：出借角色2：借款角色3：代偿角色*/
+		request.setRoleId(Integer.parseInt(bean.getIdentity()));
 		Integer result = restTemplate
 				.postForEntity(userService+"/bankopen/updateUserAccount", request, Integer.class).getBody();
 		if (result != null) {

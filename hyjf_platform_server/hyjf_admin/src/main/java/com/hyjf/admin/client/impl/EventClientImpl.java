@@ -3,7 +3,9 @@
  */
 package com.hyjf.admin.client.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.beans.request.EventRequestBean;
 import com.hyjf.admin.client.EventClient;
@@ -16,23 +18,35 @@ import com.hyjf.am.vo.config.EventVO;
  */
 @Service
 public class EventClientImpl implements EventClient {
+	@Autowired
+	private RestTemplate restTemplate;
+
 	@Override
 	public EventResponse searchAction(EventRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentevent/searchaction",
+				requestBean, EventResponse.class);
 	}
 
 	@Override
 	public EventResponse insertAction(EventRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentevent/insertaction",
+				requestBean, EventResponse.class);
 	}
 
 	@Override
 	public EventResponse updateAction(EventRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentevent/updateaction",
+				requestBean, EventResponse.class);
 	}
 
 	@Override
 	public EventVO getRecord(Integer id) {
+		EventResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/content/contentevent/getrecord/" + id,
+				EventResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
 		return null;
 	}
 }

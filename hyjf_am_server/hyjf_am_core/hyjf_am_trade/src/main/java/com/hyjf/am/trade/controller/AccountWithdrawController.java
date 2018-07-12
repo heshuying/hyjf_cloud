@@ -3,9 +3,13 @@ package com.hyjf.am.trade.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
+import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;
+import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
@@ -161,6 +165,31 @@ public class AccountWithdrawController extends BaseController {
             }
         }
         response.setResultList(accountRechargeVOS);
+        return response;
+    }
+
+    /**
+     * 获取提现列表数量
+     * @param request
+     * @return
+     */
+    @PostMapping("/getWithdrawRecordCount")
+    public int getWithdrawRecordCount(@RequestBody WithdrawBeanRequest request){
+        return accountWithdrawService.getWithdrawRecordCount(request);
+    }
+
+    /**
+     * 获取提现列表
+     * @param request
+     * @return
+     */
+    @PostMapping("/getWithdrawRecordList")
+    public WithdrawCustomizeResponse getWithdrawRecordList(@RequestBody WithdrawBeanRequest request){
+        WithdrawCustomizeResponse response = new WithdrawCustomizeResponse();
+        List<WithdrawCustomize> withdrawCustomizes =accountWithdrawService.getWithdrawRecordList(request);
+        if (CollectionUtils.isNotEmpty(withdrawCustomizes)){
+            response.setResultList(CommonUtils.convertBeanList(withdrawCustomizes,WithdrawCustomizeVO.class));
+        }
         return response;
     }
 
