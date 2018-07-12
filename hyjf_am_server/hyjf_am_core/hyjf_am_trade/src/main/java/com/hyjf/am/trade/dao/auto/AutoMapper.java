@@ -465,6 +465,7 @@ public class AutoMapper {
     @Resource
     protected StzhWhiteListMapper sTZHWhiteListMapper;
 
-
+    @Resource
+    protected AccountWebListMapper accountWebListMapper;
 }
 

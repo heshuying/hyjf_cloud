@@ -84,7 +84,7 @@
 		<result column="user_content" property="userContent" />
 	</resultMap>
 
-	<resultMap id="selectCouponRecoverMap" type="com.hyjf.am.vo.admin.coupon.CouponRecoverVo">
+	<resultMap id="selectCouponRecoverMap" type="com.hyjf.am.vo.admin.coupon.CouponRecoverVO">
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
 		<result column="transfer_time" property="transferTime" jdbcType="VARCHAR" />

@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -142,6 +143,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject handRecharge(Integer loginUserId,HttpServletRequest request, PlatformTransferRequest platformTransferRequest) {
         JSONObject result = new JSONObject();
         AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
@@ -248,6 +250,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         return result;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public BigDecimal getBankBalance(Integer userId, String accountId) {
         // 账户可用余额
         BigDecimal balance = BigDecimal.ZERO;
@@ -290,6 +293,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
      * @param accountId 银行账户
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public int updateHandRechargeRecord(PlatformTransferRequest platformTransferRequest, BankCallBean bankBean, UserInfoCustomizeVO userInfo, String accountId,String loginUserName) {
         int ret = 0;
 

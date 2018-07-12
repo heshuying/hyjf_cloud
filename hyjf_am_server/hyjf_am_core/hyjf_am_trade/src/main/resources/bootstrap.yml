@@ -1,6 +1,14 @@
 spring:
   application:
     name: AM-TRADE
+  cloud:
+      config:
+        enabled: true # 默认开启
+        label: master # 指明远程仓库的分支
+        profile: test #
+        discovery:
+          enabled: true
+          service-id: CONFIG-SERVER
   boot:
     admin:
       client:

@@ -1,9 +1,6 @@
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderCpnMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CouponRealTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CouponTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.trade.CouponCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
@@ -41,7 +38,8 @@ public class CouponServiceImpl implements CouponService {
 	private CouponRealTenderMapper couponRealTenderMapper;
 	@Autowired
 	private CouponUserMapper couponUserMapper;
-
+	@Autowired
+	private CouponRecoverMapper couponRecoverMapper;
 	/**
 	 * @param couponGrantId
 	 * @param userId
@@ -109,5 +107,31 @@ public class CouponServiceImpl implements CouponService {
 		paraMap.put("couponGrantId",couponGrantId);
 		BorrowTenderCpn cpn = couponCustomizeMapper.getCouponTenderByTender(paraMap);
 		return cpn;
+	}
+
+	/**
+	 * 获取优惠券还款记录
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public CouponRecover getCouponRecoverByPrimaryKey(Integer id) {
+		return couponRecoverMapper.selectByPrimaryKey(id);
+	}
+
+	/**
+	 * 取得优惠券投资信息
+	 * @param nid
+	 * @return
+	 */
+	@Override
+	public BorrowTenderCpn getCouponTenderInfoByNid(String nid) {
+		BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+		example.createCriteria().andNidEqualTo(nid);
+		List<BorrowTenderCpn> btList = this.borrowTenderCpnMapper.selectByExample(example);
+		if(btList!=null&&btList.size()>0){
+			return btList.get(0);
+		}
+		return null;
 	}
 }

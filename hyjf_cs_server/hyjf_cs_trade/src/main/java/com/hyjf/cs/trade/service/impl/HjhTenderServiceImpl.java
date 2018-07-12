@@ -9,11 +9,19 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -89,6 +97,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
     @Autowired
     private CouponUserClient couponUserClient;
+    @Autowired
+    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
+    @Autowired
+    private UtmRegProducer utmRegProducer;
+    @Autowired
+    private HjhCouponTenderProducer hjhCouponTenderProducer;
+
 
     /**
      * @param request
@@ -102,6 +117,17 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
+        String key = RedisConstants.HJH_TENDER_REPEAT + userId;
+        boolean checkTender = RedisUtils.tranactionSet(key, RedisConstants.TENDER_OUT_TIME);
+        if(!checkTender){
+            // 用户正在投资
+            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
+        }
+        if (StringUtils.isEmpty(request.getBorrowNid())) {
+            // 项目编号不能为空
+            throw new ReturnMessageException(MsgEnum.STATUS_CE000013);
+        }
+
         if(request.getPlatform()==null){
             // 投资平台不能为空
             throw new ReturnMessageException(MsgEnum.STATUS_ZC000018);
@@ -123,15 +149,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_CLOSE);
         }
         logger.info("加入计划投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        // 先检查redis  看用户是否重复投资
-        boolean checkToken = checkRedisToken(request);
-        if (!checkToken) {
-            // 用户正在加入计划
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_IN_PROGRESS);
-        }
-        // 设置redis 的值  防重校验
-        String redisValue = GetDate.getCalendar().getTimeInMillis() + GetCode.getRandomCode(5);
-        RedisUtils.set(RedisConstants.HJH_TENDER_REPEAT + userId, redisValue, 300);
         // 查询用户信息
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         UserVO user = amUserClient.findUserById(userId);
@@ -277,7 +294,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
-            couponService.couponTender(request, plan, account, cuc, tenderAccount);
+            couponService.couponTender(request, plan,  cuc, userId);
             // 计算收益
             Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
             result.setData(tenderEarnings);
@@ -392,10 +409,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String planOrderId = GetOrderIdUtils.getOrderId0(userId);
         int nowTime = GetDate.getNowTime10();
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-        BigDecimal planApr = plan.getExpectApr();// 预期年利率
-        Integer planPeriod = plan.getLockPeriod();// 周期
-        String borrowStyle = plan.getBorrowStyle();// 还款方式
-        BigDecimal earnings = BigDecimal.ZERO;// 预期收益
+        // 预期年利率
+        BigDecimal planApr = plan.getExpectApr();
+        // 周期
+        Integer planPeriod = plan.getLockPeriod();
+        // 还款方式
+        String borrowStyle = plan.getBorrowStyle();
+        // 预期收益
+        BigDecimal earnings = BigDecimal.ZERO;
         if ("endday".equals(borrowStyle)) {
             // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷365*锁定期；
             earnings = DuePrincipalAndInterestUtils
@@ -409,7 +430,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         }
         // 当大于等于100时 取百位 小于100 时 取十位
-        BigDecimal accountDecimal = new BigDecimal(accountStr);//用户投资金额
+        //用户投资金额
+        BigDecimal accountDecimal = new BigDecimal(accountStr);
         /*(1)汇计划加入明细表插表开始*/
         // 处理汇计划加入明细表(以下涵盖所有字段)
         HjhAccedeVO planAccede = new HjhAccedeVO();
@@ -417,30 +439,49 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         planAccede.setPlanNid(request.getBorrowNid());
         planAccede.setUserId(userId);
         planAccede.setUserName(request.getUser().getUsername());
-        planAccede.setUserAttribute(userInfo.getAttribute());//用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
-        planAccede.setAccedeAccount(accountDecimal);// 加入金额
-        planAccede.setAlreadyInvest(BigDecimal.ZERO);//已投资金额(投资时维护)
+        //用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+        planAccede.setUserAttribute(userInfo.getAttribute());
+        // 加入金额
+        planAccede.setAccedeAccount(accountDecimal);
+        //已投资金额(投资时维护)
+        planAccede.setAlreadyInvest(BigDecimal.ZERO);
         planAccede.setClient(Integer.parseInt(request.getPlatform()));
-        planAccede.setOrderStatus(0);//0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 99 自动投资异常(投资时维护)
-        planAccede.setCountInterestTime(0);//计息时间(最后放款时维护)
-        planAccede.setSendStatus(0);//协议发送状态0未发送 1已发送
+        //0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 99 自动投资异常(投资时维护)
+        planAccede.setOrderStatus(0);
+        //计息时间(最后放款时维护)
+        planAccede.setCountInterestTime(0);
+        //协议发送状态0未发送 1已发送
+        planAccede.setSendStatus(0);
         planAccede.setLockPeriod(planPeriod);
-        planAccede.setCommissionStatus(0);//提成计算状态:0:未计算,1:已计算
-        planAccede.setAvailableInvestAccount(accountDecimal);//可投金额初始与加入金额一致
-        planAccede.setWaitTotal(BigDecimal.ZERO);//(投资时维护)
-        planAccede.setWaitCaptical(BigDecimal.ZERO);//(投资时维护)
-        planAccede.setWaitInterest(BigDecimal.ZERO);//(投资时维护)
-        planAccede.setReceivedTotal(BigDecimal.ZERO);//(退出时维护)
-        planAccede.setReceivedInterest(BigDecimal.ZERO);//(退出时维护)
-        planAccede.setReceivedCapital(BigDecimal.ZERO);//(退出时维护)
-        planAccede.setQuitTime(0);//(退出时维护)
-        planAccede.setLastPaymentTime(0);//最后回款时间(复审时维护)
-        planAccede.setAcctualPaymentTime(0);//实际回款时间(退出时维护)
-        planAccede.setShouldPayTotal(accountDecimal.add(earnings));//应还总额 = 应还本金 +应还利息
+        //提成计算状态:0:未计算,1:已计算
+        planAccede.setCommissionStatus(0);
+        //可投金额初始与加入金额一致
+        planAccede.setAvailableInvestAccount(accountDecimal);
+        //(投资时维护)
+        planAccede.setWaitTotal(BigDecimal.ZERO);
+        //(投资时维护)
+        planAccede.setWaitCaptical(BigDecimal.ZERO);
+        //(投资时维护)
+        planAccede.setWaitInterest(BigDecimal.ZERO);
+        //(退出时维护)
+        planAccede.setReceivedTotal(BigDecimal.ZERO);
+        //(退出时维护)
+        planAccede.setReceivedInterest(BigDecimal.ZERO);
+        //(退出时维护)
+        planAccede.setReceivedCapital(BigDecimal.ZERO);
+        //(退出时维护)
+        planAccede.setQuitTime(0);
+        //最后回款时间(复审时维护)
+        planAccede.setLastPaymentTime(0);
+        //实际回款时间(退出时维护)
+        planAccede.setAcctualPaymentTime(0);
+        //应还总额 = 应还本金 +应还利息
+        planAccede.setShouldPayTotal(accountDecimal.add(earnings));
         planAccede.setShouldPayCapital(accountDecimal);
         planAccede.setShouldPayInterest(earnings);
         planAccede.setCreateUser(userId);
-        planAccede.setDelFlag(0);//初始未未删除
+        //初始未未删除
+        planAccede.setDelFlag(0);
         // 给加入明细用的
         request.setPlanOrderId(planOrderId);
         request.setEarnings(earnings);
@@ -461,10 +502,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
                     planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
                     planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
-                    logger.info("InviteUserName: " + userInfoCustomize.getUserName());
-                    logger.info("InviteUserRegionname: " + userInfoCustomize.getRegionName());
-                    logger.info("InviteUserBranchname: " + userInfoCustomize.getBranchName());
-                    logger.info("InviteUserDepartmentname: " + userInfoCustomize.getDepartmentName());
                 }
             } else if (userInfo.getAttribute() == 2 || userInfo.getAttribute() == 3) {
                 // 查找用户推荐人详情信息
@@ -483,38 +520,42 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 插入汇计划加入明细表
         boolean trenderFlag = amBorrowClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
-        if (trenderFlag) {//加入明细表插表成功的前提下，继续
+        if (trenderFlag) {
+            //加入明细表插表成功的前提下，继续
             //crm投资推送
             // TODO: 2018/6/22  crm投资推送
            /* rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
                     RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(planAccede));*/
-            // 不用更新用户是不是新手  通过查询获得
-            /*UserVO user = amUserClient.findUserById(userId);
-            if (user != null) {
-                if (user.getInvestflag() == 0) {
-                    user.setInvestflag(1);
-                    boolean updateUserFlag = amUserClient.updateByPrimaryKeySelective(user);
-                }
-            }*/
             // 更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 开始
             this.updateUtm(request, plan);
         }
         // 优惠券投资开始
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId != 0) {
+            logger.info("开始优惠券投资,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);
             // 优惠券投资校验
             try {
-                // 检查优惠券能用不
-                logger.info("优惠券投资校验开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
-                Map<String, String> validateMap = couponService.validateCoupon(userId, accountStr, couponGrantId,
-                        request.getPlatform(), plan.getLockPeriod(),plan.getCouponConfig());
-                if (MapUtils.isEmpty(validateMap)) {
-                    // 校验通过 进行优惠券投资投资
-                    logger.info("优惠券投资校验成功,userId{},券为:{}", userId, couponGrantId);
-                    this.couponTender(request, plan);
-                } else {
-                    logger.info("优惠券投资校验失败返回结果{},userId{},券为:{}", validateMap.get("statusDesc"), userId, couponGrantId);
-                }
+                // 开始使用优惠券
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mqMsgId", GetCode.getRandomCode(10));
+                // 真实投资金额
+                params.put("money", accountStr);
+                // 借款项目编号
+                params.put("borrowNid", plan.getPlanNid());
+                // 平台
+                params.put("platform", request.getPlatform());
+                // 优惠券id
+                params.put("couponGrantId", couponGrantId+"");
+                // ip
+                params.put("ip", request.getIp());
+                // 真实投资订单号
+                params.put("ordId", request.getOrderId());
+                // 用户编号
+                params.put("userId", userId+"");
+                params.put("account", request.getAccount());
+                params.put("mainTenderNid", request.getMainTenderNid());
+                hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -537,29 +578,33 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 更新渠道统计用户累计投资 从mongo里面查询
             AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
             if (appChannelStatisticsDetails != null) {
-                // TODO: 2018/6/22  发送消息到mq
-                // appChannelStatisticsDetails != null && appChannelStatisticsDetails.size() == 1) {
-              /*  AppChannelStatisticsDetail channelDetail = appChannelStatisticsDetails.get(0);
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("id", channelDetail.getId());
                 // 认购本金
-                params.put("accountDecimal", accountDecimal);
+                params.put("accountDecimal", request.getAccountDecimal());
                 // 投资时间
-                params.put("investTime", nowTime);
+                params.put("investTime", request.getNowTime());
                 // 项目类型
                 params.put("projectType", "汇计划");
                 // 首次投标项目期限
-                String investProjectPeriod = debtPlan.getLockPeriod() + "天";
-                params.put("investProjectPeriod", investProjectPeriod);
-                // 更新渠道统计用户累计投资
-                if (users.getInvestflag() == 1) {
-                    this.appChannelStatisticsDetailCustomizeMapper.updateAppChannelStatisticsDetail(params);
-                } else if (users.getInvestflag() == 0) {
-                    // 更新首投投资
-                    this.appChannelStatisticsDetailCustomizeMapper.updateFirstAppChannelStatisticsDetail(params);
+                String investProjectPeriod = "";
+                // 还款方式
+                String borrowStyle = plan.getBorrowStyle();
+                if ("endday".equals(borrowStyle)) {
+                    investProjectPeriod = plan.getLockPeriod() + "天";
+                } else {
+                    investProjectPeriod = plan.getLockPeriod() + "月";
                 }
-                logger.info("用户:"+ userId+ "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号："+ planAccede.getAccedeOrderId());
-           */
+                params.put("investProjectPeriod", investProjectPeriod);
+                //根据investFlag标志位来决定更新哪种投资
+                params.put("investFlag", checkIsNewUserCanInvest(request.getUser().getUserId()));
+                //压入消息队列
+                try {
+                    appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                    logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+                }
             } else {
                 // 更新huiyingdai_utm_reg的首投信息
                 UtmRegVO utmReg = amUserClient.findUtmRegByUserId(request.getUser().getUserId());
@@ -572,8 +617,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     // 项目类型
                     params.put("projectType", "汇计划");
                     String investProjectPeriod = "";
-                    // 首次投标项目期限
-                    String borrowStyle = plan.getBorrowStyle();// 还款方式
+                    // 首次投标项目期限 // 还款方式
+                    String borrowStyle = plan.getBorrowStyle();
                     if ("endday".equals(borrowStyle)) {
                         investProjectPeriod = plan.getLockPeriod() + "天";
                     } else {
@@ -582,29 +627,19 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     // 首次投标项目期限
                     params.put("investProjectPeriod", investProjectPeriod);
                     // 更新渠道统计用户累计投资
-                    if (users.getInvestflag() == 0) {
+                    if(this.checkIsNewUserCanInvest(request.getUser().getUserId())){
                         // 更新huiyingdai_utm_reg的首投信息
-                        boolean updateUtmFlag = amUserClient.updateFirstUtmReg(params);
+                        try {
+                            utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        } catch (MQException e) {
+                            e.printStackTrace();
+                            logger.error("更新huiyingdai_utm_reg的首投信息失败");
+                        }
                     }
                 }
             }
         }
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
-    }
-
-    /**
-     * 进行优惠券投资
-     *
-     * @param request
-     * @param plan
-     */
-    private void couponTender(TenderRequest request, HjhPlanVO plan) {
-        String accountStr = request.getAccount();
-        Integer userId = request.getUser().getUserId();
-        Integer couponGrantId = request.getCouponGrantId();
-        CouponUserVO cuc = couponClient.getCouponUser(request.getCouponGrantId(), userId);
-        logger.info("优惠券投资开始,userId{},平台{},券为:{}", userId, request.getPlatform(), couponGrantId);
-        couponService.couponTender(request, plan, request.getBankOpenAccount(), cuc, request.getTenderAccount());
     }
 
     /**
@@ -776,23 +811,4 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         this.checkEvaluation(user);
     }
 
-    /**
-     * @Description 检查redis里面的缓存  用户是否能投资
-     * @Author sunss
-     * @Version v0.1
-     * @Date 2018/6/19 10:38
-     */
-    private boolean checkRedisToken(TenderRequest request) {
-        String token_ = "";
-        if (RedisUtils.exists(RedisConstants.HJH_TENDER_REPEAT + request.getUser().getUserId())) {
-            // 如果已经有了
-            String redisTenderToken = RedisUtils.get(token_ + request.getUser().getUserId());
-            if (!redisTenderToken.equals(request.getTenderToken())) {
-                logger.info("用户已经加入计划userId:{},ip:{},ip{},平台{}", request.getUser().getUserId(), request.getIp(), request.getPlatform());
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

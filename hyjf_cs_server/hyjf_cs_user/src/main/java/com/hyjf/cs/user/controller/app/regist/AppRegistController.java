@@ -4,25 +4,34 @@
 package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.util.GetJumpCommand;
+import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @author zhangqingqing
@@ -30,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "app端用户注册接口")
 @RestController
-@RequestMapping("/app/bank/user/")
+@RequestMapping("/app/user/bank/")
 public class AppRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);
@@ -44,43 +53,88 @@ public class AppRegistController extends BaseUserController {
     /**
      * 注册
      * @param key
-     * @param register
      * @param request
      * @return
+     * @throws UnsupportedEncodingException
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public AppResult<WebViewUserVO> register(@RequestHeader String key, @RequestBody RegisterRequest register, HttpServletRequest request) {
-        logger.info("app端注册接口, register is :{}", JSONObject.toJSONString(register));
-        AppResult<WebViewUserVO> result = new AppResult<>();
-        String mobilephone = DES.decodeValue(key, register.getMobile());
-        String smsCode = DES.decodeValue(key,register.getVerificationCode());
-        String pwd = DES.decodeValue(key, register.getPassword());
-        String reffer = DES.decodeValue(key, register.getReffer());
+    public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/user/bank/register");
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+
+        // 手机号
+        String mobile = request.getParameter("mobile");
+        // 验证码
+        String verificationCode = request.getParameter("verificationCode");
+        // 登录密码
+        String password = request.getParameter("password");
+        // 推荐人
+        String reffer = request.getParameter("reffer");
+        String jumpCommand = GetJumpCommand.getLinkJumpPrefix(request, version);
         //检查版本
-        String version = register.getVersion();
         if(version.length()>=5){
             version = version.substring(0, 5);
         }
         CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
-        register = new RegisterRequest();
-        register.setMobile(mobilephone);
-        register.setPassword(pwd);
-        register.setReffer(reffer);
-        register.setVerificationCode(smsCode);
-        registService.checkParam(register);
-        WebViewUserVO userVO = registService.register(register, GetCilentIP.getIpAddr(request));
-        if (!registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
+        logger.info("当前注册手机号: {}", mobile);
 
+        // 取得加密用的Key
+        CheckUtil.check(StringUtils.isNotBlank(key),MsgEnum.STATUS_CE000001);
+        mobile = DES.decodeValue(key, mobile);
+        verificationCode = DES.decodeValue(key, verificationCode);
+        password = DES.decodeValue(key, password);
+        reffer = DES.decodeValue(key, reffer);
+        RegisterRequest register = new RegisterRequest();
+        register.setMobile(mobile);
+        register.setPassword(password);
+        register.setReffer(reffer);
+        register.setVerificationCode(verificationCode);
+        registService.checkParam(register);
+        registService.register(register, GetCilentIP.getIpAddr(request));
+        String statusDesc = "注册成功";
+        if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
+            BaseMapBean baseMapBean=new BaseMapBean();
+            baseMapBean.set("imageUrl", "");
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+            baseMapBean.set("imageUrlOperation", "");
+            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            ret.put(CustomConstants.APP_STATUS, 0);
+            ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
+            ret.put("successUrl", baseMapBean.getUrl());
+            return ret;
+        }else {
+            AdsRequest adsRequest = new AdsRequest();
+            adsRequest.setLimitStart(0);
+            adsRequest.setLimitEnd(1);
+            adsRequest.setHost(systemConfig.getDomainAppUrl());
+            adsRequest.setCode("registpop");
+            AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
+            // 注册成功发券提示
+            String operationUrl = jumpCommand + "://jumpCouponsList/?";
+            BaseMapBean baseMapBean = new BaseMapBean();
+            baseMapBean.set("imageUrl", record.getImage());
+            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+            baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+            baseMapBean.set("imageUrlOperation", operationUrl);
+            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            ret.put(CustomConstants.APP_STATUS, 0);
+            ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
+            ret.put("successUrl", baseMapBean.getUrl());
+            return ret;
         }
-        result.setData(userVO);
-        if (userVO != null) {
-            logger.info("app端注册成功, userId is :{}", userVO.getUserId());
-        } else {
-            logger.error("app端注册失败...");
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
-        }
-        return result;
     }
 }

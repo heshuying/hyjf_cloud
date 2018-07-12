@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -83,6 +84,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @author dxj
  * @version BatchBorrowRepayZTServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
+@Service
 public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BatchBorrowRepayZTServiceImpl.class);
