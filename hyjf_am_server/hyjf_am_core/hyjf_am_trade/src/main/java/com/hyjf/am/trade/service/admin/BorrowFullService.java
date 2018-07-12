@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize;
 
@@ -76,7 +76,7 @@ public interface BorrowFullService {
      * @param borrowFullRequest
      * @return
      */
-    AdminResponse updateBorrowFull(BorrowFullRequest borrowFullRequest);
+    Response updateBorrowFull(BorrowFullRequest borrowFullRequest);
 
     /**
      * 流标
@@ -84,5 +84,5 @@ public interface BorrowFullService {
      * @param borrowFullRequest
      * @return
      */
-    AdminResponse updateBorrowOver(BorrowFullRequest borrowFullRequest);
+    Response updateBorrowOver(BorrowFullRequest borrowFullRequest);
 }
