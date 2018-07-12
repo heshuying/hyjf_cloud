@@ -56,4 +56,18 @@ public interface BankOpenService extends BaseUserService {
 	 * @Date 2018/6/21 15:34
 	 */
 	WebResult<Object> getFiledMess(String logOrdId);
+
+	/**
+	 * 获得担保机构开户调用银行的参数
+	 * @param openBean
+	 * @return
+	 */
+	Map<String,Object> getAssureOpenAccountMV(OpenAccountPageBean openBean);
+
+	/**
+	 * 获得借款人开户调用银行的参数
+	 * @param openBean
+	 * @return
+	 */
+	Map<String,Object> getLoanOpenAccountMV(OpenAccountPageBean openBean);
 }

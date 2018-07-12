@@ -4,8 +4,6 @@
 package com.hyjf.am.trade.controller.admin.hjhplan;
 
 import java.util.List;
-import java.util.Map;
-
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -17,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
+import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 import io.swagger.annotations.Api;
 
@@ -82,4 +82,21 @@ public class AdminHjhCreditTenderController {
         }
         return response;
 	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :汇计划承接记录详情
+	 */
+	@RequestMapping(value = "/selectHjhCreditTenderRecord",method = RequestMethod.POST)
+	public HjhDebtCreditTenderResponse selectHjhCreditTenderRecord(@RequestBody @Valid HjhCreditTenderRequest request){
+		HjhDebtCreditTenderResponse response = new HjhDebtCreditTenderResponse();
+		HjhDebtCreditTenderVO vo = adminHjhCreditTenderService.selectHjhCreditTenderRecord(request);
+        if(vo != null){
+        	response.setResult(vo);
+            //代表成功
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+	}
+	
 }

@@ -35,6 +35,8 @@ public class BankOpenRequest extends BaseVO {
 
 	private String retMsg;
 
+	private Integer roleId;
+
 	public Integer getUserId() {
 		return userId;
 	}
@@ -137,5 +139,13 @@ public class BankOpenRequest extends BaseVO {
 
 	public void setRetMsg(String retMsg) {
 		this.retMsg = retMsg;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
 	}
 }

@@ -1,6 +1,6 @@
 package com.hyjf.pay.service;
 
-import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.entity.BankExclusiveLog;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallPnrApiBean;
 
@@ -29,7 +29,7 @@ public interface BankPayLogService {
 	 * @param orderId
 	 * @return
 	 */
-	ChinapnrExclusiveLog selectChinapnrExclusiveLogByOrderId(String orderId);
+	BankExclusiveLog selectChinapnrExclusiveLogByOrderId(String orderId);
 
 	String insertChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean);
 	

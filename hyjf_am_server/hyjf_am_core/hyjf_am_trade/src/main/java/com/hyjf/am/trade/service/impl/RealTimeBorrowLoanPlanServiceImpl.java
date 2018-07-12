@@ -1944,7 +1944,7 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 		Map<String, String> replaceStrs = new HashMap<String, String>();
 		replaceStrs.put("val_title", borrowNid);
 		replaceStrs.put("val_time", GetDate.formatTime());
-		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
+		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
 			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));

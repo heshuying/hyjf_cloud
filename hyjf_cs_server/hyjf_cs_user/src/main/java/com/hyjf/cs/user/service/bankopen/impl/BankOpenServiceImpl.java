@@ -189,7 +189,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         openAccoutBean.setGender(gender);
         openAccoutBean.setMobile(openBean.getMobile());
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
-        openAccoutBean.setAcctUse("00000");
+        openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
         //String retUrl = systemConfig.getFrontHost() + openBean.getClientHeader() + "/open/faild?phone=" + openBean.getMobile()+"&logOrdId="+openAccoutBean.getLogOrderId();
@@ -229,7 +229,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 开户失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 开户失败   将开户记录状态改为4
-            // TODO: 2018/6/21  记录失败原因
             // 查询失败原因
             String retMsg = bean.getRetMsg();
             BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
@@ -488,6 +487,114 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         map.put("error",errorMess);
         result.setData(map);
         return result;
+    }
+
+    /**
+     * 获得担保机构开户调用银行的参数
+     *
+     * @param openBean
+     * @return
+     */
+    @Override
+    public Map<String, Object> getAssureOpenAccountMV(OpenAccountPageBean openBean) {
+        {
+            // 根据身份证号码获取性别
+            String gender = "";
+            int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
+            if (sexInt % 2 == 0) {
+                gender = "F";
+            } else {
+                gender = "M";
+            }
+            // 获取共同参数
+            String idType = BankCallConstant.ID_TYPE_IDCARD;
+            // 调用开户接口
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            openAccoutBean.setIdentity(openBean.getIdentity());
+            /**1：出借角色2：借款角色3：代偿角色*/
+            openAccoutBean.setChannel(openBean.getChannel());
+            openAccoutBean.setIdType(idType);
+            openAccoutBean.setIdNo(openBean.getIdNo());
+            openAccoutBean.setName(openBean.getTrueName());
+            openAccoutBean.setGender(gender);
+            openAccoutBean.setMobile(openBean.getMobile());
+            // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
+            openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
+            openAccoutBean.setIdentity(openBean.getIdentity());
+            // 同步地址  是否跳转到前端页面
+            String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
+            String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
+            // 异步调用路
+            String bgRetUrl = systemConfig.getWebHost() + "/web/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
+            openAccoutBean.setRetUrl(retUrl);
+            openAccoutBean.setSuccessfulUrl(successUrl);
+            openAccoutBean.setNotifyUrl(bgRetUrl);
+            openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
+            openAccoutBean.setLogRemark("页面开户");
+            openAccoutBean.setLogIp(openBean.getIp());
+            openBean.setOrderId(openAccoutBean.getLogOrderId());
+            try {
+                Map<String, Object> map = BankCallUtils.callApiMap(openAccoutBean);
+                return map;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    /**
+     * 获得借款人开户调用银行的参数
+     *
+     * @param openBean
+     * @return
+     */
+    @Override
+    public Map<String, Object> getLoanOpenAccountMV(OpenAccountPageBean openBean) {
+        {
+            // 根据身份证号码获取性别
+            String gender = "";
+            int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
+            if (sexInt % 2 == 0) {
+                gender = "F";
+            } else {
+                gender = "M";
+            }
+            // 获取共同参数
+            String idType = BankCallConstant.ID_TYPE_IDCARD;
+            // 调用开户接口
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            openAccoutBean.setIdentity(openBean.getIdentity());
+            /**1：出借角色2：借款角色3：代偿角色*/
+            openAccoutBean.setChannel(openBean.getChannel());
+            openAccoutBean.setIdType(idType);
+            openAccoutBean.setIdNo(openBean.getIdNo());
+            openAccoutBean.setName(openBean.getTrueName());
+            openAccoutBean.setGender(gender);
+            openAccoutBean.setMobile(openBean.getMobile());
+            // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
+            openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
+            openAccoutBean.setIdentity(openBean.getIdentity());
+            // 同步地址  是否跳转到前端页面
+            String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
+            String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
+            // 异步调用路
+            String bgRetUrl = systemConfig.getWebHost() + "/web/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
+            openAccoutBean.setRetUrl(retUrl);
+            openAccoutBean.setSuccessfulUrl(successUrl);
+            openAccoutBean.setNotifyUrl(bgRetUrl);
+            openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
+            openAccoutBean.setLogRemark("页面开户");
+            openAccoutBean.setLogIp(openBean.getIp());
+            openBean.setOrderId(openAccoutBean.getLogOrderId());
+            try {
+                Map<String, Object> map = BankCallUtils.callApiMap(openAccoutBean);
+                return map;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }
