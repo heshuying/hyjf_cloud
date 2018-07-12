@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditTenderCustomizeMapper">
+
+
+	<!-- 管理后台   汇转让   还款计划  已承接债转  数目 -->
+	<select id="countBorrowCreditTender" resultType="java.lang.Integer" >
+		SELECT
+		COUNT(hct.assign_nid) AS total
+		FROM ht_credit_tender hct INNER JOIN ht_r_user hu ON hct.user_id = hu.user_id
+		INNER JOIN ht_r_user huc ON hct.credit_user_id = huc.user_id
+		<include refid="WHERE_COLUMN"/>
+	</select>
+
+
+	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize">
+		select
+		hu.username AS userName,
+		huc.username AS creditUserName,
+		hct.status AS status,
+		hct.bid_nid AS bidNid,
+		hct.credit_nid AS creditNid,
+		hct.credit_tender_nid AS creditTenderNid,
+		hct.assign_nid AS assignNid,
+		hct.assign_capital AS assignCapital,
+		hct.assign_account AS assignAccount,
+		hct.assign_interest AS assignInterest,
+		hct.assign_price AS assignPrice,
+		hct.assign_pay AS assignPay,
+		hct.assign_repay_account AS assignRepayAccount,
+		(select sum(manage_fee) from ht_credit_repay where assign_nid= hct.assign_nid) AS creditFee,
+		CASE
+		WHEN hct.assign_repay_end_time != 0 THEN
+		FROM_UNIXTIME(hct.assign_repay_end_time, '%Y-%m-%d')
+		ELSE
+		''
+		END AS assignRepayEndTime,
+		CASE
+		WHEN hct.assign_repay_next_time != 0 THEN
+		FROM_UNIXTIME(hct.assign_repay_next_time, '%Y-%m-%d')
+		ELSE
+		''
+		END AS assignRepayNextTime,
+		hct.create_time AS addTime
+		FROM ht_credit_tender hct INNER JOIN ht_r_user hu ON hct.user_id = hu.user_id
+		INNER JOIN ht_r_user huc ON hct.credit_user_id = huc.user_id
+		<include refid="WHERE_COLUMN"/>
+		ORDER BY
+		hct.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="sumBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderSumVO">
+		select
+		    SUM(hct.assign_capital) AS sumAssignCapital,
+		    SUM(hct.assign_account) AS sumAssignAccount,
+		    SUM(hct.assign_interest) AS sumAssignInterest,
+		    SUM(hct.assign_price) AS sumAssignPrice,
+		    SUM(hct.assign_pay) AS sumAssignPay,
+		    SUM(hct.assign_repay_account) AS sumAssignRepayAccount,
+		    SUM((select sum(manage_fee) from ht_credit_repay where assign_nid= hct.assign_nid)) AS sumCreditFee
+	    FROM ht_credit_tender hct INNER JOIN ht_r_user hu ON hct.user_id = hu.user_id
+	    INNER JOIN ht_r_user huc ON hct.credit_user_id = huc.user_id
+		<include refid="WHERE_COLUMN"/>
+	</select>
+
+	<sql id="WHERE_COLUMN">
+		<where>
+			<if test="userName != null and userName != ''">
+				AND hu.username = #{userName}
+			</if>
+			<if test="creditUserName != null and creditUserName != ''">
+				AND huc.create_user_name  = #{creditUserName}
+			</if>
+			<if test="creditNid != null and creditNid != ''">
+				AND hct.credit_nid = #{creditNid}
+			</if>
+			<if test="bidNid != null and bidNid!= ''">
+				AND hct.bid_nid = #{bidNid}
+			</if>
+			<if test="assignNid != null and assignNid != ''">
+				AND hct.assign_nid = #{assignNid}
+			</if>
+			<if test="status != null and status != ''">
+				AND hct.status = #{status}
+			</if>
+			<if test="assignRepayNextTimeStart != null and assignRepayNextTimeStart != ''">
+				AND FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d') <![CDATA[>=]]> #{assignRepayNextTimeStart}
+			</if>
+			<if test="assignRepayNextTimeEnd != null and assignRepayNextTimeEnd != ''">
+				AND FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d') <![CDATA[<=]]> #{assignRepayNextTimeEnd}
+			</if>
+			<if test="addTimeStart != null and addTimeStart != ''">
+				AND DATE_FORMAT( hct.create_time, '%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{addTimeStart},'%Y-%m-%d')
+			</if>
+			<if test="addTimeEnd != null and addTimeEnd != ''">
+				AND DA_FORMAT( hct.create_time, '%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{addTimeEnd},  '%Y-%m-%d')
+			</if>
+		</where>
+	</sql>
+
+
+
+</mapper>

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -109,6 +110,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject handleBorrowRegistException(String borrowNid, Integer loginUserId) {
         JSONObject result = new JSONObject();
         BorrowVO borrowVO = amTradeClient.searchBorrowByBorrowNid(borrowNid);
@@ -324,7 +326,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @param loginUserId 登录用户id
      * @return
      */
-    private BankCallBean borrowRegistSearch(String borrowNid, String accountId, int loginUserId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BankCallBean borrowRegistSearch(String borrowNid, String accountId, int loginUserId) {
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
         String orderId = GetOrderIdUtils.getOrderId2(loginUserId);
@@ -369,7 +372,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @param loginUserId
      * @return
      */
-    private BankCallBean borrowRegist(BorrowVO borrow, boolean isMonth, String accountId, int loginUserId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BankCallBean borrowRegist(BorrowVO borrow, boolean isMonth, String accountId, int loginUserId) {
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
         String orderId = GetOrderIdUtils.getOrderId2(loginUserId);
@@ -431,7 +435,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    private boolean updateBorrowRegist(BorrowVO borrow, int status, int registStatus,Integer type){
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateBorrowRegist(BorrowVO borrow, int status, int registStatus,Integer type){
         Date nowDate = new Date();
         borrow.setRegistStatus(registStatus);
         borrow.setStatus(status);

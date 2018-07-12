@@ -4,7 +4,7 @@ import com.hyjf.am.resquest.admin.CouponTenderRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.coupon.CouponTenderCustomizeMapper;
 import com.hyjf.am.trade.service.admin.coupon.CouponTenderService;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVo;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class CouponTenderServiceImpl implements CouponTenderService {
     }
 
     @Override
-    public List<CouponRecoverVo> getCouponRecoverCustomize(Map<String, Object> paramMap) {
+    public List<CouponRecoverVO> getCouponRecoverCustomize(Map<String, Object> paramMap) {
         return couponTenderCustomizeMapper.getCouponRecoverCustomize(paramMap);
     }
 
@@ -69,7 +69,7 @@ public class CouponTenderServiceImpl implements CouponTenderService {
     }
 
     @Override
-    public List<CouponRecoverVo> getHjhCouponRecoverCustomize(Map<String, Object> paramMap) {
+    public List<CouponRecoverVO> getHjhCouponRecoverCustomize(Map<String, Object> paramMap) {
         return couponTenderCustomizeMapper.getHjhCouponRecoverCustomize(paramMap);
     }
 
