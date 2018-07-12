@@ -50,6 +50,18 @@ public class SystemConfig {
     @Value("${hyjf.bank.prikey.pass}")
 	private String bankPrikeyPass;
 
+	/** 汇付天下地址 */
+	@Value("${hyjf.chinapnr.url}")
+	private String chinapnrUrl;
+
+	public String getChinapnrUrl() {
+		return chinapnrUrl;
+	}
+
+	public void setChinapnrUrl(String chinapnrUrl) {
+		this.chinapnrUrl = chinapnrUrl;
+	}
+
 	public String getReturnUrl() {
 		return returnUrl;
 	}
