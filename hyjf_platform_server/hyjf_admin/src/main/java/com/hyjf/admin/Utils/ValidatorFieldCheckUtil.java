@@ -1130,16 +1130,19 @@ public class ValidatorFieldCheckUtil {
 		zoneNum.put(91, "外国");
 		char[] PARITYBIT = { '1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2' };
 		int[] POWER_LIST = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 };
-		if (certNo == null || certNo.length() != 18)
-			return false;
+		if (certNo == null || certNo.length() != 18) {
+            return false;
+        }
 		final char[] cs = certNo.toUpperCase().toCharArray();
 		// 校验位数
 		int power = 0;
 		for (int i = 0; i < cs.length; i++) {
-			if (i == cs.length - 1 && cs[i] == 'X')
-				break;// 最后一位可以 是X或x
-			if (cs[i] < '0' || cs[i] > '9')
-				return false;
+			if (i == cs.length - 1 && cs[i] == 'X') {
+                break;// 最后一位可以 是X或x
+            }
+			if (cs[i] < '0' || cs[i] > '9') {
+                return false;
+            }
 			if (i < cs.length - 1) {
 				power += (cs[i] - '0') * POWER_LIST[i];
 			}
@@ -1154,8 +1157,9 @@ public class ValidatorFieldCheckUtil {
 		String year = certNo.substring(6, 10);
 
 		final int iyear = Integer.parseInt(year);
-		if (iyear < 1800 || iyear > Calendar.getInstance().get(Calendar.YEAR))
-			return false;// 1900年的PASS，超过今年的PASS
+		if (iyear < 1800 || iyear > Calendar.getInstance().get(Calendar.YEAR)) {
+            return false;// 1900年的PASS，超过今年的PASS
+        }
 
 		// 校验月份
 		String month = certNo.length() == 15 ? certNo.substring(8, 10) : certNo.substring(10, 12);
@@ -1167,12 +1171,14 @@ public class ValidatorFieldCheckUtil {
 		// 校验天数
 		String day = certNo.length() == 15 ? certNo.substring(10, 12) : certNo.substring(12, 14);
 		final int iday = Integer.parseInt(day);
-		if (iday < 1 || iday > 31)
-			return false;
+		if (iday < 1 || iday > 31) {
+            return false;
+        }
 
 		// 校验"校验码"
-		if (certNo.length() == 15)
-			return true;
+		if (certNo.length() == 15) {
+            return true;
+        }
 		return cs[cs.length - 1] == PARITYBIT[power % 11];
 	}
 

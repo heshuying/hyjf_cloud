@@ -1718,9 +1718,9 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 			if (BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)) {
 				String state = StringUtils.isNotBlank(debtQuery.getState()) ? debtQuery.getState() : "";
 				if (StringUtils.isNotBlank(state)) {
-					if (state.equals("4")) {
+					if ("4".equals(state)) {
 						return true;
-					} else if (state.equals("2")) {
+					} else if ("2".equals(state)) {
 
 						try {
 							

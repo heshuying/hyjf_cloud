@@ -341,11 +341,11 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             String status = listCustomize.getStatus();
-            if (listCustomize.getStatusName().equals("稍后开启")){    //1.启用  2.关闭
+            if ("稍后开启".equals(listCustomize.getStatusName())){    //1.启用  2.关闭
                 // 20.立即加入  21.稍后开启
                 homePageCustomize.setStatus("21");
                 homePageCustomize.setStatusName("稍后开启");
-            }else if(listCustomize.getStatusName().equals("立即加入")){  //1.启用  2.关闭
+            }else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("立即加入");
             }
@@ -434,7 +434,7 @@ public class AppHomeServiceImpl implements AppHomeService {
 
 //       System.out.println("noticeStatus: " + noticeStatus);
         // 是否需要收到通知
-        if(noticeStatus.equals("true") && StringUtils.isNotBlank(platform) && platform.equals("3") && isNeedUpdate){
+        if("true".equals(noticeStatus) && StringUtils.isNotBlank(platform) && "3".equals(platform) && isNeedUpdate){
             info.put("needForcedToUpdate", "1");
             info.put("forcedToUpdateUrl", noticeUrlIOS);
         }else {
@@ -456,9 +456,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         adsRequest.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
         adsRequest.setHost(HOST);
         String code = "";
-        if (platform.equals("2")) {
+        if ("2".equals(platform)) {
             code = "android_banner";
-        } else if (platform.equals("3")) {
+        } else if ("3".equals(platform)) {
             code = "ios_banner";
         }
         adsRequest.setCode(code);
@@ -502,7 +502,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("adImageUrl", appads.getImage());
             info.put("adImageUrlOperation", appads.getUrl());
 
-            if(appads.getNewUserShow().equals("2") || (appads.getNewUserShow().equals("1") && isNewFlag)){
+            if("2".equals(appads.getNewUserShow()) || ("1".equals(appads.getNewUserShow()) && isNewFlag)){
                 info.put("adExist", "1");
             }else{
                 info.put("adExist", "0");
@@ -537,7 +537,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("imageUrlOperation", appads.getUrl());
 
             // TODO: 2018/7/6 查询mongo 获取用户请求次数 zyk int requestTimes = homePageService.updateCurrentDayRequestTimes(uniqueIdentifier, userId);
-            if(appads.getNewUserShow().equals("2") || (appads.getNewUserShow().equals("1") && userId == null)){
+            if("2".equals(appads.getNewUserShow()) || ("1".equals(appads.getNewUserShow()) && userId == null)){
                 //if(requestTimes <= 1){
                 if (true){
                     // 如果是今天第一次请求则显示
@@ -572,9 +572,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         adsRequest.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
         adsRequest.setHost(HOST);
         String code = "";
-        if (platform.equals("2")) {
+        if ("2".equals(platform)) {
             code = android;
-        } else if (platform.equals("3")) {
+        } else if ("3".equals(platform)) {
             code = ios;
         }
         adsRequest.setCode(code);
@@ -698,16 +698,16 @@ public class AppHomeServiceImpl implements AppHomeService {
         adsRequest.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
         adsRequest.setHost(HOST);
         String code = "";
-        if (platform.equals("2")) {
-            if (type.equals("0")) {//未注册
+        if ("2".equals(platform)) {
+            if ("0".equals(type)) {//未注册
                 code = "android_regist_888";
-            } else if (type.equals("1")) {
+            } else if ("1".equals(type)) {
                 code = "android_open_888";
             }
-        } else if (platform.equals("3")) {
-            if (type.equals("0")) {//未注册
+        } else if ("3".equals(platform)) {
+            if ("0".equals(type)) {//未注册
                 code = "ios_regist_888";
-            } else if (type.equals("1")) {
+            } else if ("1".equals(type)) {
                 code = "ios_open_888";
             }
         }

@@ -186,7 +186,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
-        if (detailCsVO.getIsNew() == 0 || detailCsVO.getType().equals("13")) {
+        if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
             // TODO: 2018/6/23  getProjectDetail(modelAndView, detailCsVO,userId);     待确认是否还有老标后再处理
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
@@ -300,7 +300,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         /**
          * 融通宝收益叠加
          */
-        if (borrow.getType().equals("13")) {
+        if ("13".equals(borrow.getType())) {
             borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
         }
 
@@ -344,7 +344,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         borrow.setBorrowInterest(borrowInterest.toString());
 
         // TODO: 2018/6/25 汇资产项目后期处理
-        if (borrow.getType().equals("9")) {// 如果项目为汇资产项目
+        if ("9".equals(borrow.getType())) {// 如果项目为汇资产项目
 //            // 添加相应的项目详情信息
 //            other.put("projectDeatil", borrow);
 //            // 4查询相应的汇资产的首页信息
@@ -616,11 +616,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 项目为非汇资产项目
             else {
                 // 4查询非汇资产项目的项目信息
-                if (comOrPer.equals("1")) {
+                if ("1".equals(comOrPer)) {
                     // 查询相应的企业项目详情
                     ProjectCompanyDetailVO borrowInfo = borrowUserClient.searchProjectCompanyDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
-                } else if (comOrPer.equals("2")) {
+                } else if ("2".equals(comOrPer)) {
                     // 查询相应的汇直投个人项目详情
                     WebProjectPersonDetailVO borrowInfo = borrowUserClient.searchProjectPersonDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);

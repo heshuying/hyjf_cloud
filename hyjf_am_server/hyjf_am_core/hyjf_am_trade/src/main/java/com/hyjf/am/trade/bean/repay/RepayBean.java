@@ -60,11 +60,13 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 		this.ip = ip;
 	}
 
-	public Integer getRepayUserId() {
+	@Override
+    public Integer getRepayUserId() {
 		return repayUserId;
 	}
 
-	public void setRepayUserId(Integer repayUserId) {
+	@Override
+    public void setRepayUserId(Integer repayUserId) {
 		this.repayUserId = repayUserId;
 	}
 
