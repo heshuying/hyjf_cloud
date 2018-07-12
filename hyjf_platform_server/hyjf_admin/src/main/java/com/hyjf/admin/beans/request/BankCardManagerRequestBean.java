@@ -1,27 +1,33 @@
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.BasePage;
+import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 
 /**
  * 银行卡管理請求參數
  * @author nxl
  */
-public class BankCardManagerRequest extends BasePage{
+public class BankCardManagerRequestBean  extends BaseRequest implements Serializable {
+	@ApiModelProperty(value = "用户名")
 	private String userName;
+	@ApiModelProperty(value = "所属银行")
 	private String bank;
+	@ApiModelProperty(value = "银行帐号")
 	private String account;
+	@ApiModelProperty(value = "银行卡属性")
 	private String cardProperty;
+	@ApiModelProperty(value = "是否默认")
 	private String cardType;
+	@ApiModelProperty(value = "添加时间/绑卡时间开始")
 	private String addTimeStart;
+	@ApiModelProperty(value = "添加时间/绑卡时间结束")
 	private String addTimeEnd;
+	@ApiModelProperty(value = "手机号")
 	private String mobile;
+	@ApiModelProperty(value = "姓名")
 	private String realName;
-
-	//分页区分,
-	// 导出时设置为0,代表查找全部,
-	// 默认为1,代表分页
-	private int limitFlg = 1;
 
 	public String getUserName() {
 		return userName;
@@ -79,7 +85,6 @@ public class BankCardManagerRequest extends BasePage{
 		this.addTimeEnd = addTimeEnd;
 	}
 
-
 	public String getMobile() {
 		return mobile;
 	}
@@ -94,13 +99,5 @@ public class BankCardManagerRequest extends BasePage{
 
 	public void setRealName(String realName) {
 		this.realName = realName;
-	}
-
-	public int getLimitFlg() {
-		return limitFlg;
-	}
-
-	public void setLimitFlg(int limitFlg) {
-		this.limitFlg = limitFlg;
 	}
 }
