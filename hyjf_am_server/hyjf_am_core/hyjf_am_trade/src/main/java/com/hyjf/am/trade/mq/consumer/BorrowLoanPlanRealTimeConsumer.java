@@ -161,7 +161,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 					toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com", };
 				}
 				MailMessage mailmessage = new MailMessage(null, null, "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail, null,
-						MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 
 				try {
 					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, JSON.toJSONBytes(mailmessage)));

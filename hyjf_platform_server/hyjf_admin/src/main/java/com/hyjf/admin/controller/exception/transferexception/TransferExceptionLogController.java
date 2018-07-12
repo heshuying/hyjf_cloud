@@ -3,6 +3,7 @@ package com.hyjf.admin.controller.exception.transferexception;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.SmsProducer;
@@ -26,6 +27,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -35,13 +38,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
 /**
  * 转账异常
  */
-@Controller
+@Api(value = "银行转账异常")
+@RestController
 @RequestMapping("/exception/transferexception")
 public class TransferExceptionLogController extends BaseController {
 
@@ -52,17 +57,22 @@ public class TransferExceptionLogController extends BaseController {
     /** 还款金额(优惠券用) */
     private static final String VAL_AMOUNT = "val_amount";
 
-    @Value("${hyjf.bank.merrp.account}")
-    private String BANK_MERRP_ACCOUNT;
-
     private static final String PERMISSIONS = "transferexception";
 
     @Autowired
     private TransferExceptionLogService transferLogService;
 
+    /**
+     * 短信mq生产端
+     */
     @Autowired
     private SmsProducer smsProducer;
-
+    /**
+     * 引入配置文件
+     */
+    @Autowired
+    private SystemConfig systemConfig;
+    
 	/**
 	 * 画面初始化
 	 * @param request
@@ -124,7 +134,7 @@ public class TransferExceptionLogController extends BaseController {
                 transfer.setOrderId(orderId);
                 transferLogService.updateRecordByUUID(transfer);
             }
-            String merrpAccount = BANK_MERRP_ACCOUNT;
+            String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
 
             BankCallBean bean = new BankCallBean();
             bean.setVersion(BankCallConstant.VERSION_10);// 版本号

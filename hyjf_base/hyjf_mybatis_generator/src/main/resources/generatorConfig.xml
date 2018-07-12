@@ -1645,12 +1645,14 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
-        <table tableName="ht_link" domainObjectName="Link">
+       <table tableName="ht_link" domainObjectName="Link">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="partner_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="isindex" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="id" javaType="java.lang.Integer" jdbcType="SMALLINT" />
+            <columnOverride column="order" javaType="java.lang.Integer" jdbcType="SMALLINT" />
         </table>
 
         <table tableName="ht_message_push_tag" domainObjectName="MessagePushTag">

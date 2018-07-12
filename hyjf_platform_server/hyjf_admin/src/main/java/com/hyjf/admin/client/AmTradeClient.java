@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
@@ -517,4 +518,18 @@ public interface AmTradeClient {
      * @return
      */
     Integer deleteAccountExceptionById(Integer id);
+
+    /**
+     * 获取提现列表数量
+     * @param request
+     * @return
+     */
+    int getWithdrawRecordCount(WithdrawBeanRequest request);
+
+    /**
+     * 获取提现列表
+     * @param request
+     * @return
+     */
+    List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request);
 }

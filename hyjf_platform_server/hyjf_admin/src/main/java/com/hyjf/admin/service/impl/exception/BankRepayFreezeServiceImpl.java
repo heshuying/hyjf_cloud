@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl.exception;
 
-import com.hyjf.admin.beans.request.BankRepayFreezeRequest;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.common.util.GetOrderIdUtils;

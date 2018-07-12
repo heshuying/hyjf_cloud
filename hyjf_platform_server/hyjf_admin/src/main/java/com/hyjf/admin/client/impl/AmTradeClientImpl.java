@@ -13,8 +13,10 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1019,6 +1021,33 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url="http://AM-TRADE/am-trade/accountexception/deleteaccountexceptionbyid/" + id;
         Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
         return response;
+    }
+
+
+    /**
+     * 获取提现列表数量
+     * @param request
+     * @return
+     */
+    @Override
+    public int getWithdrawRecordCount(WithdrawBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordCount";
+        return restTemplate.postForEntity(url,request,Integer.class).getBody();
+    }
+
+    /**
+     * 获取提现列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordList";
+        WithdrawCustomizeResponse response=restTemplate.postForEntity(url,request,WithdrawCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResultList();
+        }
+        return null;
     }
 
 
