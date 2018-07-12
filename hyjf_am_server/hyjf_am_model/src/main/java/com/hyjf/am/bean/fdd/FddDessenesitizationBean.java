@@ -3,27 +3,27 @@ package com.hyjf.am.bean.fdd;
 import java.io.Serializable;
 
 /**
- * 娉曞ぇ澶т笅杞借劚鏁忓弬鏁扮被
+ *  法大大下载脱敏参数类
  */
 public class FddDessenesitizationBean implements Serializable{
 
     private static final long serialVersionUID = 3147045390130550149L;
 
-    /**鏂囦欢淇濆瓨璺緞*/
+    /**文件保存路径*/
     private  String savePath;
-    /**鍚堝悓瀛樺偍ID*/
+    /**合同存储ID*/
     private  String  agrementID;
-    /**鍚堝悓绫诲瀷*/
+    /**合同类型*/
     private  String transType;
-    /**ftp鏈嶅姟鍣ㄥ瓨鍌ㄥ湴鍧�*/
+    /**ftp服务器存储地址*/
     private String  ftpPath;
-    /**鍚堝悓涓嬭浇鍦板潃*/
+    /**合同下载地址*/
     private String downloadUrl;
-    /**鍚堝悓缂栧彿*/
+    /**合同编号*/
     private String ordid;
-    /**鍒ゆ柇鎶曡祫浜�/鎵挎帴浜烘槸鍚︿负浼佷笟鐢ㄦ埛*/
+    /**判断投资人/承接人是否为企业用户*/
     private boolean isTenderCompany;
-    /**鍑鸿浜烘槸鍚︿负浼佷笟鎴�*/
+    /**出让人是否为企业户*/
     private boolean isCreditCompany;
 
 

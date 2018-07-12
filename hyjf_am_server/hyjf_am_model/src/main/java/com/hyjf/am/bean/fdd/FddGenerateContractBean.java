@@ -7,56 +7,56 @@ public class FddGenerateContractBean implements Serializable{
 
 
     private static final long serialVersionUID = 5040840191981425010L;
-    /**璁㈠崟鍙�*/
+    /**订单号*/
     private String ordid;
-    /**浜ゆ槗绫诲瀷*/
+    /**交易类型*/
     private int transType;
-    /**鍊熸浜虹湡瀹炲鍚�*/
+    /**借款人真实姓名*/
     private String borrowUserTrueName;
-    /**鎶曡祫浜虹敤鎴峰悕*/
+    /**投资人用户名*/
     private String tenderUserName;
-    /**鎶曡祫浜虹湡瀹炲鍚�*/
+    /**投资人真实姓名*/
     private String tenderTrueName;
-    /**鎶曡祫浜虹敤鎴稩D*/
+    /**投资人用户ID*/
     private int tenderUserId;
-    /**鎶曡祫浜鸿瘉浠跺彿*/
+    /**投资人证件号*/
     private String idCard;
-    /**涔欐柟鍊熸閲戦*/
+    /**乙方借款金额*/
     private BigDecimal borrowAccount;
-    /**鍊熸鏈熼檺*/
+    /**借款期限*/
     private String borrowDate;
-    /**鍊熸鍒╃巼*/
+    /**借款利率*/
     private String borrowRate;
-    /**杩樻鏂瑰紡*/
+    /**还款方式*/
     private String borrowStyle;
-    /**鐢叉柟鍑哄�熼噾棰�*/
+    /**甲方出借金额*/
     private BigDecimal tenderAccount;
-    /**鏍煎紡鍖栭噾棰�*/
+    /**格式化金额*/
     private String tenderAccountFMT;
-    /**鏍煎紡鍖栭噾棰�*/
+    /**格式化金额*/
     private String tenderInterestFmt;
-    /**鍊熸棰勬湡鏀剁泭*/
+    /**借款预期收益*/
     private BigDecimal tenderInterest;
-    /**绛剧讲鏃堕棿*/
+    /**签署时间*/
     private String signDate;
-    /**鏍囩殑鍙�*/
+    /**标的号*/
     private String borrowNid;
-    /**鎶曡祫绫诲瀷 0锛氬師濮� 1锛氬�鸿浆 2 :璁″垝*/
+    /**投资类型 0：原始 1：债转 2 :计划*/
     private int tenderType;
-    /**瀹㈡埛瑙掕壊 1锛氭帴鍏ュ钩鍙� 2-鎷呬繚鍏徃
-     3-鎶曡祫浜� 4-鍊熸浜�*/
+    /**客户角色 1：接入平台 2-担保公司
+     3-投资人 4-借款人*/
     private String clientRole;
-    /**璁″垝鐢熸晥鏃ユ湡*/
+    /**计划生效日期*/
     private String planStartDate;
-    /**璁″垝鍒版湡鏃ユ湡*/
+    /**计划到期日期*/
     private String planEndDate;
-    /** 鎵挎帴缂栧彿 */
+    /** 承接编号 */
     private String assignNid;
-    /**鍊熸浜哄鎴稩D*/
+    /**借款人客户ID*/
     private String borrowerCustomerID;
-    /**鍑鸿浜虹敤鎴稩D*/
+    /**出让人用户ID*/
     private Integer creditUserID;
-    /**鍚堝悓鍚嶇О*/
+    /**合同名称*/
     private String contractName;
 
     public String getTenderAccountFMT() {
