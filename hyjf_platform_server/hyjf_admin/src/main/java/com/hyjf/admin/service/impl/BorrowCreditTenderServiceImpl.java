@@ -2,14 +2,18 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.Utils.Page;
 import com.hyjf.admin.beans.BorrowCreditRepayInfoResultBean;
+import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
 import com.hyjf.admin.beans.BorrowCreditTenderResultBean;
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
+import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.service.BorrowCreditTenderService;
+import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -43,17 +47,26 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     public static final String BASE_URL = "http://AM-TRADE/am-trade/creditTender";
 
-    public static final String LIST_URL = BASE_URL + "/getList";
-
-    public static final String COUNT_URL = BASE_URL + "/getCount";
-
-    public static final String SUM_URL = BASE_URL + "/getSum";
-
-    public static final String REPAY_COUNT_URL = BASE_URL + "/getRepayCount";
-
+    /*还款信息列表*/
     public static final String REPAY_LIST_URL = BASE_URL + "/getRepayList";
-
+    /*还款信息count*/
+    public static final String REPAY_COUNT_URL = BASE_URL + "/getRepayCount";
+    /*还款信息合计*/
     public static final String REPAY_SUM_URL = BASE_URL + "/getRepaySum";
+
+    /*还款详情count*/
+    public static final String REPAY_INFO_COUNT_URL = BASE_URL + "/getRepayInfoCount";
+    /*还款详情list*/
+    public static final String REPAY_INFO_LIST_URL = BASE_URL + "/getRepayInfoList";
+    /*还款详情合计*/
+    public static final String REPAY_INFO_SUM_URL = BASE_URL + "/getRepayInfoSum";
+
+    /*承接列表count*/
+    public static final String TENDER_COUNT_URL = BASE_URL + "/getTenderCount";
+    /*承接列表list*/
+    public static final String TENDER_LIST_URL = BASE_URL + "/getTenderList";
+    /*承接列表sum*/
+    public static final String TENDER_SUM_URL = BASE_URL + "/getTenderSum";
 
     /**
      * 查询还款信息列表
@@ -64,18 +77,18 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     @Override
     public AdminResult getBorrowCreditRepayList(BorrowCreditRepayRequest request) {
         AdminResult result = new AdminResult();
-        BorrowCreditTenderResultBean bean = new BorrowCreditTenderResultBean();
+        BorrowCreditRepayResultBean bean = new BorrowCreditRepayResultBean();
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
-        BorrowCreditTenderResponse response = baseClient.postExe(COUNT_URL, req, BorrowCreditTenderResponse.class);
+        BorrowCreditTenderResponse response = baseClient.postExe(REPAY_COUNT_URL, req, BorrowCreditTenderResponse.class);
         Integer count = response.getCount();
         if (count > 0) {
-            response = baseClient.postExe(LIST_URL, req, BorrowCreditTenderResponse.class);
+            response = baseClient.postExe(REPAY_LIST_URL, req, BorrowCreditTenderResponse.class);
             List<BorrowCreditRepayVO> list = response.getResultList();
             bean.setRecordList(list);
-            response = baseClient.postExe(SUM_URL, req, BorrowCreditTenderResponse.class);
+            response = baseClient.postExe(REPAY_SUM_URL, req, BorrowCreditTenderResponse.class);
             bean.setSumData(response.getSumData());
         }
         bean.setTotal(count);
@@ -83,6 +96,12 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         return result;
     }
 
+    /**
+     * 还款信息列表导出
+     *
+     * @author zhangyk
+     * @date 2018/7/11 20:41
+     */
     @Override
     public void exprotBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) {
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
@@ -93,7 +112,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
                 + CustomConstants.EXCEL_EXT;
 
         // 导出列表不需要分页,扩大数据查询范围，使失效
-        BorrowCreditTenderResponse res = baseClient.postExe(LIST_URL, req, BorrowCreditTenderResponse.class);
+        BorrowCreditTenderResponse res = baseClient.postExe(REPAY_LIST_URL, req, BorrowCreditTenderResponse.class);
         List<BorrowCreditRepayVO> list = res.getResultList();
         if (CollectionUtils.isNotEmpty(list)) {
             // 特殊处理数据
@@ -110,6 +129,12 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         exportExcel(sheetName, fileName, titles, list, response);
     }
 
+    /**
+     * 还款信息明细
+     *
+     * @author zhangyk
+     * @date 2018/7/12 10:52
+     */
     @Override
     public AdminResult getBorrowCreditRepayInfoList(BorrowCreditRepayRequest request) {
         AdminResult result = new AdminResult();
@@ -117,17 +142,45 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         CheckUtil.check(StringUtils.isNotBlank(request.getAssignNid()), MsgEnum.ERR_OBJECT_REQUIRED, "订单号");
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
-        BorrowCreditRepayResponse response = baseClient.postExe(REPAY_COUNT_URL, req, BorrowCreditRepayResponse.class);
+        BorrowCreditRepayResponse response = baseClient.postExe(REPAY_INFO_COUNT_URL, req, BorrowCreditRepayResponse.class);
         Integer count = response.getCount();
         if (count > 0) {
             req.setLimitStart(page.getOffset());
             req.setLimitEnd(page.getLimit());
-            response = baseClient.postExe(REPAY_LIST_URL, req, BorrowCreditRepayResponse.class);
+            response = baseClient.postExe(REPAY_INFO_LIST_URL, req, BorrowCreditRepayResponse.class);
             List<BorrowCreditRepayInfoVO> list = response.getResultList();
             bean.setRecordList(list);
-            response = baseClient.postExe(REPAY_SUM_URL, req, BorrowCreditRepayResponse.class);
+            response = baseClient.postExe(REPAY_INFO_SUM_URL, req, BorrowCreditRepayResponse.class);
             Map<String, Object> sumVo = response.getSumData();
             bean.setSumData(sumVo);
+        }
+        bean.setTotal(count);
+        result.setData(bean);
+        return result;
+    }
+
+    /**
+     * 承接信息列表
+     *
+     * @author zhangyk
+     * @date 2018/7/12 19:04
+     */
+    @Override
+    public AdminResult getCreditTenderList(BorrowCreditTenderRequest request) {
+        AdminResult result = new AdminResult();
+        BorrowCreditTenderResultBean bean = new BorrowCreditTenderResultBean();
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        AdminCreditTenderResponse response = baseClient.postExe(TENDER_COUNT_URL, req, AdminCreditTenderResponse.class);
+        Integer count = response.getCount();
+        if (count > 0) {
+            req.setLimitStart(page.getOffset());
+            req.setLimitEnd(page.getLimit());
+            response = baseClient.postExe(TENDER_LIST_URL, req, AdminCreditTenderResponse.class);
+            List<BorrowCreditTenderVO> list = response.getResultList();
+            bean.setRecordList(list);
+            response = baseClient.postExe(TENDER_SUM_URL, req, AdminCreditTenderResponse.class);
+            bean.setSumData(response.getSumData());
         }
         bean.setTotal(count);
         result.setData(bean);

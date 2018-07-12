@@ -4,7 +4,7 @@
 
 
 	<!-- 管理后台   汇转让   还款计划  已承接债转  数目 -->
-	<select id="countBorrowCreditTender" resultType="java.lang.Integer" >
+	<select id="countBorrowCreditRepay" resultType="java.lang.Integer" >
 		SELECT
 		COUNT(hct.assign_nid) AS total
 		FROM ht_credit_tender hct
@@ -12,7 +12,7 @@
 	</select>
 
 
-	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize">
+	<select id="searchBorrowCreditRepay" resultType="com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize">
 		select
 		hct.user_name AS userName,
 		hct.credit_user_name AS creditUserName,
@@ -50,7 +50,7 @@
 		</if>
 	</select>
 
-	<select id="sumBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderSumVO">
+	<select id="sumBorrowCreditRepay" resultType="com.hyjf.am.vo.admin.BorrowCreditRepaySumVO">
 		select
 		    SUM(hct.assign_capital) AS sumAssignCapital,
 		    SUM(hct.assign_account) AS sumAssignAccount,
@@ -100,7 +100,7 @@
 
 	 <!-- *******************************************还款明细*************************************************************    -->
 
-	<select id="getCreditRepayList" resultType="com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO">
+	<select id="getCreditRepayInfoList" resultType="com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO">
 		SELECT
 			hbi.borrow_nid as borrowNid,
 			hbi.name as borrowName,
@@ -122,7 +122,7 @@
 		</if>
 	</select>
 
-	<select id="sumCreditRepay" resultType="Map">
+	<select id="sumCreditRepayInfo" resultType="Map">
 		select
 		  SUM(assign_capital) AS sumAssignCapital,
 		  SUM(assign_interest) AS sumAssigninterest,
@@ -130,6 +130,105 @@
 		  SUM(manage_fee) AS sumManageFee
     from ht_credit_repay
 	</select>
+
+	<!-- **********************************        承接列表       *********************************************************-->
+	<select id="countBorrowCreditTender" resultType="int">
+		SELECT
+		  COUNT(1)
+		FROM
+		  ht_credit_tender ct
+        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+        <include refid="TENDER_WHERE_COLUMN"/>
+	</select>
+
+
+	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderVO">
+		SELECT
+		ct.assign_nid              AS assignNid,
+		ct.client             	 AS client,
+		ct.credit_nid              AS creditNid,
+		ct.bid_nid                 AS bidNid,
+		ct.credit_user_name      AS creditUserName,
+		ct.user_name                 AS userName,
+		FORMAT(ct.assign_capital, 2)          AS assignCapital,
+		FORMAT(bc.credit_discount, 2)         AS creditDiscount,
+		FORMAT(ct.assign_capital, 2)          AS assignCapitalPrice,
+		FORMAT(ct.assign_price, 2)            AS assignPrice,
+		FORMAT(ct.assign_interest_advance, 2) AS assignInterestAdvance,
+		FORMAT(ct.credit_fee, 2)              AS creditFee,
+		FORMAT(ct.assign_pay, 2)              AS assignPay,
+		 ct.create_time  AS addTime,
+
+		hta.status AS contractStatus,
+		hta.contract_number AS contractNumber,
+		ct.user_id as userId,
+		ct.credit_tender_nid as creditTenderNid,
+		hta.download_url AS downloadUrl,
+		hta.viewpdf_url AS viewpdfUrl,
+		hta.img_url AS imgUrl
+		FROM
+		ht_credit_tender ct
+		INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = ct.assign_nid
+		<include refid="TENDER_WHERE_COLUMN"/>
+		ORDER BY
+		bc.create_time DESC
+		<if test="limitStart >= 0  and limitEnd >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+
+	</select>
+
+	<select id="sumCreditTender" resultType="Map">
+		SELECT
+		  SUM(ct.assign_capital)          AS sumAssignCapital,
+		  SUM(ct.assign_capital)          AS sumAssignCapitalPrice,
+		  SUM(ct.assign_price)            AS sumAssignPrice,
+		  SUM(ct.assign_interest_advance) AS sumAssignInterestAdvance,
+		  SUM(ct.credit_fee)              AS sumCreditFee,
+		  SUM(ct.assign_pay)              AS sumAssignPay
+		FROM
+		  ht_credit_tender ct
+        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+		<include refid="TENDER_WHERE_COLUMN"/>
+	</select>
+
+
+	<sql id="TENDER_WHERE_COLUMN">
+		<where>
+			<!-- 项目编号 -->
+			<if test="bidNid != null and bidNid != ''">
+				AND bc.bid_nid LIKE CONCAT('%', #{bidNid}, '%')
+			</if>
+			<!-- 债转编号 -->
+			<if test="creditNid != null and creditNid != ''">
+				AND bc.credit_nid LIKE CONCAT('%', #{creditNid}, '%')
+			</if>
+			<!-- 用户名 -->
+			<if test="userName != null and userName != ''">
+				AND bc.user_name LIKE CONCAT('%', #{userName}, '%')
+			</if>
+			<!-- 承接人-->
+			<if test="creditUserName != null and creditUserName != ''">
+				AND bt.create_user_name LIKE CONCAT('%', #{creditUserName}, '%')
+			</if>
+			<!-- 订单号-->
+			<if test="assignNid != null and assignNid != ''">
+				AND ct.assign_nid LIKE CONCAT('%', #{assignNid}, '%')
+			</if>
+			<!-- 客户端-->
+			<if test="client != null and client != ''">
+				AND bc.client=#{client}
+			</if>
+			<!-- 时间 -->
+			<if test="addTimeStart != null and addTimeStart != ''">
+				AND unix_timestamp(ct.create_time) <![CDATA[>=]]> unix_timestamp(#{addTimeStart})
+			</if>
+			<if test="addTimeEnd != null and addTimeEnd != ''">
+				AND unix_timestamp(ct.create_time) <![CDATA[<=]]> unix_timestamp(#{addTimeEnd})+86399
+			</if>
+		</where>
+	</sql>
 
 
 </mapper>
