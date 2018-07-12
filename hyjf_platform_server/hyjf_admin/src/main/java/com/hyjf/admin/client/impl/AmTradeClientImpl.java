@@ -1115,5 +1115,21 @@ public class AmTradeClientImpl implements AmTradeClient{
         return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
     }
 
+    /**
+     * yangchangwei
+     * 根据Borrownid 获取放款任务表
+     * @param id
+     * @return
+     */
+    @Override
+    public BorrowApicronResponse getBorrowApicronByID(String id) {
+        BorrowApicronResponse response = restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID", id, BorrowApicronResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
 
 }

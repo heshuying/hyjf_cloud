@@ -5,6 +5,7 @@ package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndRequest;
 import com.hyjf.am.vo.admin.*;
@@ -544,4 +545,11 @@ public interface AmTradeClient {
     int updateBankCreditEnd(BankCreditEndVO requestBean);
 
     int updateCreditEndForInitial(BankCreditEndVO requestBean);
+
+    /**
+     * 根据ID获取放款任务表
+     * @param id
+     * @return
+     */
+    BorrowApicronResponse getBorrowApicronByID(String id);
 }
