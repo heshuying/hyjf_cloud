@@ -3,7 +3,11 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+
+import java.util.List;
 
 /**
  * @author liubin
@@ -19,4 +23,14 @@ public interface BankCreditEndService extends BaseService{
      * @return
      */
     int insertBankCreditEndForCreditEnd(HjhDebtCredit hjhDebtCredit, String tenderAccountId, String tenderAuthCode);
+
+    List<BankCreditEnd> getCreditEndList(BankCreditEndRequest requestBean);
+
+    Integer getCreditEndCount(BankCreditEndRequest requestBean);
+
+    int updateBankCreditEnd(BankCreditEnd bankCreditEnd);
+
+    BankCreditEnd selectByOrderId(String orderId);
+
+    int updateCreditEndForInitial(BankCreditEnd bankCreditEnd);
 }
