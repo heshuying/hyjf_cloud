@@ -35,7 +35,7 @@ import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.BankCallDefine;
 import com.hyjf.pay.call.BankCallApi;
 import com.hyjf.pay.config.SystemConfig;
-import com.hyjf.pay.entity.ChinapnrExclusiveLog;
+import com.hyjf.pay.entity.BankExclusiveLog;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -200,7 +200,7 @@ public class BankCallController extends BaseController {
             // 查询相应的订单记录
             if (Validator.isNotNull(logOrderId)) {
                 // 获取主键
-                ChinapnrExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -256,7 +256,7 @@ public class BankCallController extends BaseController {
             }
         } else {
             if (StringUtils.isNotBlank(logOrderId)) {
-                ChinapnrExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -373,7 +373,7 @@ public class BankCallController extends BaseController {
             // 返回参数中含有logOrderId时, 更新状态记录
             if (Validator.isNotNull(logOrderId)) {
                 // 取得检证数据
-                ChinapnrExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -621,7 +621,7 @@ public class BankCallController extends BaseController {
             // 返回参数中含有logOrderId时, 更新状态记录
             if (Validator.isNotNull(logOrderId)) {
                 // 取得检证数据
-                ChinapnrExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+                BankExclusiveLog record = payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
                 if (record != null) {
                     bean.setLogOrderId(logOrderId);
                     bean.setLogClient(record.getClient());
@@ -720,7 +720,7 @@ public class BankCallController extends BaseController {
         // 验签成功时, 跳转到各功能模块的回调URL
         ModelAndView modelAndView = new ModelAndView(BankCallDefine.JSP_BANK_SEND);
         if (StringUtils.isNotBlank(logOrderId)) {
-            ChinapnrExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
+            BankExclusiveLog record = this.payLogService.selectChinapnrExclusiveLogByOrderId(logOrderId);
             if (record != null) {
                 bean.setLogOrderId(logOrderId);
                 bean.setLogClient(record.getClient());
