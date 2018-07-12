@@ -115,16 +115,16 @@ public class FddGenerateContractBean implements Serializable{
         this.planEndDate = planEndDate;
     }
     /**
-     * 鎵挎帴璁㈠崟鍙�
+     * 承接订单号
      */
     private String assignOrderId;
     /**
-     * 鍊鸿浆缂栧彿
+     * 债转编号
      */
     private String creditNid;
 
     /**
-     * 鍊鸿浆鍘熷鎶曡祫璁㈠崟鍙�
+     * 债转原始投资订单号
      */
     private String creditTenderNid;
 
