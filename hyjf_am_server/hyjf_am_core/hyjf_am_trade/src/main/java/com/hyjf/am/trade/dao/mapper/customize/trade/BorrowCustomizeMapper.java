@@ -1,10 +1,12 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize;
+import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,4 +46,9 @@ public interface BorrowCustomizeMapper {
      */
     BorrowCustomize getBorrowCustomize(String borrowNid);
 
+    /**
+     * 手动录标的自动备案、初审的标
+     * @return
+     */
+    List<BorrowWithBLOBs> selectAutoBorrowNidList();
 }
