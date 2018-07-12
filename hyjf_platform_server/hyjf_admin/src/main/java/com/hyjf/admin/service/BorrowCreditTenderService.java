@@ -22,4 +22,12 @@ public interface BorrowCreditTenderService {
     void exprotBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response);
 
 
+    /**
+     * 还款信息明细
+     * @author zhangyk
+     * @date 2018/7/12 10:52
+     */
+    AdminResult getBorrowCreditRepayInfoList(BorrowCreditRepayRequest request);
+
+
 }

@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.trade.service.BorrowCreditTenderService;
+import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,9 @@ public class CreditTenderController extends BaseController{
 
     @Autowired
     BankCreditTenderService bankCreditTenderService;
+
+    @Autowired
+    private BorrowCreditTenderService borrowCreditTenderService;
 
 
     @GetMapping("/selectByAssignNidAndUserId/{assignNid}/{userId}")
@@ -302,6 +308,49 @@ public class CreditTenderController extends BaseController{
         CreditTenderVO bean =bankCreditTenderService.getCreditTenderByUserIdOrdId(logOrderId,logUserId);
         response.setResult(bean);
         return response;
+    }
+
+
+    /**
+     * 汇转让还款详情count
+     * @author zhangyk
+     * @date 2018/7/12 15:22
+     */
+    @PostMapping("/getRepayCount")
+    public BorrowCreditRepayResponse getCreditTenderInfoCount(@RequestBody BorrowCreditRepayAmRequest request){
+        BorrowCreditRepayResponse response = new BorrowCreditRepayResponse();
+        Integer count = borrowCreditTenderService.getCreditRepayListCount(request);
+        response.setCount(count);
+        return response;
+
+    }
+
+
+    /**
+     * 汇转让还款详情list
+     * @author zhangyk
+     * @date 2018/7/12 15:23
+     */
+    @PostMapping("/getRepayList")
+    public BorrowCreditRepayResponse getCreditTenderInfoList(@RequestBody BorrowCreditRepayAmRequest request){
+        BorrowCreditRepayResponse response = new BorrowCreditRepayResponse();
+        List<BorrowCreditRepayInfoVO> list = borrowCreditTenderService.getCreditRepayList(request);
+        response.setResultList(list);
+        return response;
+    }
+
+    /**
+     * 汇转让还款详情合计行
+     * @author zhangyk
+     * @date 2018/7/12 15:23
+     */
+    @PostMapping("/getRepaySum")
+    public BorrowCreditRepayResponse getCreditTenderInfoSum(@RequestBody BorrowCreditRepayAmRequest request){
+        BorrowCreditRepayResponse response = new BorrowCreditRepayResponse();
+        Map<String,Object> map = borrowCreditTenderService.getCreditRepayListSum(request);
+        response.setSumData(map);
+        return response;
+
     }
 
 }

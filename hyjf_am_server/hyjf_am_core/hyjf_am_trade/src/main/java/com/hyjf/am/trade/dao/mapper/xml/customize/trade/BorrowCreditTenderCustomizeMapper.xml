@@ -7,16 +7,15 @@
 	<select id="countBorrowCreditTender" resultType="java.lang.Integer" >
 		SELECT
 		COUNT(hct.assign_nid) AS total
-		FROM ht_credit_tender hct INNER JOIN ht_r_user hu ON hct.user_id = hu.user_id
-		INNER JOIN ht_r_user huc ON hct.credit_user_id = huc.user_id
+		FROM ht_credit_tender hct
 		<include refid="WHERE_COLUMN"/>
 	</select>
 
 
 	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize">
 		select
-		hu.username AS userName,
-		huc.username AS creditUserName,
+		hct.user_name AS userName,
+		hct.credit_user_name AS creditUserName,
 		hct.status AS status,
 		hct.bid_nid AS bidNid,
 		hct.credit_nid AS creditNid,
@@ -42,8 +41,7 @@
 		''
 		END AS assignRepayNextTime,
 		hct.create_time AS addTime
-		FROM ht_credit_tender hct INNER JOIN ht_r_user hu ON hct.user_id = hu.user_id
-		INNER JOIN ht_r_user huc ON hct.credit_user_id = huc.user_id
+		FROM ht_credit_tender hct
 		<include refid="WHERE_COLUMN"/>
 		ORDER BY
 		hct.create_time DESC
@@ -61,18 +59,17 @@
 		    SUM(hct.assign_pay) AS sumAssignPay,
 		    SUM(hct.assign_repay_account) AS sumAssignRepayAccount,
 		    SUM((select sum(manage_fee) from ht_credit_repay where assign_nid= hct.assign_nid)) AS sumCreditFee
-	    FROM ht_credit_tender hct INNER JOIN ht_r_user hu ON hct.user_id = hu.user_id
-	    INNER JOIN ht_r_user huc ON hct.credit_user_id = huc.user_id
+	    FROM ht_credit_tender hct
 		<include refid="WHERE_COLUMN"/>
 	</select>
 
 	<sql id="WHERE_COLUMN">
 		<where>
 			<if test="userName != null and userName != ''">
-				AND hu.username = #{userName}
+				AND hct.user_name = #{userName}
 			</if>
 			<if test="creditUserName != null and creditUserName != ''">
-				AND huc.create_user_name  = #{creditUserName}
+				AND hct.create_user_name  = #{creditUserName}
 			</if>
 			<if test="creditNid != null and creditNid != ''">
 				AND hct.credit_nid = #{creditNid}
@@ -101,6 +98,38 @@
 		</where>
 	</sql>
 
+	 <!-- *******************************************还款明细*************************************************************    -->
+
+	<select id="getCreditRepayList" resultType="com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO">
+		SELECT
+			hbi.borrow_nid as borrowNid,
+			hbi.name as borrowName,
+			hb.borrow_style as borrowStyle,
+			cr.recover_period as recoverPeriod,
+	  		cr.assign_capital as assignCapital,
+			cr.assign_interest as assignInterest,
+			cr.assign_account as assignAccount,
+			cr.manage_fee as manageFee,
+			cr.status,
+		    CASE WHEN  cr.assign_repay_next_time > 0 THEN FROM_UNIXTIME( cr.assign_repay_next_time, '%Y-%m-%d %H:%i:%s' )
+		    ELSE '' END as assignRepayNextTime
+		FROM ht_credit_repay cr
+		LEFT JOIN ht_borrow_info  hbi on hbi.borrow_nid = cr.bid_nid
+		LEFT JOIN ht_borrow hb on hb.borrow_nid = cr.bid_nid
+		WHERE assign_nid = #{assignNid}
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="sumCreditRepay" resultType="Map">
+		select
+		  SUM(assign_capital) AS sumAssignCapital,
+		  SUM(assign_interest) AS sumAssigninterest,
+		  SUM(assign_account) AS sumAssignAccount,
+		  SUM(manage_fee) AS sumManageFee
+    from ht_credit_repay
+	</select>
 
 
 </mapper>
