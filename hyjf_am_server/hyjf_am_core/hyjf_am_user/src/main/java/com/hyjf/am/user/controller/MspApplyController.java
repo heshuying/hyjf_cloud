@@ -1,75 +1,35 @@
 package com.hyjf.am.user.controller;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
 import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspApply;
-import com.hyjf.am.user.dao.model.auto.MspApplydetails;
-import com.hyjf.am.user.dao.model.auto.MspConfigure;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetail;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.MspApplyService;
 import com.hyjf.am.user.utils.AnRongDefine;
 import com.hyjf.am.user.utils.ParamUtil;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.user.MspAbnormalBeanVO;
-import com.hyjf.am.vo.user.MspAnliinfosVO;
-import com.hyjf.am.vo.user.MspApplyVO;
-import com.hyjf.am.vo.user.MspApplydetailsVO;
-import com.hyjf.am.vo.user.MspBlackdataVO;
-import com.hyjf.am.vo.user.MspConfigureVO;
-import com.hyjf.am.vo.user.MspFqzVO;
-import com.hyjf.am.vo.user.MspNormalcreditdetailVO;
-import com.hyjf.am.vo.user.MspQuerydetailVO;
-import com.hyjf.am.vo.user.MspRegionVO;
-import com.hyjf.am.vo.user.MspShixininfosVO;
-import com.hyjf.am.vo.user.MspTitleVO;
-import com.hyjf.am.vo.user.MspZhixinginfosVO;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.http.HttpClientUtils;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
 import com.hyjf.pay.lib.anrong.util.AnRongCallUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static com.hyjf.am.response.Response.FAIL;
 
 /**
  * 
@@ -89,7 +49,7 @@ public class MspApplyController  {
 	/**
 	 * 列表维护画面初始化
 	 * 
-	 * @param request
+	 * @param
 	 * @param form
 	 * @return
 	 */
@@ -147,8 +107,8 @@ public class MspApplyController  {
 	/**
 	 * 画面迁移(含有id更新，不含有id添加)
 	 * 
-	 * @param request
-	 * @param form
+	 * @param
+	 * @param
 	 * @return
 	 */
 	@RequestMapping("/infoAction")	
@@ -162,7 +122,7 @@ public class MspApplyController  {
 	/**
 	 * 添加活动信息
 	 * 
-	 * @param request
+	 * @param
 	 * @param form
 	 * @return
 	 */
@@ -177,7 +137,7 @@ public class MspApplyController  {
 		
 		if(!validatorApiResult(postResultJson)){
 		    // 失败返回
-			result.setRtn(result.FAIL);
+			result.setRtn(FAIL);
             result.setMessage( postResultJson.get(AnRongDefine.RESULT_JSON_KEY_MSP_MESS)+"<br/>"+postResultJson.get(AnRongDefine.RESULT_JSON_KEY_FQZ_MESS));
             return result;
 		}
@@ -205,7 +165,7 @@ public class MspApplyController  {
     /**
 	 * 修改活动维护信息
 	 * 
-	 * @param request
+	 * @param
 	 * @param form
 	 * @return
 	 */
@@ -224,7 +184,7 @@ public class MspApplyController  {
 	/**
 	 * 删除配置信息
 	 * 
-	 * @param request
+	 * @param
 	 * @param form
 	 * @return
 	 */
@@ -250,19 +210,19 @@ public class MspApplyController  {
 			if (form.getId() != null) {
 				Boolean hasnot = true;
 				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).getId() == form.getId()) {
+					if (list.get(i).getId().equals(form.getId())) {
 						hasnot = false;
 						break;
 					}
 				}
 				if (hasnot) {
-					result.setRtn(Response.FAIL);
+					result.setRtn(FAIL);
 					result.setMessage ("银行名称或银行代码不可重复添加");
 				} else {
 					result.setRtn(Response.SUCCESS);
 				}
 			} else {
-				result.setRtn(Response.FAIL);
+				result.setRtn(FAIL);
 				result.setMessage ("银行名称或银行代码不可重复添加");
 			}
 		} else {
@@ -274,7 +234,7 @@ public class MspApplyController  {
 	/**
 	 * 画面迁移(含有id更新，不含有id添加)
 	 * 
-	 * @param request
+	 * @param
 	 * @param form
 	 * @return
 	 */
@@ -327,7 +287,7 @@ public class MspApplyController  {
     public MspApplytResponse shareUser(@RequestBody  MspApplytRequest form) {
 		MspApplytResponse result = new MspApplytResponse();
         // 准备参数
-        if(!form.getApprovalResult().equals("01")) {
+        if(!"01".equals(form.getApprovalResult())) {
         	
         	form.setUnredeemedMoney(null);
         	form.setRepaymentStatus(null);
@@ -345,7 +305,7 @@ public class MspApplyController  {
         
         if(!validatorApiResult(postResultJson)){
             // 失败返回
-        	result.setRtn(Response.FAIL);
+        	result.setRtn(FAIL);
             result.setMessage( (String)postResultJson.get("msg"));
             return result;
         }
@@ -363,7 +323,7 @@ public class MspApplyController  {
 	/**
 	 * 列表维护画面初始化
 	 * 
-	 * @param request
+	 * @param
 	 * @param form
 	 * @return
 	 */
@@ -371,7 +331,7 @@ public class MspApplyController  {
 	public MspApplytResponse download(@RequestBody  MspApplytRequest form) {
 		String applyId=form.getApplyId();
 		MspApplytResponse mar=new MspApplytResponse();
-		if(form.getApplyId()==null||!form.getApplyId().equals("")) {
+		if(form.getApplyId()==null||!"".equals(form.getApplyId())) {
 			MspApply ma=this.mspApplyService.getRecord( Integer.valueOf(form.getIds()));
 			MspApplyVO mspapply=new MspApplyVO();
 			BeanUtils.copyProperties(ma,mspapply);
@@ -392,14 +352,14 @@ public class MspApplyController  {
 			BigDecimal  quxiao= new BigDecimal(0);
 			int quxiaoshu=0;
 			for (MspApplydetails mspApplyDetails : applylist) {
-				if(mspApplyDetails.getApplyresult()!=null&&mspApplyDetails.getApplyresult().equals("01")) {
+				if(mspApplyDetails.getApplyresult()!=null&& "01".equals(mspApplyDetails.getApplyresult())) {
 					tongguo=tongguo.add(new BigDecimal(mspApplyDetails.getLoanmoney()));
 					
 				}
-				if(mspApplyDetails.getApplyresult()!=null&&mspApplyDetails.getApplyresult().equals("02")) {
+				if(mspApplyDetails.getApplyresult()!=null&& "02".equals(mspApplyDetails.getApplyresult())) {
 					jujue=jujue.add(new BigDecimal(mspApplyDetails.getLoanmoney()));
 				}
-				if(mspApplyDetails.getApplyresult()!=null&&mspApplyDetails.getApplyresult().equals("05")) {
+				if(mspApplyDetails.getApplyresult()!=null&& "05".equals(mspApplyDetails.getApplyresult())) {
 					quxiao=quxiao.add(new BigDecimal(mspApplyDetails.getLoanmoney()));
 					quxiaoshu=quxiaoshu+1;
 				}
@@ -411,9 +371,9 @@ public class MspApplyController  {
 	          
 	        Calendar   calendar   =   new   GregorianCalendar(); 
 	        calendar.setTime(new Date()); 
-	        calendar.add(calendar.DAY_OF_MONTH, -3);
+	        calendar.add(Calendar.DAY_OF_MONTH, -3);
 	        Date y3 = calendar.getTime();
-	        calendar.add(calendar.DAY_OF_MONTH, -3);
+	        calendar.add(Calendar.DAY_OF_MONTH, -3);
 	        Date y6 = calendar.getTime();
 		        
 			

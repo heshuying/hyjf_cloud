@@ -50,6 +50,7 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param userId
      * @return
      */
+    @Override
     UserVO getUserByUserId(Integer userId);
     /**
      * @Description

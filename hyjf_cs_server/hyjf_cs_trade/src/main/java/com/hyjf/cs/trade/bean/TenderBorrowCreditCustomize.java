@@ -83,11 +83,13 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 		this.telcode = telcode;
 	}
 
-	public String getTenderPeriod() {
+	@Override
+    public String getTenderPeriod() {
 		return tenderPeriod;
 	}
 
-	public void setTenderPeriod(String tenderPeriod) {
+	@Override
+    public void setTenderPeriod(String tenderPeriod) {
 		this.tenderPeriod = tenderPeriod;
 	}
 
