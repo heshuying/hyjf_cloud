@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.admin.service.CashDepositeService;
+import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -42,12 +43,16 @@ public class CashDepositeController extends BaseController {
     @PostMapping("/searchList")
     public JSONObject searchList(AssetListRequest request) {
     	JSONObject jsonObject = new JSONObject();
+    	List<AssetListCustomizeVO> list = null ;
     	// 总条数
         Integer count = assetListService.getRecordCount(request);
         jsonObject.put("count",count);
         // 保证金不足的资产列表list
-        List<AssetListCustomizeVO> recordList=assetListService.findAssetList(request);
-        jsonObject.put("recordList",recordList);
+    	AssetListCustomizeResponse res = assetListService.findAssetList(request);
+		if(res != null) {
+			list = res.getResultList();
+			jsonObject.put("recordList",list);
+		}
         // 资金来源 下拉框
         List<HjhInstConfigVO> hjhInstConfigList=assetListService.getHjhInstConfigList();
         jsonObject.put("hjhInstConfigList", hjhInstConfigList);

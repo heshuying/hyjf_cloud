@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
@@ -45,7 +46,6 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
 import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.AccountListClient;
 import com.hyjf.cs.trade.client.AmBorrowClient;
@@ -947,7 +947,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
 
         logger.info("-------------加入订单号:" + accedeOrderId + ",开始生成计划加入协议！----------");
         try {
-            FddGenerateContractBean bean = new FddGenerateContractBean();
+            FddGenerateContractBeanVO bean = new FddGenerateContractBeanVO();
             bean.setOrdid(accedeOrderId);
             // TODO 该类型原有共同变量获取
 //            bean.setTransType(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN);
