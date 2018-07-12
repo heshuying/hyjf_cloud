@@ -91,7 +91,9 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	private String assignPlanOrderId;
 	
 	/**
-	 * 承接订单号
+	 * 承接订单号(计划订单号是加入计划时生成的订单号，
+	 * 加入后投资会有投资订单号 也就是tender表的nig，
+	 * 债转相当于再投资 然后债转再投资时生成 assignOrderId 类似于 nid,跟加入计划的订单号无关)
 	 */
 	private String assignOrderId;
 	
@@ -176,6 +178,23 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	private String imgUrl;
 	
 	private int limit;
+
+	/**
+	 * 隐藏域用户id
+	 */
+	private String userIdHidden;
+	/**
+	 * 隐藏域标的号
+	 */
+	private String borrowNidHidden;
+	/**
+	 * 隐藏域承接订单号
+	 */
+	private String assignNidHidden;
+	/**
+	 * 隐藏域债转编号
+	 */
+	private String creditNidHidden;
 	
 	/**
 	 * 构造方法
@@ -463,5 +482,36 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
-	
+
+	public String getUserIdHidden() {
+		return userIdHidden;
+	}
+
+	public void setUserIdHidden(String userIdHidden) {
+		this.userIdHidden = userIdHidden;
+	}
+
+	public String getBorrowNidHidden() {
+		return borrowNidHidden;
+	}
+
+	public void setBorrowNidHidden(String borrowNidHidden) {
+		this.borrowNidHidden = borrowNidHidden;
+	}
+
+	public String getAssignNidHidden() {
+		return assignNidHidden;
+	}
+
+	public void setAssignNidHidden(String assignNidHidden) {
+		this.assignNidHidden = assignNidHidden;
+	}
+
+	public String getCreditNidHidden() {
+		return creditNidHidden;
+	}
+
+	public void setCreditNidHidden(String creditNidHidden) {
+		this.creditNidHidden = creditNidHidden;
+	}
 }
