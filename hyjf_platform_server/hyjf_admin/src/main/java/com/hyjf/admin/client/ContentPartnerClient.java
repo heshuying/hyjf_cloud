@@ -4,7 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.ContentPartnerRequestBean;
-import com.hyjf.am.response.admin.ContentPartnerResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.vo.config.LinkVO;
 
 /**
@@ -18,7 +18,7 @@ public interface ContentPartnerClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentPartnerResponse searchAction(ContentPartnerRequestBean requestBean);
+	LinkResponse searchAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 添加公司管理-合作伙伴
@@ -26,7 +26,7 @@ public interface ContentPartnerClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentPartnerResponse insertAction(ContentPartnerRequestBean requestBean);
+	LinkResponse insertAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 修改公司管理-合作伙伴
@@ -34,7 +34,7 @@ public interface ContentPartnerClient {
 	 * @param requestBean
 	 * @return
 	 */
-	ContentPartnerResponse updateAction(ContentPartnerRequestBean requestBean);
+	LinkResponse updateAction(ContentPartnerRequestBean requestBean);
 
 	/**
 	 * 根据id获取公司管理-合作伙伴
