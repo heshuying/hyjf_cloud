@@ -342,4 +342,27 @@
 			  AND a.borrow_nid = #{borrowNid}
 
 	</select>
+
+    <select id="selectAutoBorrowNidList" resultMap="selectBorrowNidListMap">
+        SELECT
+        hb.borrow_nid AS borrow_nid,
+        hb.`status` AS `status`,
+        hb.verify_status AS verify_status
+        FROM
+        ht_borrow hb
+        LEFT JOIN ht_borrow_info info ON info.id = hb.id
+        INNER JOIN ht_hjh_asset_borrowtype hhab ON info.inst_code = hhab.inst_code
+        AND info.asset_type = hhab.asset_type
+        WHERE
+        info.inst_code = '10000000'
+        AND ((hb.`status` = 0
+        AND hhab.auto_record = 1)
+        OR (hb.`status` = 1
+        AND hb.verify_status = 0
+        AND hhab.auto_bail = 1)
+        OR (hb.`status` = 1
+        AND hb.verify_status <![CDATA[<>]]> 0
+        AND hhab.auto_audit = 1))
+    </select>
+
 </mapper>
