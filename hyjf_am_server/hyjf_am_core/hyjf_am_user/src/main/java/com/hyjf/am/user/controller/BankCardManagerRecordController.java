@@ -9,6 +9,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.user.BankCardLogResponse;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
+import com.hyjf.am.user.dao.model.auto.BankCardLog;
+import com.hyjf.am.vo.user.BankCardLogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,14 +54,24 @@ public class BankCardManagerRecordController extends BaseController{
         BankCardManagerResponse response = new BankCardManagerResponse();
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = bankCardManagerServiceService.countUserRecord(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
-        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectBankCardList(mapParam,paginator.getOffset(), paginator.getLimit());
+        Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
+        if(request.getPageSize() == 0){
+            paginator = new Paginator(request.getCurrPage(), usesrCount);
+        }
+        int limitStart = 0;
+        int limitEnd = 0;
+        //查询导出数据
+        if(request.getLimitFlg()!=0){
+            limitStart = paginator.getOffset();
+            limitEnd = paginator.getLimit();
+        }
+        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectBankCardList(mapParam,limitStart, limitEnd);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
                 response.setResultList(bankcardManager);
                 response.setCount(usesrCount);
-                response.setRtn(Response.SUCCESS);//代表成功
+                response.setRtn(Response.SUCCESS);
             }
         }
         return response;
@@ -91,8 +105,18 @@ public class BankCardManagerRecordController extends BaseController{
         BankCardManagerResponse response = new BankCardManagerResponse();
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = bankCardManagerServiceService.countRecordTotalNew(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
-        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectNewBankCardList(mapParam,paginator.getOffset(), paginator.getLimit());
+        Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
+        if(request.getPageSize() ==0){
+            paginator = new Paginator(request.getCurrPage(), usesrCount);
+        }
+        int limitStart = 0;
+        int limitEnd = 0;
+        //查询导出数据
+        if(request.getLimitFlg()!=0){
+            limitStart = paginator.getOffset();
+            limitEnd = paginator.getLimit();
+        }
+        List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectNewBankCardList(mapParam,limitStart, limitEnd);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
@@ -137,6 +161,39 @@ public class BankCardManagerRecordController extends BaseController{
         mapParam.put("mobile",request.getMobile());
         mapParam.put("realName",request.getRealName());
         return mapParam;
+    }
+
+    /**
+     * 查找用户银行卡操作记录表
+     * @param request
+     * @return
+     */
+    @RequestMapping("/selectBankCardLogByExample")
+    public BankCardLogResponse selectBankCardLogByExample(@RequestBody @Valid BankCardLogRequest request) {
+        logger.info("---selectBankCardLogByExample by param---  " + JSONObject.toJSON(request));
+        BankCardLogResponse response = new BankCardLogResponse();
+        int bankCount = bankCardManagerServiceService.countBankCardLog(request);
+        Paginator paginator = new Paginator(request.getCurrPage(), bankCount,request.getPageSize());
+        if(request.getPageSize() ==0){
+            paginator = new Paginator(request.getCurrPage(), bankCount);
+        }
+        int limitStart = 0;
+        int limitEnd = 0;
+        //查询导出数据
+        if(request.getLimitFlg()!=0){
+            limitStart = paginator.getOffset();
+            limitEnd = paginator.getLimit();
+        }
+        List<BankCardLog> bankCardLogs = bankCardManagerServiceService.selectBankCardLogByExample(request,limitStart,limitEnd);
+        if(bankCount>0){
+            if (!CollectionUtils.isEmpty(bankCardLogs)) {
+                List<BankCardLogVO> bankcardManager = CommonUtils.convertBeanList(bankCardLogs, BankCardLogVO.class);
+                response.setResultList(bankcardManager);
+                response.setCount(bankCount);
+                response.setRtn(Response.SUCCESS);//代表成功
+            }
+        }
+        return response;
     }
 
 }

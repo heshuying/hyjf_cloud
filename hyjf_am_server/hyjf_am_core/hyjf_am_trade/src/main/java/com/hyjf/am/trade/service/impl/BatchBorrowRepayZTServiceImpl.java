@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.vo.message.AppMsMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +151,9 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
     
 	@Autowired
 	private SmsProducer smsProducer;
+
+	@Autowired
+	private AppMessageProducer appMessageProducer;
 
     @Autowired
     SystemConfig systemConfig;
@@ -3222,21 +3227,18 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 	 */
 	private void sendSms(int userId, String borrowNid, BigDecimal repayCapital, BigDecimal repayInterest) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayCapital)) {
-			//TODO: userid问题
-//			Map<String, String> msg = new HashMap<String, String>();
-//			msg.put(VAL_USERID, String.valueOf(userId));
-//			msg.put(VAL_BORROWNID, borrowNid);
-//			msg.put(VAL_CAPITAL, repayCapital.toString());
-//			msg.put(VAL_INTEREST, repayInterest.toString());
-//			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
-//				Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//				if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
-//					return;
-//				}
-//				SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
-//						CustomConstants.CHANNEL_TYPE_NORMAL);
-//				smsProcesser.gather(smsMessage);
-//			}
+ 			Map<String, String> msg = new HashMap<>();
+			msg.put("userId", String.valueOf(userId));
+			msg.put("val_borrownid", borrowNid);
+			msg.put("val_capital", repayCapital.toString());
+			msg.put("val_interest", repayInterest.toString());
+			SmsMessage smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
+					CustomConstants.CHANNEL_TYPE_NORMAL);
+			try {
+				smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+			} catch (MQException e2) {
+				logger.error("发送邮件失败..", e2);
+			}
 		}
 	}
 
@@ -3250,37 +3252,21 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 	 */
 	private void sendMessage(int userId, String borrowNid, BigDecimal repayAccount, BigDecimal repayInterest) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayAccount)) {
-			//TODO: userid问题
-//			Map<String, String> msg = new HashMap<String, String>();
-//			msg.put(VAL_USERID, String.valueOf(userId));
-//			msg.put(VAL_BORROWNID, borrowNid);
-//			msg.put(VAL_AMOUNT, repayAccount.toString());
-//			msg.put(VAL_INTEREST, repayInterest.toString());
-//			if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-//				Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//				if (users == null) {
-//					return;
-//				} else {
-//					UsersInfo userInfo = this.getUsersInfoByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//					if (StringUtils.isEmpty(userInfo.getTruename())) {
-//						msg.put(VAL_NAME, users.getUsername());
-//					} else if (userInfo.getTruename().length() > 1) {
-//						msg.put(VAL_NAME, userInfo.getTruename().substring(0, 1));
-//					} else {
-//						msg.put(VAL_NAME, userInfo.getTruename());
-//					}
-//					Integer sex = userInfo.getSex();
-//					if (Validator.isNotNull(sex)) {
-//						if (sex.intValue() == 2) {
-//							msg.put(VAL_SEX, "女士");
-//						} else {
-//							msg.put(VAL_SEX, "先生");
-//						}
-//					}
-//					AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
-//					appMsProcesser.gather(smsMessage);
-//				}
-//			}
+			Map<String, String> msg = new HashMap<>();
+			msg.put("userId", String.valueOf(userId));
+			msg.put("val_borrownid", borrowNid);
+			msg.put("val_amount", repayAccount.toString());
+			msg.put("val_interest", repayInterest.toString());
+
+			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get("userId")), msg, null,
+					MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
+			try {
+				appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+						JSON.toJSONBytes(smsMessage)));
+			} catch (MQException e) {
+				logger.error("发送app消息失败..", e);
+			}
+
 		}
 	}
 
@@ -3290,7 +3276,7 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 		replaceStrs.put("val_title", borrowNid);
 		replaceStrs.put("val_time", GetDate.formatTime());
 		SmsMessage smsMessage =
-                new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null,
+                new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null,
                 		CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 		
 		try {

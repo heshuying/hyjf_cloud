@@ -3,14 +3,14 @@
  */
 package com.hyjf.am.resquest.user;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
 /**
  * @author NXL
  * @version UserMemberParamVO, v0.1 2018/6/19 17:41
  *          会员中心->会员管理(请求参数）
  */
-public class UserManagerRequest extends BaseVO {
+public class UserManagerRequest extends BasePage {
     //注册开始时间
     public String regTimeStart;
     // 注册结束时间
@@ -40,18 +40,6 @@ public class UserManagerRequest extends BaseVO {
     // 用户来源
     public String instCodeSrch;
 
-    public int limit;
-
-        private int paginatorPage = 1;
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
     //
     public String getRegTimeStart() {
         return regTimeStart;
@@ -163,14 +151,5 @@ public class UserManagerRequest extends BaseVO {
 
     public void setInstCodeSrch(String instCodeSrch) {
         this.instCodeSrch = instCodeSrch;
-    }
-
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.message.bean.MessagePush;
 import com.hyjf.cs.message.jpush.*;
 import com.hyjf.cs.message.mongo.MessagePushMsgDao;
@@ -89,6 +90,12 @@ public class MsgPushHandle {
 		if (userVO == null) {
 			return -1;
 		}
+
+		UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userVO.getUserId());
+		// 为保护客户隐私，只显示客户姓氏，不显示客户全名。 胡宝志20160115
+		replaceStrs.put("val_name", userInfoVO.getTruename().substring(0, 1));
+		replaceStrs.put("val_sex", userInfoVO.getSex() == 1 ? "先生" : "女士");
+
 		return sendMessages(tplCode, replaceStrs, userVO.getMobile());
 	}
 

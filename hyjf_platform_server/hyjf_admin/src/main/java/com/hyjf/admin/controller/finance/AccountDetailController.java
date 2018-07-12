@@ -143,7 +143,7 @@ public class AccountDetailController extends BaseController {
     public JSONObject accountdetailDataRepair(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = null;
         String strRepayDate = "";
-        // 查询出20170120还款后,交易明细有问题的用户ID
+        // 查询出还款后,交易明细有问题的用户ID
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
             List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList = adminAccountDetailDataRepairResponse.getResultList();

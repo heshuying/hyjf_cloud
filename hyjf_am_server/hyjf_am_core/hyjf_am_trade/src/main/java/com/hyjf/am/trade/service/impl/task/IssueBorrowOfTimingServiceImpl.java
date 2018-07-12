@@ -352,7 +352,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		// 短信参数
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("val_title", borrowNid);
-		SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMSSENDFORMANAGER, sender,
+		SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, sender,
 				tplCode, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));

@@ -1777,7 +1777,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		Map<String, String> borrowerReplaceStrs = new HashMap<String, String>();
 		borrowerReplaceStrs.put("val_borrownid", borrowNid);
 		borrowerReplaceStrs.put("val_amount", accountBorrow.getBalance().toString());
-		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
+		SmsMessage borrowerSmsMessage = new SmsMessage(borrowUserId, borrowerReplaceStrs, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_JIEKUAN_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
 			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowerSmsMessage)));
@@ -1792,7 +1792,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		Map<String, String> replaceStrs = new HashMap<String, String>();
 		replaceStrs.put("val_title", borrowNid);
 		replaceStrs.put("val_time", GetDate.formatTime());
-		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMSSENDFORMANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
+		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
 			mailProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));

@@ -5,15 +5,15 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.user.BankcardManagerVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.hyjf.admin.client.BankCardManagerClient;
-
 import java.util.List;
 
 /**
@@ -46,12 +46,12 @@ public class BankCardManagerClientImpl implements BankCardManagerClient{
      * @return
      */
     @Override
-    public List<BankcardManagerVO> selectBankCardList(BankCardManagerRequest request){
+    public BankCardManagerResponse selectBankCardList(BankCardManagerRequest request){
         BankCardManagerResponse response = restTemplate
                 .postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistHF",request, BankCardManagerResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }
@@ -62,15 +62,30 @@ public class BankCardManagerClientImpl implements BankCardManagerClient{
      * @return
      */
     @Override
-    public List<BankcardManagerVO> selectNewBankCardList (BankCardManagerRequest request){
+    public BankCardManagerResponse selectNewBankCardList (BankCardManagerRequest request){
         BankCardManagerResponse response = restTemplate
                 .postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistJX",request, BankCardManagerResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }
 
+    /**
+     * 查找用户银行卡操作记录表
+     * @param request
+     * @return
+     */
+    @Override
+    public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
+        BankCardLogResponse response =  restTemplate
+                .postForEntity("http://AM-USER/am-user/bankCardManager/selectBankCardLogByExample",request, BankCardLogResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
 
 }

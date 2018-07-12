@@ -34,22 +34,46 @@ public interface AccountDetailService {
      */
     int countAccountDetail(Map<String, Object> mapParam);
 
-    //查询出20170120还款后,交易明细有问题的用户ID
+    /**
+     * 查询出款后,交易明细有问题的用户ID
+     * @return
+     */
     List<AdminAccountDetailDataRepairCustomize> queryAccountDetailErrorUserList();
 
-    //查询交易明细最小的id
+    /**
+     * 查询交易明细最小的id
+     * @param userId
+     * @return
+     */
     AdminAccountDetailDataRepairCustomize queryAccountDetailIdByUserId(int userId);
 
-    // 根据Id查询此条交易明细
+    /**
+     * 根据Id查询此条交易明细
+     * @param accountId
+     * @return
+     */
     AccountList selectAccountById(int accountId);
 
-    // 查询此用户的下一条交易明细
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @param userId
+     * @return
+     */
     AccountList selectNextAccountList(int accountId, int userId);
 
-    // 根据查询用交易类型查询用户操作金额
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @return
+     */
     AccountTrade selectAccountTradeByValue(String tradeValue);
 
-    // 更新用户的交易明细
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @return
+     */
     int updateAccountList(AccountListRequest accountListRequest);
 
 }
