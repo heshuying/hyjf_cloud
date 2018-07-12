@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.impl.admin.productcenter.batchcenter.borrowrecover;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.admin.productcenter.batchcenter.borrowRecover.BatchCenterBorrowRecoverService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
@@ -44,9 +45,26 @@ public class BatchCenterBorrowRecoverServiceImpl extends BaseServiceImpl impleme
         return recoverVoList;
     }
 
+    /**
+     * 获取批次中心列表求和
+     * @param request
+     * @return
+     */
     @Override
     public BatchBorrowRecoverVo getListSum(BatchBorrowRecoverRequest request) {
         this.batchCenterCustomizeMapper.sumBatchCenter(request);
         return null;
+    }
+
+    /**
+     * 根据ID获取批次任务数据
+     * @param id
+     * @return
+     */
+    @Override
+    public BorrowApicron getRecoverApicronByID(String id) {
+
+        BorrowApicron borrowApicron = this.borrowApicronMapper.selectByPrimaryKey(Integer.valueOf(id));
+        return borrowApicron;
     }
 }
