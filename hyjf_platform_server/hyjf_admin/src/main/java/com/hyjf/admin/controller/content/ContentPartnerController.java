@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.content;
 
 import com.hyjf.am.response.config.LinkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +77,19 @@ public class ContentPartnerController extends BaseController {
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentPartnerRequestBean requestBean) {
 		LinkResponse response = contentPartnerService.updateStatus(requestBean);
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<>();
+	}
+
+	@ApiOperation(value = "公司管理-合作伙伴", notes = "删除公司管理-合作伙伴")
+	@RequestMapping("/delete/{id}")
+	public AdminResult delete(@PathVariable Integer id) {
+		LinkResponse response = contentPartnerService.deleteById(id);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}

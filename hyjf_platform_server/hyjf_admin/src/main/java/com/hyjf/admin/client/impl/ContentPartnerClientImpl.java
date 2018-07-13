@@ -3,13 +3,13 @@
  */
 package com.hyjf.admin.client.impl;
 
-import com.hyjf.am.response.config.LinkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.beans.request.ContentPartnerRequestBean;
 import com.hyjf.admin.client.ContentPartnerClient;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.vo.config.LinkVO;
 
 /**
@@ -47,5 +47,11 @@ public class ContentPartnerClientImpl implements ContentPartnerClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	@Override
+	public LinkResponse deleteById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentpartner/delete/" + id,
+				LinkResponse.class);
 	}
 }

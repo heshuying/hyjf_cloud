@@ -52,4 +52,9 @@ public class ContentQualifyServiceImpl implements ContentQualifyService {
 		}
 		return null;
 	}
+
+	@Override
+	public ContentQualifyResponse deleteById(Integer id) {
+		return contentQualifyClient.deleteById(id);
+	}
 }

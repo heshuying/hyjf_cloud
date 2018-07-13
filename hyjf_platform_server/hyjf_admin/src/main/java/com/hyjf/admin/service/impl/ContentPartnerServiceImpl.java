@@ -49,4 +49,9 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 		BeanUtils.copyProperties(record, requestBean);
 		return contentPartnerClient.updateAction(requestBean);
 	}
+
+	@Override
+	public LinkResponse deleteById(Integer id) {
+		return contentPartnerClient.deleteById(id);
+	}
 }

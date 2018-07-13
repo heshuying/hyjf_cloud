@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -42,4 +42,11 @@ public interface ContentEnvironmentService {
 	 * @return
 	 */
 	ContentEnvironment getRecord(Integer id);
+
+	/**
+	 * 删除内容管理-办公环境状态
+	 *
+	 * @param id
+	 */
+    void deleteById(Integer id);
 }

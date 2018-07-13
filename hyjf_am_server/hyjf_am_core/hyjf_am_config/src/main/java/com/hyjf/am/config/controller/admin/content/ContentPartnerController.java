@@ -3,9 +3,14 @@
  */
 package com.hyjf.am.config.controller.admin.content;
 
-import java.util.List;
-
+import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.dao.model.auto.Link;
+import com.hyjf.am.config.service.ContentPartnerService;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.resquest.admin.ContentPartnerRequest;
+import com.hyjf.am.vo.config.LinkVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -14,20 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.Link;
-import com.hyjf.am.config.service.ContentPartnerService;
-import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.resquest.admin.ContentPartnerRequest;
-import com.hyjf.am.vo.config.LinkVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
 
 /**
  * @author fuqiang
  * @version ContentPartnerController, v0.1 2018/7/12 10:36
  */
 @RestController
-@RequestMapping("/am-config/content/contentenpartner")
+@RequestMapping("/am-config/content/contentpartner")
 public class ContentPartnerController extends BaseConfigController {
 	@Autowired
 	private ContentPartnerService contentPartnerService;
@@ -92,6 +91,31 @@ public class ContentPartnerController extends BaseConfigController {
 			LinkVO vo = new LinkVO();
 			BeanUtils.copyProperties(link, vo);
 		}
+		return response;
+	}
+
+	/**
+	 * 根据合作类型查询公司管理-合作伙伴
+	 *
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/getbypartnertype/{type}")
+	public LinkResponse getbyPartnerType(@PathVariable Integer type) {
+		LinkResponse response = new LinkResponse();
+		Link link = contentPartnerService.getbyPartnerType(type);
+		if (link != null) {
+			LinkVO vo = new LinkVO();
+			BeanUtils.copyProperties(link, vo);
+		}
+		return response;
+	}
+
+	@RequestMapping("/delete/{id}")
+	public LinkResponse delete(@PathVariable Integer id) {
+		LinkResponse response = new LinkResponse();
+		contentPartnerService.deleteById(id);
+		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
 }

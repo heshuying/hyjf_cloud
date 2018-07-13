@@ -3,16 +3,6 @@
  */
 package com.hyjf.am.config.controller.admin.content;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.service.EventService;
@@ -21,6 +11,15 @@ import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 公司纪事
@@ -94,6 +93,20 @@ public class EventController extends BaseConfigController {
 			EventVO vo = new EventVO();
 			BeanUtils.copyProperties(event, vo);
 		}
+		return response;
+	}
+
+	/**
+	 * 根据id查询公司管理-公司纪事
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete/{id}")
+	public EventResponse delete(@PathVariable Integer id) {
+		EventResponse response = new EventResponse();
+		eventService.deleteById(id);
+		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
 }

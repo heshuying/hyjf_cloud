@@ -42,4 +42,12 @@ public interface TeamService {
 	 * @return
 	 */
 	TeamResponse updateStatus(TeamRequestBean requestBean);
+
+	/**
+	 * 删除公司管理-团队介绍状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    TeamResponse deleteById(Integer id);
 }
