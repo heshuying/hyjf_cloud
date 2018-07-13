@@ -3,40 +3,43 @@
  */
 package com.hyjf.admin.client.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
+import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.common.validator.Validator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1204,6 +1207,91 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
-
+    /**
+     * 检索汇计划加入明细列表
+     * @param request
+     * @return
+     */
+    @Override
+    public AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/selectAccedeRecordList";
+        AutoTenderExceptionResponse response =  restTemplate.
+                postForEntity(url, request, AutoTenderExceptionResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 查询计划加入明细
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    @Override
+    public HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/selectHjhAccedeByParam";
+        HjhAccedeResponse response =  restTemplate.
+                postForEntity(url, tenderExceptionSolveRequest, HjhAccedeResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 查询计划加入明细临时表
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    @Override
+    public HjhPlanBorrowTmpResponse selectBorrowJoinList(TenderExceptionSolveRequest tenderExceptionSolveRequest){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/selectBorrowJoinList";
+        HjhPlanBorrowTmpResponse response =  restTemplate.
+                postForEntity(url, tenderExceptionSolveRequest, HjhPlanBorrowTmpResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 更改加入明细状态
+     * @param status
+     * @param accedeId
+     * @return
+     */
+    @Override
+    public boolean updateTenderByParam(int status,int accedeId){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/updateTenderByParam/"+status+"/"+accedeId;
+        Response<Boolean> response = restTemplate.getForEntity(url,Response.class).getBody();
+        if (response != null && response.getResult()) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 更新投资数据
+     *
+     * @return
+     * @author nxl
+     */
+    @Override
+    public boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean) {
+        String url = "http://AM-TRADE/am-trade/autoTenderController/updateBorrowForAutoTender";
+        BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
+        BeanUtils.copyProperties(bean, bankCallBeanVO);
+        UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrow, hjhAccede, bankCallBeanVO);
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (!Response.isSuccess(response)) {
+            logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动投资成功后，更新投资数据失败。");
+            throw new RuntimeException("银行自动投资成功后，更新投资数据失败。");
+        }
+        return true;
+    }
 
 }

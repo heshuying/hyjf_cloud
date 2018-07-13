@@ -6,6 +6,8 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
@@ -19,9 +21,11 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 
@@ -564,4 +568,45 @@ public interface AmTradeClient {
     BorrowTenderVO getBorrowTenderByNid(String nid);
 
     HjhDebtCreditTenderVO getByAssignOrderId(String assignOrderId);
+
+    /**
+     * 检索汇计划加入明细列表
+     * @param request
+     * @return
+     */
+   AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request);
+    /**
+     * 查询计划加入明细
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+    /**
+     * 查询计划加入明细临时表
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    HjhPlanBorrowTmpResponse selectBorrowJoinList(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+
+    /**
+     * 更新
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param status
+     * @param accedeId
+     * @return
+     */
+    boolean updateTenderByParam(int status,int accedeId);
+    /**
+     * 更新投资数据
+     *
+     * @return
+     * @author nxl
+     */
+    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+
 }

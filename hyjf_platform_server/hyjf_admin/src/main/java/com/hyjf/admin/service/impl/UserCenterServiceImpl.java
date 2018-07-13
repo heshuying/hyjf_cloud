@@ -636,5 +636,14 @@ public class UserCenterServiceImpl implements UserCenterService {
     public int updateUserIdCard(AdminUserRecommendRequest request){
         return userCenterClient.updateUserIdCard(request);
     }
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO queryBankOpenAccountByUserId(int userId){
+        return userCenterClient.queryBankOpenAccountByUserId(userId);
+    }
 
 }
