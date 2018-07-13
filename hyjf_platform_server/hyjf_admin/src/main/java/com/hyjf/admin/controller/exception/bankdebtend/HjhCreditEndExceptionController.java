@@ -34,12 +34,12 @@ public class HjhCreditEndExceptionController extends BaseController {
     HjhCreditEndExceptionService hjhCreditEndExceptionService;
 
     /**
-     * 结束债权列表
+     * 汇计划结束债权列表
      * @param requestBean
      * @return
      */
-    @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
-    @RequestMapping("/list")
+    @ApiOperation(value = "汇计划结束债权列表", notes = "汇计划结束债权列表")
+    @RequestMapping("/getlist")
     public JSONObject getList(@RequestBody HjhDebtCreditListRequest requestBean){
         JSONObject jsonObject = null;
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhCreditEndExceptionService.queryHjhDebtCreditList(requestBean);
@@ -60,6 +60,11 @@ public class HjhCreditEndExceptionController extends BaseController {
         return jsonObject;
     }
 
+    /**
+     * 汇计划结束债权
+     * @param creditNid
+     * @return
+     */
     @ApiOperation(value = "汇计划结束债权", notes = "汇计划结束债权")
     @RequestMapping("/request_debtend/{creditNid}")
     public JSONObject updateDebtEndAction(@PathVariable String creditNid){
