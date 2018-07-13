@@ -1,10 +1,10 @@
 package com.hyjf.admin.controller.exception.bankdebtend;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.BankCreditEndService;
-import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * 异常中心-结束债权异常处理
  * @author hesy
  * @version BankCreditEndController, v0.1 2018/7/12 16:55
  */
 @Api(value = "异常中心-结束债权异常处理")
 @RestController
 @RequestMapping("/hyjf-admin/exception/creditend")
-public class BankCreditEndController extends BaseController {
+public class BankCreditEndExceptionController extends BaseController {
     @Autowired
     BankCreditEndService bankCreditEndService;
 
@@ -35,7 +36,7 @@ public class BankCreditEndController extends BaseController {
      */
     @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
     @RequestMapping("/list")
-    public JSONObject getList(@RequestBody BankCreditEndRequest requestBean){
+    public JSONObject getList(@RequestBody BankCreditEndListRequest requestBean){
         Integer count = bankCreditEndService.getCreditEndCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         page.setTotal(count);

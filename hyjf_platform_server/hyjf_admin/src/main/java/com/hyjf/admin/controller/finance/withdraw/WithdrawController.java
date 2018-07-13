@@ -6,6 +6,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.finance.withdraw.WithdrawService;
+import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -17,6 +18,7 @@ import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -63,7 +65,11 @@ public class WithdrawController extends BaseController {
 		JSONObject jsonObject = new JSONObject();
 		Integer count = withdrawService.getWithdrawRecordCount(request);
 		jsonObject.put("count",count);
-		List<WithdrawCustomizeVO> recordList=withdrawService.getWithdrawRecordList(request);
+		List<WithdrawCustomizeVO> recordList = null;
+		WithdrawCustomizeResponse response =withdrawService.getWithdrawRecordList(request);
+		if (Validator.isNotNull(response)){
+			recordList=response.getResultList();
+		}
 		jsonObject.put("recordList",recordList);
 		return jsonObject;
 	}
@@ -167,7 +173,11 @@ public class WithdrawController extends BaseController {
 		if (StringUtils.isEmpty(form.getAddtimeEndSrch())) {
 			form.setAddtimeEndSrch(GetDate.getDate("yyyy-MM-dd"));
 		}
-		List<WithdrawCustomizeVO> recordList = this.withdrawService.getWithdrawRecordList(form);
+		List<WithdrawCustomizeVO> recordList = null;
+		WithdrawCustomizeResponse recordListResponse=this.withdrawService.getWithdrawRecordList(form);
+		if (Validator.isNotNull(recordListResponse)){
+			recordList=recordListResponse.getResultList();
+		}
 
 		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
@@ -179,7 +189,7 @@ public class WithdrawController extends BaseController {
 		// 生成一个表格
 		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
 
-		if (recordList != null && recordList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(recordList)) {
 
 			int sheetCount = 1;
 			int rowNum = 0;

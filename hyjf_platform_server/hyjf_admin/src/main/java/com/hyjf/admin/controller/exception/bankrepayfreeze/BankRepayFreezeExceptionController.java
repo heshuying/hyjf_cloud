@@ -1,7 +1,7 @@
 package com.hyjf.admin.controller.exception.bankrepayfreeze;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.request.BankRepayFreezeRequest;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.BankRepayFreezeService;
@@ -25,7 +25,7 @@ import java.util.List;
 @Api(value = "异常中心-还款冻结异常撤销")
 @RestController
 @RequestMapping("/hyjf-admin/exception/repayfreeze_cancel")
-public class BankRepayFreezeController extends BaseController {
+public class BankRepayFreezeExceptionController extends BaseController {
     @Autowired
     BankRepayFreezeService bankRepayFreezeService;
 

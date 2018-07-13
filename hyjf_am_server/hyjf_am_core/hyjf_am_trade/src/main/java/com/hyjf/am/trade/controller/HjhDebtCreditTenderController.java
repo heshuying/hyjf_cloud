@@ -7,10 +7,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
@@ -40,6 +37,21 @@ public class HjhDebtCreditTenderController extends BaseController{
         List<HjhDebtCreditTender> hjhDebtCreditTenders = hjhDebtCreditTenderService.getHjhDebtCreditTenderList(request);
         if(CollectionUtils.isNotEmpty(hjhDebtCreditTenders)){
             response.setResultList(CommonUtils.convertBeanList(hjhDebtCreditTenders,HjhDebtCreditTenderVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 根据assignOrderId获取
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @RequestMapping("/getby_assignorderid/{assignOrderId}")
+    public HjhDebtCreditTenderResponse getByAssignOrderId(@PathVariable String assignOrderId) {
+        HjhDebtCreditTenderResponse response = new HjhDebtCreditTenderResponse();
+        HjhDebtCreditTender hjhDebtCreditTender = hjhDebtCreditTenderService.selectHjhDebtCreditTenderByAssignOrderId(assignOrderId);
+        if(hjhDebtCreditTender != null){
+            response.setResult(CommonUtils.convertBean(hjhDebtCreditTender,HjhDebtCreditTenderVO.class));
         }
         return response;
     }

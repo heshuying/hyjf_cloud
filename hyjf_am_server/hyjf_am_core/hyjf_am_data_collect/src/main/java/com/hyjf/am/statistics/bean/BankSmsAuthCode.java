@@ -1,8 +1,11 @@
 package com.hyjf.am.statistics.bean;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.util.Date;
 
+@Document(collection = "ht_bank_sms_auth_code")
 public class BankSmsAuthCode implements Serializable {
     private Integer id;
 
