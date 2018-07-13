@@ -365,4 +365,83 @@
         AND hhab.auto_audit = 1))
     </select>
 
+	<!-- 查询出到期但是未满标的标的,给其发短信 -->
+	<resultMap id="searchNotFullBorrowMsgMap" type="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		<!-- 序号借款编号  -->
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="timeStartSrch" property="timeStartSrch" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="searchNotFullBorrowMsg" resultMap="searchNotFullBorrowMsgMap" parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		SELECT
+			b.borrow_nid,
+			FROM_UNIXTIME(verify_time +  borrow_valid_time * 24 * 60 *60, '%Y-%m-%d %H:%i:%s' ) AS timeStartSrch
+		FROM
+			ht_borrow b
+			LEFT JOIN ht_borrow_info inf ON b.id = inf.id
+		WHERE
+			( b.`status` = 2 AND b.reverify_time = '0'
+			 	AND
+			 	  (
+			 	      ( b.borrow_full_status = 0 AND b.borrow_account_yes <![CDATA[<]]> b.account )
+			 	  AND
+			 	      ( b.verify_time + ( inf.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) )
+			 	  )
+			  )
+	</select>
+
+	<!-- 查询汇计划到期但是未满标的标的,给其发短信 -->
+	<select id="searchHjhNotFullBorrowMsg" resultMap="searchNotFullBorrowMsgMap" parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		SELECT
+		b.borrow_nid,
+		FROM_UNIXTIME(verify_time +  borrow_valid_time * 24 * 60 *60, '%Y-%m-%d %H:%i:%s' ) AS timeStartSrch
+		FROM
+		ht_borrow b
+		LEFT JOIN ht_borrow_info inf ON b.id = inf.id
+		WHERE
+		( b.`status` = 2 AND b.reverify_time = '0'
+		AND
+		(
+		( b.borrow_full_status = 0 AND b.borrow_account_yes <![CDATA[<]]> b.account )
+		AND
+		( b.verify_time + ( inf.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) )
+		)
+		AND b.plan_nid != NULL
+		)
+	</select>
+
+	<resultMap id="selectBorrowNidListMap" type="com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="verify_status" property="verifyStatus" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectAutoReviewBorrowNidList" resultMap="selectBorrowNidListMap">
+		SELECT
+			hb.borrow_nid AS borrow_nid
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		INNER JOIN ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
+		AND inf.asset_type = hhab.asset_type
+		WHERE
+			hb.`status` = 3
+		AND hb.borrow_full_status = 1
+		AND hhab.auto_review = 1
+		AND hb.plan_nid IS NULL;
+    </select>
+
+	<select id="selectAutoReviewHJHBorrowNidList" resultMap="selectBorrowNidListMap">
+		SELECT
+			hb.borrow_nid AS borrow_nid
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		INNER JOIN ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
+		AND inf.asset_type = hhab.asset_type
+		WHERE
+			hb.`status` = 3
+		AND hb.borrow_full_status = 1
+		AND hhab.auto_review = 1
+		AND hb.plan_nid IS NOT NULL;
+    </select>
+
 </mapper>

@@ -1,10 +1,11 @@
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.service.BaseService;
-import com.hyjf.am.response.admin.BatchBorrowRecoverBankInfoReponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
+import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
+import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ import java.util.List;
  */
 public interface BatchBorrowRecoverService extends BaseService{
     /**
-     * 获取批次放款列表
+     * 获取批次中心列表
      * @param request
      * @return
      */
-    BatchBorrowRecoverReponse queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
+    JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
 
     /**
      * 获取批次状态列表的显示内容
@@ -40,5 +41,13 @@ public interface BatchBorrowRecoverService extends BaseService{
      * @param borrowNid
      * @return
      */
-    BatchBorrowRecoverBankInfoReponse queryBatchBorrowRecoverBankInfoList(String borrowNid);
+    List<BorrowRecoverBankInfoVo> queryBatchBorrowRecoverBankInfoList(String borrowNid);
+
+    /**
+     * 获取批次还款的批次交易明细
+     * @param apicronID
+     * @return
+     */
+    List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID);
+
 }

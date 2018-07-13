@@ -1,20 +1,21 @@
 package com.hyjf.pay.lib.chinapnr.util;
 
-import java.net.URLEncoder;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.chinapnr.MerPriv;
+import com.hyjf.common.http.HttpDeal;
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.chinapnr.MerPriv;
-import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
+import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,6 +30,8 @@ public class ChinapnrUtil {
 
     /** THIS_CLASS */
     private static final String THIS_CLASS = ChinapnrUtil.class.getName();
+
+    private static PaySystemConfig paySystemConfig = SpringUtils.getBean(PaySystemConfig.class);
 
     /** 跳转的jsp页面 */
     private static final String SEND_JSP = "/chinapnr/chinapnr_send";
@@ -55,9 +58,8 @@ public class ChinapnrUtil {
         ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 
         try {
-            // 取出调用汇付接口的url  todo xiashuqing 20180615
-            //String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
-            String payurl = "";
+            // 取出调用汇付接口的url
+            String payurl = paySystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -106,9 +108,8 @@ public class ChinapnrUtil {
                     
                 }
             }
-            // 取出调用汇付接口的url // 取出调用汇付接口的url  todo xiashuqing 20180615
-           // String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
-            String payurl = "";
+            // 取出调用汇付接口的url
+            String payurl = paySystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -144,9 +145,8 @@ public class ChinapnrUtil {
             // bean转换成参数
             bean.convert();
 
-            // 取出调用汇付接口的url // 取出调用汇付接口的url  todo xiashuqing 20180615
-            //String payurl = PropUtils.getSystem(CustomConstants.HYJF_PAY_URL);
-            String payurl = "";
+            // 取出调用汇付接口的url
+            String payurl = paySystemConfig.getPayUrl();
             if (Validator.isNull(payurl)) {
                 throw new Exception("接口工程URL不能为空");
             }
@@ -170,18 +170,14 @@ public class ChinapnrUtil {
      * 取得页面返回 URL
      */
     public static String getRetUrl() {
-        //   todo xiashuqing 20180615
-        //return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_RETURN_URL);
-        return "";
+        return paySystemConfig.getChinapnrReturnUril();
     }
 
     /**
      * 企业用户绑定取得页面返回 URL
      */
     public static String getBindRetUrl() {
-        //   todo xiashuqing 20180615
-        //return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_BIND_RETURN_URL);
-        return "";
+        return paySystemConfig.getChinapnrBindreturnUrl();
     }
 
     
@@ -189,9 +185,7 @@ public class ChinapnrUtil {
      * 取得商户后台应答地址
      */
     public static String getBgRetUrl() {
-        //   todo xiashuqing 20180615
-        //return ChinaPnrPropUtils.getSystem(ChinaPnrConstant.PROP_CALLBACK_URL);
-        return "";
+        return paySystemConfig.getChinapnrCallBack();
     }
 
     /**
@@ -221,7 +215,7 @@ public class ChinapnrUtil {
      * 设置UUID
      *
      * @param bean
-     * @param id 
+     * @param mongId
      */
     public static String setUUID(ChinapnrBean bean, String mongId) {
         MerPriv merPrivPo = bean.getMerPrivPo();

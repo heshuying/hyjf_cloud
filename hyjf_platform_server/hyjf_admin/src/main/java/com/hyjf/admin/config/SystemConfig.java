@@ -38,9 +38,36 @@ public class SystemConfig {
 
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
-    
-    
-    
+
+    /**
+     * 银行代码
+     */
+    @Value("${hyjf.bank.bankcode}")
+    private String BANK_BANKCODE;
+
+    /**
+     * 平台机构代码
+     */
+    @Value("${hyjf.bank.instcode}")
+    private String BANK_INSTCODE;
+
+
+    public String getBANK_BANKCODE() {
+        return BANK_BANKCODE;
+    }
+
+    public void setBANK_BANKCODE(String BANK_BANKCODE) {
+        this.BANK_BANKCODE = BANK_BANKCODE;
+    }
+
+    public String getBANK_INSTCODE() {
+        return BANK_INSTCODE;
+    }
+
+    public void setBANK_INSTCODE(String BANK_INSTCODE) {
+        this.BANK_INSTCODE = BANK_INSTCODE;
+    }
+
     public String getBANK_MERRP_ACCOUNT() {
 		return BANK_MERRP_ACCOUNT;
 	}
