@@ -4,9 +4,9 @@ import com.hyjf.am.vo.BasePage;
 
 /**
  * @author hesy
- * @version BankCreditEndRequest, v0.1 2018/7/12 14:23
+ * @version BankCreditEndListRequest, v0.1 2018/7/12 14:23
  */
-public class BankCreditEndRequest extends BasePage {
+public class BankCreditEndListRequest extends BasePage {
     /**
      * 融资用户ID(检索用)
      */

@@ -25,7 +25,7 @@ import java.util.List;
 @Api(value = "异常中心-还款冻结异常撤销")
 @RestController
 @RequestMapping("/hyjf-admin/exception/repayfreeze_cancel")
-public class BankRepayFreezeController extends BaseController {
+public class BankRepayFreezeExceptionController extends BaseController {
     @Autowired
     BankRepayFreezeService bankRepayFreezeService;
 

@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.exception;
 
-import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -12,9 +12,9 @@ import java.util.List;
  * @version BankCreditEndService, v0.1 2018/7/12 16:51
  */
 public interface BankCreditEndService {
-    List<BankCreditEndVO> getCreditEndList(BankCreditEndRequest requestBean);
+    List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean);
 
-    int getCreditEndCount(BankCreditEndRequest requestBean);
+    int getCreditEndCount(BankCreditEndListRequest requestBean);
 
     BankCreditEndVO getCreditEndByOrderId(String orderId);
 
