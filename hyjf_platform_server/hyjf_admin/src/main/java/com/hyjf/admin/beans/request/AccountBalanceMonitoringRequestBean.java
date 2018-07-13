@@ -1,14 +1,35 @@
-package com.hyjf.am.vo.admin;
+package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.common.paginator.Paginator;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
-public class MerchantAccountVO extends BaseVO implements Serializable {
+/**
+ * @author by xiehuili on 2018/7/13.
+ */
+public class AccountBalanceMonitoringRequestBean {
+    /**
+     * 此处为属性说明
+     */
+    private static final long serialVersionUID = -1967959761793508714L;
+
+    /**
+     * ids
+     */
     private String ids;
+
+    /** 是否更新 */
+    private boolean isUpdateFlg;
+
+    /** 子账户名称(检索用) */
+    private String subAccountNameSear;
+
+    /** 子账户类型(检索用) */
+    private String subAccountTypeSear;
+
+    /** 列表数据JSON */
+    private String balanceDataJson;
+
     private Integer id;
 
     private String subAccountName;
@@ -42,9 +63,6 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     private Integer createTime;
 
     private Integer updateTime;
-//子账号类型
-    private List<ParamName> paramNameList;
-    private static final long serialVersionUID = 1L;
 
     public String getIds() {
         return ids;
@@ -52,6 +70,38 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     public void setIds(String ids) {
         this.ids = ids;
+    }
+
+    public boolean isUpdateFlg() {
+        return isUpdateFlg;
+    }
+
+    public void setUpdateFlg(boolean updateFlg) {
+        isUpdateFlg = updateFlg;
+    }
+
+    public String getSubAccountNameSear() {
+        return subAccountNameSear;
+    }
+
+    public void setSubAccountNameSear(String subAccountNameSear) {
+        this.subAccountNameSear = subAccountNameSear;
+    }
+
+    public String getSubAccountTypeSear() {
+        return subAccountTypeSear;
+    }
+
+    public void setSubAccountTypeSear(String subAccountTypeSear) {
+        this.subAccountTypeSear = subAccountTypeSear;
+    }
+
+    public String getBalanceDataJson() {
+        return balanceDataJson;
+    }
+
+    public void setBalanceDataJson(String balanceDataJson) {
+        this.balanceDataJson = balanceDataJson;
     }
 
     public Integer getId() {
@@ -67,7 +117,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setSubAccountName(String subAccountName) {
-        this.subAccountName = subAccountName == null ? null : subAccountName.trim();
+        this.subAccountName = subAccountName;
     }
 
     public String getSubAccountType() {
@@ -75,7 +125,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setSubAccountType(String subAccountType) {
-        this.subAccountType = subAccountType == null ? null : subAccountType.trim();
+        this.subAccountType = subAccountType;
     }
 
     public String getSubAccountCode() {
@@ -83,7 +133,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setSubAccountCode(String subAccountCode) {
-        this.subAccountCode = subAccountCode == null ? null : subAccountCode.trim();
+        this.subAccountCode = subAccountCode;
     }
 
     public Integer getTransferIntoFlg() {
@@ -163,7 +213,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setPurpose(String purpose) {
-        this.purpose = purpose == null ? null : purpose.trim();
+        this.purpose = purpose;
     }
 
     public Short getSort() {
@@ -190,11 +240,24 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public List<ParamName> getParamNameList() {
-        return paramNameList;
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+    /**
+     * 列表画面自定义标签上的用翻页对象：paginator
+     */
+    private Paginator paginator;
+
+    public int getPaginatorPage() {
+        return paginatorPage == 0 ? 1 : paginatorPage;
     }
 
-    public void setParamNameList(List<ParamName> paramNameList) {
-        this.paramNameList = paramNameList;
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
     }
+
+
+
 }
