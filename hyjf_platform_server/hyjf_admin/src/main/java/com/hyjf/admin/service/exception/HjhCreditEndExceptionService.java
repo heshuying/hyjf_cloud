@@ -13,4 +13,6 @@ public interface HjhCreditEndExceptionService extends BaseService {
     boolean requestDebtEnd(HjhDebtCreditVO credit, String tenderAccountId, String tenderAuthCode) throws Exception;
 
     boolean updateCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
+
+    String getSellerAuthCode(String tenderOrderId, Integer SourceType);
 }

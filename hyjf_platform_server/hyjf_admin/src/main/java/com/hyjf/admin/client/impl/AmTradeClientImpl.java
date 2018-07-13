@@ -18,6 +18,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import org.slf4j.Logger;
@@ -1173,4 +1174,36 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return response.getResult().intValue();
     }
+
+    /**
+     *根据nid获取BorrowTender
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @Override
+    public BorrowTenderVO getBorrowTenderByNid(String nid) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByNid/"+nid;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据assignOrderId获取
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @Override
+    public HjhDebtCreditTenderVO getByAssignOrderId(String assignOrderId){
+        String url = "http://AM-TRADE/am-trade/hjhDebtCreditTender/getby_assignorderid/"+assignOrderId;
+        HjhDebtCreditTenderResponse response = restTemplate.getForEntity(url,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+
 }

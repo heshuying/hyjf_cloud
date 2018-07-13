@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 
@@ -559,4 +560,8 @@ public interface AmTradeClient {
     int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
 
     int requestDebtEnd(HjhDebtCreditVO credit, String sellerUsrcustid, String sellerAuthCode);
+
+    BorrowTenderVO getBorrowTenderByNid(String nid);
+
+    HjhDebtCreditTenderVO getByAssignOrderId(String assignOrderId);
 }

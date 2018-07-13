@@ -1,9 +1,10 @@
 package com.hyjf.admin.service.impl.exception;
 
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.exception.HjhCreditEndExceptionService;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,28 @@ public class HjhCreditEndExceptionServiceImpl extends BaseServiceImpl implements
     @Override
     public boolean updateCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO){
         return amTradeClient.updateHjhDebtCreditForEnd(hjhDebtCreditVO) > 0 ? true : false;
+    }
+
+    @Override
+    public String getSellerAuthCode(String tenderOrderId, Integer SourceType) {
+        String authCode = null;
+        if (SourceType.compareTo(1) == 0) {
+            // 1原始债权
+            BorrowTenderVO borrowtender = amTradeClient.getBorrowTenderByNid(tenderOrderId);
+            if (borrowtender == null || borrowtender.getAuthCode() == null) {
+                logger.error("未从BorrowTender获取出让人"+tenderOrderId+"的投标成功的授权号。  ");
+                return null;
+            }
+            authCode = borrowtender.getAuthCode();
+        }else {
+            // 0非原始债权
+            HjhDebtCreditTenderVO hjhDebtCreditTender = amTradeClient.getByAssignOrderId(tenderOrderId);
+            if (hjhDebtCreditTender == null || hjhDebtCreditTender.getAuthCode() == null) {
+                logger.error("未从HjhDebtCreditTender获取出让人"+tenderOrderId+"的债转成功的授权号。  ");
+                return null;
+            }
+            authCode = hjhDebtCreditTender.getAuthCode();
+        }
+        return authCode;
     }
 }

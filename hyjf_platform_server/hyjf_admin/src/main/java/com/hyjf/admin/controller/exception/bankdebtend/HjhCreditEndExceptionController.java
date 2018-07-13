@@ -46,7 +46,7 @@ public class HjhCreditEndExceptionController extends BaseController {
 
         if (credit.getCreditCapitalWait().compareTo(BigDecimal.ZERO) == 0) {
             //获取出让人投标成功的授权号
-            /*String sellerAuthCode = this.hjhCreditEndExceptionService.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
+            String sellerAuthCode = this.hjhCreditEndExceptionService.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
             if (sellerAuthCode == null) {
                return this.fail("未取得出让人投资的授权码。");
             }
@@ -64,7 +64,7 @@ public class HjhCreditEndExceptionController extends BaseController {
             } catch (Exception e) {
                 logger.error("债转编号[" + creditNid + "]银行结束债权异常。", e);
                 return this.fail("结束债权异常");
-            }*/
+            }
         }
 
         return this.success();
