@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * 汇计划结束债权异常
  * @author hesy
  * @version HjhCreditEndExceptionServiceImpl, v0.1 2018/7/12 18:47
  */
