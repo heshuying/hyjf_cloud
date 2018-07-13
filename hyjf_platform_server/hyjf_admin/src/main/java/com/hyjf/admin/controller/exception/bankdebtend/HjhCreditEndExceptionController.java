@@ -3,10 +3,11 @@ package com.hyjf.admin.controller.exception.bankdebtend;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.HjhCreditEndExceptionService;
-import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
+import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
+import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +33,32 @@ public class HjhCreditEndExceptionController extends BaseController {
     @Autowired
     HjhCreditEndExceptionService hjhCreditEndExceptionService;
 
+    /**
+     * 结束债权列表
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
+    @RequestMapping("/list")
+    public JSONObject getList(@RequestBody HjhDebtCreditListRequest requestBean){
+        JSONObject jsonObject = null;
+        HjhDebtCreditReponse hjhDebtCreditReponse = hjhCreditEndExceptionService.queryHjhDebtCreditList(requestBean);
+        List<HjhDebtCreditVo> hjhDebtCreditVoList = new ArrayList<HjhDebtCreditVo>();
+        if (null != hjhDebtCreditReponse) {
+            List<HjhDebtCreditVo> listAccountDetail = hjhDebtCreditReponse.getResultList();
+            Integer recordCount = hjhDebtCreditReponse.getRecordTotal();
+            if (null != listAccountDetail && listAccountDetail.size() > 0) {
+                hjhDebtCreditVoList.addAll(listAccountDetail);
+            }
+            if (null != hjhDebtCreditVoList) {
+                hjhCreditEndExceptionService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
+                jsonObject = this.success(String.valueOf(recordCount), hjhDebtCreditVoList);
+            } else {
+                jsonObject = this.fail("暂无符合条件数据");
+            }
+        }
+        return jsonObject;
+    }
 
     @ApiOperation(value = "汇计划结束债权", notes = "汇计划结束债权")
     @RequestMapping("/request_debtend/{creditNid}")
