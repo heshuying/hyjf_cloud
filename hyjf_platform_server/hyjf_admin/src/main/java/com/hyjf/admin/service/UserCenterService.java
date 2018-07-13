@@ -171,5 +171,10 @@ public interface UserCenterService {
      * @return
      */
     int updateUserIdCard(AdminUserRecommendRequest request);
-
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
 }
