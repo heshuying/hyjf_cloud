@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFullCustomizeMapper;
@@ -168,7 +169,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
      * @return
      */
     @Override
-    public AdminResponse updateBorrowFull(BorrowFullRequest borrowFullRequest) {
+    public Response updateBorrowFull(BorrowFullRequest borrowFullRequest) {
         BorrowVO borrow = borrowFullRequest.getBorrowVO();
         BorrowInfoVO borrowInfo = borrowFullRequest.getBorrowInfoVO();
         // 标的编号
@@ -194,7 +195,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         boolean result = this.checkBorrowTenderOverFlow(borrowNid, borrowFullRequest.getAccountId());
         logger.info("校验结果: " + result);
         if (result) {
-            return new AdminResponse(AdminResponse.FAIL,
+            return new Response(Response.FAIL,
                     "标的爆标,请进行处理![用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
         }
 
@@ -267,19 +268,19 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                     borrowApicron.setUpdateTime(GetDate.getNowTime());
                     boolean apicronFlag = this.borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
                     if (apicronFlag) {
-                        return new AdminResponse();
+                        return new Response();
                     } else {
-                        return new AdminResponse(AdminResponse.FAIL,
+                        return new Response(Response.FAIL,
                                 "[编号：" + borrowNid + "]apicron跟新失败！");
                     }
                 } else {
-                    return new AdminResponse(AdminResponse.FAIL, "[编号：" + borrowNid + "]标的更新失败！");
+                    return new Response(Response.FAIL, "[编号：" + borrowNid + "]标的更新失败！");
                 }
             } else {
-                return new AdminResponse(AdminResponse.FAIL, "[编号：" + borrowNid + "]apicron无记录！");
+                return new Response(Response.FAIL, "[编号：" + borrowNid + "]apicron无记录！");
             }
         } else {
-            return new AdminResponse(AdminResponse.FAIL,
+            return new Response(Response.FAIL,
                     "[编号：" + borrowNid + "]标的记录存在没有授权码的记录，请确认！");
         }
     }
@@ -510,7 +511,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
      * @return
      */
     @Override
-    public AdminResponse updateBorrowOver(BorrowFullRequest borrowFullRequest) {
+    public Response updateBorrowOver(BorrowFullRequest borrowFullRequest) {
         Date systemNowDate = new Date();
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
         if (StringUtils.isNotEmpty(borrowNid)) {
@@ -533,15 +534,15 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                 //更新标的信息
                 int updateResult = this.borrowMapper.updateByExampleSelective(borrow, borrowExample);
                 if (updateResult > 0) {
-                    return new AdminResponse();
+                    return new Response();
                 } else {
-                    return new AdminResponse(AdminResponse.FAIL, "[编号：" + borrowNid + "]标的更新失败！");
+                    return new Response(Response.FAIL, "[编号：" + borrowNid + "]标的更新失败！");
                 }
             } else {
-                return new AdminResponse(AdminResponse.FAIL, "未查询到标的信息！");
+                return new Response(Response.FAIL, "未查询到标的信息！");
             }
         } else {
-            return new AdminResponse(AdminResponse.FAIL, "标的编号为空！");
+            return new Response(Response.FAIL, "标的编号为空！");
         }
     }
 }

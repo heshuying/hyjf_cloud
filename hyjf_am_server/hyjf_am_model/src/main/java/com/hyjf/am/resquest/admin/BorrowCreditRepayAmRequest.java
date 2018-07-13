@@ -25,21 +25,24 @@ public class BorrowCreditRepayAmRequest  implements Serializable {
     /* 还款状态 */
     private String status;
 
-    //下次还款时间
+    /* 下次还款时间*/
     private String assignRepayNextTimeStart;
 
-    //下次还款时间
+    /* 下次还款时间*/
     private String assignRepayNextTimeEnd;
 
-    // 债权承接时间
+    /* 债权承接时间*/
     private String addTimeStart;
 
-    // 债权承接时间
+    /* 债权承接时间*/
     private String addTimeEnd;
 
     private Integer limitStart;
 
     private Integer limitEnd;
+
+    /* 平台 */
+    private String client;
 
     public String getUserName() {
         return userName;
@@ -135,5 +138,13 @@ public class BorrowCreditRepayAmRequest  implements Serializable {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 }

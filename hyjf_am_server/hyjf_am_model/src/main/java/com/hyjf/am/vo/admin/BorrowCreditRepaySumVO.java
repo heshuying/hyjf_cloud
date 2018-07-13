@@ -5,11 +5,11 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 
 /**
- * 债权投资统计数据bean
+ * 还款信息统计数据bean
  * @author zhangyk
  * @date 2018/7/11 19:38
  */
-public class BorrowCreditTenderSumVO extends BaseVO implements Serializable {
+public class BorrowCreditRepaySumVO extends BaseVO implements Serializable {
 
 
     /*应收本金总计*/

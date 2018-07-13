@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.beans.response;
 
+import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 投资明细共用返回bean
  * @author wangjun
  * @version BorrowInvestResponseBean, v0.1 2018/7/10 17:15
  */
@@ -34,6 +36,21 @@ public class BorrowInvestResponseBean {
      * 投资方式
      */
     private Map<String,String> investTypeList;
+
+    /**
+     * 投资人债权明细
+     */
+    List<InvestorDebtBean> detailList;
+
+    /**
+     * PDF脱敏图片
+     */
+    List<String> imgList;
+
+    /**
+     * 文件服务器
+     */
+    String fileDomainUrl;
 
     public List<BorrowInvestCustomizeVO> getRecordList() {
         return recordList;
@@ -81,5 +98,29 @@ public class BorrowInvestResponseBean {
 
     public void setInvestTypeList(Map<String, String> investTypeList) {
         this.investTypeList = investTypeList;
+    }
+
+    public List<InvestorDebtBean> getDetailList() {
+        return detailList;
+    }
+
+    public void setDetailList(List<InvestorDebtBean> detailList) {
+        this.detailList = detailList;
+    }
+
+    public List<String> getImgList() {
+        return imgList;
+    }
+
+    public void setImgList(List<String> imgList) {
+        this.imgList = imgList;
+    }
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
     }
 }

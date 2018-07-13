@@ -1,6 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
+import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,14 @@ public interface BorrowCreditTenderService {
      * @date 2018/7/12 10:52
      */
     AdminResult getBorrowCreditRepayInfoList(BorrowCreditRepayRequest request);
+
+
+    /**
+     * 承接信息列表
+     * @author zhangyk
+     * @date 2018/7/12 19:04
+     */
+    AdminResult getCreditTenderList(BorrowCreditTenderRequest request);
 
 
 }
