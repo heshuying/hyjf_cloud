@@ -1,7 +1,7 @@
 package com.hyjf.admin.controller.exception.bankdebtend;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.BankCreditEndService;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;

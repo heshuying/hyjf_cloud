@@ -1,4 +1,4 @@
-package com.hyjf.admin.Utils;
+package com.hyjf.admin.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
