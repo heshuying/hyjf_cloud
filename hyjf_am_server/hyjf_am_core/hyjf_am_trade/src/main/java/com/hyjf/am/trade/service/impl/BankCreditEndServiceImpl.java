@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BankCreditEndService;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
@@ -70,7 +70,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      * @date: 2018/7/12
      */
     @Override
-    public List<BankCreditEnd> getCreditEndList(BankCreditEndRequest requestBean){
+    public List<BankCreditEnd> getCreditEndList(BankCreditEndListRequest requestBean){
         BankCreditEndExample example = new BankCreditEndExample();
         BankCreditEndExample.Criteria criteria = example.createCriteria();
         if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){
@@ -104,7 +104,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      * @date: 2018/7/12
      */
     @Override
-    public Integer getCreditEndCount(BankCreditEndRequest requestBean){
+    public Integer getCreditEndCount(BankCreditEndListRequest requestBean){
         BankCreditEndExample example = new BankCreditEndExample();
         BankCreditEndExample.Criteria criteria = example.createCriteria();
         if(StringUtils.isNotBlank(requestBean.getUserIdSrch())){

@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl.finance.withdraw;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.finance.withdraw.WithdrawService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
+import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -32,7 +33,7 @@ public class WithdrawServiceImpl extends BaseAdminServiceImpl implements Withdra
     }
 
     @Override
-    public List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request) {
+    public WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request) {
         return amTradeClient.getWithdrawRecordList(request);
     }
 

@@ -3,7 +3,7 @@ package com.hyjf.admin.service.impl.exception;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -30,12 +30,12 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements com.hyj
     AmTradeClient amTradeClient;
 
     @Override
-    public List<BankCreditEndVO> getCreditEndList(BankCreditEndRequest requestBean) {
+    public List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean) {
         return amTradeClient.getCreditEndList(requestBean);
     }
 
     @Override
-    public int getCreditEndCount(BankCreditEndRequest requestBean){
+    public int getCreditEndCount(BankCreditEndListRequest requestBean){
         return amTradeClient.getCreditEndCount(requestBean);
     }
 
