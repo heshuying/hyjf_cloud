@@ -67,12 +67,12 @@
 	<select id="queryChangeLogList" resultMap="BaseResultMap"
 		parameterType="com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper">
 		SELECT id, user_id, username, real_name, mobile, idcard, `role`, `attribute`, recommend_user, is51, 
-               `status`, change_userid, update_user_id as change_userid,update_user as change_user, FROM_UNIXTIME(change_time, '%Y-%m-%d %H:%i:%S') as change_time, remark
+               `status`, update_user_id as change_userid,update_user as change_user,update_time as change_time, remark
 		,borrower_type from ht_user_change_log l
 		
 		WHERE 1=1 
 		<include refid="where-all-page-condition"/>
-		ORDER BY l.change_time DESC
+		ORDER BY l.update_time DESC
 	    <if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitEnd}
 	    </if>

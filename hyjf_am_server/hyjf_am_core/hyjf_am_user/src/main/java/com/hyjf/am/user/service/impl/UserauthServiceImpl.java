@@ -295,6 +295,71 @@ public class UserauthServiceImpl extends BaseServiceImpl  implements UserauthSer
 
 
 	
-	
+	@Override
+	public BankCallBean cancelInvestAuth(int userId, String channel) {
+		BankCallBean selectbean = new BankCallBean();
+		selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		selectbean.setTxCode(BankCallConstant.TXCODE_AUTOBID_AUTH_CANCEL);
+		selectbean.setInstCode(instCode);// 机构代码
+		selectbean.setBankCode(bankCode);
+		selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+		selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+		selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+		selectbean.setChannel(channel);
+		BankOpenAccountExample accountExample = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+		crt.andUserIdEqualTo(userId);
+		BankOpenAccount bankOpenAccount = selectByExample(accountExample);
+		if (bankOpenAccount != null) {
+			selectbean.setAccountId(bankOpenAccount.getAccount());// 电子账号
+		}
+		selectbean.setOrderId(GetOrderIdUtils.getUsrId(userId));// 订单号
+
+		HjhUserAuth hjhUserAuth = this.getHjhUserAuthByUserId(userId);
+		if (hjhUserAuth != null) {
+			selectbean.setOrgOrderId(hjhUserAuth.getAutoOrderId());// 原订单号
+		}
+
+		// 操作者ID
+		selectbean.setLogUserId(String.valueOf(userId));
+		selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+		selectbean.setLogClient(0);
+		// 调用接口
+		BankCallBean retBean = BankCallUtils.callApiBg(selectbean);
+		return retBean;
+	}
+
+	@Override
+	public BankCallBean cancelCreditAuth(int userId, String channel) {
+		BankCallBean selectbean = new BankCallBean();
+		selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		selectbean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_CANCEL);
+		selectbean.setInstCode(instCode);// 机构代码
+		selectbean.setBankCode(bankCode);
+		selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+		selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+		selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+		selectbean.setChannel(channel);
+		BankOpenAccountExample accountExample = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+		crt.andUserIdEqualTo(userId);
+		BankOpenAccount bankOpenAccount = selectByExample(accountExample);
+		if (bankOpenAccount != null) {
+			selectbean.setAccountId(bankOpenAccount.getAccount());// 电子账号
+		}
+		selectbean.setOrderId(GetOrderIdUtils.getUsrId(userId));// 订单号
+
+		HjhUserAuth hjhUserAuth = this.getHjhUserAuthByUserId(userId);
+		if (hjhUserAuth != null) {
+			selectbean.setOrgOrderId(hjhUserAuth.getAutoCreditOrderId());// 原订单号
+		}
+		// 操作者ID
+		selectbean.setLogUserId(String.valueOf(userId));
+		selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+		selectbean.setLogClient(0);
+		// 调用接口
+		BankCallBean retBean = BankCallUtils.callApiBg(selectbean);
+		return retBean;
+	}
 
 }
