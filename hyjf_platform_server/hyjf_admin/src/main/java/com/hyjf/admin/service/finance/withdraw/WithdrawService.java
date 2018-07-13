@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.finance.withdraw;
 
 import com.hyjf.admin.service.BaseAdminService;
+import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -21,7 +22,7 @@ public interface WithdrawService extends BaseAdminService {
 	 * 获取提现列表
 	 * @return
 	 */
-	public List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request);
+	public WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request);
 
 	/**
 	 * 根据用户Id查询用户账户信息

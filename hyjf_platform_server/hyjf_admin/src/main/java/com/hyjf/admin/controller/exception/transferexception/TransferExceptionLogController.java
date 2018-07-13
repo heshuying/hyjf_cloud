@@ -9,6 +9,7 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -85,7 +86,12 @@ public class TransferExceptionLogController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         Integer count = transferLogService.countRecord(request);
         jsonObject.put("count",count);
-        List<AdminTransferExceptionLogCustomizeVO> recordList  = transferLogService.getRecordList(request);
+        List<AdminTransferExceptionLogCustomizeVO> recordList = null;
+        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(request);
+        if (Validator.isNotNull(response)){
+            recordList=response.getResultList();
+        }
+
         jsonObject.put("recordList",recordList);
 		return jsonObject;
 	}

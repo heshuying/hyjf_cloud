@@ -585,13 +585,10 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @return
      */
     @Override
-    public List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
+    public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
         String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
         AdminTransferExceptionLogResponse response=restTemplate.postForEntity(url,request,AdminTransferExceptionLogResponse.class).getBody();
-        if (Validator.isNotNull(response)){
-            return response.getResultList();
-        }
-        return null;
+        return response;
     }
 
     /**
@@ -1043,13 +1040,10 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @return
      */
     @Override
-    public List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request) {
+    public WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request) {
         String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordList";
         WithdrawCustomizeResponse response=restTemplate.postForEntity(url,request,WithdrawCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)){
-            response.getResultList();
-        }
-        return null;
+        return response;
     }
 
     /**

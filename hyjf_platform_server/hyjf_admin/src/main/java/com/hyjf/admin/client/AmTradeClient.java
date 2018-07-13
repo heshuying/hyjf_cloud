@@ -356,7 +356,7 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
 
     /**
      *  获取银行转账异常总数 jijun 20180710
@@ -534,7 +534,7 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request);
+    WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request);
 
     List<BankCreditEndVO> getCreditEndList(BankCreditEndRequest requestBean);
 

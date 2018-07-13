@@ -1,6 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -23,7 +24,7 @@ public interface TransferExceptionLogService extends BaseAdminService{
      * @author jijun
      * @return
      */
-	public List<AdminTransferExceptionLogCustomizeVO> getRecordList(AdminTransferExceptionLogRequest request);
+	AdminTransferExceptionLogResponse getRecordList(AdminTransferExceptionLogRequest request);
 
 	/**
 	 * 获取转账异常记录数
