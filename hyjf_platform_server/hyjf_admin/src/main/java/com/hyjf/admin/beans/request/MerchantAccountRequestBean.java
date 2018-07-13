@@ -1,13 +1,23 @@
-package com.hyjf.am.vo.admin;
-
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+package com.hyjf.admin.beans.request;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 
-public class MerchantAccountVO extends BaseVO implements Serializable {
+/**
+ * @author by xiehuili on 2018/7/12.
+ */
+public class MerchantAccountRequestBean  implements Serializable {
+    /** serialVersionUID */
+    private static final long serialVersionUID = 7768418442884796575L;
+
+    private String ids;
+
+
+    /** 子账户名称(检索用) */
+    private String subAccountNameSear;
+
+    /** 子账户类型(检索用) */
+    private String subAccountTypeSear;
     private Integer id;
 
     private String subAccountName;
@@ -41,9 +51,27 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     private Integer createTime;
 
     private Integer updateTime;
-//子账号类型
-    private List<ParamName> paramNameList;
-    private static final long serialVersionUID = 1L;
+
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
 
     public Integer getId() {
         return id;
@@ -53,12 +81,28 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
         this.id = id;
     }
 
+    public String getSubAccountNameSear() {
+        return subAccountNameSear;
+    }
+
+    public void setSubAccountNameSear(String subAccountNameSear) {
+        this.subAccountNameSear = subAccountNameSear;
+    }
+
+    public String getSubAccountTypeSear() {
+        return subAccountTypeSear;
+    }
+
+    public void setSubAccountTypeSear(String subAccountTypeSear) {
+        this.subAccountTypeSear = subAccountTypeSear;
+    }
+
     public String getSubAccountName() {
         return subAccountName;
     }
 
     public void setSubAccountName(String subAccountName) {
-        this.subAccountName = subAccountName == null ? null : subAccountName.trim();
+        this.subAccountName = subAccountName;
     }
 
     public String getSubAccountType() {
@@ -66,7 +110,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setSubAccountType(String subAccountType) {
-        this.subAccountType = subAccountType == null ? null : subAccountType.trim();
+        this.subAccountType = subAccountType;
     }
 
     public String getSubAccountCode() {
@@ -74,7 +118,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setSubAccountCode(String subAccountCode) {
-        this.subAccountCode = subAccountCode == null ? null : subAccountCode.trim();
+        this.subAccountCode = subAccountCode;
     }
 
     public Integer getTransferIntoFlg() {
@@ -154,7 +198,7 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     }
 
     public void setPurpose(String purpose) {
-        this.purpose = purpose == null ? null : purpose.trim();
+        this.purpose = purpose;
     }
 
     public Short getSort() {
@@ -179,13 +223,5 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public List<ParamName> getParamNameList() {
-        return paramNameList;
-    }
-
-    public void setParamNameList(List<ParamName> paramNameList) {
-        this.paramNameList = paramNameList;
     }
 }

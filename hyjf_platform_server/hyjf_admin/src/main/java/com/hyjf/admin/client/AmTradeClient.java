@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
@@ -554,6 +555,55 @@ public interface AmTradeClient {
      * @return
      */
     BorrowApicronResponse getBorrowApicronByID(String id);
+
+
+    /**
+     * 分页查询平台设置账户列表
+     * @return
+     */
+    public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest request);
+
+    /**
+     * 根据id查询账户平台设置
+     * @return
+     */
+    public MerchantAccountResponse searchAccountConfigInfo(Integer id);
+
+    /**
+     * 添加账户平台设置
+     * @return
+     */
+    public MerchantAccountResponse saveAccountConfig(AdminMerchantAccountRequest request);
+
+    /**
+     * 修改账户平台设置
+     * @return
+     */
+    public MerchantAccountResponse updateAccountConfig(AdminMerchantAccountRequest request);
+
+
+    /**
+     * 子账户类型 查询
+     * @return
+     */
+    public List<ParamName> getParamNameList(String code);
+    /**
+     *
+     * 根据子账户名称检索
+     * @param subAccountName
+     * @return
+     */
+    public int countAccountListInfoBySubAccountName(String ids, String subAccountName);
+
+    /**
+     *
+     * 根据子账户代号检索
+     * @param subAccountCode
+     * @return
+     */
+    public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode);
+
+
 
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
 
