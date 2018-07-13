@@ -3,12 +3,9 @@ spring:
     name: AM-CONFIG
   cloud:
       config:
-        enabled: true # 默认开启
-        label: master # 指明远程仓库的分支
-        profile: test #
-        discovery:
-          enabled: true
-          service-id: CONFIG-SERVER
+        uri: http://micoserver:2222/
+        profile: test
+
   boot:
     admin:
       client:
@@ -25,12 +22,7 @@ spring:
     vhost: /
 #    kafka:
 #      bootstrap-servers: 123.56.216.212:9092
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://127.0.0.1:1111/eureka/
-  instance:
-    preferIpAddress: true
+
 
 server:
   port: 8091

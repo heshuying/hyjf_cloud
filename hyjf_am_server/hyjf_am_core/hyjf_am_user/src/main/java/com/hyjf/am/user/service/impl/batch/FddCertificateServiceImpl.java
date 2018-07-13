@@ -3,17 +3,6 @@
  */
 package com.hyjf.am.user.service.impl.batch;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
@@ -31,6 +20,16 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -65,6 +64,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
 
     @Override
     public void updateUserCAInfo(Integer userId, User user, UserInfo userInfo) throws Exception {
+        String throwInfo = "CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].";
         logger.info("CA认证用户ID:[" + userId + "].");
         // 根据用户ID查询用户CA认证信息
         CertificateAuthority certificateAuthority = selectCAInfoByUserId(userId);
@@ -100,8 +100,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     user.setIsCaFlag(1);
                     boolean isUserUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
                     if (!isUserUpdateFlag) {
-                        logger.info("CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].");
-                        throw new Exception("CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].");
+                        throw new Exception(throwInfo);
                     }
                 }
                 //  如果用户没有进行过CA认证
@@ -126,8 +125,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     newCertificateAuthority.setUpdateUserId(userId);
                     boolean isInsertFlag = this.certificateAuthorityMapper.insertSelective(newCertificateAuthority) > 0 ? true : false;
                     if (!isInsertFlag) {
-                        logger.info("CA认证成功后,插入用户CA认证记录表失败,用户ID:[" + userId + "].");
-                        throw new Exception("CA认证成功后,插入用户CA认证记录表失败,用户ID:[" + userId + "].");
+                        throw new Exception(throwInfo);
                     }
                 } else {
                     // 如果用户已进行过CA认证,更新用户CA认证记录
@@ -144,8 +142,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     certificateAuthority.setUpdateUserId(userId);
                     boolean isUpdateFlag = this.certificateAuthorityMapper.updateByPrimaryKeySelective(certificateAuthority) > 0 ? true : false;
                     if (!isUpdateFlag) {
-                        logger.info("CA认证成功后,更新用户CA认证记录表失败,用户ID:[" + userId + "].");
-                        throw new Exception("CA认证成功后,更新用户CA认证记录表失败,用户ID:[" + userId + "].");
+                        throw new Exception(throwInfo);
                     }
                 }
             }
@@ -153,7 +150,6 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             // 企业用户CA认证
             CorpOpenAccountRecord corpOpenAccountRecord = getCorpOpenAccountRecord(userId);
             if (corpOpenAccountRecord == null) {
-                logger.info("获取企业信息失败,企业用户ID:[" + userId + "].");
                 throw new Exception("获取企业信息失败,企业用户ID:[" + userId + "].");
             }
             // 组织机构代码
@@ -180,8 +176,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     user.setIsCaFlag(1);
                     boolean isUserUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
                     if (!isUserUpdateFlag) {
-                        logger.info("CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].");
-                        throw new Exception("CA认证成功后,更新用户表CA标识失败,用户ID:[" + userId + "].");
+                        throw new Exception(throwInfo);
                     }
                 }
                 // 如果没有做过CA认证
@@ -205,8 +200,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     newCertificateAuthority.setUpdateUserId(userId);
                     boolean isInsertFlag = this.certificateAuthorityMapper.insertSelective(newCertificateAuthority) > 0 ? true : false;
                     if (!isInsertFlag) {
-                        logger.info("CA认证成功后,插入用户CA认证记录表失败,用户ID:[" + userId + "].");
-                        throw new Exception("CA认证成功后,插入用户CA认证记录表失败,用户ID:[" + userId + "].");
+                        throw new Exception(throwInfo);
                     }
                 } else {
                     // 如果已经做过CA认证,更新CA认证记录表
@@ -223,8 +217,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
                     certificateAuthority.setUpdateUserId(userId);
                     boolean isUpdateFlag = this.certificateAuthorityMapper.updateByPrimaryKeySelective(certificateAuthority) > 0 ? true : false;
                     if (!isUpdateFlag) {
-                        logger.info("CA认证成功后,更新用户CA认证记录表失败,用户ID:[" + userId + "].");
-                        throw new Exception("CA认证成功后,更新用户CA认证记录表失败,用户ID:[" + userId + "].");
+                        throw new Exception(throwInfo);
                     }
                 }
             }

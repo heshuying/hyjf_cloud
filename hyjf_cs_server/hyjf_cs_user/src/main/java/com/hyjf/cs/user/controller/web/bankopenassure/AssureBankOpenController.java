@@ -40,8 +40,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/web/user/secure/assurebankopen")
-public class BankOpenController extends BaseUserController {
-	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
+public class AssureBankOpenController extends BaseUserController {
+	private static final Logger logger = LoggerFactory.getLogger(AssureBankOpenController.class);
 
 	@Autowired
 	private BankOpenService bankOpenService;
