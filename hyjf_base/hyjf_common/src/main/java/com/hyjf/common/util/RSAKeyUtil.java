@@ -181,7 +181,7 @@ public class RSAKeyUtil {
 
 	/**
 	 * 获取私钥
-	 * @param p12Path 文件路径
+	 * @paramp12Path 文件路径
 	 * @param pwd 私钥密码
 	 *            the pcks12 keystore file path in class path
 	 * @return PrivateKey
@@ -284,7 +284,7 @@ public class RSAKeyUtil {
 	/**
 	 * 根据输入流密码获取keystore
 	 * @param is
-	 * @param pwds
+	 * @parampwds
 	 * @return
 	 * @throws IOException
 	 * @throws GeneralSecurityException
@@ -312,24 +312,5 @@ public class RSAKeyUtil {
 			}
 		}
 		return null;
-	}
-
-	/////////////////////// test method//////////////////////
-	public static void testGenerateKeyPair() {
-		try {
-			KeyPairGenerator keygen = KeyPairGenerator.getInstance("RSA");
-			keygen.initialize(1024, new SecureRandom("credit2go".getBytes()));
-			KeyPair keys = keygen.genKeyPair();
-			PublicKey publicKey = keys.getPublic();
-			PrivateKey privateKey = keys.getPrivate();
-
-			System.out.println("publicKey : " + new String(Hex.encodeHex(publicKey.getEncoded())));
-			System.out.println("publicKey : " + Base64.encodeBase64String(publicKey.getEncoded()));
-
-			System.out.println("privateKey: " + new String(Hex.encodeHex(privateKey.getEncoded())));
-			System.out.println("privateKey: " + Base64.encodeBase64String(privateKey.getEncoded()));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

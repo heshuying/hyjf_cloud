@@ -1,4 +1,4 @@
-package com.hyjf.admin.controller.productcenter.borrow.batchcenter.batchborrowrecover;
+package com.hyjf.admin.controller.productcenter.borrow.batchcenter.batchborrowrepay;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -6,7 +6,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
-import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
+import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -25,53 +25,54 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
+
 /**
  * @Auther:yangchangwei
- * @Date:2018/7/7
- * @Description: 批次中心-批次放款
+ * @Date:2018/7/12
+ * @Description:
  */
-@Api(value = "批次中心-批次放款")
+@Api(value = "批次中心-批次还款")
 @RestController
-@RequestMapping("/hyjf-admin/batchBorrowRecover")
-public class BatchBorrowRecoverController extends BaseController{
+@RequestMapping("/hyjf-admin/batchBorrowRepay")
+public class BatchBorrowRepayController extends BaseController{
+
+    private static final String NAME_CLASS = "REPAY_STATUS";
+
 
     @Autowired
     private BatchBorrowRecoverService batchBorrowRecoverService;
 
-    public static final String NAME_CLASS = "REPAY_STATUS";
-
-
-    @ApiOperation(value = "批次中心-批次放款页面初始化", notes = "页面初始化")
-    @PostMapping(value = "/batchBorrowRecoverInit")
+    @ApiOperation(value = "批次中心-批次还款页面初始化", notes = "页面初始化")
+    @PostMapping(value = "/batchBorrowRepayInit")
     @ResponseBody
-    public JSONObject batchBorrowRecoverInit() {
+    public JSONObject batchBorrowRepayInit() {
         JSONObject jsonObject = null;
         return jsonObject;
     }
 
-    @ApiOperation(value = "批次中心-批次放款页面列表显示", notes = "页面列表显示")
-    @PostMapping(value = "/querybatchBorrowRecoverList")
+    @ApiOperation(value = "批次中心-批次还款页面列表显示", notes = "页面列表显示")
+    @PostMapping(value = "/querybatchBorrowRepayList")
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
     @ResponseBody
-    public JSONObject querybatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request) {
-        JSONObject jsonObject;
-        request.setApiType(0);
+    public JSONObject querybatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request) {
+        request.setApiType(1);
         request.setNameClass(NAME_CLASS);
-        jsonObject = batchBorrowRecoverService.queryBatchBorrowRecoverList(request);
+        JSONObject jsonObject = batchBorrowRecoverService.queryBatchBorrowRecoverList(request);
         return jsonObject;
     }
 
-    @ApiOperation(value = "批次中心-批次放款页面查询交易批次明细", notes = "查询交易批次明细")
-    @PostMapping(value = "/querybatchBorrowRecoverBankInfoList")
+
+    @ApiOperation(value = "批次中心-批次还款页面查询交易批次明细", notes = "查询交易批次明细")
+    @PostMapping(value = "/querybatchBorrowRepayBankInfoList")
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
     @ResponseBody
-    public JSONObject querybatchBorrowRecoverBankInfoList(@RequestBody String apicronID) {
+    public JSONObject querybatchBorrowRepayBankInfoList(@RequestBody String apicronID) {
         JSONObject jsonObject;
-        List<BorrowRecoverBankInfoVo> resultList= batchBorrowRecoverService.queryBatchBorrowRecoverBankInfoList(apicronID);
+        List<BatchBorrowRepayBankInfoVO> resultList = batchBorrowRecoverService.queryBatchBorrowRepayBankInfoList(apicronID);
         if (null != resultList) {
             jsonObject = this.success(String.valueOf(resultList.size()), resultList);
         } else {
@@ -80,25 +81,27 @@ public class BatchBorrowRecoverController extends BaseController{
         return jsonObject;
     }
 
-
-    @ApiOperation(value = "批次中心-批次放款页面导出功能", notes = "导出功能")
-    @PostMapping(value = "/exportBatchBorrowRecoverList")
+    @ApiOperation(value = "批次中心-批次还款页面导出功能", notes = "导出功能")
+    @PostMapping(value = "/exportBatchBorrowRepayList")
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
     @ResponseBody
-    public JSONObject exportBatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response){
-        String sheetName = "批次放款列表";
+    public JSONObject exportBatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response){
+        // 表格sheet名称
+        String sheetName = "批次还款列表";
 
         request.setLimitStart(-1);
-        JSONObject jsonObject = this.querybatchBorrowRecoverList(request);
+        JSONObject jsonObject = this.querybatchBorrowRepayList(request);
+
         if(FAIL.equals(jsonObject.get(STATUS))){
             this.fail("暂时没有符合条件的数据！");
         }
         List<BatchBorrowRecoverVo> recordList = (List<BatchBorrowRecoverVo>) jsonObject.get(LIST);
-
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[] { "序号","借款编号","资产来源","批次号", "借款金额","放款服务费","应放款","已放款","总笔数","成功笔数","失败笔数","更新时间","批次状态"};
+        // 序号   借款编号    批次号 还款角色    还款用户名   当前还款期数  总期数 借款金额    应收服务费   应还款 已还款 总笔数 成功笔数    成功金额    失败笔数    失败金额    提交时间    更新时间    批次状态    银行回执说明
+        String[] titles = new String[] {"序号 ","借款编号","资产来源","批次号","还款角色","还款用户名","当前还款期数","总期数","借款金额","还款服务费",
+                "应还款","已还款","总笔数","成功笔数","成功金额","失败笔数","失败金额","提交时间","更新时间","批次状态","银行回执说明"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -122,7 +125,7 @@ public class BatchBorrowRecoverController extends BaseController{
                 Row row = sheet.createRow(rowNum);
                 // 循环数据
                 for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BatchBorrowRecoverVo  customize= recordList.get(i);
+                    BatchBorrowRecoverVo customize = recordList.get(i);
 
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
@@ -135,52 +138,83 @@ public class BatchBorrowRecoverController extends BaseController{
                     else if (celLength == 1) {
                         cell.setCellValue(customize.getBorrowNid());
                     }
-                    /*----------add by LSY START---------------------*/
-                    // 借款编号
+                    // 资产来源
                     else if (celLength == 2) {
                         cell.setCellValue(customize.getInstName());
                     }
-                    /*----------add by LSY END---------------------*/
                     // 批次号
                     else if (celLength == 3) {
                         cell.setCellValue(customize.getBatchNo());
                     }
-                    // 借款金额
+                    // 还款角色
                     else if (celLength == 4) {
+                        cell.setCellValue("0".equals(customize.getIsRepayOrgFlag())?"借款人":"担保机构");
+                    }
+                    // 还款用户名
+                    else if (celLength == 5) {
+                        cell.setCellValue(customize.getUserName());
+                    }
+                    // 当前还款期数
+                    else if (celLength == 6) {
+                        cell.setCellValue(customize.getPeriodNow());
+                    }
+                    // 总期数
+                    else if (celLength == 7) {
+                        cell.setCellValue(customize.getBorrowPeriod());
+                    }
+                    // 借款金额
+                    else if (celLength == 8) {
                         cell.setCellValue(customize.getBorrowAccount().toString());
                     }
                     // 应收服务费
-                    else if (celLength == 5) {
+                    else if (celLength == 9) {
                         cell.setCellValue(customize.getBatchServiceFee().toString());
                     }
-                    // 应放款
-                    else if (celLength == 6) {
+                    // 应还款
+                    else if (celLength == 10) {
                         cell.setCellValue(customize.getBatchAmount().toString());
                     }
-                    // 已放款
-                    else if (celLength == 7) {
+                    // 已还款
+                    else if (celLength == 11) {
                         cell.setCellValue(customize.getSucAmount().toString());
                     }
-                    // 总笔数）
-                    else if (celLength == 8) {
+                    // 总笔数
+                    else if (celLength == 12) {
                         cell.setCellValue(customize.getBatchCounts());
                     }
                     // 成功笔数
-                    else if (celLength == 9) {
+                    else if (celLength == 13) {
                         cell.setCellValue(customize.getSucCounts());
                     }
+                    // 成功金额
+                    else if (celLength == 14) {
+                        cell.setCellValue(customize.getSucAmount().toString());
+                    }
                     // 失败笔数
-                    else if (celLength == 10) {
+                    else if (celLength == 15) {
                         cell.setCellValue(customize.getFailCounts());
                     }
+                    //  失败金额
+                    else if (celLength == 16) {
+                        cell.setCellValue(customize.getFailAmount().toString());
+                    }
+                    // 提交时间
+                    else if (celLength == 17) {
+                        cell.setCellValue(customize.getCreateTime());
+                    }
                     // 更新时间
-                    else if (celLength == 11) {
+                    else if (celLength == 18) {
                         cell.setCellValue(customize.getUpdateTime());
                     }
                     // 批次状态
-                    else if (celLength == 12) {
+                    else if (celLength == 19) {
                         cell.setCellValue(customize.getStatusStr());
                     }
+                    // 银行回执说明
+                    else if (celLength == 20) {
+                        cell.setCellValue(customize.getData());
+                    }
+
                 }
             }
         }
@@ -188,6 +222,10 @@ public class BatchBorrowRecoverController extends BaseController{
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         return this.success();
     }
+
+
+
+
 
 
 }
