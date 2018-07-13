@@ -51,11 +51,11 @@ public class HjhLabelClientImpl implements HjhLabelClient{
 	}
 	
 	@Override
-	public List<HjhLabelCustomizeVO> findHjhLabelList(HjhLabelRequest request) {
+	public HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request) {
 		HjhLabelCustomizeResponse response = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }			
 		return null;
 	}
