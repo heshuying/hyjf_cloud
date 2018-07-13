@@ -11,18 +11,13 @@
 
 package com.hyjf.common.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.RedisKey;
 import org.apache.commons.lang3.StringUtils;
 
-import com.hyjf.common.cache.RedisUtils;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
 public class GetOrderIdUtils {
 
@@ -239,6 +234,24 @@ public class GetOrderIdUtils {
 		Double randomValue = Math.random();
         String randomValueS = randomValue.toString();
         return randomValueS.substring(randomValueS.indexOf(".")+1, 8);
+	}
+
+	/**
+	 * 获取订单时间时分秒
+	 *
+	 * @return
+	 */
+	public static synchronized String getBatchNo() {
+		int batchNo = 100000;
+		String batchNoStr = RedisUtils.get(RedisKey.BATCH_NO);
+		if (StringUtils.isNotBlank(batchNoStr)) {
+			long result = RedisUtils.incr(RedisKey.BATCH_NO);
+			return result + "";
+		} else {
+			RedisUtils.set(RedisKey.BATCH_NO, String.valueOf(batchNo));
+			batchNoStr = String.valueOf(batchNo);
+		}
+		return batchNoStr;
 	}
 
 }

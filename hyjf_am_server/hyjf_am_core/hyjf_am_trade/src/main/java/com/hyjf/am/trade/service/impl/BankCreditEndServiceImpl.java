@@ -6,9 +6,12 @@ package com.hyjf.am.trade.service.impl;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BankCreditEndService;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -168,4 +171,148 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
     }
 
+
+    /**
+     * 批次结束债权用更新 结束债权任务表
+     * @param bankCreditEnd
+     * @return
+     */
+    @Override
+    public int updateBankCreditEndForBatch(BankCreditEnd bankCreditEnd) {
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andStatusEqualTo(0); // 初始
+        example.setLimitStart(0);
+        example.setLimitEnd(500);// 记录数限制
+        example.setOrderByClause("order by id ");
+        bankCreditEnd.setUpdateTime(GetDate.getDate());
+        return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
+    }
+
+    /**
+     * 据批次号和日期，取得结束债权任务列表
+     * @param batchNo
+     * @param txDate
+     * @return
+     */
+    @Override
+    public List<BankCreditEnd> getBankCreditEndListByBatchnoTxdate(String batchNo, String txDate) {
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andBatchNoEqualTo(batchNo);//批次号
+        example.createCriteria().andTxDateEqualTo(txDate);//日期
+        return this.bankCreditEndMapper.selectByExample(example);
+    }
+
+    @Override
+    public int updateBankCreditEndForStatus(String batchNo, String txDate, int status) {
+        BankCreditEndExample example = new BankCreditEndExample();
+        example.createCriteria().andBatchNoEqualTo(batchNo);//批次号
+        example.createCriteria().andTxDateEqualTo(txDate);//日期
+
+        BankCreditEnd bankCreditEnd = new BankCreditEnd();
+        bankCreditEnd.setStatus(status);//批次状态
+        bankCreditEnd.setUpdateTime(GetDate.getDate());
+        return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
+    }
+
+    /**
+     * 批次结束债权校验（异步回调）
+     * 更新批次债权结束，校验
+     * @param bean
+     * @return
+     */
+    @Override
+    public int updateBatchCreditEndCheck(BankCallBeanVO bean) {
+
+        BankCreditEndExample example = new BankCreditEndExample();
+        BankCreditEndExample.Criteria cra = example.createCriteria();
+
+        cra.andBatchNoEqualTo(bean.getBatchNo());
+        cra.andTxDateEqualTo(bean.getTxDate());
+        cra.andTxTimeEqualTo(bean.getTxTime());
+        cra.andSeqNoEqualTo(bean.getSeqNo());
+//        cra.andStatusEqualTo(0); // 确定先收到合法性//TODO:
+
+        BankCreditEndExample exampleLimit = example;
+        exampleLimit.setLimitStart(0);
+        exampleLimit.setLimitEnd(1);
+        exampleLimit.setOrderByClause("id desc");
+        List<BankCreditEnd> ends = this.bankCreditEndMapper.selectByExample(exampleLimit);
+        logger.info(bean.getBatchNo()+"  "+ends.size());
+        if(ends != null && ends.size() > 0) {
+            BankCreditEnd oneCredit = ends.get(0);
+            if(oneCredit.getStatus() == 4) {
+                logger.info(bean.getBatchNo()+" 合法性已经成功 ");
+                return 0;
+            }
+        }else {
+            return 0;
+        }
+
+        BankCreditEnd newEnd = new BankCreditEnd();
+        newEnd.setCheckRetcode(bean.getRetCode());
+        newEnd.setCheckRetmsg(bean.getRetMsg());
+
+        if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+            newEnd.setStatus(4); // 校验成功
+        }else {
+            newEnd.setStatus(10); // 校验失败
+        }
+        newEnd.setUpdateUser(1);
+        newEnd.setUpdateTime(GetDate.getDate());
+
+        return this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+    }
+
+    @Override
+    public int updateBatchCreditEndFinish(BankCallBeanVO bean) {
+
+        BankCreditEndExample example = new BankCreditEndExample();
+        BankCreditEndExample.Criteria cra = example.createCriteria();
+
+        cra.andBatchNoEqualTo(bean.getBatchNo());
+        cra.andTxDateEqualTo(bean.getTxDate());
+        cra.andTxTimeEqualTo(bean.getTxTime());
+        cra.andSeqNoEqualTo(bean.getSeqNo());
+//        cra.andStatusEqualTo(2);// 确定先收到
+
+        BankCreditEndExample exampleLimit = example;
+        exampleLimit.setLimitStart(0);
+        exampleLimit.setLimitEnd(1);
+        exampleLimit.setOrderByClause("id desc");
+        List<BankCreditEnd> ends = this.bankCreditEndMapper.selectByExample(exampleLimit);
+        logger.info(bean.getBatchNo()+"  "+ends.size());
+        if(ends != null && ends.size() > 0) {
+            BankCreditEnd oneCredit = ends.get(0);
+            if(oneCredit.getStatus() == 11 || oneCredit.getStatus() == 5) {
+                logger.info(bean.getBatchNo()+" 业务处理已经成功 ");
+                return 0;
+            }
+        }else {
+            return 0;
+        }
+
+        BankCreditEnd newEnd = new BankCreditEnd();
+        newEnd.setRetcode(bean.getRetCode());
+        newEnd.setRetmsg(bean.getRetMsg());
+        newEnd.setSucCounts(Integer.valueOf(bean.getSucCounts()));
+        int failCnt = 0;
+        if(bean.getFailCounts() != null) {
+            failCnt = Integer.valueOf(bean.getFailCounts());
+        }
+        newEnd.setFailCounts(failCnt);
+
+        if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+            if(failCnt > 0) {
+                newEnd.setStatus(11); // 业务部分成功
+            }else {
+                newEnd.setStatus(5); // 业务全部成功
+            }
+        }else {
+            newEnd.setStatus(12); // 业务全部失败
+        }
+        newEnd.setUpdateUser(1);
+        newEnd.setUpdateTime(GetDate.getDate());
+
+        return this.bankCreditEndMapper.updateByExampleSelective(newEnd, example);
+    }
 }
