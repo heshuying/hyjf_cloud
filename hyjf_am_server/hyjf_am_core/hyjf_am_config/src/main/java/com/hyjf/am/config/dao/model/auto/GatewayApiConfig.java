@@ -17,6 +17,8 @@ public class GatewayApiConfig implements Serializable {
 
     private Integer stripPrefix;
 
+    private Integer secureVisitFlag;
+
     private String apiName;
 
     private static final long serialVersionUID = 1L;
@@ -75,6 +77,14 @@ public class GatewayApiConfig implements Serializable {
 
     public void setStripPrefix(Integer stripPrefix) {
         this.stripPrefix = stripPrefix;
+    }
+
+    public Integer getSecureVisitFlag() {
+        return secureVisitFlag;
+    }
+
+    public void setSecureVisitFlag(Integer secureVisitFlag) {
+        this.secureVisitFlag = secureVisitFlag;
     }
 
     public String getApiName() {

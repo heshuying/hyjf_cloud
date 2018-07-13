@@ -325,73 +325,73 @@ public class SmsNoticeConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andValueIsNull() {
-            addCriterion("`value` is null");
+        public Criteria andConfigValueIsNull() {
+            addCriterion("config_value is null");
             return (Criteria) this;
         }
 
-        public Criteria andValueIsNotNull() {
-            addCriterion("`value` is not null");
+        public Criteria andConfigValueIsNotNull() {
+            addCriterion("config_value is not null");
             return (Criteria) this;
         }
 
-        public Criteria andValueEqualTo(String value) {
-            addCriterion("`value` =", value, "value");
+        public Criteria andConfigValueEqualTo(String value) {
+            addCriterion("config_value =", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueNotEqualTo(String value) {
-            addCriterion("`value` <>", value, "value");
+        public Criteria andConfigValueNotEqualTo(String value) {
+            addCriterion("config_value <>", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueGreaterThan(String value) {
-            addCriterion("`value` >", value, "value");
+        public Criteria andConfigValueGreaterThan(String value) {
+            addCriterion("config_value >", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueGreaterThanOrEqualTo(String value) {
-            addCriterion("`value` >=", value, "value");
+        public Criteria andConfigValueGreaterThanOrEqualTo(String value) {
+            addCriterion("config_value >=", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueLessThan(String value) {
-            addCriterion("`value` <", value, "value");
+        public Criteria andConfigValueLessThan(String value) {
+            addCriterion("config_value <", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueLessThanOrEqualTo(String value) {
-            addCriterion("`value` <=", value, "value");
+        public Criteria andConfigValueLessThanOrEqualTo(String value) {
+            addCriterion("config_value <=", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueLike(String value) {
-            addCriterion("`value` like", value, "value");
+        public Criteria andConfigValueLike(String value) {
+            addCriterion("config_value like", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueNotLike(String value) {
-            addCriterion("`value` not like", value, "value");
+        public Criteria andConfigValueNotLike(String value) {
+            addCriterion("config_value not like", value, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueIn(List<String> values) {
-            addCriterion("`value` in", values, "value");
+        public Criteria andConfigValueIn(List<String> values) {
+            addCriterion("config_value in", values, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueNotIn(List<String> values) {
-            addCriterion("`value` not in", values, "value");
+        public Criteria andConfigValueNotIn(List<String> values) {
+            addCriterion("config_value not in", values, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueBetween(String value1, String value2) {
-            addCriterion("`value` between", value1, value2, "value");
+        public Criteria andConfigValueBetween(String value1, String value2) {
+            addCriterion("config_value between", value1, value2, "configValue");
             return (Criteria) this;
         }
 
-        public Criteria andValueNotBetween(String value1, String value2) {
-            addCriterion("`value` not between", value1, value2, "value");
+        public Criteria andConfigValueNotBetween(String value1, String value2) {
+            addCriterion("config_value not between", value1, value2, "configValue");
             return (Criteria) this;
         }
 
