@@ -49,6 +49,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -2071,6 +2072,7 @@ public class FddHandle {
 	 */
 	private boolean uplodTmImage(String upParentDir, String saveDir, int type) {
 
+		boolean ret = true;
 
 		String ftpIP = systemConfig.getHyjfFtpIp();
 		String port = systemConfig.getHyjfFtpPort();
@@ -2080,18 +2082,19 @@ public class FddHandle {
 		}
 		String password = systemConfig.getHyjfFtpPassword();
 		String username = systemConfig.getHyjfFtpUsername();
+		FileInputStream in = null;
 		try {
 			logger.info("----------待上传目录：" + upParentDir);
-			File paraentDir = new File(upParentDir);
-			String upParaFile = paraentDir.getParent();
-			if(paraentDir.isDirectory()){
+			File parentDir = new File(upParentDir);
+			String upParaFile = parentDir.getParent();
+			if(parentDir.isDirectory()){
 
 				logger.info("----------待删除目录：" + upParaFile);
-				File[] files = paraentDir.listFiles();
+				File[] files = parentDir.listFiles();
 				for (File file : files) {
 					String fileName = file.getName();
 					logger.info("--------循环目录，开始上传文件：" + fileName);
-					FileInputStream in = new FileInputStream(file);
+					in = new FileInputStream(file);
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, in);
 					if (!flag){
@@ -2099,9 +2102,9 @@ public class FddHandle {
 					}
 				}
 			}else{
-				String fileName = paraentDir.getName();
+				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
-				FileInputStream in = new FileInputStream(paraentDir);
+				in = new FileInputStream(parentDir);
 				boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 						basePathImage, saveDir, fileName, in);
 				if (!flag){
@@ -2116,9 +2119,15 @@ public class FddHandle {
 		}catch (Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());
-			return false;
+			ret = false;
+		}finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return  true;
+		return ret;
 
 	}
 }
