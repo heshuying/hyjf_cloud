@@ -1,5 +1,6 @@
 package com.hyjf.zuul.filter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -63,7 +64,7 @@ public class AccessFilter extends ZuulFilter {
 		String requestUri = request.getRequestURI().toString();
 
 		boolean secureVisitFlag;
-		Map<String, GatewayApiConfigVO> map = RedisUtils.getObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, Map.class);
+		Map<String, Object> map = RedisUtils.getObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, Map.class);
 		if (!CollectionUtils.isEmpty(map)) {
 			secureVisitFlag = isSecureVisit(map, originalRequestPath);
 		} else {
@@ -161,7 +162,7 @@ public class AccessFilter extends ZuulFilter {
 	 * @param originalRequestPath
 	 * @return
 	 */
-	private boolean isSecureVisit(Map<String, GatewayApiConfigVO> map, String originalRequestPath) {
+	private boolean isSecureVisit(Map<String, Object> map, String originalRequestPath) {
 		boolean secureVisitFlag = false;
 		for (String key : map.keySet()) {
 			if (key.contains("?")) {
@@ -173,7 +174,8 @@ public class AccessFilter extends ZuulFilter {
 			// 路径匹配
 			if (originalRequestPath.startsWith(key)) {
 				// 判断是否是安全访问
-				GatewayApiConfigVO vo = map.get(key);
+				GatewayApiConfigVO vo =  JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class) ;
+				//JSONObject.parseObject(map.get(key), )
 				if (vo.getSecureVisitFlag() == 1) {
 					secureVisitFlag = true;
 				}

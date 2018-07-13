@@ -1,7 +1,9 @@
 package com.hyjf.common.cache;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -12,10 +14,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * redis工具类
  * @author dxj
@@ -139,6 +139,10 @@ public class RedisUtils {
             pool = getPool();
             jedis = pool.getResource();
             value = jedis.get(key);
+
+//            if(Collection.class.isAssignableFrom(clazz)){
+//                return JSON.parseObject(value, new TypeReference<T>(){});
+//            }
 
             return JSON.parseObject(value, clazz);
         } catch (Exception e) {
