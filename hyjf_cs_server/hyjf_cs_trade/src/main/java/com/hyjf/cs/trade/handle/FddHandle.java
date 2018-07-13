@@ -2122,7 +2122,9 @@ public class FddHandle {
 			ret = false;
 		}finally {
 			try {
-				in.close();
+			    if (Validator.isNotNull(in)){
+                    in.close();
+                }
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
