@@ -1,6 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.response.admin.BatchBorrowRecoverBankInfoReponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
@@ -33,4 +34,11 @@ public interface BatchBorrowRecoverService extends BaseService{
      * @return
      */
     BatchBorrowRecoverVo queryBatchCenterListSum(BatchBorrowRecoverRequest request);
+
+    /**
+     * 获取实时放款的批次交易明细
+     * @param borrowNid
+     * @return
+     */
+    BatchBorrowRecoverBankInfoReponse queryBatchBorrowRecoverBankInfoList(String borrowNid);
 }

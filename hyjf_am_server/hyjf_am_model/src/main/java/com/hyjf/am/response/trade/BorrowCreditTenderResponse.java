@@ -1,14 +1,14 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.BorrowCreditTenderSumVO;
+import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 
 public class BorrowCreditTenderResponse extends Response<BorrowCreditRepayVO> {
 
     private Integer count;
 
-    private BorrowCreditTenderSumVO sumData;
+    private BorrowCreditRepaySumVO sumData;
 
     public Integer getCount() {
         return count;
@@ -18,11 +18,11 @@ public class BorrowCreditTenderResponse extends Response<BorrowCreditRepayVO> {
         this.count = count;
     }
 
-    public BorrowCreditTenderSumVO getSumData() {
+    public BorrowCreditRepaySumVO getSumData() {
         return sumData;
     }
 
-    public void setSumData(BorrowCreditTenderSumVO sumData) {
+    public void setSumData(BorrowCreditRepaySumVO sumData) {
         this.sumData = sumData;
     }
 }

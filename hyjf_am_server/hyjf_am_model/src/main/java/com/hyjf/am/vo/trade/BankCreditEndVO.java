@@ -1,12 +1,19 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
 package com.hyjf.am.vo.trade;
+
+import com.hyjf.am.vo.BaseVO;
 
 import java.util.Date;
 
 /**
- * @author hesy
- * @version BankCreditEndVO, v0.1 2018/7/12 14:30
+ * @author liubin
+ * @version BankCreditEndVO, v0.1 2018/7/10 19:30
  */
-public class BankCreditEndVO {
+public class BankCreditEndVO extends BaseVO {
+    private static final long serialVersionUID = 543246465664343L;
+
     private Integer id;
 
     private String batchNo;
@@ -69,8 +76,6 @@ public class BankCreditEndVO {
 
     private Date updateTime;
 
-    private static final long serialVersionUID = 1L;
-
     public Integer getId() {
         return id;
     }
@@ -84,7 +89,7 @@ public class BankCreditEndVO {
     }
 
     public void setBatchNo(String batchNo) {
-        this.batchNo = batchNo == null ? null : batchNo.trim();
+        this.batchNo = batchNo;
     }
 
     public String getTxDate() {
@@ -92,7 +97,7 @@ public class BankCreditEndVO {
     }
 
     public void setTxDate(String txDate) {
-        this.txDate = txDate == null ? null : txDate.trim();
+        this.txDate = txDate;
     }
 
     public String getTxTime() {
@@ -100,7 +105,7 @@ public class BankCreditEndVO {
     }
 
     public void setTxTime(String txTime) {
-        this.txTime = txTime == null ? null : txTime.trim();
+        this.txTime = txTime;
     }
 
     public String getSeqNo() {
@@ -108,7 +113,7 @@ public class BankCreditEndVO {
     }
 
     public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo == null ? null : seqNo.trim();
+        this.seqNo = seqNo;
     }
 
     public Integer getTxCounts() {
@@ -132,7 +137,7 @@ public class BankCreditEndVO {
     }
 
     public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
+        this.username = username;
     }
 
     public Integer getTenderUserId() {
@@ -148,7 +153,7 @@ public class BankCreditEndVO {
     }
 
     public void setTenderUsername(String tenderUsername) {
-        this.tenderUsername = tenderUsername == null ? null : tenderUsername.trim();
+        this.tenderUsername = tenderUsername;
     }
 
     public String getAccountId() {
@@ -156,7 +161,7 @@ public class BankCreditEndVO {
     }
 
     public void setAccountId(String accountId) {
-        this.accountId = accountId == null ? null : accountId.trim();
+        this.accountId = accountId;
     }
 
     public String getTenderAccountId() {
@@ -164,7 +169,7 @@ public class BankCreditEndVO {
     }
 
     public void setTenderAccountId(String tenderAccountId) {
-        this.tenderAccountId = tenderAccountId == null ? null : tenderAccountId.trim();
+        this.tenderAccountId = tenderAccountId;
     }
 
     public String getOrderId() {
@@ -172,7 +177,7 @@ public class BankCreditEndVO {
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+        this.orderId = orderId;
     }
 
     public String getOrgOrderId() {
@@ -180,7 +185,7 @@ public class BankCreditEndVO {
     }
 
     public void setOrgOrderId(String orgOrderId) {
-        this.orgOrderId = orgOrderId == null ? null : orgOrderId.trim();
+        this.orgOrderId = orgOrderId;
     }
 
     public String getBorrowNid() {
@@ -188,7 +193,7 @@ public class BankCreditEndVO {
     }
 
     public void setBorrowNid(String borrowNid) {
-        this.borrowNid = borrowNid == null ? null : borrowNid.trim();
+        this.borrowNid = borrowNid;
     }
 
     public String getAuthCode() {
@@ -196,7 +201,7 @@ public class BankCreditEndVO {
     }
 
     public void setAuthCode(String authCode) {
-        this.authCode = authCode == null ? null : authCode.trim();
+        this.authCode = authCode;
     }
 
     public Integer getCreditEndType() {
@@ -220,7 +225,7 @@ public class BankCreditEndVO {
     }
 
     public void setCheckRetcode(String checkRetcode) {
-        this.checkRetcode = checkRetcode == null ? null : checkRetcode.trim();
+        this.checkRetcode = checkRetcode;
     }
 
     public String getCheckRetmsg() {
@@ -228,7 +233,7 @@ public class BankCreditEndVO {
     }
 
     public void setCheckRetmsg(String checkRetmsg) {
-        this.checkRetmsg = checkRetmsg == null ? null : checkRetmsg.trim();
+        this.checkRetmsg = checkRetmsg;
     }
 
     public String getRetcode() {
@@ -236,7 +241,7 @@ public class BankCreditEndVO {
     }
 
     public void setRetcode(String retcode) {
-        this.retcode = retcode == null ? null : retcode.trim();
+        this.retcode = retcode;
     }
 
     public String getRetmsg() {
@@ -244,7 +249,7 @@ public class BankCreditEndVO {
     }
 
     public void setRetmsg(String retmsg) {
-        this.retmsg = retmsg == null ? null : retmsg.trim();
+        this.retmsg = retmsg;
     }
 
     public Integer getSucCounts() {
@@ -284,7 +289,7 @@ public class BankCreditEndVO {
     }
 
     public void setFailmsg(String failmsg) {
-        this.failmsg = failmsg == null ? null : failmsg.trim();
+        this.failmsg = failmsg;
     }
 
     public Integer getCreateUser() {

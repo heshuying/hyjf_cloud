@@ -46,7 +46,6 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
         if(merchantAccounts!=null&&merchantAccounts.size()>0){
             // 调用汇付接口,查询余额
             ChinapnrBean bean = new ChinapnrBean();
-            // 构建请求参数
             // 版本号(必须)
             bean.setVersion(ChinaPnrConstant.VERSION_10);
             // 消息类型(必须)
@@ -57,7 +56,7 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
             ChinapnrBean resultBean = ChinapnrUtil.callApiBg(bean);
             String respCode = resultBean == null ? "" : resultBean.getRespCode();
             // 如果接口调用成功
-            if (ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
+            if (null!=resultBean&&ChinaPnrConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 //如果接口返回的账户结果串不为空
                 if (StringUtils.isNotBlank(resultBean.getAcctDetails())) {
                     try {

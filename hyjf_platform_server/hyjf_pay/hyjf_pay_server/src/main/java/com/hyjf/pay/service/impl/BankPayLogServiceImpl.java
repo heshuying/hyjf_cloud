@@ -1,14 +1,5 @@
 package com.hyjf.pay.service.impl;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
@@ -22,6 +13,14 @@ import com.hyjf.pay.mongo.BankExclusiveLogDao;
 import com.hyjf.pay.mongo.BankLogDao;
 import com.hyjf.pay.mongo.BankSendLogDao;
 import com.hyjf.pay.service.BankPayLogService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Map;
 
 @Service
 public class BankPayLogServiceImpl implements BankPayLogService {
@@ -38,7 +37,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     /**
      * 保存发送日志
      *
-     * @param chinapnrSendlog
+     * @param
      */
     @Override
     public void saveChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean) {
@@ -67,7 +66,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     /**
      * 保存接受日志
      *
-     * @param chinapnrLog
+     * @param
      */
     @Override
     public void saveChinapnrLog(BankCallBean bean, int returnType) {
@@ -111,7 +110,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     }
 
     @Override
-    public String insertChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean) {
+    public String insertChinapnrSendLog(BankCallBean bean) {
         int nowTime = GetDate.getNowTime10();
         BankSendlog sendlog = new BankSendlog();
         sendlog.setOrdid(bean.getLogOrderId());
@@ -121,7 +120,7 @@ public class BankPayLogServiceImpl implements BankPayLogService {
         sendlog.setMsgType(bean.getTxCode());
         sendlog.setMsgdata(bean.get(BankCallConstant.PARAM_LOGMSGDATA));
         sendlog.setChkvalue(bean.get(BankCallConstant.PARAM_SIGN));
-        sendlog.setContent(pnrApiBean.getJsonMap());
+        sendlog.setContent(bean.getJsonMap());
         sendlog.setRemark(bean.getLogRemark());
         sendlog.setClient(GetterUtil.getInteger(bean.get(BankCallConstant.PARAM_LOGCLIENT)));
         sendlog.setCreateTime(nowTime);

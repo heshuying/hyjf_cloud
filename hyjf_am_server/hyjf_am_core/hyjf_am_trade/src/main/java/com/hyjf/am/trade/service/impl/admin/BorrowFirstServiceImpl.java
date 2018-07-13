@@ -165,7 +165,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
      * @param borrowFireRequest
      */
     @Override
-    public void updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
+    public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
         BorrowVO borrow = borrowFireRequest.getBorrowVO();
         if (borrow != null) {
             // 插入时间
@@ -173,7 +173,6 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             Date systemNowDate = GetDate.getDate(systemNowDateLong);
             // 剩余的金额
             borrow.setBorrowAccountWait(borrow.getAccount());
-            int time = systemNowDateLong;
             // 当发标状态为立即发标时插入系统时间
             if (StringUtils.isNotBlank(borrowFireRequest.getVerifyStatus())) {
                 // 发标方式为”暂不发标2“或者”定时发标 3“时，项目状态变为”待发布“
@@ -202,7 +201,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                     // 状态
                     borrow.setStatus(2);
                     // 借款到期时间
-                    borrow.setBorrowEndTime(String.valueOf(time + borrow.getBorrowValidTime() * 86400));
+                    borrow.setBorrowEndTime(String.valueOf(systemNowDateLong + borrow.getBorrowValidTime() * 86400));
 
                     // 根据此标的是否跑引擎操作redis ：0未使用 1使用
                     if (borrow.getIsEngineUsed() == 0) {
@@ -217,12 +216,15 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 borrowCra.andBorrowNidEqualTo(borrow.getBorrowNid());
                 Borrow updateBorrow = new Borrow();
                 BeanUtils.copyProperties(borrow, updateBorrow);
-                this.borrowMapper.updateByExampleSelective(updateBorrow, borrowExample);
-                // 删写redis的定时发标时间
-                changeOntimeOfRedis(borrow);
+                int updateCount = this.borrowMapper.updateByExampleSelective(updateBorrow, borrowExample);
+                if(updateCount > 0){
+                    // 删写redis的定时发标时间
+                    changeOntimeOfRedis(borrow);
+                    return true;
+                }
             }
         }
-
+        return false;
     }
 
     private void changeOntimeOfRedis(BorrowVO borrow) {
@@ -242,16 +244,19 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
      * @param borrowFireRequest
      */
     @Override
-    public void sendToMQ(BorrowFireRequest borrowFireRequest) {
+    public boolean sendToMQ(BorrowFireRequest borrowFireRequest) {
         BorrowVO borrow = borrowFireRequest.getBorrowVO();
         if (borrow != null) {
             try {
                 JSONObject params = new JSONObject();
                 params.put("borrowNid", borrow.getBorrowNid());
                 borrowFirstProducer.messageSend(new MessageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                return true;
             } catch (MQException e) {
-                logger.error("发送【关联计划】MQ失败...");
+                logger.error(borrow.getBorrowNid() + "----发送【关联计划】MQ失败...");
+                return false;
             }
         }
+        return false;
     }
 }

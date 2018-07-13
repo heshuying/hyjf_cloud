@@ -10,13 +10,13 @@ public interface BankPayLogService {
 	
 	/**
 	 * 保存发送日志
-	 * @param chinapnrSendlog
+	 * @param
 	 */
 	void saveChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean);
 	
 	/**
 	 * 保存接受日志
-	 * @param chinapnrLog
+	 * @param
 	 */
 	void saveChinapnrLog(BankCallBean bean, int returnType);
 
@@ -31,7 +31,7 @@ public interface BankPayLogService {
 	 */
 	BankExclusiveLog selectChinapnrExclusiveLogByOrderId(String orderId);
 
-	String insertChinapnrSendLog(BankCallPnrApiBean pnrApiBean, BankCallBean bean);
+	String insertChinapnrSendLog( BankCallBean bean);
 	
 	String insertChinapnrExclusiveLog(BankCallBean bean);
 	

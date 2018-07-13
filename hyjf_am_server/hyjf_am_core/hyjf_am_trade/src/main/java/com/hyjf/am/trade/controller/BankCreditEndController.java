@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankCreditEndResponse;
-import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
 import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
@@ -50,7 +50,7 @@ public class BankCreditEndController {
      * @date: 2018/7/12
      */
     @RequestMapping("/getlist")
-    public BankCreditEndResponse getCreditEndList(@RequestBody BankCreditEndRequest requestBean){
+    public BankCreditEndResponse getCreditEndList(@RequestBody BankCreditEndListRequest requestBean){
         BankCreditEndResponse response = new BankCreditEndResponse();
         List<BankCreditEnd> recordList = bankCreditEndService.getCreditEndList(requestBean);
         if (Validator.isNotNull(recordList)){
@@ -65,7 +65,7 @@ public class BankCreditEndController {
      * @date: 2018/7/12
      */
     @RequestMapping("/getcount")
-    public Integer getCreditEndCount(@RequestBody BankCreditEndRequest requestBean){
+    public Integer getCreditEndCount(@RequestBody BankCreditEndListRequest requestBean){
         return bankCreditEndService.getCreditEndCount(requestBean);
     }
 
@@ -75,7 +75,7 @@ public class BankCreditEndController {
      * @date: 2018/7/12
      */
     @RequestMapping("/getby_orderid/{orderId}")
-    public BankCreditEndResponse getCreditEndList(@PathVariable String orderId){
+    public BankCreditEndResponse getCreditEndByOrderId(@PathVariable String orderId){
         BankCreditEndResponse response = new BankCreditEndResponse();
         BankCreditEnd record = bankCreditEndService.selectByOrderId(orderId);
         if (Validator.isNotNull(record)){

@@ -131,7 +131,7 @@ public class AppPassWordController {
         modelAndView = new ModelAndView("/jumpHTML");
         BaseMapBean baseMapBean=new BaseMapBean();
         Map<String,Object> map = passWordService.checkStatus(token,sign);
-        if (null!=map){
+        if (null!=map&&map.get("baseMapBean")!=null){
             modelAndView.addObject("callBackForm", map.get("baseMapBean"));
             return modelAndView;
         }

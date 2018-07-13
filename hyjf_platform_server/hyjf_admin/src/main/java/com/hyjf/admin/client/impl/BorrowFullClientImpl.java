@@ -6,7 +6,7 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.BorrowFullClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
-import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowFullCustomizeResponse;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
@@ -38,7 +38,12 @@ public class BorrowFullClientImpl implements BorrowFullClient {
     @Override
     public Integer countBorrowFull(BorrowFullRequest borrowFullRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_full/count_borrow_full";
-        return restTemplate.postForEntity(url, borrowFullRequest, Integer.class).getBody();
+        BorrowFullCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowFullRequest, BorrowFullCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getTotal();
+        }
+        return 0;
     }
 
     /**
@@ -101,7 +106,12 @@ public class BorrowFullClientImpl implements BorrowFullClient {
     @Override
     public Integer countFullList(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow_full/count_full_list/" + borrowNid;
-        return restTemplate.getForEntity(url, Integer.class).getBody();
+        BorrowFullCustomizeResponse response =
+                restTemplate.getForEntity(url, BorrowFullCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getTotal();
+        }
+        return 0;
     }
 
     /**
@@ -179,10 +189,10 @@ public class BorrowFullClientImpl implements BorrowFullClient {
     @Override
     public AdminResult updateBorrowFull(BorrowFullRequest borrowFullRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_full/update_borrow_full";
-        AdminResponse response = restTemplate.postForEntity(url, borrowFullRequest, AdminResponse.class).getBody();
+        Response response = restTemplate.postForEntity(url, borrowFullRequest, Response.class).getBody();
         if (response != null) {
             AdminResult adminResult = new AdminResult();
-            if (!AdminResponse.isSuccess(response)) {
+            if (!Response.isSuccess(response)) {
                 adminResult.setStatus(BaseResult.FAIL);
                 adminResult.setStatusDesc(response.getMessage());
             }
@@ -200,10 +210,10 @@ public class BorrowFullClientImpl implements BorrowFullClient {
     @Override
     public AdminResult updateBorrowOver(BorrowFullRequest borrowFullRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_full/update_borrow_over";
-        AdminResponse response = restTemplate.postForEntity(url, borrowFullRequest, AdminResponse.class).getBody();
+        Response response = restTemplate.postForEntity(url, borrowFullRequest, Response.class).getBody();
         if (response != null) {
             AdminResult adminResult = new AdminResult();
-            if (!AdminResponse.isSuccess(response)) {
+            if (!Response.isSuccess(response)) {
                 adminResult.setStatus(BaseResult.FAIL);
                 adminResult.setStatusDesc(response.getMessage());
             }

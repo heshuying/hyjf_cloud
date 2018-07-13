@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.*;
@@ -8,6 +9,7 @@ import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -413,11 +415,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     public int requestDebtEnd(HjhDebtCreditVO credit, String sellerUsrcustid, String sellerAuthCode) {
         String url = urlBase + "bankCreditEndController/insertBankCreditEndForCreditEnd";
         InsertBankCreditEndForCreditEndRequest request = new InsertBankCreditEndForCreditEndRequest(credit, sellerUsrcustid, sellerAuthCode);
-        Response<Integer> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
         }
-        return response.getResult().intValue();
+        return response.getResultInt().intValue();
     }
 
     /**
@@ -531,6 +533,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 批次结束债权用更新 结束债权任务表
+     * @author liubin
+     */
+    @Override
+    public int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO) {
+        String url = urlBase + "bankCreditEndController/updateBankCreditEndForBatch";
+        BankCreditEndRequest request = new BankCreditEndRequest(bankCreditEndVO);
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
     @Override
     public CouponResponse getBorrowCoupon(MyCouponListRequest requestBean) {
         String url = urlBase + "coupon/getborrowcoupon";
@@ -549,5 +566,72 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 根据批次号和日期，取得结束债权任务列表
+     * @param bankCreditEndVO
+     * @return
+     * @author liubin
+     *
+     */
+    @Override
+    public List<BankCreditEndVO> getBankCreditEndListByBatchnoTxdate(BankCreditEndVO bankCreditEndVO) {
+        String url = urlBase + "bankCreditEndController/getBankCreditEndListByBatchnoTxdate/" + bankCreditEndVO.getBatchNo() + "/" + bankCreditEndVO.getTxDate();
+        BankCreditEndResponse response = restTemplate.getForEntity(url, BankCreditEndResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据条件(批次号和日期)，更新结束债权任务状态
+     * @param bankCreditEndVO
+     * @param status
+     * @return
+     * @author liubin
+     */
+    @Override
+    public int updateCreditEndForStatus(BankCreditEndVO bankCreditEndVO, int status) {
+        String url = urlBase + "bankCreditEndController/updateBankCreditEndForStatus";
+        UpdateBankCreditEndForStatusRequest request = new UpdateBankCreditEndForStatusRequest(bankCreditEndVO, status);
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 合法性检查后，更新批次结束债权任务
+     * @param bankCallBeanVO
+     * @return
+     * @author liubin
+     */
+    @Override
+    public int updateBatchCreditEndCheck(BankCallBeanVO bankCallBeanVO) {
+        String url = urlBase + "bankCreditEndController/updateBatchCreditEndCheck";
+        IntegerResponse response = restTemplate.postForEntity(url, bankCallBeanVO, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+    /**
+     * 银行完成后，更新批次结束债权任务
+     * @param bankCallBeanVO
+     * @return
+     * @author liubin
+     */
+    @Override
+    public int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO) {
+        String url = urlBase + "bankCreditEndController/updateBatchCreditEndFinish";
+        IntegerResponse response = restTemplate.postForEntity(url, bankCallBeanVO, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
     }
 }

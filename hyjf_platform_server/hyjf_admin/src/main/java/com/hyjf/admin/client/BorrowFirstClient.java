@@ -86,12 +86,12 @@ public interface BorrowFirstClient {
      *
      * @param borrowFireRequest
      */
-    void updateOntimeRecord(BorrowFireRequest borrowFireRequest);
+    boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
 
     /**
      * 加入计划
      *
      * @param borrowFireRequest
      */
-    void sendToMQ(BorrowFireRequest borrowFireRequest);
+    boolean sendToMQ(BorrowFireRequest borrowFireRequest);
 }

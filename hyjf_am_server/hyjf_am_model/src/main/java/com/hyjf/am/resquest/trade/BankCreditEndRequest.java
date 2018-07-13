@@ -1,94 +1,28 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
 package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 
 /**
- * @author hesy
- * @version BankCreditEndRequest, v0.1 2018/7/12 14:23
+ * @author liubin
+ * @version BankCreditEndRequest, v0.1 2018/7/6 18:16
  */
-public class BankCreditEndRequest extends BasePage {
-    /**
-     * 融资用户ID(检索用)
-     */
-    private String userIdSrch;
-    /**
-     * 投资资用户ID(检索用)
-     */
-    private String tenderUserIdSrch;
-    /**
-     * 批次号(检索用)
-     */
-    private String batchNoSrch;
-    /**
-     * 订单号(检索用)
-     */
-    private String orderIdSrch;
-    /**
-     * 状态(检索用)
-     */
-    private String statusSrch;
-    /**
-     * 检索条件 limitStart
-     */
-    private Integer limitStart;
-    /**
-     * 检索条件 limitEnd
-     */
-    private Integer limitEnd;
+public class BankCreditEndRequest extends BaseVO {
 
-    public String getUserIdSrch() {
-        return userIdSrch;
+    private BankCreditEndVO bankCreditEndVO;
+
+    public BankCreditEndRequest(BankCreditEndVO bankCreditEndVO) {
+        this.bankCreditEndVO = bankCreditEndVO;
     }
 
-    public void setUserIdSrch(String userIdSrch) {
-        this.userIdSrch = userIdSrch;
+    public BankCreditEndVO getBankCreditEndVO() {
+        return bankCreditEndVO;
     }
 
-    public String getTenderUserIdSrch() {
-        return tenderUserIdSrch;
-    }
-
-    public void setTenderUserIdSrch(String tenderUserIdSrch) {
-        this.tenderUserIdSrch = tenderUserIdSrch;
-    }
-
-    public String getBatchNoSrch() {
-        return batchNoSrch;
-    }
-
-    public void setBatchNoSrch(String batchNoSrch) {
-        this.batchNoSrch = batchNoSrch;
-    }
-
-    public String getOrderIdSrch() {
-        return orderIdSrch;
-    }
-
-    public void setOrderIdSrch(String orderIdSrch) {
-        this.orderIdSrch = orderIdSrch;
-    }
-
-    public String getStatusSrch() {
-        return statusSrch;
-    }
-
-    public void setStatusSrch(String statusSrch) {
-        this.statusSrch = statusSrch;
-    }
-
-    public Integer getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(Integer limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public Integer getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(Integer limitEnd) {
-        this.limitEnd = limitEnd;
+    public void setBankCreditEndVO(BankCreditEndVO bankCreditEndVO) {
+        this.bankCreditEndVO = bankCreditEndVO;
     }
 }

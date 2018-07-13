@@ -1,32 +1,39 @@
 package com.hyjf.admin.beans;
 
-import com.hyjf.am.vo.admin.BorrowCreditSumVO;
-import com.hyjf.am.vo.admin.BorrowCreditTenderSumVO;
-import com.hyjf.am.vo.admin.BorrowCreditVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
+import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
- * admin: 产品中心-汇转让-还款信息返回结果实体bean
+ * 承接信息返回实体bean
  * @author zhangyk
- * @date 2018/7/11 19:25
+ * @date 2018/7/12 21:06
  */
 public class BorrowCreditTenderResultBean implements Serializable {
 
-    private List<BorrowCreditRepayVO> recordList;
 
-    private BorrowCreditTenderSumVO sumData;
+    private List<BorrowCreditTenderVO> recordList;
+
+    private Map<String,Object> sumData;
 
     private Integer total;
 
-    public List<BorrowCreditRepayVO> getRecordList() {
+    public List<BorrowCreditTenderVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowCreditRepayVO> recordList) {
+    public void setRecordList(List<BorrowCreditTenderVO> recordList) {
         this.recordList = recordList;
+    }
+
+    public Map<String, Object> getSumData() {
+        return sumData;
+    }
+
+    public void setSumData(Map<String, Object> sumData) {
+        this.sumData = sumData;
     }
 
     public Integer getTotal() {
@@ -35,13 +42,5 @@ public class BorrowCreditTenderResultBean implements Serializable {
 
     public void setTotal(Integer total) {
         this.total = total;
-    }
-
-    public BorrowCreditTenderSumVO getSumData() {
-        return sumData;
-    }
-
-    public void setSumData(BorrowCreditTenderSumVO sumData) {
-        this.sumData = sumData;
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
@@ -95,12 +96,16 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.BatchBorrowRepayPlanService;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -212,8 +217,6 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 
     @Autowired
     private BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
-    
-    
 
     @Autowired
     private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
@@ -238,6 +241,12 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
     
 	@Autowired
 	private SmsProducer smsProducer;
+    
+	@Autowired
+	private FddProducer fddProducer;
+
+	@Autowired
+	private AppMessageProducer appMessageProducer;
 
     @Autowired
     SystemConfig systemConfig;
@@ -4588,16 +4597,18 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 
 		logger.info("-------------加入订单号:" + accedeOrderId + ",开始生成计划加入协议！----------");
 		try {
-		    // TODO: 法大大消息队列
-//			FddGenerateContractBean bean = new FddGenerateContractBean();
-//			bean.setOrdid(accedeOrderId);
-//			bean.setTransType(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN);
-//			bean.setTenderUserId(userId);
-//			bean.setSignDate(GetDate.getDataString(GetDate.date_sdf));//签署日期
-//			bean.setPlanStartDate(GetDate.getDateMyTimeInMillis(countInterestTime));
-//			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(quitTime));
-//			bean.setTenderInterestFmt(waitTotal.toString());
+			FddGenerateContractBean bean = new FddGenerateContractBean();
+			bean.setOrdid(accedeOrderId);
+			bean.setTransType(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN);
+			bean.setTenderUserId(userId);
+			bean.setSignDate(GetDate.getDataString(GetDate.date_sdf));//签署日期
+			bean.setPlanStartDate(GetDate.getDateMyTimeInMillis(countInterestTime));
+			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(quitTime));
+			bean.setTenderInterestFmt(waitTotal.toString());
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+			
 		}catch (Exception e){
 			e.printStackTrace();
 			logger.info("-------------userid:" + userId + ",生成计划加入协议失败！----------");
@@ -4629,32 +4640,15 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		msg.put(VAL_INTEREST, waitInterest.toString());
 		msg.put(VAL_DATE, endDateStr);
 		
-		//TODO: 发送app消息队列，需要根据userid取真实用户
-//		if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-//			Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//			if (users == null) {
-//				return;
-//			} else {
-//				UsersInfo userInfo = this.getUsersInfoByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//				if (StringUtils.isEmpty(userInfo.getTruename())) {
-//					msg.put(VAL_NAME, users.getUsername());
-//				} else if (userInfo.getTruename().length() > 1) {
-//					msg.put(VAL_NAME, userInfo.getTruename().substring(0, 1));
-//				} else {
-//					msg.put(VAL_NAME, userInfo.getTruename());
-//				}
-//				Integer sex = userInfo.getSex();
-//				if (Validator.isNotNull(sex)) {
-//					if (sex.intValue() == 2) {
-//						msg.put(VAL_SEX, "女士");
-//					} else {
-//						msg.put(VAL_SEX, "先生");
-//					}
-//				}
-//				AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
-//				appMsProcesser.gather(smsMessage);
-//			}
-//		}
+		//发送app消息队列，需要根据userid取真实用户
+		AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
+		try {
+			appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+					JSON.toJSONBytes(smsMessage)));
+		} catch (MQException e) {
+			logger.error("发送app消息失败..", e);
+		}
+		
 	}
 
 	/**
@@ -4812,32 +4806,15 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		Map<String, String> msg = new HashMap<String, String>();
 		msg.put(VAL_AMOUNT, amount.toString());// 待收金额
 		msg.put(VAL_USERID, String.valueOf(userId));
-		//TODO: 推送消息队列
-//		if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-//			Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//			if (users == null) {
-//				return;
-//			} else {
-//				UsersInfo userInfo = this.getUsersInfoByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//				if (StringUtils.isEmpty(userInfo.getTruename())) {
-//					msg.put(VAL_NAME, users.getUsername());
-//				} else if (userInfo.getTruename().length() > 1) {
-//					msg.put(VAL_NAME, userInfo.getTruename().substring(0, 1));
-//				} else {
-//					msg.put(VAL_NAME, userInfo.getTruename());
-//				}
-//				Integer sex = userInfo.getSex();
-//				if (Validator.isNotNull(sex)) {
-//					if (sex.intValue() == 2) {
-//						msg.put(VAL_SEX, "女士");
-//					} else {
-//						msg.put(VAL_SEX, "先生");
-//					}
-//				}
-//				AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
-//				appMsProcesser.gather(smsMessage);
-//			}
-//		}
+		// 推送消息队列
+		AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
+		try {
+			appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+					JSON.toJSONBytes(smsMessage)));
+		} catch (MQException e) {
+			logger.error("发送app消息失败..", e);
+		}
+		
 	}
 	
 	/**
@@ -4864,33 +4841,15 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		msg.put(VAL_HJH_TITLE, planName);
 		msg.put(VAL_INTEREST, waitInterest.toString());
 		msg.put(VAL_DATE, endDateStr);
-		//TODO:取姓名，发送消息对垒
-//		Users users = getUsersByUserId(userId);
-//		if (users == null || Validator.isNull(users.getMobile()) || (users.getInvestSms() != null && users.getInvestSms() == 1)) {
-//			return;
-//		}
-//		UsersInfo userInfo = this.getUsersInfoByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//		if (StringUtils.isEmpty(userInfo.getTruename())) {
-//			msg.put(VAL_NAME, users.getUsername());
-//		} else if (userInfo.getTruename().length() > 1) {
-//			msg.put(VAL_NAME, userInfo.getTruename().substring(0, 1));
-//		} else {
-//			msg.put(VAL_NAME, userInfo.getTruename());
-//		}
-//		
-//		Integer sex = userInfo.getSex();
-//		if (Validator.isNotNull(sex)) {
-//			if (sex.intValue() == 2) {
-//				msg.put(VAL_SEX, "女士");
-//			} else {
-//				msg.put(VAL_SEX, "先生");
-//			}
-//		}
-//		logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
-//		SmsMessage smsMessage = null;
-//		smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
-//				CustomConstants.CHANNEL_TYPE_NORMAL);
-//		smsProcesser.gather(smsMessage);
+		logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
+		SmsMessage smsMessage = null;
+		smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
+				CustomConstants.CHANNEL_TYPE_NORMAL);
+		try {
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+		} catch (MQException e2) {
+			logger.error("发送邮件失败..", e2);
+		}
 	}
 	
 	/**
