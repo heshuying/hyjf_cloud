@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.client.BorrowInvestClient;
 import com.hyjf.admin.service.BorrowInvestService;

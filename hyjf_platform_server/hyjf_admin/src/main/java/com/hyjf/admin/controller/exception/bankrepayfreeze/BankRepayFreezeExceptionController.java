@@ -1,7 +1,7 @@
 package com.hyjf.admin.controller.exception.bankrepayfreeze;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.request.BankRepayFreezeRequest;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.BankRepayFreezeService;

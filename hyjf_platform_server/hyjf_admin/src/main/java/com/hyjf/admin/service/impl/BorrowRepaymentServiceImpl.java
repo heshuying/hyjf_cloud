@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
 import com.hyjf.admin.client.BorrowRepaymentClient;
@@ -23,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
