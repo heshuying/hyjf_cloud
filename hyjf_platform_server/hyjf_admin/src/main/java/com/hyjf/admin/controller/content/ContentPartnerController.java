@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.content;
 
+import com.hyjf.am.response.config.LinkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,6 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ContentPartnerService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.ContentPartnerResponse;
 import com.hyjf.am.vo.config.LinkVO;
 
 import io.swagger.annotations.Api;
@@ -36,7 +36,7 @@ public class ContentPartnerController extends BaseController {
 	@ApiOperation(value = "公司管理-合作伙伴", notes = "公司管理-合作伙伴列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<LinkVO>> searchAction(@RequestBody ContentPartnerRequestBean requestBean) {
-		ContentPartnerResponse response = contentPartnerService.searchAction(requestBean);
+		LinkResponse response = contentPartnerService.searchAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -49,7 +49,7 @@ public class ContentPartnerController extends BaseController {
 	@ApiOperation(value = "公司管理-合作伙伴", notes = "添加公司管理-合作伙伴")
 	@RequestMapping("/insert")
 	public AdminResult add(@RequestBody ContentPartnerRequestBean requestBean) {
-		ContentPartnerResponse response = contentPartnerService.insertAction(requestBean);
+		LinkResponse response = contentPartnerService.insertAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -62,7 +62,7 @@ public class ContentPartnerController extends BaseController {
 	@ApiOperation(value = "公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody ContentPartnerRequestBean requestBean) {
-		ContentPartnerResponse response = contentPartnerService.updateAction(requestBean);
+		LinkResponse response = contentPartnerService.updateAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -75,7 +75,7 @@ public class ContentPartnerController extends BaseController {
 	@ApiOperation(value = "公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentPartnerRequestBean requestBean) {
-		ContentPartnerResponse response = contentPartnerService.updateStatus(requestBean);
+		LinkResponse response = contentPartnerService.updateStatus(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}

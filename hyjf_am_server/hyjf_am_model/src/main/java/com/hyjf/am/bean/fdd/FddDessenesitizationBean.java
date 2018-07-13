@@ -1,9 +1,9 @@
-package com.hyjf.cs.trade.bean.fdd;
+package com.hyjf.am.bean.fdd;
 
 import java.io.Serializable;
 
 /**
- * 法大大下载脱敏参数类
+ *  法大大下载脱敏参数类
  */
 public class FddDessenesitizationBean implements Serializable{
 

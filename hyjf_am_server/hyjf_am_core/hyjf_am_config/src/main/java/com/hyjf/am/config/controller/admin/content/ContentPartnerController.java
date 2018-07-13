@@ -5,6 +5,7 @@ package com.hyjf.am.config.controller.admin.content;
 
 import java.util.List;
 
+import com.hyjf.am.response.config.LinkResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -17,7 +18,6 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.service.ContentPartnerService;
 import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.admin.ContentPartnerResponse;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.am.vo.config.LinkVO;
 import com.hyjf.common.util.CommonUtils;
@@ -39,9 +39,9 @@ public class ContentPartnerController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/searchaction")
-	public ContentPartnerResponse searchAction(@RequestBody ContentPartnerRequest request) {
+	public LinkResponse searchAction(@RequestBody ContentPartnerRequest request) {
 		logger.info("查询公司管理-合作伙伴开始......");
-		ContentPartnerResponse response = new ContentPartnerResponse();
+		LinkResponse response = new LinkResponse();
 		List<Link> list = contentPartnerService.searchAction(request);
 		if (!CollectionUtils.isEmpty(list)) {
 			List<LinkVO> voList = CommonUtils.convertBeanList(list, LinkVO.class);
@@ -57,8 +57,8 @@ public class ContentPartnerController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/insertaction")
-	public ContentPartnerResponse insertAction(@RequestBody ContentPartnerRequest request) {
-		ContentPartnerResponse response = new ContentPartnerResponse();
+	public LinkResponse insertAction(@RequestBody ContentPartnerRequest request) {
+		LinkResponse response = new LinkResponse();
 		contentPartnerService.insertAction(request);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
@@ -71,8 +71,8 @@ public class ContentPartnerController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/updateaction")
-	public ContentPartnerResponse updateAction(@RequestBody ContentPartnerRequest request) {
-		ContentPartnerResponse response = new ContentPartnerResponse();
+	public LinkResponse updateAction(@RequestBody ContentPartnerRequest request) {
+		LinkResponse response = new LinkResponse();
 		contentPartnerService.updateAction(request);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
@@ -85,8 +85,8 @@ public class ContentPartnerController extends BaseConfigController {
 	 * @return
 	 */
 	@RequestMapping("/getrecord/{id}")
-	public ContentPartnerResponse getRecord(@PathVariable Integer id) {
-		ContentPartnerResponse response = new ContentPartnerResponse();
+	public LinkResponse getRecord(@PathVariable Integer id) {
+		LinkResponse response = new LinkResponse();
 		Link link = contentPartnerService.getRecord(id);
 		if (link != null) {
 			LinkVO vo = new LinkVO();

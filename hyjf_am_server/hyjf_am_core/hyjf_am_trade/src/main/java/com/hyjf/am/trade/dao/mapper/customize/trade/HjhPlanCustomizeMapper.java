@@ -64,7 +64,7 @@ public interface HjhPlanCustomizeMapper {
     
     /**
      * 获取汇计划sum
-     * @param hjhAccede
+     * @param request
      * @return
      */
     HjhPlanSumVO getCalcSumByParam(PlanListCustomizeRequest request);
@@ -75,4 +75,13 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     List<HjhPlanCustomize> getHjhPlanAppList(Map<String,Object> params);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新对象
+     * @Date 11:28 2018/7/12
+     * @Param 
+     * @return
+     */
+    void updatePlanAccount(HjhPlan hjhPlan);
 }

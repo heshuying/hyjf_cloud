@@ -75,8 +75,11 @@ public class BorrowRegistController {
      * @return
      */
     @RequestMapping("/get_regist_count")
-    public Integer getRegistCount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
-        return borrowRegistService.getRegistCount(borrowRegistListRequest);
+    public BorrowRegistCustomizeResponse getRegistCount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
+        BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
+        int count = borrowRegistService.getRegistCount(borrowRegistListRequest);
+        response.setTotal(count);
+        return response;
     }
 
     /**
@@ -131,8 +134,11 @@ public class BorrowRegistController {
      * @return
      */
     @RequestMapping("/update_borrow_regist")
-    public int updateBorrowRegist(@RequestBody BorrowRegistRequest request) {
-        return borrowRegistService.updateBorrowRegistFromList(request);
+    public BorrowRegistCustomizeResponse updateBorrowRegist(@RequestBody BorrowRegistRequest request) {
+        BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
+        int updateCount = borrowRegistService.updateBorrowRegistFromList(request);
+        response.setTotal(updateCount);
+        return response;
     }
 
     /**
@@ -142,7 +148,10 @@ public class BorrowRegistController {
      * @return
      */
     @RequestMapping("/update_entrusted_borrow_regist")
-    public int updateEntrustedBorrowRegist(@RequestBody BorrowRegistRequest request) {
-        return borrowRegistService.updateEntrustedBorrowRegist(request);
+    public BorrowRegistCustomizeResponse updateEntrustedBorrowRegist(@RequestBody BorrowRegistRequest request) {
+        BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
+        int updateCount = borrowRegistService.updateEntrustedBorrowRegist(request);
+        response.setTotal(updateCount);
+        return response;
     }
 }

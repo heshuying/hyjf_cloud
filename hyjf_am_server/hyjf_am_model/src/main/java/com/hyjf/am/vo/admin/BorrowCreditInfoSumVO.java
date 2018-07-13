@@ -3,7 +3,7 @@ package com.hyjf.am.vo.admin;
 import com.hyjf.am.vo.BaseVO;
 
 /**
- * 债转详情bean
+ * 债转详情合计bean
  * @author zhangyk
  * @date 2018/7/10 17:12
  */

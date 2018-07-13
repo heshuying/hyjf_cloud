@@ -167,7 +167,6 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
      */
     @Override
     public AdminResult updateBorrowFireInfo(String borrowNid, String verifyStatus, String ontime) {
-        JSONObject jsonObject = new JSONObject();
         //项目验证
         String checkResult = this.checkItems(borrowNid, verifyStatus, ontime);
         if (!OK.equals(checkResult)) {
@@ -188,11 +187,17 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         borrowFireRequest.setVerifyStatus(verifyStatus);
         borrowFireRequest.setOntime(ontime);
 
-        borrowFirstClient.updateOntimeRecord(borrowFireRequest);
+        boolean updateFlag = borrowFirstClient.updateOntimeRecord(borrowFireRequest);
+        if(!updateFlag){
+            return new AdminResult(BaseResult.FAIL,"数据更新失败");
+        }
 
         if (borrowVO.getIsEngineUsed().equals(1) && Integer.valueOf(verifyStatus) == 4) {
             // 成功后到关联计划队列
-            borrowFirstClient.sendToMQ(borrowFireRequest);
+            boolean sendFlag = borrowFirstClient.sendToMQ(borrowFireRequest);
+            if(!sendFlag){
+                return new AdminResult(BaseResult.FAIL,"发送MQ失败");
+            }
             logger.info(borrowNid + "--已发送至MQ");
         }
 
@@ -230,6 +235,6 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 return "定时发标时间不正确！";
             }
         }
-        return "OK";
+        return OK;
     }
 }

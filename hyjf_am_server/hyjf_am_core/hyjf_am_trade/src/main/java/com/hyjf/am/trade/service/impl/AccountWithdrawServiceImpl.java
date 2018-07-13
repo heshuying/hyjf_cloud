@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -229,5 +231,25 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
         }
 
         return accountRecharges2;
+    }
+
+    /**
+     * 获取提现列表数量
+     * @param request
+     * @return
+     */
+    @Override
+    public int getWithdrawRecordCount(WithdrawBeanRequest request) {
+        return withdrawCustomizeMapper.selectWithdrawCount(request);
+    }
+
+    /**
+     * 获取提现列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<WithdrawCustomize> getWithdrawRecordList(WithdrawBeanRequest request) {
+        return withdrawCustomizeMapper.selectWithdrawList(request);
     }
 }

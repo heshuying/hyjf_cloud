@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin;
 
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowFullCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize;
@@ -38,8 +39,11 @@ public class BorrowFullController {
      * @return
      */
     @RequestMapping("/count_borrow_full")
-    public Integer countBorrowFull(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
-        return borrowFullService.countBorrowFull(borrowFullRequest);
+    public BorrowFullCustomizeResponse countBorrowFull(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
+        BorrowFullCustomizeResponse response = new BorrowFullCustomizeResponse();
+        int count = borrowFullService.countBorrowFull(borrowFullRequest);
+        response.setTotal(count);
+        return response;
     }
 
     /**
@@ -102,8 +106,11 @@ public class BorrowFullController {
      * @return
      */
     @RequestMapping("/count_full_list/{borrowNid}")
-    public Integer countFullList(@PathVariable String borrowNid) {
-        return borrowFullService.countFullList(borrowNid);
+    public BorrowFullCustomizeResponse countFullList(@PathVariable String borrowNid) {
+        BorrowFullCustomizeResponse response = new BorrowFullCustomizeResponse();
+        int count = borrowFullService.countFullList(borrowNid);
+        response.setTotal(count);
+        return response;
     }
 
     /**
@@ -148,8 +155,7 @@ public class BorrowFullController {
      * @return
      */
     @RequestMapping("/update_borrow_full")
-    public AdminResponse updateBorrowFull(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
-        //todo wangjun 现在异常捕捉器只返回Response类型，简单类型需要修改，AdminResponse需要统一改成Response？
+    public Response updateBorrowFull(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
         return borrowFullService.updateBorrowFull(borrowFullRequest);
     }
 
@@ -160,7 +166,7 @@ public class BorrowFullController {
      * @return
      */
     @RequestMapping("/update_borrow_over")
-    public AdminResponse updateBorrowOver(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
+    public Response updateBorrowOver(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
         return borrowFullService.updateBorrowOver(borrowFullRequest);
     }
 }

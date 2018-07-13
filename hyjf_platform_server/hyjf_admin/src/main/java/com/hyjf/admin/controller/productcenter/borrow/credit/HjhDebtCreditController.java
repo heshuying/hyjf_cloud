@@ -79,6 +79,7 @@ public class HjhDebtCreditController extends BaseController{
     @ResponseBody
     public JSONObject exportHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request,HttpServletResponse response) {
 
+        request.setCurrPage(-1);
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhDebtCreditService.queryHjhDebtCreditList(request);
 
         List<HjhDebtCreditVo> resultList = hjhDebtCreditReponse.getResultList();

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.dao.mapper.auto.AccountBorrowMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
@@ -65,9 +66,12 @@ import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
 import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.RealTimeBorrowLoanService;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -148,6 +152,39 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
     
 	@Autowired
 	private SmsProducer smsProducer;
+    
+	@Autowired
+	private FddProducer fddProducer;
+
+	@Autowired
+	private AppMessageProducer appMessageProducer;
+	
+	/** 项目标号 */
+	private static final String VAL_TITLE = "val_title";
+
+	/** 用户ID */
+	private static final String VAL_USERID = "userId";
+
+	/** 用户名 */
+	private static final String VAL_NAME = "val_name";
+
+	/** 性别 */
+	private static final String VAL_SEX = "val_sex";
+
+	/** 放款金额 */
+	private static final String VAL_AMOUNT = "val_amount";
+
+	/** 投资本金 */
+	private static final String VAL_BALANCE = "val_balance";
+
+	/** 预期收益 */
+	private static final String VAL_PROFIT = "val_profit";
+
+	/** 放款时间 */
+	private static final String VAL_RECOVERTIME = "val_recovertime";
+	
+	/**分期下次还款时间*/
+	private static final String VAL_NEXTRECOVERTIME = "val_nextrecovertime";
     
 
 	@Override
@@ -521,7 +558,7 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 				calculateNew.setId(calculates.get(0).getId());
 				this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
 			}
-			//上市活动  //TODO: 这个活动不需要这么玩了
+			//上市活动  //TODO: 微服务后没有了暂时注释
 //			CommonSoaUtils.listBorrow(borrow.getBorrowNid());
 			return true;
 		} else {
@@ -1754,11 +1791,12 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		if (!apicronSuccessFlag) {
 			throw new RuntimeException("批次放款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
 		}
+		
 		createTenderGenerateContract(borrow,borrowTender,awaitInterest);
 		try {
 //			this.sendMail(borrowRecover);
 			this.sendMessage(borrowRecover);
-			this.sendSms(borrowRecover);
+			this.sendSms(borrowRecover, borrow, borrowInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1817,6 +1855,40 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 		}
 		return null;
 	}
+	
+	/**
+	 * 判断是否分期标的
+	 * @param nid
+	 * @return
+	 */
+	private BorrowRecoverPlan isRecoverPlan(String nid) {
+		BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
+		example.createCriteria().andNidEqualTo(nid).andRecoverPeriodEqualTo(1);
+		List<BorrowRecoverPlan> borrowRecoverPlanList = this.borrowRecoverPlanMapper.selectByExample(example);
+		if (borrowRecoverPlanList != null && borrowRecoverPlanList.size() > 0) {
+			return borrowRecoverPlanList.get(0);
+		}
+		return null;
+	}
+	
+	/**
+	 * 获得分期最后一期还款时间
+	 * @param nid
+	 * @param borrowNid 
+	 * @return
+	 */
+	private BorrowRecoverPlan getBorrowgetrecoverLastTime(String nid, String borrowNid) {
+		
+		BorrowExample example = new BorrowExample();
+		example.createCriteria().andBorrowNidEqualTo(borrowNid);
+		List<Borrow> borrow = this.borrowMapper.selectByExample(example);
+		Integer borrowPeriod = borrow.get(0).getBorrowPeriod();
+		
+		BorrowRecoverPlanExample planExample = new BorrowRecoverPlanExample();
+		planExample.createCriteria().andNidEqualTo(nid).andRecoverPeriodEqualTo(borrowPeriod);
+		List<BorrowRecoverPlan> planRecover = this.borrowRecoverPlanMapper.selectByExample(planExample);
+		return planRecover.get(0);
+	}
 
 	/**
 	 * 生成投资居间服务协议
@@ -1827,21 +1899,23 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 	 */
 	private void createTenderGenerateContract(Borrow borrow, BorrowTender borrowTender, BigDecimal recoverInterest) {
 		String nid = borrowTender.getNid();
-		// TODO: 
 		try {
-//			Integer userId = borrowTender.getUserId();
-//			String userName = borrowTender.getTenderUserName();
-//			String signDate =GetDate.getDataString(GetDate.date_sdf);
-//			FddGenerateContractBean bean = new FddGenerateContractBean();
-//			bean.setTenderUserId(userId);
-//			bean.setOrdid(nid);
-//			bean.setTransType(1);
-//			bean.setBorrowNid(borrow.getBorrowNid());
-//			bean.setSignDate(signDate);
-//			bean.setTenderUserName(userName);
-//			bean.setTenderType(0);
-//			bean.setTenderInterest(recoverInterest);
+			Integer userId = borrowTender.getUserId();
+			String userName = borrowTender.getUserName();
+			String signDate =GetDate.getDataString(GetDate.date_sdf);
+			FddGenerateContractBean bean = new FddGenerateContractBean();
+			bean.setTenderUserId(userId);
+			bean.setOrdid(nid);
+			bean.setTransType(1);
+			bean.setBorrowNid(borrow.getBorrowNid());
+			bean.setSignDate(signDate);
+			bean.setTenderUserName(userName);
+			bean.setTenderType(0);
+			bean.setTenderInterest(recoverInterest);
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+			
+			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 		}catch (Exception e){
 			logger.info("-----------------生成居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());
 		}
@@ -1855,41 +1929,25 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 	 */
 
 	private void sendMessage(BorrowRecover borrowRecover) {
-//		int userId = borrowRecover.getUserId();
-//		BigDecimal amount = borrowRecover.getRecoverAccount();
-//		BigDecimal capital = borrowRecover.getRecoverCapital();
-//		BigDecimal interest = borrowRecover.getRecoverInterest();
-//		Map<String, String> msg = new HashMap<String, String>();
-//		msg.put(VAL_TITLE, borrowRecover.getBorrowNid());
-//		msg.put(VAL_AMOUNT, amount.toString());// 待收金额
-//		msg.put(VAL_BALANCE, capital.toString()); // 投资本金
-//		msg.put(VAL_PROFIT, interest.toString()); // 预期收益
-//		msg.put(VAL_USERID, String.valueOf(userId));
-//		if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-//			Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//			if (users == null) {
-//				return;
-//			} else {
-//				UsersInfo userInfo = this.getUsersInfoByUserId(Integer.valueOf(msg.get(VAL_USERID)));
-//				if (StringUtils.isEmpty(userInfo.getTruename())) {
-//					msg.put(VAL_NAME, users.getUsername());
-//				} else if (userInfo.getTruename().length() > 1) {
-//					msg.put(VAL_NAME, userInfo.getTruename().substring(0, 1));
-//				} else {
-//					msg.put(VAL_NAME, userInfo.getTruename());
-//				}
-//				Integer sex = userInfo.getSex();
-//				if (Validator.isNotNull(sex)) {
-//					if (sex.intValue() == 2) {
-//						msg.put(VAL_SEX, "女士");
-//					} else {
-//						msg.put(VAL_SEX, "先生");
-//					}
-//				}
-//				AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageDefine.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TOUZI_SUCCESS);
-//				appMsProcesser.gather(smsMessage);
-//			}
-//		}
+		int userId = borrowRecover.getUserId();
+		BigDecimal amount = borrowRecover.getRecoverAccount();
+		BigDecimal capital = borrowRecover.getRecoverCapital();
+		BigDecimal interest = borrowRecover.getRecoverInterest();
+		Map<String, String> msg = new HashMap<String, String>();
+		msg.put(VAL_TITLE, borrowRecover.getBorrowNid());
+		msg.put(VAL_AMOUNT, amount.toString());// 待收金额
+		msg.put(VAL_BALANCE, capital.toString()); // 投资本金
+		msg.put(VAL_PROFIT, interest.toString()); // 预期收益
+		msg.put(VAL_USERID, String.valueOf(userId));
+
+		AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TOUZI_SUCCESS);
+		try {
+			appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+					JSON.toJSONBytes(smsMessage)));
+		} catch (MQException e) {
+			logger.error("发送app消息失败..", e);
+		}
+		
 	}
 	
 	/**
@@ -1897,55 +1955,58 @@ public class RealTimeBorrowLoanServiceImpl implements RealTimeBorrowLoanService 
 	 *
 	 * @param borrowRecover
 	 */
-	private void sendSms(BorrowRecover borrowRecover) {
+	private void sendSms(BorrowRecover borrowRecover, Borrow borrow, BorrowInfo borrowInfo) {
 		
-//		int userId = borrowRecover.getUserId();
-//		BigDecimal capital = borrowRecover.getRecoverCapital();
-//		BigDecimal interest = borrowRecover.getRecoverInterest();
-//		int repayTime = Integer.parseInt(borrowRecover.getRecoverTime());
-//		String dateStr = GetDate.getDateMyTimeInMillis(repayTime);
-//		//判断是否分期 增加分期短信模板 add by cwyang 2017-8-8
-//		String nid = borrowRecover.getNid();
-//		logger.info("==========cwyang开始发送短信=========订单号:" + nid);
-//		BorrowRecoverPlan planInfo = isRecoverPlan(nid);
-//		String planDateStr = null; //下一期时间
-//		String lastPlanDateStr = null;//最后一期时间
-//		boolean isPlan = false;
-//		if (planInfo != null) {
-//			isPlan = true;
-//			int planTime = Integer.parseInt(planInfo.getRecoverTime());
-//			planDateStr = GetDate.getDateMyTimeInMillis(planTime);
-//			BorrowRecoverPlan lastPlanInfo = getBorrowgetrecoverLastTime(nid,borrowRecover.getBorrowNid());
-//			int lastPlantime = Integer.parseInt(lastPlanInfo.getRecoverTime());
-//			lastPlanDateStr = GetDate.getDateMyTimeInMillis(lastPlantime);
-//			logger.info("==========cwyang启用分期短信模板=========订单号:" + nid + ",下期还款时间:" + planDateStr + ",最后还款时间:" + lastPlanDateStr);
-//		}else{
-//			logger.info("==========cwyang不启用分期短信模板=========订单号:" + nid);
-//		}
-//		Map<String, String> msg = new HashMap<String, String>();
-//		msg.put(VAL_BALANCE, capital.toString());
-//		msg.put(VAL_PROFIT, interest.toString());
-//		msg.put(VAL_RECOVERTIME, dateStr);
-//		msg.put(VAL_USERID, String.valueOf(userId));
-//		if (isPlan) {
-//			msg.put(VAL_NEXTRECOVERTIME, planDateStr);
-//			msg.put(VAL_RECOVERTIME, lastPlanDateStr);
-//		}
-//		Users users = getUsersByUserId(userId);
-//		if (users == null || Validator.isNull(users.getMobile()) || (users.getInvestSms() != null && users.getInvestSms() == 1)) {
-//			return;
-//		}
-//		System.err.println("userid=" + msg.get(VAL_USERID) + ";开始发送短信,投资金额" + msg.get(VAL_BALANCE));
-//		SmsMessage smsMessage = null;
-//		System.err.println("判断是否为分期模板:planDateStr = "+ planDateStr);
-//		if (isPlan) {
-//			smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_TOUZI_PLAN_SUCCESS,
-//					CustomConstants.CHANNEL_TYPE_NORMAL);
-//		}else{
-//			smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageDefine.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_TOUZI_SUCCESS,
-//					CustomConstants.CHANNEL_TYPE_NORMAL);
-//		}
-//		smsProcesser.gather(smsMessage);
+		int userId = borrowRecover.getUserId();
+		BigDecimal capital = borrowRecover.getRecoverCapital();
+		BigDecimal interest = borrowRecover.getRecoverInterest();
+		int repayTime = borrowRecover.getRecoverTime();
+		String dateStr = GetDate.getDateMyTimeInMillis(repayTime);
+		//判断是否分期 增加分期短信模板 add by cwyang 2017-8-8
+		String nid = borrowRecover.getNid();
+		logger.info("==========cwyang开始发送短信=========订单号:" + nid);
+		BorrowRecoverPlan planInfo = isRecoverPlan(nid);
+		String planDateStr = null; //下一期时间
+		String lastPlanDateStr = null;//最后一期时间
+		boolean isPlan = false;
+		if (planInfo != null) {
+			isPlan = true;
+			int planTime = planInfo.getRecoverTime();
+			planDateStr = GetDate.getDateMyTimeInMillis(planTime);
+			BorrowRecoverPlan lastPlanInfo = getBorrowgetrecoverLastTime(nid,borrowRecover.getBorrowNid());
+			int lastPlantime = lastPlanInfo.getRecoverTime();
+			lastPlanDateStr = GetDate.getDateMyTimeInMillis(lastPlantime);
+			logger.info("==========cwyang启用分期短信模板=========订单号:" + nid + ",下期还款时间:" + planDateStr + ",最后还款时间:" + lastPlanDateStr);
+		}else{
+			logger.info("==========cwyang不启用分期短信模板=========订单号:" + nid);
+		}
+		Map<String, String> msg = new HashMap<String, String>();
+		msg.put(VAL_BALANCE, capital.toString());
+		msg.put(VAL_PROFIT, interest.toString());
+		msg.put(VAL_RECOVERTIME, dateStr);
+		msg.put(VAL_USERID, String.valueOf(userId));
+		if (isPlan) {
+			msg.put(VAL_NEXTRECOVERTIME, planDateStr);
+			msg.put(VAL_RECOVERTIME, lastPlanDateStr);
+		}
+		
+		logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,投资金额" + msg.get(VAL_BALANCE));
+		SmsMessage smsMessage = null;
+		logger.info("判断是否为分期模板:planDateStr = "+ planDateStr);
+		if (isPlan) {
+			smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_PLAN_SUCCESS,
+					CustomConstants.CHANNEL_TYPE_NORMAL);
+		}else{
+			smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_SUCCESS,
+					CustomConstants.CHANNEL_TYPE_NORMAL);
+		}
+
+		try {
+			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+		} catch (MQException e2) {
+			logger.error("发送邮件失败..", e2);
+		}
+		
 	}
 
 }
