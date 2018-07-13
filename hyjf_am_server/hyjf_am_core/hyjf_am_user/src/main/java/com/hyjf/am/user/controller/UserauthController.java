@@ -55,7 +55,7 @@ public class UserauthController extends BaseController{
 		Map<String, Object> authUser = this.buildQueryCondition(adminUserAuthListRequest);
 		int recordTotal = this.userauthService.countRecordTotal(authUser);
 		if (recordTotal > 0) {
-			Paginator paginator = new Paginator(adminUserAuthListRequest.getPaginatorPage(), recordTotal);
+			Paginator paginator = new Paginator(adminUserAuthListRequest.getCurrPage(),adminUserAuthListRequest.getPageSize(), recordTotal);
 			List<AdminUserAuthListCustomize> recordList = this.userauthService.getRecordList(authUser,
 					paginator.getOffset(), paginator.getLimit());
 			AdminUserAuthListResponse aualr = new AdminUserAuthListResponse();
@@ -140,13 +140,29 @@ public class UserauthController extends BaseController{
 		// 返回结果
 		AdminUserAuthListResponse result = new AdminUserAuthListResponse();
 		logger.info("自动投资解约开始，用户：{}", userId);
-		// 关闭授权操作
-		userauthService.updateCancelInvestAuth(userId);
-		String authType = "7";
-		// 在auth_log表中插入解约记录
-		userauthService.insertUserAuthLog2(userId, ordId, authType);
-		result.setMessage("自动投资解约成功！");
-		result.setRtn(AdminUserAuthListResponse.SUCCESS);
+		
+		BankCallBean retBean = userauthService.cancelCreditAuth(userId, "000002");
+		
+		
+		if (retBean != null) {
+            if (BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
+            	// 关闭授权操作
+        		userauthService.updateCancelInvestAuth(userId);
+        		String authType = "7";
+        		// 在auth_log表中插入解约记录
+        		userauthService.insertUserAuthLog2(userId, retBean.getRetCode(), authType);
+        		result.setMessage("自动投资解约成功！");
+        		result.setRtn(AdminUserAuthListResponse.SUCCESS);
+            } else {
+                String retCode = retBean != null ? retBean.getRetCode() : "";
+        		result.setMessage(retCode);
+        		result.setRtn(AdminUserAuthListResponse.ERROR);
+            }
+        } else {
+    		result.setMessage("自动投资解约失败！");
+    		result.setRtn(AdminUserAuthListResponse.ERROR);
+        }
+
 
 		return result;
 	}
@@ -160,14 +176,26 @@ public class UserauthController extends BaseController{
 	public AdminUserAuthListResponse cancelCreditAuth(@PathVariable int userId, @PathVariable String ordId) {
 		// 返回结果
 		AdminUserAuthListResponse result = new AdminUserAuthListResponse();
-
-		String authType = "8";
-		// 关闭授权操作
-		userauthService.updateCancelCreditAuth(userId);
-		// 在auth_log表中插入解约记录
-		userauthService.insertUserAuthLog2(userId, ordId, authType);
-		result.setMessage("自动投资解约成功！");
-		result.setRtn(AdminUserAuthListResponse.SUCCESS);
+		BankCallBean retBean = userauthService.cancelCreditAuth(userId, "000002");
+		
+        if (retBean != null) {
+            if (BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
+            	String authType = "8";
+        		// 关闭授权操作
+        		userauthService.updateCancelCreditAuth(userId);
+        		// 在auth_log表中插入解约记录
+        		userauthService.insertUserAuthLog2(userId, retBean.getLogOrderId(), authType);
+        		result.setMessage("自动债转解约成功！");
+        		result.setRtn(AdminUserAuthListResponse.SUCCESS);
+            } else {
+                String retCode = retBean != null ? retBean.getRetCode() : "";
+        		result.setMessage(retCode);
+        		result.setRtn(AdminUserAuthListResponse.ERROR);
+            }
+        } else {
+    		result.setMessage("自动债转解约失败！");
+    		result.setRtn(AdminUserAuthListResponse.ERROR);
+        }
 		return result;
 	}
 
