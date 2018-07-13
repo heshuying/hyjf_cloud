@@ -94,6 +94,21 @@ public class BorrowTenderController extends BaseController{
     }
 
     /**
+     * 根据nid获取一条记录
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @GetMapping("/getBorrowTenderByNid/{nid}")
+    public BorrowTenderResponse getBorrowTenderByNid(@PathVariable String nid){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        List<BorrowTender> tenderList = borrowTenderService.getBorrowTenderListByNid(nid);
+        if (CollectionUtils.isNotEmpty(tenderList)){
+            response.setResult(CommonUtils.convertBean(tenderList.get(0),BorrowTenderVO.class));
+        }
+        return response;
+    }
+
+    /**
      * 根据投资订单号查询已承接金额
      * @param tenderNid
      * @return

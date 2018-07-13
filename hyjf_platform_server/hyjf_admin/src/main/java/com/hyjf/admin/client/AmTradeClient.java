@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.trade.BankCreditEndRequest;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
@@ -19,6 +19,8 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 
 import java.util.List;
@@ -356,7 +358,7 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
 
     /**
      *  获取银行转账异常总数 jijun 20180710
@@ -534,11 +536,11 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    List<WithdrawCustomizeVO> getWithdrawRecordList(WithdrawBeanRequest request);
+    WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request);
 
-    List<BankCreditEndVO> getCreditEndList(BankCreditEndRequest requestBean);
+    List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean);
 
-    int getCreditEndCount(BankCreditEndRequest requestBean);
+    int getCreditEndCount(BankCreditEndListRequest requestBean);
 
     BankCreditEndVO getCreditEndByOrderId(String orderId);
 
@@ -552,4 +554,14 @@ public interface AmTradeClient {
      * @return
      */
     BorrowApicronResponse getBorrowApicronByID(String id);
+
+    HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
+
+    int requestDebtEnd(HjhDebtCreditVO credit, String sellerUsrcustid, String sellerAuthCode);
+
+    BorrowTenderVO getBorrowTenderByNid(String nid);
+
+    HjhDebtCreditTenderVO getByAssignOrderId(String assignOrderId);
 }

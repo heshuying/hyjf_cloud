@@ -39,4 +39,21 @@ public class HjhDebtCreditTenderServiceImpl implements HjhDebtCreditTenderServic
 		List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(creditTenderExample);
         return creditTenderList;
     }
+
+    /**
+     * 通过AssignOrderId查找HjhDebtCreditTender
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @Override
+    public HjhDebtCreditTender selectHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
+        HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
+        HjhDebtCreditTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andAssignOrderIdEqualTo(assignOrderId);
+        List<HjhDebtCreditTender> list = hjhDebtCreditTenderMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

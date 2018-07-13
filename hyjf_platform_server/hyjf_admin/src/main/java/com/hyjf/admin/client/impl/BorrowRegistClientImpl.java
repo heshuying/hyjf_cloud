@@ -57,7 +57,12 @@ public class BorrowRegistClientImpl implements BorrowRegistClient {
     @Override
     public Integer getRegistCount(BorrowRegistListRequest borrowRegistListRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_regist/get_regist_count";
-        return restTemplate.postForEntity(url, borrowRegistListRequest, Integer.class).getBody();
+        BorrowRegistCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowRegistListRequest, BorrowRegistCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getTotal();
+        }
+        return 0;
     }
 
     @Override
@@ -129,11 +134,23 @@ public class BorrowRegistClientImpl implements BorrowRegistClient {
 
     @Override
     public int updateBorrowRegist(BorrowRegistRequest borrowRegistRequest) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist", borrowRegistRequest, int.class).getBody();
+        String url = "http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist";
+        BorrowRegistCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowRegistRequest, BorrowRegistCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getTotal();
+        }
+        return 0;
     }
 
     @Override
     public int updateEntrustedBorrowRegist(BorrowRegistRequest borrowRegistRequest) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/borrow_regist/update_entrusted_borrow_regist", borrowRegistRequest, int.class).getBody();
+        String url = "http://AM-TRADE/am-trade/borrow_regist/update_entrusted_borrow_regist";
+        BorrowRegistCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowRegistRequest, BorrowRegistCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getTotal();
+        }
+        return 0;
     }
 }

@@ -1,4 +1,4 @@
-package com.hyjf.admin.Utils;
+package com.hyjf.admin.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.GetDate;

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.dao.mapper.auto.AccountBorrowMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
@@ -72,6 +73,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.RealTimeBorrowLoanPlanService;
@@ -157,15 +159,18 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 
 	@Autowired
 	private BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
+
+    @Autowired
+    private HjhPlanAssetMapper hjhPlanAssetMapper;
     
 	@Autowired
 	private MailProducer mailProducer;
     
 	@Autowired
 	private SmsProducer smsProducer;
-
-    @Autowired
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
+    
+	@Autowired
+	private FddProducer fddProducer;
 	
 	/**
 	 * 请求放款
@@ -1967,18 +1972,18 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 			Integer userId = borrowTender.getUserId();
 			String userName = borrowTender.getUserName();
 			String signDate =GetDate.getDataString(GetDate.date_sdf);
-//			FddGenerateContractBean bean = new FddGenerateContractBean();
-//			bean.setTenderUserId(userId);
-//			bean.setOrdid(nid);
-//			bean.setTransType(1);
-//			bean.setBorrowNid(borrow.getBorrowNid());
-//			bean.setSignDate(signDate);
-//			bean.setTenderUserName(userName);
-//			bean.setTenderType(0);
-//			bean.setTenderInterest(recoverInterest);
+			FddGenerateContractBean bean = new FddGenerateContractBean();
+			bean.setTenderUserId(userId);
+			bean.setOrdid(nid);
+			bean.setTransType(1);
+			bean.setBorrowNid(borrow.getBorrowNid());
+			bean.setSignDate(signDate);
+			bean.setTenderUserName(userName);
+			bean.setTenderType(0);
+			bean.setTenderInterest(recoverInterest);
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
-			
-			//TODO: 协议队列
+			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 			
 		}catch (Exception e){
 			logger.info("-----------------生成计划居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());

@@ -1,6 +1,6 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowRepaymentInfoListBean;
 import com.hyjf.admin.client.BorrowRepaymentInfoListClient;
 import com.hyjf.admin.client.HjhInstConfigClient;

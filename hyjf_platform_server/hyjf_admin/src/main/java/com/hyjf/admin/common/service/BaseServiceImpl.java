@@ -4,8 +4,13 @@
 package com.hyjf.admin.common.service;
 
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.BankAccountManageClient;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -16,10 +21,12 @@ import java.util.List;
  * @version BaseController, v0.1 2018/6/15 19:18
  */
 public class BaseServiceImpl implements BaseService{
-
+    public static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 
     @Autowired
     private AmConfigClient amConfigClient;
+    @Autowired
+    private BankAccountManageClient bankAccountManageClient;
 
     /**
      * 根据hyjf_param_name 的nameCd和nameClass获得param描述
@@ -50,5 +57,16 @@ public class BaseServiceImpl implements BaseService{
     public List<ParamNameVO> getParamNameList(String nameClass) {
         List<ParamNameVO> paramNameList = amConfigClient.getParamNameList(nameClass);
         return paramNameList;
+    }
+
+    /**
+     * 获取开户信息
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+        BankOpenAccountVO bankAccount = bankAccountManageClient.getBankOpenAccount(userId);
+        return bankAccount;
     }
 }

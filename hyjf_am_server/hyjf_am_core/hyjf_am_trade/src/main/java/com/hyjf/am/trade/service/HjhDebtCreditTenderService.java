@@ -17,4 +17,6 @@ public interface HjhDebtCreditTenderService {
 
 
     List<HjhDebtCreditTender> getHjhDebtCreditTenderList(HjhDebtCreditTenderRequest request);
+
+    HjhDebtCreditTender selectHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
 }
