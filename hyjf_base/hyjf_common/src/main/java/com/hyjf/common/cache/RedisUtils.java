@@ -139,11 +139,6 @@ public class RedisUtils {
             pool = getPool();
             jedis = pool.getResource();
             value = jedis.get(key);
-
-//            if(Collection.class.isAssignableFrom(clazz)){
-//                return JSON.parseObject(value, new TypeReference<T>(){});
-//            }
-
             return JSON.parseObject(value, clazz);
         } catch (Exception e) {
             e.printStackTrace();

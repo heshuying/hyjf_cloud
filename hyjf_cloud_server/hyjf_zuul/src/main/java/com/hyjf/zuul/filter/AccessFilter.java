@@ -175,7 +175,6 @@ public class AccessFilter extends ZuulFilter {
 			if (originalRequestPath.startsWith(key)) {
 				// 判断是否是安全访问
 				GatewayApiConfigVO vo =  JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class) ;
-				//JSONObject.parseObject(map.get(key), )
 				if (vo.getSecureVisitFlag() == 1) {
 					secureVisitFlag = true;
 				}
