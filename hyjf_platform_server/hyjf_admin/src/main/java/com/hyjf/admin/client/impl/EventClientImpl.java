@@ -49,4 +49,10 @@ public class EventClientImpl implements EventClient {
 		}
 		return null;
 	}
+
+	@Override
+	public EventResponse deleteById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentevent/delete/" + id,
+				EventResponse.class);
+	}
 }

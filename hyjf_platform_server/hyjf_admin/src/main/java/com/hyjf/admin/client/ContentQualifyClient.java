@@ -43,4 +43,12 @@ public interface ContentQualifyClient {
 	 * @return
 	 */
 	ContentQualifyVO getRecord(Integer id);
+
+	/**
+	 * 删除公司管理-资质荣誉状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    ContentQualifyResponse deleteById(Integer id);
 }

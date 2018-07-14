@@ -65,4 +65,9 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         }
         return new ContentArticle();
     }
+
+    @Override
+    public ContentArticle getArticleById(Integer id) {
+        return contentArticleMapper.selectByPrimaryKey(id);
+    }
 }

@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.content;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,6 +78,19 @@ public class ContentEnvironmentController extends BaseController {
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.updateStatus(requestBean);
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<>();
+	}
+
+	@ApiOperation(value = "内容管理-办公环境", notes = "删除内容管理-办公环境状态")
+	@RequestMapping("/delete/{id}")
+	public AdminResult updatestatus(@PathVariable Integer id) {
+		ContentEnvironmentResponse response = contentEnvironmentService.deleteById(id);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}

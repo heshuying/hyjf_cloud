@@ -3,20 +3,19 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.config.dao.mapper.auto.ContentQualifyMapper;
 import com.hyjf.am.config.dao.model.auto.ContentQualify;
 import com.hyjf.am.config.dao.model.auto.ContentQualifyExample;
 import com.hyjf.am.config.service.ContentQualifyService;
 import com.hyjf.am.resquest.admin.ContentQualifyRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -74,5 +73,10 @@ public class ContentQualifyServiceImpl implements ContentQualifyService {
 			return list.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	public void delete(Integer id) {
+		contentQualifyMapper.deleteByPrimaryKey(id);
 	}
 }

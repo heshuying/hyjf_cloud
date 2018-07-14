@@ -40,4 +40,9 @@ public class ContentJobClientImpl implements ContentJobClient {
 	public JobsVo getRecord(Integer id) {
 		return null;
 	}
+
+	@Override
+	public JobResponse deleteById(Integer id) {
+		return null;
+	}
 }

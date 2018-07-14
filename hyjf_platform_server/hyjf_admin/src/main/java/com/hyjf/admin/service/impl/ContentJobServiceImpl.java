@@ -52,4 +52,9 @@ public class ContentJobServiceImpl implements ContentJobService {
 		}
 		return null;
 	}
+
+	@Override
+	public JobResponse deleteById(Integer id) {
+		return contentJobClient.deleteById(id);
+	}
 }

@@ -2,7 +2,6 @@ package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.service.ContentArticleService;
-import com.hyjf.am.response.config.RecruitResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
@@ -79,5 +78,17 @@ public class ContentArticleController {
         }
         return response;
     }
+
+	@RequestMapping("/getarticlebyid/{id}")
+	public ContentArticleResponse getArticleById(@PathVariable Integer id) {
+		ContentArticleResponse response = new ContentArticleResponse();
+		ContentArticle contentArticle = contentArticleService.getArticleById(id);
+		if (contentArticle != null) {
+			ContentArticleVO vo = new ContentArticleVO();
+			BeanUtils.copyProperties(contentArticle, vo);
+			response.setResult(vo);
+		}
+		return response;
+	}
 
 }

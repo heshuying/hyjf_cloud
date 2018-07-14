@@ -3,16 +3,6 @@
  */
 package com.hyjf.am.config.controller.admin.content;
 
-import java.util.List;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
 import com.hyjf.am.config.service.ContentEnvironmentService;
@@ -22,6 +12,15 @@ import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
 import com.hyjf.am.vo.config.ContentEnvironmentVO;
 import com.hyjf.am.vo.config.ContentQualifyVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 内容管理-办公环境
@@ -95,6 +94,20 @@ public class ContentEnvironmentController extends BaseConfigController {
 			ContentQualifyVO vo = new ContentQualifyVO();
 			BeanUtils.copyProperties(contentEnvironment, vo);
 		}
+		return response;
+	}
+
+	/**
+	 * 删除内容管理-办公环境
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete/{id}")
+	public ContentEnvironmentResponse delete(@PathVariable Integer id) {
+		ContentEnvironmentResponse response = new ContentEnvironmentResponse();
+		contentEnvironmentService.deleteById(id);
+		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
 }

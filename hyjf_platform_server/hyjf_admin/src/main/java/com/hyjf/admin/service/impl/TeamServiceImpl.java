@@ -49,4 +49,9 @@ public class TeamServiceImpl implements TeamService {
 		BeanUtils.copyProperties(record, requestBean);
 		return teamClient.updateAction(requestBean);
 	}
+
+	@Override
+	public TeamResponse deleteById(Integer id) {
+		return teamClient.deleteById(id);
+	}
 }

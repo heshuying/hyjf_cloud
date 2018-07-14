@@ -49,4 +49,9 @@ public class EventServiceImpl implements EventService {
 		BeanUtils.copyProperties(record, requestBean);
 		return eventClient.updateAction(requestBean);
 	}
+
+	@Override
+	public EventResponse deleteById(Integer id) {
+		return eventClient.deleteById(id);
+	}
 }

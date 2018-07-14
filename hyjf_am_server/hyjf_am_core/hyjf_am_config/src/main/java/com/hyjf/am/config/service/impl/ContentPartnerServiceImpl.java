@@ -3,19 +3,19 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.LinkMapper;
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
 import com.hyjf.am.config.service.ContentPartnerService;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -63,5 +63,21 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	@Override
 	public Link getRecord(Integer id) {
 		return linkMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public Link getbyPartnerType(Integer type) {
+		LinkExample example = new LinkExample();
+		example.createCriteria().andPartnerTypeEqualTo(type);
+		List<Link> linkList = linkMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(linkList)) {
+			return linkList.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		linkMapper.deleteByPrimaryKey(id);
 	}
 }

@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.ContentQualify;
 import com.hyjf.am.resquest.admin.ContentQualifyRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -42,4 +42,11 @@ public interface ContentQualifyService {
 	 * @return
 	 */
 	ContentQualify getRecord(Integer id);
+
+	/**
+	 * 根据id删除公司管理-资质荣誉
+	 *
+	 * @param id
+	 */
+    void delete(Integer id);
 }

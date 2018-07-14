@@ -43,4 +43,12 @@ public interface ContentEnvironmentClient {
 	 * @return
 	 */
 	ContentEnvironmentVO getRecord(Integer id);
+
+	/**
+	 * 删除内容管理-办公环境状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    ContentEnvironmentResponse deleteById(Integer id);
 }

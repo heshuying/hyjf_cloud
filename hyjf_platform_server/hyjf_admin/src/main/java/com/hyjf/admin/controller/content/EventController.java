@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.content;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +77,19 @@ public class EventController extends BaseController {
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.updateStatus(requestBean);
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<>();
+	}
+
+	@ApiOperation(value = "公司管理-公司记事", notes = "删除公司管理-公司记事")
+	@RequestMapping("/delete/{id}")
+	public AdminResult updatestatus(@PathVariable Integer id) {
+		EventResponse response = eventService.deleteById(id);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
