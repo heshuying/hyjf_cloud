@@ -56,6 +56,10 @@ public class SystemConfig {
     @Value("${hyjf.ftp.password}")
     private String hyjfFtpPassword;
 
+    @Value("${hyjf.web.bank.batch.creditend.verify.url}")
+    private String notifyUrl;
+    @Value("${hyjf.web.bank.batch.creditend.result.url}")
+    private String retNotifyUrl;
 
     public String getHyjfPayFddNotifyUrl() {
         return hyjfPayFddNotifyUrl;
@@ -191,5 +195,21 @@ public class SystemConfig {
 
     public void setIosNoticeRequestUrl(String iosNoticeRequestUrl) {
         this.iosNoticeRequestUrl = iosNoticeRequestUrl;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+    }
+
+    public String getRetNotifyUrl() {
+        return retNotifyUrl;
+    }
+
+    public void setRetNotifyUrl(String retNotifyUrl) {
+        this.retNotifyUrl = retNotifyUrl;
     }
 }

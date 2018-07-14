@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,13 +42,14 @@ public class UserauthController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "授权状态", notes = "授权状态集合")
-	@RequestMapping(value = "/userauthlist")
+	@PostMapping(value = "/userauthlist")
 	@ResponseBody
 	public JSONObject userManagerInit(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody Map<String, String> map) {
 		JSONObject info = new JSONObject();
 		AdminUserAuthListRequest adminUserAuthListRequest = new AdminUserAuthListRequest();
-		adminUserAuthListRequest.setPaginatorPage(Integer.valueOf(map.get("paginatorPage")));
+		adminUserAuthListRequest.setCurrPage(Integer.valueOf(map.get("currPage")));
+		adminUserAuthListRequest.setPageSize(Integer.valueOf(map.get("pageSize")));
 		adminUserAuthListRequest.setUserName(map.get("userName"));
 		adminUserAuthListRequest.setRecommendName(map.get("recommendName"));
 		adminUserAuthListRequest.setAutoInvesStatus(map.get("autoInvesStatus"));
@@ -72,7 +74,7 @@ public class UserauthController extends BaseController {
 	 * @param
 	 */
 	@ApiOperation(value = "授权状态", notes = "自动投资解约")
-	@RequestMapping(value = "/userinvescancel")
+	@PostMapping(value = "/userinvescancel")
 	@ResponseBody
 	public JSONObject cancelInvestAuth(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody Map<String, String> map) {
@@ -106,7 +108,7 @@ public class UserauthController extends BaseController {
 	 * @param
 	 */
 	@ApiOperation(value = "授权状态", notes = "自动债转解约")
-	@RequestMapping(value = "/usercreditcancel")
+	@PostMapping(value = "/usercreditcancel")
 	@ResponseBody
 	public JSONObject cancelCreditAuth(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody Map<String, String> map) {

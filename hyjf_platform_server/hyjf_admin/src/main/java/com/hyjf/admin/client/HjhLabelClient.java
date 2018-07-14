@@ -5,6 +5,7 @@ package com.hyjf.admin.client;
 
 import java.util.List;
 
+import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
@@ -35,7 +36,7 @@ public interface HjhLabelClient {
      * @param request
      * @return
      */
-    List<HjhLabelCustomizeVO> findHjhLabelList(HjhLabelRequest request);
+    HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request);
     
     /**
      * 查询标签配置列表

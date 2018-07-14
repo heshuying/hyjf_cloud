@@ -3,10 +3,11 @@ package com.hyjf.admin.controller.exception.bankdebtend;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.HjhCreditEndExceptionService;
-import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
+import com.hyjf.am.response.admin.HjhDebtCreditReponse;
+import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
+import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +33,38 @@ public class HjhCreditEndExceptionController extends BaseController {
     @Autowired
     HjhCreditEndExceptionService hjhCreditEndExceptionService;
 
+    /**
+     * 汇计划结束债权列表
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "汇计划结束债权列表", notes = "汇计划结束债权列表")
+    @RequestMapping("/getlist")
+    public JSONObject getList(@RequestBody HjhDebtCreditListRequest requestBean){
+        JSONObject jsonObject = null;
+        HjhDebtCreditReponse hjhDebtCreditReponse = hjhCreditEndExceptionService.queryHjhDebtCreditList(requestBean);
+        List<HjhDebtCreditVo> hjhDebtCreditVoList = new ArrayList<HjhDebtCreditVo>();
+        if (null != hjhDebtCreditReponse) {
+            List<HjhDebtCreditVo> listAccountDetail = hjhDebtCreditReponse.getResultList();
+            Integer recordCount = hjhDebtCreditReponse.getRecordTotal();
+            if (null != listAccountDetail && listAccountDetail.size() > 0) {
+                hjhDebtCreditVoList.addAll(listAccountDetail);
+            }
+            if (null != hjhDebtCreditVoList) {
+                hjhCreditEndExceptionService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
+                jsonObject = this.success(String.valueOf(recordCount), hjhDebtCreditVoList);
+            } else {
+                jsonObject = this.fail("暂无符合条件数据");
+            }
+        }
+        return jsonObject;
+    }
 
+    /**
+     * 汇计划结束债权
+     * @param creditNid
+     * @return
+     */
     @ApiOperation(value = "汇计划结束债权", notes = "汇计划结束债权")
     @RequestMapping("/request_debtend/{creditNid}")
     public JSONObject updateDebtEndAction(@PathVariable String creditNid){
@@ -46,7 +79,7 @@ public class HjhCreditEndExceptionController extends BaseController {
 
         if (credit.getCreditCapitalWait().compareTo(BigDecimal.ZERO) == 0) {
             //获取出让人投标成功的授权号
-            /*String sellerAuthCode = this.hjhCreditEndExceptionService.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
+            String sellerAuthCode = this.hjhCreditEndExceptionService.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
             if (sellerAuthCode == null) {
                return this.fail("未取得出让人投资的授权码。");
             }
@@ -64,7 +97,7 @@ public class HjhCreditEndExceptionController extends BaseController {
             } catch (Exception e) {
                 logger.error("债转编号[" + creditNid + "]银行结束债权异常。", e);
                 return this.fail("结束债权异常");
-            }*/
+            }
         }
 
         return this.success();

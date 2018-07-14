@@ -37,7 +37,7 @@ public class AdminBorrowCreditPaymentController {
     @PostMapping("/exportData")
     @ResponseBody
     public void  exportBorrowCreditList(@RequestBody BorrowCreditRepayRequest request,HttpServletResponse response){
-        borrowCreditTenderService.exprotBorrowCreditRepayList(request,response);
+        borrowCreditTenderService.exportBorrowCreditRepayList(request,response);
     }
 
     @ApiOperation(value = "还款信息明细", notes = "还款信息明细")

@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoginService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -66,7 +67,7 @@ public class LoginController extends BaseController {
 		adminSystemRequest.setUsername(username);
 		adminSystemRequest.setPassword(password);
 		AdminSystemResponse prs = loginService.getUserInfo(adminSystemRequest);
-		if("00".equals(prs.getMessage())) {
+		if(!Response.isSuccess(prs)) {
 			info.put("status", "99");
 			info.put("msg", prs.getMessage());
 			return info;
@@ -74,6 +75,7 @@ public class LoginController extends BaseController {
 		String uuid=UUID.randomUUID().toString();
 		RedisUtils.set("admin@"+username, uuid, 3600);
 		this.setUser(request, prs.getResult());
+		System.out.println(prs.getResult().getId());
 		info.put("uuid", uuid);
 		info.put("user", prs.getResult());
 		info.put("status", "00");

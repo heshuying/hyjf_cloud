@@ -1,56 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper">
-    <select id="countInvest" resultType="INTEGER" parameterType="INTEGER">
-        SELECT SUM(a) FROM (SELECT COUNT(*) a FROM ht_borrow_tender WHERE user_id = #{userId}
-          UNION ALL
-        SELECT COUNT(*) a FROM ht_credit_tender WHERE user_id = #{userId}
-          UNION ALL
-        SELECT COUNT(*) a FROM ht_borrow_tender_cpn WHERE user_id = #{userId}
-          UNION ALL
-        SELECT COUNT(*) a FROM ht_hjh_accede  WHERE user_id =  #{userId})b
-    </select>
+<mapper
+	namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper">
+	<select id="countInvest" resultType="INTEGER" parameterType="INTEGER">
+		SELECT SUM(a) FROM (SELECT COUNT(*) a FROM ht_borrow_tender WHERE
+		user_id = #{userId}
+		UNION ALL
+		SELECT COUNT(*) a FROM ht_credit_tender WHERE user_id = #{userId}
+		UNION ALL
+		SELECT COUNT(*) a FROM ht_borrow_tender_cpn WHERE user_id = #{userId}
+		UNION ALL
+		SELECT COUNT(*) a FROM ht_hjh_accede WHERE user_id = #{userId})b
+	</select>
 
-    <update id="updateOfBorrow" parameterType="map" >
-	    UPDATE huiyingdai_borrow b
-		SET b.borrow_account_yes = b.borrow_account_yes + #{borrowAccountYes,jdbcType=DECIMAL},
-		b.borrow_account_wait = b.borrow_account_wait - #{borrowAccountYes,jdbcType=DECIMAL},
+	<update id="updateOfBorrow" parameterType="map">
+		UPDATE huiyingdai_borrow b
+		SET b.borrow_account_yes = b.borrow_account_yes +
+		#{borrowAccountYes,jdbcType=DECIMAL},
+		b.borrow_account_wait =
+		b.borrow_account_wait - #{borrowAccountYes,jdbcType=DECIMAL},
 		b.borrow_service = CAST(
 		(
-			CAST(
-				CASE
-				WHEN b.borrow_service IS NULL THEN
-					'0'
-				ELSE
-					b.borrow_service
-				END AS DECIMAL(65,2)
-			) + #{borrowService,jdbcType=DECIMAL}
+		CAST(
+		CASE
+		WHEN b.borrow_service IS NULL THEN
+		'0'
+		ELSE
+		b.borrow_service
+		END AS DECIMAL(65,2)
+		) + #{borrowService,jdbcType=DECIMAL}
 		) AS CHAR),
-		b.borrow_account_scale =TRUNCATE((b.borrow_account_yes/b.account)*100,2),
-		b.tender_times = b.tender_times + 1
+		b.borrow_account_scale
+		=TRUNCATE((b.borrow_account_yes/b.account)*100,2),
+		b.tender_times =
+		b.tender_times + 1
 		WHERE
-			b.id = #{borrowId,jdbcType=INTEGER}
-  	</update>
+		b.id = #{borrowId,jdbcType=INTEGER}
+	</update>
 
-    <update id="updateOfFullBorrow" parameterType="map" >
-	    UPDATE huiyingdai_borrow b
+	<update id="updateOfFullBorrow" parameterType="map">
+		UPDATE huiyingdai_borrow b
 		SET b.borrow_full_status = 1,
 		b.`status` = 3,
 		b.borrow_full_time = unix_timestamp(now())
 		WHERE
-			b.id = #{borrowId,jdbcType=INTEGER}
-  	</update>
+		b.id = #{borrowId,jdbcType=INTEGER}
+	</update>
 
 
-	<!--查询项目详情-->
-	<select id="getProjectDetail" resultType="com.hyjf.am.vo.trade.ProjectCustomeDetailVO" parameterType="String">
+	<!--查询项目详情 -->
+	<select id="getProjectDetail" resultType="com.hyjf.am.vo.trade.ProjectCustomeDetailVO"
+		parameterType="String">
 		SELECT
 		hydb.borrow_nid,
 		hydbpt.borrow_project_type AS project_type,
 		hydbpt.borrow_cd AS type,
 		hydbpt.borrow_name AS type_name,
-		hydb.`name` AS borrow_name,
-		IFNULL(hydb.project_name,hydb.borrow_nid) as project_name,
+		hydb.`name`
+		AS borrow_name,
+		IFNULL(hydb.project_name,hydb.borrow_nid) as
+		project_name,
 		hydb.borrow_contents,
 		hydb.borrow_measures_mea,
 		hydb.is_new,
@@ -66,14 +75,16 @@
 		hydb.asset_type,
 		hydb.is_show,
 		CASE
-		WHEN hydb.company_or_personal = 2 THEN
+		WHEN hydb.company_or_personal = 2
+		THEN
 		(
 		SELECT
 		m.credit
 		FROM
 		ht_borrow_maninfo m
 		WHERE
-		m.borrow_nid = hydb.borrow_nid
+		m.borrow_nid =
+		hydb.borrow_nid
 		)
 		ELSE
 		(
@@ -86,15 +97,19 @@
 		)
 		END AS user_credit,
 		hydb.borrow_measures_instit AS measures_instit,
-		hydb.account AS borrow_account,
+		hydb.account AS
+		borrow_account,
 		truncate(hydb.account/10000,2) AS borrow_account_wan,
 		hydb.borrow_apr,
 		hydb.borrow_period,
-		CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
+		CASE WHEN hydb.borrow_style =
+		'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
 		hydb.borrow_account_wait AS invest_account,
-		hydb.company_or_personal AS com_or_per,
+		hydb.company_or_personal AS
+		com_or_per,
 		hydbs.`name` AS repay_style,
-		hydb.borrow_account_scale AS borrow_schedule,
+		hydb.borrow_account_scale AS
+		borrow_schedule,
 		hydb.booking_status,
 		hydb.booking_begin_time,
 		hydb.booking_end_time,
@@ -104,40 +119,52 @@
 		truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
 		hydb.tender_account_max,
 		CASE
-		WHEN hydb.`status` = 1 AND hydb.verify_status = 3
-		THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i' )
+		WHEN hydb.`status` = 1 AND
+		hydb.verify_status = 3
+		THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d
+		%H:%i' )
 		ELSE
 		FROM_UNIXTIME(
 		hydb.verify_time,
 		'%Y-%m-%d %H:%i'
 		)
-		END AS send_time,
+		END AS
+		send_time,
 		FROM_UNIXTIME(
 		hydb.borrow_full_time,
 		'%Y-%m-%d %H:%i:%s'
-		) AS full_time,
+		) AS
+		full_time,
 		FROM_UNIXTIME(
-		(hydb.verify_time + hydb.borrow_valid_time * 24 * 60 * 60),
+		(hydb.verify_time + hydb.borrow_valid_time *
+		24 * 60 * 60),
 		'%Y-%m-%d %H:%i:%s'
 		) AS borrow_end_time,
 		CASE
-		WHEN hydb.`status` = 1 AND hydb.verify_status = 3
-		THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i:%s' )
+		WHEN
+		hydb.`status` = 1 AND hydb.verify_status = 3
+		THEN FROM_UNIXTIME(
+		hydb.ontime, '%Y-%m-%d %H:%i:%s' )
 		ELSE ''
 		END AS on_time,
 		CASE
-		WHEN hydb.`status` = 1 AND hydb.booking_status =0
-		THEN FROM_UNIXTIME( hydb.booking_begin_time, '%Y-%m-%d %H:%i:%s' )
+		WHEN
+		hydb.`status` = 1 AND hydb.booking_status =0
+		THEN FROM_UNIXTIME(
+		hydb.booking_begin_time, '%Y-%m-%d %H:%i:%s' )
 		ELSE ''
-		END AS on_appoint_time,
+		END AS
+		on_appoint_time,
 		CASE
 		WHEN hydb.`status` = 1 AND hydb.verify_status = 3
 		THEN hydb.ontime
 		ELSE ''
 		END AS time,
 		CASE
-		WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
-		WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
+		WHEN hydb.`status` = 1 AND
+		hydb.verify_status = 3 THEN '10'
+		WHEN hydb.`status` = 2 AND
+		hydb.borrow_full_status = 0
 		AND (
 		hydb.verify_time + (
 		hydb.borrow_valid_time * 24 * 60 * 60
@@ -149,16 +176,17 @@
 		'12'
 		WHEN hydb.`status` = 4 THEN
 		'13'
-		WHEN hydb.`status` = 5 THEN
+		WHEN
+		hydb.`status` = 5 THEN
 		'14'
-		<!-- WHEN hydb.`status` = 2 THEN
-            '15' -->
+		<!-- WHEN hydb.`status` = 2 THEN '15' -->
 		ELSE
 		''
 		END AS `status`,
 		hydb.`status` AS status_orginal,
 		hydb.borrow_increase_money increase_money,
-		hydb.borrow_interest_coupon interest_coupon,
+		hydb.borrow_interest_coupon
+		interest_coupon,
 		hydb.borrow_taste_money taste_money,
 		hydb.borrow_asset_number,
 		hydb.borrow_project_source,
@@ -176,12 +204,15 @@
 		hydb.borrow_level
 		FROM
 		ht_borrow hydb
-		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+		LEFT JOIN ht_borrow_project_type
+		hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN
+		ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
 		WHERE
 		(
 		hydbpt.borrow_project_type = 'HZT'
-		OR hydbpt.borrow_project_type = 'HXF'
+		OR hydbpt.borrow_project_type =
+		'HXF'
 		)
 		AND (
 		(
@@ -194,12 +225,14 @@
 		hydb.`status` = 2
 		AND hydb.borrow_full_status = 0
 		AND (
-		hydb.verify_time + (
+		hydb.verify_time
+		+ (
 		hydb.borrow_valid_time * 24 * 60 * 60
 		) > UNIX_TIMESTAMP(NOW())
 		)
 		)
-		OR (
+		OR
+		(
 		hydb.`status` = 3
 		)
 		OR (
@@ -209,160 +242,297 @@
 		hydb.`status` = 5
 		)
 		)
-		AND hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
+		AND
+		hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
 
 	</select>
 
 
-	<!--项目公司详情-->
-	<select id="getProjectCompanyDetail" resultType="com.hyjf.am.vo.trade.ProjectCompanyDetailVO" parameterType="String">
+	<!--项目公司详情 -->
+	<select id="getProjectCompanyDetail" resultType="com.hyjf.am.vo.trade.ProjectCompanyDetailVO"
+		parameterType="String">
 		SELECT
-			hydb.borrow_contents,
-			CONCAT(
-				hydbu.province,
-				hydbu.city,
-				hydbu.area
-			) AS borrow_address,
-			hydb.name as borrow_name,
-			hydbu.industry AS borrow_industry,
-			hydbu.reg_captial,
-			hydbu.com_reg_time AS regist_time,
-			hydb.account_contents,
-			hydbu.username AS company_name,
-			hydbu.litigation,
-			hydbu.social_credit_code,
-			hydbu.regist_code,
-			hydbu.main_business,
-			hydbu.legal_person,
-			hydbu.overdue_times,
-			hydbu.overdue_amount,
-			hydbu.is_certificate,
-			hydbu.is_operation,
-			hydbu.is_finance,
-			hydbu.is_enterprise_creidt,
-			hydbu.is_legal_person,
-			hydbu.is_asset,
-			hydbu.is_purchase_contract,
-			hydbu.is_supply_contract,
-			hydbu.overdue_report,
-			hydbu.debt_situation,
-			hydbu.other_borrowed,
-			hydbu.is_funds,
-			hydbu.is_managed,
-			hydbu.is_ability,
-			hydbu.is_overdue,
-			hydbu.is_complaint,
-			hydbu.is_punished
+		hydb.borrow_contents,
+		CONCAT(
+		hydbu.province,
+		hydbu.city,
+		hydbu.area
+		) AS borrow_address,
+		hydb.name as borrow_name,
+		hydbu.industry AS borrow_industry,
+		hydbu.reg_captial,
+		hydbu.com_reg_time AS regist_time,
+		hydb.account_contents,
+		hydbu.username AS company_name,
+		hydbu.litigation,
+		hydbu.social_credit_code,
+		hydbu.regist_code,
+		hydbu.main_business,
+		hydbu.legal_person,
+		hydbu.overdue_times,
+		hydbu.overdue_amount,
+		hydbu.is_certificate,
+		hydbu.is_operation,
+		hydbu.is_finance,
+		hydbu.is_enterprise_creidt,
+		hydbu.is_legal_person,
+		hydbu.is_asset,
+		hydbu.is_purchase_contract,
+		hydbu.is_supply_contract,
+		hydbu.overdue_report,
+		hydbu.debt_situation,
+		hydbu.other_borrowed,
+		hydbu.is_funds,
+		hydbu.is_managed,
+		hydbu.is_ability,
+		hydbu.is_overdue,
+		hydbu.is_complaint,
+		hydbu.is_punished
 		FROM
-			ht_borrow hydb
-		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid = hydbu.`borrow_nid`
+		ht_borrow hydb
+		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid =
+		hydbu.`borrow_nid`
 		WHERE
-			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal = 1
 
 	</select>
 
 
-	<select id="getProjectPsersonDetail" resultType="com.hyjf.am.vo.trade.WebProjectPersonDetailVO" parameterType="String">
+	<select id="getProjectPsersonDetail" resultType="com.hyjf.am.vo.trade.WebProjectPersonDetailVO"
+		parameterType="String">
 
 		SELECT
-			hydb.borrow_contents,
-			hydbm.old AS age,
-			<!--pnr.`name` AS sex,
-			pna.`name` AS merry,  -->
-			CONCAT(hydbm.pro, hydbm.city) AS working_city,
-			hydb.account_contents,
-			hydbm.`name` AS true_name,
-			hydbm.position,
-			hydbm.card_no,
-			hydbm.domicile,
-			hydbm.overdue_times,
-			hydbm.overdue_amount,
-			hydbm.litigation,
-			hydbm.is_card,
-			hydbm.is_income,
-			hydbm.is_credit,
-			hydbm.is_asset,
-			hydbm.is_vehicle,
-			hydbm.is_driving_license,
-			hydbm.is_vehicle_registration,
-			hydbm.is_merry,
-			hydbm.is_work,
-			hydbm.is_account_book,
-			hydbm.annual_income,
-			hydbm.overdue_report,
-			hydbm.debt_situation,
-			hydbm.other_borrowed,
-			hydbm.is_funds,
-			hydbm.is_managed,
-			hydbm.is_ability,
-			hydbm.is_overdue,
-			hydbm.is_complaint,
-			hydbm.is_punished
+		hydb.borrow_contents,
+		hydbm.old AS age,
+		<!--pnr.`name` AS sex, pna.`name` AS merry, -->
+		CONCAT(hydbm.pro, hydbm.city) AS working_city,
+		hydb.account_contents,
+		hydbm.`name` AS true_name,
+		hydbm.position,
+		hydbm.card_no,
+		hydbm.domicile,
+		hydbm.overdue_times,
+		hydbm.overdue_amount,
+		hydbm.litigation,
+		hydbm.is_card,
+		hydbm.is_income,
+		hydbm.is_credit,
+		hydbm.is_asset,
+		hydbm.is_vehicle,
+		hydbm.is_driving_license,
+		hydbm.is_vehicle_registration,
+		hydbm.is_merry,
+		hydbm.is_work,
+		hydbm.is_account_book,
+		hydbm.annual_income,
+		hydbm.overdue_report,
+		hydbm.debt_situation,
+		hydbm.other_borrowed,
+		hydbm.is_funds,
+		hydbm.is_managed,
+		hydbm.is_ability,
+		hydbm.is_overdue,
+		hydbm.is_complaint,
+		hydbm.is_punished
 		FROM
-			ht_borrow hydb
-		LEFT JOIN ht_borrow_maninfo hydbm ON hydbm.borrow_nid = hydb.borrow_nid
+		ht_borrow hydb
+		LEFT JOIN ht_borrow_maninfo hydbm ON hydbm.borrow_nid =
+		hydb.borrow_nid
 		WHERE
-			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal = 2
 	</select>
 
-	<select id="getTotalInverestCount" resultType="int" parameterType="String">
-		SELECT  (
-				(SELECT COUNT(*) a  FROM ht_borrow_tender htbt WHERE user_id = #{userId} )
-					 +
-				  (  SELECT COUNT(*) a  FROM ht_credit_tender  WHERE user_id = #{userId})
-					 +
-				   ( SELECT COUNT(*) a  FROM ht_borrow_tender_cpn WHERE user_id =  #{userId} )
-					 +
-				  (  SELECT COUNT(*)   FROM ht_hjh_accede   WHERE user_id =  #{userId} )
-		) as total
+	<select id="getTotalInverestCount" resultType="int"
+		parameterType="String">
+		SELECT (
+		(SELECT COUNT(*) a FROM ht_borrow_tender htbt WHERE user_id = #{userId} )
+		+
+		( SELECT COUNT(*) a FROM ht_credit_tender WHERE user_id = #{userId})
+		+
+		( SELECT COUNT(*) a FROM ht_borrow_tender_cpn WHERE user_id = #{userId}
+		)
+		+
+		( SELECT COUNT(*) FROM ht_hjh_accede WHERE user_id = #{userId} )
+		) as
+		total
 	</select>
 
-	<resultMap id="borrowCustomizeMap" type="com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize">
+	<resultMap id="borrowCustomizeMap"
+		type="com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
-		<result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
-		<result column="borrow_pre_nid" property="borrowPreNid" jdbcType="VARCHAR" />
-		<result column="borrow_pre_nid_new" property="borrowPreNidNew" jdbcType="VARCHAR" />
+		<result column="borrow_valid_time" property="borrowValidTime"
+			jdbcType="INTEGER" />
+		<result column="borrow_pre_nid" property="borrowPreNid"
+			jdbcType="VARCHAR" />
+		<result column="borrow_pre_nid_new" property="borrowPreNidNew"
+			jdbcType="VARCHAR" />
 
 	</resultMap>
-	<select id="getBorrowCustomize" resultMap="borrowCustomizeMap" parameterType="String">
+	<select id="getBorrowCustomize" resultMap="borrowCustomizeMap"
+		parameterType="String">
 		SELECT
-				a.id,
-				a.user_id,
-				a.borrow_nid,
-				b.borrow_valid_time,
-				b.borrow_pre_nid,
-				b.borrow_pre_nid_new
-			FROM ht_borrow a, ht_borrow_info b
+		a.id,
+		a.user_id,
+		a.borrow_nid,
+		b.borrow_valid_time,
+		b.borrow_pre_nid,
+		b.borrow_pre_nid_new
+		FROM ht_borrow a, ht_borrow_info b
 
-			WHERE a.id = b.id
-			  AND a.borrow_nid = #{borrowNid}
+		WHERE a.id = b.id
+		AND a.borrow_nid = #{borrowNid}
 
 	</select>
 
-    <select id="selectAutoBorrowNidList" resultMap="selectBorrowNidListMap">
-        SELECT
-        hb.borrow_nid AS borrow_nid,
-        hb.`status` AS `status`,
-        hb.verify_status AS verify_status
-        FROM
-        ht_borrow hb
-        LEFT JOIN ht_borrow_info info ON info.id = hb.id
-        INNER JOIN ht_hjh_asset_borrowtype hhab ON info.inst_code = hhab.inst_code
-        AND info.asset_type = hhab.asset_type
-        WHERE
-        info.inst_code = '10000000'
-        AND ((hb.`status` = 0
-        AND hhab.auto_record = 1)
-        OR (hb.`status` = 1
-        AND hb.verify_status = 0
-        AND hhab.auto_bail = 1)
-        OR (hb.`status` = 1
-        AND hb.verify_status <![CDATA[<>]]> 0
-        AND hhab.auto_audit = 1))
-    </select>
+	<select id="selectAutoBorrowNidList" resultMap="selectBorrowNidListMap">
+		SELECT
+		hb.borrow_nid AS borrow_nid,
+		hb.`status` AS `status`,
+		hb.verify_status AS verify_status
+		FROM
+		ht_borrow hb
+		LEFT JOIN ht_borrow_info info ON info.id = hb.id
+		INNER JOIN ht_hjh_asset_borrowtype hhab ON info.inst_code = hhab.inst_code
+		AND info.asset_type = hhab.asset_type
+		WHERE
+		info.inst_code = '10000000'
+		AND ((hb.`status` = 0
+		AND hhab.auto_record = 1)
+		OR (hb.`status` = 1
+		AND hb.verify_status = 0
+		AND hhab.auto_bail = 1)
+		OR (hb.`status` = 1
+		AND hb.verify_status <![CDATA[<>]]>
+		0
+		AND hhab.auto_audit = 1))
+	</select>
 
+	<!-- 查询出到期但是未满标的标的,给其发短信 -->
+	<resultMap id="searchNotFullBorrowMsgMap"
+		type="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		<!-- 序号借款编号 -->
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="timeStartSrch" property="timeStartSrch"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="searchNotFullBorrowMsg" resultMap="searchNotFullBorrowMsgMap"
+		parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		SELECT
+		b.borrow_nid,
+		FROM_UNIXTIME(verify_time + borrow_valid_time * 24 * 60 *60, '%Y-%m-%d %H:%i:%s' ) AS
+		timeStartSrch
+		FROM
+		ht_borrow b
+		LEFT JOIN ht_borrow_info inf ON b.id = inf.id
+		WHERE
+		( b.`status` = 2 AND b.reverify_time = '0'
+		AND
+		(
+		( b.borrow_full_status = 0 AND b.borrow_account_yes <![CDATA[<]]>
+		b.account )
+		AND
+		( b.verify_time + ( inf.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]>
+		UNIX_TIMESTAMP(NOW()) )
+		)
+		)
+	</select>
+
+	<!-- 查询汇计划到期但是未满标的标的,给其发短信 -->
+	<select id="searchHjhNotFullBorrowMsg" resultMap="searchNotFullBorrowMsgMap"
+		parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		SELECT
+		b.borrow_nid,
+		FROM_UNIXTIME(verify_time + borrow_valid_time * 24
+		* 60 *60, '%Y-%m-%d %H:%i:%s' ) AS timeStartSrch
+		FROM
+		ht_borrow b
+		LEFT
+		JOIN ht_borrow_info inf ON b.id = inf.id
+		WHERE
+		( b.`status` = 2 AND
+		b.reverify_time = '0'
+		AND
+		(
+		( b.borrow_full_status = 0 AND
+		b.borrow_account_yes <![CDATA[<]]>
+		b.account )
+		AND
+		( b.verify_time + ( inf.borrow_valid_time * 24 * 60 *60
+		) <![CDATA[<]]>
+		UNIX_TIMESTAMP(NOW()) )
+		)
+		AND b.plan_nid != NULL
+		)
+	</select>
+
+	<resultMap id="selectBorrowNidListMap"
+		type="com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="verify_status" property="verifyStatus"
+			jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectAutoReviewBorrowNidList" resultMap="selectBorrowNidListMap">
+		SELECT
+		hb.borrow_nid AS borrow_nid
+		FROM
+		ht_borrow hb
+		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		INNER JOIN
+		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
+		AND
+		inf.asset_type = hhab.asset_type
+		WHERE
+		hb.`status` = 3
+		AND hb.borrow_full_status = 1
+		AND hhab.auto_review = 1
+		AND
+		hb.plan_nid IS NULL;
+	</select>
+
+	<select id="selectAutoReviewHJHBorrowNidList" resultMap="selectBorrowNidListMap">
+		SELECT
+		hb.borrow_nid AS borrow_nid
+		FROM
+		ht_borrow hb
+		LEFT JOIN ht_borrow_info inf ON hb.id = inf.id
+		INNER JOIN
+		ht_hjh_asset_borrowtype hhab ON inf.inst_code = hhab.inst_code
+		AND
+		inf.asset_type = hhab.asset_type
+		WHERE
+		hb.`status` = 3
+		AND hb.borrow_full_status = 1
+		AND hhab.auto_review = 1
+		AND
+		hb.plan_nid IS NOT NULL;
+	</select>
+	<select id="getBorrowPreNid" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT DISTINCT
+		MAX(b.borrow_pre_nid_new)
+		FROM
+		ht_borrow_info b
+		WHERE
+		b.borrow_pre_nid_new LIKE CONCAT('%', #{mmdd, jdbcType=VARCHAR}, '%')
+		AND b.project_type != 15
+		AND b.project_type != 16
+		AND b.project_type != 19
+		AND b.inst_code = 10000000
+	</select>
+	<select id="getXJDBorrowPreNid" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		SELECT
+		MAX(CAST(b.borrow_pre_nid_new as SIGNED))
+		FROM
+		ht_borrow_info b
+		WHERE
+		b.borrow_pre_nid_new LIKE CONCAT('%', #{mmdd, jdbcType=VARCHAR}, '%')
+		AND ( b.project_type = 15 OR b.project_type = 16 OR b.project_type = 19 )
+		AND b.inst_code = 10000000
+	</select>
 </mapper>

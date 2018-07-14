@@ -121,5 +121,19 @@ public interface UserauthService {
 	 * @param userId
 	 */
 	void updateCancelCreditAuth(int userId);
+    /**
+    *
+    * 投资授权解约
+    * @author sunss
+    * @return
+    */
+   BankCallBean cancelInvestAuth(int userId, String channel);
 
+   /**
+    *
+    * 债转授权解约
+    * @author sunss
+    * @return
+    */
+   BankCallBean cancelCreditAuth(int userId, String channel);
 }

@@ -5,9 +5,12 @@ package com.hyjf.admin.common.service;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.BankAccountManageClient;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.CustomConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.List;
  * @version BaseController, v0.1 2018/6/15 19:18
  */
 public class BaseServiceImpl implements BaseService{
-
+    public static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 
     @Autowired
     private AmConfigClient amConfigClient;

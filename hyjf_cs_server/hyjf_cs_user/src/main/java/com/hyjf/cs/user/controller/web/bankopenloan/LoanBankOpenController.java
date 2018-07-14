@@ -12,7 +12,6 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.web.bankopen.WebBankOpenController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -41,8 +40,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/web/user/secure/loanbankopen")
-public class WebLoanBankOpenController extends BaseUserController {
-	private static final Logger logger = LoggerFactory.getLogger(WebLoanBankOpenController.class);
+public class LoanBankOpenController extends BaseUserController {
+	private static final Logger logger = LoggerFactory.getLogger(LoanBankOpenController.class);
 
 	@Autowired
 	private BankOpenService bankOpenService;
