@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
@@ -15,13 +16,11 @@ import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -150,6 +149,25 @@ public class ProjectListController extends BaseController{
         }
         return res;
     }
+
+
+    /**
+     * 查询web端计划基本详情()
+     * @author zhangyk
+     * @date 2018/7/14 17:59
+     */
+    @GetMapping("/web/searchPlanDetail/{planNid}")
+    public HjhPlanDetailResponse searchPlanList(@PathVariable String planNid){
+        HjhPlanDetailResponse res = new HjhPlanDetailResponse();
+        PlanDetailCustomize detail= projectListService.getPlanDetail(planNid);
+        if (detail != null){
+            PlanDetailCustomizeVO detailCustomizeVO = CommonUtils.convertBean(detail,PlanDetailCustomizeVO.class);
+            res.setResult(detailCustomizeVO);
+        }
+        return res;
+    }
+
+
 
 
 

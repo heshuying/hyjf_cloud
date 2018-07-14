@@ -12,9 +12,11 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 
 
 /**
@@ -80,6 +82,16 @@ public interface ProjectListService {
      * @date 2018/6/21 15:51
      */
     List<HjhPlanCustomize> searchWebPlanList(ProjectListRequest request);
+
+
+    /**
+     * web端获取计划基本详情
+     * @author zhangyk
+     * @date 2018/7/14 18:08
+     */
+    PlanDetailCustomize getPlanDetail(String planNid);
+
+
 
     // --------------------------web end --------------------------------------------------
     //---------------------------app start ------------------------------------------------

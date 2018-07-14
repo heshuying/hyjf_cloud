@@ -78,11 +78,13 @@ public class ProjectConstant {
 
     public static final String WEB_PLAN_LIST = "resultList";
 
+    /*汇计划接口相关 开始*/
     public static final String HJH_DATA_ACCEDE_ACCOUNT_TOTAL = "accedeAccountTotal";
 
     public static final String HJH_DATA_INTEREST_TOTAL = "interestTotal";
 
     public static final String HJH_DATA_ACCEDE_TIMES = "accedeTimes";
+    /*汇计划接口相关 结束*/
 
 
 

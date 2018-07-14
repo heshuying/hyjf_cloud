@@ -5,6 +5,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
@@ -73,6 +74,13 @@ public interface WebProjectListCustomizeMapper {
      * @date 2018/6/21 15:55
      */
     List<HjhPlanCustomize> searchWebPlanList(Map<String, Object> params);
+
+    /**
+     * 获取计划基本详情
+     * @author zhangyk
+     * @date 2018/7/14 18:11
+     */
+    PlanDetailCustomize getPlanDetail(String planNid);
 
 
     // ----------------------------------web end -----------------------------------------------

@@ -31,6 +31,7 @@ import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
+import com.hyjf.cs.trade.bean.PlanDetailBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WebProjectListService;
@@ -885,7 +886,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.put("joinPeopleNum", String.valueOf(joinPeopleNum));
 
         // 根据项目标号获取相应的计划信息
-        PlanDetailCustomizeVO planDetail = hjhAccedeClient.getPlanDetail(planNid);
+        PlanDetailCustomizeVO planDetail = webProjectListClient.getPlanDetail(planNid);
 
         // 线上异常处理 如果为空的话直接返回
         if(planDetail==null){
@@ -972,7 +973,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /** 汇添金优惠券使用结束 pcc */
 
             // 计划详情头部(结束)
-            result.put("planDetail", planDetail);
+
+            PlanDetailBean detailBean = CommonUtils.convertBean(planDetail,PlanDetailBean.class);
+            result.put("planDetail", detailBean);
             // 获取计划介绍
             String planIntroduce = planDetail.getPlanConcept();
             if (Validator.isNotNull(planIntroduce)) {
