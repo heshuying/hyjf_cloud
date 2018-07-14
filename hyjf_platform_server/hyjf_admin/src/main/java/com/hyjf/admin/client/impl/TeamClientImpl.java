@@ -23,19 +23,19 @@ public class TeamClientImpl implements TeamClient {
 
 	@Override
 	public TeamResponse searchAction(TeamRequestBean requestBean) {
-		return restTemplate.postForObject("http://AM-CONFIG//am-config/team/searchaction", requestBean,
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/team/searchaction", requestBean,
 				TeamResponse.class);
 	}
 
 	@Override
 	public TeamResponse insertAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG//am-config/team/insertaction", requestBean,
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/insertaction", requestBean,
                 TeamResponse.class);
 	}
 
 	@Override
 	public TeamResponse updateAction(TeamRequestBean requestBean) {
-        return restTemplate.postForObject("http://AM-CONFIG//am-config/team/updateaction", requestBean,
+        return restTemplate.postForObject("http://AM-CONFIG/am-config/team/updateaction", requestBean,
                 TeamResponse.class);
 	}
 
@@ -51,6 +51,6 @@ public class TeamClientImpl implements TeamClient {
 
 	@Override
 	public TeamResponse deleteById(Integer id) {
-		return restTemplate.getForObject("http://AM-CONFIG//am-config/team/delete/" + id, TeamResponse.class);
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/team/delete/" + id, TeamResponse.class);
 	}
 }

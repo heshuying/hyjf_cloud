@@ -98,7 +98,7 @@ public class ContentEnvironmentController extends BaseConfigController {
 	}
 
 	/**
-	 * 修改内容管理-办公环境
+	 * 删除内容管理-办公环境
 	 *
 	 * @param id
 	 * @return
