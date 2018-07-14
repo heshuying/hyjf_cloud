@@ -2,9 +2,9 @@ spring:
   application:
     name: BATCH
   cloud:
-    config:
-      uri: http://micoserver:2222/
-      profile: test
+          config:
+            uri: http://micoserver:2222/
+            profile: test
 
 server:
   port: 9091

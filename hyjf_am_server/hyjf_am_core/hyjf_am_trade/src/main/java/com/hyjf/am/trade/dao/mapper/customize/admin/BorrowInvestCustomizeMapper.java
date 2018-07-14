@@ -5,6 +5,8 @@ package com.hyjf.am.trade.dao.mapper.customize.admin;
 
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowInvestCustomize;
+import com.hyjf.am.trade.dao.model.customize.admin.BorrowListCustomize;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -52,4 +54,12 @@ public interface BorrowInvestCustomizeMapper {
      * @return
      */
     String sumBorrowInvest(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 获取借款列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowListCustomize> selectBorrowList(@Param("borrowNid") String borrowNid);
 }

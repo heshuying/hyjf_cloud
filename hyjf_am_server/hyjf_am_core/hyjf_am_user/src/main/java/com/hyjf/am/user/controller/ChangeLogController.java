@@ -23,7 +23,9 @@ import com.hyjf.am.user.dao.model.customize.ChangeLogCustomize;
 import com.hyjf.am.user.service.ChangeLogService;
 
 import com.hyjf.am.vo.user.ChangeLogVO;
+import com.hyjf.am.vo.user.MspApplyVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 
 
 /**
@@ -50,16 +52,14 @@ public class ChangeLogController extends BaseController{
 		BeanUtils.copyProperties(changeLogRequest,change);
 		int recordTotal = this.changeLogService.countRecordTotal(change);
 		if (recordTotal > 0) {
-			Paginator paginator = new Paginator(changeLogRequest.getPaginatorPage(), recordTotal);
+			Paginator paginator = new Paginator(changeLogRequest.getCurrPage(),changeLogRequest.getPageSize(), recordTotal);
 			change.setLimitStart(paginator.getOffset());
 			change.setLimitEnd(paginator.getLimit());
 			List<ChangeLogCustomize> recordList = this.changeLogService.getChangeLogList(change);
 			
 			ChangeLogResponse aualr = new ChangeLogResponse();
-			List<ChangeLogVO> avo = null;
 			if (recordList != null) {
-				BeanUtils.copyProperties(recordList, avo);
-				aualr.setResultList(avo);
+				aualr.setResultList(CommonUtils.convertBeanList(recordList,ChangeLogVO.class));
 				aualr.setRecordTotal(recordTotal);
 				aualr.setRtn(Response.SUCCESS);
 			}
