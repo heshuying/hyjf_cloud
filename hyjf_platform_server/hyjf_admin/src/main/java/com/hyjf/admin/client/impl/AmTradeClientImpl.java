@@ -1294,4 +1294,42 @@ public class AmTradeClientImpl implements AmTradeClient{
         return true;
     }
 
+    /**
+     * 结束债权列表
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/manualreverse/getlist";
+        ManualReverseCustomizeResponse response=restTemplate.postForEntity(url,requestBean,ManualReverseCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 结束债权总记录数
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int getManualReverseCount(ManualReverseCustomizeRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/manualreverse/getcount";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * 手动冲正更新
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @Override
+    public Boolean updateManualReverse(ManualReverseAddRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/manualreverse/update_manualreverse";
+        return restTemplate.postForEntity(url,requestBean,Boolean.class).getBody();
+    }
+
+
 }

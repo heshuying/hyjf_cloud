@@ -85,6 +85,23 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 根据accountId获取用户
+	 * @auther: hesy
+	 * @date: 2018/7/14
+	 */
+	@Override
+	public UserVO getUserByAccountId(String accountId) {
+		String url = "http://AM-USER/am-user/user/getby_accountid/" + accountId;
+		UserResponse response = restTemplate
+				.getForEntity(url, UserResponse.class)
+				.getBody();
+		if(Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
 	@Override
 	public UserVO getUserByUserName(String loginUserName) {
 		UserResponse response = restTemplate
@@ -251,5 +268,21 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 
 		return jsonObject;
+	}
+
+	/**
+	 * 更具userName获取开户信息
+	 * @auther: hesy
+	 * @date: 2018/7/14
+	 */
+	@Override
+	public BankOpenAccountVO queryBankOpenAccountByUserName(String userName) {
+		BankOpenAccountResponse response = restTemplate.
+				getForEntity("http://AM-USER/am-user/userManager/get_openaccount_byusername/" + userName, BankOpenAccountResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

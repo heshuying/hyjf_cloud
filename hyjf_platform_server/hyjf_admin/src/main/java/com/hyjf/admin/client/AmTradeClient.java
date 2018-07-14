@@ -609,4 +609,9 @@ public interface AmTradeClient {
      */
     boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
 
+    List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean);
+
+    int getManualReverseCount(ManualReverseCustomizeRequest requestBean);
+
+    Boolean updateManualReverse(ManualReverseAddRequest requestBean);
 }

@@ -467,6 +467,22 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     }
 
     /**
+     * 根据用户名获取
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @Override
+    public BankOpenAccount queryBankOpenAccountByUserName(String userName) {
+        BankOpenAccountExample openExample = new BankOpenAccountExample();
+        openExample.createCriteria().andUserNameEqualTo(userName);
+        List<BankOpenAccount> bankOpenAccount = this.bankOpenAccountMapper.selectByExample(openExample);
+        if (bankOpenAccount != null && bankOpenAccount.size() > 0) {
+            return bankOpenAccount.get(0);
+        }
+        return null;
+    }
+
+    /**
      * 更新开户信息
      *
      * @param request
