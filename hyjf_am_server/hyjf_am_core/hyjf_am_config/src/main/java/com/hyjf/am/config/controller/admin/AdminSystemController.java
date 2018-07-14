@@ -58,15 +58,15 @@ public class AdminSystemController extends BaseConfigController {
 		adminSystem.setUsername(adminSystemR.getUsername());
 		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
 		adminSystem.setState("NOT CHECK");
-		adminSystem = adminSystemService.getUserInfo(adminSystem);
-		if (adminSystem != null) {
+		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
+		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
 			// 如果状态不可用
 			if ("1".equals(adminSystem.getState())) {
 				asr.setMessage("该用户已禁用");
 				return asr;
 			}
-			BeanUtils.copyProperties(adminSystem, asv);
+			BeanUtils.copyProperties(adminSystemr, asv);
 			asr.setResult(asv);
 			return asr;
 		} else {

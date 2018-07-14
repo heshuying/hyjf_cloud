@@ -328,4 +328,115 @@
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 	    <include refid="Where_Clause" />
 	</select>
+
+	<resultMap id="selectBorrowListMap" type="com.hyjf.am.trade.dao.model.customize.admin.BorrowListCustomize">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+		<!-- 项目标题 -->
+		<result column="project_name" property="projectName" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="userId" property="userId" />
+		<result column="applicant" property="applicant" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
+		<result column="project_type" property="projectType" jdbcType="VARCHAR" />
+		<result column="project_type_name" property="projectTypeName" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="borrow_full_time" property="borrowFullTime" jdbcType="VARCHAR" />
+		<result column="reverify_time" property="reverifyTime" jdbcType="VARCHAR" />
+		<!-- 放款完成时间 -->
+		<result column="recover_last_time" property="recoverLastTime" jdbcType="VARCHAR" />
+		<!-- 放款完成时间 -->
+		<result column="recover_last_day" property="recoverLastDay" jdbcType="VARCHAR" />
+		<!-- 已借到金额 -->
+		<result column="borrow_account_yes" property="borrowAccountYes" jdbcType="VARCHAR" />
+		<!-- 剩余金额 -->
+		<result column="borrow_account_wait" property="borrowAccountWait" jdbcType="VARCHAR" />
+		<!-- 借款进度 -->
+		<result column="borrow_account_scale" property="borrowAccountScale" jdbcType="VARCHAR" />
+		<!-- 借款进度 -->
+		<result column="borrow_publisher" property="borrowPublisher" jdbcType="VARCHAR" />
+		<!-- 加息率 -->
+		<result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
+		<!-- 融通宝编号 -->
+		<result column="borrow_asset_number" property="borrowAssetNumber" jdbcType="VARCHAR" />
+		<!-- 协议期限 -->
+		<result column="contract_period" property="contractPeriod" jdbcType="VARCHAR" />
+		<!-- 期限类型 -->
+		<result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR" />
+		<!-- 项目最小投资金额 万-->
+		<result column="tender_account_min_wan" property="tenderAccountMinWan" jdbcType="VARCHAR" />
+		<!-- 倍增金额  increaseMoney-->
+		<result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
+		<!-- 复审用户名-->
+		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+		<!--  垫付机构用户名-->
+		<result column="repay_org_name" property="repayOrgUserName" jdbcType="VARCHAR" />
+		<!--  计划编号 -->
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<!--  资产来源 -->
+		<result column="inst_name" property="instName" jdbcType="VARCHAR" />
+		<!-- 标签名称 -->
+		<result column="labelName" property="labelName" jdbcType="VARCHAR" />
+		<!-- 借款方姓名 -->
+		<result column="truename" property="truename" jdbcType="VARCHAR" />
+		<result column="businame" property="businame" jdbcType="VARCHAR" />
+		<result column="usertype" property="userType" jdbcType="VARCHAR" />
+		<result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectBorrowList" resultMap="selectBorrowListMap" parameterType="String">
+		SELECT
+		bi.borrow_increase_money increase_money,
+		truncate(bi.tender_account_min/10000,2) tender_account_min_wan,
+		bi.contract_period,
+		bi.borrow_extra_yield,
+		bi.borrow_asset_number,
+		bi.borrow_publisher,
+		CASE WHEN b.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
+		b.borrow_nid,
+		bi.`name` AS borrow_name,
+		bi.project_name,
+		bi.applicant,
+		b.borrow_user_name AS username,
+		b.user_id AS userId,
+		FORMAT(b.account, 2) AS account,
+		FORMAT(b.borrow_account_yes, 2) AS borrow_account_yes,
+		FORMAT(b.borrow_account_wait, 2) AS borrow_account_wait,
+		CONCAT(TRUNCATE((b.borrow_account_yes/b.account)*100,2), '%') borrow_account_scale,
+		b.borrow_style,
+		bs.`name` AS borrow_style_name,
+		bi.project_type,
+		bpt.borrow_name AS project_type_name,
+		CASE WHEN borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
+		CONCAT(b.borrow_apr, '%') borrow_apr,
+		FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
+		CASE
+		WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
+		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
+		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
+		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
+		WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
+		WHEN b.`status` = 2 THEN '已流标'
+		ELSE
+		''
+		END AS `status`,
+		DATE_FORMAT( b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		CASE WHEN b.borrow_full_time IS NOT NULL THEN FROM_UNIXTIME( b.borrow_full_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS borrow_full_time,
+		CASE WHEN b.recover_last_time <![CDATA[<>]]> 0 AND b.recover_last_time IS NOT NULL THEN FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS recover_last_time,
+		CASE WHEN b.recover_last_time <![CDATA[<>]]> 0 AND b.recover_last_time IS NOT NULL THEN FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) ELSE '' END AS recover_last_day
+		FROM ht_borrow b
+	  	INNER JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(bi.project_type AS CHAR)
+		where b.borrow_nid = #{borrowNid}
+		ORDER BY
+		b.create_time DESC, b.id DESC
+
+	</select>
 </mapper>
