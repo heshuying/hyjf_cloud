@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.http.HtmlUtil;
@@ -156,7 +157,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitStart(0);
         request.setLimitEnd(4);
         request.setIsHome("1");
-        List<WebProjectListCustomizeVO> planList = webProjectListClient.searchPlanList(request);
+        List<HjhPlanCustomizeVO> planList = webProjectListClient.searchPlanList(request);
         // TODO: 2018/7/4   方法返回值不正确  待修正 result.setHjhPlanList(planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);

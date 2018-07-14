@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public interface WebProjectListClient {
      * @author zhangyk
      * @date 2018/6/21 15:29
      */
-    public List<WebProjectListCustomizeVO> searchPlanList(ProjectListRequest request);
+    public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request);
 
     // --------------------------- web end  -----------------------------------
 

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages={"com.hyjf.common", "com.hyjf.cs.trade","com.hyjf.pay"})
+@ComponentScan(basePackages={"com.hyjf.cs","com.hyjf.common", "com.hyjf.cs.trade","com.hyjf.pay"})
 public class CsTradeApplication {
 
 	@Bean

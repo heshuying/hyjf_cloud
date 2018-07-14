@@ -11,10 +11,10 @@ import javax.validation.Valid;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 
 
 /**
@@ -79,7 +79,7 @@ public interface ProjectListService {
      * @author zhangyk
      * @date 2018/6/21 15:51
      */
-    List<WebProjectListCustomizeVO> searchWebPlanList(ProjectListRequest request);
+    List<HjhPlanCustomize> searchWebPlanList(ProjectListRequest request);
 
     // --------------------------web end --------------------------------------------------
     //---------------------------app start ------------------------------------------------

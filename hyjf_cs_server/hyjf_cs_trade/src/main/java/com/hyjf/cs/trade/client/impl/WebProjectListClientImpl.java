@@ -1,16 +1,14 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.AppProjectListResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.ProjectDetailResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.cs.trade.client.WebProjectListClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,8 +109,8 @@ public class WebProjectListClientImpl implements WebProjectListClient {
      * @date 2018/6/21 15:29
      */
     @Override
-    public List<WebProjectListCustomizeVO> searchPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request,ProjectListResponse.class).getBody();
+    public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request) {
+        HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request,HjhPlanResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getResultList();
