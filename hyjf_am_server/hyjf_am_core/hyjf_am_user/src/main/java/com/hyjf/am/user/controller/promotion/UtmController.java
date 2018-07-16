@@ -1,17 +1,19 @@
 package com.hyjf.am.user.controller.promotion;
 
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.promotion.UtmService;
-import com.hyjf.am.vo.admin.UtmVo;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.service.promotion.UtmService;
+import com.hyjf.am.vo.admin.UtmVO;
 
 /**
  * @author walter.limeng
@@ -31,7 +33,7 @@ public class UtmController extends BaseController {
     @RequestMapping("/getbypagelist")
     public UtmResponse getByPageList(@RequestBody @Valid Map<String, Object> map) {
         UtmResponse response = new UtmResponse();
-        List<UtmVo> pageList = utmService.getByPageList(map);
+        List<UtmVO> pageList = utmService.getByPageList(map);
         if (pageList != null) {
             response.setResultList(pageList);
         }

@@ -13,7 +13,6 @@ import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
 import com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -57,17 +56,17 @@ public class CustomizeMapper extends AutoMapper {
     @Resource
     protected BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected AdminBorrowRecoverCustomizeMapper borrowRecoverCustomizeMapper;
-    @Autowired
+    @Resource
     protected AdminBorrowLogCustomizeMapper borrowLogCustomizeMapper;
-    @Autowired
+    @Resource
     protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected AdminBorrowRepaymentInfoListCustomizeMapper borrowRepaymentInfoListCustomizeMapper;
     @Resource
     protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
@@ -81,22 +80,25 @@ public class CustomizeMapper extends AutoMapper {
     @Resource
     protected TzjCustomizeMapper tzjCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected OntimeTenderCustomizeMapper ontimeTenderCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected WithdrawCustomizeMapper withdrawCustomizeMapper;
 
     @Resource
     protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
     @Resource
     protected WDZJCustomizeMapper wdzjCustomizeMapper;
+
+    @Resource
+    protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
 
 }
 

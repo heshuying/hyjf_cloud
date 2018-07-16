@@ -3,7 +3,7 @@ package com.hyjf.am.user.service.impl.promotion;
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.service.promotion.UtmService;
-import com.hyjf.am.vo.admin.UtmVo;
+import com.hyjf.am.vo.admin.UtmVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +20,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Autowired
     private UtmRegCustomizeMapper utmRegCustomizeMapper;
     @Override
-    public List<UtmVo> getByPageList(Map<String, Object> map) {
-        List<UtmVo> list = utmRegCustomizeMapper.getByPageList(map);
+    public List<UtmVO> getByPageList(Map<String, Object> map) {
+        List<UtmVO> list = utmRegCustomizeMapper.getByPageList(map);
         return list;
     }
 

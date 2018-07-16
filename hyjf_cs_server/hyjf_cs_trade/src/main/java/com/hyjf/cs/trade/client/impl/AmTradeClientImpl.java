@@ -12,6 +12,9 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -634,4 +637,75 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResultInt().intValue();
     }
+
+    /**
+     * 根据borrowNid获取BorrowInfoVO对象
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoVO getBorrowInfoByNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/"+borrowNid;
+        BorrowInfoResponse response=restTemplate.getForEntity(url,BorrowInfoResponse.class).getBody();
+        if(response!=null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
+     * 投资异常定时任务更新投资信息
+     * @param request
+     * @return
+     */
+    @Override
+    public boolean updateTenderStart(BorrowTenderTmpRequest request) {
+        String url = "http://AM-TRADE/am-trade/bankexception/updateTenderStart";
+        return restTemplate.postForEntity(url,request,Boolean.class).getBody();
+    }
+
+    /**
+     * 获取BorrowTenderTmpVO列表
+     */
+	@Override
+	public List<BorrowTenderTmpVO> getBorrowTenderTmpList() {
+		String url = "http://AM-TRADE/am-trade/bankexception/getBorrowTenderTmpList";
+		BorrowTenderTmpResponse response =restTemplate.getForEntity(url,BorrowTenderTmpResponse.class).getBody();
+		if (response!=null){
+			response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取BatchBorrowTenderCustomizeVO列表
+	 */
+	@Override
+	public List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList() {
+		String url = "http://AM-TRADE/am-trade/bankException/queryAuthCodeBorrowTenderList";
+		BatchBorrowTenderCustomizeResponse response =
+				restTemplate.getForEntity(url,BatchBorrowTenderCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	
+	/**
+	 * 插入AuthCode
+	 */
+	@Override
+	public void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
+		String url = "http://AM-TRADE/am-trade/bankException/insertAuthCode";
+		BatchBorrowTenderCustomizeRequest request = new BatchBorrowTenderCustomizeRequest();
+		request.setBatchBorrowTenderCustomizeList(list);
+		restTemplate.postForEntity(url,request,Boolean.class).getBody();
+	}
+
+	
+	
+	
+	
 }

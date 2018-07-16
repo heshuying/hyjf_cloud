@@ -10,7 +10,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -33,10 +32,10 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.AmBorrowClient;
 import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BatchBankInvestAllClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
@@ -54,31 +53,26 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 @Service
 public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implements BatchBankInvestAllService {
     private static final Logger logger = LoggerFactory.getLogger(BatchBankInvestAllServiceImpl.class);
-
-    @Autowired
-    private BatchBankInvestAllClient batchBankInvestAllClient;//银行提现掉单
+	/**
+	 * client
+	 */
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private AmBorrowClient amBorrowClient;
+	private AmTradeClient amTradeClient;
 	@Autowired
 	private AmMongoClient amMongoClient;
-
+	/**
+	 * mq生产端
+	 */
 	@Autowired
 	private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-
 	@Autowired
 	private UtmRegProducer utmRegProducer;
 	@Autowired
 	private VIPUserTenderProducer vipUserTenderProducer;
-
-
-	@Value("${hyjf.bank.instcode}")
-	private String BANK_INSTCODE;
-
-	@Value("${hyjf.bank.bankcode}")
-	private String BANK_BANKCODE;
-
+	@Autowired
+	private SystemConfig systemConfig;
 
 	@Override
 	public void updateTender() {
@@ -108,10 +102,10 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				request.setAccountChinapnrTender(accountChinapnrTender);
 				if (bean!=null){
 					String borrowId = bean.getProductId();// 借款Id
-					BorrowVO borrow =this.amBorrowClient.getBorrowByNid(borrowId);
+					BorrowVO borrow =this.amTradeClient.selectBorrowByNid(borrowId);
 					request.setBorrow(borrow);
 					String borrowNid = borrowId == null ? "" : borrow.getBorrowNid();// 项目编号
-					BorrowInfoVO borrowInfo = this.amBorrowClient.getBorrowInfoByNid(borrowNid);
+					BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
 					request.setBorrowInfo(borrowInfo);
 					BankOpenAccountVO accountChinapnrBorrower = this.getBankOpenAccount(borrowInfo.getUserId());
 					request.setAccountChinapnrBorrower(accountChinapnrBorrower);
@@ -135,7 +129,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				request.setEmployeeCustomize_ref(employeeCustomize_ref);
 				request.setNowTime(GetDate.getNowTime10());
 				
-				boolean ret = this.batchBankInvestAllClient.updateTenderStart(request);
+				boolean ret = this.amTradeClient.updateTenderStart(request);
 				if (!ret){
 					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
 					//更新失败不继续执行
@@ -245,8 +239,8 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);// 消息类型
-		bean.setInstCode(BANK_INSTCODE);// 机构代码
-		bean.setBankCode(BANK_BANKCODE);
+		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+		bean.setBankCode(systemConfig.getBankBankcode());
 		bean.setTxDate(GetOrderIdUtils.getTxDate());
 		bean.setTxTime(GetOrderIdUtils.getTxTime());
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -263,7 +257,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 
 
 	private List<BorrowTenderTmpVO> getBorrowTenderTmpList() {
-		return batchBankInvestAllClient.getBorrowTenderTmpList();
+		return this.amTradeClient.getBorrowTenderTmpList();
 	}
 
 
