@@ -20,25 +20,12 @@ import com.hyjf.am.vo.BaseVO;
 
 public class ChangeLogRequest extends BasePage {
 	
-	/**
-	 * 翻页机能用的隐藏变量
-	 */
-	private int paginatorPage = 1;
+
     private String startTime;
 
     private String endTime;
 
 
-	public int getPaginatorPage() {
-		if (paginatorPage == 0) {
-			paginatorPage = 1;
-		}
-		return paginatorPage;
-	}
-
-	public void setPaginatorPage(int paginatorPage) {
-		this.paginatorPage = paginatorPage;
-	}
 	 private Integer id;
 
 	    private Integer userId;

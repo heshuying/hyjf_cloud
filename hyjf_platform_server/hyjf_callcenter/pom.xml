@@ -91,6 +91,35 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.hyjf.callcenter.HyjfCallcenterApplication</mainClass>
+					<requiresUnpack>
+						<dependency>
+							<groupId>org.apache.axis2</groupId>
+							<artifactId>axis2</artifactId>
+						</dependency>
+					</requiresUnpack>
+					<finalName>hyjf-callcenter</finalName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<excludes>
+						<exclude>**/application.yml</exclude>
+						<exclude>**/bootstrap.yml</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

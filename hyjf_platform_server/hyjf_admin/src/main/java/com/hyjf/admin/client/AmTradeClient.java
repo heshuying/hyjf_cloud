@@ -3,18 +3,29 @@
  */
 package com.hyjf.admin.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 
@@ -351,7 +362,7 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
+    AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request);
 
     /**
      *  获取银行转账异常总数 jijun 20180710
@@ -396,4 +407,211 @@ public interface AmTradeClient {
      * @return
      */
     List<SubCommissionVO> searchSubCommissionList(SubCommissionRequest request);
+
+    Integer deleteFreezeLogById(Integer id);
+
+    BankRepayFreezeLogVO getBankFreezeLogByOrderId(String orderId);
+
+    List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd);
+
+    Integer getFreezeLogValidAllCount();
+
+    /**
+     * 转账成功后续处理
+     * @param jsonObject
+     * @return
+     */
+    boolean transferAfter(JSONObject jsonObject);
+
+    /**
+     * 根据主键获取优惠券还款记录
+     * @param recoverId
+     * @return
+     */
+    CouponRecoverVO getCouponRecoverByPrimaryKey(Integer recoverId);
+
+    /**
+     *取得优惠券投资信息
+     * @param nid
+     * @return
+     */
+    BorrowTenderCpnVO getCouponTenderInfoByNid(String nid);
+    /**
+     * 根据筛选条件查询银行投资撤销异常的数据count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request);
+    /**
+     * 根据筛选条件查询银行投资撤销异常list
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<BorrowTenderTmpVO> searchTenderCancelExceptionList(TenderCancelExceptionRequest request);
+    /**
+     * 根据orderId查询BorrowTender
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    List<BorrowTenderVO> searchBorrowTenderByOrderId(String orderId);
+    /**
+     * 根据orderId查询BorrowTenderTmp
+     * @auth sunpeikai
+     * @param orderId 订单号
+     * @return
+     */
+    BorrowTenderTmpVO searchBorrowTenderTmpByOrderId(String orderId);
+    /**
+     * 根据id删除BorrowTenderTmp
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    Integer deleteBorrowTenderTmpById(Integer id);
+
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param freezeHistoryVO 冻结历史
+     * @return
+     */
+    Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
+
+    /**
+     * 查询批次中心的批次列表的求和
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
+
+
+    /**
+     * 根据筛选条件查询汇付对账count
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    Integer getAccountExceptionCount(AccountExceptionRequest request);
+
+    /**
+     * 根据筛选条件查询汇付对账列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
+    List<AccountExceptionVO> searchAccountExceptionList(AccountExceptionRequest request);
+
+    /**
+     * 根据id查询AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    AccountExceptionVO searchAccountExceptionById(Integer id);
+
+    /**
+     * 更新AccountException
+     * @auth sunpeikai
+     * @param accountExceptionVO 更新参数
+     * @return
+     */
+    Integer updateAccountException(AccountExceptionVO accountExceptionVO);
+
+    /**
+     * 根据id删除AccountException
+     * @auth sunpeikai
+     * @param id 主键
+     * @return
+     */
+    Integer deleteAccountExceptionById(Integer id);
+
+    /**
+     * 获取提现列表数量
+     * @param request
+     * @return
+     */
+    int getWithdrawRecordCount(WithdrawBeanRequest request);
+
+    /**
+     * 获取提现列表
+     * @param request
+     * @return
+     */
+    WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request);
+
+    List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean);
+
+    int getCreditEndCount(BankCreditEndListRequest requestBean);
+
+    BankCreditEndVO getCreditEndByOrderId(String orderId);
+
+    int updateBankCreditEnd(BankCreditEndVO requestBean);
+
+    int updateCreditEndForInitial(BankCreditEndVO requestBean);
+
+    /**
+     * 根据ID获取放款任务表
+     * @param id
+     * @return
+     */
+    BorrowApicronResponse getBorrowApicronByID(String id);
+
+    HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
+
+    int requestDebtEnd(HjhDebtCreditVO credit, String sellerUsrcustid, String sellerAuthCode);
+
+    BorrowTenderVO getBorrowTenderByNid(String nid);
+
+    HjhDebtCreditTenderVO getByAssignOrderId(String assignOrderId);
+
+    /**
+     * 检索汇计划加入明细列表
+     * @param request
+     * @return
+     */
+   AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request);
+    /**
+     * 查询计划加入明细
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+    /**
+     * 查询计划加入明细临时表
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    HjhPlanBorrowTmpResponse selectBorrowJoinList(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+
+    /**
+     * 更新
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param status
+     * @param accedeId
+     * @return
+     */
+    boolean updateTenderByParam(int status,int accedeId);
+    /**
+     * 更新投资数据
+     *
+     * @return
+     * @author nxl
+     */
+    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+
+    List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean);
+
+    int getManualReverseCount(ManualReverseCustomizeRequest requestBean);
+
+    Boolean updateManualReverse(ManualReverseAddRequest requestBean);
 }

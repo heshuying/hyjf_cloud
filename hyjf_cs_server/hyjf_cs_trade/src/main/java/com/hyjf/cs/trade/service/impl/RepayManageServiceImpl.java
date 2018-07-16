@@ -165,7 +165,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }
 
         for(BorrowApicronVO apicron : borrowApicrons){
-            if(apicron.getApiType() == 1 && apicron.getPeriodNow() == periodNow){
+            if(apicron.getApiType() == 1 && apicron.getPeriodNow().equals(periodNow)){
                 return  apicron;
             }
         }

@@ -1,13 +1,12 @@
 package com.hyjf.common.util;
 
-import java.util.*;
-
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
 
 /**
  * 
@@ -16,7 +15,7 @@ import com.hyjf.common.validator.Validator;
  * @author renxingchen
  * @version hyjf 1.0
  * @since hyjf 1.0 2016年2月18日
- * @see 上午9:21:27
+ * @see9:21:27
  */
 public class SecretUtil {
 
@@ -73,6 +72,24 @@ public class SecretUtil {
     }
 
     /**
+     *
+     * 生成规则：
+     *
+     * @return
+     */
+    public static String createToken( Integer userId, String username , String accountId) {
+        // 参数校验
+        if (userId <= 0 || StringUtils.isEmpty(username.trim())) {
+            throw new RuntimeException("参数异常");
+        }
+        AppUserToken token = new AppUserToken(userId, username, accountId);
+        String encryptString = JSON.toJSONString(token);
+        String sign = createSign();
+        RedisUtils.set(sign, encryptString, RedisUtils.signExpireTime);
+        return sign;
+    }
+
+    /**
      * 验证Order
      *
      * @param key
@@ -94,7 +111,6 @@ public class SecretUtil {
      * 验证Order
      *
      * @param key
-     * @param token
      * @param randomString
      * @param order
      * @return
@@ -251,7 +267,6 @@ public class SecretUtil {
     /**
      * 验证token 业务代码不需要再单独调用此方法，废弃
      *
-     * @param key
      * @param sign
      * @param token
      * @return

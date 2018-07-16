@@ -3,16 +3,21 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import com.hyjf.am.resquest.user.BankCardManagerRequest;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
+import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
 import com.hyjf.am.user.dao.mapper.customize.BankCardManagerCustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.BankCardLog;
+import com.hyjf.am.user.dao.model.auto.BankCardLogExample;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
 import com.hyjf.am.user.service.BankCardManagerRecordService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,23 +31,26 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
 
     @Autowired
     private BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
+    @Autowired
+    private BankCardLogMapper bankCardLogMapper;
 
     private static Logger logger = LoggerFactory.getLogger(BankCardManagerRecordServiceImpl.class);
 
 
     /**
-     *  根据筛选条件查找汇付银行卡信息列表
-     * @param request 筛选条件
+     * 根据筛选条件查找汇付银行卡信息列表
+     *
+     * @param mapParam 筛选条件
      * @return
      */
     @Override
-    public List<BankcardManagerCustomize> selectBankCardList(Map<String,Object> mapParam,int limitStart, int limitEnd) {
+    public List<BankcardManagerCustomize> selectBankCardList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
         //参数设置
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
             mapParam.put("limitStart", limitStart);
         }
-        if (limitEnd > 0) {
+        if (limitEnd == 0 || limitEnd > 0) {
             mapParam.put("limitEnd", limitEnd);
         }
 //        Map<String, Object> mapParam = paramSet(request);
@@ -52,11 +60,12 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
 
     /**
      * 根据条件统计汇付银行卡信息
-     * @param request
+     *
+     * @param mapParam
      * @return
      */
     @Override
-    public int countUserRecord(Map<String,Object> mapParam) {
+    public int countUserRecord(Map<String, Object> mapParam) {
 //        Map<String, Object> mapParam = paramSet(request);
         Integer integerCount = bankCardManagerCustomizeMapper.countRecordTotal(mapParam);
         int intUserCount = integerCount.intValue();
@@ -65,10 +74,11 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
 
     /**
      * 根据筛选条件查找江西银行卡信息列表
+     *
      * @return
      */
     @Override
-    public List<BankcardManagerCustomize> selectNewBankCardList (Map<String,Object> mapParam,int limitStart, int limitEnd) {
+    public List<BankcardManagerCustomize> selectNewBankCardList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
             mapParam.put("limitStart", limitStart);
@@ -83,17 +93,100 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
 
 
     /**
-     *根据条件统计江西银行卡信息
+     * 根据条件统计江西银行卡信息
+     *
      * @return
      */
     @Override
-    public int countRecordTotalNew(Map<String,Object> mapParam) {
+    public int countRecordTotalNew(Map<String, Object> mapParam) {
 //        Map<String, Object> mapParam = paramSet(request);
         Integer integerCount = bankCardManagerCustomizeMapper.countRecordTotalNew(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;
     }
 
+    /**
+     * 根据筛选条件查找用户银行卡操作记录表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<BankCardLog> selectBankCardLogByExample(BankCardLogRequest request, int limitStart, int limitEnd) {
+        BankCardLogExample example = new BankCardLogExample();
+        BankCardLogExample.Criteria criteria = example.createCriteria();
+        // 条件查询
+        if (StringUtils.isNotEmpty(request.getBankCode())) {
+            criteria.andBankCodeEqualTo(request.getBankCode());
+        }
+        if (StringUtils.isNotEmpty(request.getUserName())) {
+            criteria.andUserNameLike("%" + request.getUserName() + "%");
+        }
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dateStart = null;
+        Date dateEnd = null;
+        /*if (StringUtils.isNotEmpty(request.getStartTime())) {
+            try {
+                dateStart = smp.parse(request.getStartTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            criteria.andCreateTimeGreaterThanOrEqualTo(dateStart);
+        }
+        if (StringUtils.isNotEmpty(request.getEndTime())) {
+            try {
+                dateEnd = smp.parse(request.getEndTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            criteria.andCreateTimeLessThanOrEqualTo(dateEnd);
+        }*/
+        if (limitStart != -1 && limitEnd != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        example.setOrderByClause("create_time Desc");
+        List<BankCardLog> listBank = bankCardLogMapper.selectByExample(example);
+        return listBank;
+    }
 
+    /**
+     * 根据筛选条件统计用户银行卡操作记录表
+     * @param request
+     * @return
+     */
+    @Override
+    public int countBankCardLog(BankCardLogRequest request){
+        BankCardLogExample example = new BankCardLogExample();
+        BankCardLogExample.Criteria criteria = example.createCriteria();
+        // 条件查询
+        if (StringUtils.isNotEmpty(request.getBankCode())) {
+            criteria.andBankCodeEqualTo(request.getBankCode());
+        }
+        if (StringUtils.isNotEmpty(request.getUserName())) {
+            criteria.andUserNameLike("%" + request.getUserName() + "%");
+        }
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date dateStart = null;
+        Date dateEnd = null;
+        /*if (StringUtils.isNotEmpty(request.getStartTime())) {
+            try {
+                dateStart = smp.parse(request.getStartTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            criteria.andCreateTimeGreaterThanOrEqualTo(dateStart);
+        }
+        if (StringUtils.isNotEmpty(request.getEndTime())) {
+            try {
+                dateEnd = smp.parse(request.getEndTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            criteria.andCreateTimeLessThanOrEqualTo(dateEnd);
+        }*/
+        int intCount = bankCardLogMapper.countByExample(example);
+        return intCount;
+    }
 
 }

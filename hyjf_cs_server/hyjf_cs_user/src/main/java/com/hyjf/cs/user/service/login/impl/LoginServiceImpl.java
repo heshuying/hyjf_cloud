@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.login.impl;
 
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -10,11 +11,13 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,23 +36,23 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     private SystemConfig systemConfig;
 
     /**
-     *登录
-     * @param loginUserName
-     *           手机号
+     * 登录
+     *
+     * @param loginUserName 手机号
      * @param loginPassword
      * @param ip
      */
     @Override
-    public WebViewUserVO login(String loginUserName, String loginPassword, String ip) {
+    public WebViewUserVO login(String loginUserName, String loginPassword, String ip,String channel) {
         if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
-            CheckUtil.check(false,MsgEnum.ERR_USER_LOGIN);
+            CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
         }
         // 获取密码错误次数
         String errCount = RedisUtils.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
         if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
-            CheckUtil.check(false,MsgEnum.ERR_PASSWORD_ERROR_TOO_MANEY);
+            CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MANEY);
         }
-        return this.doLogin(loginUserName, loginPassword, ip);
+        return this.doLogin(loginUserName, loginPassword, ip, channel);
     }
 
     /**
@@ -59,10 +62,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
      * @param loginPassword
      * @return
      */
-    private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip) {
+    private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip,String channel) {
         UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
         WebViewUserVO webViewUserVO = new WebViewUserVO();
-        CheckUtil.check(userVO != null,MsgEnum.ERR_USER_LOGIN);
+        CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
         int userId = userVO.getUserId();
         String codeSalt = userVO.getSalt();
         String passwordDb = userVO.getPassword();
@@ -82,8 +85,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
             // 2. 缓存
             webViewUserVO = setToken(webViewUserVO);
-
-            // 3. todo pangchengchao登录时自动同步线下充值记录
+            BankOpenAccountVO account = this.getBankOpenAccount(userId);
+            String accountId = null;
+            if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+                accountId = account.getAccount();
+                // 3. todo pangchengchao登录时自动同步线下充值记录
+            }
+            if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
+                String sign = SecretUtil.createToken(userId, loginUserName, accountId);
+                webViewUserVO.setToken(sign);
+            }
         } else {
             // 密码错误，增加错误次数
             RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
@@ -94,31 +105,32 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
     /**
      * 校验app参数
+     *
      * @param
      * @return
      */
     @Override
-    public void checkForApp(String version,String platform,String netStatus){
-        CheckUtil.check(null!=version&&null!=platform&&null!=netStatus,MsgEnum.STATUS_CE000001);
-        CheckUtil.check(StringUtils.isNotEmpty(version),MsgEnum.STATUS_CE000014);
-        CheckUtil.check(StringUtils.isNotEmpty(platform)&&StringUtils.isNotEmpty(netStatus),MsgEnum.STATUS_CE000001);
-              if(version.length()>=5){
+    public void checkForApp(String version, String platform, String netStatus) {
+        CheckUtil.check(null != version && null != platform && null != netStatus, MsgEnum.STATUS_CE000001);
+        CheckUtil.check(StringUtils.isNotEmpty(version), MsgEnum.STATUS_CE000014);
+        CheckUtil.check(StringUtils.isNotEmpty(platform) && StringUtils.isNotEmpty(netStatus), MsgEnum.STATUS_CE000001);
+        if (version.length() >= 5) {
             version = version.substring(0, 5);
         }
-        CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
+        CheckUtil.check(version.compareTo("1.4.0") > 0, MsgEnum.STATUS_CE000014);
 
     }
 
     /**
-     *
      * 退出清空MobileCod
-     * @author pcc
+     *
      * @param userId
      * @param sign
+     * @author pcc
      */
     @Override
     public void clearMobileCode(Integer userId, String sign) {
-        amUserClient.clearMobileCode(userId,sign);
+        amUserClient.clearMobileCode(userId, sign);
     }
 
     /**

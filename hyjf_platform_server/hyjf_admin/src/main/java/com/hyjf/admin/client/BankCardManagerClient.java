@@ -3,9 +3,11 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.user.BankCardLogResponse;
+import com.hyjf.am.response.user.BankCardManagerResponse;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.user.BankcardManagerVO;
 
 import java.util.List;
 
@@ -18,7 +20,6 @@ public interface BankCardManagerClient {
     /**
      * 获取银行列表
      *
-     * @param request
      * @return
      */
     List<BanksConfigVO> selectBankConfigList();
@@ -28,11 +29,17 @@ public interface BankCardManagerClient {
      * @param request 筛选条件
      * @return
      */
-    List<BankcardManagerVO> selectBankCardList(BankCardManagerRequest request);
+    BankCardManagerResponse selectBankCardList(BankCardManagerRequest request);
 
     /**
      * 根据筛选条件查找江西银行卡信息列表
      * @return
      */
-    List<BankcardManagerVO> selectNewBankCardList (BankCardManagerRequest request);
+    BankCardManagerResponse selectNewBankCardList (BankCardManagerRequest request);
+    /**
+     * 查找用户银行卡操作记录表
+     * @param request
+     * @return
+     */
+   BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request);
 }

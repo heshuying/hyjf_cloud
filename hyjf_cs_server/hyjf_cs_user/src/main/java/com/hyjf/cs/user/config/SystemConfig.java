@@ -14,7 +14,13 @@ public class SystemConfig {
 
     @Value("${hyjf.web.host}")
     public String webHost;
-    
+
+    @Value("${hyjf.app.host}")
+    public String appHost;
+
+    @Value("${hyjf.weChat.host}")
+    public String weChatHost;
+
     @Value("{hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
@@ -65,6 +71,22 @@ public class SystemConfig {
 
     @Value("${hyjf.app.version.new}")
     private String newVersion;
+
+    public String getWeChatHost() {
+        return weChatHost;
+    }
+
+    public void setWeChatHost(String weChatHost) {
+        this.weChatHost = weChatHost;
+    }
+
+    public String getAppHost() {
+        return appHost;
+    }
+
+    public void setAppHost(String appHost) {
+        this.appHost = appHost;
+    }
 
     public String getNewVersion() {
         return newVersion;

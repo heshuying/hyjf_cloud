@@ -11,6 +11,7 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.mq.MailProducer;
 import com.hyjf.admin.mq.Producer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +105,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject searchBalanceByUsername(String userName) {
         JSONObject jsonObject = new JSONObject();
         List<UserVO> userVOList = amUserClient.searchUserByUsername(userName);
@@ -139,6 +142,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject checkCustomerTransferParam(CustomerTransferRequest request) {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isNotEmpty(request.getOutUserName())) {
@@ -191,6 +195,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
      * @auth sunpeikai
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean insertTransfer(CustomerTransferRequest request) {
         return amTradeClient.insertUserTransfer(request);
     }
@@ -220,7 +225,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         MailMessage mailMessage = new MailMessage(null, replaceMap, "用户转账",null,null, email, CustomConstants.PARAM_TPL_TRANSFER, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
         // 发送
         try {
-            mailProducer.messageSend(new Producer.MassageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+            mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
         } catch (MQException e) {
             e.printStackTrace();
         }

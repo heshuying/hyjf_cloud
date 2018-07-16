@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.service.coupon;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
@@ -40,4 +42,18 @@ public interface MyCouponListService {
      * @return list
      */
     List<CouponUserForAppCustomizeVO> getMyCouponByPage(MyCouponListRequest requestBean);
+
+    /**
+     * APP,PC,wechat散标投资查询优惠券列表
+     * @param requestBean userId:用户ID，money：投资金额，borrowNid:投资标的，platform：投资平台
+     * @return JSONObject
+     */
+    JSONObject getBorrowCoupon(MyCouponListRequest requestBean);
+
+    /**
+     * APP,PC,wechat加入计划查询优惠券列表
+     * @param requestBean userId:用户ID，money：投资金额，planNid:投资标的，platform：投资平台
+     * @return JSONObject
+     */
+    JSONObject getPlanCouponoupon(MyCouponListRequest requestBean);
 }

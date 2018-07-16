@@ -116,4 +116,26 @@ public class RedisConstants {
     // _tmp
     public static final String HJH_SLASH_TMP = "_tmp";
     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+
+
+    /**
+     * 散标投资防重校验
+     */
+    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT";
+
+
+    /**
+     * 投资防重校验过期时间
+     */
+    public static final Integer TENDER_OUT_TIME = 300;
+
+    /**
+     * 短信模板缓存
+     */
+    public static final String SMS_TEMPLATE_TPLCODE = "sms_template_tplCode_";
+
+    /**
+     * 网关路由配置
+     */
+    public static final String ZUUL_ROUTER_CONFIG_KEY = "zuul_roter_config_key";
 }

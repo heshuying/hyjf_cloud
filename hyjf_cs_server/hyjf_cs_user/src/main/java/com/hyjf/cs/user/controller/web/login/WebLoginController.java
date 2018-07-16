@@ -14,6 +14,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ public class WebLoginController extends BaseUserController {
         String loginUserName = user.getUsername();
         String loginPassword = user.getPassword();
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
-        WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request));
+        WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
         if (userVO != null) {
             logger.info("web端登录成功 userId is :{}", userVO.getUserId());
 

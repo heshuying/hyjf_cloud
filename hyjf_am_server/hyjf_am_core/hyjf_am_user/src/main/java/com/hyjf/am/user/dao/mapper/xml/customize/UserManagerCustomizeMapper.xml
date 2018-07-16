@@ -468,7 +468,7 @@
         </if>
     </sql>
 
-    <!--根据用户id获取土建人信息-->
+    <!--根据用户id获取推荐人信息-->
     <resultMap id="UserRecommendPOMap" type="com.hyjf.am.user.dao.model.customize.UserRecommendCustomize">
         <id column="user_id" property="userId" jdbcType="INTEGER" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -492,4 +492,42 @@
         WHERE
         hydu.user_id =#{userId,jdbcType=INTEGER}
     </select>
+
+    <resultMap id="UserInfoForLogMap" type="com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="real_name" property="realName" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="idcard" property="idCard" jdbcType="VARCHAR" />
+        <result column="user_role" property="userRole" jdbcType="INTEGER" />
+        <result column="attribute" property="attribute" jdbcType="INTEGER" />
+        <result column="open_account" property="openAccount" jdbcType="INTEGER" />
+        <result column="bank_open_account" property="bankOpenAccount" jdbcType="INTEGER" />
+        <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+        <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
+        <result column="recommend_user_id" property="recommendUserId" jdbcType="INTEGER" />
+        <result column="reg_time" property="regTime" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectUserInfoByUserId" resultMap="UserInfoForLogMap" parameterType="java.lang.Integer">
+        SELECT
+        hydu.user_id,
+        hydu.username AS user_name,
+        hydui.truename AS real_name,
+        hydu.mobile,
+        hydui.role_id AS user_role,
+        hydui.attribute,
+        hydu.open_account,
+        hydu.`status` AS user_status,
+        hydur.username AS recommend_name,
+        hydur.user_id AS recommend_user_id,
+        hydui.idcard,
+        hydu.reg_time
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
+        LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
+        WHERE hydu.user_id =#{userId,jdbcType=INTEGER}
+    </select>
+
 </mapper>

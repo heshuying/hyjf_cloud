@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
@@ -15,18 +16,20 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
  * @version AssetListClient
  */
 public interface AssetListClient {
-    /**
-     * 资产来源
-     * @param request
-     * @return
-     */
+	/**
+	 * 获取资金来源
+	 *
+	 * @param 
+	 * @return List<HjhInstConfigVO>
+	 */
     List<HjhInstConfigVO> findHjhInstConfigList();
 
-    /**
-     * 产品类型
-     * @param request
-     * @return
-     */
+	/**
+	 * 产品类型下拉联动
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
     List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch);
 
     /**
@@ -37,11 +40,11 @@ public interface AssetListClient {
     Map<String, String> findParamNameMap(String param);
 
     /**
-     * 资产列表
+     * 查询资产列表
      * @param request
      * @return
      */
-    List<AssetListCustomizeVO> findAssetList(AssetListRequest request);
+    AssetListCustomizeResponse findAssetList(AssetListRequest request);
 
     /**
      * 详情查询

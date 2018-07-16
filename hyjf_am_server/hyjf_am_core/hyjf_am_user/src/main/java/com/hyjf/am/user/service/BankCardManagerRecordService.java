@@ -3,7 +3,8 @@
  */
 package com.hyjf.am.user.service;
 
-import com.hyjf.am.resquest.user.BankCardManagerRequest;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
+import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
 
 import java.util.List;
@@ -46,4 +47,17 @@ public interface BankCardManagerRecordService {
      * @return
      */
     int countRecordTotalNew(Map<String,Object> mapParam);
+
+    /**
+     * 根据筛选条件查找用户银行卡操作记录表
+     * @param request
+     * @return
+     */
+    List<BankCardLog> selectBankCardLogByExample(BankCardLogRequest request,int limitStart,int limitEnd);
+    /**
+     * 根据筛选条件统计用户银行卡操作记录表
+     * @param request
+     * @return
+     */
+    int countBankCardLog(BankCardLogRequest request);
 }

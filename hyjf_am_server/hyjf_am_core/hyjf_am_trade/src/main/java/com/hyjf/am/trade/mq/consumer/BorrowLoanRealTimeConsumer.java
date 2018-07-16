@@ -43,20 +43,36 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author dxj
  * @version BorrowLoanRealTimeConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-@Component
+//@Component
 public class BorrowLoanRealTimeConsumer extends Consumer {
 
 	private static final Logger logger = LoggerFactory.getLogger(BorrowLoanRealTimeConsumer.class);
 
+    @Autowired
+	RealTimeBorrowLoanService realTimeBorrowLoanService;
+
+    @Autowired
+    SystemConfig systemConfig;
+    
+	@Autowired
+	MailProducer mailProducer;
+
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+//		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+		
+		// 设置并发数
+		defaultMQPushConsumer.setConsumeThreadMin(1);
+		defaultMQPushConsumer.setConsumeThreadMax(1);
+		defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
+		defaultMQPushConsumer.setConsumeTimeout(30);
+		
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
@@ -66,19 +82,10 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {
-
-	    @Autowired
-		RealTimeBorrowLoanService batchLoanService;
-
-	    @Autowired
-	    SystemConfig systemConfig;
-	    
-		@Autowired
-		private MailProducer mailProducer;
 	    
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.info("直投放款请求 收到消息，开始处理....");
+			logger.info("直投放款请求 收到消息，开始处理...."+msgs.size());
 			BorrowApicron borrowApicron;
 			
 			try {
@@ -112,15 +119,15 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				// 如果放款状态为请求中
 				if (loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDING) {
 					// 发送放款
-					BankCallBean requestLoanBean = this.batchLoanService.requestLoans(borrowApicron);
+					BankCallBean requestLoanBean = realTimeBorrowLoanService.requestLoans(borrowApicron);
 					if (requestLoanBean == null) {
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 放款失败处理
-						boolean batchDetailFlag = this.batchLoanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
+						boolean batchDetailFlag = realTimeBorrowLoanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
 						if (!batchDetailFlag) {
 							throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
 						}
-						boolean apicronResultFlag = this.batchLoanService.updateBorrowApicron(borrowApicron,
+						boolean apicronResultFlag = realTimeBorrowLoanService.updateBorrowApicron(borrowApicron,
 								CustomConstants.BANK_BATCH_STATUS_FAIL);
 						if (apicronResultFlag) {
 							throw new Exception(
@@ -130,7 +137,7 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 						}
 					} else {// 放款成功
 							// 进行后续操作
-						boolean batchDetailFlag = this.batchLoanService.updateBatchDetailsQuery(borrowApicron,
+						boolean batchDetailFlag = realTimeBorrowLoanService.updateBatchDetailsQuery(borrowApicron,
 								requestLoanBean);
 						if (!batchDetailFlag) {
 							throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
@@ -169,16 +176,16 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				}
 				MailMessage mailmessage = new MailMessage(null, null,
 						"[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail,
-						null, MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+						null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 
 				try {
-					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailmessage)));
+					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, JSON.toJSONBytes(mailmessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}
 				
 			}
-			logger.info("--------------------------------------放款任务结束，项目编号：" + borrowNid + "=============");
+			logger.info("----------------------放款任务结束，项目编号：" + borrowNid + "=============");
 			RedisUtils.del(redisKey);
 			logger.info("----------------------------直投放款结束--------------------------------");
 

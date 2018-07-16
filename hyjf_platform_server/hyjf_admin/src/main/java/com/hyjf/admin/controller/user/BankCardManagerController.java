@@ -4,25 +4,34 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.BankCardLogRequestBean;
+import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankCardManagerService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCardLogResponse;
+import com.hyjf.am.response.user.BankCardManagerResponse;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.user.BankCardLogVO;
 import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.excel.AbstractExcelExportHandler;
 import com.hyjf.common.excel.ExcelField;
-import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 /**
  * @author nxl
  * @version RegistRecordController, v0.1 2018/6/23 15:16
@@ -41,7 +49,7 @@ import java.util.Map;
 @Api(value = "銀行卡管理")
 @RestController
 @RequestMapping("/hyjf-admin/bankcardManager")
-public class BankCardManagerController {
+public class BankCardManagerController extends BaseController {
     @Autowired
     private BankCardManagerService bankCardManagerService;
 
@@ -53,7 +61,7 @@ public class BankCardManagerController {
         // 银行卡属性
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         // 是否默认
-        Map<String, String> bankcardType  = CacheUtil.getParamNameMap("BANKCARD_TYPE");
+        Map<String, String> bankcardType = CacheUtil.getParamNameMap("BANKCARD_TYPE");
         List<BanksConfigVO> listBanksConfigVO = bankCardManagerService.selectBankConfigList();
         jsonObject.put("bankcardType", bankcardType);
         jsonObject.put("bankcardProperty", bankcardProperty);
@@ -65,90 +73,93 @@ public class BankCardManagerController {
     @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
-    public JSONObject bankOpenRecordAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
-        BankCardManagerRequest requestBank =setRequese(map);
-        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectBankCardList(requestBank,0,0);
-        String status="error";
-        if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
-            jsonObject.put("record",bankcardManagerVOList);
-            status="success";
+        BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
+        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(bankCardManagerRequest);
+        if (bankCardManagerResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status",status);
-        return jsonObject;
+        if (!Response.isSuccess(bankCardManagerResponse)) {
+            return new AdminResult<>(FAIL, bankCardManagerResponse.getMessage());
+        }
+        return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
     }
+
     @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public JSONObject bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
-        BankCardManagerRequest requestBank =setRequese(map);
-        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
-        String status="error";
-        if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
-            jsonObject.put("record",bankcardManagerVOList);
-            status="success";
+        BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
+        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectNewBankCardList(bankCardManagerRequest);
+        if (bankCardManagerResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status",status);
-        return jsonObject;
+        if (!Response.isSuccess(bankCardManagerResponse)) {
+            return new AdminResult<>(FAIL, bankCardManagerResponse.getMessage());
+        }
+        return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
     }
-    private BankCardManagerRequest  setRequese(Map<String,Object> mapParam){
+
+    private BankCardManagerRequest setRequese(Map<String, Object> mapParam) {
         BankCardManagerRequest requestBank = new BankCardManagerRequest();
-        if(null!=mapParam&&mapParam.size()>0){
-            if(mapParam.containsKey("userName")){
+        if (null != mapParam && mapParam.size() > 0) {
+            if (mapParam.containsKey("userName")) {
                 requestBank.setUserName(mapParam.get("userName").toString());
             }
-            if(mapParam.containsKey("userName")){
+            if (mapParam.containsKey("userName")) {
                 requestBank.setUserName(mapParam.get("userName").toString());
             }
-            if(mapParam.containsKey("bank")){
+            if (mapParam.containsKey("bank")) {
                 requestBank.setBank(mapParam.get("bank").toString());
             }
-            if(mapParam.containsKey("account")){
+            if (mapParam.containsKey("account")) {
                 requestBank.setAccount(mapParam.get("account").toString());
             }
-            if(mapParam.containsKey("realName")){
+            if (mapParam.containsKey("realName")) {
                 requestBank.setRealName(mapParam.get("realName").toString());
             }
-            if(mapParam.containsKey("cardProperty")){
+            if (mapParam.containsKey("cardProperty")) {
                 requestBank.setCardProperty(mapParam.get("cardProperty").toString());
             }
-            if(mapParam.containsKey("cardType")){
+            if (mapParam.containsKey("cardType")) {
                 requestBank.setCardType(mapParam.get("cardType").toString());
             }
-            if(mapParam.containsKey("addTimeStart")){
+            if (mapParam.containsKey("addTimeStart")) {
                 requestBank.setAddTimeStart(mapParam.get("addTimeStart").toString());
             }
-            if(mapParam.containsKey("addTimeEnd")){
+            if (mapParam.containsKey("addTimeEnd")) {
                 requestBank.setAddTimeEnd(mapParam.get("addTimeEnd").toString());
             }
-            if(mapParam.containsKey("mobile")){
+            if (mapParam.containsKey("mobile")) {
                 requestBank.setMobile(mapParam.get("mobile").toString());
             }
-            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                requestBank.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
-            }
+           /* if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
+                requestBank.setLimitFlg(Integer.parseInt(mapParam.get("limit").toString()));
+            }*/
         }
         return requestBank;
     }
 
 
-
     /**
      * 新版导出： 缺点， 需要增加一条count计数， 列表查询要传分页信息， 工作量略微增加
-     * @param request
+     *
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportbankcard")
-    public void exportExcel(HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public void exportExcel(HttpServletResponse response, @RequestBody Map<String, Object> map) {
         // 封装查询条件
         final BankCardManagerRequest requestBank = setRequese(map);
         // 表格sheet名称
         String sheetName = "银行卡管理";
 
-        new AbstractExcelExportHandler<BankcardManagerVO>(){
+        new AbstractExcelExportHandler<BankcardManagerVO>() {
 
             @Override
             public List<ExcelField> buildExcelFields() {
@@ -166,12 +177,21 @@ public class BankCardManagerController {
 
             @Override
             public int countExportData() {
-                return bankCardManagerService.countBankCardList(requestBank);
+                BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
+                if (null != bankCardManagerResponse) {
+                    return bankCardManagerResponse.getCount();
+                }
+                return 0;
             }
 
             @Override
             public List<BankcardManagerVO> selectExportDataList(int limitStart, int limit) {
-                return bankCardManagerService.selectBankCardList(requestBank,limitStart,limit);
+                BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
+                if (null != bankCardManagerResponse) {
+                    return bankCardManagerResponse.getResultList();
+                }
+                return null;
+//                return bankCardManagerService.selectBankCardList(requestBank,limitStart,limit);
             }
         }.exportExcel(response, sheetName);
 
@@ -246,66 +266,68 @@ public class BankCardManagerController {
 
 
     /**
-     *
      * 导出方法
-     * @author pcc
      * @param request
      * @param response
+     * @param bankCardManagerRequestBean
      * @throws Exception
      */
     @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportnewbankcard")
-    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
+    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "银行卡管理";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 封装查询条件
-        BankCardManagerRequest requestBank =setRequese(map);
+        BankCardManagerRequest requestBank = new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
+        //查找全部
+        requestBank.setLimitFlg(0);
         // 需要输出的结果列表
-        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
+        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
+//        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
         //序号、用户名、当前手机号、姓名、身份证号、银行卡号、绑卡时间
-        String[] titles = new String[] { "序号", "用户名", "当前手机号", "姓名", "身份证号", "银行卡号", "绑卡时间" };
+        String[] titles = new String[]{"序号", "用户名", "当前手机号", "姓名", "身份证号", "银行卡号", "绑卡时间"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
         HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-
-        if (bankcardManagerVOList != null && bankcardManagerVOList.size() > 0) {
-
-            int sheetCount = 1;
-            int rowNum = 0;
-
-            for (int i = 0; i < bankcardManagerVOList.size(); i++) {
-                rowNum++;
-                if (i != 0 && i % 60000 == 0) {
-                    sheetCount++;
-                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                    rowNum = 1;
-                }
-
-                // 新建一行
-                Row row = sheet.createRow(rowNum);
-                // 循环数据
-                for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BankcardManagerVO user = bankcardManagerVOList.get(i);
-                    // 创建相应的单元格
-                    Cell cell = row.createCell(celLength);
-                    if (celLength == 0) {// 序号
-                        cell.setCellValue(i + 1);
-                    } else if (celLength == 1) {// 用户名
-                        cell.setCellValue(user.getUserName());
-                    } else if (celLength == 2) {// 当前手机号
-                        cell.setCellValue(user.getMobile());
-                    } else if (celLength == 3) {// 姓名
-                        cell.setCellValue(user.getRealName());
-                    } else if (celLength == 4) {// 身份证号
-                        cell.setCellValue(user.getIdcard());
-                    } else if (celLength == 5) {// 银行卡号
-                        cell.setCellValue(user.getAccount());
-                    } else if (celLength == 6) {// 绑卡时间
-                        cell.setCellValue(user.getAddTime());
+        if (null != bankCardManagerResponse) {
+            List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+            if (bankcardManagerVOList != null && bankcardManagerVOList.size() > 0) {
+                int sheetCount = 1;
+                int rowNum = 0;
+                for (int i = 0; i < bankcardManagerVOList.size(); i++) {
+                    rowNum++;
+                    if (i != 0 && i % 60000 == 0) {
+                        sheetCount++;
+                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                        rowNum = 1;
+                    }
+                    // 新建一行
+                    Row row = sheet.createRow(rowNum);
+                    // 循环数据
+                    for (int celLength = 0; celLength < titles.length; celLength++) {
+                        BankcardManagerVO user = bankcardManagerVOList.get(i);
+                        // 创建相应的单元格
+                        Cell cell = row.createCell(celLength);
+                        if (celLength == 0) {// 序号
+                            cell.setCellValue(i + 1);
+                        } else if (celLength == 1) {// 用户名
+                            cell.setCellValue(user.getUserName());
+                        } else if (celLength == 2) {// 当前手机号
+                            cell.setCellValue(user.getMobile());
+                        } else if (celLength == 3) {// 姓名
+                            cell.setCellValue(user.getRealName());
+                        } else if (celLength == 4) {// 身份证号
+                            cell.setCellValue(user.getIdcard());
+                        } else if (celLength == 5) {// 银行卡号
+                            cell.setCellValue(user.getAccount());
+                        } else if (celLength == 6) {// 绑卡时间
+                            cell.setCellValue(user.getAddTime());
+                        }
                     }
                 }
             }
@@ -313,4 +335,96 @@ public class BankCardManagerController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+
+    //汇付银行操作记录記錄查询
+    @ApiOperation(value = "銀行卡管理", notes = "汇付银行操作记录")
+    @PostMapping(value = "/selectbankcardlogbyexample")
+    @ResponseBody
+    public AdminResult<ListResult<BankCardLogVO>> selectBankCardLogByExample(HttpServletRequest request, @RequestBody BankCardLogRequestBean bankCardLogRequestBean){
+        BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
+        BeanUtils.copyProperties(bankCardLogRequestBean, bankCardLogRequest);
+        BankCardLogResponse bankCardLogResponse = bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
+        if (bankCardLogResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(bankCardLogResponse)) {
+            return new AdminResult<>(FAIL, bankCardLogResponse.getMessage());
+        }
+        return new AdminResult<ListResult<BankCardLogVO>>(ListResult.build(bankCardLogResponse.getResultList(), bankCardLogResponse.getCount()));
+    }
+    @ApiOperation(value = "銀行卡管理", notes = "用户银行卡操作记录导出")
+    @PostMapping(value = "/exportbankcardlog")
+    public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
+
+        // 表格sheet名称
+        String sheetName = "用户银行卡操作记录";
+        // 文件名称
+        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        // 封装查询条件
+        BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
+        BeanUtils.copyProperties(bankCardLogRequestBean, bankCardLogRequest);
+        // 银行卡属性
+        Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
+        //查找全部
+        bankCardLogRequest.setLimitFlg(0);
+        // 需要输出的结果列表
+        BankCardLogResponse bankCardLogResponse =  bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
+//        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
+        String[] titles = new String[] { "序号", "用户名", "银行账号", "所属银行", "操作", "银行卡属性", "操作时间" };
+        // 声明一个工作薄
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        // 生成一个表格
+        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+        if (null != bankCardLogResponse) {
+            List<BankCardLogVO> bankcardManagerVOList = bankCardLogResponse.getResultList();
+            //序号、用户名、当前手机号、姓名、身份证号、银行卡号、绑卡时间
+            if (null!= bankcardManagerVOList&& bankcardManagerVOList.size() > 0) {
+
+                int sheetCount = 1;
+                int rowNum = 0;
+
+                for (int i = 0; i < bankcardManagerVOList.size(); i++) {
+                    rowNum++;
+                    if (i != 0 && i % 60000 == 0) {
+                        sheetCount++;
+                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                        rowNum = 1;
+                    }
+
+                    // 新建一行
+                    Row row = sheet.createRow(rowNum);
+                    // 循环数据
+                    for (int celLength = 0; celLength < titles.length; celLength++) {
+                        BankCardLogVO user = bankcardManagerVOList.get(i);
+                        // 创建相应的单元格
+                        Cell cell = row.createCell(celLength);
+                        if (celLength == 0) {// 序号
+                            cell.setCellValue(i + 1);
+                        } else if (celLength == 1) {// 用户名
+                            cell.setCellValue(user.getUserName());
+                        } else if (celLength == 2) {// 银行账号
+                            cell.setCellValue(user.getBankCode());
+                        } else if (celLength == 3) {// 所属银行
+                            cell.setCellValue(user.getBankName());
+                        } else if (celLength == 4) {// 操作
+                            if(user.getOperationType() == 0){
+                                cell.setCellValue("绑定");
+                            }else{
+                                cell.setCellValue("删除");
+                            }
+                        } else if (celLength == 5) {
+                            // 银行卡属性
+                            /*String cellValue = bankcardProperty.getOrDefault(user.getBankCode(),null);
+                            cell.setCellValue(cellValue);*/
+                        } else if (celLength == 6) {// 添加时间
+                            cell.setCellValue(user.getCreateTime());
+                        }
+                    }
+                }
+            }
+        }
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }
+
 }

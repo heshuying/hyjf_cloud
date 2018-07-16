@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -109,6 +110,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject handleBorrowRegistException(String borrowNid, Integer loginUserId) {
         JSONObject result = new JSONObject();
         BorrowVO borrowVO = amTradeClient.searchBorrowByBorrowNid(borrowNid);
@@ -202,7 +204,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                 else if (debtDetails.size() == 1) {
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
                                     String state = debtDetail.getString(BankCallConstant.PARAM_STATE);
-                                    if (state.equals("9")) {
+                                    if ("9".equals(state)) {
                                         // 2备案状态已撤销直接更改标的状态为:流标,撤销备案
                                         boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 6, 3,1);
                                         if (debtRegistedNewFlag) {
@@ -212,7 +214,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                             result.put("success", "1");
                                             result.put("msg", "备案已经撤销后，更新相应的状态失败,请联系客服！");
                                         }
-                                    } else if (state.equals("8")) {
+                                    } else if ("8".equals(state)) {
                                         // 2备案处理中更改备案状态为备案中
                                         boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 0, 1,1);
                                         if (debtRegistedNewFlag) {
@@ -222,7 +224,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                             result.put("success", "1");
                                             result.put("msg", "银行备案处理中，更新相应的状态失败,请联系客服！");
                                         }
-                                    } else if (state.equals("1")) {
+                                    } else if ("1".equals(state)) {
                                         // 2备案成功直接更改备案状态:银行确认state为1的情况,银行标的备案成功
                                         //new added by 受托支付备案
                                         if(borrowVO.getEntrustedFlg()==1){
@@ -324,7 +326,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @param loginUserId 登录用户id
      * @return
      */
-    private BankCallBean borrowRegistSearch(String borrowNid, String accountId, int loginUserId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BankCallBean borrowRegistSearch(String borrowNid, String accountId, int loginUserId) {
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
         String orderId = GetOrderIdUtils.getOrderId2(loginUserId);
@@ -369,7 +372,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @param loginUserId
      * @return
      */
-    private BankCallBean borrowRegist(BorrowVO borrow, boolean isMonth, String accountId, int loginUserId) {
+    @Transactional(rollbackFor = Exception.class)
+    public BankCallBean borrowRegist(BorrowVO borrow, boolean isMonth, String accountId, int loginUserId) {
         // 获取共同参数
         String channel = BankCallConstant.CHANNEL_PC;
         String orderId = GetOrderIdUtils.getOrderId2(loginUserId);
@@ -431,7 +435,8 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
      * @param type 1更新标的备案 2更新受托支付标的备案
      * @return
      */
-    private boolean updateBorrowRegist(BorrowVO borrow, int status, int registStatus,Integer type){
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateBorrowRegist(BorrowVO borrow, int status, int registStatus,Integer type){
         Date nowDate = new Date();
         borrow.setRegistStatus(registStatus);
         borrow.setStatus(status);

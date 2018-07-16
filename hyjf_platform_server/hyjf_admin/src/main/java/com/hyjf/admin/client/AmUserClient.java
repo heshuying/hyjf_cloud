@@ -1,6 +1,8 @@
 package com.hyjf.admin.client;
 
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.AdminUserAuthListResponse;
+import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -34,6 +36,8 @@ public interface AmUserClient {
      * @return
      */
     UserVO searchUserByUserId(Integer userId);
+
+    UserVO getUserByAccountId(String accountId);
 
     /**
      * 根据手机号获取用户信息
@@ -107,4 +111,21 @@ public interface AmUserClient {
      */
     EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId);
 
+    /**
+     * 查询自动投资债转异常列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    AdminUserAuthListResponse userAuthList(AdminUserAuthListRequest adminUserAuthListRequest);
+
+    /**
+     * 同步用户授权状态
+     * @auth sunpeikai
+     * @param type 1自动投资授权  2债转授权
+     * @return
+     */
+    JSONObject synUserAuth(Integer userId, Integer type);
+
+    BankOpenAccountVO queryBankOpenAccountByUserName(String userName);
 }

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.admin.productcenter.batchcenter.borrowRecover;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 
@@ -28,4 +29,18 @@ public interface BatchCenterBorrowRecoverService extends BaseService{
      * @return
      */
     List<BatchBorrowRecoverVo> getList(BatchBorrowRecoverRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 获取列表求和
+     * @param request
+     * @return
+     */
+    BatchBorrowRecoverVo getListSum(BatchBorrowRecoverRequest request);
+
+    /**
+     * 根据ID获取任务表数据
+     * @param id
+     * @return
+     */
+    BorrowApicron getRecoverApicronByID(String id);
 }

@@ -1,9 +1,5 @@
 package com.hyjf.zuul.config;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +20,6 @@ public class RefreshRouteService {
 
 	@Autowired
     RouteLocator routeLocator;
-
-	public void openTimeTaskThread() {
-		ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
-		// 延时 100 秒后，按 300 秒的周期执行任务
-		timer.scheduleAtFixedRate(() -> refreshRoute(), 100 * 1000, 300 * 1000, TimeUnit.MILLISECONDS);
-	}
 
 	public void refreshRoute() {
 		logger.info("refreshRoute...");

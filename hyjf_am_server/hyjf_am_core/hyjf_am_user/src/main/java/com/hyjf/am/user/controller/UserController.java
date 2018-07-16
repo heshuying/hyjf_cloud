@@ -439,6 +439,22 @@ public class UserController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据银行电子账号获取用户
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @RequestMapping("/getby_accountid/{accountId}")
+    public UserResponse getUserByAccountId(@PathVariable String accountId) {
+        UserResponse response = new UserResponse();
+        User user = userService.getUserByAccountId(accountId);
+        if (user != null) {
+            UserVO userVO = CommonUtils.convertBean(user, UserVO.class);
+            response.setResult(userVO);
+        }
+        return response;
+    }
+
     @RequestMapping("/getEvalationByCountScore/{countScore}")
     public EvalationResponse getEvalationByCountScore(@PathVariable short countScore) {
         EvalationResponse response = new EvalationResponse();

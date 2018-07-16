@@ -33,13 +33,19 @@ public class BorrowFirstClientImpl implements BorrowFirstClient {
     @Override
     public Integer countBorrowFirst(BorrowFirstRequest borrowFirstRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_first/count_borrow_first";
-        return restTemplate.postForEntity(url, borrowFirstRequest, Integer.class).getBody();
+        BorrowFirstCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowFirstRequest, BorrowFirstCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getTotal();
+        }
+        return 0;
     }
 
     @Override
     public List<BorrowFirstCustomizeVO> selectBorrowFirstList(BorrowFirstRequest borrowFirstRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_first/select_borrow_first_list";
-        BorrowFirstCustomizeResponse response = restTemplate.postForEntity(url, borrowFirstRequest, BorrowFirstCustomizeResponse.class).getBody();
+        BorrowFirstCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowFirstRequest, BorrowFirstCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -49,7 +55,12 @@ public class BorrowFirstClientImpl implements BorrowFirstClient {
     @Override
     public String sumBorrowFirstAccount(BorrowFirstRequest borrowFirstRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_first/sum_borrow_first_account";
-        return restTemplate.postForEntity(url, borrowFirstRequest, String.class).getBody();
+        BorrowFirstCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowFirstRequest, BorrowFirstCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getSumAccount();
+        }
+        return null;
     }
 
     @Override
@@ -103,7 +114,12 @@ public class BorrowFirstClientImpl implements BorrowFirstClient {
     @Override
     public boolean insertBorrowBail(String borrowNid, String currUserId) {
         String url = "http://AM-TRADE/am-trade/borrow_first/insert_borrow_bail/" + borrowNid + "/" + currUserId;
-        return restTemplate.getForEntity(url, boolean.class).getBody();
+        BorrowFirstCustomizeResponse response =
+                restTemplate.getForEntity(url, BorrowFirstCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getFlag();
+        }
+        return false;
     }
 
     /**
@@ -112,9 +128,14 @@ public class BorrowFirstClientImpl implements BorrowFirstClient {
      * @param borrowFireRequest
      */
     @Override
-    public void updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
+    public boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_first/update_ontime_record";
-        restTemplate.postForEntity(url, borrowFireRequest, String.class);
+        BorrowFirstCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getFlag();
+        }
+        return false;
     }
 
     /**
@@ -123,8 +144,13 @@ public class BorrowFirstClientImpl implements BorrowFirstClient {
      * @param borrowFireRequest
      */
     @Override
-    public void sendToMQ(BorrowFireRequest borrowFireRequest) {
+    public boolean sendToMQ(BorrowFireRequest borrowFireRequest) {
         String url = "http://AM-TRADE/am-trade/borrow_first/send_to_mq";
-        restTemplate.postForEntity(url, borrowFireRequest, String.class);
+        BorrowFirstCustomizeResponse response =
+                restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
+        if(response != null){
+            return response.getFlag();
+        }
+        return false;
     }
 }

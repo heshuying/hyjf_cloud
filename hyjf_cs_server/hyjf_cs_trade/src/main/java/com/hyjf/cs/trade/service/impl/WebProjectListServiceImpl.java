@@ -3,17 +3,19 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.UserCouponConfigCustomizeVo;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -25,9 +27,11 @@ import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
+import com.hyjf.cs.trade.bean.PlanDetailBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.WebProjectListService;
@@ -56,6 +60,8 @@ import java.util.Map;
 public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements WebProjectListService {
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
+
+    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistics/search/getTotalInvestAndInterestEntity";
 
     @Autowired
     private WebProjectListClient webProjectListClient;
@@ -101,6 +107,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     @Autowired
     private HjhAccedeClient hjhAccedeClient;
+
+    @Autowired
+    private BaseClient baseClient;
 
 
     /**
@@ -186,7 +195,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
-        if (detailCsVO.getIsNew() == 0 || detailCsVO.getType().equals("13")) {
+        if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
             // TODO: 2018/6/23  getProjectDetail(modelAndView, detailCsVO,userId);     待确认是否还有老标后再处理
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
@@ -300,7 +309,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         /**
          * 融通宝收益叠加
          */
-        if (borrow.getType().equals("13")) {
+        if ("13".equals(borrow.getType())) {
             borrowApr = borrowApr.add(new BigDecimal(borrow.getBorrowExtraYield()));
         }
 
@@ -344,7 +353,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         borrow.setBorrowInterest(borrowInterest.toString());
 
         // TODO: 2018/6/25 汇资产项目后期处理
-        if (borrow.getType().equals("9")) {// 如果项目为汇资产项目
+        if ("9".equals(borrow.getType())) {// 如果项目为汇资产项目
 //            // 添加相应的项目详情信息
 //            other.put("projectDeatil", borrow);
 //            // 4查询相应的汇资产的首页信息
@@ -616,11 +625,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 项目为非汇资产项目
             else {
                 // 4查询非汇资产项目的项目信息
-                if (comOrPer.equals("1")) {
+                if ("1".equals(comOrPer)) {
                     // 查询相应的企业项目详情
                     ProjectCompanyDetailVO borrowInfo = borrowUserClient.searchProjectCompanyDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
-                } else if (comOrPer.equals("2")) {
+                } else if ("2".equals(comOrPer)) {
                     // 查询相应的汇直投个人项目详情
                     WebProjectPersonDetailVO borrowInfo = borrowUserClient.searchProjectPersonDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
@@ -803,10 +812,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchPlanData(ProjectListRequest request) {
-        Map<String, Object> map = webProjectListClient.searchPlanData(request);
-        if (map == null) {
-            logger.error("web查询原子层计划专区上部统计数据异常");
-            throw new RuntimeException("web查询原子层计划专区上部统计数据异常");
+        TotalInvestAndInterestResponse response = baseClient.getExe(INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();
+        Map<String, Object> map = new HashMap<>();
+        if(totalInvestAndInterestVO != null){
+            map.put(ProjectConstant.HJH_DATA_ACCEDE_ACCOUNT_TOTAL, CommonUtils.formatAmount(totalInvestAndInterestVO.getHjhTotalInvestAmount()));
+            map.put(ProjectConstant.HJH_DATA_INTEREST_TOTAL, CommonUtils.formatAmount(totalInvestAndInterestVO.getHjhTotalInterestAmount()));
+            map.put(ProjectConstant.HJH_DATA_ACCEDE_TIMES, totalInvestAndInterestVO.getHjhTotalInvestNum());
         }
         WebResult webResult = new WebResult();
         webResult.setData(map);
@@ -832,21 +844,20 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             logger.error("web查询原子层计划专区计划列表数据count异常");
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
-        // 上部统计数据
+      /*  // 上部统计数据
         Map<String, Object> map = webProjectListClient.searchPlanData(request);
         if (map == null) {
             logger.error("web查询原子层计划专区统计数据异常");
             throw new RuntimeException("web查询原子层计划专区统计数据异常");
-        }
+        }*/
         if (count > 0) {
-            List<WebProjectListCustomizeVO> list = webProjectListClient.searchPlanList(request);
+            List<HjhPlanCustomizeVO> list = webProjectListClient.searchPlanList(request);
             if (CollectionUtils.isEmpty(list)){
                 logger.error("web查询原子层计划专区计划列表数据异常");
                 throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
             }
             result.put(ProjectConstant.WEB_PLAN_LIST,list);
         }
-        result.put(ProjectConstant.WEB_PLAN_TOTAL_DATA,map);
         webResult.setData(result);
         page.setTotal(count);
         webResult.setPage(page);
@@ -875,7 +886,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.put("joinPeopleNum", String.valueOf(joinPeopleNum));
 
         // 根据项目标号获取相应的计划信息
-        PlanDetailCustomizeVO planDetail = hjhAccedeClient.getPlanDetail(planNid);
+        PlanDetailCustomizeVO planDetail = webProjectListClient.getPlanDetail(planNid);
 
         // 线上异常处理 如果为空的话直接返回
         if(planDetail==null){
@@ -962,7 +973,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             /** 汇添金优惠券使用结束 pcc */
 
             // 计划详情头部(结束)
-            result.put("planDetail", planDetail);
+
+            PlanDetailBean detailBean = CommonUtils.convertBean(planDetail,PlanDetailBean.class);
+            result.put("planDetail", detailBean);
             // 获取计划介绍
             String planIntroduce = planDetail.getPlanConcept();
             if (Validator.isNotNull(planIntroduce)) {

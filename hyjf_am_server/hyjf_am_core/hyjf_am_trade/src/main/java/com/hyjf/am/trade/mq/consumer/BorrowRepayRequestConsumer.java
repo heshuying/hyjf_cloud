@@ -5,7 +5,6 @@ package com.hyjf.am.trade.mq.consumer;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -47,20 +46,40 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @author dxj
  * @version BorrowRepayRequestConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-@Component
+//@Component
 public class BorrowRepayRequestConsumer extends Consumer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayRequestConsumer.class);
 
+
+    @Autowired
+    BatchBorrowRepayPlanService batchBorrowRepayPlanService;
+    
+    @Autowired
+    BatchBorrowRepayZTService batchBorrowRepayZTService;
+
+    @Autowired
+    SystemConfig systemConfig;
+    
+	@Autowired
+	private MailProducer mailProducer;
+
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
+//		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
 		// 订阅指定MyTopic下tags等于MyTag
 		defaultMQPushConsumer.subscribe(MQConstant.BORROW_REPAY_REQUEST_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
-		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+		
+		// 设置并发数
+		defaultMQPushConsumer.setConsumeThreadMin(1);
+		defaultMQPushConsumer.setConsumeThreadMax(1);
+		defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
+		defaultMQPushConsumer.setConsumeTimeout(15);
+		
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
@@ -70,19 +89,6 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	}
 
 	public class MessageListener implements MessageListenerConcurrently {
-
-
-	    @Autowired
-	    BatchBorrowRepayPlanService batchBorrowRepayPlanService;
-	    
-	    @Autowired
-	    BatchBorrowRepayZTService batchBorrowRepayZTService;
-
-	    @Autowired
-	    SystemConfig systemConfig;
-	    
-		@Autowired
-		private MailProducer mailProducer;
 		
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
@@ -135,16 +141,16 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        	Map map = null;
 	        	// 全部发送还款请求
 	        	if (StringUtils.isNotBlank(planNid)) {//计划还款请求
-	        		map = this.batchBorrowRepayPlanService.requestRepay(borrowApicron);
+	        		map = batchBorrowRepayPlanService.requestRepay(borrowApicron);
 				}else{//直投还款请求
-					map = this.batchBorrowRepayZTService.requestRepay(borrowApicron);
+					map = batchBorrowRepayZTService.requestRepay(borrowApicron);
 				}
 	        	boolean requestLoanFlag = (boolean) map.get("result");
 	        	delFlag = (boolean) map.get("delFlag");
 	        	if (!requestLoanFlag) {
 	        		try {
 	        			// 更新任务API状态
-	            		this.batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_SEND_FAIL);
+	            		batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_SEND_FAIL);
 					} catch (Exception e) {
 						delFlag = true;
 						throw new Exception("-------------" + borrowNid + "--本金还款请求完成,变更请求失败异常!-----------");
@@ -176,10 +182,10 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        		toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com","zhangjinpeng@hyjf.com" };
 	        	}
 	        	MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
-	        			MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+	        			MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 
 				try {
-					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(mailMessage)));
 				} catch (MQException e2) {
 					logger.error("发送邮件失败..", e2);
 				}
@@ -216,7 +222,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	    	String borrowNid = borrowApicron.getBorrowNid();
 	    	logger.info("------------------------标的号:" + borrowNid + "开始处理还款请求异常-------------");
 	    	try {
-	    		boolean apicronResultFlag = this.batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
+	    		boolean apicronResultFlag = batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
 	    		if (apicronResultFlag) {
 	    			logger.info("------------------------标的号:" + borrowNid + "处理还款请求异常成功,还款请求结果为成功!-------------");
 	    			return true;
@@ -242,7 +248,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 			logger.info("-----------------标的号:" + borrowNid + "开始校验是否存在请求异常的情况,批次号:" + batchNo + "-------------------------");
 			try {
 				if (StringUtils.isNotBlank(batchNo)) {
-					BankCallBean batchResult = this.batchBorrowRepayZTService.batchQuery(borrowApicron);
+					BankCallBean batchResult = batchBorrowRepayZTService.batchQuery(borrowApicron);
 					if (Validator.isNull(batchResult)) {
 						throw new Exception("还款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
 					}

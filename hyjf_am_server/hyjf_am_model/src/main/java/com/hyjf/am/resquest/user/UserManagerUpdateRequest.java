@@ -26,6 +26,9 @@ public class UserManagerUpdateRequest extends BaseVO{
     public String status;
     /** 借款人类型*/
     public Integer borrowerType;
+    //当前登陆用户信息
+    private String logingUserId;
+    private String loginUserName;
 
     public String getUserId() {
         return userId;
@@ -89,5 +92,21 @@ public class UserManagerUpdateRequest extends BaseVO{
 
     public void setBorrowerType(Integer borrowerType) {
         this.borrowerType = borrowerType;
+    }
+
+    public String getLogingUserId() {
+        return logingUserId;
+    }
+
+    public void setLogingUserId(String logingUserId) {
+        this.logingUserId = logingUserId;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
+    }
+
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
     }
 }

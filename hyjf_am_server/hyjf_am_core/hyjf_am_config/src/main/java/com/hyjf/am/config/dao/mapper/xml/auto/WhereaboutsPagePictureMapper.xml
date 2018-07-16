@@ -9,11 +9,11 @@
     <result column="picture_url" property="pictureUrl" jdbcType="VARCHAR" />
     <result column="sort" property="sort" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
     <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -120,8 +120,8 @@
       create_time, update_time)
     values (#{pictureName,jdbcType=VARCHAR}, #{pictureType,jdbcType=INTEGER}, #{whereaboutsId,jdbcType=INTEGER}, 
       #{pictureUrl,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=BIT}, #{createUserId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER})
+      #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.WhereaboutsPagePicture" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -183,7 +183,7 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        #{delFlag,jdbcType=BIT},
+        #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         #{createUserId,jdbcType=VARCHAR},
@@ -192,10 +192,10 @@
         #{updateUserId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -230,7 +230,7 @@
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.delFlag != null" >
-        del_flag = #{record.delFlag,jdbcType=BIT},
+        del_flag = #{record.delFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createUserId != null" >
         create_user_id = #{record.createUserId,jdbcType=VARCHAR},
@@ -239,10 +239,10 @@
         update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=INTEGER},
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=INTEGER},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -258,11 +258,11 @@
       picture_url = #{record.pictureUrl,jdbcType=VARCHAR},
       sort = #{record.sort,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
-      del_flag = #{record.delFlag,jdbcType=BIT},
+      del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=VARCHAR},
       update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=INTEGER},
-      update_time = #{record.updateTime,jdbcType=INTEGER}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -289,7 +289,7 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=BIT},
+        del_flag = #{delFlag,jdbcType=TINYINT},
       </if>
       <if test="createUserId != null" >
         create_user_id = #{createUserId,jdbcType=VARCHAR},
@@ -298,10 +298,10 @@
         update_user_id = #{updateUserId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -314,11 +314,11 @@
       picture_url = #{pictureUrl,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=BIT},
+      del_flag = #{delFlag,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       update_user_id = #{updateUserId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

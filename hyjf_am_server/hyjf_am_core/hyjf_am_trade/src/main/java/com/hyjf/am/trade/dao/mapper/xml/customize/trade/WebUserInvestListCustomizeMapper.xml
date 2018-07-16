@@ -827,53 +827,49 @@ UNION
 	<select id="selectUserInvestList" resultMap="UserInvestListMap" parameterType="Map">
 		SELECT
 			hydat.id,
-			hydui.truename AS real_name,
+			hydu.truename AS real_name,
 			hydu.username,
-			hydat.recover_account_interest, 
-			hydui.idcard,
-			
+			hydat.recover_account_interest,
 			SUBSTRING(FORMAT(hydat.account,4),1,LENGTH(FORMAT(hydat.account,4))-2) AS account,
-			
 			CASE
 				WHEN hydb.borrow_style = 'endday' THEN
-					CONCAT(hydb.borrow_period, '天')
+				CONCAT(hydb.borrow_period, '天')
 				ELSE
-					CONCAT(
-						hydb.borrow_period,
-						'个月'
-					)
-				END AS invest_period,
-		 hydb.borrow_apr AS interest,
-		 FROM_UNIXTIME(
+				CONCAT(
+				hydb.borrow_period,
+				'个月'
+				)
+			END AS invest_period,
+			hydb.borrow_apr AS interest,
+			FROM_UNIXTIME(
 			hydb.verify_time,
 			'%Y-%m-%d %H:%i:%s'
-		) AS invest_start_time,
-		 FROM_UNIXTIME(
+			) AS invest_start_time,
+			FROM_UNIXTIME(
 			hydb.repay_last_time,
 			'%Y-%m-%d %H:%i:%s'
-		) AS invest_end_time,
-		 FROM_UNIXTIME(
+			) AS invest_end_time,
+			FROM_UNIXTIME(
 			hydb.verify_time,
 			'%Y-%m-%d'
-		) AS invest_start_day,
-		 FROM_UNIXTIME(
+			) AS invest_start_day,
+			FROM_UNIXTIME(
 			hydb.repay_last_time,
 			'%Y-%m-%d'
-		) AS invest_end_day,
-		 hydbs.nid AS method_nid,
-		 hydbs.`name` AS repay_method,
-		 hydat.recover_account_all AS total,
-		 hydat.nid,
-		 hydat.user_id
+			) AS invest_end_day,
+			hydbs.nid AS method_nid,
+			hydbs.`name` AS repay_method,
+			hydat.recover_account_all AS total,
+			hydat.nid,
+			hydat.user_id
 		FROM
-			huiyingdai_borrow_tender hydat
-		INNER JOIN huiyingdai_borrow hydb ON hydb.borrow_nid = hydat.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		INNER JOIN huiyingdai_users_info hydui ON hydui.user_id = hydat.user_id
-		INNER JOIN huiyingdai_users hydu ON hydu.user_id = hydat.user_id
+			ht_borrow_tender hydat
+		INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hydat.borrow_nid
+		INNER JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		INNER JOIN ht_r_user hydu ON hydu.user_id = hydat.user_id
 		<include refid="Where_Clause_User_Invest_List" />
 		<if test="limitStart != null and limitEnd !=null" >
-	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>
 	</select>
 
@@ -1159,7 +1155,7 @@ UNION
 			hydbrp.late_interest,
 			hydbrp.delay_interest
 		FROM
-			huiyingdai_borrow_recover_plan hydbrp
+			ht_borrow_recover_plan hydbrp
 		<include refid="Where_Clause_Project_Repay_Plan_List" />
 		ORDER BY hydbrp.recover_period ASC
 	</select>
@@ -1194,7 +1190,7 @@ UNION
 		SELECT
 			COUNT(hydbrp.id)
 		FROM
-			huiyingdai_borrow_recover_plan hydbrp
+			ht_borrow_recover_plan hydbrp
 		<include refid="Where_Clause_Project_Repay_Plan_List" />
 	</select>
 	

@@ -82,24 +82,6 @@ public class AdminUserAuthListRequest extends BasePage {
 	private String investEndTimeEnd;
 
 	/**
-	 * 翻页机能用的隐藏变量
-	 */
-	private int paginatorPage = 1;
-
-
-
-	public int getPaginatorPage() {
-		if (paginatorPage == 0) {
-			paginatorPage = 1;
-		}
-		return paginatorPage;
-	}
-
-	public void setPaginatorPage(int paginatorPage) {
-		this.paginatorPage = paginatorPage;
-	}
-
-	/**
 	 * userId
 	 *
 	 * @return the userId

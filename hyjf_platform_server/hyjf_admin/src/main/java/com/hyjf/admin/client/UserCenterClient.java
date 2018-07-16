@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -22,7 +23,7 @@ public interface UserCenterClient {
      * @param request
      * @return
      */
-    List<UserManagerVO> selectUserMemberList(UserManagerRequest request);
+    UserManagerResponse selectUserMemberList(UserManagerRequest request);
 
     /**
      * 根据机构编号获取机构列表
@@ -264,4 +265,17 @@ public interface UserCenterClient {
     UserVO selectUserByRecommendName(String recommendName);
 
     SpreadsUserVO selectSpreadsUsersByUserId(String userId);
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    int updateUserRecommend(AdminUserRecommendRequest request);
+
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    int updateUserIdCard(AdminUserRecommendRequest request);
 }

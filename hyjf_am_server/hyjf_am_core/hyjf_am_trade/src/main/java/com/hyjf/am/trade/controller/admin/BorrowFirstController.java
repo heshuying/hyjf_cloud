@@ -36,8 +36,11 @@ public class BorrowFirstController {
      * @return
      */
     @RequestMapping("/count_borrow_first")
-    public Integer countBorrowFirst(@RequestBody @Valid BorrowFirstRequest borrowFirstRequest) {
-        return borrowFirstService.countBorrowFirst(borrowFirstRequest);
+    public BorrowFirstCustomizeResponse countBorrowFirst(@RequestBody @Valid BorrowFirstRequest borrowFirstRequest) {
+        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
+        int count = borrowFirstService.countBorrowFirst(borrowFirstRequest);
+        response.setTotal(count);
+        return response;
     }
 
     /**
@@ -62,8 +65,11 @@ public class BorrowFirstController {
      * @return
      */
     @RequestMapping("/sum_borrow_first_account")
-    public String sumBorrowFirstAccount(@RequestBody @Valid BorrowFirstRequest borrowFirstRequest) {
-        return borrowFirstService.getSumBorrowFirstAccount(borrowFirstRequest);
+    public BorrowFirstCustomizeResponse sumBorrowFirstAccount(@RequestBody @Valid BorrowFirstRequest borrowFirstRequest) {
+        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
+        String sumAccount = borrowFirstService.getSumBorrowFirstAccount(borrowFirstRequest);
+        response.setSumAccount(sumAccount);
+        return response;
     }
 
     /**
@@ -72,8 +78,11 @@ public class BorrowFirstController {
      * @return
      */
     @RequestMapping("/insert_borrow_bail/{borrowNid}/{currUserId}")
-    public boolean insertBorrowBail(@PathVariable String borrowNid, @PathVariable String currUserId) {
-        return borrowFirstService.insertBorrowBail(borrowNid, currUserId);
+    public BorrowFirstCustomizeResponse insertBorrowBail(@PathVariable String borrowNid, @PathVariable String currUserId) {
+        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
+        boolean flag = borrowFirstService.insertBorrowBail(borrowNid, currUserId);
+        response.setFlag(flag);
+        return response;
     }
 
     /**
@@ -82,8 +91,11 @@ public class BorrowFirstController {
      * @param borrowFireRequest
      */
     @RequestMapping("/update_ontime_record")
-    public void updateOntimeRecord(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
-        borrowFirstService.updateOntimeRecord(borrowFireRequest);
+    public BorrowFirstCustomizeResponse updateOntimeRecord(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
+        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
+        boolean flag = borrowFirstService.updateOntimeRecord(borrowFireRequest);
+        response.setFlag(flag);
+        return response;
     }
 
     /**
@@ -92,7 +104,10 @@ public class BorrowFirstController {
      * @param borrowFireRequest
      */
     @RequestMapping("/send_to_mq")
-    public void sendToMQ(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
-        borrowFirstService.sendToMQ(borrowFireRequest);
+    public BorrowFirstCustomizeResponse sendToMQ(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
+        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
+        boolean flag = borrowFirstService.sendToMQ(borrowFireRequest);
+        response.setFlag(flag);
+        return response;
     }
 }

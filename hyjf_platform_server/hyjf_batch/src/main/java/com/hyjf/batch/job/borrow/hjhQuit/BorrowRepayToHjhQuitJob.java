@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
  * @author PC-LIUSHOUYI
  * @version BorrowRepayToHjhQuitJob, v0.1 2018/6/25 9:31
  */
-@DisallowConcurrentExecution  // 禁止并发执行
+/** 禁止并发执行 */
+@DisallowConcurrentExecution
 public class BorrowRepayToHjhQuitJob extends BaseJob implements Job {
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

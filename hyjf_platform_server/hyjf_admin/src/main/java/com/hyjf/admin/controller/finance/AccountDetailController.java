@@ -143,7 +143,7 @@ public class AccountDetailController extends BaseController {
     public JSONObject accountdetailDataRepair(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         JSONObject jsonObject = null;
         String strRepayDate = "";
-        // 查询出20170120还款后,交易明细有问题的用户ID
+        // 查询出还款后,交易明细有问题的用户ID
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
             List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList = adminAccountDetailDataRepairResponse.getResultList();
@@ -378,7 +378,7 @@ public class AccountDetailController extends BaseController {
                         }
                         // 资金托管平台
                         else if (celLength == 6) {
-                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getIsBank()) ? "" : accountDetailCustomize.getIsBank().equals("1") ? "江西银行" : "汇付天下");
+                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getIsBank()) ? "" : "1".equals(accountDetailCustomize.getIsBank()) ? "江西银行" : "汇付天下");
                         }
                         // 流水号
                         else if (celLength == 7) {
@@ -430,11 +430,11 @@ public class AccountDetailController extends BaseController {
                         }
                         // 交易状态
                         else if (celLength == 19) {
-                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getTradeStatus()) ? "" : accountDetailCustomize.getTradeStatus().equals("0") ? "失败" : "成功" + "");
+                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getTradeStatus()) ? "" : "0".equals(accountDetailCustomize.getTradeStatus()) ? "失败" : "成功" + "");
                         }
                         // 对账状态
                         else if (celLength == 20) {
-                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getCheckStatus()) ? "" : accountDetailCustomize.getCheckStatus().equals("0") ? "未对账" : "已对账" + "");
+                            cell.setCellValue(StringUtils.isEmpty(accountDetailCustomize.getCheckStatus()) ? "" : "0".equals(accountDetailCustomize.getCheckStatus()) ? "未对账" : "已对账" + "");
                         }
                         // 备注说明
                         else if (celLength == 21) {

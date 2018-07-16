@@ -1,50 +1,15 @@
 package com.hyjf.cs.trade.handle;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BorrowCreditRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
-import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
-import com.hyjf.am.resquest.trade.TenderAgreementRequest;
+import com.hyjf.am.bean.fdd.FddDessenesitizationBean;
+import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.FddTempletVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -65,27 +30,29 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.CreditAssignedBean;
-import com.hyjf.cs.trade.bean.fdd.FddDessenesitizationBean;
-import com.hyjf.cs.trade.bean.fdd.FddGenerateContractBean;
-import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.AssetManageClient;
-import com.hyjf.cs.trade.client.BankCreditTenderClient;
-import com.hyjf.cs.trade.client.BorrowCreditClient;
-import com.hyjf.cs.trade.client.BorrowManinfoClient;
-import com.hyjf.cs.trade.client.BorrowRecoverClient;
-import com.hyjf.cs.trade.client.BorrowTenderClient;
-import com.hyjf.cs.trade.client.BorrowUserClient;
-import com.hyjf.cs.trade.client.HjhAccedeClient;
-import com.hyjf.cs.trade.client.HjhDebtCreditClient;
-import com.hyjf.cs.trade.client.HjhDebtCreditTenderClient;
-import com.hyjf.cs.trade.client.TenderAgreementClient;
+import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.FddProducer;
 import com.hyjf.cs.trade.mq.producer.MailProducer;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * 法大大 handle
@@ -130,23 +97,8 @@ public class FddHandle {
 	private TenderAgreementClient tenderAgreementClient;
 	@Autowired
 	private BorrowRecoverClient borrowRecoverClient;
-
-	@Value("${hyjf.pay.fdd.nofify.url}")
-	private String HYJF_PAY_FDD_NOTIFY_URL;
-	@Value("${hyjf.fdd.customerid}")
-	private String FDD_HYJF_CUSTOMERID;
-	@Value("${hyjf.ftp.ip}")
-	private String HYJF_FTP_IP;
-	@Value("${hyjf.ftp.port}")
-	private String HYJF_FTP_PORT;
-	@Value("${hyjf.ftp.basepath.img}")
-	private String HYJF_FTP_BASEPATH_IMG;
-	@Value("${hyjf.ftp.basepath.pdf}")
-	private String HYJF_FTP_BASEPATH_PDF;
-	@Value("${hyjf.ftp.username}")
-	private String HYJF_FTP_USERNAME;
-	@Value("${hyjf.ftp.password}")
-	private String HYJF_FTP_PASSWORD;
+	@Autowired
+	private SystemConfig systemConfig;
 
 	@Autowired
 	private FddProducer fddProducer;
@@ -406,7 +358,7 @@ public class FddHandle {
 			customerId = authority.getCustomerId();
 		}
 
-		String payurl = HYJF_PAY_FDD_NOTIFY_URL;
+		String payurl = systemConfig.getHyjfPayFddNotifyUrl();
 		String notifyUrl = payurl + DzqzConstant.REQUEST_MAPPING_CALLAPI_SIGNNODIFY + "?transType=" + transType;
 		// 投资人签署
 		DzqzCallBean callBean = new DzqzCallBean();
@@ -445,7 +397,7 @@ public class FddHandle {
 				DzqzCallUtil.callApiBg(callBean);
 			} else {
 				// 接入平台签署
-				String platFromCustomerId = FDD_HYJF_CUSTOMERID;
+				String platFromCustomerId = systemConfig.getHyjfFddCustomerid();
 				callBean.setCustomer_id(platFromCustomerId);
 				callBean.setClient_role("1");
 				if (FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType) {
@@ -1415,7 +1367,7 @@ public class FddHandle {
 
 
 		//平台客户编号
-		String platFromCustomerId = FDD_HYJF_CUSTOMERID;
+		String platFromCustomerId =systemConfig.getHyjfFddCustomerid();
 
 		//查询投资人/承接人是否为企业用户
 		boolean isTenderCompany = false;
@@ -1816,19 +1768,19 @@ public class FddHandle {
 	private File createFaddPDFImgFile(TenderAgreementVO tenderAgreement, String savePath) {
 
 		SFTPParameter para = new SFTPParameter() ;
-		String ftpIP = HYJF_FTP_IP;
-		String port = HYJF_FTP_PORT;
-		String basePathImage = HYJF_FTP_BASEPATH_IMG;
-		String basePathPdf = HYJF_FTP_BASEPATH_PDF;
-		String password = HYJF_FTP_PASSWORD;
-		String username = HYJF_FTP_USERNAME;
+		String ftpIP = systemConfig.getHyjfFtpIp();
+		String port = systemConfig.getHyjfFtpPort();
+		String basePathImage = systemConfig.getHyjfFtpBasepathImg();
+		String basePathPdf = systemConfig.getHyjfFtpBasepathPdf();
+		String password = systemConfig.getHyjfFtpPassword();
+		String username = systemConfig.getHyjfFtpUsername();
 		para.hostName = ftpIP;//ftp服务器地址
 		para.userName = username;//ftp服务器用户名
 		para.passWord = password;//ftp服务器密码
 		para.port = Integer.valueOf(port);//ftp服务器端口
 		para.downloadPath =basePathImage;//ftp服务器文件目录
 		para.savePath = savePath;
-		para.fileName=tenderAgreement.getTenderNid();
+		para.fileName = tenderAgreement.getTenderNid();
 		String imgUrl = tenderAgreement.getImgUrl();
 		String pdfUrl = tenderAgreement.getPdfUrl();
 		if(StringUtils.isNotBlank(pdfUrl)){
@@ -2120,27 +2072,29 @@ public class FddHandle {
 	 */
 	private boolean uplodTmImage(String upParentDir, String saveDir, int type) {
 
+		boolean ret = true;
 
-		String ftpIP = HYJF_FTP_IP;
-		String port = HYJF_FTP_PORT;
-		String basePathImage = HYJF_FTP_BASEPATH_IMG;
+		String ftpIP = systemConfig.getHyjfFtpIp();
+		String port = systemConfig.getHyjfFtpPort();
+		String basePathImage = systemConfig.getHyjfFtpBasepathImg();
 		if(type == 0){//上传pdf
-			basePathImage = HYJF_FTP_BASEPATH_PDF;
+			basePathImage = systemConfig.getHyjfFtpBasepathPdf();
 		}
-		String password = HYJF_FTP_PASSWORD;
-		String username = HYJF_FTP_USERNAME;
+		String password = systemConfig.getHyjfFtpPassword();
+		String username = systemConfig.getHyjfFtpUsername();
+		FileInputStream in = null;
 		try {
 			logger.info("----------待上传目录：" + upParentDir);
-			File paraentDir = new File(upParentDir);
-			String upParaFile = paraentDir.getParent();
-			if(paraentDir.isDirectory()){
+			File parentDir = new File(upParentDir);
+			String upParaFile = parentDir.getParent();
+			if(parentDir.isDirectory()){
 
 				logger.info("----------待删除目录：" + upParaFile);
-				File[] files = paraentDir.listFiles();
+				File[] files = parentDir.listFiles();
 				for (File file : files) {
 					String fileName = file.getName();
 					logger.info("--------循环目录，开始上传文件：" + fileName);
-					FileInputStream in = new FileInputStream(file);
+					in = new FileInputStream(file);
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, in);
 					if (!flag){
@@ -2148,9 +2102,9 @@ public class FddHandle {
 					}
 				}
 			}else{
-				String fileName = paraentDir.getName();
+				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
-				FileInputStream in = new FileInputStream(paraentDir);
+				in = new FileInputStream(parentDir);
 				boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 						basePathImage, saveDir, fileName, in);
 				if (!flag){
@@ -2165,9 +2119,17 @@ public class FddHandle {
 		}catch (Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());
-			return false;
+			ret = false;
+		}finally {
+			try {
+			    if (Validator.isNotNull(in)){
+                    in.close();
+                }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return  true;
+		return ret;
 
 	}
 }

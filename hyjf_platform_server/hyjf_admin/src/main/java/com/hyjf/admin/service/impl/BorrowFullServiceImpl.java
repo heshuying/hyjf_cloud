@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.response.BorrowFullInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFullResponseBean;
 import com.hyjf.admin.client.BorrowFirstClient;
@@ -136,15 +136,22 @@ public class BorrowFullServiceImpl implements BorrowFullService {
     }
 
     private String checkItems(BorrowFullRequest borrowFullRequest) {
-        //todo wangjun 暂时没有共同方法
         //标的编号
-//        if(StringUtils.isBlank(borrowFullRequest.getBorrowNidSrch())){
-//            return "标的编号！";
-//        }
-//        // 审核备注
-//        if(StringUtils.isBlank(borrowFullRequest.getReverifyRemark())){
-//            return "复审备注为空！";
-//        }
+        if(StringUtils.isBlank(borrowFullRequest.getBorrowNidSrch())){
+            return "标的编号！";
+        }
+        // 审核备注
+        if(StringUtils.isBlank(borrowFullRequest.getReverifyRemark())){
+            return "复审备注为空！";
+        }
+
+        //标的信息、状态
+        BorrowVO borrow = borrowFirstClient.selectBorrowByNid(borrowFullRequest.getBorrowNidSrch());
+        if(borrow == null){
+            return "标的信息不存在！";
+        } else if(borrow.getStatus() == 16) {
+            return "标的状态不正确！";
+        }
         return OK;
     }
 

@@ -56,11 +56,12 @@ public class UserManagerController extends BaseController{
         logger.info("---findUserslist by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
         String returnCode = Response.FAIL;
+        String returnMsg = Response.FAIL_MSG;
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = userManagerService.countUserRecord(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
-        if(request.getLimit()==0){
-            paginator = new Paginator(request.getPaginatorPage(), usesrCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
+        if(request.getPageSize()==0){
+            paginator = new Paginator(request.getCurrPage(), usesrCount);
         }
         List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(usesrCount>0){
@@ -69,10 +70,12 @@ public class UserManagerController extends BaseController{
                 response.setResultList(userVoList);
                 response.setCount(usesrCount);
                 returnCode = Response.SUCCESS;
+                returnMsg = Response.SUCCESS_MSG;
 
             }
         }
-        response.setRtn(returnCode);//代表成功
+        response.setRtn(returnCode);
+        response.setMessage(returnMsg);
         return response;
     }
 
@@ -381,6 +384,24 @@ public class UserManagerController extends BaseController{
     }
 
     /**
+     *根据用户名获取开户信息
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @RequestMapping("/get_openaccount_byusername/{userName}")
+    public BankOpenAccountResponse queryBankOpenAccountByUserName(@PathVariable String userName) {
+        BankOpenAccountResponse response = new BankOpenAccountResponse();
+        BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+        BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserName(userName);
+        if (null != bankOpenAccount) {
+            BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+            response.setResult(bankOpenAccountVO);
+            response.setRtn(Response.SUCCESS);//代表成功
+        }
+        return response;
+    }
+
+    /**
      * 更新开户信息
      *
      * @param request
@@ -580,4 +601,22 @@ public class UserManagerController extends BaseController{
         return bankCardResponse;
     }
 
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserRecommend")
+    public int updateUserRecommend(@RequestBody AdminUserRecommendRequest request){
+        return userManagerService.updateUserRe(request);
+    }
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserIdCard")
+    public int updateUserIdCard(@RequestBody AdminUserRecommendRequest request){
+        return userManagerService.updateUserIdCard(request);
+    }
 }

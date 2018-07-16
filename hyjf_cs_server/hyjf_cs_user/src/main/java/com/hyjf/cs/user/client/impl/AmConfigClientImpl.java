@@ -140,4 +140,11 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+    @Override
+    public String getBankRetMsg(String retCode) {
+        String retMsg = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/adminException/getBankRetMsg/" + retCode, String.class).getBody();
+        return retMsg;
+    }
 }

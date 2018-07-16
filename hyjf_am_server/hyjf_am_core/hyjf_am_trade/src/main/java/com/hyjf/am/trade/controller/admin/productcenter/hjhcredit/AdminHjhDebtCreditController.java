@@ -59,6 +59,10 @@ public class AdminHjhDebtCreditController extends BaseController{
         int limitStart = paginator.getOffset();
         int limitEnd = paginator.getLimit();
 
+        if(request.getCurrPage() == -1){
+            limitStart = -1;
+            limitEnd = -1;
+        }
         Map map = ConvertUtils.convertObjectToMap(request);
         List<AdminHjhDebtCreditCustomize> list =  adminHjhDebtCreditService.getList(map,limitStart,limitEnd);
         List<HjhDebtCreditVo> voList = null;

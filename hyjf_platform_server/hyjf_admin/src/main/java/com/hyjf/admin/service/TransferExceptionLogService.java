@@ -1,8 +1,14 @@
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.util.List;
 
@@ -18,7 +24,7 @@ public interface TransferExceptionLogService extends BaseAdminService{
      * @author jijun
      * @return
      */
-	public List<AdminTransferExceptionLogCustomizeVO> getRecordList(AdminTransferExceptionLogRequest request);
+	AdminTransferExceptionLogResponse getRecordList(AdminTransferExceptionLogRequest request);
 
 	/**
 	 * 获取转账异常记录数
@@ -48,4 +54,57 @@ public interface TransferExceptionLogService extends BaseAdminService{
 	 * @return
 	 */
 	TransferExceptionLogVO getRecordByUUID(String uuid);
+
+	/**
+	 * 转账成功后续处理
+	 * @return
+	 */
+	boolean transferAfter(JSONObject jsonObject);
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+    UserInfoCustomizeVO queryUserInfoByUserId(Integer userId);
+
+    /**
+     * 获取优惠券还款记录
+     * jijun 20180711
+     */
+	public CouponRecoverVO getCouponRecover(Integer recoverId);
+
+	/**
+	 * 取得优惠券投资信息
+	 * @param tenderId
+	 * @return
+	 */
+    BorrowTenderCpnVO getCouponTenderInfoByNid(String tenderId);
+
+	/**
+	 * 获取userInfo
+	 * @param userId
+	 * @return
+	 */
+	UserInfoVO getUserInfoByUserId(Integer userId);
+
+	/**
+	 * 查找用户的推荐人
+	 * @param userId
+	 * @return
+	 */
+	SpreadsUserVO getSpreadsUserByUserId(Integer userId);
+
+	/**
+	 * 获取员工信息
+	 * @param userId
+	 * @return
+	 */
+	EmployeeCustomizeVO selectEmployeeByUserId(Integer userId);
+
+	/**
+	 * 获取user
+	 * @return
+	 */
+    UserVO getUserByUserId(Integer userId);
 }

@@ -1,70 +1,12 @@
 package com.hyjf.am.user.service.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecordExample;
-import com.hyjf.am.user.dao.model.auto.Evalation;
-import com.hyjf.am.user.dao.model.auto.EvalationExample;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthExample;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
-import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
-import com.hyjf.am.user.dao.model.auto.PreRegist;
-import com.hyjf.am.user.dao.model.auto.PreRegistExample;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserBindEmailLog;
-import com.hyjf.am.user.dao.model.auto.UserBindEmailLogExample;
-import com.hyjf.am.user.dao.model.auto.UserContact;
-import com.hyjf.am.user.dao.model.auto.UserEvalation;
-import com.hyjf.am.user.dao.model.auto.UserEvalationBehavior;
-import com.hyjf.am.user.dao.model.auto.UserEvalationExample;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserLog;
-import com.hyjf.am.user.dao.model.auto.UserLoginLog;
-import com.hyjf.am.user.dao.model.auto.UserLoginLogExample;
-import com.hyjf.am.user.dao.model.auto.UtmPlat;
-import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.dao.model.auto.UtmRegExample;
-import com.hyjf.am.user.dao.model.auto.VipUserTender;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.AccountProducer;
 import com.hyjf.am.user.service.UserService;
@@ -80,6 +22,19 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -740,17 +695,17 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			String paymentAuth = bean.getPaymentAuth();
 			//还款授权
 			String repayAuth = bean.getRepayAuth();
-			if(org.apache.commons.lang3.StringUtils.isNotBlank(autoBidStatus)){
+			if(StringUtils.isNotBlank(autoBidStatus)){
 				hjhUserAuth.setAutoInvesStatus(Integer.parseInt(autoBidStatus));
 			}
-			if(org.apache.commons.lang3.StringUtils.isNotBlank(autoTransfer)){
+			if(StringUtils.isNotBlank(autoTransfer)){
 				hjhUserAuth.setAutoCreditStatus(Integer.parseInt(autoTransfer));
 			}
-			if(org.apache.commons.lang3.StringUtils.isNotBlank(paymentAuth)){
+			if(StringUtils.isNotBlank(paymentAuth)){
 				hjhUserAuth.setAutoPaymentStatus(Integer.parseInt(paymentAuth));
 				hjhUserAuth.setAutoPaymentEndTime(bean.getPaymentDeadline());
 			}
-			if(org.apache.commons.lang3.StringUtils.isNotBlank(repayAuth)){
+			if(StringUtils.isNotBlank(repayAuth)){
 				hjhUserAuth.setAutoRepayStatus(Integer.parseInt(repayAuth));
 				hjhUserAuth.setAutoRepayEndTime(bean.getRepayDeadline());
 			}

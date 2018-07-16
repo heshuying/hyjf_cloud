@@ -30,7 +30,7 @@ public class WhereaboutsPageConfig implements Serializable {
 
     private Integer statusOn;
 
-    private Boolean delFlag;
+    private Integer delFlag;
 
     private String createUserId;
 
@@ -146,11 +146,11 @@ public class WhereaboutsPageConfig implements Serializable {
         this.statusOn = statusOn;
     }
 
-    public Boolean getDelFlag() {
+    public Integer getDelFlag() {
         return delFlag;
     }
 
-    public void setDelFlag(Boolean delFlag) {
+    public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
     }
 

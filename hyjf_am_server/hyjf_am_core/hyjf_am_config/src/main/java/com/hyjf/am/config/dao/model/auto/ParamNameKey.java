@@ -22,6 +22,6 @@ public class ParamNameKey implements Serializable {
     }
 
     public void setNameCd(String nameCd) {
-        this.nameCd = nameCd;
+        this.nameCd = nameCd == null ? null : nameCd.trim();
     }
 }

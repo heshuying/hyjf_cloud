@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper">
+	<resultMap id="TenderMapResult" type="com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize">
+		<result column="id" property="id" />
+		<!-- 用户ID -->
+		<result column="user_id" property="userId" /> 
+		<result column="name" property="name" />
+		<!-- 发生时间 -->
+		<result column="ontime" property="ontime" /> 
+		<result column="borrow_valid_time" property="borrowValidTime" />
+		<result column="borrow_nid" property="borrowNid" />
+		<result column="account" property="account" />
+	</resultMap>
+
+	<select id="queryOntimeTenderCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			ht_borrow b
+		INNER JOIN ht_borrow_bail bail ON b.borrow_nid = bail.borrow_nid
+		WHERE
+			b.`status`= 1
+		AND b.verify_status = 1
+		AND b.ontime > 0 
+		AND b.ontime <![CDATA[<=]]> #{ontime}
+	</select>
+	<!-- 查询所有到达定时发标时间的标  -->
+	<select id="queryOntimeTenderList" resultMap="TenderMapResult" parameterType="java.lang.Integer">
+		SELECT
+			b.id,
+			b.user_id,
+			i.`name` AS name,
+			b.ontime,
+			i.borrow_valid_time,
+			b.borrow_nid,
+			b.account,
+			b.borrow_account_wait
+		FROM
+			ht_borrow b
+		INNER JOIN ht_borrow_bail bail ON b.borrow_nid = bail.borrow_nid
+		LEFT JOIN ht_borrow_info i on i.id = b.id
+		WHERE
+			b.`status` = 1
+		AND b.verify_status = 3
+		AND b.is_engine_used = 0
+		AND b.ontime > 0
+		AND b.ontime <![CDATA[<=]]> #{ontime}
+	</select>
+	
+	<select id="queryHjhOntimeTenderList" resultMap="TenderMapResult" parameterType="java.lang.Integer">
+		SELECT
+			b.id,
+			b.user_id,
+			i.`name` AS name,
+			b.ontime,
+			i.borrow_valid_time,
+			b.borrow_nid,
+			b.account,
+			b.borrow_account_wait
+		FROM
+			ht_borrow b
+		INNER JOIN ht_borrow_bail bail ON b.borrow_nid = bail.borrow_nid
+		LEFT JOIN ht_borrow_info i on i.id = b.id
+		WHERE
+			b.`status` = 1
+		AND b.verify_status = 3
+		AND b.is_engine_used = 1
+		AND b.ontime > 0
+		AND b.ontime <![CDATA[<=]]> #{ontime}
+	</select>
+	
+
+</mapper>
+

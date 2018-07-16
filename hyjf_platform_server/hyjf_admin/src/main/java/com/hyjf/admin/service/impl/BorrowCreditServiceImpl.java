@@ -1,14 +1,14 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.Utils.Page;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowCreditInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditListResultBean;
 import com.hyjf.admin.beans.request.BorrowCreditRequest;
 import com.hyjf.admin.client.AmBorrowCreditClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
-import com.hyjf.admin.controller.LoginController;
 import com.hyjf.admin.service.BorrowCreditService;
+import com.hyjf.am.response.admin.AdminBorrowCreditInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
@@ -17,6 +17,7 @@ import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.service.BaseClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
@@ -38,6 +38,9 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
 
     @Autowired
     private AmBorrowCreditClient amBorrowCreditClient;
+
+    @Autowired
+    private BaseClient baseClient;
 
     public static final Logger logger = LoggerFactory.getLogger(BorrowCreditServiceImpl.class);
 
@@ -55,6 +58,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         Integer count = amBorrowCreditClient.getBorrowCreditCount(req);
+
         if (count != null && count > 0){
             List<BorrowCreditVO> list = amBorrowCreditClient.getBorrowCreditList(req);
             BorrowCreditSumVO sumVO = amBorrowCreditClient.getBorrwoCreditTotalSum(req);
@@ -96,7 +100,10 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
         BorrowCreditAmRequest req = new BorrowCreditAmRequest();
         req.setCreditNid(creditNid);
-        Integer count = amBorrowCreditClient.countBorrowCreditInfo(req);
+        //Integer count = amBorrowCreditClient.countBorrowCreditInfo(req);
+        AdminBorrowCreditInfoResponse response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/countBorrowCreditInfo4admin",request,AdminBorrowCreditInfoResponse.class);
+        Integer count = response.getCount();
+
         if (count == null){
             logger.error("admin:查询债转详情原子层count异常");
             throw new RuntimeException("admin:查询债转详情原子层count异常");
@@ -104,11 +111,10 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         if (count > 0){
             req.setLimitStart(page.getOffset());
             req.setLimitEnd(page.getLimit());
-            List<BorrowCreditInfoVO> list = amBorrowCreditClient.searchBorrowCreditInfoList(req);
-            /*if (CollectionUtils.isEmpty(list)){
-                logger.error("admin:查询债转详情原子层list异常");
-                throw new RuntimeException("admin:查询债转详情原子层list异常");
-            }*/
+            //List<BorrowCreditInfoVO> list = amBorrowCreditClient.searchBorrowCreditInfoList(req);
+            response = baseClient.postExe("http://AM-TRADE/am-trade/borrowCredit/searchBorrowCreditInfo4admin",request,AdminBorrowCreditInfoResponse.class);
+            List<BorrowCreditInfoVO> list = response.getResultList();
+
             CheckUtil.checkNull(list,"admin:查询债转详情原子层list异常");
             BorrowCreditInfoSumVO sumVO = amBorrowCreditClient.sumBorrowCreditInfoData(req);
             CheckUtil.checkNull(sumVO,"admin:查询债转详情合计行查询异常");

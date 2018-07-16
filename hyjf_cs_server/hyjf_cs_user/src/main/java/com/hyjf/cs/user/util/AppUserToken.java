@@ -22,6 +22,7 @@ public class AppUserToken implements Serializable {
         super();
     }
 
+
     public AppUserToken(Integer userId, String username) {
         super();
         this.userId = userId;
@@ -47,5 +48,6 @@ public class AppUserToken implements Serializable {
     private Integer userId;
 
     private String username;
+
 
 }

@@ -6,13 +6,12 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.UserCenterClient;
 import com.hyjf.admin.service.UserCenterService;
-import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -82,33 +80,31 @@ public class UserCenterServiceImpl implements UserCenterService {
      * @return
      */
     @Override
-    public JSONObject selectUserMemberList(UserManagerRequest request) {
-        JSONObject jsonObject = new JSONObject();
-        Map<String, Object> mapReturn = new HashMap<String, Object>();
-        String status = Response.SUCCESS;//0->成功,99->失败
+    public UserManagerResponse selectUserMemberList(UserManagerRequest request) {
         // 初始化分页参数，并组合到请求参数
         // 关联hyjf_trade库的ht_hjh_inst_config表
         List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
         // 查询列表
-        List<UserManagerVO> listUserMember = userCenterClient.selectUserMemberList(request);
-        if (!CollectionUtils.isEmpty(listUserMember)) {
-            if(!CollectionUtils.isEmpty(listHjhInstConfig)){
-                for (UserManagerVO userManager : listUserMember) {
-                    for (HjhInstConfigVO hjhinst : listHjhInstConfig) {
-                        if (hjhinst.getInstCode().equals(userManager.getInstCode())) {
-                            userManager.setInstName(hjhinst.getInstName());
-                        }
-                    }
+        UserManagerResponse userManagerResponse = userCenterClient.selectUserMemberList(request);
+        if (null != userManagerResponse) {
+            List<UserManagerVO> listUserMember = userManagerResponse.getResultList();
+            if (!CollectionUtils.isEmpty(listUserMember)) {
+                if (!CollectionUtils.isEmpty(listHjhInstConfig)) {
+                    setUserInstName(listUserMember, listHjhInstConfig);
                 }
             }
-        } else {
-            // 暂无数据
-            status = Response.FAIL;
         }
-        //用户列表信息
-        jsonObject.put("record", listUserMember);
-        jsonObject.put("status", status);
-        return jsonObject;
+        return userManagerResponse;
+    }
+
+    private void setUserInstName(List<UserManagerVO> listUserMember, List<HjhInstConfigVO> listHjhInstConfig) {
+        for (UserManagerVO userManager : listUserMember) {
+            for (HjhInstConfigVO hjhinst : listHjhInstConfig) {
+                if (hjhinst.getInstCode().equals(userManager.getInstCode())) {
+                    userManager.setInstName(hjhinst.getInstName());
+                }
+            }
+        }
     }
 
     /**
@@ -209,40 +205,11 @@ public class UserCenterServiceImpl implements UserCenterService {
     /**
      * 更新用户信息
      *
-     * @param map
+     * @param request
      * @return
      */
     @Override
-    public int updataUserInfo(Map<String, String> map) {
-        UserManagerUpdateRequest request = null;
-        if (null != map && map.size() > 0) {
-            if (map.containsKey("userId") && null != map.get("userId")) {
-                request.setUserId(map.get("userId"));
-            }
-            if (map.containsKey("userName") && null != map.get("userName")) {
-                request.setUserName(map.get("userName"));
-            }
-            if (map.containsKey("email") && null != map.get("email")) {
-                request.setEmail(map.get("email"));
-            }
-            if (map.containsKey("mobile") && null != map.get("mobile")) {
-                request.setMobile(map.get("mobile"));
-            }
-            if (map.containsKey("userRole") && null != map.get("userRole")) {
-                request.setUserRole(map.get("userRole"));
-            }
-            if (map.containsKey("remark") && null != map.get("remark")) {
-                request.setRemark(map.get("remark"));
-            }
-            if (map.containsKey("status") && null != map.get("status")) {
-                request.setStatus(map.get("status"));
-            }
-            if (map.containsKey("borrowerType") && null != map.get("borrowerType")) {
-                if (StringUtils.isNotBlank(map.get("borrowerType"))) {
-                    request.setBorrowerType(Integer.parseInt(map.get("borrowerType")));
-                }
-            }
-        }
+    public int updataUserInfo(UserManagerUpdateRequest request) {
         int intUpdFlg = userCenterClient.updataUserInfo(request);
         return intUpdFlg;
     }
@@ -631,152 +598,6 @@ public class UserCenterServiceImpl implements UserCenterService {
         return BankCallUtils.callApiBg(bean);
     }
 
-   /* *//**
-     * 保持推荐信息
-     * @param recommendName
-     * @return
-     *//*
-    public void updateUserRe(Map<String,Object> mapParam) {
-        // 根据推荐人用户名查询用户
-
-        UserVO userRecommendNew = userCenterClient.selectUserByRecommendName(mapParam.get("recommendName").toString());
-        String oldRecommendUser = "";
-//        AdminSystem adminSystem = (AdminSystem) SessionUtils.getSession(CustomConstants.LOGIN_USER_INFO);
-        int time = GetDate.getNowTime10();
-        String userId = mapParam.get("userId").toString();
-        if (null!= userRecommendNew) {
-            // 获取新推荐人
-            // 根据主键查询用户信息
-            UserVO user = userCenterClient.selectUserByUserId(Integer.parseInt(userId));
-            oldRecommendUser = user.getReferrerUserName();
-            // 更新推荐人
-           *//* user.setReferrer(userRecommendNew.getUserId());
-            user.setReferrerUserName(userRecommendNew.getUsername());
-            usersMapper.updateByPrimaryKey(user);*//*
-            // 更新userInfo的主单与非主单信息 2015年12月30日18:27:22 孙亮
-            //updateUserParam(user.getUserId());
-
-           *//* SpreadsUsersExample example = new SpreadsUsersExample();
-            example.createCriteria().andUserIdEqualTo(Integer.parseInt(form.getUserId()));
-
-            List<SpreadsUsers> spreadUsers = spreadsUsersMapper.selectByExample(example);*//*
-           SpreadsUserVO spreadsUserVO = userCenterClient.selectSpreadsUsersByUserId(userId);
-            Integer oldSpreadUserId = null;
-            if (spreadsUserVO != null) {
-                oldSpreadUserId = spreadsUserVO.getSpreadsUserId();
-                spreadsUserVO.setSpreadsUserId(userRecommendNew.getUserId());
-//                spreadsUserVO.setOperation(adminSystem.getUsername());
-                // 保存用户推荐人信息
-                spreadsUsersMapper.updateByPrimaryKeyWithBLOBs(spreadUser);
-
-                SpreadsUserLogVO spreadsUsersLog = new SpreadsUserLogVO();
-                spreadsUsersLog.setOldSpreadsUserId(oldSpreadUserId);
-                spreadsUsersLog.setUserId(Integer.parseInt(userId));
-                spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
-                spreadsUsersLog.setType("web");
-                spreadsUsersLog.setOpernote(form.getRemark());
-                spreadsUsersLog.setOperation(adminSystem.getUsername());
-                spreadsUsersLog.setCreateTime(new Date());
-                spreadsUsersLog.setCreateIp(form.getIp());
-                // 保存相应的更新日志信息
-                spreadsUsersLogMapper.insertSelective(spreadsUsersLog);
-            } else {
-                SpreadsUserVO spreadUser = new SpreadsUserVO();
-                spreadUser.setUserId(Integer.parseInt(form.getUserId()));
-                spreadUser.setOldSpreadsUserId(userRecommendNew.getUserId());
-                spreadUser.setCreateIp(form.getIp());
-                spreadUser.setCreateTime(new Date());
-                spreadUser.setType("web");
-                spreadUser.setOpernote("web");
-                spreadUser.setOperation(adminSystem.getUsername());
-                // 插入推荐人
-                spreadsUsersMapper.insertSelective(spreadUser);
-
-                SpreadsUserLogVO spreadsUsersLog = new SpreadsUserLogVO();
-                spreadsUsersLog.setOldSpreadsUserId(null);
-                spreadsUsersLog.setUserId(Integer.parseInt(form.getUserId()));
-                spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
-                spreadsUsersLog.setType("web");
-                spreadsUsersLog.setOpernote(form.getRemark());
-                spreadsUsersLog.setOperation(adminSystem.getUsername());
-                spreadsUsersLog.setCreateTime(new Date());
-                spreadsUsersLog.setCreateIp(form.getIp());
-                // 保存相应的更新日志信息
-                spreadsUsersLogMapper.insertSelective(spreadsUsersLog);
-            }
-
-        } else {
-            // 根据主键查询用户信息
-            UserVO user = userCenterClient.selectUserByUserId(Integer.parseInt(userId));
-            // 更新推荐人
-            *//*user.setReferrer(null);
-            user.setReferrerUserName(null);
-            usersMapper.updateByPrimaryKey(user);*//*
-            // 更新userInfo的主单与非主单信息 2015年12月30日18:27:22 孙亮
-            updateUserParam(user.getUserId());
-           *//* SpreadsUsersExample example = new SpreadsUsersExample();
-            example.createCriteria().andUserIdEqualTo(Integer.parseInt(form.getUserId()));
-            List<SpreadsUsers> spreadUsers = spreadsUsersMapper.selectByExample(example);*//*
-            SpreadsUserVO spreadsUserVO = userCenterClient.selectSpreadsUsersByUserId(userId);
-            if (spreadsUserVO != null) {
-                // 删除用户的推荐人
-                spreadsUsersMapper.deleteByPrimaryKey(spreadsUserVO.getId());
-
-                SpreadsUserLogVO spreadsUsersLog = new SpreadsUserLogVO();
-                spreadsUsersLog.setOldSpreadsUserId(spreadsUserVO.getSpreadsUserId());
-                spreadsUsersLog.setUserId(Integer.parseInt(form.getUserId()));
-                spreadsUsersLog.setSpreadsUserId(null);
-                spreadsUsersLog.setType("web");
-                spreadsUsersLog.setOpernote(form.getRemark());
-                spreadsUsersLog.setOperation(adminSystem.getUsername());
-                spreadsUsersLog.setCreateTime(new Date());
-                spreadsUsersLog.setCreateIp(form.getIp());
-                // 保存相应的更新日志信息
-                spreadsUsersLogMapper.insertSelective(spreadsUsersLog);
-            }
-        }
-
-        // 保存用户信息修改日志
-        List<UserInfoForLogCustomize> users = usersCustomizeMapper
-                .selectUserByUserId(Integer.parseInt(form.getUserId()));
-        if (users != null && !users.isEmpty()) {
-            UserInfoForLogCustomize customize = users.get(0);
-            UserChangeLogVO changeLog = new UsersChangeLog();
-            changeLog.setUserId(customize.getUserId());
-            changeLog.setUsername(customize.getUserName());
-            changeLog.setAttribute(customize.getAttribute());
-            changeLog.setIs51(customize.getIs51());
-            changeLog.setRole(customize.getUserRole());
-            changeLog.setMobile(customize.getMobile());
-            changeLog.setRealName(customize.getRealName());
-            changeLog.setRecommendUser(oldRecommendUser);
-            changeLog.setStatus(customize.getUserStatus());
-            changeLog.setChangeType(ChangeLogDefine.CHANGELOG_TYPE_RECOMMEND);
-            changeLog.setIdcard(customize.getIdCard());
-
-            UsersChangeLogExample logExample = new UsersChangeLogExample();
-            UsersChangeLogExample.Criteria logCriteria = logExample.createCriteria();
-            logCriteria.andUserIdEqualTo(Integer.parseInt(form.getUserId()));
-            int count = usersChangeLogMapper.countByExample(logExample);
-            if (count <= 0) {
-                // 如果从来没有添加过操作日志，则将原始信息插入修改日志中
-                changeLog.setRemark("初始注册");
-                changeLog.setChangeUser("system");
-                changeLog.setChangeTime(customize.getRegTime());
-                usersChangeLogMapper.insertSelective(changeLog);
-            }
-
-            // 插入一条用户信息修改日志
-            changeLog.setChangeUser(adminSystem.getUsername());
-            changeLog.setChangeUserid(Integer.parseInt(adminSystem.getId()));
-            changeLog.setRecommendUser(form.getRecommendName());
-            changeLog.setRemark(form.getRemark());
-            changeLog.setChangeTime(GetDate.getNowTime10());
-            usersChangeLogMapper.insertSelective(changeLog);
-        }
-
-    }
-*/
 
     /**
      * 获取推荐人信息
@@ -796,4 +617,33 @@ public class UserCenterServiceImpl implements UserCenterService {
     public UserVO selectUserByRecommendName(String recommendName){
         return userCenterClient.selectUserByRecommendName(recommendName);
     }
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateUserRecommend(AdminUserRecommendRequest request){
+        return userCenterClient.updateUserRecommend(request);
+    }
+
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    @Override
+    public int updateUserIdCard(AdminUserRecommendRequest request){
+        return userCenterClient.updateUserIdCard(request);
+    }
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO queryBankOpenAccountByUserId(int userId){
+        return userCenterClient.queryBankOpenAccountByUserId(userId);
+    }
+
 }

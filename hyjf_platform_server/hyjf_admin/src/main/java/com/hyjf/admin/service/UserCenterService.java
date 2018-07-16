@@ -4,8 +4,11 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
+import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
@@ -24,7 +27,7 @@ public interface UserCenterService {
      * @param request
      * @return
      */
-    JSONObject selectUserMemberList(UserManagerRequest request);
+    UserManagerResponse selectUserMemberList(UserManagerRequest request);
 
     /**
      * 根据机构编号获取机构列表
@@ -81,7 +84,7 @@ public interface UserCenterService {
     /**
      * 更新用户信息
      */
-    int updataUserInfo( Map<String, String> map);
+    int updataUserInfo(UserManagerUpdateRequest userRequest);
 
     /**
      * 根据用户id获取推荐人信息
@@ -154,4 +157,24 @@ public interface UserCenterService {
      * @return
      */
     UserVO selectUserByRecommendName(String recommendName);
+
+    /**
+     * 修改推荐人信息
+     * @param request
+     * @return
+     */
+    int updateUserRecommend(AdminUserRecommendRequest request);
+
+    /**
+     * 修改用户身份证
+     * @param request
+     * @return
+     */
+    int updateUserIdCard(AdminUserRecommendRequest request);
+    /**
+     * 单表查询开户信息
+     *
+     * @return
+     */
+    BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
 }

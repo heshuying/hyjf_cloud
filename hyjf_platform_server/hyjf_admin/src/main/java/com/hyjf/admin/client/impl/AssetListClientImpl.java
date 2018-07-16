@@ -16,7 +16,6 @@ import com.hyjf.am.response.admin.HjhAssetTypeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -32,13 +31,13 @@ public class AssetListClientImpl implements AssetListClient {
 	private RestTemplate restTemplate;
 
 	/**
-	 * 资产来源
-	 * @param request
-	 * @return
+	 * 获取资金来源
+	 *
+	 * @param 
+	 * @return List<HjhInstConfigVO>
 	 */
 	@Override
 	public List<HjhInstConfigVO> findHjhInstConfigList() {
-		// usercenter 中的方法复用
 		HjhInstConfigResponse response = restTemplate.
 				getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
 				getBody();
@@ -47,7 +46,13 @@ public class AssetListClientImpl implements AssetListClient {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 产品类型下拉联动
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
 	@Override
 	public List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch) {
 		HjhAssetTypeResponse response = restTemplate.
@@ -59,24 +64,40 @@ public class AssetListClientImpl implements AssetListClient {
 		return null;
 	}
 
+    /**
+     * 查询ParamName
+     * @param request
+     * @return
+     */
 	@Override
 	public Map<String, String> findParamNameMap(String param) {
 		Map<String,String> resultMap = CacheUtil.getParamNameMap(param);
 		return resultMap;
 	}
 
+    /**
+     * 查询资产列表
+     * @param request
+     * @return
+     */
 	@Override
-	public List<AssetListCustomizeVO> findAssetList(AssetListRequest request) {
+	public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
 		AssetListCustomizeResponse response = restTemplate
 				.postForEntity("http://AM-TRADE/am-trade/assetList/findAssetList" ,request,
 						AssetListCustomizeResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
+			return response;
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 查询详情
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
 	@Override
 	public AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest) {
 		AssetDetailCustomizeResponse response = restTemplate
@@ -88,7 +109,13 @@ public class AssetListClientImpl implements AssetListClient {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 查询记录总数
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
 	@Override
 	public Integer getRecordCount(AssetListRequest request) {
 		AssetListCustomizeResponse response = restTemplate
@@ -101,6 +128,12 @@ public class AssetListClientImpl implements AssetListClient {
 		return null;
 	}
 
+	/**
+	 * 查询列总计
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
 	@Override
 	public BigDecimal sumAccount(AssetListRequest request) {
 		AssetListCustomizeResponse response = restTemplate

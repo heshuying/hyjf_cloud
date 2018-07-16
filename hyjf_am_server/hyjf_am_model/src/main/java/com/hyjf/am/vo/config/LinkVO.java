@@ -12,13 +12,13 @@ import java.util.Date;
  * @version LinkVO, v0.1 2018/7/9 11:53
  */
 public class LinkVO extends BaseVO {
-    private Short id;
+    private Integer id;
 
     private Integer type;
 
     private Integer status;
 
-    private Short order;
+    private Integer order;
 
     private String url;
 
@@ -70,11 +70,11 @@ public class LinkVO extends BaseVO {
 
     private static final long serialVersionUID = 1L;
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -94,11 +94,11 @@ public class LinkVO extends BaseVO {
         this.status = status;
     }
 
-    public Short getOrder() {
+    public Integer getOrder() {
         return order;
     }
 
-    public void setOrder(Short order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 
