@@ -70,4 +70,24 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     public ContentArticle getArticleById(Integer id) {
         return contentArticleMapper.selectByPrimaryKey(id);
     }
+
+    /**
+     * 查询公告列表
+     * @author zhangyk
+     * @date 2018/7/16 11:42
+     */
+    @Override
+    public List<ContentArticle> getNoticeList(ContentArticleRequest request) {
+        ContentArticleExample example = new ContentArticleExample();
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
+        ContentArticleExample.Criteria cra = example.createCriteria();
+        cra.andTypeEqualTo(request.getNoticeType());
+        cra.andStatusEqualTo(1);
+        example.setOrderByClause("create_time Desc");
+        List<ContentArticle> conlist = contentArticleMapper.selectByExample(example);
+        return conlist;
+    }
+
+
 }
