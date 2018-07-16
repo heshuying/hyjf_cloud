@@ -487,7 +487,7 @@
         FROM
         ht_user hydu
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
-        LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_userid
+        LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
         LEFT JOIN ht_user_info hyui ON hyui.user_id = hydu.user_id
         WHERE
         hydu.user_id =#{userId,jdbcType=INTEGER}

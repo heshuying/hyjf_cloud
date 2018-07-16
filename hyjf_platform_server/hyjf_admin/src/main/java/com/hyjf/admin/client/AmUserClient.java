@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -391,4 +392,26 @@ public interface AmUserClient {
      * @return
      */
     Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+    /**
+     * 根据参数查询用户画像信息
+     * @param request
+     * @return
+     * @author nxl
+     */
+    UserPortraitResponse selectRecordList(UserPortraitRequest request);
+
+    /**
+     * 根据用户id查找用户画像
+     * @param userId
+     * @author nxl
+     * @return
+     */
+    UserPortraitVO selectUsersPortraitByUserId(Integer userId);
+
+    /**
+     * 修改用户画像
+     * @author nxl
+     */
+    int updateUserPortrait(UserPortraitRequest request);
+
 }

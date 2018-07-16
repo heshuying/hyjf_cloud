@@ -21,18 +21,21 @@ public interface UserPortraitClient {
      * 根据参数查询用户画像信息
      * @param request
      * @return
+     * @author nxl
      */
     UserPortraitResponse selectRecordList(UserPortraitRequest request);
 
     /**
      * 根据用户id查找用户画像
      * @param userId
+     * @author nxl
      * @return
      */
     UserPortraitVO selectUsersPortraitByUserId(Integer userId);
 
     /**
      * 修改用户画像
+     * @author nxl
      */
     int updateUserPortrait(UserPortraitRequest request);
 
