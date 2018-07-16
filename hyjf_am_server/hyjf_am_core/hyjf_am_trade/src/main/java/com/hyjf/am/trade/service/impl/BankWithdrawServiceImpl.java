@@ -108,8 +108,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         int nowTime = GetDate.getNowTime10();
 
         if (("00000000".equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode()))
-                && "00".equals(bean.getResult())
-                && !("1".equals(bean.getOrFlag()))) {
+                && "00".equals(bean.getResult()) && !("1".equals(bean.getOrFlag()))) {
             CheckResult rtCheck = checkCallRetAndHyjf(bean,accountWithdraw);
             if (!rtCheck.isResultBool()) {
                 // 验证失败，异常信息抛出
@@ -120,7 +119,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             // 提现订单号
 
             //3.DB防并发处理
-            rtCheck = checkConcurrencyDB(accountWithdraw, userId, ordId);;
+            rtCheck = checkConcurrencyDB(accountWithdraw, userId, ordId);
             if (!rtCheck.isResultBool()) {
                 // 记录被其他进程处理，日志信息输出
                 logger.info(this.getClass().getName(), "handlerAfterCash",

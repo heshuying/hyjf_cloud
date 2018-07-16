@@ -54,7 +54,7 @@ public interface AmBorrowClient {
      * @param borrowNid
      * @return
      */
-	public BorrowInfoVO getBorrowInfoByNid(String borrowNid);
+	BorrowInfoVO getBorrowInfoByNid(String borrowNid);
 
     /**
      * 投资之前插入tmp表
