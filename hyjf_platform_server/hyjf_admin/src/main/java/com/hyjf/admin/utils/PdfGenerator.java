@@ -1,4 +1,4 @@
-package com.hyjf.admin.Utils;
+package com.hyjf.admin.utils;
 
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.common.http.HttpDeal;
