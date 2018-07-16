@@ -87,7 +87,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "内容管理-办公环境", notes = "删除内容管理-办公环境状态")
+	@ApiOperation(value = "内容管理-办公环境", notes = "删除内容管理-办公环境")
 	@RequestMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		ContentEnvironmentResponse response = contentEnvironmentService.deleteById(id);

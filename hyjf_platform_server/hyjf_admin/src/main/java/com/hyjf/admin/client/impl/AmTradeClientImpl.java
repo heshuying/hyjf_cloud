@@ -9,9 +9,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
-import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
-import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -26,6 +24,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -37,6 +36,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1331,5 +1331,41 @@ public class AmTradeClientImpl implements AmTradeClient{
         return restTemplate.postForEntity(url,requestBean,Boolean.class).getBody();
     }
 
+    /**
+     * 计算实际金额 保存creditTenderLog表
+     *
+     * @return
+     * @author nxl
+     */
+    @Override
+    public Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
+        String url = "http://AM-TRADE/am-trade/autoTenderController/saveCreditTenderLogNoSave";
+        SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
+        Response<Map<String, Object>> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 汇计划自动承接成功后数据库更新操作
+     *
+     * @return
+     * @author nxl
+     */
+    @Override
+    public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,
+                                             String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
+        String url = "http://AM-TRADE/am-trade/autoTenderController/updateCreditForAutoTender";
+        BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
+        BeanUtils.copyProperties(bean, bankCallBeanVO);
+        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(credit, hjhAccede, hjhPlan, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap);
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (!Response.isSuccess(response)) {
+            logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动债转成功后，更新债转数据失败。");
+            throw new RuntimeException("银行自动债转成功后，更新债转数据失败。");
+        }
+        return true;
+    }
 
 }

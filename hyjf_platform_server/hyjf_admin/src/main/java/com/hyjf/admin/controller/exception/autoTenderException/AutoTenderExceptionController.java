@@ -253,15 +253,17 @@ public class AutoTenderExceptionController extends BaseController {
                         return (planOrderId+" 债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid());
                     }
                     String sellerUsrcustid = sellerBankOpenAccount.getAccount();//出让用户的江西银行电子账号
-                    // 计算实际金额 保存creditTenderLog表
-
                     // 生成承接日志
                     // 债权承接订单日期
                     String orderDate = GetDate.getServerDateTime(1, new Date());
-                    Map<String, Object> resultMap = new HashMap<String, Object>();
-                    // todo 方法1
-                    /*saveCreditTenderLogNoSave(credit, hjhAccede, hjhPlanBorrowTmp.getOrderId(), orderDate, hjhPlanBorrowTmp.getAccount(), hjhPlanBorrowTmp.getIsLast());
-                    saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);*/
+                    Boolean isLast = false;
+                    //是否标的的最后一笔投资/承接(0:非最后一笔；1:最后一笔)
+                    if(hjhPlanBorrowTmp.getIsLast()==1){
+                        isLast = true;
+                    }
+                    // 计算实际金额 保存creditTenderLog表
+                    Map<String, Object> resultMap = autoTenderExceptionService.saveCreditTenderLogNoSave(credit, hjhAccede,
+                            hjhPlanBorrowTmp.getOrderId(), orderDate, hjhPlanBorrowTmp.getAccount(),isLast);
                     if (Validator.isNull(resultMap)) {
                         logger.info("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                         return ("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
@@ -284,11 +286,8 @@ public class AutoTenderExceptionController extends BaseController {
                             + "\n,承接服务率:" + resultMap.get("serviceApr")
                             + "\n,承接服务费:" + resultMap.get("serviceFee"));
                     // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-
                     bean.setOrderId(hjhPlanBorrowTmp.getOrderId());
-                    // todo 方法2
-//                    boolean isOK = autoTenderService.updateCredit(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultMap);
-                    boolean isOK =true;
+                    boolean isOK = autoTenderExceptionService.updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultMap);
                     if(isOK){
                         // 更改加入明细状态和投资临时表状态
                         autoTenderExceptionService.updateTenderByParam(orderStatus,hjhAccede.getId());
@@ -303,7 +302,6 @@ public class AutoTenderExceptionController extends BaseController {
                             // 投资成功后减掉redis 钱
                             String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
                             RedisBorrow redisBorrow = new RedisBorrow();
-                            // liquidation_fair_value - credit_price
                             BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                             redisBorrow.setBorrowAccountWait(await);
                             redisBorrow.setBorrowNid(credit.getCreditNid());
@@ -340,20 +338,16 @@ public class AutoTenderExceptionController extends BaseController {
                     }
                 }else if ("CA110112".equals(queryRetCode)){
                     // 更改加入明细状态和投资临时表状态
-//                    this.updateTender(hjhAccede, hjhPlanBorrowTmp,orderStatus);
                     autoTenderExceptionService.updateTenderByParam(orderStatus,hjhAccede.getId());
                     // 只有不是接口成功表失败的情况才会退回队列
                     if(!BankCallConstant.RESPCODE_SUCCESS.equals(hjhPlanBorrowTmp.getRespCode())){
                         // 投资成功后减掉redis 钱
                         String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
-
-                        // liquidation_fair_value - credit_price
                         BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                         redisBorrow.setBorrowAccountWait(await);
                         redisBorrow.setBorrowNid(credit.getCreditNid());
                         logger.info(credit.getCreditNid()+" 更新表退回队列  "+await);
-
                         // 银行成功后，如果标的可投金额非0，推回队列的头部，标的可投金额为0，不再推回队列
                         if (await.compareTo(BigDecimal.ZERO) >= 0) {
                             String redisStr = JSON.toJSONString(redisBorrow);
