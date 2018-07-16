@@ -1,6 +1,6 @@
 package com.hyjf.admin.controller.manager;
 
-import com.hyjf.admin.Utils.ValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.admin.beans.request.MerchantAccountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
