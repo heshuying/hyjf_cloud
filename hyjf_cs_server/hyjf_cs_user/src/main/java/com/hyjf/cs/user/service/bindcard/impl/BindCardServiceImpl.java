@@ -319,7 +319,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
 		bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
 		bankCardLogRequest.setStatus(0);// 成功
-//		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
+		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 		if (!isUpdateFlag) {
 			throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
