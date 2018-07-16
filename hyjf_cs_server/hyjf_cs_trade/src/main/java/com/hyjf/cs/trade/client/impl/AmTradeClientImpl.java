@@ -7,6 +7,8 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.response.wdzj.BorrowDataResponse;
+import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
@@ -26,6 +28,8 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
+import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -704,8 +708,85 @@ public class AmTradeClientImpl implements AmTradeClient {
 		restTemplate.postForEntity(url,request,Boolean.class).getBody();
 	}
 
-	
-	
+	/**
+	 * 网贷之家标的列表
+	 * @auther: hesy
+	 * @date: 2018/7/16
+	 */
+    @Override
+    public List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/get_borrowlist";
+        BorrowDataResponse response =
+                restTemplate.postForEntity(url,requestBean,BorrowDataResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家标的列表总记录数
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public Integer countBorrowList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/count_borrowlist";
+        Response<Integer> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家标的列表总金额
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public String sumBorrowAmount(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/sum_borrowamount";
+        Response<String> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家提前还款列表
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public List<PreapysListCustomizeVO> selectPreapysList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/get_preapyslist";
+        PreapysListResponse response =
+                restTemplate.postForEntity(url,requestBean,PreapysListResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家提前还款列表总记录数
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public Integer countPreapysList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/count_preapyslist";
+        Response<Integer> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 	
 	
 }
