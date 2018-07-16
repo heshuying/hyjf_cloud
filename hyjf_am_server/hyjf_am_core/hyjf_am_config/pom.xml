@@ -144,7 +144,7 @@
                <!-- <configuration>
                     <excludes>
                         <exclude>**/application.yml</exclude>
-                        <exclude>**/bootstrap.yml</exclude>
+                        <exclude>**/bootstrap.yml.bak</exclude>
                     </excludes>
                 </configuration>-->
             </plugin>
