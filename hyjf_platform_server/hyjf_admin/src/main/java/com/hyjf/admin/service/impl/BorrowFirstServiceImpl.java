@@ -3,20 +3,22 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
-import com.hyjf.admin.client.BorrowFirstClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.service.BorrowFirstService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
@@ -41,7 +43,10 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
 
     private static final String OK = "OK";
     @Autowired
-    BorrowFirstClient borrowFirstClient;
+    AmTradeClient amTradeClient;
+
+    @Autowired
+    AmUserClient amUserClient;
 
     /**
      * 借款初审列表
@@ -53,7 +58,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
     public BorrowFirstResponseBean getBorrowFirstList(BorrowFirstRequest borrowFirstRequest) {
         BorrowFirstResponseBean borrowFirstResponseBean = new BorrowFirstResponseBean();
         //查询总条数
-        Integer count = borrowFirstClient.countBorrowFirst(borrowFirstRequest);
+        Integer count = amTradeClient.countBorrowFirst(borrowFirstRequest);
         borrowFirstResponseBean.setTotal(count);
         //分页参数
         Page page = Page.initPage(borrowFirstRequest.getCurrPage(), borrowFirstRequest.getPageSize());
@@ -62,8 +67,8 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         borrowFirstRequest.setLimitEnd(page.getLimit());
         //查询列表 总计
         if (count > 0) {
-            List<BorrowFirstCustomizeVO> list = borrowFirstClient.selectBorrowFirstList(borrowFirstRequest);
-            String sumAccount = borrowFirstClient.sumBorrowFirstAccount(borrowFirstRequest);
+            List<BorrowFirstCustomizeVO> list = amTradeClient.selectBorrowFirstList(borrowFirstRequest);
+            String sumAccount = amTradeClient.sumBorrowFirstAccount(borrowFirstRequest);
             borrowFirstResponseBean.setRecordList(list);
             borrowFirstResponseBean.setSumAccount(sumAccount);
         }
@@ -80,16 +85,19 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         if (StringUtils.isBlank(borrowNid)) {
             return new AdminResult(BaseResult.FAIL, "标的编号为空！");
         } else {
-            BorrowVO borrowVO = borrowFirstClient.selectBorrowByNid(borrowNid);
-            BorrowInfoVO borrowInfoVO = borrowFirstClient.selectBorrowInfoByNid(borrowNid);
+            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
             if (borrowVO == null || borrowInfoVO == null) {
                 return new AdminResult(BaseResult.FAIL, "未查询到标的信息！");
             }
             BorrowBailInfoResponseBean borrowBailInfoResponseBean = new BorrowBailInfoResponseBean();
             BeanUtils.copyProperties(borrowVO, borrowBailInfoResponseBean);
             borrowBailInfoResponseBean.setName(borrowInfoVO.getName());
-            borrowBailInfoResponseBean.setUserName(borrowFirstClient.getUserName(borrowVO.getUserId()));
-            BorrowConfigVO borrowConfigVO = borrowFirstClient.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE);
+            UserVO userVO = amUserClient.findUserById(borrowVO.getUserId());
+            if(userVO != null){
+                borrowBailInfoResponseBean.setUserName(userVO.getUsername());
+            }
+            BorrowConfigVO borrowConfigVO = amTradeClient.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE);
             // 计算公式：保证金金额=借款金额×3％
             BigDecimal bailPercent = new BigDecimal(borrowConfigVO.getConfigValue());
             double accountBail = (borrowVO.getAccount().multiply(bailPercent)).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
@@ -108,7 +116,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
     public AdminResult insertBorrowBail(String borrowNid, String currUserId) {
         if (StringUtils.isNotBlank(borrowNid)) {
             // 交保证金
-            boolean borrowBailFlag = borrowFirstClient.insertBorrowBail(borrowNid, currUserId);
+            boolean borrowBailFlag = amTradeClient.insertBorrowBail(borrowNid, currUserId);
             if (borrowBailFlag) {
                 return new AdminResult();
             } else {
@@ -132,8 +140,8 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
 //            int engineFlag = this.borrowFirstClient.isEngineUsed(borrowNid);
 //            jsonObject.put("engineFlag", engineFlag);
 
-            BorrowVO borrowVO = borrowFirstClient.selectBorrowByNid(borrowNid);
-            BorrowInfoVO borrowInfoVO = borrowFirstClient.selectBorrowInfoByNid(borrowNid);
+            BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+            BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
             if (borrowVO != null && borrowInfoVO != null) {
                 BorrowFireInfoResponseBean response = new BorrowFireInfoResponseBean();
                 BeanUtils.copyProperties(borrowVO, response);
@@ -173,8 +181,8 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         }
 
         //获取标的信息
-        BorrowVO borrowVO = borrowFirstClient.selectBorrowByNid(borrowNid);
-        BorrowInfoVO borrowInfoVO = borrowFirstClient.selectBorrowInfoByNid(borrowNid);
+        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
         if (borrowVO == null || borrowInfoVO == null) {
             return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
         }
@@ -186,14 +194,14 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         borrowFireRequest.setVerifyStatus(verifyStatus);
         borrowFireRequest.setOntime(ontime);
 
-        boolean updateFlag = borrowFirstClient.updateOntimeRecord(borrowFireRequest);
+        boolean updateFlag = amTradeClient.updateOntimeRecord(borrowFireRequest);
         if(!updateFlag){
             return new AdminResult(BaseResult.FAIL,"数据更新失败");
         }
 
         if (borrowVO.getIsEngineUsed().equals(1) && Integer.valueOf(verifyStatus) == 4) {
             // 成功后到关联计划队列
-            boolean sendFlag = borrowFirstClient.sendToMQ(borrowFireRequest);
+            boolean sendFlag = amTradeClient.sendToMQ(borrowFireRequest);
             if(!sendFlag){
                 return new AdminResult(BaseResult.FAIL,"发送MQ失败");
             }

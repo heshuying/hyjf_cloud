@@ -13,11 +13,21 @@ import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 public class BorrowRegistCustomizeResponse extends Response<BorrowRegistCustomizeVO> {
     private Integer total;
 
+    private String sumAccount;
+
     public Integer getTotal() {
         return total;
     }
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public String getSumAccount() {
+        return sumAccount;
+    }
+
+    public void setSumAccount(String sumAccount) {
+        this.sumAccount = sumAccount;
     }
 }
