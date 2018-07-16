@@ -112,7 +112,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 
 
     /**
-     * 获取推荐人姓名查找用户
+     * 获取userId查找推荐人
      * @param userId
      * @return
      */

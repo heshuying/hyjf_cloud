@@ -4,6 +4,9 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 
@@ -21,7 +24,7 @@ public interface LoanCoverService {
      * @param request
      * @return
      */
-    List<LoanCoverUserVO> selectUserMemberList(LoanCoverUserRequest request);
+    LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request);
     /**
      * 保存记录
      */
@@ -37,5 +40,5 @@ public interface LoanCoverService {
     /**
      * 更新记录
      */
-    JSONObject updateLoanCoverUser(Map<String,Object> mapParam);
+    AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean);
 }

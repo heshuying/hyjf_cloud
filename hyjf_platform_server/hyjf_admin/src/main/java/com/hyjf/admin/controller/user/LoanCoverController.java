@@ -1,13 +1,18 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
+import com.hyjf.am.vo.user.UserPortraitVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -20,12 +25,14 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +41,7 @@ import java.util.Map;
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "借款盖章用户接口")
+@Api(value = "会员中心-借款盖章用户接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersLoancover")
 public class LoanCoverController extends BaseController {
@@ -52,17 +59,33 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "借款盖章用户", notes = "获取借款盖章用户列表")
     @PostMapping(value = "/selectLoancoverList")
     @ResponseBody
-    public JSONObject selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        LoanCoverUserRequest loanCoverUserRequest = serParamRequest(map);
-        JSONObject jsonObject = new JSONObject();
-        List<LoanCoverUserVO> loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
-        String status = Response.FAIL;
-        if (null != loanCoverUserVOList && loanCoverUserVOList.size() > 0) {
-            jsonObject.put("record", loanCoverUserVOList);
-            status = Response.SUCCESS;
+    public AdminResult<ListResult<LoanCoverUserVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+        LoanCoverUserRequest loanCoverUserRequest  = new LoanCoverUserRequest();
+        BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+        loanCoverUserRequest.setLimitFlg(0);
+        LoanCoverUserResponse loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
+        if(loanCoverUserVOList==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status", status);
-        return jsonObject;
+        if (!Response.isSuccess(loanCoverUserVOList)) {
+            return new AdminResult<>(FAIL, loanCoverUserVOList.getMessage());
+        }
+        return new AdminResult<ListResult<LoanCoverUserVO>>(ListResult.build(loanCoverUserVOList.getResultList(), loanCoverUserVOList.getCount())) ;
+    }
+    /**
+     * 添加借款盖章用户
+     *
+     * @return
+     */
+    @ApiOperation(value = "借款盖章用户", notes = "初始化修改借款盖章用户")
+    @PostMapping(value = "/updateLoancoverInit")
+    @ResponseBody
+    public AdminResult<LoanCoverUserVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
+        LoanCoverUserVO loanCoverUserResponse = loanCoverService.selectRecordByIdNo(id);
+        if (null != loanCoverUserResponse) {
+            return new AdminResult<LoanCoverUserVO>(loanCoverUserResponse);
+        }
+        return new AdminResult<>(FAIL, FAIL_DESC);
     }
 
     private LoanCoverUserRequest serParamRequest(Map<String, Object> mapParam) {
@@ -94,13 +117,6 @@ public class LoanCoverController extends BaseController {
             if (mapParam.containsKey("startCreate")) {
                 request.setStartCreate(mapParam.get("startCreate").toString());
             }
-
-            /*if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                request.setLimit((Integer) mapParam.get("limit"));
-            }*/
-            /*if (mapParam.containsKey("limitEnd")&& StringUtils.isNotBlank(mapParam.get("limitEnd").toString())) {
-                request.setLimitEnd((Integer)mapParam.get("limitEnd"));
-            }*/
         }
         return request;
     }
@@ -113,10 +129,9 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "借款盖章用户", notes = "添加借款盖章用户")
     @PostMapping(value = "/insertLoancover")
     @ResponseBody
-    public JSONObject insertLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject result = new JSONObject();
-        String msg = "";
-        LoanCoverUserRequest loanCoverUserRequest = serParamRequest(map);
+    public AdminResult insertLoancover(HttpServletRequest request, HttpServletResponse response,@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+        LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
+        BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
         loanCoverUserRequest.setCreateUserId(Integer.parseInt(adminSystemVO.getId()));
@@ -125,20 +140,18 @@ public class LoanCoverController extends BaseController {
         // 调用校验
         if (!validatorParm(loanCoverUserRequest)) {
             // 失败返回
-            result.put("status", Response.FAIL);
-            result.put("msg", "参数错误");
-            return result;
+            return new AdminResult<>(FAIL, "参数错误");
         }
         if (!loanCoverService.selectIsExistsRecordByIdNo(loanCoverUserRequest.getIdNo())) {
-            result.put("status", Response.FAIL);
-            result.put("msg", "该输入统一社会信用代码或身份证已存在");
-            return result;
+            return new AdminResult<>(FAIL, "该输入统一社会信用代码或身份证已存在");
         }
         loanCoverUserRequest.setCreateTime(new Date());
-        loanCoverService.insertLoanCoverUser(loanCoverUserRequest);
-//        if(){}
-        result.put("status", Response.SUCCESS);
-        return result;
+        int intFlg = loanCoverService.insertLoanCoverUser(loanCoverUserRequest);
+
+        if(intFlg<=0){
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>();
     }
 
     private boolean validatorParm(LoanCoverUserRequest form) {
@@ -159,10 +172,8 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "借款盖章用户", notes = "修改借款盖章用户")
     @PostMapping(value = "/updateLoancover")
     @ResponseBody
-    public JSONObject updateLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject result = new JSONObject();
-        result = loanCoverService.updateLoanCoverUser(map);
-        return result;
+    public AdminResult updateLoancover(HttpServletRequest request, HttpServletResponse response,@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+        return  loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean);
     }
 
     /*  *
@@ -173,9 +184,14 @@ public class LoanCoverController extends BaseController {
        * @param form*/
     @ApiOperation(value = "借款盖章用户", notes = "导出借款盖章用户")
     @PostMapping(value = "/exportLoancover")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
-        LoanCoverUserRequest loanCoverUserRequest = serParamRequest(map);
-        List<LoanCoverUserVO> loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
+        LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
+        BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+        LoanCoverUserResponse loanCoverUserResponse = loanCoverService.selectUserMemberList(loanCoverUserRequest);
+        List<LoanCoverUserVO> loanCoverUserVOList = new ArrayList<LoanCoverUserVO>();
+        if(null!=loanCoverUserRequest){
+            loanCoverUserVOList= loanCoverUserResponse.getResultList();
+        }
         // 表格sheet名称
         String sheetName = "借款盖章用户查询";
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())

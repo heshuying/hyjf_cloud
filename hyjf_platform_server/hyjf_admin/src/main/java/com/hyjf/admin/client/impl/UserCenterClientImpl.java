@@ -35,6 +35,7 @@ public class UserCenterClientImpl implements UserCenterClient {
      *
      * @param request
      * @return
+     * @auth nxl
      */
     @Override
     public UserManagerResponse selectUserMemberList(UserManagerRequest request) {
@@ -49,7 +50,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据机构编号获取机构列表
-     *
+     * @auth nxl
      * @return
      */
     @Override
@@ -65,7 +66,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据筛选条件查找用户总数
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -82,7 +83,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取用户详情
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -99,7 +100,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取测评信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -116,7 +117,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取开户信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -133,7 +134,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取企业用户开户信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -150,7 +151,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取第三方平台绑定信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -167,14 +168,14 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取用户CA认证记录表
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
     @Override
     public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
         CertificateAuthorityResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager//selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
+                getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -184,7 +185,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取用户修改信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -201,7 +202,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 更新用户信息
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -215,7 +216,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取推荐人信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -230,7 +231,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     }
     /**
      * 校验手机号
-     *
+     * @auther: nxl
      * @param userId
      * @param mobile
      * @return
@@ -245,7 +246,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 校验推荐人
-     *
+     * @auther: nxl
      * @param userId
      * @param recommendName
      * @return
@@ -260,7 +261,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id查找用户信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -277,7 +278,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id查找用户信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -293,25 +294,8 @@ public class UserCenterClientImpl implements UserCenterClient {
     }
 
     /**
-     * 根據accounId獲取開戶信息
-     *
-     * @param accountId
-     * @return
-     */
-    @Override
-    public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
-        BankOpenAccountResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).
-                getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    /**
      * 更新企业用户开户记录
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -325,7 +309,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 插入企业用户开户记录
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -339,7 +323,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据银行卡号获取bankId
-     *
+     * @auther: nxl
      * @param cardNo
      * @return
      */
@@ -352,7 +336,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 获取银行卡配置信息
-     *
+     * @auther: nxl
      * @param bankId
      * @return
      */
@@ -368,7 +352,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 更新用户绑定的银行卡
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -381,7 +365,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 保存用户绑定的银行卡
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -394,7 +378,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 单表查询开户信息
-     *
+     * @auther: nxl
      * @return
      */
     @Override
@@ -410,7 +394,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 更新开户信息
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -423,7 +407,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 插入开户信息
-     *
+     * @auther: nxl
      * @param request
      * @return
      */
@@ -436,7 +420,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 根据用户id获取用户信息
-     *
+     * @auther: nxl
      * @param userId
      * @return
      */
@@ -452,7 +436,7 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 更新用户信息表
-     *
+     * @auther: nxl
      * @return
      */
     @Override
@@ -466,8 +450,8 @@ public class UserCenterClientImpl implements UserCenterClient {
 
     /**
      * 更新用户表
-     *
      * @return
+     * @auther: nxl
      */
     @Override
     public int updateUser(UserVO userVO) {
@@ -494,6 +478,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     }
     /**
      * 根据推荐人姓名查找用户
+     * @auther: nxl
      * @param recommendName
      * @return
      */
@@ -506,6 +491,12 @@ public class UserCenterClientImpl implements UserCenterClient {
         }
         return null;
     }
+    /**
+     * 根据userId查找推荐人信息
+     * @param userId
+     * @auther: nxl
+     * @return
+     */
     @Override
     public SpreadsUserVO selectSpreadsUsersByUserId(String userId){
         SpreadsUserResponse response = restTemplate
@@ -518,6 +509,7 @@ public class UserCenterClientImpl implements UserCenterClient {
     /**
      * 修改推荐人信息
      * @param request
+     * @auther: nxl
      * @return
      */
     @Override
@@ -529,12 +521,26 @@ public class UserCenterClientImpl implements UserCenterClient {
     /**
      * 修改用户身份证
      * @param request
+     * @auther: nxl
      * @return
      */
     @Override
     public int updateUserIdCard(AdminUserRecommendRequest request){
         int response = restTemplate
                 .postForEntity("http://AM-USER/am-user/userManager/updateUserIdCard",request, Integer.class).getBody();
+        return response;
+    }
+
+    /**
+     * 修改用户身份证
+     * @param updCompanyRequest
+     * @auther: nxl
+     * @return
+     */
+    @Override
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest){
+        Response response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userManager/saveCompanyInfo",updCompanyRequest, Response.class).getBody();
         return response;
     }
 }
