@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.UtmClient;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.vo.admin.UtmVo;
+import com.hyjf.am.vo.admin.UtmVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class UtmServiceImpl implements UtmService {
         map.put("limitStart",(currPage -1) * pageSize);
         map.put("limitEnd",currPage * pageSize);
         UtmResponse utmResponse = utmClient.getByPageList(map);
-        List<UtmVo> list = new ArrayList<UtmVo>();
+        List<UtmVO> list = new ArrayList<UtmVO>();
         if(null != utmResponse){
             list = utmResponse.getResultList();
         }

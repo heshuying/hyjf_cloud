@@ -6,7 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.PdfGenerator;
+import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
