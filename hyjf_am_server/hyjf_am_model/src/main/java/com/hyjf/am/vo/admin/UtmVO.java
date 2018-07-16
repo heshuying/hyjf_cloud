@@ -5,7 +5,7 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UtmVo extends BaseVO implements Serializable {
+public class UtmVO extends BaseVO implements Serializable {
     private Integer id;
 
     private Integer sourceId;
