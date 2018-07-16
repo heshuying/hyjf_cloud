@@ -6,6 +6,7 @@ import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.market.dao.model.auto.AdsExample;
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AdsService;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,4 +77,20 @@ public class AdsServiceImpl implements AdsService {
 			return null;
 		}
 	}
+
+	@Override
+	public List<Ads> getBannerList(AdsRequest request) {
+		AdsExample example = new AdsExample();
+		example.setOrderByClause("`order` Asc");
+		AdsExample.Criteria crt = example.createCriteria();
+		crt.andTypeIdEqualTo(request.getIsIndex());
+		crt.andStatusEqualTo(1);
+		crt.andIsIndexEqualTo(request.getIsIndex());
+		crt.andStartTimeLessThanOrEqualTo(GetDate.getDataString(GetDate.datetimeFormat));//活动开始时间要小于当前时间
+		crt.andEndTimeGreaterThanOrEqualTo(GetDate.getDataString(GetDate.datetimeFormat));//活动结束时间要大于当前时间
+		List<Ads> adsList = adsMapper.selectByExample(example);
+		return adsList;
+	}
+
+
 }
