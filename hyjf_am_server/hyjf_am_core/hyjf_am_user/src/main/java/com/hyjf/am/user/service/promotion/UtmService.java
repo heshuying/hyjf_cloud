@@ -102,4 +102,25 @@ public interface UtmService extends BaseService {
      * @return
      */
     UtmPlat deleteUtmPlat(UtmPlatVO utmPlatVO);
+
+    /**
+     * 查询访问数
+     * @param sourceId 账户推广平台
+     * @return
+     */
+    Integer getAccessNumber(Integer sourceId);
+
+    /**
+     * 查询注册数量
+     * @param sourceId 账户推广平台
+     * @return
+     */
+    Integer getRegistNumber(Integer sourceId);
+
+    /**
+     * 查询开户数量
+     * @param sourceId 账户推广平台
+     * @return
+     */
+    Integer getOpenAccountNumber(Integer sourceId);
 }
