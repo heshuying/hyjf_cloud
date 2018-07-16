@@ -5,14 +5,15 @@ package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author liubin
  * @version BankCreditEndVO, v0.1 2018/7/10 19:30
  */
-public class BankCreditEndVO extends BaseVO {
-    private static final long serialVersionUID = 543246465664343L;
+public class BankCreditEndVO extends BaseVO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Integer id;
 
