@@ -788,5 +788,47 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-USER/am-user/userManager/saveCompanyInfo",updCompanyRequest, Response.class).getBody();
 		return response;
 	}
+    /**
+     * 根据参数查询用户画像信息
+     * @param request
+     * @return
+     */
+    @Override
+    public UserPortraitResponse selectRecordList(UserPortraitRequest request){
+        UserPortraitResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userPortraitManage/findUserPortraitRecord", request, UserPortraitResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户id查找用户画像
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPortraitVO selectUsersPortraitByUserId(Integer userId){
+        UserPortraitResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userPortraitManage/selectUserPortraitByUserId/"+ userId, UserPortraitResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 修改用户画像
+     */
+    @Override
+    public int updateUserPortrait(UserPortraitRequest request){
+        int response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userPortraitManage/updateUserPortraitRecord",request,Integer.class)
+                .getBody();
+        return response;
+    }
 
 }
