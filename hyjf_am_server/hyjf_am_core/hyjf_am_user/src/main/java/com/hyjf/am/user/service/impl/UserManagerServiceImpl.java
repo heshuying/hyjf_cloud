@@ -894,7 +894,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         //更新log表
         // 插入一条用户信息修改日志
         changeLog.setIdcard(request.getIdCard());
-        changeLog.setUpdateType(2);//2用户信息修改
+//        changeLog.setUpdateType(2);//2用户信息修改
+        changeLog.setUpdateType(2);
         changeLog.setUpdateUserId(Integer.parseInt(request.getLoginUserId()));
         changeLog.setUpdateUser(request.getLoginUserName());
         changeLog.setRemark(request.getRemark());
