@@ -130,12 +130,12 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public Integer getRegistNumber(Integer sourceId) {
-        return utmRegCustomizeMapper.getRegistNumber(sourceId);
+        return null;
     }
 
     @Override
     public Integer getOpenAccountNumber(Integer sourceId) {
-        return utmRegCustomizeMapper.getOpenAccountNumber(sourceId);
+        return null;
     }
 
     /**
