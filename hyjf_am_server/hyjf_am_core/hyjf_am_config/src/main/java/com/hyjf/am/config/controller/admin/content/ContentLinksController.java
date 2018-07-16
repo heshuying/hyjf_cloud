@@ -5,9 +5,6 @@ package com.hyjf.am.config.controller.admin.content;
 
 import java.util.List;
 
-import com.hyjf.am.config.dao.model.auto.Link;
-import com.hyjf.am.response.config.LinkResponse;
-import com.hyjf.am.vo.config.LinkVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -17,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.ContentEnvironment;
+import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.service.ContentLinksService;
 import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.response.admin.ContentEnvironmentResponse;
-import com.hyjf.am.resquest.admin.ContentEnvironmentRequest;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.ContentLinksRequest;
-import com.hyjf.am.vo.config.ContentEnvironmentVO;
-import com.hyjf.am.vo.config.ContentQualifyVO;
+import com.hyjf.am.vo.config.LinkVO;
 import com.hyjf.common.util.CommonUtils;
 
 /**
