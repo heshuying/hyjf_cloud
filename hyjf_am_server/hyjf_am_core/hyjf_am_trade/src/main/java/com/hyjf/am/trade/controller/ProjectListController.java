@@ -3,26 +3,24 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.AppProjectListResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.ProjectDetailResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -138,17 +136,38 @@ public class ProjectListController extends BaseController{
 
 
     /**
-     * 查询web端计划专区计划列表count
+     * 查询web端计划专区计划列表List
      * @author zhangyk
      * @date 2018/6/21 15:49
      */
     @RequestMapping("/web/searchPlanList")
-    public ProjectListResponse searchPlanList(@RequestBody @Valid  ProjectListRequest request){
-        ProjectListResponse res = new ProjectListResponse();
-        List<WebProjectListCustomizeVO> list= projectListService.searchWebPlanList(request);
-        res.setResultList(list);
+    public HjhPlanResponse searchPlanList(@RequestBody @Valid  ProjectListRequest request){
+        HjhPlanResponse res = new HjhPlanResponse();
+        List<HjhPlanCustomize> list= projectListService.searchWebPlanList(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            res.setResultList(CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class));
+        }
         return res;
     }
+
+
+    /**
+     * 查询web端计划基本详情()
+     * @author zhangyk
+     * @date 2018/7/14 17:59
+     */
+    @GetMapping("/web/searchPlanDetail/{planNid}")
+    public HjhPlanDetailResponse searchPlanList(@PathVariable String planNid){
+        HjhPlanDetailResponse res = new HjhPlanDetailResponse();
+        PlanDetailCustomize detail= projectListService.getPlanDetail(planNid);
+        if (detail != null){
+            PlanDetailCustomizeVO detailCustomizeVO = CommonUtils.convertBean(detail,PlanDetailCustomizeVO.class);
+            res.setResult(detailCustomizeVO);
+        }
+        return res;
+    }
+
+
 
 
 

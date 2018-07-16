@@ -384,6 +384,24 @@ public class UserManagerController extends BaseController{
     }
 
     /**
+     *根据用户名获取开户信息
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @RequestMapping("/get_openaccount_byusername/{userName}")
+    public BankOpenAccountResponse queryBankOpenAccountByUserName(@PathVariable String userName) {
+        BankOpenAccountResponse response = new BankOpenAccountResponse();
+        BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+        BankOpenAccount bankOpenAccount = userManagerService.queryBankOpenAccountByUserName(userName);
+        if (null != bankOpenAccount) {
+            BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+            response.setResult(bankOpenAccountVO);
+            response.setRtn(Response.SUCCESS);//代表成功
+        }
+        return response;
+    }
+
+    /**
      * 更新开户信息
      *
      * @param request

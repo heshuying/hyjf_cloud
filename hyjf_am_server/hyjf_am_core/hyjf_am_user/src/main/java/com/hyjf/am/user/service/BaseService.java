@@ -66,4 +66,6 @@ public interface BaseService {
      * @return
      */
     BankOpenAccount selectByExample(BankOpenAccountExample example);
+
+    User getUserByAccountId(String accountId);
 }

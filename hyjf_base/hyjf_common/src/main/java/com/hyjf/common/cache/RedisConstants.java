@@ -133,4 +133,9 @@ public class RedisConstants {
      * 短信模板缓存
      */
     public static final String SMS_TEMPLATE_TPLCODE = "sms_template_tplCode_";
+
+    /**
+     * 网关路由配置
+     */
+    public static final String ZUUL_ROUTER_CONFIG_KEY = "zuul_roter_config_key";
 }
