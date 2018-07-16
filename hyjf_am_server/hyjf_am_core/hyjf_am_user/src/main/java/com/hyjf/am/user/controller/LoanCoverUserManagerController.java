@@ -50,34 +50,6 @@ public class LoanCoverUserManagerController extends BaseController{
     @RequestMapping("/loanCoverUserRecord")
     public LoanCoverUserResponse findLoanCoverUserRecord(@RequestBody @Valid LoanCoverUserRequest request) {
         logger.info("---findLoanCoverUserRecord by param---  " + JSONObject.toJSON(request));
-//        Map<String, Object> mapParam = paramSet(request);
-        /*int start = 0;
-        int end = 0;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if (request.getStartCreate() != null) {
-            Date date;
-            try {
-                date = simpleDateFormat.parse(request.getStartCreate());
-                start = (int) (date.getTime() / 1000);
-            } catch (ParseException e) {
-                logger.info("借款盖章用户返回日期格式化异常：" + e.getMessage());
-            }
-
-        }
-        if (request.getEndCreate() != null) {
-            Date date;
-            try {
-                date = simpleDateFormat.parse(request.getEndCreate());
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(date);
-                cal.add(Calendar.DATE, 1);
-
-                end = (int) ((cal.getTime()).getTime() / 1000);
-            } catch (ParseException e) {
-                logger.info("借款盖章用户返回日期格式化异常：" + e.getMessage());
-            }
-
-        }*/
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStart = new Date();
         Date dateEnd = new Date();
@@ -88,16 +60,21 @@ public class LoanCoverUserManagerController extends BaseController{
             }catch (ParseException e) {
                 e.printStackTrace();
             }
-
-
         }
+
         LoanCoverUserResponse response = new LoanCoverUserResponse();
         Integer registCount = loanCoverUserManagerService.countLoanSubjectCertificateAuthority(request,dateStart,dateEnd);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
-        if(request.getLimit() ==0){
-            paginator = new Paginator(request.getPaginatorPage(), registCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
+        if(request.getPageSize() ==0){
+            paginator = new Paginator(request.getCurrPage(), registCount);
         }
-        List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,paginator.getOffset(), paginator.getLimit(),dateStart,dateEnd);
+        int limitStart = paginator.getOffset();
+        int limitEnd =  paginator.getLimit();
+        if(request.getLimitFlg()==1){
+            limitEnd = 0;
+            limitStart = 0;
+        }
+        List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,limitStart,limitEnd,dateStart,dateEnd);
         if(registCount>0){
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<LoanCoverUserVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, LoanCoverUserVO.class);

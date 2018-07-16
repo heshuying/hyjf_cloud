@@ -33,12 +33,12 @@ public class LoanCoverClientImpl implements LoanCoverClient {
      * @return
      */
     @Override
-    public List<LoanCoverUserVO> selectUserMemberList(LoanCoverUserRequest request) {
+    public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request) {
         LoanCoverUserResponse response = restTemplate
                 .postForEntity("http://AM-USER/am-user/loanCoverUser/loanCoverUserRecord", request, LoanCoverUserResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }
@@ -63,6 +63,7 @@ public class LoanCoverClientImpl implements LoanCoverClient {
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
+
         }
         return null;
     }
@@ -70,12 +71,12 @@ public class LoanCoverClientImpl implements LoanCoverClient {
      * 根据id查找记录
      */
     @Override
-    public LoanCoverUserVO selectIsExistsRecordById(String strId){
+    public  LoanCoverUserResponse selectIsExistsRecordById(String strId){
         LoanCoverUserResponse response = restTemplate.
                 getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordById/"+strId, LoanCoverUserResponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
+            return response;
         }
         return null;
     }

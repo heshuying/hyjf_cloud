@@ -4,11 +4,9 @@
 package com.hyjf.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
-import com.hyjf.am.resquest.user.UserChangeLogRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
@@ -126,18 +124,8 @@ public interface UserCenterService {
      * @return
      */
     CompanyInfoVO selectCompanyInfoByUserId(String userId);
-    /**
-     * 根據accounId獲取開戶信息
-     * @param accountId
-     * @return
-     */
-    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
 
-    /**
-     * 保存企业信息
-     * @return
-     */
-    JSONObject saveCompanyInfo(Map<String,String> mapParam);
+
     /**
      * 获取某一用户的信息修改列表
      * @param request
@@ -177,4 +165,11 @@ public interface UserCenterService {
      * @return
      */
     BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
+
+    /**
+     * 保存企业信息
+     * @param updCompanyRequest
+     * @return
+     */
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
 }

@@ -28,7 +28,7 @@ import java.util.Map;
  * @author nxl
  * @version EvaluationController, v0.1 2018/6/25 17:23
  */
-@Api(value = "用户测评")
+@Api(value = "会员中心-用户测评")
 @RestController
 @RequestMapping("/hyjf-admin/evaluation")
 public class EvalationController extends BaseController {
