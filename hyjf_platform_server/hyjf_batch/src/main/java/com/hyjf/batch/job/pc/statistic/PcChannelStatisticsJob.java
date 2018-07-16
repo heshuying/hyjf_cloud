@@ -11,6 +11,7 @@ import org.quartz.JobExecutionException;
 import com.hyjf.batch.job.BaseJob;
 
 /**
+ * PC渠道统计数据定时
  * @author fuqiang
  * @version PcChannelStatisticsJob, v0.1 2018/7/16 10:12
  */

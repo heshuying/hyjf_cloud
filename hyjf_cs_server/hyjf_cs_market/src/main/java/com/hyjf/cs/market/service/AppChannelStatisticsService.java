@@ -5,11 +5,11 @@ package com.hyjf.cs.market.service;
 
 /**
  * @author fuqiang
- * @version PcChannelStatisticsService, v0.1 2018/7/16 10:27
+ * @version AppChannelStatisticsService, v0.1 2018/7/16 14:18
  */
-public interface PcChannelStatisticsService extends BaseMarketService {
+public interface AppChannelStatisticsService extends BaseMarketService {
 	/**
-	 * 更新Pc渠道统计
+	 * 更新app渠道统计
 	 *
 	 */
 	void insertStatistics();

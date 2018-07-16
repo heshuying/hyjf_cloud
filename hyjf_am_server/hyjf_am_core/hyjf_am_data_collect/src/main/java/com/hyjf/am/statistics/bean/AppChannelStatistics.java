@@ -21,13 +21,13 @@ public class AppChannelStatistics implements Serializable {
 
     private String channelName;
 
-    private BigDecimal visitCount;
+    private Integer visitCount;
 
-    private BigDecimal registerCount;
+    private Integer registerCount;
 
-    private BigDecimal openAccountCount;
+    private Integer openAccountCount;
 
-    private BigDecimal investNumber;
+    private Integer investNumber;
 
     private BigDecimal cumulativeCharge;
 
@@ -99,35 +99,35 @@ public class AppChannelStatistics implements Serializable {
         this.channelName = channelName == null ? null : channelName.trim();
     }
 
-    public BigDecimal getVisitCount() {
+    public Integer getVisitCount() {
         return visitCount;
     }
 
-    public void setVisitCount(BigDecimal visitCount) {
+    public void setVisitCount(Integer visitCount) {
         this.visitCount = visitCount;
     }
 
-    public BigDecimal getRegisterCount() {
+    public Integer getRegisterCount() {
         return registerCount;
     }
 
-    public void setRegisterCount(BigDecimal registerCount) {
+    public void setRegisterCount(Integer registerCount) {
         this.registerCount = registerCount;
     }
 
-    public BigDecimal getOpenAccountCount() {
+    public Integer getOpenAccountCount() {
         return openAccountCount;
     }
 
-    public void setOpenAccountCount(BigDecimal openAccountCount) {
+    public void setOpenAccountCount(Integer openAccountCount) {
         this.openAccountCount = openAccountCount;
     }
 
-    public BigDecimal getInvestNumber() {
+    public Integer getInvestNumber() {
         return investNumber;
     }
 
-    public void setInvestNumber(BigDecimal investNumber) {
+    public void setInvestNumber(Integer investNumber) {
         this.investNumber = investNumber;
     }
 

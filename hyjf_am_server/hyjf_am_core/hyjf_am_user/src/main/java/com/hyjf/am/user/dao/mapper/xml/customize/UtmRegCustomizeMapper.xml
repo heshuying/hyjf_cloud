@@ -38,15 +38,14 @@
 	</select>
 	<sql id="Where_Clause">
 		<where>
-			AND 1=1
 			<if test="sourceType != null and sourceType != ''" >
-				and source_type =  ${sourceType}
+				and source_type =  #{sourceType}
 			</if>
 			<if test="sourceId != null and sourceId != ''" >
-				and source_id =  ${sourceId}
+				and source_id =  #{sourceId}
 			</if>
 			<if test="delFlag != null and delFlag != ''" >
-				and del_flag =  ${delFlag}
+				and del_flag =  #{delFlag}
 			</if>
 			<if test="limitStart >= 0" >
 				limit #{limitStart} , #{limitEnd}
