@@ -149,6 +149,8 @@ public interface UserManagerService extends BaseService{
      */
     BankOpenAccount queryBankOpenAccountByUserId(int userId);
 
+    BankOpenAccount queryBankOpenAccountByUserName(String userName);
+
     /**
      * 更新开户信息
      *

@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1620,6 +1620,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="retryable" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="enabled" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="secure_visit_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">

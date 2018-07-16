@@ -4,10 +4,9 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.HjhLabelResponse;
-import com.hyjf.am.response.trade.HjhPlanAppResponse;
+import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.UserHjhInvistDetailCustomizeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
@@ -88,8 +87,8 @@ public class HjhPlanController extends BaseController{
      * @Date 2018/6/19 14:04
      */
     @RequestMapping("/getHjhPlanByPlanNid/{planNid}")
-    public HjhPlanResponse getHjhPlanByPlanNid(@PathVariable String planNid) {
-        HjhPlanResponse response = new HjhPlanResponse();
+    public com.hyjf.am.response.user.HjhPlanResponse getHjhPlanByPlanNid(@PathVariable String planNid) {
+        com.hyjf.am.response.user.HjhPlanResponse response = new com.hyjf.am.response.user.HjhPlanResponse();
         HjhPlan plan = hjhPlanService.getHjhPlanByNid(planNid);
         HjhPlanVO result = CommonUtils.convertBean(plan, HjhPlanVO.class);
         response.setResult(result);
@@ -119,8 +118,8 @@ public class HjhPlanController extends BaseController{
     }
 
     @PostMapping("/selectAppHjhPlanList")
-    public HjhPlanAppResponse selectAppHjhPlanList(@RequestBody HjhPlanRequest request){
-        HjhPlanAppResponse response = new HjhPlanAppResponse();
+    public HjhPlanResponse selectAppHjhPlanList(@RequestBody HjhPlanRequest request){
+        HjhPlanResponse response = new HjhPlanResponse();
         List<HjhPlanCustomize> list= hjhPlanService.selectAppHomeHjhPlan(request);
         if (!CollectionUtils.isEmpty(list)){
             response.setResultList(CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class));

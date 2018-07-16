@@ -574,6 +574,66 @@ public class GatewayApiConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andSecureVisitFlagIsNull() {
+            addCriterion("secure_visit_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagIsNotNull() {
+            addCriterion("secure_visit_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagEqualTo(Integer value) {
+            addCriterion("secure_visit_flag =", value, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagNotEqualTo(Integer value) {
+            addCriterion("secure_visit_flag <>", value, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagGreaterThan(Integer value) {
+            addCriterion("secure_visit_flag >", value, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("secure_visit_flag >=", value, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagLessThan(Integer value) {
+            addCriterion("secure_visit_flag <", value, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("secure_visit_flag <=", value, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagIn(List<Integer> values) {
+            addCriterion("secure_visit_flag in", values, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagNotIn(List<Integer> values) {
+            addCriterion("secure_visit_flag not in", values, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagBetween(Integer value1, Integer value2) {
+            addCriterion("secure_visit_flag between", value1, value2, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecureVisitFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("secure_visit_flag not between", value1, value2, "secureVisitFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andApiNameIsNull() {
             addCriterion("api_name is null");
             return (Criteria) this;

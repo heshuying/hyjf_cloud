@@ -3,7 +3,6 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -37,6 +36,8 @@ public interface AmUserClient {
      * @return
      */
     UserVO searchUserByUserId(Integer userId);
+
+    UserVO getUserByAccountId(String accountId);
 
     /**
      * 根据手机号获取用户信息
@@ -126,4 +127,5 @@ public interface AmUserClient {
      */
     JSONObject synUserAuth(Integer userId, Integer type);
 
+    BankOpenAccountVO queryBankOpenAccountByUserName(String userName);
 }

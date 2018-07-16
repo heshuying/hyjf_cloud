@@ -43,4 +43,12 @@ public interface ContentPartnerClient {
 	 * @return
 	 */
 	LinkVO getRecord(Integer id);
+
+	/**
+	 * 根据id删除公司管理-合作伙伴
+	 *
+	 * @param id
+	 * @return
+	 */
+    LinkResponse deleteById(Integer id);
 }

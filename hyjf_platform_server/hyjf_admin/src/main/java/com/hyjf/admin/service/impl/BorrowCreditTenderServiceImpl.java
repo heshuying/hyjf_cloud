@@ -4,35 +4,43 @@ import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowCreditRepayInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
 import com.hyjf.admin.beans.BorrowCreditTenderResultBean;
+import com.hyjf.admin.beans.CreditUserInfoBean;
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BorrowCreditTenderService;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +48,13 @@ import java.util.Map;
 @Service
 public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService {
 
+    Logger logger = LoggerFactory.getLogger(BorrowCreditTenderServiceImpl.class);
+
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private SystemConfig systemConfig;
 
     public static final String HZR_PREFIX = "HZR";
 
@@ -67,6 +80,8 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public static final String TENDER_LIST_URL = BASE_URL + "/getTenderList";
     /*承接列表sum*/
     public static final String TENDER_SUM_URL = BASE_URL + "/getTenderSum";
+
+    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/";
 
     /**
      * 查询还款信息列表
@@ -103,7 +118,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
      * @date 2018/7/11 20:41
      */
     @Override
-    public void exprotBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) {
+    public void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) {
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
 
         String sheetName = "还款信息列表";
@@ -187,8 +202,191 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         return result;
     }
 
+    /**
+     * 承接信息列表导出
+     * @author zhangyk
+     * @date 2018/7/13 10:49
+     */
+    @Override
+    public void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response) {
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        AdminCreditTenderResponse res = baseClient.postExe(TENDER_LIST_URL, req, AdminCreditTenderResponse.class);
+        List<BorrowCreditTenderVO> list = res.getResultList();
+        String sheetName = "汇转让-承接信息";
 
-    // 生成excel
+        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+
+        //String[] titles = new String[] { "序号","订单号","债转编号","项目编号","出让人","出让人当前的推荐人的用户名","出让人当前的推荐人的用户属性","出让人当前的推荐人的分公司","出让人当前的推荐人的部门","出让人当前的推荐人的团队","出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队", "承接人","承接人当前的推荐人的用户名","承接人当前的推荐人的用户属性","承接人当前的推荐人的分公司","承接人当前的推荐人的部门","承接人当前的推荐人的团队","承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队", "承接本金","折让率","认购价格","垫付利息", "债转服务费", "实付金额","承接平台", "承接时间" };
+        String[] titles = new String[] { "序号","订单号","债转编号","项目编号","出让人","承接人", "承接本金","折让率","认购价格","垫付利息", "债转服务费", "实付金额","承接平台", "承接时间" };
+        exportTenderExcel(sheetName,fileName , titles ,list,response);
+    }
+
+
+    /**
+     * 查看债权人债权信息
+     * @author zhangyk
+     * @date 2018/7/13 15:21
+     */
+    @Override
+    public AdminResult getCreditUserInfo(HttpServletRequest request) {
+        AdminResult result = new AdminResult();
+        String userId = request.getParameter("userId");
+        String assignNid = request.getParameter("assignNid");
+        CheckUtil.check(StringUtils.isNotBlank(userId) ,MsgEnum.ERR_OBJECT_REQUIRED,"用户");
+        CheckUtil.check(StringUtils.isNotBlank(assignNid) ,MsgEnum.ERR_OBJECT_REQUIRED,"承接订单号");
+        String url = BANK_OPEN_ACCOUNT_URL +userId;
+        BankOpenAccountResponse response = baseClient.getExe(url,BankOpenAccountResponse.class);
+        BankOpenAccountVO accountVO = response.getResult();
+        CreditUserInfoBean userInfo = new CreditUserInfoBean();
+        if (accountVO != null){
+            String accountId = accountVO.getAccount();
+            // 调用江西银行查询单笔投资人投标申请接口
+            BankCallBean bankCallBean = bidApplyQuery(userId,assignNid,accountId);
+            if (bankCallBean != null){
+                userInfo = CommonUtils.convertBean(bankCallBean,CreditUserInfoBean.class);
+            }else{
+                logger.error("调用江西银行查询单笔投资人投标申请接口异常");
+            }
+        }
+        result.setData(userInfo);
+        return result;
+    }
+
+
+    private BankCallBean bidApplyQuery(String userId,String orderId, String accountId){
+        BankCallBean bean = new BankCallBean();
+        String instCode = systemConfig.getBANK_INSTCODE();
+        String bankCode = systemConfig.getBANK_BANKCODE();
+        String txDate = GetOrderIdUtils.getTxDate();
+        String txTime = GetOrderIdUtils.getTxTime();
+        String seqNo = GetOrderIdUtils.getSeqNo(6);
+        String channel = BankCallConstant.CHANNEL_PC;
+        //设置查询需要参数
+        bean.setInstCode(instCode);
+        bean.setBankCode(bankCode);
+        bean.setTxDate(txDate);
+        bean.setTxTime(txTime);
+        bean.setSeqNo(seqNo);
+        bean.setChannel(channel);
+        bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);
+        bean.setAccountId(accountId);// 投资人电子账户号
+        bean.setOrgOrderId(orderId);
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId0(Integer.parseInt(userId)));
+        bean.setLogUserId(userId);
+        BankCallBean result = BankCallUtils.callApiBg(bean);
+        return result;
+    }
+
+
+    /**
+     * 承接信息生成excel
+     * @author zhangyk
+     * @date 2018/7/13 11:10
+     */
+    private void exportTenderExcel(String sheetName,String fileName,String[] titles, List<BorrowCreditTenderVO> resultList, HttpServletResponse response){
+        // 声明一个工作薄
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        // 生成一个表格
+        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+
+        if (resultList != null && resultList.size() > 0) {
+            int sheetCount = 1;
+            int rowNum = 0;
+            for (int i = 0; i < resultList.size(); i++) {
+                rowNum++;
+                if (i != 0 && i % 60000 == 0) {
+                    sheetCount++;
+                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                    rowNum = 1;
+                }
+                // 新建一行
+                Row row = sheet.createRow(rowNum);
+                // 循环数据
+                for (int celLength = 0; celLength < titles.length; celLength++) {
+                    BorrowCreditTenderVO creditTenderVo = resultList.get(i);
+
+                    // 创建相应的单元格
+                    Cell cell = row.createCell(celLength);
+                    // 序号
+                    if (celLength == 0) {
+                        cell.setCellValue(i + 1);
+                    }
+                    // 订单号
+                    else if (celLength == 1) {
+                        cell.setCellValue(creditTenderVo.getAssignNid());
+                    }
+                    // 债转编号
+                    else if (celLength == 2) {
+                        cell.setCellValue(creditTenderVo.getCreditNid());
+                    }
+                    // 项目编号
+                    else if (celLength == 3) {
+                        cell.setCellValue(creditTenderVo.getBidNid());
+                    }
+                    // 出让人用户名
+                    else if (celLength == 4) {
+                        cell.setCellValue(creditTenderVo.getCreditUserName());
+                    }
+                    // 承接人
+                    else if (celLength == 5){
+                        cell.setCellValue(creditTenderVo.getUserName());
+                    }
+
+                    // 承接本金
+                    else if (celLength == 6) {
+                        cell.setCellValue(creditTenderVo.getAssignCapital());
+                    }
+                    // 折让率
+                    else if (celLength == 7) {
+                        cell.setCellValue(creditTenderVo.getCreditDiscount());
+                    }
+                    // 认购价格
+                    else if (celLength == 8) {
+                        cell.setCellValue(creditTenderVo.getAssignPrice());
+                    }
+                    // 垫付利息
+                    else if (celLength == 9) {
+                        cell.setCellValue(creditTenderVo.getAssignInterestAdvance());
+                    }
+                    // 服务费
+                    else if (celLength == 10) {
+                        cell.setCellValue(creditTenderVo.getCreditFee());
+                    }
+                    // 实付金额
+                    else if (celLength == 11) {
+                        cell.setCellValue(creditTenderVo.getAssignPay());
+                    }
+                    // 客户端
+                    else if (celLength == 12) {
+                        if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
+                                &&creditTenderVo.getClient().equals("0")) {
+                            cell.setCellValue("pc");
+                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
+                                &&creditTenderVo.getClient().equals("1")) {
+                            cell.setCellValue("微信");
+                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
+                                &&creditTenderVo.getClient().equals("2")) {
+                            cell.setCellValue("android");
+                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
+                                &&creditTenderVo.getClient().equals("3")) {
+                            cell.setCellValue("ios");
+                        }
+                    }
+                    // 承接时间
+                    else if (celLength == 13) {
+                        cell.setCellValue(creditTenderVo.getAddTime());
+                    }
+                }
+            }
+        }
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+
+    }
+
+
+    // 还款信息生成excel
     private void exportExcel(String sheetName, String fileName, String[] titles, List<BorrowCreditRepayVO> resultList, HttpServletResponse response) {
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

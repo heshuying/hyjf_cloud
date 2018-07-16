@@ -1,5 +1,18 @@
 package com.hyjf.cs.user.controller.web.bankopen;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -17,19 +30,9 @@ import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * 
@@ -40,8 +43,8 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/web/user/secure/open")
-public class BankOpenController extends BaseUserController {
-	private static final Logger logger = LoggerFactory.getLogger(BankOpenController.class);
+public class WebBankOpenController extends BaseUserController {
+	private static final Logger logger = LoggerFactory.getLogger(WebBankOpenController.class);
 
 	@Autowired
 	private BankOpenService bankOpenService;

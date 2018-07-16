@@ -27,4 +27,12 @@ public interface ContentArticleService {
      * @return
      */
     public ContentArticle getContactUs();
+
+    /**
+     * 根据id获取动态
+     *
+     * @param id
+     * @return
+     */
+    ContentArticle getArticleById(Integer id);
 }

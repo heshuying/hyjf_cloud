@@ -95,4 +95,18 @@ public class ContentQualifyController extends BaseConfigController {
 		}
 		return response;
 	}
+
+	/**
+	 * 删除公司管理-资质荣誉状态
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("delete/{id}")
+	public ContentQualifyResponse delete(@PathVariable Integer id) {
+		ContentQualifyResponse response = new ContentQualifyResponse();
+		contentQualifyService.delete(id);
+		response.setRtn(AdminResponse.SUCCESS);
+		return response;
+	}
 }

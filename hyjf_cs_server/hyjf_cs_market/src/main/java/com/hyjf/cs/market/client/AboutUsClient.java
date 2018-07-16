@@ -3,10 +3,7 @@
  */
 package com.hyjf.cs.market.client;
 
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.config.JobsVo;
-import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.am.vo.config.*;
 
 import java.util.List;
 
@@ -75,4 +72,12 @@ public interface AboutUsClient {
      * @return
      */
     public List<ContentArticleVO> getknowsList();
+
+    /**
+     * 获取合作伙伴列表
+     *
+     * @param partnerType 合作类型
+     * @return
+     */
+    List<LinkVO> getPartnersList(Integer partnerType);
 }

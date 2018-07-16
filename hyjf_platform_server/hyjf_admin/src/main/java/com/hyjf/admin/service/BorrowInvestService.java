@@ -3,14 +3,20 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.InvestorDebtBean;
+import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
+import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author wangjun
  * @version BorrowInvestService, v0.1 2018/7/10 9:17
  */
-public interface BorrowInvestService{
+public interface BorrowInvestService {
     /**
      * 投资明细列表
      *
@@ -18,4 +24,44 @@ public interface BorrowInvestService{
      * @return
      */
     BorrowInvestResponseBean getBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 投资明细导出列表
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    List<BorrowInvestCustomizeVO> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 投资人债权明细
+     *
+     * @param investorDebtBean
+     * @return
+     */
+    AdminResult debtInfo(InvestorDebtBean investorDebtBean);
+
+    /**
+     * PDF脱敏图片预览
+     *
+     * @param nid
+     * @return
+     */
+    AdminResult pdfPreview(String nid);
+
+    /**
+     * PDF签署
+     *
+     * @param investorDebtBean
+     * @return
+     */
+    AdminResult pdfSign(InvestorDebtBean investorDebtBean);
+
+    /**
+     * 发送协议
+     *
+     * @param investorRequest
+     * @return
+     */
+    AdminResult sendAgreement(InvestorRequest investorRequest);
 }

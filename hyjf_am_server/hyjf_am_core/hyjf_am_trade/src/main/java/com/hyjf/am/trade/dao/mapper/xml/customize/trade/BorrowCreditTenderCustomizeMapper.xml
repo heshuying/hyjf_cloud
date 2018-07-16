@@ -173,7 +173,7 @@
 		<include refid="TENDER_WHERE_COLUMN"/>
 		ORDER BY
 		bc.create_time DESC
-		<if test="limitStart >= 0  and limitEnd >= 0" >
+		<if test="limitStart != null  and limitEnd != null" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
 

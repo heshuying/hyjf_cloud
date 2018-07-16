@@ -49,4 +49,11 @@ public interface TeamService {
      * @return
      */
     Team getRecord(Integer id);
+
+    /**
+     * 根据id删除公司管理-团队介绍
+     *
+     * @param id
+     */
+    void deleteById(Integer id);
 }

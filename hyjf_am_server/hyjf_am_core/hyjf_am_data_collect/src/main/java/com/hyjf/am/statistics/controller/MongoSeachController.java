@@ -2,24 +2,22 @@ package com.hyjf.am.statistics.controller;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
-import com.hyjf.am.statistics.bean.AccountWebList;
-import com.hyjf.am.statistics.bean.AppChannelStatisticsDetail;
-import com.hyjf.am.statistics.bean.BankSmsAuthCode;
-import com.hyjf.am.statistics.bean.DirectionalTransferAssociatedRecords;
+import com.hyjf.am.statistics.bean.*;
 import com.hyjf.am.statistics.mongo.*;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -45,6 +43,9 @@ public class MongoSeachController {
 
     @Autowired
     private CalculateInvestInterestDao calculateInvestInterestDao;
+
+    @Autowired
+    private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
 
     /**
      * 根据userId查询渠道投资信息
@@ -144,4 +145,20 @@ public class MongoSeachController {
 		response.setInterestSum(totalInvestmentAmount);
 		return response;
 	}
+
+	/**
+	 * 查询运营统计数据
+	 * @author zhangyk
+	 * @date 2018/7/14 15:57
+	 */
+	@GetMapping("/getTotalInvestAndInterestEntity")
+    public TotalInvestAndInterestResponse getTotalInvestAndInterest(){
+	   TotalInvestAndInterestResponse response = new TotalInvestAndInterestResponse();
+	   TotalInvestAndInterestEntity entity =  totalInvestAndInterestMongoDao.findOne(new Query());
+	   if (entity != null){
+	       response.setResult(CommonUtils.convertBean(entity,TotalInvestAndInterestVO.class));
+       }
+	   return response;
+
+    }
 }

@@ -3,14 +3,13 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.config.RecruitResponse;
 import com.hyjf.am.response.config.TeamResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.config.JobsVo;
-import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.am.vo.config.*;
 import com.hyjf.cs.market.client.AboutUsClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +53,7 @@ public class AboutUsClientImpl implements AboutUsClient {
 
     @Override
 	public TeamVO getFounder() {
-		TeamResponse response = restTemplate.getForObject("http://am-config/team/getfounder", TeamResponse.class);
+		TeamResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/team/getfounder", TeamResponse.class);
 		if (response != null) {
 			return response.getResult();
 		}
@@ -62,19 +61,34 @@ public class AboutUsClientImpl implements AboutUsClient {
 	}
 
     @Override
-    public List<EventVO> getEventsList() {
-        return null;
-    }
+	public List<EventVO> getEventsList() {
+		EventResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/content/contentevent/searchaction", null, EventResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 
-    @Override
-    public List<ContentArticleVO> aboutUsClient() {
-        return null;
-    }
+	@Override
+	public List<ContentArticleVO> aboutUsClient() {
+		ContentArticleResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/article/contentArticleList", null, ContentArticleResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 
-    @Override
-    public ContentArticleVO getNoticeInfo(Integer id) {
-        return null;
-    }
+	@Override
+	public ContentArticleVO getNoticeInfo(Integer id) {
+		ContentArticleResponse response = restTemplate
+				.getForObject("http://AM-CONFIG/am-config/article/getarticlebyid/" + id, ContentArticleResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 
     /**
      * 获取招贤纳士列表
@@ -107,4 +121,15 @@ public class AboutUsClientImpl implements AboutUsClient {
         return null;
 
     }
+
+	@Override
+	public List<LinkVO> getPartnersList(Integer partnerType) {
+		LinkResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/content/contentpartner/getbypartnertype/" + partnerType,
+				LinkResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

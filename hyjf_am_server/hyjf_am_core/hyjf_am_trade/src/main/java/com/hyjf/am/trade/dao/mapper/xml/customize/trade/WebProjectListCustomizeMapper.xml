@@ -704,6 +704,59 @@
         </where>
     </sql>
 
+    <resultMap id="DebtPlanDetailMap" type="com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize">
+        <id column="plan_nid" property="planNid"  />
+        <result column="plan_name" property="planName"  />
+        <result column="lock_period" property="planPeriod"  />
+        <result column="expect_apr" property="planApr"  />
+        <result column="is_month" property="isMonth"  />
+        <result column="min_investment" property="debtMinInvestment"  />
+        <result column="max_investment" property="debtMaxInvestment"  />
+        <result column="plan_invest_status" property="planStatus"  />
+        <result column="investment_increment" property="debtInvestmentIncrement"  />
+        <result column="available_invest_account" property="availableInvestAccount"  />
+        <result column="plan_concept" property="planConcept"  />
+        <result column="plan_principle" property="planPrinciple"  />
+        <result column="safeguard_measures" property="safeguardMeasures"  />
+        <result column="margin_measures" property="marginMeasures"  />
+        <result column="normal_questions" property="normalQuestions"  />
+        <result column="coupon_config" property="couponConfig" jdbcType="VARCHAR" />
+        <result column="plan_invest_status" property="planStatus" jdbcType="VARCHAR" />
+        <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+        <result column="name" property="borrowStyleName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getPlanDetail" resultMap="DebtPlanDetailMap" >
+        SELECT
+			dp.plan_nid,
+			dp.plan_name,
+			dp.lock_period,
+			dp.is_month,
+			dp.expect_apr,
+			dp.min_investment,
+			dp.plan_invest_status,
+			dp.max_investment,
+			dp.investment_increment,
+			dp.available_invest_account,
+			dp.plan_concept,
+			dp.plan_principle,
+			dp.safeguard_measures,
+			dp.margin_measures,
+			dp.normal_questions,
+			dp.plan_invest_status,
+			dp.coupon_config,
+			dp.borrow_style,
+			hbs.name
+		FROM
+			ht_hjh_plan dp
+		LEFT JOIN
+			ht_borrow_style hbs
+		ON  hbs.nid = dp.borrow_style
+		WHERE
+			dp.plan_nid = #{planNid,jdbcType=VARCHAR}
+		AND hbs.status = 0
+    </select>
+
     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>web end<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>app start<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
 

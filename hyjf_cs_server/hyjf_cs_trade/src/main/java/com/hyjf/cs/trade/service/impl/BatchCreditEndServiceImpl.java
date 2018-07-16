@@ -11,6 +11,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BatchCreditEndService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -19,7 +20,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,13 +32,8 @@ import java.util.List;
  */
 @Service
 public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements BatchCreditEndService {
-
-    // 获取共同参数
-    @Value("${hyjf.web.bank.batch.creditend.verify.url}")
-    private String notifyUrl;
-    @Value("${hyjf.web.bank.batch.creditend.result.url}")
-    private String retNotifyUrl;
-
+    @Autowired
+    private SystemConfig systemConfig;
     @Autowired
     private AmTradeClient amTradeClient;
 
@@ -106,8 +101,8 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
             // 调用放款接口
             bean.setBatchNo(bankCreditEnd.getBatchNo());
             bean.setTxCounts(String.valueOf(bankCreditEnd.getTxCounts()));
-            bean.setNotifyURL(notifyUrl);
-            bean.setRetNotifyURL(retNotifyUrl);
+            bean.setNotifyURL(systemConfig.getNotifyUrl());
+            bean.setRetNotifyURL(systemConfig.getRetNotifyUrl());
             bean.setSubPacks(subPacks);
 
             BankCallBean result = BankCallUtils.callApiBg(bean);

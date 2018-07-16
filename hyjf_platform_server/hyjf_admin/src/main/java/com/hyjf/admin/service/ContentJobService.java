@@ -42,4 +42,12 @@ public interface ContentJobService {
 	 * @return
 	 */
 	JobResponse updateStatus(ContentJobRequestBean requestBean);
+
+	/**
+	 * 根据id删除招贤纳士
+	 *
+	 * @param id
+	 * @return
+	 */
+    JobResponse deleteById(Integer id);
 }

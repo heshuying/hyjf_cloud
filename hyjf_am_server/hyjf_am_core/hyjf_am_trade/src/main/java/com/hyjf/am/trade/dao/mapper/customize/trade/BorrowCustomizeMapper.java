@@ -10,6 +10,8 @@ import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * @author pangchengchao
  * @version BorrowCustomizeMapper, v0.1 2018/6/19 16:20
@@ -91,4 +93,18 @@ public interface BorrowCustomizeMapper {
      * @return 
      */
     List<BorrowWithBLOBs> selectAutoReviewHJHBorrowNidList();
+    /**
+     * 借款预编码
+     * 
+     * @param borrowCustomize
+     * @return
+     */
+    String getBorrowPreNid(@Param("mmdd") String mmdd);
+
+      /**
+       * 现金贷获取借款预编号
+       * @param mmdd
+       * @return
+       */
+    String getXJDBorrowPreNid(@Param("mmdd") String mmdd);
 }

@@ -10,8 +10,9 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -181,11 +182,21 @@ public class ProjectListServiceImpl implements ProjectListService {
      * @date 2018/6/21 15:53
      */
     @Override
-    public List<WebProjectListCustomizeVO> searchWebPlanList(ProjectListRequest request) {
+    public List<HjhPlanCustomize> searchWebPlanList(ProjectListRequest request) {
         Map<String,Object> params = new HashMap<>();
         params.put("limitStart",request.getLimitStart());
         params.put("limitEnd",request.getLimitEnd());
         return webProjectListCustomizeMapper.searchWebPlanList(params);
+    }
+
+    /**
+     * web端获取计划基本详情
+     * @author zhangyk
+     * @date 2018/7/14 18:08
+     */
+    @Override
+    public PlanDetailCustomize getPlanDetail(String planNid){
+        return webProjectListCustomizeMapper.getPlanDetail(planNid);
     }
 
 

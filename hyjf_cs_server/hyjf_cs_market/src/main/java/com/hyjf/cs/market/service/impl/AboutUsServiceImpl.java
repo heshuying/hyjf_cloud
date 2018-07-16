@@ -41,7 +41,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     @Override
     public List<LinkVO> getPartnersList(Integer partnerType) {
-        return null;
+        return aboutUsClient.getPartnersList(partnerType);
     }
 
     @Override
