@@ -83,12 +83,6 @@ public class AutoTenderExceptionController  extends BaseController {
         mapParam.put("searchEndDate",request.getSearchEndDate());
         return mapParam;
     }
-    @RequestMapping(value = "/tenderExceptionAction", method = RequestMethod.POST)
-    public TenderExceptionSolveResponse tenderExceptionAction(@RequestBody @Valid AutoTenderExceptionRequest request) {
-        logger.info("---selectAccedeRecordList by param---  " + JSONObject.toJSON(request));
-        TenderExceptionSolveResponse response = new TenderExceptionSolveResponse();
-        return null;
-    }
 
     /**
      * 查询计划加入明细
