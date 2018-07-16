@@ -26,7 +26,7 @@
     <result column="retmsg" property="retmsg" jdbcType="VARCHAR" />
     <result column="suc_counts" property="sucCounts" jdbcType="INTEGER" />
     <result column="fail_counts" property="failCounts" jdbcType="INTEGER" />
-    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="failmsg" property="failmsg" jdbcType="VARCHAR" />
     <result column="create_user" property="createUser" jdbcType="INTEGER" />
@@ -154,7 +154,7 @@
       #{orgOrderId,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{authCode,jdbcType=VARCHAR}, 
       #{creditEndType,jdbcType=TINYINT}, #{received,jdbcType=TINYINT}, #{checkRetcode,jdbcType=VARCHAR}, 
       #{checkRetmsg,jdbcType=VARCHAR}, #{retcode,jdbcType=VARCHAR}, #{retmsg,jdbcType=VARCHAR}, 
-      #{sucCounts,jdbcType=INTEGER}, #{failCounts,jdbcType=INTEGER}, #{state,jdbcType=TINYINT}, 
+      #{sucCounts,jdbcType=INTEGER}, #{failCounts,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{failmsg,jdbcType=VARCHAR}, #{createUser,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
       )
@@ -327,7 +327,7 @@
         #{failCounts,jdbcType=INTEGER},
       </if>
       <if test="state != null" >
-        #{state,jdbcType=TINYINT},
+        #{state,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
@@ -431,7 +431,7 @@
         fail_counts = #{record.failCounts,jdbcType=INTEGER},
       </if>
       <if test="record.state != null" >
-        `state` = #{record.state,jdbcType=TINYINT},
+        `state` = #{record.state,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
@@ -482,7 +482,7 @@
       retmsg = #{record.retmsg,jdbcType=VARCHAR},
       suc_counts = #{record.sucCounts,jdbcType=INTEGER},
       fail_counts = #{record.failCounts,jdbcType=INTEGER},
-      `state` = #{record.state,jdbcType=TINYINT},
+      `state` = #{record.state,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
       failmsg = #{record.failmsg,jdbcType=VARCHAR},
       create_user = #{record.createUser,jdbcType=INTEGER},
@@ -566,7 +566,7 @@
         fail_counts = #{failCounts,jdbcType=INTEGER},
       </if>
       <if test="state != null" >
-        `state` = #{state,jdbcType=TINYINT},
+        `state` = #{state,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
@@ -614,7 +614,7 @@
       retmsg = #{retmsg,jdbcType=VARCHAR},
       suc_counts = #{sucCounts,jdbcType=INTEGER},
       fail_counts = #{failCounts,jdbcType=INTEGER},
-      `state` = #{state,jdbcType=TINYINT},
+      `state` = #{state,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
       failmsg = #{failmsg,jdbcType=VARCHAR},
       create_user = #{createUser,jdbcType=INTEGER},

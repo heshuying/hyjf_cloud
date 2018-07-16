@@ -10,6 +10,12 @@ import com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -285,4 +291,49 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
     }
 
+    /**
+     * 获取系统配置
+     * @param configCd
+     * @return
+     */
+    @Override
+    public String getBorrowConfig(String configCd) {
+        BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
+        return borrowConfig.getConfigValue();
+    }
+
+    /**
+     * 根据电子账号查询用户在江西银行的可用余额
+     *
+     * @param accountId
+     * @return
+     */
+    @Override
+    public BigDecimal getBankBalance(Integer userId, String accountId) {
+        // 账户可用余额
+        BigDecimal balance = BigDecimal.ZERO;
+        BankCallBean bean = new BankCallBean();
+        bean.setVersion(BankCallConstant.VERSION_10);// 版本号
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);// 交易代码
+        bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
+        bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
+        bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
+        bean.setAccountId(accountId);// 电子账号
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogUserId(String.valueOf(userId));
+        bean.setLogRemark("电子账户余额查询");
+        bean.setLogClient(0);// 平台
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return balance;
+    }
 }

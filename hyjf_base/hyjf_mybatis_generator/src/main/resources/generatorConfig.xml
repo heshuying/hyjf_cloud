@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -459,7 +459,6 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="credit_end_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="received" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="state" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

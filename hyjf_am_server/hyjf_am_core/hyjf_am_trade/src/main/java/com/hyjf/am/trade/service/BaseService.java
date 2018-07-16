@@ -3,8 +3,9 @@
  */
 package com.hyjf.am.trade.service;
 
-import java.math.BigDecimal;
 import com.hyjf.am.trade.dao.model.auto.*;
+
+import java.math.BigDecimal;
 
 /**
  * 资金服务: BaseService
@@ -78,4 +79,17 @@ public interface BaseService {
 
     BorrowRepayPlan getRepayPlan(String borrowNid, int period);
 
+    /**
+     * 获取系统配置
+     * @param configCd
+     * @return
+     */
+    String getBorrowConfig(String configCd);
+
+    /**
+     * 根据电子账号查询用户在江西银行的可用余额
+     * @param accountId
+     * @return
+     */
+    BigDecimal getBankBalance(Integer userId, String accountId);
 }

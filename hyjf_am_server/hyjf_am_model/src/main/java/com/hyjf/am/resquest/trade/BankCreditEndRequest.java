@@ -3,16 +3,19 @@
  */
 package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.resquest.Request;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 
 /**
  * @author liubin
  * @version BankCreditEndRequest, v0.1 2018/7/6 18:16
  */
-public class BankCreditEndRequest extends BaseVO {
+public class BankCreditEndRequest extends Request {
 
     private BankCreditEndVO bankCreditEndVO;
+
+    public BankCreditEndRequest() {
+    }
 
     public BankCreditEndRequest(BankCreditEndVO bankCreditEndVO) {
         this.bankCreditEndVO = bankCreditEndVO;
