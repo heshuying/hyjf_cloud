@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.common.GetOrderIdUtils;
+import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
 import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
@@ -40,11 +41,9 @@ public class BankInvestExceptionServiceImpl implements BankInvestService {
 	@Autowired
 	private BorrowTenderMapper borrowTenderMapper;
 
-	@Value("${hyjf.bank.instcode}")
-	private String BANK_INSTCODE;
+	@Autowired
+	private SystemConfig systemConfig;
 
-	@Value("${hyjf.bank.bankcode}")
-	private String BANK_BANKCODE;
 
 	 /**
 	 * 查询出投资表authcode为空的记录
@@ -95,8 +94,8 @@ public class BankInvestExceptionServiceImpl implements BankInvestService {
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(ClientConstants.VERSION_10);// 接口版本号
 		bean.setTxCode(ClientConstants.TXCODE_BID_APPLY_QUERY);// 消息类型
-		bean.setInstCode(BANK_INSTCODE);// 机构代码
-		bean.setBankCode(BANK_BANKCODE);
+		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+		bean.setBankCode(systemConfig.getBankBankcode());
 		bean.setTxDate(GetOrderIdUtils.getTxDate());
 		bean.setTxTime(GetOrderIdUtils.getTxTime());
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));

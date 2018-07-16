@@ -417,5 +417,19 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
-
+	/**
+	 * 更新CertificateAuthorityVO
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 更新参数
+	 * @return
+	 */
+	@Override
+	public int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", certificateAuthorityVO, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
 }

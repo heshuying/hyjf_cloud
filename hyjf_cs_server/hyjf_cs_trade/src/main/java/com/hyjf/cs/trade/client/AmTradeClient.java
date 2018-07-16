@@ -2,12 +2,16 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -252,4 +256,36 @@ public interface AmTradeClient {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO);
+
+    /**
+     * 根据borrowNid获取BorrowInfoVO对象
+     * @param borrowNid
+     * @return
+     */
+    BorrowInfoVO getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 投资异常处理定时任务处理
+     * @param request
+     * @return
+     */
+    boolean updateTenderStart(BorrowTenderTmpRequest request);
+
+    /**
+     * 获取BorrowTenderTmpVO列表
+     * @return
+     */
+	List<BorrowTenderTmpVO> getBorrowTenderTmpList();
+
+	/**
+	 * 获取BatchBorrowTenderCustomizeVO列表
+	 * @return
+	 */
+	List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList();
+
+	/**
+	 * @param list
+	 */
+	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
+
 }

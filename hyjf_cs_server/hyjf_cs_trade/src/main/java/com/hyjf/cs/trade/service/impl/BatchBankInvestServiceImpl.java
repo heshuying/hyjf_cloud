@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.cs.trade.client.BankWithdrawClient;
-import com.hyjf.cs.trade.client.BatchBankInvestClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BatchBankInvestService;
 
@@ -23,14 +22,14 @@ public class BatchBankInvestServiceImpl extends BaseTradeServiceImpl implements 
     private static final Logger logger = LoggerFactory.getLogger(BatchBankInvestServiceImpl.class);
 
     @Autowired
-    private BatchBankInvestClient batchBankInvestClient;//银行提现掉单
+    private AmTradeClient amTradeClient;//银行提现掉单
     
 	@Override
 	public void handle() {
-		List<BatchBorrowTenderCustomizeVO> list=this.batchBankInvestClient.queryAuthCodeBorrowTenderList();
+		List<BatchBorrowTenderCustomizeVO> list=this.amTradeClient.queryAuthCodeBorrowTenderList();
 		if (CollectionUtils.isNotEmpty(list)){
 			logger.info("BatchBankInvestServiceImpl.run.start...");
-			batchBankInvestClient.insertAuthCode(list);
+			amTradeClient.insertAuthCode(list);
 			logger.info("BatchBankInvestServiceImpl.run.end...");
 		}
 	}
