@@ -8,6 +8,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
@@ -26,6 +27,7 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
@@ -1366,6 +1368,22 @@ public class AmTradeClientImpl implements AmTradeClient{
             throw new RuntimeException("银行自动债转成功后，更新债转数据失败。");
         }
         return true;
+    }
+
+    /**
+     * 根据机构编号获取机构列表
+     * @return
+     * @author nxl
+     */
+    @Override
+    public List<HjhInstConfigVO> selectInstConfigAll() {
+        HjhInstConfigResponse response = restTemplate.
+                getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
     }
 
 }
