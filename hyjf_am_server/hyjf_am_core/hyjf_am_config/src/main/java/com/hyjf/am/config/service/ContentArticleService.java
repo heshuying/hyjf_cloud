@@ -35,4 +35,11 @@ public interface ContentArticleService {
      * @return
      */
     ContentArticle getArticleById(Integer id);
+
+    /**
+     * 查询公告列表
+     * @author zhangyk
+     * @date 2018/7/16 11:39
+     */
+    List<ContentArticle> getNoticeList(ContentArticleRequest request);
 }

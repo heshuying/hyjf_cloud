@@ -36,84 +36,187 @@ public interface AmUserClient {
 
     /**
      * 获取所有渠道
+     * @param type 类型:app,pc
      * @return
      */
-    List<UtmVO> selectUtmPlatList();
+    List<UtmVO> selectUtmPlatList(String type);
 
     /**
      * 访问数
      * @param sourceId 账户推广平台
+     * @param type 类型: pc,app
      * @return
      */
-    Integer getAccessNumber(Integer sourceId);
+    Integer getAccessNumber(Integer sourceId, String type);
 
     /**
      * 注册数
      * @param sourceId 账户推广平台
+     * @param type 类型: pc,app
      * @return
      */
-    Integer getRegistNumber(Integer sourceId);
+    Integer getRegistNumber(Integer sourceId, String type);
 
     /**
      * 开户数
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    Integer getOpenAccountNumber(Integer sourceId);
+    Integer getOpenAccountNumber(Integer sourceId, String type);
 
     /**
      * 投资人数
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    Integer getTenderNumber(Integer sourceId);
+    Integer getTenderNumber(Integer sourceId, String type);
 
     /**
      * 累计充值
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal getCumulativeRecharge(Integer sourceId);
+    BigDecimal getCumulativeRecharge(Integer sourceId, String type);
 
     /**
      * 汇直投投资金额
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal getHztTenderPrice(Integer sourceId);
+    BigDecimal getHztTenderPrice(Integer sourceId, String type);
 
     /**
      * 汇消费投资金额
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal getHxfTenderPrice(Integer sourceId);
+    BigDecimal getHxfTenderPrice(Integer sourceId, String type);
 
     /**
      * 汇天利投资金额
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal gethtlTenderPrice(Integer sourceId);
+    BigDecimal getHtlTenderPrice(Integer sourceId, String type);
 
     /**
      * 汇添金投资金额
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal getHtjTenderPrice(Integer sourceId);
+    BigDecimal getHtjTenderPrice(Integer sourceId, String type);
 
     /**
      * 汇金理财投资金额
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal getRtbTenderPrice(Integer sourceId);
+    BigDecimal getRtbTenderPrice(Integer sourceId, String type);
 
     /**
      * 汇转让投资金额
      * @param sourceId
+     * @param type 类型: pc,app
      * @return
      */
-    BigDecimal getHzrTenderPrice(Integer sourceId);
+    BigDecimal getHzrTenderPrice(Integer sourceId, String type);
+
+    /**
+     * app渠道主单注册数
+     * @param sourceId
+     * @return
+     */
+    BigDecimal getRegisterAttrCount(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道Ios开户数
+     * @param sourceId
+     * @return
+     */
+    Integer getAccountNumberIos(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道PC开户数
+     * @param sourceId
+     * @return
+     */
+    Integer getAccountNumberPc(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道安卓开户数
+     * @param sourceId
+     * @return
+     */
+    Integer getAccountNumberAndroid(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道微信开户数
+     * @param sourceId
+     * @return
+     */
+    Integer getAccountNumberWechat(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道用户Android投资数
+     * @param sourceId
+     * @return
+     */
+    Integer getTenderNumberAndroid(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道用户IOS投资数
+     * @param sourceId
+     * @return
+     */
+    Integer getTenderNumberIos(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道用户PC投资数
+     * @param sourceId
+     * @return
+     */
+    Integer getTenderNumberPc(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道用户微信投资数
+     * @param sourceId
+     * @return
+     */
+    Integer getTenderNumberWechat(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道无主单用户充值数
+     * @param sourceId
+     * @return
+     */
+    BigDecimal getCumulativeAttrCharge(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道无主单开户数
+     * @param sourceId
+     * @return
+     */
+    Integer getOpenAccountAttrCount(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道投资无主单用户数
+     * @param sourceId
+     * @return
+     */
+    Integer getInvestAttrNumber(Integer sourceId);
+
+    /**
+     * 查询相应的app渠道用户投资总额
+     * @param sourceId
+     * @return
+     */
+    BigDecimal getCumulativeAttrInvest(Integer sourceId);
 }
