@@ -6,14 +6,12 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
-import com.hyjf.admin.client.BorrowFirstClient;
-import com.hyjf.admin.client.BorrowFullClient;
-import com.hyjf.admin.client.BorrowInvestClient;
-import com.hyjf.admin.client.BorrowRegistClient;
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.config.SystemConfig;
@@ -23,6 +21,7 @@ import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.utils.Page;
+import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
@@ -60,6 +59,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
@@ -74,16 +74,13 @@ import java.util.regex.Pattern;
 public class BorrowInvestServiceImpl implements BorrowInvestService {
     Logger logger = LoggerFactory.getLogger(BorrowInvestServiceImpl.class);
     @Autowired
-    BorrowInvestClient borrowInvestClient;
+    AmTradeClient amTradeClient;
 
     @Autowired
-    BorrowFullClient borrowFullClient;
+    AmUserClient amUserClient;
 
     @Autowired
-    BorrowFirstClient borrowFirstClient;
-
-    @Autowired
-    BorrowRegistClient borrowRegistClient;
+    AmConfigClient amConfigClient;
 
     @Autowired
     AccedeListService accedeListService;
@@ -117,7 +114,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     public BorrowInvestResponseBean getBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
         BorrowInvestResponseBean responseBean = new BorrowInvestResponseBean();
         //查询总条数
-        Integer count = borrowInvestClient.countBorrowInvest(borrowInvestRequest);
+        Integer count = amTradeClient.countBorrowInvest(borrowInvestRequest);
         responseBean.setTotal(count);
         //分页参数
         Page page = Page.initPage(borrowInvestRequest.getCurrPage(), borrowInvestRequest.getPageSize());
@@ -126,8 +123,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         borrowInvestRequest.setLimitEnd(page.getLimit());
         //查询列表 总计
         if (count > 0) {
-            List<BorrowInvestCustomizeVO> list = borrowInvestClient.selectBorrowInvestList(borrowInvestRequest);
-            String sumAccount = borrowInvestClient.selectBorrowInvestAccount(borrowInvestRequest);
+            List<BorrowInvestCustomizeVO> list = amTradeClient.selectBorrowInvestList(borrowInvestRequest);
+            String sumAccount = amTradeClient.selectBorrowInvestAccount(borrowInvestRequest);
             responseBean.setRecordList(list);
             responseBean.setSumAccount(sumAccount);
         }
@@ -142,7 +139,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
      */
     @Override
     public List<BorrowInvestCustomizeVO> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
-        return borrowInvestClient.getExportBorrowInvestList(borrowInvestRequest);
+        return amTradeClient.getExportBorrowInvestList(borrowInvestRequest);
     }
 
     /**
@@ -158,7 +155,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         if (!OK.equals(checkResult)) {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
-        BankOpenAccountVO bankOpenAccount = borrowFullClient.getBankOpenAccountByUserId(Integer.valueOf(investorDebtBean.getUserid()));
+        BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccountByUserId(Integer.valueOf(investorDebtBean.getUserid()));
         if (bankOpenAccount == null) {
             return new AdminResult(BaseResult.FAIL, "该用户没有开户信息！");
         }
@@ -248,7 +245,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     private String getBankRetMsg(String retCode) {
         //如果错误码不为空
         if (StringUtils.isNotBlank(retCode)) {
-            BankReturnCodeConfigVO bankReturnCodeConfig = borrowInvestClient.getBankReturnCodeConfig(retCode);
+            BankReturnCodeConfigVO bankReturnCodeConfig = amConfigClient.getBankReturnCodeConfig(retCode);
             if (bankReturnCodeConfig != null) {
                 String retMsg = bankReturnCodeConfig.getErrorMsg();
                 if (StringUtils.isNotBlank(retMsg)) {
@@ -341,7 +338,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     @Override
     public AdminResult pdfPreview(String nid) {
         // 根据订单号查询用户投资协议记录表
-        TenderAgreementVO tenderAgreement = borrowInvestClient.selectTenderAgreement(nid);
+        TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
         if (tenderAgreement != null && StringUtils.isNotBlank(tenderAgreement.getImgUrl())) {
             BorrowInvestResponseBean responseBean = new BorrowInvestResponseBean();
             String imgUrl = tenderAgreement.getImgUrl();
@@ -376,24 +373,24 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         // 投资订单号
         String nid = investorDebtBean.getNid();
         // 获取标的放款记录
-        BorrowRecoverVO br = borrowInvestClient.selectBorrowRecover(userId, borrowNid, nid);
+        BorrowRecoverVO br = amTradeClient.selectBorrowRecover(userId, borrowNid, nid);
         if (br == null) {
             return new AdminResult(BaseResult.FAIL, "操作失败");
         }
 
         // 获取标的信息
-        BorrowVO borrow = borrowFirstClient.selectBorrowByNid(borrowNid);
-        BorrowInfoVO borrowInfo = borrowFirstClient.selectBorrowInfoByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
         if (borrow == null || borrowInfo == null) {
             return new AdminResult(BaseResult.FAIL, "标的不存在");
         }
 
         // 获取用户信息
-        UserVO user = borrowRegistClient.findUserById(userId);
+        UserVO user = amUserClient.findUserById(userId);
         if (user == null) {
             return new AdminResult(BaseResult.FAIL, "用户信息不存在");
         }
-        TenderAgreementVO tenderAgreement = borrowInvestClient.selectTenderAgreement(nid);
+        TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
         if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
             accedeListService.updateSaveSignInfo(tenderAgreement, borrowNid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
         } else {
@@ -456,7 +453,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             // 向每个投资人发送邮件
             if (Validator.isNotNull(userId) && NumberUtils.isNumber(userId)) {
 
-                UserVO user = borrowRegistClient.findUserById(Integer.valueOf(userId));
+                UserVO user = amUserClient.findUserById(Integer.valueOf(userId));
 
                 if (user == null) {
                     return "用户不存在！";
@@ -470,7 +467,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                 }
                 Map<String, String> msg = new HashMap<String, String>();
                 msg.put(VAL_NAME, user.getUsername());
-                UserInfoVO usersInfo = borrowInvestClient.findUserInfoById(Integer.valueOf(userId));
+                UserInfoVO usersInfo = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 if (Validator.isNotNull(usersInfo) && Validator.isNotNull(usersInfo.getSex())) {
                     if (usersInfo.getSex() == 2) {
                         msg.put(VAL_SEX, "女士");
@@ -485,7 +482,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 //                BorrowCommonCustomize borrowCommonCustomize = new BorrowCommonCustomize();
 //                // 借款编码
 //                borrowCommonCustomize.setBorrowNidSrch(borrowNid);
-                List<BorrowListCustomizeVO> recordList = borrowInvestClient.selectBorrowList(borrowNid);
+                List<BorrowListCustomizeVO> recordList = amTradeClient.selectBorrowList(borrowNid);
                 if (recordList != null && recordList.size() == 1) {
                     Map<String, Object> contents = new HashMap<String, Object>();
                     contents.put("record", recordList.get(0));
@@ -494,9 +491,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     // 借款人用户名
                     int borrowerUserId = recordList.get(0).getUserId();
                     contents.put("record", recordList.get(0));
-                    UserInfoVO borrowerUserinfo = borrowInvestClient.findUserInfoById(borrowerUserId);
-                    UserVO borrowerUser = borrowRegistClient.findUserById(borrowerUserId);
-                    BorrowVO borrow = borrowFirstClient.selectBorrowByNid(borrowNid);
+                    UserInfoVO borrowerUserinfo = amUserClient.findUsersInfoById(borrowerUserId);
+                    UserVO borrowerUser = amUserClient.findUserById(borrowerUserId);
+                    BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
                     if (borrow.getPlanNid() != null) {
                         contents.put("borrowUsername", borrowerUserinfo.getTruename().substring(0, 1) + "**");
                     } else {
@@ -507,7 +504,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     contents.put("recoverTime", recordList.get(0).getRecoverLastTime());
                     // 用户投资列表
                     List<WebUserInvestListCustomizeVO> tzList =
-                            borrowInvestClient.selectUserInvestList(borrowInvestRequest);
+                            amTradeClient.selectUserInvestList(borrowInvestRequest);
                     // 原代码是 > 0
                     if (tzList != null && tzList.size() == 1) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
@@ -545,10 +542,10 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         }
                         contents.put("earnings", earnings);
                         if ("month".equals(borrowStyle) || "principal".equals(borrowStyle) || "endmonth".equals(borrowStyle)) {
-                            int recordTotal = borrowInvestClient.countProjectRepayPlanRecordTotal(borrowInvestRequest);
+                            int recordTotal = amTradeClient.countProjectRepayPlanRecordTotal(borrowInvestRequest);
                             if (recordTotal > 0) {
                                 Paginator paginator = new Paginator(1, recordTotal);
-                                List<WebProjectRepayListCustomizeVO> repayList = borrowInvestClient.selectProjectRepayPlanList(
+                                List<WebProjectRepayListCustomizeVO> repayList = amTradeClient.selectProjectRepayPlanList(
                                         borrowInvestRequest);
                                 contents.put("paginator", paginator);
                                 contents.put("repayList", repayList);
@@ -562,7 +559,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     String pdfUrl = "";
                     // 融通宝协议
                     if (recordList.get(0).getProjectType().equals("13")) {
-                        UserInfoVO userinfo = borrowInvestClient.findUserInfoById(Integer.valueOf(userId));
+                        UserInfoVO userinfo = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                         if (tzList != null && tzList.size() > 0) {
                             contents.put("investDeatil", tzList.get(0));
                         }
@@ -608,7 +605,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                             MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                     //发送邮件MQ
                     mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
-                    int updateResult = borrowInvestClient.updateBorrowRecover(borrowInvestRequest);
+                    int updateResult = amTradeClient.updateBorrowRecover(borrowInvestRequest);
                     if (updateResult > 0) {
                         return null;
                     }

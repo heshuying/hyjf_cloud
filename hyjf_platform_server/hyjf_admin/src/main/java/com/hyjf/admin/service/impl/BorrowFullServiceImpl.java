@@ -3,14 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.response.BorrowFullInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFullResponseBean;
-import com.hyjf.admin.client.BorrowFirstClient;
-import com.hyjf.admin.client.BorrowFullClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.service.BorrowFullService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.vo.admin.BorrowFullCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -32,10 +32,10 @@ import java.util.Map;
 @Service
 public class BorrowFullServiceImpl implements BorrowFullService {
     @Autowired
-    BorrowFullClient borrowFullClient;
+    AmTradeClient amTradeClient;
 
     @Autowired
-    BorrowFirstClient borrowFirstClient;
+    AmUserClient amUserClient;
 
     public static final String OK = "OK";
 
@@ -49,7 +49,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
     public BorrowFullResponseBean getBorrowFullList(BorrowFullRequest borrowFullRequest) {
         BorrowFullResponseBean borrowFullResponseBean = new BorrowFullResponseBean();
         //查询总条数
-        Integer count = borrowFullClient.countBorrowFull(borrowFullRequest);
+        Integer count = amTradeClient.countBorrowFull(borrowFullRequest);
         borrowFullResponseBean.setTotal(count);
         //分页参数
         Page page = Page.initPage(borrowFullRequest.getCurrPage(), borrowFullRequest.getPageSize());
@@ -58,8 +58,8 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         borrowFullRequest.setLimitEnd(page.getLimit());
         //查询列表 总计
         if (count > 0) {
-            List<BorrowFullCustomizeVO> list = borrowFullClient.selectBorrowFullList(borrowFullRequest);
-            BorrowFullCustomizeVO sumAccount = borrowFullClient.sumAccount(borrowFullRequest);
+            List<BorrowFullCustomizeVO> list = amTradeClient.selectBorrowFullList(borrowFullRequest);
+            BorrowFullCustomizeVO sumAccount = amTradeClient.sumAccount(borrowFullRequest);
             borrowFullResponseBean.setRecordList(list);
             Map<String, String> accountMap = new HashMap<>();
             accountMap.put("sumAccount", sumAccount.getSumAccount());
@@ -82,11 +82,11 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         if (StringUtils.isBlank(borrowFullRequest.getBorrowNidSrch())) {
             return new AdminResult(BaseResult.FAIL, "标的编号为空！");
         } else {
-            BorrowFullCustomizeVO reverifyInfo = this.borrowFullClient.getFullInfo(borrowFullRequest.getBorrowNidSrch());
+            BorrowFullCustomizeVO reverifyInfo = this.amTradeClient.getFullInfo(borrowFullRequest.getBorrowNidSrch());
             if (reverifyInfo != null) {
                 borrowFullInfoResponseBean.setBorrowFullInfo(reverifyInfo);
                 //查询复审详细列表总条数
-                Integer count = borrowFullClient.countFullList(borrowFullRequest.getBorrowNidSrch());
+                Integer count = amTradeClient.countFullList(borrowFullRequest.getBorrowNidSrch());
                 borrowFullInfoResponseBean.setTotal(count);
                 //查询复审详细列表及其合计
                 if (count > 0) {
@@ -96,8 +96,8 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                     borrowFullRequest.setLimitStart(page.getOffset());
                     borrowFullRequest.setLimitEnd(page.getLimit());
                     //查询
-                    List<BorrowFullCustomizeVO> list = borrowFullClient.getFullList(borrowFullRequest);
-                    BorrowFullCustomizeVO sumAccount = borrowFullClient.sumAmount(borrowFullRequest.getBorrowNidSrch());
+                    List<BorrowFullCustomizeVO> list = amTradeClient.getFullList(borrowFullRequest);
+                    BorrowFullCustomizeVO sumAccount = amTradeClient.sumAmount(borrowFullRequest.getBorrowNidSrch());
                     borrowFullInfoResponseBean.setRecordList(list);
                     Map<String, String> accountMap = new HashMap<>();
                     accountMap.put("investmentAmount", sumAccount.getInvestmentAmount());
@@ -146,7 +146,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         }
 
         //标的信息、状态
-        BorrowVO borrow = borrowFirstClient.selectBorrowByNid(borrowFullRequest.getBorrowNidSrch());
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowFullRequest.getBorrowNidSrch());
         if(borrow == null){
             return "标的信息不存在！";
         } else if(borrow.getStatus() == 16) {
@@ -159,8 +159,8 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         // 借款编号
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
         //查询标的信息
-        BorrowVO borrow = borrowFirstClient.selectBorrowByNid(borrowNid);
-        BorrowInfoVO borrowInfo = borrowFirstClient.selectBorrowInfoByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
 
         if (borrow == null || borrowInfo == null) {
             return "标的信息不存在。[借款编号：" + borrowNid + "]";
@@ -173,12 +173,12 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                 Integer borrowUserId = borrow.getUserId();
 
                 // 取得借款人账户信息
-                AccountVO borrowAccount = borrowFullClient.getAccountByUserId(borrowUserId);
+                AccountVO borrowAccount = amTradeClient.getAccountByUserId(borrowUserId);
                 if (borrowAccount == null) {
                     return "借款人账户不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]";
                 }
                 // 获取借款人开户信息
-                BankOpenAccountVO borrowerAccount = borrowFullClient.getBankOpenAccountByUserId(borrowUserId);
+                BankOpenAccountVO borrowerAccount = amUserClient.getBankOpenAccountByUserId(borrowUserId);
                 if (borrowerAccount == null) {
                     return "借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]";
                 } else {
@@ -186,7 +186,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                     borrowFullRequest.setAccountId(borrowerAccount.getAccount());
                 }
 
-                AdminResult updateResult = borrowFullClient.updateBorrowFull(borrowFullRequest);
+                AdminResult updateResult = amTradeClient.updateBorrowFull(borrowFullRequest);
                 if (updateResult != null) {
                     if (AdminResult.SUCCESS.equals(updateResult.getStatus())) {
                         return OK;
@@ -210,6 +210,6 @@ public class BorrowFullServiceImpl implements BorrowFullService {
      */
     @Override
     public AdminResult updateBorrowOver(BorrowFullRequest borrowFullRequest) {
-        return borrowFullClient.updateBorrowOver(borrowFullRequest);
+        return amTradeClient.updateBorrowOver(borrowFullRequest);
     }
 }

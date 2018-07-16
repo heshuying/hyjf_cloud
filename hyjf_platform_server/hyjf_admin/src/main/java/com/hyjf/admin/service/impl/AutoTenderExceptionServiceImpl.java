@@ -5,7 +5,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AllocationEngineClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.BorrowRegistClient;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
@@ -40,8 +39,6 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
     private AmTradeClient amTradeClient;
     @Autowired
     private AllocationEngineClient allocationEngineClient;
-    @Autowired
-    private BorrowRegistClient borrowRegistClient;
 
     private Logger logger = LoggerFactory.getLogger(AutoTenderExceptionServiceImpl.class);
 
@@ -169,7 +166,7 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
      */
     @Override
     public BorrowVO selectBorrowByNid(String borrowNid){
-        return borrowRegistClient.selectBorrowByNid(borrowNid);
+        return amTradeClient.selectBorrowByNid(borrowNid);
     }
     /**
      * 更新投资数据

@@ -414,4 +414,12 @@ public interface AmUserClient {
      */
     int updateUserPortrait(UserPortraitRequest request);
 
+
+    /**
+     * 根据UserID查询开户信息
+     *
+     * @param userId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccountByUserId(Integer userId);
 }
