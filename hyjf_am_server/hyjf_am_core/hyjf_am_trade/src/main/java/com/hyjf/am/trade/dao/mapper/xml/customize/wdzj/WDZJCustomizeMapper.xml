@@ -57,7 +57,7 @@
 		hb.borrow_nid
 	) AS loanUrl,
 	 FROM_UNIXTIME(
-		br.addtime,
+	  UNIX_TIMESTAMP(br.create_time),
 		'%Y-%m-%d %H:%i:%s'
 	) AS successTime,
 	0 AS reward
@@ -65,8 +65,8 @@
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-		br.addtime >= #{timeStart}
-	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+	  UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
 	<if test="limitStart != null and limitStart >= 0">
 		LIMIT #{limitStart} , #{limitEnd}
 	</if>
@@ -79,8 +79,8 @@
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-		br.addtime >= #{timeStart}
-	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
   </select>
 
   <select id="sumBorrowAmount" parameterType="map" resultType="string">
@@ -90,8 +90,8 @@
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-		br.addtime >= #{timeStart}
-	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
   </select>
   
   

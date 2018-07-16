@@ -355,6 +355,10 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_CREDIT_DISCOUNT_NULL("1","折让率不能为空"),
 	ERROR_CREDIT_DISCOUNT_ERROR("1","折让率范围错误"),
 	ERROR_CREDIT_DISCOUNT_FORMAT_ERROR("1","折让率格式错误"),
+	ERROR_CREDIT_QUERY_ERROR("1","查询债转状态异常"),
+	ERROR_CREDIT_UPDATE_ERROR("1","更新债转数据异常"),
+	ERROR_CREDIT_FIND_LOG_ERROR("1","未查询到债转承接记录"),
+	ERROR_CREDIT_AUTH_CODE_ERROR("1","未查询到债转授权码"),
 
 	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
 	ERROR_CREDIT_NID_CAPITAL_NULL("1","债转编号和承接本金不能为空"),

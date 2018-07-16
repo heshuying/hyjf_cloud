@@ -106,11 +106,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.hyjf</groupId>
-            <artifactId>hyjf_am_common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -144,7 +139,7 @@
                <!-- <configuration>
                     <excludes>
                         <exclude>**/application.yml</exclude>
-                        <exclude>**/bootstrap.yml</exclude>
+                        <exclude>**/bootstrap.yml.bak</exclude>
                     </excludes>
                 </configuration>-->
             </plugin>

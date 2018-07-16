@@ -517,15 +517,15 @@ public class UserManagerController extends BaseController{
         String returnCode = Response.FAIL;
         if(null!=request){
             mapParam.put("userId",request.getUserId());
-            //mapParam.put("changeType",request.getChangeType());
+            mapParam.put("changeType",request.getChangeType());
         }
-       /* List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
+        List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
         if (!CollectionUtils.isEmpty(userChangeLogsList)) {
             List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
             response.setResultList(userChangeLogVOList);
             response.setCount(userChangeLogsList.size());
             returnCode = Response.SUCCESS;
-        }*/
+        }
         response.setRtn(returnCode);//代表成功
         return response;
     }
@@ -607,7 +607,7 @@ public class UserManagerController extends BaseController{
      * @return
      */
     @RequestMapping("/updateUserRecommend")
-    public int updateUserRecommend(@RequestBody AdminUserRecommendRequest request){
+    public int updateUserRecommend(@RequestBody @Valid  AdminUserRecommendRequest request){
         return userManagerService.updateUserRe(request);
     }
     /**
@@ -616,7 +616,18 @@ public class UserManagerController extends BaseController{
      * @return
      */
     @RequestMapping("/updateUserIdCard")
-    public int updateUserIdCard(@RequestBody AdminUserRecommendRequest request){
+    public int updateUserIdCard(@RequestBody @Valid AdminUserRecommendRequest request){
         return userManagerService.updateUserIdCard(request);
+    }
+
+    /**
+     * 保存公司信息
+     * @param updCompanyRequest
+     * @return
+     */
+    @RequestMapping("/saveCompanyInfo")
+    public Response saveCompanyInfo(@RequestBody @Valid  UpdCompanyRequest updCompanyRequest){
+        Response bankCardResponse = userManagerService.saveCompanyInfo(updCompanyRequest);
+        return bankCardResponse;
     }
 }

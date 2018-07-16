@@ -175,6 +175,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 获取债转数据错误
             throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
         }
+        logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userId);
@@ -186,6 +187,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         TenderToCreditAssignCustomizeVO creditAssign = this.creditClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
+        logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
         // 获取插入债转日志的数据
         CreditTenderLogVO creditTenderLog = this.getCreditTenderLog(request,user,borrowCredit);
         // 获取调用银行的参数
@@ -201,6 +203,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         result.setData(callData);
         // 保存债转的日志
         saveCreditTenderAssignLog(bean,creditTenderLog);
+        logger.info("债转投资跳转到银行完成   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
         return result;
     }
 
@@ -219,6 +222,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         // 更新相应的债转承接log表 修改错误信息  等
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+            logger.info("债转承接失败,userId:{},订单号:{},平台:{},返回码{}",bean.getLogUserId(),bean.getLogOrderId(),bean.getLogClient(),bean.getRetCode());
             // 债转失败了  更新错误信息
             String retMsg = bean.getRetMsg();
             BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
@@ -229,9 +233,10 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             resultBean.setStatus(true);
             return resultBean;
         }
-
+        logger.info("开始进行投资异步逻辑 返回承接成功,开始查询承接状态.userId:{},订单号:{},平台:{},返回码{}",bean.getLogUserId(),bean.getLogOrderId(),bean.getLogClient(),bean.getRetCode());
         // 调用相应的查询接口查询此笔承接的相应的承接状态
         BankCallBean tenderQueryBean = this.creditInvestQuery(logOrderId, userId ,bean.getAccountId());
+        logger.info("查询债转状态完成.userId:{},订单号:{},平台:{},返回码{}",bean.getLogUserId(),bean.getLogOrderId(),bean.getLogClient(),tenderQueryBean==null?"空":tenderQueryBean.getRetCode());
         if (Validator.isNotNull(tenderQueryBean)) {
             // bean实体转化
             tenderQueryBean.convert();
@@ -248,12 +253,36 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     if (StringUtils.isNotBlank(authCode)) {
                         // 更新债转交易成功后的相关信息
                         boolean tenderFlag = this.updateTenderCreditInfo(logOrderId, userId, authCode,creditTenderLog.get(0));
+                        if(!tenderFlag){
+                            // 更新债转数据异常
+                            throw new CheckException(MsgEnum.ERROR_CREDIT_UPDATE_ERROR);
+                        }
+                    }else{
+                        // 未查询到债转授权码
+                        throw new CheckException(MsgEnum.ERROR_CREDIT_AUTH_CODE_ERROR);
                     }
-
+                }else{
+                    // 未查询到债转承接记录
+                    throw new CheckException(MsgEnum.ERROR_CREDIT_FIND_LOG_ERROR);
                 }
+            }else{
+                // 修改失败原因
+                String retMsg = tenderQueryBean.getRetMsg();
+                BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
+                if (retMsgVo != null) {
+                    retMsg = retMsgVo.getErrorMsg();
+                }
+                creditClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
+                // 债转承接状态异常
+                throw new CheckException(MsgEnum.ERROR_CREDIT_QUERY_ERROR);
             }
+        }else{
+            // 查询债转状态异常
+            throw new CheckException(MsgEnum.ERROR_CREDIT_QUERY_ERROR);
         }
-        return null;
+        logger.info("投资异步处理完毕,userId:{},订单号:{},平台:{}",bean.getLogUserId(),bean.getLogOrderId(),bean.getLogClient());
+        resultBean.setStatus(true);
+        return resultBean;
     }
 
     /**
@@ -901,7 +930,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         try {
                             accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
                         } catch (MQException e) {
-                            e.printStackTrace();
+                            logger.error("更新网站收支明细失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
                     }
                     // 更新渠道统计用户累计投资
@@ -925,8 +954,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                     MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                         } catch (MQException e) {
-                            e.printStackTrace();
-                            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+                            logger.error("渠道统计用户累计投资推送消息队列失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
                     } else {
                         // 更新huiyingdai_utm_reg的首投信息
@@ -951,8 +979,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                                     utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
                                 }
                             } catch (MQException e) {
-                                e.printStackTrace();
-                                logger.error("更新huiyingdai_utm_reg的首投信息失败");
+                                logger.error("更新huiyingdai_utm_reg的首投信息失败! logOrdId:{},userId:{}",logOrderId,userId);
                             }
                         }
                     }
@@ -977,6 +1004,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     return true;
                 }
+            }else{
+                throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
             }
 
         }
@@ -1229,7 +1258,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         try {
             ifOldDate = GetDate.datetimeFormat.parse(oldOrNewDate).getTime() / 1000;
         } catch (Exception e) {
-            System.err.println("债转算是否是新旧标区分时间错误，债转标号:" + borrowCredit.getCreditNid());
+            logger.error("债转算是否是新旧标区分时间错误，债转标号:" + borrowCredit.getCreditNid());
         }
         if (ifOldDate != null && ifOldDate <= borrowCredit.getAddTime()) {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));

@@ -4,10 +4,12 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.Borrow" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+    <result column="project_type" property="projectType" jdbcType="BIT" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
     <result column="account" property="account" jdbcType="DECIMAL" />
+    <result column="borrow_valid_time" property="borrowValidTime" jdbcType="INTEGER" />
     <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
     <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
     <result column="borrow_apr" property="borrowApr" jdbcType="DECIMAL" />
@@ -128,18 +130,19 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, borrow_nid, user_id, borrow_user_name, `status`, account, borrow_style, borrow_period, 
-    borrow_apr, label_id, is_show, is_engine_used, is_installment, is_month, regist_status, 
-    regist_time, regist_user_id, regist_user_name, verify_status, verify_over_time, verify_time, 
-    verify_userid, verify_user_name, verify_remark, verify_contents, borrow_status, ontime, 
-    borrow_end_time, plan_nid, borrow_full_status, borrow_full_time, tender_times, borrow_account_yes, 
-    borrow_account_wait, borrow_service, reverify_status, reverify_time, reverify_userid, 
-    reverify_user_name, reverify_remark, reverify_contents, recover_last_time, repay_last_time, 
-    repay_next_time, repay_status, repay_full_status, repay_fee_normal, repay_account_all, 
-    repay_account_interest, repay_account_capital, repay_account_yes, repay_account_interest_yes, 
-    repay_account_capital_yes, repay_account_wait, repay_account_interest_wait, repay_account_capital_wait, 
-    borrow_manager, service_fee_rate, manage_fee_rate, differential_rate, late_interest_rate, 
-    late_free_days, create_user_name, add_ip, create_time, updatetime
+    id, borrow_nid, project_type, user_id, borrow_user_name, `status`, account, borrow_valid_time, 
+    borrow_style, borrow_period, borrow_apr, label_id, is_show, is_engine_used, is_installment, 
+    is_month, regist_status, regist_time, regist_user_id, regist_user_name, verify_status, 
+    verify_over_time, verify_time, verify_userid, verify_user_name, verify_remark, verify_contents, 
+    borrow_status, ontime, borrow_end_time, plan_nid, borrow_full_status, borrow_full_time, 
+    tender_times, borrow_account_yes, borrow_account_wait, borrow_service, reverify_status, 
+    reverify_time, reverify_userid, reverify_user_name, reverify_remark, reverify_contents, 
+    recover_last_time, repay_last_time, repay_next_time, repay_status, repay_full_status, 
+    repay_fee_normal, repay_account_all, repay_account_interest, repay_account_capital, 
+    repay_account_yes, repay_account_interest_yes, repay_account_capital_yes, repay_account_wait, 
+    repay_account_interest_wait, repay_account_capital_wait, borrow_manager, service_fee_rate, 
+    manage_fee_rate, differential_rate, late_interest_rate, late_free_days, create_user_name, 
+    add_ip, create_time, updatetime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowExample" >
     select
@@ -178,22 +181,23 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_borrow (borrow_nid, user_id, borrow_user_name, 
-      `status`, account, borrow_style, 
-      borrow_period, borrow_apr, label_id, 
-      is_show, is_engine_used, is_installment, 
-      is_month, regist_status, regist_time, 
-      regist_user_id, regist_user_name, verify_status, 
-      verify_over_time, verify_time, verify_userid, 
-      verify_user_name, verify_remark, verify_contents, 
-      borrow_status, ontime, borrow_end_time, 
-      plan_nid, borrow_full_status, borrow_full_time, 
-      tender_times, borrow_account_yes, borrow_account_wait, 
-      borrow_service, reverify_status, reverify_time, 
-      reverify_userid, reverify_user_name, reverify_remark, 
-      reverify_contents, recover_last_time, repay_last_time, 
-      repay_next_time, repay_status, repay_full_status, 
-      repay_fee_normal, repay_account_all, repay_account_interest, 
+    insert into ht_borrow (borrow_nid, project_type, user_id, 
+      borrow_user_name, `status`, account, 
+      borrow_valid_time, borrow_style, borrow_period, 
+      borrow_apr, label_id, is_show, 
+      is_engine_used, is_installment, is_month, 
+      regist_status, regist_time, regist_user_id, 
+      regist_user_name, verify_status, verify_over_time, 
+      verify_time, verify_userid, verify_user_name, 
+      verify_remark, verify_contents, borrow_status, 
+      ontime, borrow_end_time, plan_nid, 
+      borrow_full_status, borrow_full_time, tender_times, 
+      borrow_account_yes, borrow_account_wait, borrow_service, 
+      reverify_status, reverify_time, reverify_userid, 
+      reverify_user_name, reverify_remark, reverify_contents, 
+      recover_last_time, repay_last_time, repay_next_time, 
+      repay_status, repay_full_status, repay_fee_normal, 
+      repay_account_all, repay_account_interest, 
       repay_account_capital, repay_account_yes, repay_account_interest_yes, 
       repay_account_capital_yes, repay_account_wait, 
       repay_account_interest_wait, repay_account_capital_wait, 
@@ -201,22 +205,23 @@
       differential_rate, late_interest_rate, late_free_days, 
       create_user_name, add_ip, create_time, 
       updatetime)
-    values (#{borrowNid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowUserName,jdbcType=VARCHAR}, 
-      #{status,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, #{borrowStyle,jdbcType=VARCHAR}, 
-      #{borrowPeriod,jdbcType=INTEGER}, #{borrowApr,jdbcType=DECIMAL}, #{labelId,jdbcType=INTEGER}, 
-      #{isShow,jdbcType=TINYINT}, #{isEngineUsed,jdbcType=TINYINT}, #{isInstallment,jdbcType=TINYINT}, 
-      #{isMonth,jdbcType=TINYINT}, #{registStatus,jdbcType=TINYINT}, #{registTime,jdbcType=TIMESTAMP}, 
-      #{registUserId,jdbcType=INTEGER}, #{registUserName,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=TINYINT}, 
-      #{verifyOverTime,jdbcType=INTEGER}, #{verifyTime,jdbcType=INTEGER}, #{verifyUserid,jdbcType=VARCHAR}, 
-      #{verifyUserName,jdbcType=VARCHAR}, #{verifyRemark,jdbcType=VARCHAR}, #{verifyContents,jdbcType=VARCHAR}, 
-      #{borrowStatus,jdbcType=TINYINT}, #{ontime,jdbcType=INTEGER}, #{borrowEndTime,jdbcType=VARCHAR}, 
-      #{planNid,jdbcType=VARCHAR}, #{borrowFullStatus,jdbcType=TINYINT}, #{borrowFullTime,jdbcType=INTEGER}, 
-      #{tenderTimes,jdbcType=INTEGER}, #{borrowAccountYes,jdbcType=DECIMAL}, #{borrowAccountWait,jdbcType=DECIMAL}, 
-      #{borrowService,jdbcType=VARCHAR}, #{reverifyStatus,jdbcType=TINYINT}, #{reverifyTime,jdbcType=INTEGER}, 
-      #{reverifyUserid,jdbcType=VARCHAR}, #{reverifyUserName,jdbcType=VARCHAR}, #{reverifyRemark,jdbcType=VARCHAR}, 
-      #{reverifyContents,jdbcType=VARCHAR}, #{recoverLastTime,jdbcType=INTEGER}, #{repayLastTime,jdbcType=INTEGER}, 
-      #{repayNextTime,jdbcType=INTEGER}, #{repayStatus,jdbcType=TINYINT}, #{repayFullStatus,jdbcType=TINYINT}, 
-      #{repayFeeNormal,jdbcType=DECIMAL}, #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccountInterest,jdbcType=DECIMAL}, 
+    values (#{borrowNid,jdbcType=VARCHAR}, #{projectType,jdbcType=BIT}, #{userId,jdbcType=INTEGER}, 
+      #{borrowUserName,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{account,jdbcType=DECIMAL}, 
+      #{borrowValidTime,jdbcType=INTEGER}, #{borrowStyle,jdbcType=VARCHAR}, #{borrowPeriod,jdbcType=INTEGER}, 
+      #{borrowApr,jdbcType=DECIMAL}, #{labelId,jdbcType=INTEGER}, #{isShow,jdbcType=TINYINT}, 
+      #{isEngineUsed,jdbcType=TINYINT}, #{isInstallment,jdbcType=TINYINT}, #{isMonth,jdbcType=TINYINT}, 
+      #{registStatus,jdbcType=TINYINT}, #{registTime,jdbcType=TIMESTAMP}, #{registUserId,jdbcType=INTEGER}, 
+      #{registUserName,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=TINYINT}, #{verifyOverTime,jdbcType=INTEGER}, 
+      #{verifyTime,jdbcType=INTEGER}, #{verifyUserid,jdbcType=VARCHAR}, #{verifyUserName,jdbcType=VARCHAR}, 
+      #{verifyRemark,jdbcType=VARCHAR}, #{verifyContents,jdbcType=VARCHAR}, #{borrowStatus,jdbcType=TINYINT}, 
+      #{ontime,jdbcType=INTEGER}, #{borrowEndTime,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
+      #{borrowFullStatus,jdbcType=TINYINT}, #{borrowFullTime,jdbcType=INTEGER}, #{tenderTimes,jdbcType=INTEGER}, 
+      #{borrowAccountYes,jdbcType=DECIMAL}, #{borrowAccountWait,jdbcType=DECIMAL}, #{borrowService,jdbcType=VARCHAR}, 
+      #{reverifyStatus,jdbcType=TINYINT}, #{reverifyTime,jdbcType=INTEGER}, #{reverifyUserid,jdbcType=VARCHAR}, 
+      #{reverifyUserName,jdbcType=VARCHAR}, #{reverifyRemark,jdbcType=VARCHAR}, #{reverifyContents,jdbcType=VARCHAR}, 
+      #{recoverLastTime,jdbcType=INTEGER}, #{repayLastTime,jdbcType=INTEGER}, #{repayNextTime,jdbcType=INTEGER}, 
+      #{repayStatus,jdbcType=TINYINT}, #{repayFullStatus,jdbcType=TINYINT}, #{repayFeeNormal,jdbcType=DECIMAL}, 
+      #{repayAccountAll,jdbcType=DECIMAL}, #{repayAccountInterest,jdbcType=DECIMAL}, 
       #{repayAccountCapital,jdbcType=DECIMAL}, #{repayAccountYes,jdbcType=DECIMAL}, #{repayAccountInterestYes,jdbcType=DECIMAL}, 
       #{repayAccountCapitalYes,jdbcType=DECIMAL}, #{repayAccountWait,jdbcType=DECIMAL}, 
       #{repayAccountInterestWait,jdbcType=DECIMAL}, #{repayAccountCapitalWait,jdbcType=DECIMAL}, 
@@ -234,6 +239,9 @@
       <if test="borrowNid != null" >
         borrow_nid,
       </if>
+      <if test="projectType != null" >
+        project_type,
+      </if>
       <if test="userId != null" >
         user_id,
       </if>
@@ -245,6 +253,9 @@
       </if>
       <if test="account != null" >
         account,
+      </if>
+      <if test="borrowValidTime != null" >
+        borrow_valid_time,
       </if>
       <if test="borrowStyle != null" >
         borrow_style,
@@ -431,6 +442,9 @@
       <if test="borrowNid != null" >
         #{borrowNid,jdbcType=VARCHAR},
       </if>
+      <if test="projectType != null" >
+        #{projectType,jdbcType=BIT},
+      </if>
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
       </if>
@@ -442,6 +456,9 @@
       </if>
       <if test="account != null" >
         #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowValidTime != null" >
+        #{borrowValidTime,jdbcType=INTEGER},
       </if>
       <if test="borrowStyle != null" >
         #{borrowStyle,jdbcType=VARCHAR},
@@ -640,6 +657,9 @@
       <if test="record.borrowNid != null" >
         borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       </if>
+      <if test="record.projectType != null" >
+        project_type = #{record.projectType,jdbcType=BIT},
+      </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
       </if>
@@ -651,6 +671,9 @@
       </if>
       <if test="record.account != null" >
         account = #{record.account,jdbcType=DECIMAL},
+      </if>
+      <if test="record.borrowValidTime != null" >
+        borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
       </if>
       <if test="record.borrowStyle != null" >
         borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
@@ -841,10 +864,12 @@
     update ht_borrow
     set id = #{record.id,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
+      project_type = #{record.projectType,jdbcType=BIT},
       user_id = #{record.userId,jdbcType=INTEGER},
       borrow_user_name = #{record.borrowUserName,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
       account = #{record.account,jdbcType=DECIMAL},
+      borrow_valid_time = #{record.borrowValidTime,jdbcType=INTEGER},
       borrow_style = #{record.borrowStyle,jdbcType=VARCHAR},
       borrow_period = #{record.borrowPeriod,jdbcType=INTEGER},
       borrow_apr = #{record.borrowApr,jdbcType=DECIMAL},
@@ -915,6 +940,9 @@
       <if test="borrowNid != null" >
         borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       </if>
+      <if test="projectType != null" >
+        project_type = #{projectType,jdbcType=BIT},
+      </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
       </if>
@@ -926,6 +954,9 @@
       </if>
       <if test="account != null" >
         account = #{account,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowValidTime != null" >
+        borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
       </if>
       <if test="borrowStyle != null" >
         borrow_style = #{borrowStyle,jdbcType=VARCHAR},
@@ -1113,10 +1144,12 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow" >
     update ht_borrow
     set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
+      project_type = #{projectType,jdbcType=BIT},
       user_id = #{userId,jdbcType=INTEGER},
       borrow_user_name = #{borrowUserName,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
       account = #{account,jdbcType=DECIMAL},
+      borrow_valid_time = #{borrowValidTime,jdbcType=INTEGER},
       borrow_style = #{borrowStyle,jdbcType=VARCHAR},
       borrow_period = #{borrowPeriod,jdbcType=INTEGER},
       borrow_apr = #{borrowApr,jdbcType=DECIMAL},

@@ -52,7 +52,7 @@ public class BankCreditEnd implements Serializable {
 
     private Integer failCounts;
 
-    private Integer state;
+    private String state;
 
     private Integer status;
 
@@ -260,12 +260,12 @@ public class BankCreditEnd implements Serializable {
         this.failCounts = failCounts;
     }
 
-    public Integer getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setState(String state) {
+        this.state = state == null ? null : state.trim();
     }
 
     public Integer getStatus() {

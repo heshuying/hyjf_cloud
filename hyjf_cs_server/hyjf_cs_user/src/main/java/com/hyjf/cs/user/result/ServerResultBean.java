@@ -1,6 +1,6 @@
 package com.hyjf.cs.user.result;
 
-import com.hyjf.cs.common.bean.result.BaseResult;
+import com.hyjf.am.bean.result.BaseResult;
 
 /**
  * @author xiasq

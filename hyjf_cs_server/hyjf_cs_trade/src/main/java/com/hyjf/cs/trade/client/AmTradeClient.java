@@ -23,6 +23,8 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
+import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -288,4 +290,13 @@ public interface AmTradeClient {
 	 */
 	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
 
+    List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean);
+
+    Integer countBorrowList(Map<String, Object> requestBean);
+
+    String sumBorrowAmount(Map<String, Object> requestBean);
+
+    List<PreapysListCustomizeVO> selectPreapysList(Map<String, Object> requestBean);
+
+    Integer countPreapysList(Map<String, Object> requestBean);
 }

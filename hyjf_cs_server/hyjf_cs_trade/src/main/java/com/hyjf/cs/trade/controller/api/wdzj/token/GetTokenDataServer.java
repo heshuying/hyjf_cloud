@@ -22,7 +22,7 @@ import java.util.UUID;
  */
 @Api(value = "api端网贷之家token获取接口")
 @Controller
-@RequestMapping("/api/synbalance")
+@RequestMapping("/api/wdzj/token")
 public class GetTokenDataServer extends BaseTradeController {
     @Autowired
     SystemConfig systemConfig;

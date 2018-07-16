@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
@@ -148,14 +149,6 @@ public interface UserCenterClient {
     List<BankCardVO> selectBankCardByUserId(int userId);
 
     /**
-     * 根據accounId獲取開戶信息
-     *
-     * @param accountId
-     * @return
-     */
-    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
-
-    /**
      * 更新企业用户开户记录
      *
      * @param request
@@ -278,4 +271,10 @@ public interface UserCenterClient {
      * @return
      */
     int updateUserIdCard(AdminUserRecommendRequest request);
+    /**
+     * 保存企业开户信息
+     * @param updCompanyRequest
+     * @return
+     */
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
 }

@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "用户画像接口")
+@Api(value = "会员中心-用户画像接口")
 @RestController
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
