@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.SubmissionsCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="userName != null and userName != ''">
+				AND	u.username like concat('%',#{userName},'%') 
+			</if>
+			
+			<if test="sysType != null and sysType != ''">
+				AND s.sys_type = #{sysType}
+			</if>
+			<if test="sysVersion != null and sysVersion != ''">
+				AND	s.sys_version like concat('%',#{sysVersion},'%') 
+			</if>
+			<if test="platformVersion != null and platformVersion != ''">
+				AND	s.platform_version like concat('%',#{platformVersion},'%') 
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND s.phone_type like concat('%',#{phoneType},'%') 
+			</if>
+			<if test="content != null and content != ''">
+				AND s.content like concat('%',#{content},'%') 
+			</if>
+		    <if test="addTimeStart != null and addTimeStart != ''">
+				AND s.addtime <![CDATA[>=]]> unix_timestamp(#{addTimeStart,jdbcType=VARCHAR})
+			</if>
+			<if test="addTimeEnd != null and addTimeEnd != ''">
+				AND s.addtime <![CDATA[<=]]> unix_timestamp(#{addTimeEnd,jdbcType=VARCHAR})
+			</if>
+		</where>
+	</sql>
+	<resultMap id="SubmissionsMapResult"
+		type="com.hyjf.am.vo.config.SubmissionsCustomizeVO">
+		<result column="id" property="submissionsId" jdbcType="INTEGER" /> <!-- 用户名 -->
+		<result column="username" property="userName" jdbcType="VARCHAR" /> <!-- 用户名 -->
+		<result column="sys_type" property="sysType" jdbcType="INTEGER" /> <!-- 系统类别  -->
+		<result column="platform_version" property="platformVersion" jdbcType="VARCHAR" /> <!-- 平台版本号  -->
+		<result column="phone_type" property="phoneType" jdbcType="VARCHAR" /> <!-- 手机型号  -->
+		<result column="content" property="content" jdbcType="VARCHAR" /> <!-- 反馈内容  -->
+		<result column="addtime" property="addTime" jdbcType="VARCHAR" /> <!-- 添加时间 -->
+	</resultMap>
+
+	<!-- 根据条件 查询意见反馈信息  -->
+	<select id="queryRecordList" resultMap="SubmissionsMapResult"
+		parameterType="java.util.Map">
+		SELECT
+			s.id,
+			CASE
+		WHEN ISNULL(u.username)
+		OR u.username = '' THEN
+			'游客'
+		ELSE
+			u.username
+		END username,
+		 CASE
+		WHEN (
+			pa.name_cd = '2'
+			OR pa.name_cd = '3'
+		)
+		AND ! ISNULL(s.sys_version) THEN
+			CONCAT(
+				pa.`name`,
+				'-',
+				s.sys_version
+			)
+		ELSE
+			pa.`name`
+		END sys_type,
+		 s.platform_version,
+		 s.phone_type,
+		 s.content,
+		 FROM_UNIXTIME( s.addtime, '%Y-%m-%d %H:%i:%s' ) addtime
+		FROM
+			ht_submissions s
+		LEFT JOIN huiyingdai_users u ON s.user_id = u.user_id
+		LEFT JOIN ht_param_name pa ON pa.name_class = 'CLIENT'
+		AND pa.name_cd = s.sys_type
+		<include refid="Where_Clause" />
+		ORDER BY s.addtime DESC
+		<if test="limitStart != null and limitEnd !=null" >
+	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+	    </if>
+	</select>
+	
+	<!-- 根据条件 查询意见反馈信息  -->
+	<select id="countRecordTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			count(s.id)
+		FROM
+			ht_submissions s
+		where s.user_id = #{}
+		<include refid="Where_Clause" />
+	</select>
+</mapper>
+

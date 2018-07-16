@@ -2,9 +2,10 @@ spring:
   application:
     name: AM-DATA-COLLECT
   cloud:
-      config:
-        uri: http://micoserver:2222/
-        profile: test
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: am-data-collect
   boot:
     admin:
       client:

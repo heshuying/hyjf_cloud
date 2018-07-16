@@ -94,32 +94,9 @@ import com.hyjf.common.validator.Validator;
  * @since 20180620
  */
 @Service
-public class BankCreditTenderServiceImpl implements BankCreditTenderService {
+public class BankCreditTenderServiceImpl extends BaseServiceImpl implements BankCreditTenderService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BankCreditTenderServiceImpl.class);
-
-	@Autowired
-	private CreditTenderLogMapper creditTenderLogMapper;
-	@Autowired
-	private CreditTenderMapper creditTenderMapper;
-	@Autowired
-	private AccountMapper accountMapper;
-	@Autowired
-	private BorrowMapper borrowMapper;
-	@Autowired
-	private BorrowCreditMapper borrowCreditMapper;
-	@Autowired
-	private BorrowRecoverMapper borrowRecoverMapper;
-    @Autowired
-	private BankCreditEndMapper bankCreditEndMapper;
-	@Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-	@Autowired
-	private AccountListMapper accountListMapper;
-	@Autowired
-	private CreditRepayMapper creditRepayMapper;
-	@Autowired
-	private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
 
 	@Autowired
 	private SmsProducer smsProducer;
@@ -127,11 +104,6 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	private AccountWebListProducer accountWebListProducer;
 	@Autowired
 	private AppMessageProducer appMsProcesser;
-	@Autowired
-	private TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
-
-	@Autowired
-	private BorrowRepayPlanMapper borrowRepayPlanMapper;
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
@@ -250,7 +222,7 @@ public class BankCreditTenderServiceImpl implements BankCreditTenderService {
 	 * @param userId
 	 * @return 获取用户的账户信息
 	 */
-	private Account getAccount(Integer userId) {
+	public Account getAccount(Integer userId) {
 		AccountExample example = new AccountExample();
 		AccountExample.Criteria criteria = example.createCriteria();
 		criteria.andUserIdEqualTo(userId);

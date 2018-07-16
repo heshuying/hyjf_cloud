@@ -4,9 +4,12 @@
 package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.user.dao.mapper.customize.ChannelCustomizeMapper;
+import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.ChannelService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -15,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChannelServiceImpl implements ChannelService {
 
-    @Autowired
+    @Resource
     ChannelCustomizeMapper channelCustomizeMapper;
 
     @Override
@@ -23,5 +26,15 @@ public class ChannelServiceImpl implements ChannelService {
         String channelName = channelCustomizeMapper.selectChannelNameByUserId(userId);
 
         return channelName;
+    }
+
+    @Override
+    public Integer getChannelCoount(ChannelCustomize channelCustomize) {
+        return channelCustomizeMapper.countList(channelCustomize);
+    }
+
+    @Override
+    public List<ChannelCustomize> getChannelList(ChannelCustomize channelCustomize) {
+        return channelCustomizeMapper.selectList(channelCustomize);
     }
 }

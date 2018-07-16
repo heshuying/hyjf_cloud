@@ -2,9 +2,11 @@ spring:
   application:
     name: AM-USER
   cloud:
-      config:
-        uri: http://micoserver:2222/
-        profile: test
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: am-user
+
   boot:
     admin:
       client:

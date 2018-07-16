@@ -2,9 +2,10 @@ spring:
   application:
     name: CS-MARKET
   cloud:
-      config:
-        uri: http://micoserver:2222/
-        profile: test
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: cs-market
   boot:
     admin:
       client:

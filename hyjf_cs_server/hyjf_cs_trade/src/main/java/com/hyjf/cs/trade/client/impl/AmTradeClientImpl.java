@@ -7,11 +7,16 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
+import com.hyjf.am.response.wdzj.BorrowDataResponse;
+import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -23,6 +28,8 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
+import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -634,4 +641,152 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResultInt().intValue();
     }
+
+    /**
+     * 根据borrowNid获取BorrowInfoVO对象
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoVO getBorrowInfoByNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/"+borrowNid;
+        BorrowInfoResponse response=restTemplate.getForEntity(url,BorrowInfoResponse.class).getBody();
+        if(response!=null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+
+    /**
+     * 投资异常定时任务更新投资信息
+     * @param request
+     * @return
+     */
+    @Override
+    public boolean updateTenderStart(BorrowTenderTmpRequest request) {
+        String url = "http://AM-TRADE/am-trade/bankexception/updateTenderStart";
+        return restTemplate.postForEntity(url,request,Boolean.class).getBody();
+    }
+
+    /**
+     * 获取BorrowTenderTmpVO列表
+     */
+	@Override
+	public List<BorrowTenderTmpVO> getBorrowTenderTmpList() {
+		String url = "http://AM-TRADE/am-trade/bankexception/getBorrowTenderTmpList";
+		BorrowTenderTmpResponse response =restTemplate.getForEntity(url,BorrowTenderTmpResponse.class).getBody();
+		if (response!=null){
+			response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取BatchBorrowTenderCustomizeVO列表
+	 */
+	@Override
+	public List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList() {
+		String url = "http://AM-TRADE/am-trade/bankException/queryAuthCodeBorrowTenderList";
+		BatchBorrowTenderCustomizeResponse response =
+				restTemplate.getForEntity(url,BatchBorrowTenderCustomizeResponse.class).getBody();
+		if (response!=null){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	
+	/**
+	 * 插入AuthCode
+	 */
+	@Override
+	public void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
+		String url = "http://AM-TRADE/am-trade/bankException/insertAuthCode";
+		BatchBorrowTenderCustomizeRequest request = new BatchBorrowTenderCustomizeRequest();
+		request.setBatchBorrowTenderCustomizeList(list);
+		restTemplate.postForEntity(url,request,Boolean.class).getBody();
+	}
+
+	/**
+	 * 网贷之家标的列表
+	 * @auther: hesy
+	 * @date: 2018/7/16
+	 */
+    @Override
+    public List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/get_borrowlist";
+        BorrowDataResponse response =
+                restTemplate.postForEntity(url,requestBean,BorrowDataResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家标的列表总记录数
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public Integer countBorrowList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/count_borrowlist";
+        Response<Integer> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家标的列表总金额
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public String sumBorrowAmount(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/sum_borrowamount";
+        Response<String> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家提前还款列表
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public List<PreapysListCustomizeVO> selectPreapysList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/get_preapyslist";
+        PreapysListResponse response =
+                restTemplate.postForEntity(url,requestBean,PreapysListResponse.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 网贷之家提前还款列表总记录数
+     * @auther: hesy
+     * @date: 2018/7/16
+     */
+    @Override
+    public Integer countPreapysList(Map<String, Object> requestBean) {
+        String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/count_preapyslist";
+        Response<Integer> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+	
+	
 }

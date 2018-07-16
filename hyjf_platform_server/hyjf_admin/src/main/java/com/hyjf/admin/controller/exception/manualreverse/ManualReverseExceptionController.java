@@ -80,6 +80,7 @@ public class ManualReverseExceptionController extends BaseController {
     @ApiOperation(value = "根据用户名获取accountId", notes = "根据用户名获取accountId")
     @RequestMapping("/get_accountid_byusername/{userName}")
     public JSONObject getAccountIdAction(@PathVariable String userName){
+        logger.info("根据用户名获取accountId，{}", userName);
         if(StringUtils.isBlank(userName)){
             return this.fail("请求参数错误");
         }
@@ -87,7 +88,8 @@ public class ManualReverseExceptionController extends BaseController {
         // 查询电子账号
         String accountId = manualReverseExceptionService.getAccountIdByUserName(userName);
         if(StringUtils.isBlank(accountId)){
-            return this.fail("为获取到用户的电子账号");
+            logger.info("未获取到用户的电子账号");
+            return this.fail("未获取到用户的电子账号");
         }
 
         JSONObject info = new JSONObject();

@@ -24,10 +24,13 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -614,4 +617,19 @@ public interface AmTradeClient {
     int getManualReverseCount(ManualReverseCustomizeRequest requestBean);
 
     Boolean updateManualReverse(ManualReverseAddRequest requestBean);
+
+    /**
+     * 计算实际金额 保存creditTenderLog表
+     *
+     * @return
+     * @author nxl
+     */
+    Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast);
+    /**
+     * 汇计划自动承接成功后数据库更新操作
+     *
+     * @return
+     * @author nxl
+     */
+    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
 }

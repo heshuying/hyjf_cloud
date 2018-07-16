@@ -2,12 +2,16 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -19,6 +23,8 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
+import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -252,4 +258,45 @@ public interface AmTradeClient {
      * @return
      */
     int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO);
+
+    /**
+     * 根据borrowNid获取BorrowInfoVO对象
+     * @param borrowNid
+     * @return
+     */
+    BorrowInfoVO getBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 投资异常处理定时任务处理
+     * @param request
+     * @return
+     */
+    boolean updateTenderStart(BorrowTenderTmpRequest request);
+
+    /**
+     * 获取BorrowTenderTmpVO列表
+     * @return
+     */
+	List<BorrowTenderTmpVO> getBorrowTenderTmpList();
+
+	/**
+	 * 获取BatchBorrowTenderCustomizeVO列表
+	 * @return
+	 */
+	List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList();
+
+	/**
+	 * @param list
+	 */
+	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
+
+    List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean);
+
+    Integer countBorrowList(Map<String, Object> requestBean);
+
+    String sumBorrowAmount(Map<String, Object> requestBean);
+
+    List<PreapysListCustomizeVO> selectPreapysList(Map<String, Object> requestBean);
+
+    Integer countPreapysList(Map<String, Object> requestBean);
 }
