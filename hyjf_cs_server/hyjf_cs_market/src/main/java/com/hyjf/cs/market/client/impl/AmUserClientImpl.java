@@ -1,18 +1,20 @@
 package com.hyjf.cs.market.client.impl;
 
-import java.util.Date;
-import java.util.Set;
-
-import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
-import com.hyjf.common.util.GetDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiasq
@@ -76,6 +78,71 @@ public class AmUserClientImpl implements AmUserClient {
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getUserIds();
 		}
+		return null;
+	}
+
+	@Override
+	public List<UtmVO> selectUtmPlatList() {
+		UtmResponse response = restTemplate.postForObject("http://AM-USER//am-user/promotion/utm", null,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer getAccessNumber(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public Integer getRegistNumber(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public Integer getOpenAccountNumber(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public Integer getTenderNumber(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getCumulativeRecharge(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getHztTenderPrice(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getHxfTenderPrice(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal gethtlTenderPrice(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getHtjTenderPrice(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getRtbTenderPrice(Integer sourceId) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal getHzrTenderPrice(Integer sourceId) {
 		return null;
 	}
 }

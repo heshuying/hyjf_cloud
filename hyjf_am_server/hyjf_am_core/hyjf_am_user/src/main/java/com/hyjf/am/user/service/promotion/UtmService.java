@@ -1,7 +1,7 @@
 package com.hyjf.am.user.service.promotion;
 
 import com.hyjf.am.user.service.BaseService;
-import com.hyjf.am.vo.admin.UtmVo;
+import com.hyjf.am.vo.admin.UtmVO;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,7 @@ public interface UtmService extends BaseService {
      * @param map 查询参数
      * @return List<Utm>
      */
-    List<UtmVo> getByPageList(Map<String,Object> map);
+    List<UtmVO> getByPageList(Map<String,Object> map);
 
     /**
      * 根据条件获取总条数
