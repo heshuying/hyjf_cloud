@@ -185,4 +185,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int checkMobileCode(String mobile, String telcode, String paramTplZhuce, Integer platform, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+
+	/**
+	 * 更新CertificateAuthorityVO
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 更新参数
+	 * @return
+	 */
+	int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
 }

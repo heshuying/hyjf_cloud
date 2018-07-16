@@ -1,20 +1,5 @@
 package com.hyjf.am.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BankRechargeService;
 import com.hyjf.common.util.GetDate;
@@ -23,22 +8,20 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 江西银行充值掉单异常处理Service实现类
  * create by jijun 20180612
  */
 @Service
-public class BankRechargeServiceImpl implements BankRechargeService {
-
-    @Autowired
-    private AccountRechargeMapper accountRechargeMapper;
-    @Autowired
-    protected AccountListMapper accountListMapper;
-    @Resource
-    protected AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-    @Autowired
-    protected AccountMapper accountMapper;
+public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRechargeService {
 
     // 充值状态:失败
     private static final int RECHARGE_STATUS_FAIL = 3;
@@ -298,7 +281,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      * @param userId
      * @return
      */
-    private Account getAccount(Integer userId) {
+    public Account getAccount(Integer userId) {
         AccountExample example = new AccountExample();
         AccountExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(userId);
