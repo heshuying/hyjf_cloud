@@ -2,9 +2,10 @@ spring:
   application:
     name: CS-TRADE
   cloud:
-        config:
-          uri: http://micoserver:2222/
-          profile: test
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: cs-trade
   boot:
     admin:
       client:
