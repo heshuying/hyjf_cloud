@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.base.MessageContent;
@@ -12,6 +13,7 @@ import com.hyjf.am.user.mq.producer.AccountProducer;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
@@ -26,12 +28,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,14 +47,16 @@ import java.util.*;
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
+	@Resource
 	private AccountProducer accountProducer;
-	@Autowired
+	@Resource
 	private CertificateAuthorityMapper certificateAuthorityMapper;
-	@Autowired
+	@Resource
 	private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
-	@Autowired
+	@Resource
 	private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
+	@Resource
+	private UserMapper userMapper;
 
 
 
@@ -1191,5 +1195,23 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return insertCount;
 	}
+
+    @Override
+    public UserVO getUser(String utmReferrer, String userId) {
+		UserVO userVO = new UserVO();
+		UserExample example = new UserExample();
+		UserExample.Criteria cra = example.createCriteria();
+		if (StringUtils.isNotEmpty(utmReferrer)) {
+			cra.andUsernameEqualTo(utmReferrer);
+		}
+		if (StringUtils.isNotEmpty(userId)) {
+			cra.andUserIdEqualTo(Integer.valueOf(userId));
+		}
+		List<User> userList = this.userMapper.selectByExample(example);
+		if (userList != null && userList.size() > 0) {
+			userVO.setUsername(userList.get(0).getUsername());
+		}
+        return userVO;
+    }
 
 }

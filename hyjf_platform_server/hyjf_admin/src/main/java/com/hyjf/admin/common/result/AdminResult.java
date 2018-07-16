@@ -27,6 +27,7 @@ public class AdminResult<T> extends BaseResult<T> implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Integer totalCount;
 
 	public AdminResult() {
 		super();
@@ -48,4 +49,11 @@ public class AdminResult<T> extends BaseResult<T> implements Serializable {
 		super(e);
 	}
 
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
 }

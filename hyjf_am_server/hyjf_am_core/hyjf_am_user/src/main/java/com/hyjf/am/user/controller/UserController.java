@@ -2,6 +2,7 @@ package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -630,6 +631,20 @@ public class UserController extends BaseController {
             BeanUtils.copyProperties(utmPlat, utmPlatVO);
             response.setResult(utmPlatVO);
         }
+        return response;
+    }
+
+    /**
+     * 获取Utm对象
+     * @param userId
+     * @param utmReferrer
+     * @return
+     */
+    @RequestMapping("/getuser/{utmReferrer}/{userId}")
+    public UtmResponse getUser(@PathVariable String utmReferrer,@PathVariable String userId) {
+        UtmResponse response = new UtmResponse();
+        UserVO userVO = userService.getUser(utmReferrer,userId);
+        response.setResult(userVO);
         return response;
     }
 }

@@ -78,11 +78,11 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                 // 发送短信
                 SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, borrowList.get(i).getBorrowNid(), CustomConstants.PARAM_TPL_XMDQ,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
-//                try {
-//                    //smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-//                } catch (MQException e2) {
-//                    logger.error("发送短信失败..", e2);
-//                }
+                try {
+                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                } catch (MQException e2) {
+                    logger.error("发送短信失败..", e2);
+                }
             }
         }
     }
