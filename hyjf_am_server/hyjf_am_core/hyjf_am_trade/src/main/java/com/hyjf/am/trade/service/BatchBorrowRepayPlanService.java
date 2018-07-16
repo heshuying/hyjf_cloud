@@ -12,7 +12,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author dxj
  * @version BatchBorrowRepayPlanService.java, v0.1 2018年6月23日 下午12:03:33
  */
-public interface BatchBorrowRepayPlanService {
+public interface BatchBorrowRepayPlanService extends BaseService {
 
 
 	Map requestRepay(BorrowApicron apicron);
