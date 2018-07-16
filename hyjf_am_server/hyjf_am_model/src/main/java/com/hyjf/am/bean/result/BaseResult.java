@@ -9,7 +9,7 @@
  * Modified by : 
  */
 	
-package com.hyjf.am.common;
+package com.hyjf.am.bean.result;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;

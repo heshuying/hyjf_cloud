@@ -1,4 +1,4 @@
-package com.hyjf.cs.common.bean.result;
+package com.hyjf.am.bean.result;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.common.constants.MsgCode;

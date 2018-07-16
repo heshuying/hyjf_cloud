@@ -47,7 +47,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.CheckResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.client.AccountListClient;

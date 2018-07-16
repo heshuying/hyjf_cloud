@@ -13,7 +13,6 @@ package com.hyjf.admin.common.aop;
 
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.BaseResult;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
