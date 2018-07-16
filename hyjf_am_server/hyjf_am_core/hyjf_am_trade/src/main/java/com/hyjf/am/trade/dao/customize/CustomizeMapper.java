@@ -92,6 +92,9 @@ public class CustomizeMapper extends AutoMapper {
     @Autowired
     protected WithdrawCustomizeMapper withdrawCustomizeMapper;
 
+    @Autowired
+    protected AutoReqRepayBorrowCustomizeMapper autoReqRepayBorrowCustomizeMapper;
+
     @Resource
     protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
 
