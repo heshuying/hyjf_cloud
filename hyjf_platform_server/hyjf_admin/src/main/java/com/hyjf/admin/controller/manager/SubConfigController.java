@@ -1,7 +1,7 @@
 package com.hyjf.admin.controller.manager;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.admin.beans.request.SubConfigRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
