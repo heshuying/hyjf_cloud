@@ -23,10 +23,7 @@ import io.swagger.annotations.Api;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -71,8 +68,8 @@ public class BorrowCreditController extends BaseController{
 
 
 
-    @RequestMapping("/borrowCreditDetail/{creditNid}")
-    public BorrowCreditDetailResponse updateCreditCredit(@RequestBody @Valid String creditNid) {
+    @GetMapping("/borrowCreditDetail/{creditNid}")
+    public BorrowCreditDetailResponse updateCreditCredit(@PathVariable @Valid String creditNid) {
         BorrowCreditDetailResponse response = new BorrowCreditDetailResponse();
         BorrowCreditDetailVO detailVO = borrowCreditService.getBorrowCreditDetail(creditNid);
         response.setResult(detailVO);
