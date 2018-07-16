@@ -1,5 +1,7 @@
 package com.hyjf.cs.user.result;
 
+import com.hyjf.am.bean.result.BaseResult;
+
 /**
  * @author xiasq
  * @version ServerResult, v0.1 2018/4/25 19:42

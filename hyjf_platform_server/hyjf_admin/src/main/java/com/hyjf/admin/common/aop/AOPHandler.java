@@ -11,6 +11,7 @@ web * Description:（类功能描述-必填） 需要在每个方法前添加业
 	
 package com.hyjf.admin.common.aop;
 
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import org.aspectj.lang.ProceedingJoinPoint;

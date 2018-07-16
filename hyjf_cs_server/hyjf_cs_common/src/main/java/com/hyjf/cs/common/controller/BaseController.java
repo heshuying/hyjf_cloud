@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.common.controller;
 
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.StringUtil;
