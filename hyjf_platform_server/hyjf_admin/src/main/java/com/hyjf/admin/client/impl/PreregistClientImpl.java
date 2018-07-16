@@ -24,7 +24,7 @@ public class PreregistClientImpl implements  PreregistClient{
 	@Override
 	public AdminPreRegistListResponse getRecordList(AdminPreRegistListRequest adminPreRegistListRequest) {
 		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser" ,adminPreRegistListRequest,
+				.postForEntity("http://AM-USER/am-user/preregist/preregistlist" ,adminPreRegistListRequest,
 						AdminPreRegistListResponse.class)
 				.getBody();
 		if (adminPreRegistListResponse != null) {
@@ -36,7 +36,7 @@ public class PreregistClientImpl implements  PreregistClient{
 	@Override
 	public AdminPreRegistListResponse getPreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
 		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser" ,adminPreRegistListRequest,
+				.postForEntity("http://AM-USER/am-user/preregist/updatepreregistlist" ,adminPreRegistListRequest,
 						AdminPreRegistListResponse.class)
 				.getBody();
 		if (adminPreRegistListResponse != null) {
@@ -48,7 +48,7 @@ public class PreregistClientImpl implements  PreregistClient{
 	@Override
 	public AdminPreRegistListResponse savePreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
 		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/adminSystem/getuser" ,adminPreRegistListRequest,
+				.postForEntity("http://AM-USER/am-user/preregist/savepreregistlist" ,adminPreRegistListRequest,
 						AdminPreRegistListResponse.class)
 				.getBody();
 		if (adminPreRegistListResponse != null) {

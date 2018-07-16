@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.GenericValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,12 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.Response;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.Utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.beans.request.PlanListViewRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.AllocationEngineService;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.PlanListRequest;
@@ -32,7 +33,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.file.UploadFileUtils;
-
+import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -60,10 +61,14 @@ public class PlanListController extends BaseController{
      * @return 计划列表         已测试
      */
     @ApiOperation(value = "计划列表", notes = "计划列表初始化")
-    @PostMapping(value = "/searchAction")
+    @PostMapping(value = "/search")
     @ResponseBody
-    /*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW) */   
-    public AdminResult<ListResult<HjhPlanVO>> search(HttpServletRequest request, @RequestBody @Valid PlanListRequest form) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)  
+    public AdminResult<ListResult<HjhPlanVO>> search(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
     	// 画面检索条件无需初始化 还款方式 endday 和  end
     	// 根据删选条件获取计划列表
     	HjhPlanResponse response = this.planListService.getHjhPlanListByParam(form);
@@ -85,9 +90,13 @@ public class PlanListController extends BaseController{
 	@ApiOperation(value = "计划列表", notes = "计划列表开放额度/累积加入/待还总额累计")
 	@PostMapping(value = "/sum")
 	@ResponseBody
-	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW) */   
-	public JSONObject getSumTotal(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)   
+	public JSONObject getSumTotal(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		HjhPlanSumVO sumVO = this.planListService.getCalcSumByParam(form);
 		jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
 		jsonObject.put("sumOpenAccount", sumVO.getSumOpenAccount());
@@ -103,10 +112,10 @@ public class PlanListController extends BaseController{
 	 * @return 
 	 */
 	@ApiOperation(value = "计划列表", notes = "计划列表初始化添加计划画面")
-	@PostMapping(value = "/addPlanAction")
+	@PostMapping(value = "/addplan")
 	@ResponseBody
-	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_ADD) */   
-	public JSONObject getAddPlanView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD) 
+	public JSONObject getAddPlanView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		//添加时---获取还款方式  月/日 无需初始化 end/endday
 		//添加时---初始化 webhost 用来在详情画面上传图片
@@ -115,6 +124,10 @@ public class PlanListController extends BaseController{
 		jsonObject.put("webhost", webhost);
 		//修改时---计划编号需要判空(注意 前台在添加时会有计划编号已存在的校验，若果已经存在则报错 画面不能操作(调用存在接口))
 		// 请求能到这说明这个操作一定是修改
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		String planNid = form.getDebtPlanNid();
 		if (StringUtils.isNotEmpty(planNid)) {
 			List<HjhPlanDetailVO> planList = this.planListService.getHjhPlanDetailByPlanNid(form);
@@ -213,10 +226,14 @@ public class PlanListController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "计划列表", notes = "计划名称 是否已经存在AJAX")
-	@PostMapping(value = "/isDebtPlanNameExist")
+	@PostMapping(value = "/isdebtplannameexist")
 	@ResponseBody
-	public AdminResult<String> planNameAjaxCheck(HttpServletRequest request, @RequestBody @Valid PlanListRequest form) {
-
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH) 
+	public AdminResult<String> planNameAjaxCheck(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		// 原 String param = request.getParameter("param");  是从 HttpServletRequest 取参数
 		String planName = form.getPlanNameSrch();
 		// 判空后期有校验
@@ -240,9 +257,14 @@ public class PlanListController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "计划列表", notes = "计划编号 是否已经存在AJAX")
-	@PostMapping(value = "/isDebtPlanNidExist")
+	@PostMapping(value = "/isdebtplannidexist")
 	@ResponseBody
-	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody @Valid PlanListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH) 
+	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		// 原 String param = request.getParameter("param");  是从 HttpServletRequest 取参数
 		String planNid = form.getPlanNidSrch();
 		// 判空后期有校验
@@ -267,9 +289,14 @@ public class PlanListController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "计划列表", notes = "点击启用/关闭按键")
-	@PostMapping(value = "/switchAction")
+	@PostMapping(value = "/switch")
 	@ResponseBody
-	public AdminResult<String> switchAction(HttpServletRequest request, @RequestBody @Valid PlanListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY) 
+	public AdminResult<String> switchAction(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		HjhPlanResponse response = new HjhPlanResponse();
 		// 计划编码
 		String planNid = form.getDebtPlanNid();
@@ -295,9 +322,14 @@ public class PlanListController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "计划列表", notes = "点击显示/隐藏按键")
-	@PostMapping(value = "/displayAction")
+	@PostMapping(value = "/display")
 	@ResponseBody
-	public AdminResult<String> displayAction(HttpServletRequest request, @RequestBody @Valid PlanListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+	public AdminResult<String> displayAction(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		HjhPlanResponse response = new HjhPlanResponse();
 		// 计划编码
 		String planNid = form.getDebtPlanNid();
@@ -320,12 +352,17 @@ public class PlanListController extends BaseController{
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "计划列表", notes = "汇计划添加信息(添加更改共用)")
-	@PostMapping(value = "/insertAction")
+	@PostMapping(value = "/insert")
 	@ResponseBody
-	public JSONObject addNewPlan(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+	public JSONObject addNewPlan(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		// 获取登录这userid
 		int userId = Integer.valueOf(this.getUser(request).getId());
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	// 将画面请求request赋值给原子层 request
+    	BeanUtils.copyProperties(viewRequest, form);
 		form.setUserid(userId);
 		// 计划编码
 		String planNid = form.getDebtPlanNid();
@@ -339,7 +376,7 @@ public class PlanListController extends BaseController{
 		this.validatorFieldCheck(jsonObject, form, isExistRecord);
 		// 如果画面校验出错--->回info画面(添加就是空白，修改就是铺记录值) 调用info画面初始化接口
 		if (AdminValidatorFieldCheckUtil.hasValidateError(jsonObject)) {
-			this.getAddPlanView(request,response,form);
+			this.getAddPlanView(request,response,viewRequest);
 		}
 		//汇计划二期迭代最高可投金额为空设置默认值为1250000
 		if(StringUtils.isEmpty(form.getDebtMaxInvestment())){
@@ -400,9 +437,9 @@ public class PlanListController extends BaseController{
 		// 预期年化收益
 		AdminValidatorFieldCheckUtil.validateSignlessNumLength(jsonObject, "expectApr", form.getExpectApr(), 2, 2, true);
 		// 最低加入金额(只验证数字格式)
-		boolean debtMinInvestmentFlag =AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
+		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
 		// 最高加入金额(只验证数字格式)
-//		boolean debtMaxInvestmentFlag = ValidatorFieldCheckUtil.validateDecimal(mav, "debtMaxInvestment", PlanListBean.getDebtMaxInvestment(), 10, true);
+		/*AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMaxInvestment", form.getDebtMaxInvestment(), 10, true);*/
 		// 投资增量
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtInvestmentIncrement", form.getDebtInvestmentIncrement(), 10, true);
 		// 可用券配置

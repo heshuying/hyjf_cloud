@@ -128,4 +128,13 @@ public class CommonConstant {
 
     /**前端的url*/
     public static final String JUMP_HTML_ERROR_PATH = "/user/setting/authorization/result/failed";
+
+    /** JSP 汇付天下跳转画面 */
+    public static final String JSP_CHINAPNR_RESULT = "/chinapnr/chinapnr_result";
+
+    /** JSP 跳转到汇付天下画面 */
+    public static final String JSP_CHINAPNR_SEND = "/chinapnr/chinapnr_send";
+
+    /** chinapnrForm值 */
+    public static final String CHINAPNR_FORM = "chinapnrForm";
 }

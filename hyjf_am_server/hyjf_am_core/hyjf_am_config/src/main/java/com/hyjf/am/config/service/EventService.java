@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.resquest.admin.EventsRequest;
+
+import java.util.List;
 
 /**
  * 公司记事
@@ -44,4 +44,11 @@ public interface EventService {
 	 * @return
 	 */
 	Event getRecord(Integer id);
+
+	/**
+	 * 根据id删除公司纪事
+	 *
+	 * @param id
+	 */
+    void deleteById(Integer id);
 }

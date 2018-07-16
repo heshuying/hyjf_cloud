@@ -42,4 +42,12 @@ public interface EventService {
 	 * @return
 	 */
 	EventResponse updateStatus(EventRequestBean requestBean);
+
+	/**
+	 * 根据id删除公司管理-公司记事状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    EventResponse deleteById(Integer id);
 }

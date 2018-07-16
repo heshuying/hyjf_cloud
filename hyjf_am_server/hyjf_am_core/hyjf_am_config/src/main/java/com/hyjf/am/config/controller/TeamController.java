@@ -112,4 +112,18 @@ public class TeamController extends BaseConfigController {
 		}
 		return response;
 	}
+
+	/**
+	 * 根据id查询公司管理-团队介绍
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/delete/{id}")
+	public TeamResponse delete(@PathVariable Integer id) {
+		TeamResponse response = new TeamResponse();
+		teamService.deleteById(id);
+        response.setRtn(AdminResponse.SUCCESS);
+        return response;
+	}
 }

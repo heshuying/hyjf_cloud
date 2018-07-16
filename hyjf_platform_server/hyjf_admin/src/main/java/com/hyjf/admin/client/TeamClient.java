@@ -43,4 +43,12 @@ public interface TeamClient {
 	 * @return
 	 */
 	TeamVO getRecord(Integer id);
+
+	/**
+	 * 删除公司管理-团队介绍状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    TeamResponse deleteById(Integer id);
 }

@@ -37,15 +37,15 @@ public class AdminBorrowCreditPaymentController {
     @PostMapping("/exportData")
     @ResponseBody
     public void  exportBorrowCreditList(@RequestBody BorrowCreditRepayRequest request,HttpServletResponse response){
-        borrowCreditTenderService.exprotBorrowCreditRepayList(request,response);
+        borrowCreditTenderService.exportBorrowCreditRepayList(request,response);
     }
 
-   /* @ApiOperation(value = "债权转让明细", notes = "债权转让明细")
+    @ApiOperation(value = "还款信息明细", notes = "还款信息明细")
     @PostMapping("/infoDetail")
     @ResponseBody
-    public Object getCreditInfoDetail(@RequestBody BorrowCreditRequest request){
-       AdminResult result =  borrowCreditService.getBorrowInfoList(request);
+    public Object getCreditRepayInfoDetail(@RequestBody BorrowCreditRepayRequest request){
+       AdminResult result =  borrowCreditTenderService.getBorrowCreditRepayInfoList(request);
        return result;
-    }*/
+    }
 
 }

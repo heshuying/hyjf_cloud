@@ -9,6 +9,8 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +78,14 @@ public interface WebProjectListClient {
      * @author zhangyk
      * @date 2018/6/21 15:29
      */
-    public List<WebProjectListCustomizeVO> searchPlanList(ProjectListRequest request);
+    public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request);
+
+    /**
+     * 查询计划基本详情
+     * @author zhangyk
+     * @date 2018/7/14 18:20
+     */
+    public PlanDetailCustomizeVO getPlanDetail(String planNid);
 
     // --------------------------- web end  -----------------------------------
 

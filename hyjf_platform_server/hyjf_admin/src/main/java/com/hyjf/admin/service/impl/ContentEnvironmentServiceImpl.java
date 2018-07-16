@@ -49,4 +49,9 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 		BeanUtils.copyProperties(record, requestBean);
 		return contentEnvironmentClient.updateAction(requestBean);
 	}
+
+	@Override
+	public ContentEnvironmentResponse deleteById(Integer id) {
+		return contentEnvironmentClient.deleteById(id);
+	}
 }

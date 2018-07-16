@@ -48,4 +48,10 @@ public class ContentQualifyClientImpl implements ContentQualifyClient {
 		}
 		return null;
 	}
+
+	@Override
+	public ContentQualifyResponse deleteById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentqualify/delete/" + id,
+				ContentQualifyResponse.class);
+	}
 }

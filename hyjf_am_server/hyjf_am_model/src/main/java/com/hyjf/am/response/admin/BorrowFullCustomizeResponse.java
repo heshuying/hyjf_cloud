@@ -11,4 +11,13 @@ import com.hyjf.am.vo.admin.BorrowFullCustomizeVO;
  * @version BorrowFullCustomizeResponse, v0.1 2018/7/6 10:12
  */
 public class BorrowFullCustomizeResponse extends Response<BorrowFullCustomizeVO> {
+    private Integer total;
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
 }

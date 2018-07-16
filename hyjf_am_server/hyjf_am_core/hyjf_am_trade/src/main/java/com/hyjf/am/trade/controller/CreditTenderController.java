@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.trade.service.BorrowCreditTenderService;
+import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,8 @@ public class CreditTenderController extends BaseController{
 
     @Autowired
     BankCreditTenderService bankCreditTenderService;
+
+
 
 
     @GetMapping("/selectByAssignNidAndUserId/{assignNid}/{userId}")
@@ -303,5 +308,8 @@ public class CreditTenderController extends BaseController{
         response.setResult(bean);
         return response;
     }
+
+
+
 
 }

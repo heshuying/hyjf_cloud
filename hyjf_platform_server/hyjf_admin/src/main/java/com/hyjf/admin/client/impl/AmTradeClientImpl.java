@@ -3,34 +3,43 @@
  */
 package com.hyjf.admin.client.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
+import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.common.validator.Validator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -581,13 +590,10 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @return
      */
     @Override
-    public List<AdminTransferExceptionLogCustomizeVO> getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
+    public AdminTransferExceptionLogResponse getAdminTransferExceptionLogCustomizeList(AdminTransferExceptionLogRequest request) {
         String url = "http://AM-TRADE/am-trade/transferExceptionLog/getRecordList";
         AdminTransferExceptionLogResponse response=restTemplate.postForEntity(url,request,AdminTransferExceptionLogResponse.class).getBody();
-        if (Validator.isNotNull(response)){
-            return response.getResultList();
-        }
-        return null;
+        return response;
     }
 
     /**
@@ -904,7 +910,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     /**
      * 根据主键获取优惠券还款记录
      * @auth jijun
-     * @param recoverId
      * @return
      */
     @Override
@@ -1019,6 +1024,311 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url="http://AM-TRADE/am-trade/accountexception/deleteaccountexceptionbyid/" + id;
         Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
         return response;
+    }
+
+
+    /**
+     * 获取提现列表数量
+     * @param request
+     * @return
+     */
+    @Override
+    public int getWithdrawRecordCount(WithdrawBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordCount";
+        return restTemplate.postForEntity(url,request,Integer.class).getBody();
+    }
+
+    /**
+     * 获取提现列表
+     * @param request
+     * @return
+     */
+    @Override
+    public WithdrawCustomizeResponse getWithdrawRecordList(WithdrawBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/accountWithdraw/getWithdrawRecordList";
+        WithdrawCustomizeResponse response=restTemplate.postForEntity(url,request,WithdrawCustomizeResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 结束债权列表
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public List<BankCreditEndVO> getCreditEndList(BankCreditEndListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/getlist";
+        BankCreditEndResponse response=restTemplate.postForEntity(url,requestBean,BankCreditEndResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 结束债权总记录数
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int getCreditEndCount(BankCreditEndListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/getcount";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * 根据orderId获取
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public BankCreditEndVO getCreditEndByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/getby_orderid" + orderId;
+        BankCreditEndResponse response=restTemplate.getForEntity(url,BankCreditEndResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新结束债权记录
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateBankCreditEnd(BankCreditEndVO requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/update";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * 批次恢复为初始状态
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateCreditEndForInitial(BankCreditEndVO requestBean) {
+        String url = "http://AM-TRADE/am-trade/bankCreditEndController/update_initial";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * yangchangwei
+     * 根据Borrownid 获取放款任务表
+     * @param id
+     * @return
+     */
+    @Override
+    public BorrowApicronResponse getBorrowApicronByID(String id) {
+        BorrowApicronResponse response = restTemplate.
+                postForEntity(tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID", id, BorrowApicronResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据creditNid查询债转信息
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid) {
+        String url = tradeService + "hjhDebtCredit/selectHjhDebtCreditByCreditNid/" + creditNid;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url, HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 银行结束债权后，更新债权表为完全承接
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO) {
+        String url = tradeService + "hjhDebtCredit/updateHjhDebtCreditByPK";
+        hjhDebtCreditVO.setCreditStatus(2);//转让状态 2完全承接
+        hjhDebtCreditVO.setIsLiquidates(1);
+        Response<Integer> response = restTemplate.postForEntity(url, hjhDebtCreditVO, Response.class).getBody();
+        if (!Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
+    }
+
+    /**
+     * 请求结束债权（追加结束债权任务记录）
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int requestDebtEnd(HjhDebtCreditVO credit, String tenderAccountId, String tenderAuthCode) {
+        String url = tradeService + "bankCreditEndController/insertBankCreditEndForCreditEnd";
+        InsertBankCreditEndForCreditEndRequest request = new InsertBankCreditEndForCreditEndRequest(credit, tenderAccountId, tenderAuthCode);
+        Response<Integer> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
+    }
+
+    /**
+     *根据nid获取BorrowTender
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @Override
+    public BorrowTenderVO getBorrowTenderByNid(String nid) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByNid/"+nid;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据assignOrderId获取
+     * @auther: hesy
+     * @date: 2018/7/13
+     */
+    @Override
+    public HjhDebtCreditTenderVO getByAssignOrderId(String assignOrderId){
+        String url = "http://AM-TRADE/am-trade/hjhDebtCreditTender/getby_assignorderid/"+assignOrderId;
+        HjhDebtCreditTenderResponse response = restTemplate.getForEntity(url,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 检索汇计划加入明细列表
+     * @param request
+     * @return
+     */
+    @Override
+    public AutoTenderExceptionResponse selectAccedeRecordList(AutoTenderExceptionRequest request){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/selectAccedeRecordList";
+        AutoTenderExceptionResponse response =  restTemplate.
+                postForEntity(url, request, AutoTenderExceptionResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 查询计划加入明细
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    @Override
+    public HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/selectHjhAccedeByParam";
+        HjhAccedeResponse response =  restTemplate.
+                postForEntity(url, tenderExceptionSolveRequest, HjhAccedeResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 查询计划加入明细临时表
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    @Override
+    public HjhPlanBorrowTmpResponse selectBorrowJoinList(TenderExceptionSolveRequest tenderExceptionSolveRequest){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/selectBorrowJoinList";
+        HjhPlanBorrowTmpResponse response =  restTemplate.
+                postForEntity(url, tenderExceptionSolveRequest, HjhPlanBorrowTmpResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 更改加入明细状态
+     * @param status
+     * @param accedeId
+     * @return
+     */
+    @Override
+    public boolean updateTenderByParam(int status,int accedeId){
+        String url ="http://AM-TRADE/am-trade/autotenderexception/updateTenderByParam/"+status+"/"+accedeId;
+        Response<Boolean> response = restTemplate.getForEntity(url,Response.class).getBody();
+        if (response != null && response.getResult()) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 更新投资数据
+     *
+     * @return
+     * @author nxl
+     */
+    @Override
+    public boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean) {
+        String url = "http://AM-TRADE/am-trade/autoTenderController/updateBorrowForAutoTender";
+        BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
+        BeanUtils.copyProperties(bean, bankCallBeanVO);
+        UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrow, hjhAccede, bankCallBeanVO);
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (!Response.isSuccess(response)) {
+            logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动投资成功后，更新投资数据失败。");
+            throw new RuntimeException("银行自动投资成功后，更新投资数据失败。");
+        }
+        return true;
+    }
+
+    /**
+     * 结束债权列表
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/manualreverse/getlist";
+        ManualReverseCustomizeResponse response=restTemplate.postForEntity(url,requestBean,ManualReverseCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 结束债权总记录数
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int getManualReverseCount(ManualReverseCustomizeRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/manualreverse/getcount";
+        return restTemplate.postForEntity(url,requestBean,Integer.class).getBody();
+    }
+
+    /**
+     * 手动冲正更新
+     * @auther: hesy
+     * @date: 2018/7/14
+     */
+    @Override
+    public Boolean updateManualReverse(ManualReverseAddRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/manualreverse/update_manualreverse";
+        return restTemplate.postForEntity(url,requestBean,Boolean.class).getBody();
     }
 
 

@@ -4,6 +4,8 @@ import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -202,6 +204,13 @@ public interface AmTradeClient {
     List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
 
     /**
+     * 批次结束债权用更新 结束债权任务表
+     * @param bankCreditEndVO
+     * @return
+     */
+    int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO);
+
+    /**
      * APP,PC,wechat散标投资获取优惠券列表
      * @param requestBean
      * @return
@@ -214,4 +223,33 @@ public interface AmTradeClient {
      * @return
      */
     CouponResponse getPlanCoupon(MyCouponListRequest requestBean);
+
+    /**
+     * 根据批次号和日期，取得结束债权任务列表
+     * @param bankCreditEndVO
+     * @return
+     */
+    List<BankCreditEndVO> getBankCreditEndListByBatchnoTxdate(BankCreditEndVO bankCreditEndVO);
+
+    /**
+     * 根据条件(批次号和日期)，更新结束债权任务状态
+     * @param bankCreditEndVO
+     * @param status
+     * @return
+     */
+    int updateCreditEndForStatus(BankCreditEndVO bankCreditEndVO, int status);
+
+    /**
+     * 合法性检查后，更新批次结束债权任务
+     * @param bankCallBeanVO
+     * @return
+     */
+    int updateBatchCreditEndCheck(BankCallBeanVO bankCallBeanVO);
+
+    /**
+     * 银行完成后，更新批次结束债权任务
+     * @param bankCallBeanVO
+     * @return
+     */
+    int updateBatchCreditEndFinish(BankCallBeanVO bankCallBeanVO);
 }

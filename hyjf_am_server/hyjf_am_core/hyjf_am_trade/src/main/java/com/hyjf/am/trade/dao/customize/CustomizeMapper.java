@@ -58,7 +58,8 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected AdminBorrowRecoverCustomizeMapper borrowRecoverCustomizeMapper;
-
+    @Autowired
+    protected AdminBorrowLogCustomizeMapper borrowLogCustomizeMapper;
     @Autowired
     protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
 
@@ -87,6 +88,13 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected OntimeTenderCustomizeMapper ontimeTenderCustomizeMapper;
+
+    @Autowired
+    protected WithdrawCustomizeMapper withdrawCustomizeMapper;
+
+    @Resource
+    protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
+
 }
 
 

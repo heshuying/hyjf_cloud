@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import java.util.List;
 
+import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class TransferExceptionLogServiceImpl extends BaseAdminServiceImpl implem
     private AmTradeClient amTradeClient;
 
     @Override
-    public List<AdminTransferExceptionLogCustomizeVO> getRecordList(AdminTransferExceptionLogRequest request) {
+    public AdminTransferExceptionLogResponse getRecordList(AdminTransferExceptionLogRequest request) {
        return amTradeClient.getAdminTransferExceptionLogCustomizeList(request);
     }
 

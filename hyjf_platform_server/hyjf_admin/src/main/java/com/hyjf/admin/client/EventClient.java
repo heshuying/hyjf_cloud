@@ -43,4 +43,12 @@ public interface EventClient {
 	 * @return
 	 */
 	EventVO getRecord(Integer id);
+
+	/**
+	 * 根据id删除公司管理-公司记事状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    EventResponse deleteById(Integer id);
 }

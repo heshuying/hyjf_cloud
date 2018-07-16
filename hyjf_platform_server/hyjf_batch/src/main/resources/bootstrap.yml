@@ -2,19 +2,10 @@ spring:
   application:
     name: BATCH
   cloud:
-      config:
-        enabled: true # 默认开启
-        label: master # 指明远程仓库的分支
-        profile: test #
-        discovery:
-          enabled: true
-          service-id: CONFIG-SERVER
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://127.0.0.1:8888/eureka/
-  instance:
-    preferIpAddress: true
+          config:
+            uri: http://micoserver:2222/
+            profile: test
+
 server:
   port: 9091
   servlet:

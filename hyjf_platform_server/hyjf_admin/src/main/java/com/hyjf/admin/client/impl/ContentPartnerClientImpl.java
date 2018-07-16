@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.admin.beans.request.ContentPartnerRequestBean;
 import com.hyjf.admin.client.ContentPartnerClient;
-import com.hyjf.am.response.admin.ContentPartnerResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.vo.config.LinkVO;
 
 /**
@@ -22,30 +22,36 @@ public class ContentPartnerClientImpl implements ContentPartnerClient {
 	private RestTemplate restTemplate;
 
 	@Override
-	public ContentPartnerResponse searchAction(ContentPartnerRequestBean requestBean) {
+	public LinkResponse searchAction(ContentPartnerRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/searchaction", requestBean,
-				ContentPartnerResponse.class);
+				LinkResponse.class);
 	}
 
 	@Override
-	public ContentPartnerResponse insertAction(ContentPartnerRequestBean requestBean) {
+	public LinkResponse insertAction(ContentPartnerRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/insertaction", requestBean,
-				ContentPartnerResponse.class);
+				LinkResponse.class);
 	}
 
 	@Override
-	public ContentPartnerResponse updateAction(ContentPartnerRequestBean requestBean) {
+	public LinkResponse updateAction(ContentPartnerRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentpartner/updateaction", requestBean,
-				ContentPartnerResponse.class);
+				LinkResponse.class);
 	}
 
 	@Override
 	public LinkVO getRecord(Integer id) {
-		ContentPartnerResponse response = restTemplate.getForObject(
-				"http://AM-CONFIG/am-config/content/contentpartner/getrecord/" + id, ContentPartnerResponse.class);
+		LinkResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/content/contentpartner/getrecord/" + id, LinkResponse.class);
 		if (response != null) {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	@Override
+	public LinkResponse deleteById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentpartner/delete/" + id,
+				LinkResponse.class);
 	}
 }

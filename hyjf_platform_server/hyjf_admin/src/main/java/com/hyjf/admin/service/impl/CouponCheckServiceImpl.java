@@ -12,6 +12,7 @@ import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.am.vo.config.CouponCheckVO;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
@@ -127,13 +128,16 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             fileP = couponCheck.getFilePath();
             fileN = couponCheck.getFileName();
         }
+
+        FileInputStream in = null;
+        OutputStream out = null;
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
 
-            FileInputStream in = new FileInputStream(fileP);
+            in = new FileInputStream(fileP);
             // 创建输出流
-            OutputStream out = response.getOutputStream();
+            out = response.getOutputStream();
             // 创建缓冲区
             byte buffer[] = new byte[1024];
             int len = 0;
@@ -142,12 +146,23 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-            // 关闭文件流
-            in.close();
-            // 关闭输出流
-            out.close();
-        } catch (Exception e) {
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                // 关闭输出流
+                if (Validator.isNotNull(out)){
+                    out.flush();
+                    out.close();
+                }
+                //关闭输入流
+                if (Validator.isNotNull(in)) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

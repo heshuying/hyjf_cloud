@@ -44,4 +44,12 @@ public interface ContentQualifyService {
 	 * @return
 	 */
 	ContentQualifyResponse updateStatus(ContentQualifyRequestBean requestBean);
+
+	/**
+	 * 删除公司管理-资质荣誉状态
+	 *
+	 * @param id
+	 * @return
+	 */
+    ContentQualifyResponse deleteById(Integer id);
 }

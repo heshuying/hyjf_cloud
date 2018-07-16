@@ -36,7 +36,8 @@ public class BaseController {
 	public static final String FAIL_DESC = "失败";
 	//返回集合
 	public static final String LIST="list";
-	
+	public static final String RECORD="record";
+
 	public static final String CURR="currPage";
 	public static final String PAGE="pageSize";
 	public static final String TRCORD="recordTotal";
@@ -80,6 +81,7 @@ public class BaseController {
 		info.put(LIST, List);
 		return info;
 	}
+
 	//返回失败
 	public JSONObject  fail(String failmsg) {
 		JSONObject info = new JSONObject();

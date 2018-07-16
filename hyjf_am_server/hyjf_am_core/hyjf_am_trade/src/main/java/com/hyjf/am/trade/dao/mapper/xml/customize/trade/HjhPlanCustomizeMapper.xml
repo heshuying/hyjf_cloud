@@ -290,6 +290,19 @@
         WHERE hp.del_flg = 0 AND hp.plan_display_status = 1) t
 	</sql>
 
+	<update id="updatePlanAccount" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">
+		update ht_hjh_plan
+		set
+		<if test="joinTotal != null">
+			join_total = IFNULL(join_total,0) + #{joinTotal,jdbcType=DECIMAL},
+		</if>
+		<if test="availableInvestAccount != null">
+			available_invest_account = IFNULL(available_invest_account,0) + #{availableInvestAccount,jdbcType=DECIMAL}
+		</if>
+		where
+		plan_nid = #{planNid,jdbcType=VARCHAR}
+	</update>
+
 
 
 </mapper>

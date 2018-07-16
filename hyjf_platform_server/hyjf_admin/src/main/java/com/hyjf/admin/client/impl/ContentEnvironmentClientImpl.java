@@ -49,4 +49,10 @@ public class ContentEnvironmentClientImpl implements ContentEnvironmentClient {
 		}
 		return null;
 	}
+
+	@Override
+	public ContentEnvironmentResponse deleteById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentenvironment/delete/" + id,
+				ContentEnvironmentResponse.class);
+	}
 }

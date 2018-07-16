@@ -3,19 +3,18 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.config.dao.mapper.auto.EventMapper;
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.dao.model.auto.EventExample;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -57,5 +56,10 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Event getRecord(Integer id) {
 		return eventMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public void deleteById(Integer id) {
+		eventMapper.deleteByPrimaryKey(id);
 	}
 }

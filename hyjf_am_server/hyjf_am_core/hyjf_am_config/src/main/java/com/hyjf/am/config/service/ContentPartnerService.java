@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.List;
-
 import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -42,4 +42,19 @@ public interface ContentPartnerService {
 	 * @return
 	 */
 	Link getRecord(Integer id);
+
+	/**
+	 * 根据合作类型查询公司管理-合作伙伴
+	 *
+	 * @param type
+	 * @return
+	 */
+    Link getbyPartnerType(Integer type);
+
+	/**
+	 * 根据id删除合作伙伴
+	 *
+	 * @param id
+	 */
+	void deleteById(Integer id);
 }

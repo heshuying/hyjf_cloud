@@ -4,6 +4,7 @@
 package com.hyjf.admin.common.service;
 
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface BaseService {
      * @return
      */
     List<ParamNameVO> getParamNameList(String nameClass);
+
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
 }

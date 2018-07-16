@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.HjhPlanAppResponse;
+import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
@@ -38,7 +38,7 @@ public class AmHjhPlanClientImpl implements AmHjhPlanClient {
      */
     @Override
     public List<HjhPlanCustomizeVO> getAppHomePlanList(HjhPlanRequest request) {
-        HjhPlanAppResponse response = restTemplate.postForEntity("http://AM-TRADE//am-trade/hjhPlan/selectAppHjhPlanList",request,HjhPlanAppResponse.class).getBody();
+        HjhPlanResponse response = restTemplate.postForEntity("http://AM-TRADE//am-trade/hjhPlan/selectAppHjhPlanList",request,HjhPlanResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }

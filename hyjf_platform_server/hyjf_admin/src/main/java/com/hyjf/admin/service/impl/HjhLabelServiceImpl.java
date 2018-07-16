@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.client.HjhLabelClient;
 import com.hyjf.admin.service.HjhLabelService;
+import com.hyjf.am.response.admin.HjhLabelCustomizeResponse;
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
@@ -39,9 +40,9 @@ public class HjhLabelServiceImpl implements HjhLabelService{
 	}
 
 	@Override
-	public List<HjhLabelCustomizeVO> getHjhLabelList(HjhLabelRequest request) {
-		List<HjhLabelCustomizeVO> list = hjhLabelClient.findHjhLabelList(request);
-		return list;
+	public HjhLabelCustomizeResponse getHjhLabelList(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = hjhLabelClient.findHjhLabelList(request);
+		return response;
 	}
 
 	@Override
