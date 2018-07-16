@@ -46,7 +46,7 @@
 
         <!-- 表结构 -->
 
-       <!-- <table tableName="ht_account_bank" domainObjectName="AccountBank">
+        <table tableName="ht_account_bank" domainObjectName="AccountBank">
             <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="bank_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -1329,7 +1329,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        &lt;!&ndash; 分布式事务本地消息表 &ndash;&gt;
+        <!-- 分布式事务本地消息表 -->
         <table tableName="ht_producer_transaction_message" domainObjectName="ProducerTransactionMessage">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="message_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1625,6 +1625,7 @@
 
         <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="holiday_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_invite" domainObjectName="Invite">
