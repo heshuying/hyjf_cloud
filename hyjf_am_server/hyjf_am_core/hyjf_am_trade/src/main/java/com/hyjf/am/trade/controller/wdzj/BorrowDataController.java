@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.wdzj;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.trade.controller.BaseController;
@@ -50,8 +51,9 @@ public class BorrowDataController extends BaseController {
      * @return
      */
     @RequestMapping("/count_borrowlist")
-    public Integer countBorrowList(@RequestBody Map<String, Object> requestBean){
-        return borrowDataService.countBorrowList(requestBean);
+    public Response<Integer> countBorrowList(@RequestBody Map<String, Object> requestBean){
+        Integer result = borrowDataService.countBorrowList(requestBean);
+        return new Response(result);
     }
 
     /**
@@ -60,8 +62,9 @@ public class BorrowDataController extends BaseController {
      * @return
      */
     @RequestMapping("/sum_borrowamount")
-    public String sumBorrowAmount(@RequestBody Map<String, Object> requestBean){
-        return borrowDataService.sumBorrowAmount(requestBean);
+    public Response<String> sumBorrowAmount(@RequestBody Map<String, Object> requestBean){
+        String result = borrowDataService.sumBorrowAmount(requestBean);
+        return new Response(result);
     }
 
     /**
@@ -85,7 +88,8 @@ public class BorrowDataController extends BaseController {
      * @return
      */
     @RequestMapping("/count_preapyslist")
-    public Integer countPreapysList (@RequestBody Map<String, Object> requestBean){
-        return borrowDataService.countPreapysList(requestBean);
+    public Response<Integer> countPreapysList (@RequestBody Map<String, Object> requestBean){
+        Integer result = borrowDataService.countPreapysList(requestBean);
+        return new Response(result);
     }
 }
