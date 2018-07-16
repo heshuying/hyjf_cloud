@@ -78,7 +78,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>batch</finalName>
+					<finalName>hyjf-batch</finalName>
 				</configuration>
 			</plugin>
 			<plugin>
