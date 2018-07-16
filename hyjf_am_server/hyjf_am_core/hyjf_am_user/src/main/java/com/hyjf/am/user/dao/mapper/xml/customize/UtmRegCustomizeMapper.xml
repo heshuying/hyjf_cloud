@@ -39,8 +39,14 @@
 	<sql id="Where_Clause">
 		<where>
 			AND 1=1
-			<if test="sourceType != null" >
+			<if test="sourceType != null and sourceType != ''" >
 				and source_type =  ${sourceType}
+			</if>
+			<if test="sourceId != null and sourceId != ''" >
+				and source_id =  ${sourceId}
+			</if>
+			<if test="delFlag != null and delFlag != ''" >
+				and del_flag =  ${delFlag}
 			</if>
 			<if test="limitStart >= 0" >
 				limit #{limitStart} , #{limitEnd}
@@ -48,6 +54,22 @@
 		</where>
 	</sql>
 
+	<select id="getUtmPlat" resultType="com.hyjf.am.vo.user.UtmPlatVO" parameterType="map" >
+		SELECT id AS id,source_id sourceId,source_name sourceName,del_flag delFlag,attorn_flag attornFlag,remark remark, create_group_cd createGroupCd,
+		create_user_id createUserId,create_time createTime,update_group_cd updateGroupCd,update_user_id updateUserId,update_time updateTime,source_type sourceType
+		FROM ht_utm_plat
+		<include refid="Where_Clause" />
+	</select>
+
+	<select id="getUtmByUtmId" resultType="com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO" parameterType="String" >
+		SELECT utm_id utmId, utm_source utmSource,source_id sourceId,utm_medium utmMedium,utm_term utmTerm,utm_content utmContent,
+				utm_campaign utmCampaign,utm_referrer utmReferrer,link_address linkAddress,remark remark,STATUS STATUS
+		FROM ht_utm
+		where 1=1
+		<if test="utmId != null and utmId != ''" >
+			and utm_id =  ${utmId}
+		</if>
+	</select>
 
 
 </mapper>

@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
+import com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
 import org.springframework.stereotype.Service;
 
@@ -93,6 +94,8 @@ public class CustomizeMapper extends AutoMapper {
 
     @Resource
     protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
+    @Resource
+    protected WDZJCustomizeMapper wdzjCustomizeMapper;
 
     @Resource
     protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;

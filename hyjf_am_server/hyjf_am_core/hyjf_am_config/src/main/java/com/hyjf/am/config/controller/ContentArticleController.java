@@ -46,6 +46,24 @@ public class ContentArticleController {
     }
 
     /**
+     * 查询公告列表
+     * @author zhangyk
+     * @date 2018/7/5 9:40
+     */
+    @PostMapping("/noticeList")
+    public ContentArticleResponse getNotictList(@RequestBody ContentArticleRequest request) {
+        ContentArticleResponse response = new ContentArticleResponse();
+        List<ContentArticle> list = contentArticleService.getContentArticleList(request);
+        if (!CollectionUtils.isEmpty(list)){
+            List<ContentArticleVO> result = CommonUtils.convertBeanList(list,ContentArticleVO.class);
+            response.setResultList(result);
+        }
+        return response;
+    }
+
+
+
+    /**
      * 获取公司简介
      *
      * @return

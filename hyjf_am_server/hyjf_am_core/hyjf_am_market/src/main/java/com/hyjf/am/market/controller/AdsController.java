@@ -8,16 +8,16 @@ import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,6 +67,17 @@ public class AdsController {
 			AppAdsCustomizeVO appAdsCustomizeVO = new AppAdsCustomizeVO();
 			BeanUtils.copyProperties(appAdsCustomize, appAdsCustomizeVO);
 			response.setResult(appAdsCustomizeVO);
+		}
+		return response;
+	}
+
+	@PostMapping("/getBannerList")
+	public AppAdsCustomizeResponse getBannerList(@RequestBody AdsRequest adsRequest) {
+		AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
+		List<Ads> list = adsService.getBannerList(adsRequest);
+		if (!CollectionUtils.isEmpty(list)) {
+			List<AppAdsCustomizeVO> adsList = CommonUtils.convertBeanList(list,AppAdsCustomizeVO.class);
+			response.setResultList(adsList);
 		}
 		return response;
 	}

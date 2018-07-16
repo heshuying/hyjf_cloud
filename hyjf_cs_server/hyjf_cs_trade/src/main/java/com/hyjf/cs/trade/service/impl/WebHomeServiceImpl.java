@@ -1,8 +1,12 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.response.market.AppAdsCustomizeResponse;
+import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
@@ -12,6 +16,7 @@ import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.HomeDataResultBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -24,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +36,11 @@ import java.util.List;
 public class WebHomeServiceImpl implements WebHomeService {
 
     private static Logger logger = LoggerFactory.getLogger(WebHomeServiceImpl.class);
+
+    // 通知列表
+    private static final  String NOTICE_LIST_URL = "http://AM-CONFIG/am-config/article/noticeList";
+    // banner 列表
+    private static final  String BANNER_LIST_URL = "http://AM-MARKET/am-market/ads/getBannerList";
 
     /**
      * 平台上线时间
@@ -55,6 +64,12 @@ public class WebHomeServiceImpl implements WebHomeService {
 
     @Autowired
     private ContentArticleClient contentArticleClient;
+
+    @Autowired
+    private SystemConfig systemConfig;
+
+    @Autowired
+    private BaseClient baseClient;
 
 
     /**
@@ -114,7 +129,7 @@ public class WebHomeServiceImpl implements WebHomeService {
                         result.setHelloFlag(helloFlag);
                     }
                 } else {
-                    logger.error("查询用户信息userinfo为空");
+                    logger.info("查询用户信息userinfo为空");
                 }
 
 
@@ -133,6 +148,30 @@ public class WebHomeServiceImpl implements WebHomeService {
         Integer yearSum = GetDate.getYearFromDate(PUT_ONLINE_TIME);
         //上线年数
         result.setYearSum(yearSum);
+        // 公告
+        ContentArticleRequest contentArticleRequest = new ContentArticleRequest();
+        contentArticleRequest.setLimitStart(0);
+        contentArticleRequest.setLimitEnd(1);
+        contentArticleRequest.setNoticeType("2");//  公告类型
+        ContentArticleResponse response = baseClient.postExe(NOTICE_LIST_URL,contentArticleRequest,ContentArticleResponse.class);
+        List<ContentArticleVO> noticeList = response.getResultList();
+        if(!CollectionUtils.isEmpty(noticeList)){
+            result.setNoticeInfo(noticeList.get(0));
+        }
+        // banner
+        AdsRequest adsRequest = new AdsRequest();
+        adsRequest.setLimitStart(0);
+        adsRequest.setLimitEnd(4);
+        adsRequest.setTypeId(6);
+        adsRequest.setIsIndex(1);
+
+        AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
+        List<AppAdsCustomizeVO> bannerList = res.getResultList();
+        if ( !CollectionUtils.isEmpty(bannerList)){
+            result.setBannerList(bannerList);
+        }
+
+
 
 
         //获取新手专区项目信息(仅查第一条)
@@ -158,19 +197,18 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitEnd(4);
         request.setIsHome("1");
         List<HjhPlanCustomizeVO> planList = webProjectListClient.searchPlanList(request);
-        // TODO: 2018/7/4   方法返回值不正确  待修正 result.setHjhPlanList(planList);
+        result.setHjhPlanList(planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);
         req.setLimitStart(0);
         req.setLimitEnd(1);
         List<ContentArticleVO> list1 = contentArticleClient.searchContentArticleList(req);
-        SystemConfig systemConfig = new SystemConfig();
         if (!CollectionUtils.isEmpty(list1)){
             for (ContentArticleVO contentArticleVO : list1) {
                 if (contentArticleVO.getContent().contains("../../../..")) {
-                    contentArticleVO.setContent(contentArticleVO.getContent().replaceAll("../../../..", systemConfig.webHost));
+                    contentArticleVO.setContent(contentArticleVO.getContent().replaceAll("../../../..", systemConfig.getWebHost()));
                 } else if (contentArticleVO.getContent().contains("src=\"/")) {
-                    contentArticleVO.setContent(contentArticleVO.getContent().replaceAll("src=\"/","src=\"" + systemConfig.webHost )+ "//");
+                    contentArticleVO.setContent(contentArticleVO.getContent().replaceAll("src=\"/","src=\"" + systemConfig.getWebHost() )+ "//");
                 }
                 //去除html标签
                 contentArticleVO.setContent(HtmlUtil.getTextFromHtml(contentArticleVO.getContent()));
@@ -183,12 +221,13 @@ public class WebHomeServiceImpl implements WebHomeService {
         List<ContentArticleVO> list2 = contentArticleClient.searchContentArticleList(req);
         for (ContentArticleVO companyDynamics : list2) {
             if (companyDynamics.getContent().contains("../../../..")) {
-                companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", systemConfig.webHost ));
+                companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", systemConfig.getWebHost() ));
             } else if (companyDynamics.getContent().contains("src=\"/")) {
-                companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/","src=\"" + systemConfig.webHost )+ "//");
+                companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/","src=\"" + systemConfig.getWebHost() )+ "//");
             }
         }
         result.setCompanyDynamicsList(list2);
+        result.setNowTime(GetDate.formatDate(System.currentTimeMillis()));
          /*首页原来接口 有推广session部分,此处暂时不做处理，如果需要再加*/
         webResult.setData(result);
         return webResult;

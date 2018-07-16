@@ -122,9 +122,11 @@ public class FddUserInfoChangeMessageConsumer extends Consumer {
                 boolean isUpdateFlag = fddUserInfoChangeMessageHandle.updateUserCAInfo(userId);
                 if(isUpdateFlag){
                     // 成功更新，返回消费成功
+                    logger.info("【法大大修改客户信息】操作成功,用户ID:[" + userId + "],CA认证时手机号:[" + mobile + "],最新手机号:[" + nowMobile + "].");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }else{
                     // 更新失败，返回稍后消费
+                    logger.info("【法大大修改客户信息】更新失败,用户ID:[" + userId + "],CA认证时手机号:[" + mobile + "],最新手机号:[" + nowMobile + "].");
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
             } catch (Exception e) {

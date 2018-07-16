@@ -72,7 +72,7 @@
         <result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR" />
         <result column="borrow_account" property="borrowAccount" jdbcType="VARCHAR" />
         <result column="borrow_schedule" property="borrowSchedule" jdbcType="VARCHAR" />
-        <result column="tstatus" property="status" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="on_time" property="onTime" jdbcType="VARCHAR" />
         <result column="time" property="time" jdbcType="VARCHAR" />
         <result column="couponEnable" property="couponEnable" jdbcType="VARCHAR" />
@@ -246,7 +246,7 @@
             '13'
             ELSE
             ''
-            END AS tstatus,
+            END AS status,
             CASE WHEN htb.`status` = 1 AND htb.verify_status = 3 THEN
             FROM_UNIXTIME(htb.ontime,'%Y-%m-%d %H:%i:%s') ELSE '' END AS on_time,
             CASE  WHEN htb.`status` = 1 AND htb.verify_status = 3 THEN htb.ontime ELSE ''END AS times
