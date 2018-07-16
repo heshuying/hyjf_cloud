@@ -129,6 +129,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     public WebResult<Map<String, Object>> borrowTender(TenderRequest request) {
         WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
         Integer userId = loginUser.getUserId();
+        logger.info("开始检查散标投资参数,userId:{}", userId);
         request.setUser(loginUser);
         // 设置redis 用户正在投资
         String key = RedisConstants.BORROW_TENDER_REPEAT + userId;

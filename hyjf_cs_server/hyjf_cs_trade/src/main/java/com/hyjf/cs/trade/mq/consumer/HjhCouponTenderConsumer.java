@@ -52,9 +52,9 @@ public class HjhCouponTenderConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.HZT_COUPON_TENDER_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.HJH_COUPON_TENDER_GROUP);
         //订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.HZT_COUPON_TENDER_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.HJH_COUPON_TENDER_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
