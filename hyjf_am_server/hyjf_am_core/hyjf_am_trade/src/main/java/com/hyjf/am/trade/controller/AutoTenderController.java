@@ -136,4 +136,23 @@ public class AutoTenderController extends BaseController {
         String authCode = this.autoTenderService.getSellerAuthCode(tenderOrderId, sourceType);
         return new Response(authCode);
     }
+
+    /**
+     * 保存用户的债转承接log数据
+     * @param request
+     * @return
+     * @author nxl
+     */
+    @RequestMapping("/saveCreditTenderLogNoSave")
+    public MapResponse saveCreditTenderLogNoSave(@RequestBody SaveCreditTenderLogRequest request) {
+        MapResponse response = new MapResponse();
+        response.setResultMap(this.autoTenderService.saveCreditTenderLogNoSave(
+                request.getCredit(),
+                request.getHjhAccede(),
+                request.getOrderId(),
+                request.getOrderDate(),
+                request.getYujiAmoust(),
+                request.isLast()));
+        return response;
+    }
 }
