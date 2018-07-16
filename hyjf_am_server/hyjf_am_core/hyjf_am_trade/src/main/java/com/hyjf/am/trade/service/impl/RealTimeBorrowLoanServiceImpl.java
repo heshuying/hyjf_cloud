@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.dao.mapper.auto.AccountBorrowMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;

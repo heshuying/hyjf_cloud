@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;

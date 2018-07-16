@@ -92,7 +92,7 @@ public class CustomizeMapper extends AutoMapper {
     @Resource
     protected WithdrawCustomizeMapper withdrawCustomizeMapper;
 
-    @Autowired
+    @Resource
     protected AutoReqRepayBorrowCustomizeMapper autoReqRepayBorrowCustomizeMapper;
 
     @Resource
