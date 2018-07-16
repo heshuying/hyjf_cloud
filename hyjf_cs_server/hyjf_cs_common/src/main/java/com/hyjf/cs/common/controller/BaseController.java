@@ -3,10 +3,10 @@
  */
 package com.hyjf.cs.common.controller;
 
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.StringUtil;
-import com.hyjf.cs.common.bean.result.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;

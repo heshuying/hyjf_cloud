@@ -5,6 +5,7 @@ spring:
     config:
       uri: http://micoserver:2222/
       profile: test
+      name: cs-message
   boot:
     admin:
       client:

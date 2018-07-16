@@ -2,9 +2,10 @@ spring:
   application:
     name: AM-TRADE
   cloud:
-      config:
-        uri: http://micoserver:2222/
-        profile: test
+    config:
+      uri: http://micoserver:2222/
+      profile: test
+      name: am-trade
 
   boot:
     admin:

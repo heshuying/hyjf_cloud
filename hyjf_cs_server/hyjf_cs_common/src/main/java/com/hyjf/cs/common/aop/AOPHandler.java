@@ -11,12 +11,10 @@ web * Description:（类功能描述-必填） 需要在每个方法前添加业
 	
 package com.hyjf.cs.common.aop;
 
-import com.hyjf.am.response.Response;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.BaseResult;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;

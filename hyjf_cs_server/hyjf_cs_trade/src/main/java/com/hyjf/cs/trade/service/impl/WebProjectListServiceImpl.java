@@ -61,7 +61,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
 
-    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistics/search/getTotalInvestAndInterestEntity";
+    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
 
     @Autowired
     private WebProjectListClient webProjectListClient;

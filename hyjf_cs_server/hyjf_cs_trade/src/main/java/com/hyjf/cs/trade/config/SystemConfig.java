@@ -61,6 +61,10 @@ public class SystemConfig {
 
     @Value("${hyjf.web.bank.batch.creditend.result.url}")
     private String retNotifyUrl;
+    @Value("${hyjf.wdzj.username}")
+    private String userNameWDZJ;
+    @Value("${hyjf.wdzj.password}")
+    private String passwordWDZJ;
 
     @Value("${hyjf.bank.instcode}")
     private String bankInstcode;
@@ -234,5 +238,21 @@ public class SystemConfig {
 
     public void setRetNotifyUrl(String retNotifyUrl) {
         this.retNotifyUrl = retNotifyUrl;
+    }
+
+    public String getUserNameWDZJ() {
+        return userNameWDZJ;
+    }
+
+    public void setUserNameWDZJ(String userNameWDZJ) {
+        this.userNameWDZJ = userNameWDZJ;
+    }
+
+    public String getPasswordWDZJ() {
+        return passwordWDZJ;
+    }
+
+    public void setPasswordWDZJ(String passwordWDZJ) {
+        this.passwordWDZJ = passwordWDZJ;
     }
 }

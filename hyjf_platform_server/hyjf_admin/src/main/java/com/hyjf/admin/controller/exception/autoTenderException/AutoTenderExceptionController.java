@@ -114,10 +114,9 @@ public class AutoTenderExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "汇计划投资异常", notes = "异常处理")
-    @PostMapping(value = "/tenderExceptionAction")
+    @PostMapping(value = "/tenderExceptionAction",produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String tenderExceptionAction(TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
-
+    public String tenderExceptionAction(HttpServletRequest request, @RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
         String userId = tenderExceptionSolveRequestBean.getUserId();
         String planOrderId = tenderExceptionSolveRequestBean.getPlanOrderId();
         String debtPlanNid = tenderExceptionSolveRequestBean.getDebtPlanNid();

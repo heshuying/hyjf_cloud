@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.common.CheckResult;
+import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
@@ -35,18 +35,9 @@ import com.hyjf.common.util.GetDate;
  * create by jijun 20180614
  */
 @Service
-public class BankWithdrawServiceImpl implements BankWithdrawService {
+public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWithdrawService {
 
     private static final Logger logger = LoggerFactory.getLogger(BankWithdrawServiceImpl.class);
-
-    @Autowired
-    private AccountWithdrawMapper accountwithdrawMapper;
-    @Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-    @Autowired
-    private AccountListMapper accountListMapper;
-    @Autowired
-    private AccountMapper accountMapper;
 
     // 提现状态:提现中
     private static final int WITHDRAW_STATUS_DEFAULT = 0;
@@ -76,7 +67,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
         // 当前时间
         cra.andCreateTimeGreaterThanOrEqualTo(GetDate.countDate(5,2));// TODO T-1天之前
         cra.andCreateTimeLessThanOrEqualTo(GetDate.getMinutesAfter(GetDate.getDate(),-30));// 30分钟之前的充值订单TODO
-        return this.accountwithdrawMapper.selectByExample(example);
+        return this.accountWithdrawMapper.selectByExample(example);
     }
 
     /**
@@ -144,7 +135,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             accountWithdraw.setAccount(bean.getAccountId());
             accountWithdraw.setReason("");
 
-            boolean isAccountwithdrawFlag = this.accountwithdrawMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(accountWithdraw,AccountWithdraw.class)) > 0 ? true : false;
+            boolean isAccountwithdrawFlag = this.accountWithdrawMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(accountWithdraw,AccountWithdraw.class)) > 0 ? true : false;
             if (!isAccountwithdrawFlag) {
                 throw new Exception("提现后,更新用户提现记录表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
             }
@@ -211,7 +202,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
             AccountWithdrawExample example = new AccountWithdrawExample();
             AccountWithdrawExample.Criteria cra = example.createCriteria();
             cra.andNidEqualTo(ordId);
-            List<AccountWithdraw> list = this.accountwithdrawMapper.selectByExample(example);
+            List<AccountWithdraw> list = this.accountWithdrawMapper.selectByExample(example);
             if (list != null && list.size() > 0) {
                 AccountWithdraw accountwithdraw = list.get(0);
                 if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
@@ -226,7 +217,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
                         accountwithdraw.setReason("提现订单："+ bean.getOrFlag() + "：已冲正/撤销");
                     }
 
-                    boolean isUpdateFlag = this.accountwithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
+                    boolean isUpdateFlag = this.accountWithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
                     if (!isUpdateFlag) {
 
                         throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + userId);
@@ -246,7 +237,7 @@ public class BankWithdrawServiceImpl implements BankWithdrawService {
      * @param userId
      * @return
      */
-    private Account getAccount(Integer userId) {
+    public Account getAccount(Integer userId) {
         AccountExample example = new AccountExample();
         AccountExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(userId);
