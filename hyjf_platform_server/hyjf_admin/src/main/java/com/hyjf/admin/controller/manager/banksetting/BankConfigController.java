@@ -1,6 +1,6 @@
 package com.hyjf.admin.controller.manager.banksetting;
 
-import com.hyjf.admin.Utils.ValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.admin.beans.request.BankConfigRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
