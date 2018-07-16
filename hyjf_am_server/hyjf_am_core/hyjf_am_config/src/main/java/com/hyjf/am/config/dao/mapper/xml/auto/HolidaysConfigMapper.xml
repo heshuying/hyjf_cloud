@@ -3,13 +3,8 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.auto.HolidaysConfigMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="year" property="year" jdbcType="VARCHAR" />
-    <result column="events_name" property="eventsName" jdbcType="VARCHAR" />
-    <result column="statr_time" property="statrTime" jdbcType="VARCHAR" />
-    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
-    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="day" property="day" jdbcType="DATE" />
+    <result column="holiday_flag" property="holidayFlag" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -72,8 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `year`, events_name, statr_time, end_time, remarks, create_user_id, update_user_id, 
-    create_time, update_time
+    id, `day`, holiday_flag, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigExample" >
     select
@@ -112,14 +106,10 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_holidays_config (`year`, events_name, statr_time, 
-      end_time, remarks, create_user_id, 
-      update_user_id, create_time, update_time
-      )
-    values (#{year,jdbcType=VARCHAR}, #{eventsName,jdbcType=VARCHAR}, #{statrTime,jdbcType=VARCHAR}, 
-      #{endTime,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into ht_holidays_config (`day`, holiday_flag, create_time, 
+      update_time)
+    values (#{day,jdbcType=DATE}, #{holidayFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -127,26 +117,11 @@
     </selectKey>
     insert into ht_holidays_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="year != null" >
-        `year`,
+      <if test="day != null" >
+        `day`,
       </if>
-      <if test="eventsName != null" >
-        events_name,
-      </if>
-      <if test="statrTime != null" >
-        statr_time,
-      </if>
-      <if test="endTime != null" >
-        end_time,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
+      <if test="holidayFlag != null" >
+        holiday_flag,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -156,26 +131,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="year != null" >
-        #{year,jdbcType=VARCHAR},
+      <if test="day != null" >
+        #{day,jdbcType=DATE},
       </if>
-      <if test="eventsName != null" >
-        #{eventsName,jdbcType=VARCHAR},
-      </if>
-      <if test="statrTime != null" >
-        #{statrTime,jdbcType=VARCHAR},
-      </if>
-      <if test="endTime != null" >
-        #{endTime,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
+      <if test="holidayFlag != null" >
+        #{holidayFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -197,26 +157,11 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.year != null" >
-        `year` = #{record.year,jdbcType=VARCHAR},
+      <if test="record.day != null" >
+        `day` = #{record.day,jdbcType=DATE},
       </if>
-      <if test="record.eventsName != null" >
-        events_name = #{record.eventsName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.statrTime != null" >
-        statr_time = #{record.statrTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.endTime != null" >
-        end_time = #{record.endTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.remarks != null" >
-        remarks = #{record.remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      <if test="record.holidayFlag != null" >
+        holiday_flag = #{record.holidayFlag,jdbcType=TINYINT},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -232,13 +177,8 @@
   <update id="updateByExample" parameterType="map" >
     update ht_holidays_config
     set id = #{record.id,jdbcType=INTEGER},
-      `year` = #{record.year,jdbcType=VARCHAR},
-      events_name = #{record.eventsName,jdbcType=VARCHAR},
-      statr_time = #{record.statrTime,jdbcType=VARCHAR},
-      end_time = #{record.endTime,jdbcType=VARCHAR},
-      remarks = #{record.remarks,jdbcType=VARCHAR},
-      create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      `day` = #{record.day,jdbcType=DATE},
+      holiday_flag = #{record.holidayFlag,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -248,26 +188,11 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     update ht_holidays_config
     <set >
-      <if test="year != null" >
-        `year` = #{year,jdbcType=VARCHAR},
+      <if test="day != null" >
+        `day` = #{day,jdbcType=DATE},
       </if>
-      <if test="eventsName != null" >
-        events_name = #{eventsName,jdbcType=VARCHAR},
-      </if>
-      <if test="statrTime != null" >
-        statr_time = #{statrTime,jdbcType=VARCHAR},
-      </if>
-      <if test="endTime != null" >
-        end_time = #{endTime,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      <if test="holidayFlag != null" >
+        holiday_flag = #{holidayFlag,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -280,13 +205,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     update ht_holidays_config
-    set `year` = #{year,jdbcType=VARCHAR},
-      events_name = #{eventsName,jdbcType=VARCHAR},
-      statr_time = #{statrTime,jdbcType=VARCHAR},
-      end_time = #{endTime,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
+    set `day` = #{day,jdbcType=DATE},
+      holiday_flag = #{holidayFlag,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

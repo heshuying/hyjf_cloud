@@ -121,6 +121,23 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         return new UtmPlat();
     }
 
+    @Override
+    public Integer getAccessNumber(Integer sourceId) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return utmRegCustomizeMapper.getAccessNumber(sourceId, dayStart, dayEnd);
+    }
+
+    @Override
+    public Integer getRegistNumber(Integer sourceId) {
+        return null;
+    }
+
+    @Override
+    public Integer getOpenAccountNumber(Integer sourceId) {
+        return null;
+    }
+
     /**
      * @Author walter.limeng
      * @Description  转换utmplat对象

@@ -99,22 +99,37 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getAccessNumber(Integer sourceId, String type) {
+		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getaccessnumber/" + sourceId,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getAccessNumber();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getRegistNumber(Integer sourceId, String type) {
+		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getregistnumber/" + sourceId,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getRegistNumber();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getOpenAccountNumber(Integer sourceId, String type) {
+		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utm/getopenaccountnumber/" + sourceId,
+				UtmResponse.class);
+		if (response != null) {
+			return response.getOpenAccountNumber();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getTenderNumber(Integer sourceId, String type) {
-		return null;
+		return null;// todo
 	}
 
 	@Override

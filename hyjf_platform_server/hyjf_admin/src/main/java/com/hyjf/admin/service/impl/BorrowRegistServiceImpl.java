@@ -3,12 +3,13 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
-import com.hyjf.admin.client.BorrowRegistClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.service.BorrowRegistService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
@@ -40,11 +41,14 @@ import java.util.Map;
 @Service
 public class BorrowRegistServiceImpl implements BorrowRegistService {
     @Autowired
-    BorrowRegistClient borrowRegistClient;
+    AmTradeClient amTradeClient;
+
+    @Autowired
+    AmUserClient amUserClient;
 
     @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectList() {
-        return borrowRegistClient.selectBorrowProjectList();
+        return amTradeClient.selectBorrowProjectList();
     }
 
     @Override
@@ -63,7 +67,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
     public BorrowRegistResponseBean getRegistList(BorrowRegistListRequest borrowRegistListRequest) {
         BorrowRegistResponseBean borrowRegistResponseBean = new BorrowRegistResponseBean();
         //查询总条数
-        Integer count = borrowRegistClient.getRegistCount(borrowRegistListRequest);
+        Integer count = amTradeClient.getRegistCount(borrowRegistListRequest);
         borrowRegistResponseBean.setTotal(count);
         //分页参数
         Page page = Page.initPage(borrowRegistListRequest.getCurrPage(), borrowRegistListRequest.getPageSize());
@@ -72,8 +76,8 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         borrowRegistListRequest.setLimitEnd(page.getLimit());
         //查询列表 总计
         if (count > 0) {
-            List<BorrowRegistCustomizeVO> list = borrowRegistClient.selectBorrowRegistList(borrowRegistListRequest);
-            String sumAccount = borrowRegistClient.sumBorrowRegistAccount(borrowRegistListRequest);
+            List<BorrowRegistCustomizeVO> list = amTradeClient.selectBorrowRegistList(borrowRegistListRequest);
+            String sumAccount = amTradeClient.sumBorrowRegistAccount(borrowRegistListRequest);
             borrowRegistResponseBean.setRecordList(list);
             borrowRegistResponseBean.setSumAccount(sumAccount);
         }
@@ -90,8 +94,8 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
     public AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName) {
         AdminResult result = new AdminResult();
         // 获取相应的标的详情
-        BorrowVO borrowVO = borrowRegistClient.selectBorrowByNid(borrowNid);
-        BorrowInfoVO borrowInfoVO = borrowRegistClient.getBorrowInfoByNid(borrowNid);
+        BorrowVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
+        BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
         if (borrowVO != null && borrowInfoVO != null) {
             //項目还款方式
             String borrowStyle = borrowVO.getBorrowStyle();
@@ -99,9 +103,9 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
             int userId = borrowVO.getUserId();
-            UserVO user = borrowRegistClient.findUserById(userId);
+            UserVO user = amUserClient.findUserById(userId);
             if (Validator.isNotNull(user)) {
-                BankOpenAccountVO bankOpenAccount = borrowRegistClient.selectBankOpenAccountById(userId);
+                BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccountByUserId(userId);
                 if (Validator.isNotNull(bankOpenAccount)) {
                     // 更新相应的标的状态为备案中
                     //todo wangjun 分布式事务问题
@@ -145,7 +149,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
                         // 年化利率
                         debtRegistBean.setRate(String.valueOf(borrowVO.getBorrowApr()));
                         if (Validator.isNotNull(borrowInfoVO.getRepayOrgUserId())) {
-                            BankOpenAccountVO account = borrowRegistClient.selectBankOpenAccountById(borrowInfoVO.getRepayOrgUserId());
+                            BankOpenAccountVO account = amUserClient.getBankOpenAccountByUserId(borrowInfoVO.getRepayOrgUserId());
                             if (Validator.isNotNull(account)) {
                                 debtRegistBean.setBailAccountId(account.getAccount());
                             }
@@ -159,7 +163,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
                         //备案接口(EntrustFlag和ReceiptAccountId要么都传，要么都不传)
                         if (borrowInfoVO.getEntrustedFlg() == 1) {
 
-                            STZHWhiteListVO stzhWhiteListVO = borrowRegistClient.selectStzfWhiteList(borrowInfoVO.getInstCode().trim(), String.valueOf(borrowInfoVO.getEntrustedUserId()));
+                            STZHWhiteListVO stzhWhiteListVO = amTradeClient.selectStzfWhiteList(borrowInfoVO.getInstCode().trim(), String.valueOf(borrowInfoVO.getEntrustedUserId()));
                             if (stzhWhiteListVO != null) {
                                 debtRegistBean.setEntrustFlag(borrowInfoVO.getEntrustedFlg().toString());
                                 debtRegistBean.setReceiptAccountId(stzhWhiteListVO.getStAccountid());
@@ -232,9 +236,9 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         borrow.setRegistTime(GetDate.getNowTime());
         BorrowRegistRequest request = new BorrowRegistRequest(borrow, status, registStatus);
         if (updateType == 0) {
-            flag = borrowRegistClient.updateBorrowRegist(request) > 0 ? true : false;
+            flag = amTradeClient.updateBorrowRegist(request) > 0 ? true : false;
         } else {
-            flag = borrowRegistClient.updateEntrustedBorrowRegist(request) > 0 ? true : false;
+            flag = amTradeClient.updateEntrustedBorrowRegist(request) > 0 ? true : false;
         }
         return flag;
     }

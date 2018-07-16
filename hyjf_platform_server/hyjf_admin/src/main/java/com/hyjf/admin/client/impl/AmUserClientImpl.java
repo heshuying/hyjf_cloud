@@ -831,4 +831,20 @@ public class AmUserClientImpl implements AmUserClient {
         return response;
     }
 
+
+	/**
+	 * 根据UserID查询开户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

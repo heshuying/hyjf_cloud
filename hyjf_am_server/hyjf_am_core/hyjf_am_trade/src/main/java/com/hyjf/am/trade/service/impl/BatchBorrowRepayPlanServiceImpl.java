@@ -12,9 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,36 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BankCreditEndMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CalculateInvestInterestMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditRepayMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhDebtDetailMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhPlanAssetMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhRepayMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
@@ -62,7 +32,6 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
@@ -112,6 +81,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -126,9 +96,9 @@ import redis.clients.jedis.Transaction;
  * @version BatchBorrowRepayPlanServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
 @Service
-public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanService {
+public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements BatchBorrowRepayPlanService {
 
-	private static final Logger logger = LoggerFactory.getLogger(BatchBorrowRepayPlanServiceImpl.class);
+//	private static final Logger logger = LoggerFactory.getLogger(BatchBorrowRepayPlanServiceImpl.class);
 
 	/** 等待 */
 	private static final String TYPE_WAIT = "wait";
@@ -151,90 +121,90 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
     private static final String VAL_SEX = "val_sex";
     /** 放款金额 */
     private static final String VAL_AMOUNT = "val_amount";
-
-    @Autowired
-    private BorrowApicronMapper borrowApicronMapper;
-
-    @Autowired
-    private BorrowMapper borrowMapper;
-
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    private BorrowRecoverMapper borrowRecoverMapper;
-
-    @Autowired
-    private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
-
-    @Autowired
-    private HjhDebtCreditRepayMapper hjhDebtCreditRepayMapper;
-
-    @Autowired
-    private AccountMapper accountMapper;
-
-    @Autowired
-    private CreditRepayMapper creditRepayMapper;
-
-    @Autowired
-    private AccountListMapper accountListMapper;
-
-    @Autowired
-    private BorrowRepayPlanMapper borrowRepayPlanMapper;
-
-    @Autowired
-    private BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    private BorrowCreditMapper borrowCreditMapper;
-
-    @Autowired
-    private BorrowRepayMapper borrowRepayMapper;
-
-    @Autowired
-    private BankCreditEndMapper bankCreditEndMapper;
-
-    @Autowired
-    private CreditTenderMapper creditTenderMapper;
-
-    @Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-
-    @Autowired
-    private HjhDebtCreditMapper hjhDebtCreditMapper;
-
-    @Autowired
-    private HjhPlanMapper hjhPlanMapper;
-
-    @Autowired
-    private HjhAccedeMapper hjhAccedeMapper;
-
-    @Autowired
-    private HjhRepayMapper hjhRepayMapper;
-
-    @Autowired
-    private HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
-
-    @Autowired
-    private BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
-
-    @Autowired
-    private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
-
-    @Autowired
-    private HjhDebtDetailMapper hjhDebtDetailMapper;
-
-    @Autowired
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
-
-    @Autowired
-    private HjhInstConfigMapper hjhInstConfigMapper;
-
-    @Autowired
-    private CalculateInvestInterestMapper calculateInvestInterestMapper;
-
-    @Autowired
-    private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
+//
+//    @Autowired
+//    private BorrowApicronMapper borrowApicronMapper;
+//
+//    @Autowired
+//    private BorrowMapper borrowMapper;
+//
+//    @Autowired
+//    private BorrowInfoMapper borrowInfoMapper;
+//
+//    @Autowired
+//    private BorrowRecoverMapper borrowRecoverMapper;
+//
+//    @Autowired
+//    private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
+//
+//    @Autowired
+//    private HjhDebtCreditRepayMapper hjhDebtCreditRepayMapper;
+//
+//    @Autowired
+//    private AccountMapper accountMapper;
+//
+//    @Autowired
+//    private CreditRepayMapper creditRepayMapper;
+//
+//    @Autowired
+//    private AccountListMapper accountListMapper;
+//
+//    @Autowired
+//    private BorrowRepayPlanMapper borrowRepayPlanMapper;
+//
+//    @Autowired
+//    private BorrowTenderMapper borrowTenderMapper;
+//
+//    @Autowired
+//    private BorrowCreditMapper borrowCreditMapper;
+//
+//    @Autowired
+//    private BorrowRepayMapper borrowRepayMapper;
+//
+//    @Autowired
+//    private BankCreditEndMapper bankCreditEndMapper;
+//
+//    @Autowired
+//    private CreditTenderMapper creditTenderMapper;
+//
+//    @Autowired
+//    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
+//
+//    @Autowired
+//    private HjhDebtCreditMapper hjhDebtCreditMapper;
+//
+//    @Autowired
+//    private HjhPlanMapper hjhPlanMapper;
+//
+//    @Autowired
+//    private HjhAccedeMapper hjhAccedeMapper;
+//
+//    @Autowired
+//    private HjhRepayMapper hjhRepayMapper;
+//
+//    @Autowired
+//    private HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
+//
+//    @Autowired
+//    private BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
+//
+//    @Autowired
+//    private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
+//
+//    @Autowired
+//    private HjhDebtDetailMapper hjhDebtDetailMapper;
+//
+//    @Autowired
+//    private HjhPlanAssetMapper hjhPlanAssetMapper;
+//
+//    @Autowired
+//    private HjhInstConfigMapper hjhInstConfigMapper;
+//
+//    @Autowired
+//    private CalculateInvestInterestMapper calculateInvestInterestMapper;
+//
+//    @Autowired
+//    private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
     
 	@Autowired
 	private MailProducer mailProducer;
@@ -679,17 +649,6 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		BorrowExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
 		List<Borrow> list = borrowMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-	private BorrowInfo getBorrowInfoByNid(String borrowNid) {
-		BorrowInfoExample example = new BorrowInfoExample();
-		BorrowInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
 		if (list != null && !list.isEmpty()) {
 			return list.get(0);
 		}
@@ -1945,7 +1904,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		// 剩余还款期数
 		Integer periodNext = borrowPeriod - periodNow;
 		// 取得还款详情
-		BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
+		BorrowRepay borrowRepay = getBorrowRepayAsc(borrowNid);
 		// 投资信息
 		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 投资用户开户信息
@@ -2935,7 +2894,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 		// 剩余还款期数
 		Integer periodNext = borrowPeriod - periodNow;
 		// 取得还款详情
-		BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
+		BorrowRepay borrowRepay = getBorrowRepayAsc(borrowNid);
 		// 投资信息
 		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 查询相应的债权转让
@@ -3568,7 +3527,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 					status = 5;
 				}
 				// 还款总表
-				BorrowRepay borrowRepay = this.getBorrowRepay(borrowNid);
+				BorrowRepay borrowRepay = this.getBorrowRepayAsc(borrowNid);
 				borrowRepay.setRepayType(repayType);
 				borrowRepay.setRepayStatus(repayStatus); // 已还款
 //				borrowRepay.setRepayDays("0");
@@ -3835,7 +3794,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 				repayYesTime = nowTime;
 				status = 5;
 				// 还款总表
-				BorrowRepay borrowRepay = this.getBorrowRepay(borrowNid);
+				BorrowRepay borrowRepay = this.getBorrowRepayAsc(borrowNid);
 				borrowRepay.setRepayType(repayType);
 				borrowRepay.setRepayStatus(repayStatus); // 已还款
 //				borrowRepay.setRepayDays("0");
@@ -4263,7 +4222,7 @@ public class BatchBorrowRepayPlanServiceImpl implements BatchBorrowRepayPlanServ
 	 *
 	 * @return
 	 */
-	private BorrowRepay getBorrowRepay(String borrowNid) {
+	private BorrowRepay getBorrowRepayAsc(String borrowNid) {
 
 		BorrowRepayExample example = new BorrowRepayExample();
 		BorrowRepayExample.Criteria criteria = example.createCriteria();
