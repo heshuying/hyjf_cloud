@@ -153,4 +153,9 @@ public class RedisConstants {
      * 单IP最大登录控制
      */
     public static final String CACHE_MAX_IP_COUNT = "MaxIpCount:";
+
+    /**
+     * 自动关联计划redis防重复
+     */
+    public static final String AUTO_ISSUE_REPEAT = "borrowissue";
 }
