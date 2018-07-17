@@ -424,40 +424,52 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		String batchTxDate = String.valueOf(apicron.getTxDate());// 还款请求日期
 		int userId = apicron.getUserId();
 		String channel = BankCallConstant.CHANNEL_PC;
-		for (int i = 0; i < 3; i++) {
-			String logOrderId = GetOrderIdUtils.getOrderId2(userId);
-			String orderDate = GetOrderIdUtils.getOrderDate();
-			String txDate = GetOrderIdUtils.getTxDate();
-			String txTime = GetOrderIdUtils.getTxTime();
-			String seqNo = GetOrderIdUtils.getSeqNo(6);
-			// 调用还款接口
-			BankCallBean repayBean = new BankCallBean();
-			repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-			repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_QUERY);// 消息类型(批量还款)
-			repayBean.setTxDate(txDate);
-			repayBean.setTxTime(txTime);
-			repayBean.setSeqNo(seqNo);
-			repayBean.setChannel(channel);
-			repayBean.setBatchNo(batchNo);
-			repayBean.setBatchTxDate(batchTxDate);
-			repayBean.setLogUserId(String.valueOf(apicron.getUserId()));
-			repayBean.setLogOrderId(logOrderId);
-			repayBean.setLogOrderDate(orderDate);
-			repayBean.setLogRemark("批次状态查询");
-			repayBean.setLogClient(0);
-			BankCallBean queryResult = BankCallUtils.callApiBg(repayBean);
-			if (Validator.isNotNull(queryResult)) {
-				String retCode = StringUtils.isNotBlank(queryResult.getRetCode()) ? queryResult.getRetCode() : "";
-				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||BankCallConstant.RESPCODE_BATCHNO_NOTEXIST.equals(retCode)) {
-					return queryResult;
-				} else {
-					continue;
-				}
-			} else {
-				continue;
+		
+
+		String logOrderId = GetOrderIdUtils.getOrderId2(userId);
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String txDate = GetOrderIdUtils.getTxDate();
+		String txTime = GetOrderIdUtils.getTxTime();
+		String seqNo = GetOrderIdUtils.getSeqNo(6);
+		// 调用还款接口
+		BankCallBean repayBean = new BankCallBean();
+		repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_QUERY);// 消息类型(批量还款)
+		repayBean.setTxDate(txDate);
+		repayBean.setTxTime(txTime);
+		repayBean.setSeqNo(seqNo);
+		repayBean.setChannel(channel);
+		repayBean.setBatchNo(batchNo);
+		repayBean.setBatchTxDate(batchTxDate);
+		repayBean.setLogUserId(String.valueOf(userId));
+		repayBean.setLogOrderId(logOrderId);
+		repayBean.setLogOrderDate(orderDate);
+		repayBean.setLogRemark("计划还款批次状态查询");
+		repayBean.setLogClient(0);
+		
+		BankCallBean queryResult = BankCallUtils.callApiBg(repayBean);
+		
+		if (queryResult != null && StringUtils.isNotBlank(queryResult.getRetCode())) {
+			String retCode = queryResult.getRetCode();
+			logger.info(apicron.getBorrowNid()+" 计划还款批次状态查询返回  "+retCode+"  "+queryResult.getRetMsg());
+			if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+				return queryResult;
 			}
 		}
+		
 		return null;
+	}
+	
+	
+	/**
+	 * 根据主键从主库查询apicron 表
+	 * 这里不加select是想直接从主库查询
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public BorrowApicron selApiCronByPrimaryKey(int id) {
+		return borrowApicronMapper.selectByPrimaryKey(id);
 	}
 
 	/**
@@ -691,16 +703,15 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 
 	@Override
 	public boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception {
-		int nowTime = GetDate.getNowTime10();
+		
 		String borrowNid = apicron.getBorrowNid();
-		BorrowApicronExample example = new BorrowApicronExample();
-		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 		apicron.setStatus(status);
 //		apicron.setUpdateTime(nowTime);
-		boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
+		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(apicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
 		}
+		
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		borrow.setRepayStatus(status);
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
@@ -761,7 +772,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	}
 
 	@Override
-	public boolean updateBatchDetailsQuery(BorrowApicron apicron) {
+	public boolean reapyBatchDetailsUpdate(BorrowApicron apicron) {
 
 		String borrowNid = apicron.getBorrowNid();// 項目编号
 		Borrow borrow = this.getBorrowByNid(borrowNid);
@@ -1294,7 +1305,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!apicronFlag) {
 			throw new Exception("更新borrowApicron表失败，" + "[银行唯一订单号：" + apicron.getBankSeqNo() + "]");
 		}
+		
 		if (Validator.isNotNull(resultBeans) && resultBeans.size() > 0) {
+			// 化成订单号为key的map
 			Map<String, JSONObject> repayResults = new HashMap<String, JSONObject>();
 			for (int i = 0; i < resultBeans.size(); i++) {
 				BankCallBean resultBean = resultBeans.get(i);
@@ -1308,6 +1321,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					}
 				}
 			}
+			
 			// 取得投资详情列表
 			List<BorrowRecover> borrowRecoverList = this.getBorrowRecoverList(borrowNid);
 			if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
@@ -4152,6 +4166,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 //		String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
 //		String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
 		String channel = BankCallConstant.CHANNEL_PC;
+		logger.info(apicron.getBorrowNid()+" 批次明细查询 "+batchNo+"  页数:"+pageTotal+" ,总数: "+txCounts);
+		
 		for (int i = 1; i <= pageTotal; i++) {
 			// 循环三次查询结果
 			for (int j = 0; j < 3; j++) {
@@ -4183,6 +4199,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
 				if (Validator.isNotNull(repayResult)) {
 					String retCode = StringUtils.isNotBlank(repayResult.getRetCode()) ? repayResult.getRetCode() : "";
+					logger.info(apicron.getBorrowNid()+" 批次明细查询 "+batchNo+"  第"+i+" 页,返回码: "+retCode);
 					if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
 						results.add(repayResult);
 						break;
