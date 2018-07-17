@@ -14,10 +14,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
@@ -782,6 +779,38 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/wdzj/borrowdata/count_preapyslist";
         Response<Integer> response =
                 restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新借款API任务表
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @Override
+    public Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repay/update_apicron";
+        Response<Boolean> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据bankSeqNo检索
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @Override
+    public BorrowApicronVO selectBorrowApicron(String bankSeqNO) {
+        String url = "http://AM-TRADE/am-trade/borrowApicron/getby_bankseqno/" + bankSeqNO;
+        Response<BorrowApicronVO> response =
+                restTemplate.getForEntity(url,Response.class).getBody();
         if (response!=null && Response.isSuccess(response)){
             return response.getResult();
         }

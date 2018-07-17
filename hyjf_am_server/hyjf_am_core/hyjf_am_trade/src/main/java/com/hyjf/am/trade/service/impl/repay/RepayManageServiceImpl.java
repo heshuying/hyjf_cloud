@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.repay.BankRepayFreezeLogService;
 import com.hyjf.am.trade.service.repay.RepayManageService;
+import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -4019,5 +4020,28 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         example.setOrderByClause("id ASC");
         List<CreditRepay> creditRepayList = this.creditRepayMapper.selectByExample(example);
         return creditRepayList;
+    }
+
+    /**
+     * 更新借款API任务表
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @Override
+    public boolean updateBorrowApicron(BorrowApicron apicron, int status){
+        //更新api表状态
+        String borrowNid = apicron.getBorrowNid();
+        BorrowApicronExample example = new BorrowApicronExample();
+        example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
+        apicron.setStatus(status);
+        apicron.setUpdateTime(GetDate.getNowTime());
+        borrowApicronMapper.updateByExampleSelective(apicron, example);
+
+        //更新borrow表状态
+        Borrow borrow = this.getBorrow(borrowNid);
+        borrow.setRepayStatus(status);
+        this.borrowMapper.updateByPrimaryKey(borrow);
+
+        return true;
     }
 }
