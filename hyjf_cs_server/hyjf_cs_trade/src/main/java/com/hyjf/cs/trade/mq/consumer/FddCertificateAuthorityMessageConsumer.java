@@ -123,12 +123,11 @@ public class FddCertificateAuthorityMessageConsumer extends Consumer {
                 //crm投资推送
                 fddCertificateAuthorityMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC,null, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
                 logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }catch(Exception e){
-
+                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
 
-            return ConsumeConcurrentlyStatus.RECONSUME_LATER;
         }
     }
 }
