@@ -69,8 +69,8 @@ public class HolidaysConfigController  extends BaseController {
         }else {
             HolidaysConfigVO record = new HolidaysConfigVO();
             String data=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            record.setStatrTime(data);
-            record.setEndTime(data);
+//            record.setStatrTime(data);
+//            record.setEndTime(data);
             adminResponse.setResult(record);
         }
         if (adminResponse == null) {

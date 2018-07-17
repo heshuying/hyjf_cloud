@@ -1,7 +1,9 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.AdminVersionResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.vo.admin.VersionVO;
 
 /**
@@ -49,6 +51,7 @@ public interface VersionConfigClient {
      * @return
      */
     public VersionVO getVersionByCode(Integer vid, Integer type, String version);
+    
     public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request);
 
     public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request);

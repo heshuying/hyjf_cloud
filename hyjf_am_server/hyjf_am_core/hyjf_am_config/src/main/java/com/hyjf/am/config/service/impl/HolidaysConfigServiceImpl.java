@@ -146,8 +146,8 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
     @Override
     public HolidaysConfig  selectHolidaysConfigInfo(Integer id){
         HolidaysConfig hConfig= holidaysConfigMapper.selectByPrimaryKey(id);
-        hConfig.setStatrTime(returnDateFormat(hConfig.getStatrTime()));
-        hConfig.setEndTime(returnDateFormat(hConfig.getEndTime()));
+//        hConfig.setStatrTime(returnDateFormat(hConfig.getStatrTime()));
+//        hConfig.setEndTime(returnDateFormat(hConfig.getEndTime()));
         return hConfig;
     }
 
@@ -160,9 +160,9 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
         HolidaysConfig record = CommonUtils.convertBean(adminRequest,HolidaysConfig.class);
         record.setCreateTime(adminRequest.getCreatetime());
         record.setUpdateTime(adminRequest.getUpdatetime());
-        record.setStatrTime(requestDateFormat(adminRequest.getStatrTime()));
-        record.setEndTime(requestDateFormat(adminRequest.getEndTime()));
-        record.setYear(adminRequest.getStatrTime().substring(0,4));
+//        record.setStatrTime(requestDateFormat(adminRequest.getStatrTime()));
+//        record.setEndTime(requestDateFormat(adminRequest.getEndTime()));
+//        record.setYear(adminRequest.getStatrTime().substring(0,4));
         return  holidaysConfigMapper.insertSelective(record);
     }
 
@@ -174,9 +174,9 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
     public Integer  updateHolidaysConfigInfo(AdminHolidaysConfigRequest adminRequest){
         HolidaysConfig record = CommonUtils.convertBean(adminRequest,HolidaysConfig.class);
         record.setUpdateTime(adminRequest.getCreatetime());
-        record.setStatrTime(requestDateFormat(adminRequest.getStatrTime()));
-        record.setEndTime(requestDateFormat(adminRequest.getEndTime()));
-        record.setYear(adminRequest.getStatrTime().substring(0,4));
+//        record.setStatrTime(requestDateFormat(adminRequest.getStatrTime()));
+//        record.setEndTime(requestDateFormat(adminRequest.getEndTime()));
+//        record.setYear(adminRequest.getStatrTime().substring(0,4));
        return holidaysConfigMapper.updateByPrimaryKeySelective(record);
     }
 
@@ -204,11 +204,4 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
         }
         return rsim.format(date);
     }
-	@Override
-	public List<HolidaysConfig> selectHolidaysConfig(String orderByClause) {
-		HolidaysConfigExample example = new HolidaysConfigExample();
-		example.setOrderByClause("statr_time asc");
-		List<HolidaysConfig> holidaysConfigList = holidaysConfigMapper.selectByExample(example);
-		return holidaysConfigList;
-	}
 }
