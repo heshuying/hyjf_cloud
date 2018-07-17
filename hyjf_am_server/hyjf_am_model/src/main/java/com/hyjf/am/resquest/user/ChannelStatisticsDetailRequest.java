@@ -26,6 +26,10 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 	 * 关键词查询
 	 */
 	private String keySrch;
+	/**
+	 * 用户Id
+	 */
+	private String[] userIds;
 
 	protected int limitStart = -1;
 
@@ -69,5 +73,13 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 
 	public void setLimitEnd(int limitEnd) {
 		this.limitEnd = limitEnd;
+	}
+
+	public String[] getUserIds() {
+		return userIds;
+	}
+
+	public void setUserIds(String[] userIds) {
+		this.userIds = userIds;
 	}
 }
