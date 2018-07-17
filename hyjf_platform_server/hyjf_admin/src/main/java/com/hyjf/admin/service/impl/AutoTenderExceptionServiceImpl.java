@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AllocationEngineClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
@@ -37,8 +36,6 @@ import java.util.Map;
 public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionService {
     @Autowired
     private AmTradeClient amTradeClient;
-    @Autowired
-    private AllocationEngineClient allocationEngineClient;
 
     private Logger logger = LoggerFactory.getLogger(AutoTenderExceptionServiceImpl.class);
 
@@ -152,7 +149,7 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
 
     @Override
     public HjhPlanVO getFirstHjhPlanVO(String planNid){
-        List<HjhPlanVO> hjhPlanVOList= allocationEngineClient.getHjhPlanByPlanNid(planNid);
+        List<HjhPlanVO> hjhPlanVOList= amTradeClient.getHjhPlanByPlanNid(planNid);
         if(null!=hjhPlanVOList&&hjhPlanVOList.size()>0){
             return hjhPlanVOList.get(0);
         }

@@ -847,4 +847,27 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	
+	/*加入明细start*/
+	@Override
+	public UserVO getUserByUserId(int userId) {
+        UserResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+	}
+	
+		@Override
+	public UserInfoVO selectUsersInfoByUserId(int userid) {
+        UserInfoResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userInfo/findById/" + userid, UserInfoResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+		return null;
+	}
+	/*加入明细end*/
 }

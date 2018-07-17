@@ -426,7 +426,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
-		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/check/", certificateAuthorityVO, Integer.class)
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/certificateauthority/updatecertificateauthority", certificateAuthorityVO, Integer.class)
 				.getBody();
 		if (result == null) {
 			return 0;
@@ -444,4 +444,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
         return null;
     }
+
+	/**
+	 * 插入certificateAuthorityVO数据
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 参数
+	 * @return
+	 */
+	@Override
+	public int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/certificateauthority/insertcertificateauthority", certificateAuthorityVO, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
 }

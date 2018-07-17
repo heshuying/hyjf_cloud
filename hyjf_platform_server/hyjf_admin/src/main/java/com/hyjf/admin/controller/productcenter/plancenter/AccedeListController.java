@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -776,7 +777,7 @@ public class AccedeListController extends BaseController{
     public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListRequest form) throws MQException {
     	JSONObject ret = new JSONObject();
     	TenderAgreementVO tenderAgreement;
-    	AccedeListCustomizeVO accede;
+    	AccedeListCustomizeVO accede = null;
 		// 用户ID
 		String userid = request.getParameter("userId");
 		// 计入加入订单号
@@ -789,13 +790,20 @@ public class AccedeListController extends BaseController{
 		}
 		form.setAccedeOrderIdSrch(planOrderId);
 		List<AccedeListCustomizeVO> resultList = this.accedeListService.getAccedeListByParamWithoutPage(form);
-    	if(resultList == null && resultList.size() == 0){
+		if (CollectionUtils.isNotEmpty(resultList)) {
+			if(resultList.get(0) != null){
+				accede = resultList.get(0);
+			} else {
+				ret.put("result", "用户加入记录不存在");
+				ret.put("status", "error");
+				return ret;
+			}
+		} else {
 			ret.put("result", "用户加入记录不存在");
 			ret.put("status", "error");
 			return ret;
-    	} else {
-    		accede = resultList.get(0);
-    	}
+		}
+		
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 		if(users == null ){
 			ret.put("result", "用户不存在");
