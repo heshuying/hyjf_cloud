@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 
@@ -21,14 +22,14 @@ public interface ActivityListService {
      * @param activityListRequest
      * @return
      */
-    List<ActivityListVO> getRecordList(ActivityListRequest activityListRequest);
+    ActivityListResponse getRecordList(ActivityListRequest activityListRequest);
 
     /**
      * 添加活动
-     * @param map
+     * @param request
      * @return
      */
-    int insertRecord(Map<String, String> map);
+    int insertRecord(ActivityListRequest request);
 
     /**
      * 根据活动id查询活动信息
