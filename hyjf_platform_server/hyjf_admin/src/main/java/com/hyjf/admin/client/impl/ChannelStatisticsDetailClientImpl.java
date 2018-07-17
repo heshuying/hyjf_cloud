@@ -1,6 +1,8 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.ChannelStatisticsDetailClient;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
