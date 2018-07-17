@@ -3,9 +3,13 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUtmRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,16 +133,32 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getTenderNumber(Integer sourceId, String type) {
-		return null;// todo
+		List<Integer> userIdList = geUtmRegUserIdtList();
+		BorrowTenderUtmRequest request = new BorrowTenderUtmRequest();
+		request.setList(userIdList);
+		request.setSourceId(sourceId);
+		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/borrowTender/getutmtendernum", request, BorrowTenderResponse.class);
+		if (tenderResponse != null) {
+			return tenderResponse.getTenderCount();
+		}
+		return null;
 	}
 
 	@Override
 	public BigDecimal getCumulativeRecharge(Integer sourceId, String type) {
+		List<Integer> list = geUtmRegUserIdtList();
+		AccountRechargeResponse response = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/accountrecharge/getrechargeprice", list, AccountRechargeResponse.class);
+		if (response != null) {
+			return response.getRechargePrice();
+		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHztTenderPrice(Integer sourceId, String type) {
+		List<Integer> list = geUtmRegUserIdtList();
 		return null;
 	}
 
@@ -230,5 +250,18 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BigDecimal getCumulativeAttrInvest(Integer sourceId) {
 		return null;
+	}
+
+	private List<Integer> geUtmRegUserIdtList() {
+		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utmreg/getutmreglist",
+				UtmResponse.class);
+		List<Integer> userIdList = new ArrayList<>();
+		if (response != null) {
+			List<UtmRegVO> list = response.getResultList();
+			for (UtmRegVO vo : list) {
+				userIdList.add(vo.getUserId());
+			}
+		}
+		return userIdList;
 	}
 }

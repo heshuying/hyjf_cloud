@@ -1,11 +1,14 @@
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
+import com.hyjf.am.resquest.trade.BorrowTenderUtmRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.service.BorrowTenderService;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -15,10 +18,6 @@ import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.hyjf.am.response.trade.BorrowTenderResponse;
-import com.hyjf.am.trade.service.BorrowTenderService;
-import springfox.documentation.service.ApiListing;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -128,4 +127,21 @@ public class BorrowTenderController extends BaseController{
         CreditTenderLog bean = CommonUtils.convertBean(creditTenderLogVO,CreditTenderLog.class);
         return borrowTenderService.saveCreditTenderAssignLog(bean);
     }
+
+	/**
+	 * 获取utm注册用户投资次数
+	 * 
+	 * @return
+	 */
+	@PostMapping("/getutmtendernum")
+	public BorrowTenderResponse getUtmTenderNum(@RequestBody BorrowTenderUtmRequest request) {
+		BorrowTenderResponse response = new BorrowTenderResponse();
+		// utm注册用户的userid集合
+		List<Integer> list = request.getList();
+        Integer tenderNum = borrowTenderService.getUtmTenderNum(list);
+		if (tenderNum != null) {
+			response.setTenderCount(tenderNum);
+		}
+		return response;
+	}
 }

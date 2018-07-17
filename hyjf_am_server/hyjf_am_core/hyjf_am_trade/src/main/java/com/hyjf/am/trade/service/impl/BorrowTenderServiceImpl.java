@@ -2,10 +2,9 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowTenderService;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,8 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
 
     @Autowired
     private CreditTenderLogMapper creditTenderLogMapper;
+    @Autowired
+    private BorrowTenderCustomizeMapper borrowTenderCustomizeMapper;
 
     @Override
     public Integer getCountBorrowTenderService(Integer userId, String borrowNid) {
@@ -113,5 +114,12 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     @Override
     public Integer saveCreditTenderAssignLog(CreditTenderLog bean) {
         return creditTenderLogMapper.insertSelective(bean);
+    }
+
+    @Override
+    public Integer getUtmTenderNum(List<Integer> list) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd);
     }
 }
