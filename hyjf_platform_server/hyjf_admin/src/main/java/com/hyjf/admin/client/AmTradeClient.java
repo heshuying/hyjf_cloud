@@ -24,6 +24,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
@@ -1197,4 +1198,30 @@ public interface AmTradeClient {
 	 */
 	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
 	/*加入明细 end*/
+	
+	/*承接记录 start*/
+	/**
+	 * 获取详细列表
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form);
+	
+	/**
+	 * 获取详细列表未分页
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form);
+	
+	/**
+	 * 传参查询承接债转表
+	 * 
+	 * @param DebtCreditCustomize
+	 * @return
+	 */
+	HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form);
+	/*承接记录 end*/
 }
