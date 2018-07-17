@@ -9,6 +9,7 @@ import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.auto.ParamNameExample;
 import com.hyjf.am.config.service.SynParamService;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 
 /**
@@ -30,7 +31,7 @@ public class SynParamServiceImpl implements SynParamService {
 		cra.andDelFlagEqualTo(0);
 		List<ParamName> paramNameList = this.paramNameMapper.selectByExample(example);
 		
-		String keyprefix = "hyjf_param_name:";
+		String keyprefix = RedisConstants.CACHE_PARAM_NAME;
 		
 		for (ParamName paramName : paramNameList) {
 			
