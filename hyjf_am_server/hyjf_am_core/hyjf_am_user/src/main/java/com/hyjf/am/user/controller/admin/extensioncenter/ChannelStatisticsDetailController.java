@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.user.controller.admin.extensioncenter;
 
-import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.service.ChannelStatisticsDetailService;
 import com.hyjf.am.response.admin.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.ChannelStatisticsDetailRequest;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/am-config/extensioncenter/channelstatisticsdetail")
-public class ChannelStatisticsDetailController extends BaseConfigController {
+public class ChannelStatisticsDetailController extends BaseController {
 	@Autowired
 	private ChannelStatisticsDetailService channelStatisticsDetailService;
 
