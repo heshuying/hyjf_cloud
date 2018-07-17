@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version ChannelStatisticsDetailController, v0.1 2018/7/16 14:32
  */
 @RestController
-@RequestMapping("/am-config/extensioncenter/channelstatisticsdetail")
+@RequestMapping("/am-user/extensioncenter/channelstatisticsdetail")
 public class ChannelStatisticsDetailController extends BaseController {
 	@Autowired
 	private ChannelStatisticsDetailService channelStatisticsDetailService;
