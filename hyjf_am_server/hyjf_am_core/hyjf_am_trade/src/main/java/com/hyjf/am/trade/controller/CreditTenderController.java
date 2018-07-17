@@ -3,18 +3,6 @@
  */
 package com.hyjf.am.trade.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.validation.Valid;
-
-import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
-import com.hyjf.am.trade.service.BorrowCreditTenderService;
-import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
@@ -25,8 +13,15 @@ import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize
 import com.hyjf.am.trade.service.BankCreditTenderService;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author jun 20180621
@@ -306,6 +301,21 @@ public class CreditTenderController extends BaseController{
         CreditTenderResponse response = new CreditTenderResponse();
         CreditTenderVO bean =bankCreditTenderService.getCreditTenderByUserIdOrdId(logOrderId,logUserId);
         response.setResult(bean);
+        return response;
+    }
+
+    /**
+     * 获取utm用户债转投资
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/gethzrtenderprice")
+    public CreditTenderResponse getHzrTenderPrice(@RequestBody List<Integer> list) {
+        CreditTenderResponse response = new CreditTenderResponse();
+        BigDecimal hzrTenderPrice = bankCreditTenderService.getHzrTenderPrice(list);
+        if (hzrTenderPrice != null) {
+            response.setHzrTenderPrice(hzrTenderPrice);
+        }
         return response;
     }
 

@@ -43,7 +43,7 @@ public class RedisConstants {
     /**
      * 风险保证金前缀
      */
-    public static final String CAPITAL_TOPLIMIT_ = "CAPITAL_TOPLIMIT_";
+    public static final String CAPITAL_TOPLIMIT_ = "CAPITAL_TOPLIMIT:";
 
     /**
      * 汇计划发标redis key
@@ -58,7 +58,7 @@ public class RedisConstants {
     /**
      * 汇计划可投余额前缀
      */
-    public static final String HJH_PLAN = "HJHBAL_";
+    public static final String HJH_PLAN = "HJHBAL:";
 
     /**
      * 汇计划进入锁定期处理中队列
@@ -132,10 +132,25 @@ public class RedisConstants {
     /**
      * 短信模板缓存
      */
-    public static final String SMS_TEMPLATE_TPLCODE = "sms_template_tplCode_";
+    public static final String SMS_TEMPLATE_TPLCODE = "sms_template_tplCode:";
 
     /**
      * 网关路由配置
      */
     public static final String ZUUL_ROUTER_CONFIG_KEY = "zuul_roter_config_key";
+
+    /**
+     * PARAM表配置
+     */
+    public static final String CACHE_PARAM_NAME = "hyjf_param_name:";
+
+    /**
+     * 短信单手机控制
+     */
+    public static final String CACHE_MAX_PHONE_COUNT = "MaxPhoneCount:";
+
+    /**
+     * 单IP最大登录控制
+     */
+    public static final String CACHE_MAX_IP_COUNT = "MaxIpCount:";
 }

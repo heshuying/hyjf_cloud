@@ -10,35 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.vo.message.AppMsMessage;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.common.GetOrderIdUtils;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BankCreditEndMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowCreditMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRepayPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditRepayMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
@@ -51,7 +30,6 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
@@ -67,9 +45,11 @@ import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.BatchBorrowRepayZTService;
+import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -77,6 +57,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -87,9 +68,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @version BatchBorrowRepayZTServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
 @Service
-public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService {
-
-	private static final Logger logger = LoggerFactory.getLogger(BatchBorrowRepayZTServiceImpl.class);
+public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements BatchBorrowRepayZTService {
 
 	/** 等待 */
 	private static final String TYPE_WAIT = "wait";
@@ -97,54 +76,6 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 	private static final String TYPE_YES = "yes";
 	/** 部分完成 */
 	private static final String TYPE_WAIT_YES = "wait_yes";
-
-    @Autowired
-    private BorrowApicronMapper borrowApicronMapper;
-
-    @Autowired
-    private BorrowMapper borrowMapper;
-
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    private BorrowRecoverMapper borrowRecoverMapper;
-
-    @Autowired
-    private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
-
-    @Autowired
-    private HjhDebtCreditRepayMapper hjhDebtCreditRepayMapper;
-
-    @Autowired
-    private AccountMapper accountMapper;
-
-    @Autowired
-    private CreditRepayMapper creditRepayMapper;
-
-    @Autowired
-    private AccountListMapper accountListMapper;
-
-    @Autowired
-    private BorrowRepayPlanMapper borrowRepayPlanMapper;
-
-    @Autowired
-    private BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    private BorrowCreditMapper borrowCreditMapper;
-
-    @Autowired
-    private BorrowRepayMapper borrowRepayMapper;
-
-    @Autowired
-    private BankCreditEndMapper bankCreditEndMapper;
-
-    @Autowired
-    private CreditTenderMapper creditTenderMapper;
-
-    @Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
     
 	@Autowired
 	private MailProducer mailProducer;
@@ -361,40 +292,49 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 		String batchTxDate = String.valueOf(apicron.getTxDate());// 还款请求日期
 		int userId = apicron.getUserId();
 		String channel = BankCallConstant.CHANNEL_PC;
-		for (int i = 0; i < 3; i++) {
-			String logOrderId = GetOrderIdUtils.getOrderId2(userId);
-			String orderDate = GetOrderIdUtils.getOrderDate();
-			String txDate = GetOrderIdUtils.getTxDate();
-			String txTime = GetOrderIdUtils.getTxTime();
-			String seqNo = GetOrderIdUtils.getSeqNo(6);
-			// 调用还款接口
-			BankCallBean repayBean = new BankCallBean();
-			repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-			repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_QUERY);// 消息类型(批量还款)
-			repayBean.setTxDate(txDate);
-			repayBean.setTxTime(txTime);
-			repayBean.setSeqNo(seqNo);
-			repayBean.setChannel(channel);
-			repayBean.setBatchNo(batchNo);
-			repayBean.setBatchTxDate(batchTxDate);
-			repayBean.setLogUserId(String.valueOf(apicron.getUserId()));
-			repayBean.setLogOrderId(logOrderId);
-			repayBean.setLogOrderDate(orderDate);
-			repayBean.setLogRemark("批次状态查询");
-			repayBean.setLogClient(0);
-			BankCallBean queryResult = BankCallUtils.callApiBg(repayBean);
-			if (Validator.isNotNull(queryResult)) {
-				String retCode = StringUtils.isNotBlank(queryResult.getRetCode()) ? queryResult.getRetCode() : "";
-				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||BankCallConstant.RESPCODE_BATCHNO_NOTEXIST.equals(retCode)) {
-					return queryResult;
-				} else {
-					continue;
-				}
-			} else {
-				continue;
+		
+
+		String logOrderId = GetOrderIdUtils.getOrderId2(userId);
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String txDate = GetOrderIdUtils.getTxDate();
+		String txTime = GetOrderIdUtils.getTxTime();
+		String seqNo = GetOrderIdUtils.getSeqNo(6);
+		// 调用还款接口
+		BankCallBean repayBean = new BankCallBean();
+		repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_QUERY);// 消息类型(批量还款)
+		repayBean.setTxDate(txDate);
+		repayBean.setTxTime(txTime);
+		repayBean.setSeqNo(seqNo);
+		repayBean.setChannel(channel);
+		repayBean.setBatchNo(batchNo);
+		repayBean.setBatchTxDate(batchTxDate);
+		repayBean.setLogUserId(String.valueOf(apicron.getUserId()));
+		repayBean.setLogOrderId(logOrderId);
+		repayBean.setLogOrderDate(orderDate);
+		repayBean.setLogRemark("直投还款批次状态查询");
+		repayBean.setLogClient(0);
+		BankCallBean queryResult = BankCallUtils.callApiBg(repayBean);
+		if (queryResult != null && StringUtils.isNotBlank(queryResult.getRetCode())) {
+			String retCode = queryResult.getRetCode();
+			logger.info(apicron.getBorrowNid()+" 直投还款批次状态查询返回  "+retCode+"  "+queryResult.getRetMsg());
+			if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+				return queryResult;
 			}
 		}
+		
 		return null;
+	}
+	
+	/**
+	 * 根据主键从主库查询apicron 表
+	 * 这里不加select是想直接从主库查询
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public BorrowApicron selApiCronByPrimaryKey(int id) {
+		return borrowApicronMapper.selectByPrimaryKey(id);
 	}
 
 	/**
@@ -702,17 +642,6 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 		return null;
 	}
 
-	private BorrowInfo getBorrowInfoByNid(String borrowNid) {
-		BorrowInfoExample example = new BorrowInfoExample();
-		BorrowInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
-
 	/**
 	 * 取得还款明细列表
 	 *
@@ -778,16 +707,15 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 
 	@Override
 	public boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception {
-		int nowTime = GetDate.getNowTime10();
+
 		String borrowNid = apicron.getBorrowNid();
-		BorrowApicronExample example = new BorrowApicronExample();
-		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 		apicron.setStatus(status);
 //		apicron.setUpdateTime(nowTime);
-		boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
+		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(apicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
 		}
+		
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		borrow.setRepayStatus(status);
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
@@ -799,7 +727,7 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 	}
 	
 	@Override
-	public boolean updateBatchDetailsQuery(BorrowApicron apicron) {
+	public boolean reapyBatchDetailsUpdate(BorrowApicron apicron) {
 
 		String borrowNid = apicron.getBorrowNid();// 項目编号
 		Borrow borrow = this.getBorrowByNid(borrowNid);
@@ -1605,25 +1533,6 @@ public class BatchBorrowRepayZTServiceImpl implements BatchBorrowRepayZTService 
 		this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest);
 		logger.info("------债转还款承接部分完成---承接订单号：" + borrowCredit.getCreditNid() + "---------还款订单号" + repayOrderId);
 		return true;
-	}
-
-	/**
-	 * 取得还款信息
-	 *
-	 * @return
-	 */
-	private BorrowRepay getBorrowRepay(String borrowNid) {
-
-		BorrowRepayExample example = new BorrowRepayExample();
-		BorrowRepayExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		criteria.andRepayStatusEqualTo(0);
-		example.setOrderByClause(" id asc ");
-		List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
-		if (list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		return null;
 	}
 
 	/**

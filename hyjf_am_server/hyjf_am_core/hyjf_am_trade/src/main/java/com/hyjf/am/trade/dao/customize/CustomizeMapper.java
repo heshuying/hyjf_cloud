@@ -1,108 +1,131 @@
 package com.hyjf.am.trade.dao.customize;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.*;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowLogCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRecoverCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentInfoCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentInfoListCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhDebtCreditCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.AdminTransferExceptionLogCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.BatchCenterCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.WithdrawCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.*;
+import com.hyjf.am.trade.dao.mapper.customize.trade.AutoReqRepayBorrowCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.EmployeeCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.HjhDebtDetailCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.ManualReverseCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.RUserCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.TenderCreditCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.UserTradeDetailCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
 
-    @Resource
-    protected BorrowCustomizeMapper borrowCustomizeMapper;
+	@Autowired
+	protected BorrowCustomizeMapper borrowCustomizeMapper;
 
-    @Resource
-    protected HjhDebtDetailCustomizeMapper hjhDebtDetailCustomizeMapper;
+	@Autowired
+	protected HjhDebtDetailCustomizeMapper hjhDebtDetailCustomizeMapper;
 
-    @Resource
-    protected RepayManageCustomizeMapper repayManageCustomizeMapper;
+	@Autowired
+	protected RepayManageCustomizeMapper repayManageCustomizeMapper;
 
-    @Resource
-    protected BatchUserPortraitQueryCustomizeMapper batchUserPortraitQueryCustomizeMapper;
+	@Autowired
+	protected BatchUserPortraitQueryCustomizeMapper batchUserPortraitQueryCustomizeMapper;
 
-    @Resource
-    protected HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
+	@Autowired
+	protected HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
 
-    @Resource
-    protected BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
+	@Autowired
+	protected BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
 
-    @Resource
-    protected AdminAccountCustomizeMapper adminAccountCustomizeMapper;
+	@Autowired
+	protected AdminAccountCustomizeMapper adminAccountCustomizeMapper;
 
-    @Resource
-    protected EmployeeCustomizeMapper employeeCustomizeMapper;
+	@Autowired
+	protected EmployeeCustomizeMapper employeeCustomizeMapper;
 
-    @Resource
-    protected RUserCustomizeMapper rUserCustomizeMapper;
+	@Autowired
+	protected RUserCustomizeMapper rUserCustomizeMapper;
 
-    @Resource
-    protected AssetManageCustomizeMapper assetManageCustomizeMapper;
+	@Autowired
+	protected AssetManageCustomizeMapper assetManageCustomizeMapper;
 
-    @Resource
-    protected UserTradeDetailCustomizeMapper userTradeDetailCustomizeMapper;
+	@Autowired
+	protected UserTradeDetailCustomizeMapper userTradeDetailCustomizeMapper;
 
-    @Resource
-    protected BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
+	@Autowired
+	protected BatchHjhBorrowRepayCustomizeMapper batchHjhBorrowRepayCustomizeMapper;
 
-    @Resource
-    protected AdminBorrowRecoverCustomizeMapper borrowRecoverCustomizeMapper;
-    @Resource
-    protected AdminBorrowLogCustomizeMapper borrowLogCustomizeMapper;
-    @Resource
-    protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
+	@Autowired
+	protected AdminBorrowRecoverCustomizeMapper borrowRecoverCustomizeMapper;
+	
+	@Autowired
+	protected AdminBorrowLogCustomizeMapper borrowLogCustomizeMapper;
+	
+	@Autowired
+	protected AdminBorrowRepaymentCustomizeMapper borrowRepaymentCustomizeMapper;
 
-    @Resource
-    protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
+	@Autowired
+	protected AdminBorrowRepaymentInfoCustomizeMapper borrowRepaymentInfoCustomizeMapper;
 
-    @Resource
-    protected AdminBorrowRepaymentInfoListCustomizeMapper borrowRepaymentInfoListCustomizeMapper;
-    @Resource
-    protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
+	@Autowired
+	protected AdminBorrowRepaymentInfoListCustomizeMapper borrowRepaymentInfoListCustomizeMapper;
+	
+	@Autowired
+	protected AdminHjhDebtCreditCustomizeMapper adminHjhDebtCreditCustomizeMapper;
 
-    @Resource
-    protected BorrowAuthCustomizeMapper borrowAuthCustomizeMapper;
+	@Autowired
+	protected BorrowAuthCustomizeMapper borrowAuthCustomizeMapper;
 
-    @Resource
-    protected BatchCenterCustomizeMapper batchCenterCustomizeMapper;
+	@Autowired
+	protected BatchCenterCustomizeMapper batchCenterCustomizeMapper;
 
-    @Resource
-    protected TzjCustomizeMapper tzjCustomizeMapper;
+	@Autowired
+	protected TzjCustomizeMapper tzjCustomizeMapper;
 
-    @Resource
-    protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
+	@Autowired
+	protected AdminTransferExceptionLogCustomizeMapper transferExceptionLogCustomizeMapper;
 
-    @Resource
-    protected CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
+	@Autowired
+	protected CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
 
-    @Resource
-    protected OntimeTenderCustomizeMapper ontimeTenderCustomizeMapper;
+	@Autowired
+	protected OntimeTenderCustomizeMapper ontimeTenderCustomizeMapper;
 
-    @Resource
-    protected WithdrawCustomizeMapper withdrawCustomizeMapper;
+	@Autowired
+	protected WithdrawCustomizeMapper withdrawCustomizeMapper;
 
-    @Autowired
-    protected AutoReqRepayBorrowCustomizeMapper autoReqRepayBorrowCustomizeMapper;
+	@Autowired
+	protected AutoReqRepayBorrowCustomizeMapper autoReqRepayBorrowCustomizeMapper;
 
-    @Resource
-    protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
-    @Resource
-    protected WDZJCustomizeMapper wdzjCustomizeMapper;
+	@Autowired
+	protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
+	
+	@Autowired
+	protected WDZJCustomizeMapper wdzjCustomizeMapper;
 
-    @Resource
-    protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
+	@Autowired
+	protected TenderCreditCustomizeMapper tenderCreditCustomizeMapper;
+
+	@Autowired
+	protected WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
 
 }
-
-

@@ -23,4 +23,6 @@ public interface BorrowApicronService {
     int updateBorrowApicronOfRepayStatus(Integer id, Integer status);
 
     List<BorrowApicron> selectBorrowApicronListByBorrowNid(String borrowNid);
+
+    BorrowApicron selectBorrowApicron(String bankSeqNo);
 }

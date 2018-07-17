@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_market.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -459,6 +459,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="credit_end_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="received" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="state" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1624,6 +1625,7 @@
 
         <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="holiday_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_invite" domainObjectName="Invite">
@@ -1787,10 +1789,17 @@
         
          <table tableName="ht_content_environment" domainObjectName="ContentEnvironment">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
+        </table>-->
 
         <table tableName="ht_account_exception" domainObjectName="AccountException">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        
+         <table tableName="ht_invite_prize_conf" domainObjectName="InvitePrizeConf">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+             <columnOverride column="prize_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="prize_kind" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
 
     </context>

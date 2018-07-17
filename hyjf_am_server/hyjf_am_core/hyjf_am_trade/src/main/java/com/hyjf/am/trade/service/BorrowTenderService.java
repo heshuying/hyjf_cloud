@@ -5,7 +5,6 @@ import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,4 +36,32 @@ public interface BorrowTenderService {
      * @return
      */
     Integer saveCreditTenderAssignLog(CreditTenderLog bean);
+
+    /**
+     * 获取utm注册用户投资次数
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    Integer getUtmTenderNum(List<Integer> list);
+
+    /**
+     * 获取utm注册用户HZT投资额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getHztTenderPrice(List<Integer> list);
+
+    /**
+     * 获取utm注册用户HXF投资额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getHxfTenderPrice(List<Integer> list);
+
+    /**
+     * 获取utm注册用户RTB投资额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getRtbTenderPrice(List<Integer> list);
 }

@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -55,4 +57,33 @@ public interface UtmRegCustomizeMapper {
      * @return
      */
     UtmChannelVO getUtmByUtmId(String utmId);
+
+	/**
+	 * 查询访问数
+	 * 
+	 * @param sourceId 账户推广平台
+	 * @return
+	 */
+	Integer getAccessNumber(@Param("sourceId") Integer sourceId, @Param("dayStart") String dayStart,
+			@Param("dayEnd") String dayEnd);
+
+	/**
+	 * 查询注册数量
+	 * 
+	 * @param sourceId 账户推广平台
+	 * @return
+	 */
+	Integer getRegistNumber(@Param("sourceId") Integer sourceId, @Param("dayStart") String dayStart,
+			@Param("dayEnd") String dayEnd);
+
+	/**
+	 * 查询开户数量
+	 * 
+	 * @param sourceId 账户推广平台
+	 * @return
+	 */
+	Integer getOpenAccountNumber(@Param("sourceId") Integer sourceId, @Param("dayStart") String dayStart,
+			@Param("dayEnd") String dayEnd);
+
+	List<UtmReg> getUtmRegList(Integer sourceId);
 }

@@ -69,6 +69,92 @@
 			and utm_id =  ${utmId}
 		</if>
 	</select>
+	
+	<select id="getAccessNumber" resultType="INTEGER" parameterType="map">
+		SELECT
+			count(*)
+		FROM
+		ht_utm_visit a
+		INNER JOIN ht_utm b ON a.utm_id = b.utm_id
+		<where>
+			<if test="sourceId != null and sourceId != ''">
+				AND b.source_id = #{sourceId}
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+		
+	</select>
+	
+	<select id="getRegistNumber" resultType="INTEGER" parameterType="map">
+		SELECT
+			count(*)
+		from ht_utm_reg a INNER JOIN ht_utm b
+		on a.utm_id = b.utm_id
+		<where>
+			<if test="sourceId != null and sourceId != ''">
+				AND b.source_id = #{sourceId}
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>
+	
+	<!--<select id="getOpenAccountNumber" resultType="INTEGER" parameterType="map">
+		SELECT
+			count(*)
+		from ht_utm_reg a INNER JOIN ht_utm b
+		on a.utm_id = b.utm_id
+		<where>
+			<if test="sourceId != null and sourceId != ''">
+				AND b.source_id = #{sourceId}
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>-->
+	
+	<select id="getOpenAccountNumber" resultType="INTEGER" parameterType="map">
+		SELECT
+			count(*)
+		FROM
+			ht_utm_reg a
+		INNER JOIN hyjf_bank_open_account b ON a.user_id = b.user_id
+		<where>
+			<if test="sourceId != null and sourceId != ''">
+				AND b.source_id = #{sourceId}
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getUtmRegList" resultType="com.hyjf.am.user.dao.model.auto.UtmReg" parameterType="INTEGER">
+			select * from ht_utm_reg a
+			inner join ht_utm b
+			on a.utm_id = b.utm_id
+			<where>
+				<if test="sourceId != null and sourceId != ''">
+					b.source_id = #{sourceId}
+				</if>
+			</where>
+	</select>
 
 
 </mapper>

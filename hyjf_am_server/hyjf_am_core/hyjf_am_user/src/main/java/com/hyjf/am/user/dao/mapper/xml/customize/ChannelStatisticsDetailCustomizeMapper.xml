@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.ChannelStatisticsDetailCustomizeMapper">
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="userName != null and userName !='' " >
+				AND u.username LIKE CONCAT('%', #{userName}, '%')
+			</if>
+			<if test="sourceId != null and sourceId != ''" >
+				AND utm.source_id <![CDATA[=]]> #{sourceId}
+			</if>
+			<if test="keyName != null and keyName != ''" >
+				AND utm.utm_term LIKE CONCAT('%', #{keyName}, '%')
+			</if>
+			<if test="utmIdsSrch != null and utmIdsSrch != ''">
+				AND utm.source_id in
+				<foreach collection="utmIdsSrch" open="(" close=")" separator="," item="utmId">
+					#{utmId}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	<resultMap id="ChannelStatisticsDetailMapResult"
+		type="com.hyjf.am.vo.admin.ChannelStatisticsDetailVO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="utm_id" property="utmId" jdbcType="INTEGER" />
+		<result column="key_name" property="keyName" jdbcType="VARCHAR" />
+		<result column="source_id" property="sourceId" jdbcType="INTEGER" />
+		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="true_name" property="trueName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="register_time" property="registerTime" jdbcType="VARCHAR" />
+		<result column="open_account_time" property="openAccountTime" jdbcType="VARCHAR" />
+		<result column="first_invest_time" property="firstInvestTime" jdbcType="VARCHAR" />
+		<result column="cumulative_invest" property="cumulativeInvest" jdbcType="DECIMAL" />
+		<result column="htj_invest" property="htjInvest" jdbcType="DECIMAL" />
+		<result column="hzr_invest" property="hzrInvest" jdbcType="DECIMAL" />
+		<result column="invest_amount" property="investAmount" jdbcType="DECIMAL" />
+		<result column="invest_project_type" property="investProjectType" jdbcType="VARCHAR" />
+		<result column="invest_project_period" property="investProjectPeriod" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 后台展示列表 -->
+	<select id="queryRecordList" resultMap="ChannelStatisticsDetailMapResult" parameterType="com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest">
+		SELECT
+		t.id,
+		t.utm_id,
+		t.user_id,
+		u.username AS user_name,
+		t.create_time AS register_time,
+		FROM_UNIXTIME( t.invest_time, '%Y-%m-%d %H:%i:%S' ) AS first_invest_time,
+		c.create_time AS open_account_time,
+		CASE ui.sex
+		WHEN 1 THEN '男'
+		WHEN 2 THEN '女'
+		ELSE '未知'  END AS sex,
+		ui.truename AS true_name,
+		u.mobile,
+		utm.source_id,
+		utm.utm_source AS source_name,
+		utm.utm_term AS key_name,
+		IFNULL(t.invest_amount,0) AS invest_amount,
+		t.invest_project_type,
+		t.invest_project_period
+		FROM
+		ht_utm_reg t
+		LEFT JOIN ht_user_info ui ON t.user_id = ui.user_id
+		LEFT JOIN ht_user u ON t.user_id = u.user_id
+		LEFT JOIN ht_utm utm ON t.utm_id = utm.utm_id
+		LEFT JOIN ht_account_chinapnr c ON t.user_id = c.user_id
+		<include refid="Where_Clause" />
+		ORDER BY t.id DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+	
+	<!-- 根据条件 查询意见反馈信息  -->
+	<select id="countRecordTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			count(1)
+		FROM
+		ht_utm_reg t
+		LEFT JOIN ht_user_info ui ON t.user_id = ui.user_id
+		LEFT JOIN ht_user u ON t.user_id = u.user_id
+		LEFT JOIN ht_utm utm ON t.utm_id = utm.utm_id
+		LEFT JOIN ht_account_chinapnr c ON t.user_id = c.user_id
+		<include refid="Where_Clause" />
+	</select>
+</mapper>
+

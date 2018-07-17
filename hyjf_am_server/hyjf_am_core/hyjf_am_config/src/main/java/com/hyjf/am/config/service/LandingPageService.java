@@ -5,6 +5,7 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.Job;
 import com.hyjf.am.config.dao.model.auto.LandingPage;
+import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface LandingPageService {
 	 * @param request
 	 * @return
 	 */
-	List<LandingPage> searchAction(LandingPageRequest request);
+	LandingPageResponse searchAction(LandingPageRequest request);
 
 	/**
 	 * 添加着路页管理

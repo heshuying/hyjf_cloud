@@ -53,7 +53,7 @@ import java.util.Map;
 public class UserCenterController extends BaseController {
 
     public static final String PERMISSIONS = "userslist";
-    private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
+//    private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
 
@@ -153,7 +153,7 @@ public class UserCenterController extends BaseController {
         if(StringUtils.isNotEmpty(userId)){
             int intUserId = Integer.parseInt(userId);
             userChangeLogRequest.setUserId(intUserId);
-            userChangeLogRequest.setChangeType(CHANGELOG_TYPE_RECOMMEND);
+            userChangeLogRequest.setChangeType(2);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
             initUserUpdResponseBean.setUsersChangeLogForm(userChangeLogVOList);
         }
@@ -192,6 +192,8 @@ public class UserCenterController extends BaseController {
         if(StringUtils.isNotEmpty(userId)){
             int intUserId = Integer.parseInt(userId);
             userChangeLogRequest.setUserId(intUserId);
+            //修改类型 2用户信息修改  1推荐人修改
+            userChangeLogRequest.setChangeType(1);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
             initModifyreResponseBean.setUsersChangeLogForm(userChangeLogVOList);
         }
@@ -236,6 +238,8 @@ public class UserCenterController extends BaseController {
         if(StringUtils.isNotEmpty(userId)){
             int intUserId = Integer.parseInt(userId);
             userChangeLogRequest.setUserId(intUserId);
+            //根据源代码 设置为3
+            userChangeLogRequest.setChangeType(3);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
             initModifyreResponseBean.setUsersChangeLogForm(userChangeLogVOList);
         }

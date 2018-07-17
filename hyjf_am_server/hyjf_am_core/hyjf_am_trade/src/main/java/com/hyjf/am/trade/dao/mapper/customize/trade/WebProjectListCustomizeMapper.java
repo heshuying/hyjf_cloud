@@ -3,14 +3,9 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
-import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
+import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +46,7 @@ public interface WebProjectListCustomizeMapper {
      * @author zhangyk
      * @date 2018/6/19 16:01
      */
-    List<TenderCreditDetailCustomizeVO> searchCreditList(Map<String,Object> params);
+    List<CreditListVO> searchCreditList(Map<String,Object> params);
 
 
     /**

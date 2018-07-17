@@ -4,19 +4,16 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.UserCenterClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.UserCenterService;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
@@ -25,7 +22,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -43,8 +39,9 @@ public class UserCenterServiceImpl implements UserCenterService {
 
 
     @Autowired
-    private UserCenterClient userCenterClient;
-
+    private AmUserClient userCenterClient;
+    @Autowired
+    private AmTradeClient amTradeClient;
 
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
@@ -86,7 +83,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     public UserManagerResponse selectUserMemberList(UserManagerRequest request) {
         // 初始化分页参数，并组合到请求参数
         // 关联hyjf_trade库的ht_hjh_inst_config表
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
+        List<HjhInstConfigVO> listHjhInstConfig = amTradeClient.selectInstConfigAll();
         // 查询列表
         UserManagerResponse userManagerResponse = userCenterClient.selectUserMemberList(request);
         if (null != userManagerResponse) {
@@ -117,7 +114,7 @@ public class UserCenterServiceImpl implements UserCenterService {
      */
     @Override
     public List<HjhInstConfigVO> selectInstConfigAll() {
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
+        List<HjhInstConfigVO> listHjhInstConfig = amTradeClient.selectInstConfigAll();
         return listHjhInstConfig;
     }
 
@@ -236,8 +233,8 @@ public class UserCenterServiceImpl implements UserCenterService {
      */
     @Override
     public List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request){
-//        List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
-        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
+       List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
+//        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
         return userChangeLogVO;
     }
     /**

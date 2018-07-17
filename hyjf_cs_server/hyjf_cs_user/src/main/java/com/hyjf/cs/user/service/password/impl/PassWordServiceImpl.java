@@ -3,6 +3,18 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -11,6 +23,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -19,7 +32,13 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.DES;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -41,17 +60,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author wangc
@@ -475,11 +483,11 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 发送
         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
             // 累加手机次数
-            String currentMaxPhoneCount = RedisUtils.get(sendSmsVO.getMobile() + ":MaxPhoneCount");
+            String currentMaxPhoneCount = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVO.getMobile());
             if (StringUtils.isBlank(currentMaxPhoneCount)) {
                 currentMaxPhoneCount = "0";
             }
-            RedisUtils.set(sendSmsVO.getMobile() + ":MaxPhoneCount", (Integer.valueOf(currentMaxPhoneCount) + 1) + "", RedisUtils.getRemainMiao());
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVO.getMobile(), (Integer.valueOf(currentMaxPhoneCount) + 1) + "", RedisUtils.getRemainMiao());
             // 保存短信验证码(由于验证没有用到，将其注释掉)
             amUserClient.saveSmsCode(sendSmsVO.getMobile(), checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
             // 发送checkCode最大时间间隔，默认60秒
@@ -502,10 +510,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //判断该设备号的发送次数（暂时不做）
 
         // 判断最大发送数max_phone_count（当日该手机号发送的次数）
-        String count = RedisUtils.get(sendSmsVo.getMobile() + ":MaxPhoneCount");
+        String count = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVo.getMobile());
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(sendSmsVo.getMobile() + ":MaxPhoneCount", "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVo.getMobile(), "0");
         }
         CheckUtil.check(Integer.valueOf(count) <= smsConfig.getMaxPhoneCount(),MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
     }

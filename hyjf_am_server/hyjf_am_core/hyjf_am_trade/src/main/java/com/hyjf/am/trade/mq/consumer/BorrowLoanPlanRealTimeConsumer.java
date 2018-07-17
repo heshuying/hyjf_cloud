@@ -6,6 +6,7 @@ package com.hyjf.am.trade.mq.consumer;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -91,7 +92,9 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	        try {
 				MessageExt msgD = msgs.get(0);
 				borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
-	            if(Validator.isNull(borrowApicron)){
+	            if(borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null 
+	            		|| StringUtils.isEmpty(borrowApicron.getPlanNid()) ){
+	            	logger.info(" 计划放款异常消息：" + msgD.getMsgId());
 	            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	            }
 	        } catch (Exception e1) {
@@ -100,19 +103,23 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 	        }
 	        String borrowNid = borrowApicron.getBorrowNid();// 借款编号
 			int borrowUserId = borrowApicron.getUserId();// 借款人userId
-			int loanStatus = borrowApicron.getStatus();//放款状态
 	        Integer failTimes = borrowApicron.getFailCounts();
-	        
-			logger.info("标的编号："+borrowNid+"，开始实时放款！");
 	        // 生成任务key 校验并发请求
 	        String redisKey = RedisConstants.ZHITOU_LOAN_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
-	        boolean result = RedisUtils.tranactionSet(redisKey, 300);
-	        if(!result){
-	            logger.error("计划类放款请求中....");
-	            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-	        }
 	        
 	        try {
+		        
+				logger.info("标的编号："+borrowNid+"，开始实时放款！");
+		        boolean result = RedisUtils.tranactionSet(redisKey, 300);
+		        if(!result){
+		            logger.error("计划类放款请求中....");
+		            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+		        }
+				
+				borrowApicron = realTimeBorrowLoanPlanService.selApiCronByPrimaryKey(borrowApicron.getId());
+				//放款状态
+				int loanStatus = borrowApicron.getStatus();
+		        
 				// 如果放款状态为请求中
 				if (loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDING ) {
 					//发送放款
@@ -120,19 +127,19 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 					if (requestLoanBean == null) {
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 放款失败处理
-						boolean batchDetailFlag = realTimeBorrowLoanPlanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
+						boolean batchDetailFlag = realTimeBorrowLoanPlanService.planLoanBatchUpdateDetails(borrowApicron,requestLoanBean);
 						if (!batchDetailFlag) {
 							throw new Exception("放款银行接口失败后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
 						}
-						boolean apicronResultFlag = realTimeBorrowLoanPlanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-						if (apicronResultFlag) {
-							throw new Exception("更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-						} else {
-							throw new Exception("放款失败,[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-						}
+//						boolean apicronResultFlag = realTimeBorrowLoanPlanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
+//						if (apicronResultFlag) {
+//							throw new Exception("更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+//						} else {
+//							throw new Exception("放款失败,[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+//						}
 					}else{//放款成功
 						// 进行后续操作
-						boolean batchDetailFlag = realTimeBorrowLoanPlanService.updateBatchDetailsQuery(borrowApicron,requestLoanBean);
+						boolean batchDetailFlag = realTimeBorrowLoanPlanService.planLoanBatchUpdateDetails(borrowApicron,requestLoanBean);
 						if (!batchDetailFlag) {
 							throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
 						}

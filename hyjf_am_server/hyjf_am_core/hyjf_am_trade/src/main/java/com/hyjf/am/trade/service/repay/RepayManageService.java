@@ -3,6 +3,7 @@ package com.hyjf.am.trade.service.repay;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -125,4 +126,5 @@ public interface RepayManageService {
      */
     RepayBean calculateRepayByTerm(int userId, Borrow borrow) throws ParseException;
 
+    boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception;
 }

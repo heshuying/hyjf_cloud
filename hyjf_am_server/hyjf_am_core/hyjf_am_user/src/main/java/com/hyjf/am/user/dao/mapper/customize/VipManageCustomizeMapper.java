@@ -4,6 +4,7 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
+import com.hyjf.am.vo.user.VipAuthVO;
 
 import java.util.List;
 import java.util.Map; /**
@@ -25,4 +26,13 @@ public interface VipManageCustomizeMapper {
      * @return
      */
     List<VipManageListCustomize> selectUserList(Map<String, Object> mapParam);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据vipID获取所有vipauth对象
+     * @Date 17:03 2018/7/16
+     * @Param vipId
+     * @return
+     */
+    List<VipAuthVO> getVipAuthList(Map<String, Object> mapParam);
 }

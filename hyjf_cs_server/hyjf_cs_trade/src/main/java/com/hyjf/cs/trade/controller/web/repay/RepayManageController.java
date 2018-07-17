@@ -1,12 +1,17 @@
 package com.hyjf.cs.trade.controller.web.repay;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.TradeConstant;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
@@ -14,19 +19,19 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.RepayManageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -302,5 +307,179 @@ public class RepayManageController extends BaseTradeController {
             e.printStackTrace();
         }
         return webResult;
+    }
+
+    /**
+     * 收到报文后对合法性检查后的异步回调
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @ResponseBody
+    @RequestMapping("/repayVerifyReturn")
+    public String repayVerifyReturnAction(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
+
+        logger.info("批次还款请求,收到报文后对合法性检查后的异步回调开始");
+        BankCallResult result = new BankCallResult();
+        bean.convert();
+        String respCode = StringUtils.isBlank(bean.getRetCode()) ? null : bean.getRetCode();// 返回码
+        if (StringUtils.isBlank(respCode)) {
+            logger.info("放款校验回调，返回码为空！");
+            return JSONObject.toJSONString(result, true);
+        }
+        String txDate = bean.getTxDate();
+        String txTime = bean.getTxTime();
+        String seqNo = bean.getSeqNo();
+        String bankSeqNo = txDate + txTime + seqNo;
+        BorrowApicronVO apicron = this.repayManageService.selectBorrowApicron(bankSeqNo);
+        if (Validator.isNull(apicron)) {
+            logger.info("还款校验回调，未查询到放款请求记录！银行唯一订单号：" + bankSeqNo);
+            // 更新相应的放款请求校验失败
+            return JSONObject.toJSONString(result, true);
+        }
+        // 当前批次放款状态
+        int repayStatus = apicron.getStatus();
+        if (repayStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
+            String borrowNid = apicron.getBorrowNid();
+            if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
+                logger.info("批次还款请求,收到报文后,数据合法性异常");
+                String retMsg = bean.getRetMsg();
+                logger.info("放款校验回调失败！银行返回信息：" + retMsg);
+                apicron.setData(retMsg);
+                apicron.setFailTimes((byte)(apicron.getFailTimes() + 1));
+                // 更新任务API状态为放款校验失败
+                boolean apicronResultFlag = repayManageService.updateBorrowApicron(apicron, TradeConstant.STATUS_VERIFY_FAIL);
+                if (!apicronResultFlag) {
+                    throw new Exception("更新放款任务为放款请求失败失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                }
+                // 更新相应的放款请求校验失败
+                return JSONObject.toJSONString(result, true);
+            }
+            // 更新相应的放款请求校验成功
+            boolean apicronResultFlag = repayManageService.updateBorrowApicron(apicron, TradeConstant.STATUS_VERIFY_SUCCESS);
+            if (!apicronResultFlag) {
+                throw new Exception("更新放款任务为放款请求成功失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+            }
+        }
+        result.setStatus(true);
+        logger.info("批次还款请求,收到报文后对合法性检查后的异步回调结束");
+        return JSONObject.toJSONString(result, true);
+
+    }
+
+    /**
+     * 业务处理结果的异步回调
+     *
+     * @param request
+     * @param response
+     * @param bean
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/repayResultReturn")
+    public String repayResultReturn(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
+
+        logger.info("批次还款请求,业务处理结果的异步回调开始");
+        BankCallResult result = new BankCallResult();
+        bean.convert();
+        String respCode = StringUtils.isBlank(bean.getRetCode()) ? null : bean.getRetCode();// 返回码
+        if (StringUtils.isBlank(respCode)) {
+            logger.info("放款结果回调，返回码为空！");
+            return JSONObject.toJSONString(result, true);
+        }
+        String txDate = bean.getTxDate();
+        String txTime = bean.getTxTime();
+        String seqNo = bean.getSeqNo();
+        String bankSeqNo = txDate + txTime + seqNo;
+        BorrowApicronVO apicron = this.repayManageService.selectBorrowApicron(bankSeqNo);
+        if (Validator.isNull(apicron)) {
+            logger.info("放款结果回调，未查询到放款请求记录！银行唯一订单号：" + bankSeqNo);
+            // 更新相应的放款请求校验失败
+            return JSONObject.toJSONString(result, true);
+        }
+        // 当前批次放款状态
+        int repayStatus = apicron.getStatus();
+        String borrowNid = apicron.getBorrowNid();// 項目编号
+        int borrowUserId = apicron.getUserId();// 放款用户
+        if (repayStatus == CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS) {
+            if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
+                String retMsg = bean.getRetMsg();
+                logger.info("放款结果回调失败！银行返回信息：" + retMsg);
+                apicron.setData(retMsg);
+                apicron.setFailTimes((byte)(apicron.getFailTimes() + 1));
+                // 更新任务API状态为放款校验失败
+                boolean apicronResultFlag = repayManageService.updateBorrowApicron(apicron, TradeConstant.STATUS_LOAN_FAIL);
+                if (!apicronResultFlag) {
+                    throw new Exception("更新放款任务为放款结果失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                }
+                // 更新相应的放款请求校验失败
+                return JSONObject.toJSONString(result, true);
+            } else {
+                // 查询批次放款状态
+                BankCallBean batchResult = this.repayManageService.batchQuery(apicron);
+                if (Validator.isNotNull(batchResult)) {
+                    // 批次放款返回码
+                    String retCode = StringUtils.isNotBlank(batchResult.getRetCode()) ? batchResult.getRetCode() : "";
+                    if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+                        // 批次放款状态
+                        String batchState = batchResult.getBatchState();
+                        if (StringUtils.isNotBlank(batchState)) {
+                            // 如果是批次处理失败
+                            if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
+                                String failMsg = batchResult.getFailMsg();// 失败原因
+                                if (StringUtils.isNotBlank(failMsg)) {
+                                    apicron.setData(failMsg);
+                                    apicron.setFailTimes((byte)(apicron.getFailTimes() + 1));
+                                    // 更新任务API状态
+                                    boolean apicronResultFlag = this.repayManageService.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
+                                    if (apicronResultFlag) {
+                                        result.setStatus(true);
+                                        return JSONObject.toJSONString(result, true);
+                                    } else {
+                                        throw new Exception("更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+                                    }
+                                }
+//								else {
+//									// 查询批次交易明细，进行后续操作
+//									boolean batchDetailFlag = this.repayManageService.batchDetailsQuery(apicron);
+//									// 进行后续失败的放款的放款请求
+//									if (batchDetailFlag) {
+//										result.setStatus(true);
+//										return JSONObject.toJSONString(result, true);
+//									} else {
+//										throw new Exception("放款失败后，查询放款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+//									}
+//								}
+                            }
+//							// 如果是批次处理成功
+//							else if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_SUCCESS)) {
+//								// 查询批次交易明细，进行后续操作
+//								boolean batchDetailFlag = this.repayManageService.batchDetailsQuery(apicron);
+//								if (batchDetailFlag) {
+//									result.setStatus(true);
+//									return JSONObject.toJSONString(result, true);
+//								} else {
+//									throw new Exception("放款成功后，查询放款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+//								}
+//							} else {
+//								result.setStatus(true);
+//								return JSONObject.toJSONString(result, true);
+//							}
+                        } else {
+                            throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                        }
+                    } else {
+                        String retMsg = batchResult.getRetMsg();
+                        throw new Exception("放款状态查询失败！银行返回信息：" + retMsg + ",[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                    }
+                } else {
+                    throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                }
+            }
+        } else {
+            result.setStatus(true);
+            return JSONObject.toJSONString(result, true);
+        }
+        result.setStatus(true);
+        return JSONObject.toJSONString(result, true);
     }
 }

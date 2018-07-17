@@ -104,8 +104,11 @@ public class BorrowRegistController {
      * @return
      */
     @RequestMapping("/sum_borrow_regist_account")
-    public String sumBorrowRegistAccount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
-        return borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
+    public BorrowRegistCustomizeResponse sumBorrowRegistAccount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
+        BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
+        String sumAccount =  borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
+        response.setSumAccount(sumAccount);
+        return response;
     }
 
     /**

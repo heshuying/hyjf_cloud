@@ -10,7 +10,7 @@ public class PlanDetailBean implements Serializable {
 
     private String planApr;
 
-    private String planPeroid;
+    private String planPeriod;
 
     private String planAccount;
 
@@ -58,12 +58,12 @@ public class PlanDetailBean implements Serializable {
         this.planApr = planApr;
     }
 
-    public String getPlanPeroid() {
-        return planPeroid;
+    public String getPlanPeriod() {
+        return planPeriod;
     }
 
-    public void setPlanPeroid(String planPeroid) {
-        this.planPeroid = planPeroid;
+    public void setPlanPeriod(String planPeriod) {
+        this.planPeriod = planPeriod;
     }
 
     public String getPlanAccount() {

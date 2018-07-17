@@ -1,18 +1,12 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.resquest.trade.BorrowAuthRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
@@ -299,4 +293,8 @@ public interface AmTradeClient {
     List<PreapysListCustomizeVO> selectPreapysList(Map<String, Object> requestBean);
 
     Integer countPreapysList(Map<String, Object> requestBean);
+
+    Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean);
+
+    BorrowApicronVO selectBorrowApicron(String bankSeqNO);
 }

@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.admin.CouponUserRequest;
+import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
@@ -43,4 +45,13 @@ public interface CouponUserService {
      * @return
      */
     int insertCouponUser(CouponUser couponUser);
+
+    /**
+     * @Author walter.limeng
+     * @Description  查询用户是否已经发送优惠券
+     * @Date 18:00 2018/7/16
+     * @Param couponUserRequest
+     * @return
+     */
+    boolean getSendRepeat(CouponUserSearchRequest couponUserSearchRequest);
 }

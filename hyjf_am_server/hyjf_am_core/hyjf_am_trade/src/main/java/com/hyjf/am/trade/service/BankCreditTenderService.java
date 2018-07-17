@@ -3,9 +3,6 @@
  */
 package com.hyjf.am.trade.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
@@ -16,6 +13,10 @@ import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
 import com.hyjf.am.vo.trade.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 银行债转异常处理
@@ -156,4 +157,11 @@ public interface BankCreditTenderService {
      * @return
      */
     CreditTenderVO getCreditTenderByUserIdOrdId(String logOrderId, String logUserId);
+
+    /**
+     * 获取utm用户债转投资
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getHzrTenderPrice(List<Integer> list);
 }

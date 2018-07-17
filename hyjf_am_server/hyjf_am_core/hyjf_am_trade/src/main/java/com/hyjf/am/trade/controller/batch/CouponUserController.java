@@ -8,6 +8,7 @@ import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
+import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
@@ -100,6 +101,21 @@ public class CouponUserController extends BaseController {
         BeanUtils.copyProperties(couponUserVO,couponUser);
         int count = couponUserService.insertCouponUser(couponUser);
         response.setCount(count);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  查询用户优惠券
+     * @Date 18:06 2018/7/16
+     * @Param couponUserRequest
+     * @return
+     */
+    @PostMapping("/getsendrepeat")
+    public CouponUserResponse getSendRepeat(@RequestBody @Valid CouponUserSearchRequest couponUserSearchRequest) {
+        CouponUserResponse response = new CouponUserResponse();
+        boolean isSend = couponUserService.getSendRepeat(couponUserSearchRequest);
+        response.setSend(isSend);
         return response;
     }
 }
