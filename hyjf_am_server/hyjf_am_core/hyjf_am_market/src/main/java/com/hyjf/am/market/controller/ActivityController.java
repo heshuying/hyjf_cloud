@@ -52,20 +52,19 @@ public class ActivityController {
         logger.info("---getRecordList by param---  " + JSONObject.toJSON(request));
         ActivityListResponse response = new ActivityListResponse();
         String returnCode = Response.FAIL;
-        Map<String,Object> mapParam = paramSet(request);
-        int recordCount = activityService.countActivityList(mapParam);
+//        Map<String,Object> mapParam = paramSet(request);
+        int recordCount = activityService.countActivityList(request);
         Paginator paginator = new Paginator(request.getPaginatorPage(), recordCount,request.getLimit());
         if(request.getLimit()==0){
             paginator = new Paginator(request.getPaginatorPage(), recordCount);
         }
-        List<ActivityList> activityLists = activityService.getRecordList(mapParam,paginator.getOffset(), paginator.getLimit());
+        List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
         if(recordCount>0){
             if (!CollectionUtils.isEmpty(activityLists)) {
                 List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activityLists, ActivityListVO.class);
                 response.setResultList(activityListVOS);
                 response.setCount(recordCount);
                 returnCode = Response.SUCCESS;
-
             }
         }
         response.setRtn(returnCode);

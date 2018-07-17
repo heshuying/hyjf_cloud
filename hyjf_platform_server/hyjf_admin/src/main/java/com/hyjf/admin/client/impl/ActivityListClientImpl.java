@@ -25,11 +25,11 @@ public class ActivityListClientImpl implements ActivityListClient {
     RestTemplate restTemplate;
 
     @Override
-    public List<ActivityListVO> getRecordList(ActivityListRequest activityListRequest) {
+    public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
         String url = "http://AM-MARKET/am-market/activity/getRecordList";
         ActivityListResponse response = restTemplate.postForEntity(url,activityListRequest,ActivityListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }
