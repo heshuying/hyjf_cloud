@@ -14,6 +14,8 @@ import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,24 +42,34 @@ public class HjhPlanController extends BaseTradeController {
     private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "web端加入计划", notes = "web端加入计划")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "couponGrantId", dataType = "Integer", name = "couponGrantId", value = "优惠券id", required = true),
+            @ApiImplicitParam(paramType = "borrowNid", dataType = "String", name = "borrowNid", value = "计划编号", required = true),
+            @ApiImplicitParam(paramType = "account", dataType = "String", name = "account", value = "投资金额", required = true)
+    })
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> joinPlan(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        WebResult<Map<String,Object>> result = null;
-        try{
+        WebResult<Map<String, Object>> result = null;
+        try {
             result = hjhTenderService.joinPlan(tender);
-        }catch (CheckException e){
+        } catch (CheckException e) {
             throw e;
-        }finally {
+        } finally {
             RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
         return result;
     }
 
     @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "couponGrantId", dataType = "Integer", name = "couponGrantId", value = "优惠券id", required = true),
+            @ApiImplicitParam(paramType = "borrowNid", dataType = "String", name = "borrowNid", value = "计划编号", required = true),
+            @ApiImplicitParam(paramType = "account", dataType = "String", name = "account", value = "投资金额", required = true)
+    })
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender) {
         tender.setToken(token);

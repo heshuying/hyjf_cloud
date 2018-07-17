@@ -131,7 +131,7 @@ public class UserManagerController extends BaseController{
         UserBankOpenAccountResponse response = new UserBankOpenAccountResponse();
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
-            UserBankOpenAccountVO userBankOpenAccountVO = null;
+            UserBankOpenAccountVO userBankOpenAccountVO = new UserBankOpenAccountVO();
             UserBankOpenAccountCustomize bankOpenAccountCustomize = userManagerService.selectBankOpenAccountByUserId(intUserId);
             if (null != bankOpenAccountCustomize) {
                 BeanUtils.copyProperties(bankOpenAccountCustomize, userBankOpenAccountVO);
@@ -155,7 +155,7 @@ public class UserManagerController extends BaseController{
         CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
-            CorpOpenAccountRecordVO corpOpenAccountRecordVO = null;
+            CorpOpenAccountRecordVO corpOpenAccountRecordVO = new CorpOpenAccountRecordVO();
             CorpOpenAccountRecord corpOpenAccountRecord = userManagerService.selectCorpOpenAccountRecordByUserId(intUserId);
             if (null != corpOpenAccountRecord) {
                 BeanUtils.copyProperties(corpOpenAccountRecord, corpOpenAccountRecordVO);
@@ -179,7 +179,7 @@ public class UserManagerController extends BaseController{
         BindUserResponse response = new BindUserResponse();
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
-            BindUserVo bindUserVo = null;
+            BindUserVo bindUserVo = new BindUserVo();
             BindUser bindUser = userManagerService.selectBindUserByUserId(intUserId);
             if (null != bindUser) {
                 BeanUtils.copyProperties(bindUser, bindUserVo);
@@ -203,7 +203,7 @@ public class UserManagerController extends BaseController{
         CertificateAuthorityResponse response = new CertificateAuthorityResponse();
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
-            CertificateAuthorityVO certificateAuthorityVO = null;
+            CertificateAuthorityVO certificateAuthorityVO = new CertificateAuthorityVO();
             CertificateAuthority certificateAuthority = userManagerService.selectCertificateAuthorityByUserId(intUserId);
             if (null != certificateAuthority) {
                 BeanUtils.copyProperties(certificateAuthority, certificateAuthorityVO);
@@ -323,7 +323,7 @@ public class UserManagerController extends BaseController{
     public BankOpenAccountResponse selectBankOpenAccountByAccountId(@PathVariable String accountId) {
         BankOpenAccountResponse response = new BankOpenAccountResponse();
         logger.info("---selectBankOpenAccountByAccountId---  " + accountId);
-        BankOpenAccountVO bankOpenAccountVO = null;
+        BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
         BankOpenAccount bankOpenAccount = userManagerService.selectBankOpenAccountByAccountId(accountId);
         if (null != bankOpenAccount) {
             BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
@@ -343,7 +343,7 @@ public class UserManagerController extends BaseController{
     @RequestMapping("/updateCorpOpenAccountRecord")
     public int updateCorpOpenAccountRecord(@RequestBody @Valid CorpOpenAccountRecordRequest request) {
         logger.info("---updateCorpOpenAccountRecord---  " + JSONObject.toJSONString(request));
-        CorpOpenAccountRecord corpOpenAccountRecord = null;
+        CorpOpenAccountRecord corpOpenAccountRecord = new CorpOpenAccountRecord();
         BeanUtils.copyProperties(request, corpOpenAccountRecord);
         int ingFlg = userManagerService.updateCorpOpenAccountRecord(corpOpenAccountRecord);
         return ingFlg;
@@ -358,7 +358,7 @@ public class UserManagerController extends BaseController{
     @RequestMapping("/insertCorpOpenAccountRecord")
     public int insertCorpOpenAccountRecord(@RequestBody @Valid CorpOpenAccountRecordRequest request) {
         logger.info("---insertCorpOpenAccountRecord---  " + JSONObject.toJSONString(request));
-        CorpOpenAccountRecord corpOpenAccountRecord = null;
+        CorpOpenAccountRecord corpOpenAccountRecord = new CorpOpenAccountRecord();
         BeanUtils.copyProperties(request, corpOpenAccountRecord);
         int ingFlg = userManagerService.insertCorpOpenAccountRecord(corpOpenAccountRecord);
         return ingFlg;
@@ -409,7 +409,7 @@ public class UserManagerController extends BaseController{
      */
     @RequestMapping("/updateBankOpenAccount")
     public int updateBankOpenAccount(@RequestBody @Valid BankOpenAccountRequest request) {
-        BankOpenAccount bankOpenAccount = null;
+        BankOpenAccount bankOpenAccount = new BankOpenAccount();
         BeanUtils.copyProperties(request, bankOpenAccount);
         int ingFlg = userManagerService.updateBankOpenAccount(bankOpenAccount);
         return ingFlg;
@@ -423,7 +423,7 @@ public class UserManagerController extends BaseController{
      */
     @RequestMapping("/insertBankOpenAccount")
     public int insertBankOpenAccount(@RequestBody @Valid BankOpenAccountRequest request) {
-        BankOpenAccount bankOpenAccount = null;
+        BankOpenAccount bankOpenAccount = new BankOpenAccount();
         BeanUtils.copyProperties(request, bankOpenAccount);
         int ingFlg = userManagerService.insertBankOpenAccount(bankOpenAccount);
         return ingFlg;
@@ -437,7 +437,7 @@ public class UserManagerController extends BaseController{
      */
     @RequestMapping("/updateUserInfoByUserInfo")
     public int updateUserInfoByUserInfo(@RequestBody @Valid UserInfoRequest request) {
-        UserInfo userInfo = null;
+        UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(request, userInfo);
         int ingFlg = userManagerService.updateUserInfoByUserInfo(userInfo);
         return ingFlg;
@@ -451,7 +451,7 @@ public class UserManagerController extends BaseController{
      */
     @RequestMapping("/updateUser")
     public int updateUser(@RequestBody @Valid UserRequest request) {
-        User user = null;
+        User user = new User();
         BeanUtils.copyProperties(request, user);
         int ingFlg = userManagerService.updateUser(user);
         return ingFlg;
@@ -517,15 +517,15 @@ public class UserManagerController extends BaseController{
         String returnCode = Response.FAIL;
         if(null!=request){
             mapParam.put("userId",request.getUserId());
-            //mapParam.put("changeType",request.getChangeType());
+            mapParam.put("changeType",request.getChangeType());
         }
-       /* List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
+        List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
         if (!CollectionUtils.isEmpty(userChangeLogsList)) {
             List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
             response.setResultList(userChangeLogVOList);
             response.setCount(userChangeLogsList.size());
             returnCode = Response.SUCCESS;
-        }*/
+        }
         response.setRtn(returnCode);//代表成功
         return response;
     }
@@ -607,7 +607,7 @@ public class UserManagerController extends BaseController{
      * @return
      */
     @RequestMapping("/updateUserRecommend")
-    public int updateUserRecommend(@RequestBody AdminUserRecommendRequest request){
+    public int updateUserRecommend(@RequestBody @Valid  AdminUserRecommendRequest request){
         return userManagerService.updateUserRe(request);
     }
     /**
@@ -616,7 +616,18 @@ public class UserManagerController extends BaseController{
      * @return
      */
     @RequestMapping("/updateUserIdCard")
-    public int updateUserIdCard(@RequestBody AdminUserRecommendRequest request){
+    public int updateUserIdCard(@RequestBody @Valid AdminUserRecommendRequest request){
         return userManagerService.updateUserIdCard(request);
+    }
+
+    /**
+     * 保存公司信息
+     * @param updCompanyRequest
+     * @return
+     */
+    @RequestMapping("/saveCompanyInfo")
+    public Response saveCompanyInfo(@RequestBody @Valid  UpdCompanyRequest updCompanyRequest){
+        Response bankCardResponse = userManagerService.saveCompanyInfo(updCompanyRequest);
+        return bankCardResponse;
     }
 }

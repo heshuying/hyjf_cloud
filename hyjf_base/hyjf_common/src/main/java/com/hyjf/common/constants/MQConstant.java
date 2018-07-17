@@ -11,11 +11,11 @@ public interface MQConstant {
 	 */
 	String HYJF_DEFAULT_TAG = "HYJF_DEFAULT_TAG";
 
-    /**
-     * 测试 group topic todo 暂时使用
-     */
-    String TEST_GROUP = "TEST_GROUP";
-    String TEST_TOPIC = "TEST_TOPIC";
+	/**
+	 * 测试 group topic todo 暂时使用
+	 */
+	String TEST_GROUP = "TEST_GROUP";
+	String TEST_TOPIC = "TEST_TOPIC";
 
 	/**
 	 * 发送短信的 group topic
@@ -41,18 +41,11 @@ public interface MQConstant {
 	String ACCOUNT_GROUP = "ACCOUNT_GROUP";
 	String ACCOUNT_TOPIC = "ACCOUNT_TOPIC";
 
-	/**
-	 * 优惠券发放
-	 */
-	String GRANT_COUPON_GROUP = "COUPON_GROUP";
-	String GRANT_COUPON_TOPIC = "COUPON_TOPIC";
-
 	/** 注册送188红包 */
 	String REGISTER_COUPON_TOPIC = "REGISTER_COUPON_TOPIC";
 	String REGISTER_COUPON_TAG = "REGISTER_COUPON_TAG";
 	/** 投之家送2张加息券 */
 	String TZJ_REGISTER_INTEREST_TAG = "TZJ_REGISTER_INTEREST_TAG";
-
 
 	/**
 	 * app渠道统计数据
@@ -94,7 +87,6 @@ public interface MQConstant {
 	String ACCOUNT_WEB_LIST_GROUP = "ACCOUNT_WEB_LIST_GROUP";
 	String ACCOUNT_WEB_LIST_TOPIC = "ACCOUNT_WEB_LIST_TOPIC";
 
-
 	/**
 	 * 放款，还款请求，放款，还款
 	 */
@@ -114,6 +106,12 @@ public interface MQConstant {
 	String FDD_TOPIC = "FDD_TOPIC";
 
 	/**
+	 * 法大大修改客户信息
+	 * */
+	String FDD_USERINFO_CHANGE_GROUP = "FDD_USERINFO_CHANGE_GROUP";
+	String FDD_USERINFO_CHANGE_TOPIC = "FDD_USERINFO_CHANGE_TOPIC";
+
+	/**
 	 * 法大大CA认证
 	 */
 	String FDD_CERTIFICATE_AUTHORITY_GROUP = "FDD_CERTIFICATE_AUTHORITY_GROUP";
@@ -122,14 +120,14 @@ public interface MQConstant {
 	/**
 	 * crm开户信息推送
 	 */
-	 String CRM_ROUTINGKEY_BANCKOPEN_GROUP = "CRM_ROUTINGKEY_BANCKOPEN_GROUP";
-	String CRM_ROUTINGKEY_BANCKOPEN_TOPIC="CRM_ROUTINGKEY_BANCKOPEN_TOPIC";
+	String CRM_ROUTINGKEY_BANCKOPEN_GROUP = "CRM_ROUTINGKEY_BANCKOPEN_GROUP";
+	String CRM_ROUTINGKEY_BANCKOPEN_TOPIC = "CRM_ROUTINGKEY_BANCKOPEN_TOPIC";
 
-	/**法大大生成合同处理*/
+	/** 法大大生成合同处理 */
 	String FDD_GENERATE_CONTRACT_TAG = "FDD_GENERATE_CONTRACT_TAG";
-	/**法大大自动签署处理*/
+	/** 法大大自动签署处理 */
 	String FDD_AUTO_SIGN_TAG = "FDD_AUTO_SIGN_TAG";
-	/**法大大下载脱敏处理*/
+	/** 法大大下载脱敏处理 */
 	String FDD_DOWNPDF_AND_DESSENSITIZATION_TAG = "FDD_DOWNPDF_AND_DESSENSITIZATION_TAG";
 	/**
 	 * 汇计划退出
@@ -193,9 +191,8 @@ public interface MQConstant {
 	String VIP_USER_TENDER_GROUP = "VIP_USER_TENDER_GROUP";
 	String VIP_USER_TENDER_TOPIC = "VIP_USER_TENDER_TOPIC";
 
-
 	/**
-	 * 网站累计投资追加    修改mongodb运营数据
+	 * 网站累计投资追加 修改mongodb运营数据
 	 */
 	String STATISTICS_CALCULATE_INVEST_INTEREST_GROUP = "STATISTICS_CALCULATE_INVEST_INTEREST_GROUP";
 	String STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC = "STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC";
@@ -206,17 +203,60 @@ public interface MQConstant {
 	String AUTO_ISSUE_BORROW_JOIN_PLAN_GROUP = "AUTO_ISSUE_BORROW_JOIN_PLAN_GROUP";
 	String AUTO_ISSUE_BORROW_JOIN_PLAN_TOPIC = "AUTO_ISSUE_BORROW_JOIN_PLAN_TOPIC";
 
+
+
+	/** ------------------------------ 优惠券相关 start ------------------------------*/
+
 	/**
-	 * 汇直投优惠券使用
+	 * 优惠券发放 - 后台批量发放
+	 */
+	String BATCH_GRANT_COUPON_GROUP = "BATCH_GRANT_COUPON_GROUP";
+	String BATCH_GRANT_COUPON_TOPIC = "BATCH_GRANT_COUPON_TOPIC";
+
+	/**
+	 * 优惠券发放
+	 */
+	String GRANT_COUPON_GROUP = "COUPON_GROUP";
+	String GRANT_COUPON_TOPIC = "COUPON_TOPIC";
+
+	/**
+	 * 汇直投-优惠券使用
 	 */
 	String HZT_COUPON_TENDER_GROUP = "HZT_COUPON_TENDER_GROUP";
 	String HZT_COUPON_TENDER_TOPIC = "HZT_COUPON_TENDER_TOPIC";
 
 	/**
-	 * 汇计划优惠券使用
+	 * 汇计划-优惠券使用
 	 */
 	String HJH_COUPON_TENDER_GROUP = "HJH_COUPON_TENDER_GROUP";
 	String HJH_COUPON_TENDER_TOPIC = "HJH_COUPON_TENDER_TOPIC";
+
+	/**
+	 * 汇直投-优惠券放款
+	 */
+	String HZT_COUPON_LOAN_GROUP = "HZT_COUPON_LOAN_GROUP";
+	String HZT_COUPON_LOAN_TOPIC = "HZT_COUPON_LOAN_TOPIC";
+
+	/**
+	 * 汇计划-优惠券放款
+	 */
+	String HJH_COUPON_LOAN_GROUP = "HJH_COUPON_LOAN_GROUP";
+	String HJH_COUPON_LOAN_TOPIC = "HJH_COUPON_LOAN_TOPIC";
+
+	/**
+	 * 汇直投-优惠券还款
+	 */
+	String HZT_COUPON_REPAY_GROUP = "HZT_COUPON_REPAY_GROUP";
+	String HZT_COUPON_REPAY_TOPIC = "HZT_COUPON_REPAY_TOPIC";
+
+	/**
+	 * 汇计划-优惠券还款
+	 */
+	String HJH_COUPON_REPAY_GROUP = "HJH_COUPON_REPAY_GROUP";
+	String HJH_COUPON_REPAY_TOPIC = "HJH_COUPON_REPAY_TOPIC";
+
+	/**------------------------------- 优惠券相关 end ------------------------- end */
+
 
 	/**
 	 * 自动录标
@@ -224,19 +264,19 @@ public interface MQConstant {
 	String HJH_AUTO_ISSUERECOVER_GROUP = "HJH_AUTO_ISSUERECOVER_GROUP";
 	String HJH_AUTO_ISSUERECOVER_TOPIC = "HJH_AUTO_ISSUERECOVER_TOPIC";
 
-	// 自动备案
+	/** 自动备案 */
 	String ROCKETMQ_BORROW_RECORD_GROUP = "HYJF-ROCKETMQ-BORROW-RECORD-GROUP";
-	String ROCKETMQ_BORROW_RECORD_TOPIC= "HYJF-ROCKETMQ-BORROW-RECORD-TOPIC";
+	String ROCKETMQ_BORROW_RECORD_TOPIC = "HYJF-ROCKETMQ-BORROW-RECORD-TOPIC";
 
-	// 自动初审
+	/** 自动初审 */
 	String ROCKETMQ_BORROW_PREAUDIT_GROUP = "HYJF-ROCKETMQ-BORROW-PREAUDIT-GROUP";
 	String ROCKETMQ_BORROW_PREAUDIT_TOPIC = "HYJF-ROCKETMQ-BORROW-PREAUDIT-TOPIC";
 
-	// 自动关联计划
+	/** 自动关联计划 */
 	String ROCKETMQ_BORROW_ISSUE_GROUP = "HYJF-ROCKETMQ-BORROW-ISSUE-GROUP";
 	String ROCKETMQ_BORROW_ISSUE_TOPIC = "HYJF-ROCKETMQ-BORROW-ISSUE-TOPIC";
 
-	// 自动审核保证金
+	/** 自动审核保证金 */
 	String ROCKETMQ_BORROW_BAIL_GROUP = "HYJF-ROCKETMQ-BORROW-BAIL-GROUP";
 	String ROCKETMQ_BORROW_BAIL_TOPIC = "HYJF-ROCKETMQ-BORROW-BAIL-TOPIC";
 

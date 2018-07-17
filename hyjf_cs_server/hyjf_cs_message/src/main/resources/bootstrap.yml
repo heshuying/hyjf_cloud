@@ -5,10 +5,11 @@ spring:
     config:
       uri: http://micoserver:2222/
       profile: test
+      name: cs-message
   boot:
     admin:
       client:
-        url: http://127.0.0.1:18080
+        url: http://micoserver:18080
   sleuth:
     sampler:
       percentage: 1.0

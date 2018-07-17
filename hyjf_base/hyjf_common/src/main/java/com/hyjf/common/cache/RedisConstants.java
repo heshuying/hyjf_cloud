@@ -138,4 +138,9 @@ public class RedisConstants {
      * 网关路由配置
      */
     public static final String ZUUL_ROUTER_CONFIG_KEY = "zuul_roter_config_key";
+
+    /**
+     * PARAM表配置
+     */
+    public static final String CACHE_PARAM_NAME = "hyjf_param_name:";
 }

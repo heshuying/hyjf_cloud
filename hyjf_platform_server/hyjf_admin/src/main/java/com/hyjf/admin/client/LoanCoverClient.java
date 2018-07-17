@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 
@@ -20,7 +21,7 @@ public interface LoanCoverClient {
      * @param request
      * @return
      */
-    List<LoanCoverUserVO> selectUserMemberList(LoanCoverUserRequest request);
+    LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request);
     /**
      * 保存记录
      */
@@ -28,14 +29,14 @@ public interface LoanCoverClient {
     /**
      * 保存记录
      */
-    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo);
+     LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo);
     /**
      * 更新记录
      */
     int updateLoanCoverUserRecord(LoanCoverUserRequest request);
     /**
-     * 根据id查找记录
+     * 保存企业信息
      */
-    LoanCoverUserVO selectIsExistsRecordById(String strId);
+    LoanCoverUserResponse selectIsExistsRecordById(String strId);
 
 }

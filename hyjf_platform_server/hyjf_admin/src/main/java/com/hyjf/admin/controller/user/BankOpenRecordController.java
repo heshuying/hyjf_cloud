@@ -36,7 +36,7 @@ import java.util.Map;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "开户记录")
+@Api(value = "会员中心-开户记录")
 @RestController
 @RequestMapping("/hyjf-admin/bankOpenRecord")
 public class BankOpenRecordController {

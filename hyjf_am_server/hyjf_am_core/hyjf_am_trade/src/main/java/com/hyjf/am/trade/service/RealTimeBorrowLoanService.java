@@ -12,14 +12,16 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author dxj
  * @version RealTimeBorrowLoanService.java, v0.1 2018年6月23日 上午10:13:18
  */
-public interface RealTimeBorrowLoanService {
+public interface RealTimeBorrowLoanService extends BaseService {
 
 	BankCallBean requestLoans(BorrowApicron apicron);
 
 	BankCallBean requestLoans(BorrowApicron apicron, Map map);
 
-	boolean updateBatchDetailsQuery(BorrowApicron apicron, BankCallBean bean);
+	boolean loanBatchUpdateDetails(BorrowApicron apicron, BankCallBean bean);
 
 	boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception;
+
+	BorrowApicron selApiCronByPrimaryKey(int id);
 
 }

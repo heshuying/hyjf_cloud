@@ -16,7 +16,7 @@ public interface MspService extends BaseService {
 	
 	/**
 	 * 获取记录数
-	 * @param form
+	 * @param conditionMap
 	 * @return
 	 */
 	public Integer getRecordCount(Map<String, Object> conditionMap);
@@ -52,14 +52,14 @@ public interface MspService extends BaseService {
 	/**
 	 * 更新
 	 * 
-	 * @param record
+	 * @param mspConfigure
 	 */
 	public void updateRecord(MspConfigureCustomize mspConfigure);
 
 	/**
 	 * 删除
 	 * 
-	 * @param record
+	 * @param sendCd
 	 */
 	public void deleteRecord(String sendCd);
 

@@ -5,9 +5,10 @@ spring:
     config:
       uri: http://micoserver:2222/
       profile: test
+      name: callcenter
 
 server:
-  port: 9093
+  port: 9094
 
 logging:
   file: callcenter.log

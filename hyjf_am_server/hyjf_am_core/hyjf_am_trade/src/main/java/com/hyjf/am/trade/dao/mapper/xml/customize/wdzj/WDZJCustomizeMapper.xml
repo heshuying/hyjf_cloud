@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper" >
+  <resultMap id="BorrowListResultMap" type="com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize" >
+    <collection property="subscribes" column="borrow_nid"  select="selectTenderList" />
+  </resultMap> 
+  <resultMap id="TenderListResultMap" type="com.hyjf.am.trade.dao.model.customize.wdzj.TenderListCustomize" >
+  </resultMap>
+  <resultMap id="PreapysListCustomize" type="com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize" >
+  </resultMap>
+  <select id="selectBorrowList" parameterType="map" resultMap="BorrowListResultMap">
+	SELECT
+		hb.borrow_nid AS projectId,
+		hb.borrow_nid AS userName,
+		hb.borrow_nid,
+		hb.finance_purpose AS title,
+		hb.account AS amount,
+		hb.borrow_account_scale AS `schedule`,
+		CONCAT(hb.borrow_apr, '%') AS interestRate,
+		hb.borrow_period AS deadline,
+	
+	IF (
+		hb.borrow_style = 'endday',
+		'天',
+		'月'
+	) AS deadlineUnit,
+	 CASE
+	WHEN hb.borrow_style = 'end' THEN
+		'1'
+	WHEN hb.borrow_style = 'endday' THEN
+		'1'
+	WHEN hb.borrow_style = 'endmonth' THEN
+		'5'
+	WHEN hb.borrow_style = 'principal' THEN
+		'6'
+	WHEN hb.borrow_style = 'month' THEN
+		'2'
+	ELSE
+		''
+	END AS `repaymentType`,
+	 CASE
+	WHEN hb.asset_attributes = '1' THEN
+		'抵押标'
+	WHEN hb.asset_attributes = '2' THEN
+		'质押标'
+	WHEN hb.asset_attributes = '3' THEN
+		'信用标'
+	WHEN hb.asset_attributes = '4' THEN
+		'债权转让标'
+	WHEN hb.asset_attributes = '5' THEN
+		'净值标'
+	ELSE
+		''
+	END AS `type`,
+	 CONCAT(
+		'https://www.hyjf.com/bank/web/borrow/getBorrowDetail.do?borrowNid=',
+		hb.borrow_nid
+	) AS loanUrl,
+	 FROM_UNIXTIME(
+	  UNIX_TIMESTAMP(br.create_time),
+		'%Y-%m-%d %H:%i:%s'
+	) AS successTime,
+	0 AS reward
+	FROM
+		ht_borrow_repay br
+	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
+	WHERE
+	  UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
+	<if test="limitStart != null and limitStart >= 0">
+		LIMIT #{limitStart} , #{limitEnd}
+	</if>
+  </select>
+  
+  <select id="countBorrowList" parameterType="map" resultType="int">
+	SELECT
+		count(br.id)
+	FROM
+		ht_borrow_repay br
+	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
+	WHERE
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
+  </select>
+
+  <select id="sumBorrowAmount" parameterType="map" resultType="string">
+	SELECT
+		IFNULL(SUM(hb.account),0) amountTotal
+	FROM
+		ht_borrow_repay br
+	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
+	WHERE
+		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
+	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
+  </select>
+  
+  
+  <select id="selectTenderList" parameterType="map" resultMap="TenderListResultMap">
+  	SELECT
+		ui.idcard AS subscribeUserName,
+		t.account AS amount,
+		t.account AS validAmount,
+		FROM_UNIXTIME(
+			t.addtime,
+			'%Y-%m-%d %H:%i:%s'
+		) AS addDate,
+		'1' AS status,
+	
+	IF (
+		hu.inst_code='11000001',
+		1,
+		IF(t.accede_order_id IS NULL,0,1)
+	) AS type
+	FROM
+		ht_borrow_tender t
+	JOIN ht_users hu ON t.user_id = hu.user_id
+	JOIN ht_users_info ui ON ui.user_id = hu.user_id
+	WHERE t.borrow_nid = #{projectId}
+  </select>
+  <select id="selectPreapysList" parameterType="map" resultMap="PreapysListCustomize">
+		SELECT
+			hb.borrow_nid AS projectId,
+		'天' AS deadlineUnit,
+		 ROUND(
+			(
+				br.repay_yestime - br.create_time
+			) / (60 * 60 * 24)
+		 ) AS deadline
+		FROM
+			ht_borrow_repay br
+		JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
+		WHERE
+			br.advance_status = '1'
+		AND br.repay_status = '1'
+		AND repay_yestime >= #{timeStart}
+		AND repay_yestime <![CDATA[<=]]> #{timeEnd}
+	<if test="limitStart != null and limitStart >= 0">
+		LIMIT #{limitStart} , #{limitEnd}
+	</if>
+  </select>
+  <select id="countPreapysList" parameterType="map" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM
+			ht_borrow_repay
+		WHERE
+			advance_status = '1'
+		AND repay_status = '1'
+		AND repay_yestime >= #{timeStart}
+		AND repay_yestime <![CDATA[<=]]> #{timeEnd}
+  </select>
+</mapper>

@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.user.service;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
+import com.hyjf.am.resquest.user.UpdCompanyRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
@@ -215,4 +217,10 @@ public interface UserManagerService extends BaseService{
      * @return
      */
     int updateUserIdCard(AdminUserRecommendRequest request);
+    /**
+     * 保存企业开户信息
+     * @param updCompanyRequest
+     * @return
+     */
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
 }

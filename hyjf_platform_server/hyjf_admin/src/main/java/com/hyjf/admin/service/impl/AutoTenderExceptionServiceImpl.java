@@ -3,9 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AllocationEngineClient;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.BorrowRegistClient;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
@@ -14,6 +12,7 @@ import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -25,7 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nxl
@@ -35,10 +36,6 @@ import java.util.List;
 public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionService {
     @Autowired
     private AmTradeClient amTradeClient;
-    @Autowired
-    private AllocationEngineClient allocationEngineClient;
-    @Autowired
-    private BorrowRegistClient borrowRegistClient;
 
     private Logger logger = LoggerFactory.getLogger(AutoTenderExceptionServiceImpl.class);
 
@@ -152,7 +149,7 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
 
     @Override
     public HjhPlanVO getFirstHjhPlanVO(String planNid){
-        List<HjhPlanVO> hjhPlanVOList= allocationEngineClient.getHjhPlanByPlanNid(planNid);
+        List<HjhPlanVO> hjhPlanVOList= amTradeClient.getHjhPlanByPlanNid(planNid);
         if(null!=hjhPlanVOList&&hjhPlanVOList.size()>0){
             return hjhPlanVOList.get(0);
         }
@@ -166,7 +163,7 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
      */
     @Override
     public BorrowVO selectBorrowByNid(String borrowNid){
-        return borrowRegistClient.selectBorrowByNid(borrowNid);
+        return amTradeClient.selectBorrowByNid(borrowNid);
     }
     /**
      * 更新投资数据
@@ -187,5 +184,25 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
     @Override
     public boolean updateTenderByParam(int status,int accedeId){
         return amTradeClient.updateTenderByParam(status,accedeId);
+    }
+    /**
+     * 计算实际金额 保存creditTenderLog表
+     *
+     * @return
+     * @author nxl
+     */
+    @Override
+    public Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
+        return amTradeClient.saveCreditTenderLogNoSave(credit,hjhAccede,orderId,orderDate,yujiAmoust,isLast);
+    }
+    /**
+     * 汇计划自动承接成功后数据库更新操作
+     *
+     * @return
+     * @author nxl
+     */
+    @Override
+    public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap){
+        return amTradeClient.updateCreditForAutoTender(credit,hjhAccede,hjhPlan,bean,tenderUsrcustid,sellerUsrcustid,resultMap);
     }
 }

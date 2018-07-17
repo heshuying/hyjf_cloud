@@ -5,10 +5,12 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.common.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,5 +103,21 @@ public class AmConfigClientImpl implements AmConfigClient {
         String retMsg = restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/adminException/getBankRetMsg/" + retCode, String.class).getBody();
         return retMsg;
+    }
+
+    /**
+     * 获取银行返回码
+     *
+     * @param retCode
+     * @return
+     */
+    @Override
+    public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
+        String url = "http://AM-CONFIG/am-config/config/getBankReturnCodeConfig/" + retCode;
+        BankReturnCodeConfigResponse response = restTemplate.getForEntity(url, BankReturnCodeConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 }

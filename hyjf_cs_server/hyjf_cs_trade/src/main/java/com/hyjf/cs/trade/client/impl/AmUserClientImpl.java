@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -417,5 +418,46 @@ public class AmUserClientImpl implements AmUserClient {
 		return result;
 	}
 
+	/**
+	 * 更新CertificateAuthorityVO
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 更新参数
+	 * @return
+	 */
+	@Override
+	public int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/certificateauthority/updatecertificateauthority", certificateAuthorityVO, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
 
+    @Override
+    public String getChannelNameByUserId(int userId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId,UtmResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getChannelName();
+		}
+        return null;
+    }
+
+	/**
+	 * 插入certificateAuthorityVO数据
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 参数
+	 * @return
+	 */
+	@Override
+	public int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO) {
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/certificateauthority/insertcertificateauthority", certificateAuthorityVO, Integer.class)
+				.getBody();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
 }

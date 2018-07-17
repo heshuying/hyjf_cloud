@@ -3,28 +3,15 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.LoanCoverClient;
-import com.hyjf.admin.client.UserPortraitClient;
-import com.hyjf.admin.service.LoanCoverService;
+import com.hyjf.admin.client.AmUserClient;
+
 import com.hyjf.admin.service.UserPortraitService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.vo.user.LoanCoverUserVO;
 import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
-import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
-import com.hyjf.pay.lib.fadada.util.DzqzConstant;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +21,7 @@ import java.util.Map;
 @Service
 public class UserPortraitServiceImpl implements UserPortraitService {
     @Autowired
-    private UserPortraitClient userPortraitClient;
+    private AmUserClient userPortraitClient;
     /**
      * 根据参数查询用户画像信息
      * @return

@@ -11,10 +11,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
-import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
@@ -85,7 +82,7 @@ public class ProjectListController extends BaseController{
      * @author zhangyk
      * @date 2018/6/19 15:12
      */
-    @RequestMapping("/web/searchWebCreditListCount")
+    @RequestMapping("/web/countCreditList")
     public CreditListResponse searchCreditListCount(@RequestBody @Valid CreditListRequest request){
         CreditListResponse CreditListResponse = new CreditListResponse();
         int count = projectListService.countCreditList(request);
@@ -102,7 +99,7 @@ public class ProjectListController extends BaseController{
     @RequestMapping("/web/searchWebCreditList")
     public CreditListResponse searchCreditList(@RequestBody @Valid CreditListRequest request){
         CreditListResponse res = new CreditListResponse();
-        List<TenderCreditDetailCustomizeVO> list = projectListService.searchCreditList(request);
+        List<CreditListVO> list = projectListService.searchCreditList(request);
         res.setResultList(list);
         return res;
     }

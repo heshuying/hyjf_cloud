@@ -1,8 +1,14 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
-import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.response.user.UserPortraitResponse;
+import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -128,4 +134,313 @@ public interface AmUserClient {
     JSONObject synUserAuth(Integer userId, Integer type);
 
     BankOpenAccountVO queryBankOpenAccountByUserName(String userName);
+
+
+    /**
+     * 查找用户信息
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    UserManagerResponse selectUserMemberList(UserManagerRequest request);
+     /**
+     * 根据筛选条件查找用户总数
+      * @auth nxl
+     * @param request
+     * @return
+     */
+    int countRecordTotal(UserManagerRequest request);
+
+    /**
+     * 根据用户id获取用户详情
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    UserManagerDetailVO selectUserDetailById(String userId);
+
+    /**
+     * 根据用户id获取测评信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    UserEvalationResultVO getUserEvalationResult(String userId);
+
+    /**
+     * 根据用户id获取开户信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    UserBankOpenAccountVO selectBankOpenAccountByUserId(String userId);
+
+    /**
+     * 根据用户id获取企业用户开户信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(String userId);
+
+    /**
+     * 根据用户id获取第三方平台绑定信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    BindUserVo selectBindeUserByUserId(String userId);
+
+    /**
+     * 根据用户id获取用户CA认证记录表
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId);
+
+    /**
+     * 根据用户id获取用户修改信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    UserManagerUpdateVO selectUserUpdateInfoByUserId(String userId);
+
+    /**
+     * 更新用户信息
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int updataUserInfo(UserManagerUpdateRequest request);
+
+    /**
+     * 根据用户id获取推荐人信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    UserRecommendCustomizeVO selectUserRecommendByUserId(String userId);
+
+    /**
+     * 校验手机号
+     * @auth nxl
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    int countUserByMobile(int userId, String mobile);
+
+    /**
+     * 校验推荐人
+     * @auth nxl
+     * @param userId
+     * @param recommendName
+     * @return
+     */
+    int checkRecommend(String userId, String recommendName);
+
+    /**
+     * 根据用户id查找用户表
+     * @auth nxl
+     * @param userId
+     * @param userId
+     * @return
+     */
+    UserVO selectUserByUserId(int userId);
+
+    /**
+     * 根据用户id查找用户信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    List<BankCardVO> selectBankCardByUserId(int userId);
+
+    /**
+     * 更新企业用户开户记录
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int updateCorpOpenAccountRecord(CorpOpenAccountRecordRequest request);
+
+    /**
+     * 插入企业用户开户记录
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int insertCorpOpenAccountRecord(CorpOpenAccountRecordRequest request);
+
+    /**
+     * 根据银行卡号获取bankId
+     * @auth nxl
+     * @param cardNo
+     * @return
+     */
+    String queryBankIdByCardNo(String cardNo);
+
+    /**
+     * 获取银行卡配置信息
+     * @auth nxl
+     * @param bankId
+     * @return
+     */
+    BanksConfigVO getBanksConfigByBankId(int bankId);
+
+    /**
+     * 更新用户绑定的银行卡
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int updateUserCard(BankCardRequest request);
+
+    /**
+     * 保存用户绑定的银行卡
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int insertUserCard(BankCardRequest request);
+
+    /**
+     * 单表查询开户信息
+     * @auth nxl
+     * @return
+     */
+    BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
+
+    /**
+     * 更新开户信息
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int updateBankOpenAccount(BankOpenAccountRequest request);
+
+    /**
+     * 插入开户信息
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int insertBankOpenAccount(BankOpenAccountRequest request);
+
+    /**
+     * 根据用户id获取用户信息
+     * @auth nxl
+     * @param userId
+     * @return
+     */
+    UserInfoVO findUserInfoById(int userId);
+
+    /**
+     * 更新用户表
+     * @auth nxl
+     * @param userInfoVO
+     * @return
+     */
+    int updateUserInfoByUserInfo(UserInfoVO userInfoVO);
+
+    /**
+     * 更新用户表
+     * @auth nxl
+     * @param userVO
+     * @return
+     */
+    int updateUser(UserVO userVO);
+
+    /**
+     * 获取某一用户的信息修改列表
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request);
+
+    /**
+     * 根据推荐人姓名查找用户
+     * @param recommendName
+     * @auth nxl
+     * @return
+     */
+    UserVO selectUserByRecommendName(String recommendName);
+
+    SpreadsUserVO selectSpreadsUsersByUserId(String userId);
+    /**
+     * 修改推荐人信息
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int updateUserRecommend(AdminUserRecommendRequest request);
+
+    /**
+     * 修改用户身份证
+     * @auth nxl
+     * @param request
+     * @return
+     */
+    int updateUserIdCard(AdminUserRecommendRequest request);
+    /**
+     * 保存企业开户信息
+     * @auth nxl
+     * @param updCompanyRequest
+     * @return
+     */
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+    /**
+     * 根据参数查询用户画像信息
+     * @param request
+     * @return
+     * @author nxl
+     */
+    UserPortraitResponse selectRecordList(UserPortraitRequest request);
+
+    /**
+     * 根据用户id查找用户画像
+     * @param userId
+     * @author nxl
+     * @return
+     */
+    UserPortraitVO selectUsersPortraitByUserId(Integer userId);
+
+    /**
+     * 修改用户画像
+     * @author nxl
+     */
+    int updateUserPortrait(UserPortraitRequest request);
+
+
+    /**
+     * 根据UserID查询开户信息
+     *
+     * @param userId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccountByUserId(Integer userId);
+    
+    /*加入明细 start*/
+	/**
+	 * 通过userid获取user
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	UserVO getUserByUserId(int userId);
+
+	/**
+	 * 通过
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	UserInfoVO selectUsersInfoByUserId(int userid);
+	/*加入明细 end*/
+    
 }

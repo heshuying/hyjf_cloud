@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AdminCommonClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class AdminCommonServiceImpl implements AdminCommonService {
     @Autowired
-    AdminCommonClient adminCommonClient;
+    AmTradeClient AmTradeClient;
 
     @Override
     public Map<String, String> getParamNameMap(String param) {
@@ -31,11 +31,11 @@ public class AdminCommonServiceImpl implements AdminCommonService {
 
     @Override
     public List<BorrowStyleVO> selectBorrowStyleList() {
-        return adminCommonClient.selectBorrowStyleList();
+        return AmTradeClient.selectBorrowStyleList();
     }
 
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigList() {
-        return adminCommonClient.selectHjhInstConfigList();
+        return AmTradeClient.selectHjhInstConfigList();
     }
 }

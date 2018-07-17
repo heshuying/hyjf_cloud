@@ -72,7 +72,7 @@
         <result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR" />
         <result column="borrow_account" property="borrowAccount" jdbcType="VARCHAR" />
         <result column="borrow_schedule" property="borrowSchedule" jdbcType="VARCHAR" />
-        <result column="tstatus" property="status" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="on_time" property="onTime" jdbcType="VARCHAR" />
         <result column="time" property="time" jdbcType="VARCHAR" />
         <result column="couponEnable" property="couponEnable" jdbcType="VARCHAR" />
@@ -246,7 +246,7 @@
             '13'
             ELSE
             ''
-            END AS tstatus,
+            END AS status,
             CASE WHEN htb.`status` = 1 AND htb.verify_status = 3 THEN
             FROM_UNIXTIME(htb.ontime,'%Y-%m-%d %H:%i:%s') ELSE '' END AS on_time,
             CASE  WHEN htb.`status` = 1 AND htb.verify_status = 3 THEN htb.ontime ELSE ''END AS times
@@ -460,8 +460,18 @@
         AND hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
     </select>
 
+    <!--债转列表map-->
+    <resultMap id="creditListMap" type="com.hyjf.am.vo.trade.CreditListVO">
+        <id column="credit_nid" property="creditNid" jdbcType="VARCHAR" />
+        <result column="bid_apr" property="bidApr" jdbcType="VARCHAR" />
+        <result column="credit_term" property="creditTerm" jdbcType="VARCHAR" />
+        <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
+        <result column="credit_capital" property="creditCapital" jdbcType="VARCHAR" />
+        <result column="bid_name" property="bidName" jdbcType="VARCHAR" />
+    </resultMap>
+
     <!--债权转让查询data -->
-    <select id="searchCreditList"  resultMap="ProjectListNewMap" parameterType="Map">
+    <select id="searchCreditList"  resultMap="creditListMap" parameterType="Map">
         select
         <include refid="Credit_Base_Column_List"/>
         from   ht_borrow_credit
@@ -470,22 +480,22 @@
 	    <include refid="Credit_Common_Where_Column"/>
         ORDER BY credit_inProgress DESC,
         <if test="discountSort != null and discountSort != ''">
-            credit_discount #{discountSort},
+            credit_discount ${discountSort},
         </if>
         <if test="termSort != null and termSort != ''">
-            credit_term #{termSort},
+            credit_term  ${termSort},
         </if>
         <if test="capitalSort != null and capitalSort != ''">
-            credit_capital #{capitalSort},
+            credit_capital ${capitalSort},
         </if>
-        add_time DESC
+        ht_borrow_credit.create_time DESC
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
     </select>
 
     <!--债权转让查询count-->
-    <select id="countCreditList" resultType="int" parameterType="Map">>
+    <select id="countCreditList" resultType="int" parameterType="Map">
         select count(*)
         from   ht_borrow_credit
         INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
@@ -580,14 +590,8 @@
 		ELSE
 			''
 		END AS credit_repay_yes_time,
-	    create_date,
-	    CASE
-		WHEN add_time != 0 THEN
-			FROM_UNIXTIME(add_time, '%Y-%m-%d %H:%i:%s')
-		ELSE
-			''
-		END AS add_time,
-		add_time AS add_time_int,
+	    ht_borrow_credit.create_time as add_time,
+		ht_borrow_credit.create_time AS add_time_int,
 		CASE
 		WHEN end_time != 0 THEN
 			FROM_UNIXTIME(end_time, '%Y-%m-%d %H:%i:%s')
@@ -1074,7 +1078,7 @@
         '' AS on_time,
         truncate(hydc.credit_capital_assigned/hydc.credit_capital,2)*100 AS borrow_schedule,
         CONCAT(#{host},'?creditNid=',hydc.credit_nid) AS borrow_url,
-        hydc.add_time AS add_time,
+        hydc.create_time AS add_time,
         '0' AS couponEnable
         from ht_borrow_credit hydc
         INNER JOIN ht_borrow hydb

@@ -2,8 +2,9 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
+import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
@@ -61,7 +62,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
 
-    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistics/search/getTotalInvestAndInterestEntity";
+    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
 
     @Autowired
     private WebProjectListClient webProjectListClient;
@@ -558,23 +559,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         request.setTermSort("DESC");
         request.setCapitalSort("DESC");
         request.setInProgressSort("DESC");
-        CreditListResponse res = webProjectListClient.countCreditList(request);
+        CreditListResponse res = baseClient.postExe("http://AM-TRADE/am-trade/projectlist/web/countCreditList",request,CreditListResponse.class);
         WebResult webResult = new WebResult();
-        if (!Response.isSuccess(res)) {
-            logger.error("查询债权转让原子层count异常");
-            throw new RuntimeException("查询债权转让原子层count异常");
-        }
         int count = res.getCount();
         page.setTotal(count);
         webResult.setData(new ArrayList<>());
         if (count > 0) {
-            List<TenderCreditDetailCustomizeCsVO> result = new ArrayList<>();
-            CreditListResponse dataResponse = webProjectListClient.searchCreditList(request);
-            if (!Response.isSuccess(dataResponse)) {
-                logger.error("查询债权转让原子层list数据异常");
-                throw new RuntimeException("查询债权转让原子层list数据异常");
-            }
-            result = CommonUtils.convertBeanList(dataResponse.getResultList(), TenderCreditDetailCustomizeCsVO.class);
+            List<CreditListVO> result = new ArrayList<>();
+            CreditListResponse dataResponse = baseClient.postExe("http://AM-TRADE/am-trade/projectlist/web/searchWebCreditList",request,CreditListResponse.class);
+            result = dataResponse.getResultList();
             webResult.setData(result);
         }
         webResult.setPage(page);
@@ -595,13 +588,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         Map<String,Object> result = new HashMap<>();
         // 获取债转的详细参数
-        BorrowCreditDetailVO creditDetail = amBorrowCreditClient.getCreditDetail(creditNid);
+
+        BorrowCreditDetailResponse response= baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid,BorrowCreditDetailResponse.class);//amBorrowCreditClient.getCreditDetail(creditNid);
+        BorrowCreditDetailVO creditDetail = response.getResult();
         if (Validator.isNull(creditDetail)) {
            throw new RuntimeException("债转详情不存在");
         }
         // 获取相应的标的详情
         String borrowNid = creditDetail.getBorrowNid();
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+
+        BorrowResponse res = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrow/" +borrowNid,BorrowResponse.class);//borrowClient.selectBorrowByNid(borrowNid);
+        BorrowVO borrow = res.getResult();
         if (Validator.isNull(borrow)) {
             throw new RuntimeException("标的详情不存在");
         }

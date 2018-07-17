@@ -3,6 +3,7 @@ package com.hyjf.am.user.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -177,4 +178,14 @@ public interface UserService extends BaseService {
     UtmPlat selectUtmPlatByUserId(Integer userId);
 
     int saveUserEvaluation(UserEvalationResult userEvalationResult);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据用户ID和推荐人查询用户
+     * @Date 16:45 2018/7/14
+     * @Param utmReferrer
+     * @Param userId
+     * @return
+     */
+    UserVO getUser(String utmReferrer, String userId);
 }

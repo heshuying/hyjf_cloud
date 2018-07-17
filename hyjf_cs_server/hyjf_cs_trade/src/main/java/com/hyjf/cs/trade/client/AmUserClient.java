@@ -185,4 +185,29 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int checkMobileCode(String mobile, String telcode, String paramTplZhuce, Integer platform, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+
+	/**
+	 * 更新CertificateAuthorityVO
+	 * @auth sunpeikai
+	 * @param certificateAuthorityVO 更新参数
+	 * @return
+	 */
+	int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
+
+	/**
+	 * @Author walter.limeng
+	 * @Description  根据用户ID获取用户注册时的渠道名称
+	 * @Date 16:13 2018/7/16
+	 * @Param userId
+	 * @return
+	 */
+    String getChannelNameByUserId(int userId);
+
+    /**
+     * 插入certificateAuthorityVO数据
+     * @auth sunpeikai
+     * @param certificateAuthorityVO 参数
+     * @return
+     */
+    int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
 }

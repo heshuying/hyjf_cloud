@@ -4,6 +4,8 @@ import com.hyjf.admin.client.VersionConfigClient;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -122,4 +124,55 @@ public class VersionConfigClientImpl implements VersionConfigClient {
         }
         return null;
     }
+    @Override
+    public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-CONFIG/am-config/appversion/getRecordList", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+    }
+
+    @Override
+    public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-CONFIG/am-config/appversion/infoAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+    @Override
+    public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-CONFIG/am-config/appversion/insertAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+    @Override
+    public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-CONFIG/am-config/appversion/updateAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+    @Override
+    public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request) {
+        VersionConfigBeanResponse response = restTemplate
+                .postForEntity("http://AM-CONFIG/am-config/appversion/deleteAction", request,
+                        VersionConfigBeanResponse.class)
+                .getBody();
+        return response;
+
+    }
+
+
+
 }

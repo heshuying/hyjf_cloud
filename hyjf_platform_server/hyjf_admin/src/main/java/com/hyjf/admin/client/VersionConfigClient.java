@@ -49,4 +49,14 @@ public interface VersionConfigClient {
      * @return
      */
     public VersionVO getVersionByCode(Integer vid, Integer type, String version);
+    public VersionConfigBeanResponse searchList(VersionConfigBeanRequest request);
+
+    public VersionConfigBeanResponse searchInfo(VersionConfigBeanRequest request);
+
+    public VersionConfigBeanResponse insertInfo(VersionConfigBeanRequest request);
+
+    public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request);
+
+    public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request);
+
 }

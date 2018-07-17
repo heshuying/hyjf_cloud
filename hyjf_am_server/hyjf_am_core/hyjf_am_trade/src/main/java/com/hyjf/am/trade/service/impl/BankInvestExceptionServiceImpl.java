@@ -3,26 +3,27 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.common.GetOrderIdUtils;
-import com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.service.BankInvestService;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.hyjf.am.trade.config.SystemConfig;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
+import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
+import com.hyjf.am.trade.service.BankInvestService;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 
 /**
  * 投資掉單处理
@@ -40,11 +41,9 @@ public class BankInvestExceptionServiceImpl implements BankInvestService {
 	@Autowired
 	private BorrowTenderMapper borrowTenderMapper;
 
-	@Value("${hyjf.bank.instcode}")
-	private String BANK_INSTCODE;
+	@Autowired
+	private SystemConfig systemConfig;
 
-	@Value("${hyjf.bank.bankcode}")
-	private String BANK_BANKCODE;
 
 	 /**
 	 * 查询出投资表authcode为空的记录
@@ -95,8 +94,8 @@ public class BankInvestExceptionServiceImpl implements BankInvestService {
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(ClientConstants.VERSION_10);// 接口版本号
 		bean.setTxCode(ClientConstants.TXCODE_BID_APPLY_QUERY);// 消息类型
-		bean.setInstCode(BANK_INSTCODE);// 机构代码
-		bean.setBankCode(BANK_BANKCODE);
+		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+		bean.setBankCode(systemConfig.getBankBankcode());
 		bean.setTxDate(GetOrderIdUtils.getTxDate());
 		bean.setTxTime(GetOrderIdUtils.getTxTime());
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));

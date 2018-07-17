@@ -4,15 +4,15 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.UserCenterClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.UserCenterService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -22,7 +22,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -40,8 +39,9 @@ public class UserCenterServiceImpl implements UserCenterService {
 
 
     @Autowired
-    private UserCenterClient userCenterClient;
-
+    private AmUserClient userCenterClient;
+    @Autowired
+    private AmTradeClient amTradeClient;
 
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
@@ -83,7 +83,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     public UserManagerResponse selectUserMemberList(UserManagerRequest request) {
         // 初始化分页参数，并组合到请求参数
         // 关联hyjf_trade库的ht_hjh_inst_config表
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
+        List<HjhInstConfigVO> listHjhInstConfig = amTradeClient.selectInstConfigAll();
         // 查询列表
         UserManagerResponse userManagerResponse = userCenterClient.selectUserMemberList(request);
         if (null != userManagerResponse) {
@@ -114,7 +114,7 @@ public class UserCenterServiceImpl implements UserCenterService {
      */
     @Override
     public List<HjhInstConfigVO> selectInstConfigAll() {
-        List<HjhInstConfigVO> listHjhInstConfig = userCenterClient.selectInstConfigAll();
+        List<HjhInstConfigVO> listHjhInstConfig = amTradeClient.selectInstConfigAll();
         return listHjhInstConfig;
     }
 
@@ -233,8 +233,8 @@ public class UserCenterServiceImpl implements UserCenterService {
      */
     @Override
     public List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request){
-//        List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
-        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
+       List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
+//        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
         return userChangeLogVO;
     }
     /**
@@ -367,172 +367,30 @@ public class UserCenterServiceImpl implements UserCenterService {
     }
 
     /**
-     * 根據accounId獲取開戶信息
-     *
-     * @param accountId
+     * 保存企业开户信息
+     * @param updCompanyRequest
      * @return
      */
     @Override
-    public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
-        return userCenterClient.selectBankOpenAccountByAccountId(accountId);
-    }
-
-    @Override
-    public JSONObject saveCompanyInfo(Map<String, String> mapParam) {
-        JSONObject ret = new JSONObject();
-        String accountId = mapParam.get("accountId");
-        String userId = mapParam.get("userId");
-        String idType = mapParam.get("idType");
-        if (StringUtils.isBlank(userId)) {
-            ret.put("status", "error");
-            ret.put("result", "请先选择用户再进行操作!");
-            return ret;
-        }
-        if (StringUtils.isBlank(accountId)) {
-            ret.put("status", "error");
-            ret.put("result", "请输入正确的电子账号!");
-            return ret;
-        }
-        UserVO user = this.selectUserByUserId(userId);
-        int bankOpenFlag = user.getBankOpenAccount();
-        if (user != null && user.getUserType() != 1) {
-            if (user.getBankOpenAccount() == 1) {//已开户
-                ret.put("status", "error");
-                ret.put("result", "用户已开户!");
-                return ret;
-            }
-        }
-        if (user.getUserType() != 1) {
-            BankOpenAccountVO bankOpenAccountVO = this.selectBankOpenAccountByAccountId(accountId);
-            if (null != bankOpenAccountVO) {
-                String strUserId = String.valueOf(bankOpenAccountVO.getUserId());
-                UserVO userBankOpen = this.selectUserByUserId(strUserId);
-                Integer openFlag = userBankOpen.getBankOpenAccount();
-                if (openFlag == 1) {
-                    ret.put("status", "error");
-                    ret.put("result", "该电子账号已被使用,无法进行企业信息补录!");
-                    return ret;
-                }
-            }
-        }
-        CorpOpenAccountRecordRequest record = null;
-        if (bankOpenFlag == 1) {//获取修改信息
-            CorpOpenAccountRecordVO corpOpenAccountRecordVO = this.selectCorpOpenAccountRecordByUserId(String.valueOf(user.getUserId()));
-            BeanUtils.copyProperties(corpOpenAccountRecordVO, record);
-        } else {
-            record = new CorpOpenAccountRecordRequest();
-        }
-        record.setUserId(user.getUserId());
-        record.setUsername(user.getUsername());
-        record.setBusiCode(mapParam.get("idNo"));
-        record.setBusiName(mapParam.get("Name"));
-        record.setStatus(6);//成功
-        record.setAddTime(GetDate.getDate());
-        record.setIsBank(1);//银行开户
-        record.setCardType(Integer.parseInt(idType));
-        record.setTaxRegistrationCode(mapParam.get("TaxId"));
-        record.setBuseNo(mapParam.get("BusId"));
-        record.setRemark(mapParam.get("Remark"));
-        //保存企业信息
-        if (bankOpenFlag == 1) {
-            //修改信息
-            int flag = userCenterClient.updateCorpOpenAccountRecord(record);
-        } else {
-            // 保存信息
-            int insertFlag = userCenterClient.insertCorpOpenAccountRecord(record);
-        }
-        //保存银行卡信息
-        BankCardRequest bankCard = null;
-        if (bankOpenFlag == 1) {
-            List<BankCardVO> bankCardList = userCenterClient.selectBankCardByUserId(user.getUserId());
-            if (null != bankCardList && bankCardList.size() > 0) {
-                BankCardVO bankCardVO = bankCardList.get(0);
-                BeanUtils.copyProperties(bankCardVO, bankCard);
-            }
-        } else {
-            bankCard = new BankCardRequest();
-        }
-        bankCard.setUserId(user.getUserId());
-        bankCard.setUserName(user.getUsername());
-        bankCard.setCardNo(mapParam.get("account"));
-        bankCard.setCreateTime(GetDate.getDate());
-        bankCard.setCreateUserId(user.getUserId());
-        bankCard.setCreateUsername(user.getUsername());
-        String bankId = userCenterClient.queryBankIdByCardNo(mapParam.get("account"));
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest) {
+        UserVO user = this.selectUserByUserId(updCompanyRequest.getUserId());
+        String bankId = userCenterClient.queryBankIdByCardNo(updCompanyRequest.getAccount());
         if (StringUtils.isNotBlank(bankId)) {
             String bankName = getBankNameById(bankId);
             String payAllianceCode = null;
-            BankCallBean callBean = payAllianceCodeQuery(mapParam.get("account"), user.getUserId());
+            BankCallBean callBean = payAllianceCodeQuery(updCompanyRequest.getAccount(), user.getUserId());
             if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
                 payAllianceCode = callBean.getPayAllianceCode();
                 if (StringUtils.isBlank(payAllianceCode)) {
                     payAllianceCode = getPayAllianceCodeByBankId(bankId);
                 }
             }
-            bankCard.setBankId(Integer.parseInt(bankId));
-            bankCard.setBank(bankName);
-            bankCard.setPayAllianceCode(payAllianceCode);
-            if (bankOpenFlag == 1) {
-                int updateflag = userCenterClient.updateUserCard(bankCard);
-                if (updateflag > 0) {
-                    ret.put("status", "error");
-                    ret.put("result", "银行卡信息修改保存异常!");
-                    return ret;
-                }
-            } else {
-                int insertcard = this.userCenterClient.insertUserCard(bankCard);
-                if (insertcard > 0) {
-                    ret.put("status", "error");
-                    ret.put("result", "银行卡信息保存异常!");
-                    return ret;
-                }
-            }
+            updCompanyRequest.setBankName(bankName);
+            updCompanyRequest.setPayAllianceCode(payAllianceCode);
+            updCompanyRequest.setBankId(bankId);
         }
-        //保存开户信息
-        BankOpenAccountRequest openAccount = new BankOpenAccountRequest();
-        openAccount.setUserId(user.getUserId());
-        openAccount.setUserName(user.getUsername());
-        openAccount.setAccount(mapParam.get("accountId"));
-        openAccount.setCreateTime(GetDate.getDate());
-        openAccount.setCreateUserId(user.getUserId());
-        openAccount.setCreateUserId(user.getUserId());
-        int openFlag = 0;
-        if (bankOpenFlag == 1) {
-            BankOpenAccountVO bankOpenAccountVO = userCenterClient.queryBankOpenAccountByUserId(user.getUserId());
-            openAccount.setId(bankOpenAccountVO.getId());
-            openFlag = userCenterClient.updateBankOpenAccount(openAccount);
-        } else {
-            openFlag = userCenterClient.insertBankOpenAccount(openAccount);
-        }
-        if (openFlag > 0) {
-            ret.put("status", "error");
-            ret.put("result", "银行开户信息修改保存异常!");
-            return ret;
-        }
-        //替换企业信息名称
-        UserInfoVO userInfo = new UserInfoVO();
-        userInfo = userCenterClient.findUserInfoById(user.getUserId());
-        userInfo.setTruename(mapParam.get("Name"));
-        int userInfoFlag = userCenterClient.updateUserInfoByUserInfo(userInfo);
-        if (userInfoFlag > 0) {
-            ret.put("status", "error");
-            ret.put("result", "用户详细信息保存异常!");
-            return ret;
-        }
-        if (bankOpenFlag != 1) {
-            user.setBankAccountEsb(0);//开户平台,pc
-            user.setUserType(1);//企业用户
-            user.setBankOpenAccount(1);//已开户
-            int userFlag = userCenterClient.updateUser(user);
-            if (userInfoFlag > 0) {
-                ret.put("status", "error");
-                ret.put("result", "用户表信息保存异常!");
-                return ret;
-            }
-        }
-        ret.put("status", "success");
-        ret.put("result", "企业用户信息补录成功!");
-        return ret;
+        Response response = userCenterClient.saveCompanyInfo(updCompanyRequest);
+        return response;
     }
 
     /**

@@ -21,7 +21,6 @@
 	<modules>
         <module>hyjf_am_model</module>
         <module>hyjf_am_core</module>
-		<module>hyjf_am_common</module>
 	</modules>
 
 </project>

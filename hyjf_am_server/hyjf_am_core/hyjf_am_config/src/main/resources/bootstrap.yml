@@ -1,20 +1,21 @@
 spring:
-  application:
-    name: AM-CONFIG
-  cloud:
-      config:
-        uri: http://micoserver:2222/
-        profile: test
+ application:
+  name: AM-CONFIG
+ cloud:
+  config:
+   uri: http://micoserver:2222/
+   profile: test
+   name: am-config
 
-  boot:
+ boot:
     admin:
       client:
-        url: http://127.0.0.1:18080
-  sleuth:
+        url: http://micoserver:18080
+ sleuth:
     sampler:
       percentage: 1.0
   #rabbitmq config
-  rabbitmq:
+ rabbitmq:
     host: 47.95.176.244
     port: 5672
     username: admin
