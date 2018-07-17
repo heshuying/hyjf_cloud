@@ -8,8 +8,8 @@ import com.hyjf.am.vo.BasePage;
 import java.util.Date;
 
 /**
- * @author fuqiang
- * @version JobRequest, v0.1 2018/7/12 14:36
+ * @author tanyy
+ * @version LandingPageRequest, v0.1 2018/7/16 14:36
  */
 public class LandingPageRequest extends BasePage {
     private Integer id;

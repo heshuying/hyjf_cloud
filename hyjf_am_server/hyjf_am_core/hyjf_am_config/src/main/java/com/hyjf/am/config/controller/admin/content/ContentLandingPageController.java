@@ -45,13 +45,8 @@ public class ContentLandingPageController extends BaseConfigController {
 	 */
 	@RequestMapping("/searchaction")
 	public LandingPageResponse searchAction(@RequestBody LandingPageRequest request) {
-		logger.info("着路页管理开始......");
-		LandingPageResponse response = new LandingPageResponse();
-		List<LandingPage> list = landingPageService.searchAction(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			List<LandingPageVo> voList = CommonUtils.convertBeanList(list, LandingPageVo.class);
-			response.setResultList(voList);
-		}
+		logger.info("着路页管理查询开始......");
+		LandingPageResponse response = landingPageService.searchAction(request);
 		return response;
 	}
 
