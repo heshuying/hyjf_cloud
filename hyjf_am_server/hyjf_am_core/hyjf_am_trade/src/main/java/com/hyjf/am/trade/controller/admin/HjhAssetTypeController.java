@@ -39,7 +39,7 @@ public class HjhAssetTypeController extends BaseController {
 	public HjhAssetTypeResponse selectAssetTypeAll(@PathVariable(value = "instCodeSrch") String instCodeSrch) {
 		HjhAssetTypeResponse response = new HjhAssetTypeResponse();
 		//代表成功
-		String returnCode = "00";
+		String returnCode = "0";
 		List<HjhAssetType> hjhAssetTypeList = hjhAssetTypeService.selectAssetTypeAll(instCodeSrch);
         if (null!=hjhAssetTypeList&&hjhAssetTypeList.size()>0) {
             List<HjhAssetTypeVO> hjhAssetTypeVO = CommonUtils.convertBeanList(hjhAssetTypeList,HjhAssetTypeVO.class);
