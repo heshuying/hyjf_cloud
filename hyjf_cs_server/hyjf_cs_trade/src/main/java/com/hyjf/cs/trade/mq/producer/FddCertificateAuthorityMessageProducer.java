@@ -19,7 +19,7 @@ public class FddCertificateAuthorityMessageProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.FDD_CERTIFICATE_AUTHORITY_GROUP);
+        wrapper.setGroup(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

@@ -13,6 +13,8 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.handle.FddCertificateAuthorityMessageHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.FddCertificateAuthorityMessageProducer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -30,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: sunpeikai
@@ -42,6 +45,9 @@ public class FddCertificateAuthorityMessageConsumer extends Consumer {
 
     @Autowired
     private FddCertificateAuthorityMessageHandle fddCertificateAuthorityMessageHandle;
+
+    @Autowired
+    private FddCertificateAuthorityMessageProducer fddCertificateAuthorityMessageProducer;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -114,9 +120,8 @@ public class FddCertificateAuthorityMessageConsumer extends Consumer {
                 }
                 Map<String, String> map = Maps.newHashMap();
                 map.put("userId", String.valueOf(userId));
-
                 //crm投资推送
-                // rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_BANCKOPEN_CRM, JSON.toJSONString(map));
+                fddCertificateAuthorityMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC,null, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
                 logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
             }catch(Exception e){
