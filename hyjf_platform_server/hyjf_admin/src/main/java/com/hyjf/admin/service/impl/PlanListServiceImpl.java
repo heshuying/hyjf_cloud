@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.PlanListClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.PlanListRequest;
@@ -23,78 +23,79 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 @Service
 public class PlanListServiceImpl implements PlanListService{
 	
+
     @Autowired
-    private PlanListClient planListClient;
+    private AmTradeClient amTradeClient;
 
 	@Override
 	public HjhPlanResponse getHjhPlanListByParam(PlanListRequest form) {
-		HjhPlanResponse response = planListClient.getHjhPlanListByParam(form);
+		HjhPlanResponse response = amTradeClient.getHjhPlanListByParam(form);
 		return response;
 	}
 
 	@Override
 	public HjhPlanSumVO getCalcSumByParam(PlanListRequest form) {
-		HjhPlanSumVO vo = planListClient.getCalcSumByParam(form);
+		HjhPlanSumVO vo = amTradeClient.getCalcSumByParam(form);
 		return vo;
 	}
 
 	@Override
 	public List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form) {
-		List<HjhPlanDetailVO> list = planListClient.getHjhPlanDetailByPlanNid(form);
+		List<HjhPlanDetailVO> list = amTradeClient.getHjhPlanDetailByPlanNid(form);
 		return list;
 	}
 
 	@Override
 	public HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form) {
-		HjhPlanResponse response = planListClient.getPlanNameAjaxCheck(form);
+		HjhPlanResponse response = amTradeClient.getPlanNameAjaxCheck(form);
 		return response;
 	}
 
 	@Override
 	public HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form) {
-		HjhPlanResponse response = planListClient.getPlanNidAjaxCheck(form);
+		HjhPlanResponse response = amTradeClient.getPlanNidAjaxCheck(form);
 		return response;
 	}
 
 	@Override
 	public HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form) {
-		HjhPlanResponse response = planListClient.updatePlanStatusByPlanNid(form);
+		HjhPlanResponse response = amTradeClient.updatePlanStatusByPlanNid(form);
 		return response;
 	}
 
 	@Override
 	public HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form) {
-		HjhPlanResponse response = planListClient.updatePlanDisplayByPlanNid(form);
+		HjhPlanResponse response = amTradeClient.updatePlanDisplayByPlanNid(form);
 		return response;
 	}
 
 	@Override
 	public boolean isExistsRecord(String planNid) {
-		boolean flg = planListClient.isExistsRecord(planNid);
+		boolean flg = amTradeClient.isExistsRecord(planNid);
 		return flg;
 	}
 
 	@Override
 	public int countByPlanName(String planName) {
-		int count = planListClient.countByPlanName(planName);
+		int count = amTradeClient.countByPlanName(planName);
 		return count;
 	}
 
 	@Override
 	public int isLockPeriodExist(String lockPeriod, String borrowStyle, String isMonth) {
-		int count = planListClient.isLockPeriodExist(lockPeriod,borrowStyle,isMonth);
+		int count = amTradeClient.isLockPeriodExist(lockPeriod,borrowStyle,isMonth);
 		return count;
 	}
 
 	@Override
 	public int updateRecord(PlanListRequest form) {
-		int count = planListClient.updateRecord(form);
+		int count = amTradeClient.updateRecord(form);
 		return count;
 	}
 
 	@Override
 	public int insertRecord(PlanListRequest form) {
-		int count = planListClient.insertRecord(form);
+		int count = amTradeClient.insertRecord(form);
 		return count;
 	}
 }

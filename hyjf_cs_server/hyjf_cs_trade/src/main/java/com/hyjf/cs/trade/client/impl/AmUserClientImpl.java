@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -432,4 +433,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return result;
 	}
+
+    @Override
+    public String getChannelNameByUserId(int userId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId,UtmResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getChannelName();
+		}
+        return null;
+    }
 }

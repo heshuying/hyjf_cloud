@@ -24,6 +24,8 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -936,4 +938,204 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhInstConfigVO> selectHjhInstConfigList();
+    
+    /*资产中心 start*/
+	/**
+	 * 获取资金来源
+	 *
+	 * @param 
+	 * @return List<HjhInstConfigVO>
+	 */
+    List<HjhInstConfigVO> findHjhInstConfigList();
+
+	/**
+	 * 产品类型下拉联动
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
+    List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch);
+
+    /**
+     * param
+     * @param request
+     * @return
+     */
+    Map<String, String> findParamNameMap(String param);
+
+    /**
+     * 查询资产列表
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findAssetList(AssetListRequest request);
+
+    /**
+     * 详情查询
+     * @param request
+     * @return
+     */
+    AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
+    
+    /**
+     * 总计
+     * @param request
+     * @return
+     */
+    Integer getRecordCount(AssetListRequest request);
+    
+    /**列总数
+     * @param request
+     * @return
+     */
+    BigDecimal sumAccount(AssetListRequest request);
+
+    /**
+     * 处理保证金不足的资产
+     * @param assetId
+     * @param menuHide
+     */
+	void updateCashDepositeStatus(String assetId, String menuHide);
+	/*资产中心 end*/
+	
+	/*标签配置中心 start*/
+	/**
+     * 项目类型
+     * @param 
+     * @return
+     */
+    List<BorrowProjectTypeVO> findBorrowProjectTypeList();
+    /**
+     * 还款方式
+     * @param 
+     * @return
+     */
+    List<BorrowStyleVO> findBorrowStyleList();
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request);
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request);
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request);
+    
+	/**
+     * 插入标签配置列表
+     * @param request
+     */
+    void insertHjhLabelRecord(HjhLabelInfoRequest request);
+    
+	/**
+     * 更新标签配置列表
+     * @param request
+     */
+    int updateHjhLabelRecord(HjhLabelInfoRequest request);
+    
+	/**
+     * 更新引擎表
+     * @param request
+     */
+    int updateAllocationRecord(HjhLabelInfoRequest request);
+    /*标签配置中心 end*/
+    
+    /*计划列表 start*/
+    /**
+     * 获取计划列表
+     * @return
+     */
+ 	HjhPlanResponse getHjhPlanListByParam(PlanListRequest form);
+ 	
+ 	/**
+     * 获取计划列表 sum
+     * @return
+     */
+ 	HjhPlanSumVO getCalcSumByParam(PlanListRequest form);
+ 	
+ 	/**
+     * 获取计划详情列表
+     * @return
+     */
+ 	List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form);
+ 	
+ 	/**
+     * AJax
+     * @return
+     */
+ 	HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form);
+ 	
+ 	/**
+     * AJax
+     * @return
+     */
+ 	HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form);
+ 	
+ 	/**
+     * 修改计划状态
+     * @return
+     */
+ 	HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form);
+ 	
+ 	/**
+     * 修改计划显示状态
+     * @return
+     */
+ 	HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form);
+ 	
+ 	/**
+ 	 * 根据主键判断数据是否存在
+ 	 * 
+ 	 * @Title isExistsRecord
+ 	 * @param planNid
+ 	 * @return
+ 	 */
+ 	boolean isExistsRecord(String planNid);
+ 	
+ 	/**
+ 	 * 根据计划名称查询数量
+ 	 * 
+ 	 * @Title isExistsRecord
+ 	 * @param planNid
+ 	 * @return
+ 	 */
+ 	int countByPlanName(String planName);
+ 	
+ 	/**
+ 	 * 根据计划还款方式，锁定期，锁定期类型获取计划数量(月)
+ 	 * 
+ 	 * @Title isDebtPlanTypeNameExist
+ 	 * @param debtPlanTypeName
+ 	 * @return
+ 	 */
+ 	int isLockPeriodExist(String lockPeriod,String borrowStyle,String isMonth);
+ 	
+ 	/**
+ 	 * 更新操作
+ 	 * 
+ 	 * @Title updateRecord
+ 	 * @param planListBean
+ 	 * @throws Exception
+ 	 */
+ 	int updateRecord(PlanListRequest form);
+ 	
+ 	/**
+ 	 * 插入操作
+ 	 * 
+ 	 * @param record
+ 	 */
+ 	int insertRecord(PlanListRequest form);
+ 	/*计划列表 end*/
 }

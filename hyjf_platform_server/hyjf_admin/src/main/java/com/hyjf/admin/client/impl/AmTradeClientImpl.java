@@ -9,6 +9,8 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.HjhPlanDetailResponse;
+import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -25,9 +27,12 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
@@ -2012,4 +2017,316 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+    
+    /*资产中心 start*/
+    /**
+	 * 获取资金来源
+	 *
+	 * @param 
+	 * @return List<HjhInstConfigVO>
+	 */
+	@Override
+	public List<HjhInstConfigVO> findHjhInstConfigList() {
+		HjhInstConfigResponse response = restTemplate.
+				getForEntity("http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigAll", HjhInstConfigResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	
+	/**
+	 * 产品类型下拉联动
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
+	@Override
+	public List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch) {
+		HjhAssetTypeResponse response = restTemplate.
+				getForEntity("http://AM-TRADE/am-trade/hjhAssetType/selectAssetTypeAll/"+ instCodeSrch, HjhAssetTypeResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    /**
+     * 查询ParamName
+     * @param request
+     * @return
+     */
+	@Override
+	public Map<String, String> findParamNameMap(String param) {
+		Map<String,String> resultMap = CacheUtil.getParamNameMap(param);
+		return resultMap;
+	}
+
+    /**
+     * 查询资产列表
+     * @param request
+     * @return
+     */
+	@Override
+	public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
+		AssetListCustomizeResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/assetList/findAssetList" ,request,
+						AssetListCustomizeResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	
+	/**
+	 * 查询详情
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
+	@Override
+	public AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest) {
+		AssetDetailCustomizeResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/assetList/findDetailById",assetListRequest,
+						AssetDetailCustomizeResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	
+	/**
+	 * 查询记录总数
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
+	@Override
+	public Integer getRecordCount(AssetListRequest request) {
+		AssetListCustomizeResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/assetList/findRecordCount" ,request,
+						AssetListCustomizeResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getCount();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询列总计
+	 *
+	 * @param request
+	 * @return 查询详情
+	 */
+	@Override
+	public BigDecimal sumAccount(AssetListRequest request) {
+		AssetListCustomizeResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/assetList/sumAccount" ,request,
+						AssetListCustomizeResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getSum();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateCashDepositeStatus(String assetId, String menuHide) {
+		String url = "http://AM-TRADE/am-trade/assetList/updateCashDepositeStatus/"+assetId+"/"+menuHide;
+		restTemplate.getForEntity(url, String.class).getBody();
+		
+	}
+	/*资产中心 end*/
+	
+	/*标签配置中心 start*/
+	@Override
+	public List<BorrowProjectTypeVO> findBorrowProjectTypeList() {
+		// 复用
+        BorrowProjectTypeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowProjectByBorrowCd", BorrowProjectTypeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+		return null;
+	}
+	
+	@Override
+	public List<BorrowStyleVO> findBorrowStyleList() {
+		// 复用
+		BorrowStyleResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowStyleList", BorrowStyleResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+		return null;
+	}
+	
+	@Override
+	public HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }			
+		return null;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
+		restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord", request,
+				Object.class);
+	}
+
+	@Override
+	public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/updateHjhLabelRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+		return 0;
+	}
+
+	@Override
+	public int updateAllocationRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/updateAllocationRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+		return 0;
+	}
+	/*标签配置中心 end*/
+	
+	/*计划列表 start*/
+	@Override
+	public HjhPlanResponse getHjhPlanListByParam(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParam", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanSumVO getCalcSumByParam(PlanListRequest form) {
+		HjhPlanSumResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getCalcSumByParam", form,HjhPlanSumResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+		return null;
+	}
+
+	@Override
+	public List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form) {
+		HjhPlanDetailResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanDetailByPlanNid", form,HjhPlanDetailResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNameAjaxCheck", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNidAjaxCheck", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanStatusByPlanNid", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanDisplayByPlanNid", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
+
+	@Override
+	public boolean isExistsRecord(String planNid) {
+		String url = "http://AM-TRADE/am-trade/planList/isExistsRecord/" + planNid;
+		boolean Flag = restTemplate.getForEntity(url,Boolean.class).getBody();
+		return Flag;
+	}
+
+	@Override
+	public int countByPlanName(String planName) {
+		String url = "http://AM-TRADE/am-trade/planList/countByPlanName/" + planName;
+		Integer count = restTemplate.getForEntity(url,Integer.class).getBody();
+		return count;
+	}
+
+	@Override
+	public int isLockPeriodExist(String lockPeriod, String borrowStyle, String isMonth) {
+		String url = "http://AM-TRADE/am-trade/planList/isLockPeriodExist/" + lockPeriod + "/" + borrowStyle + "/" + isMonth;
+		Integer count = restTemplate.getForEntity(url,Integer.class).getBody();
+		return count;
+	}
+
+	@Override
+	public int updateRecord(PlanListRequest form) {
+		String url = "http://AM-TRADE/am-trade/planList/updateRecord";
+		Integer Flag = restTemplate.postForEntity(url,form,Integer.class).getBody();
+		return Flag;
+	}
+
+	@Override
+	public int insertRecord(PlanListRequest form) {
+		String url = "http://AM-TRADE/am-trade/planList/insertRecord";
+		Integer Flag = restTemplate.postForEntity(url,form,Integer.class).getBody();
+		return Flag;
+	}
+	/*计划列表 end*/
 }

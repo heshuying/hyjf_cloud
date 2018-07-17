@@ -14,11 +14,21 @@ public class CouponUserResponse extends Response<CouponUserVO> {
 
     private  Integer count;
 
+    private boolean isSend;
+
     public Integer getCount() {
         return count;
     }
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public boolean getIsSend() {
+        return isSend;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
     }
 }
