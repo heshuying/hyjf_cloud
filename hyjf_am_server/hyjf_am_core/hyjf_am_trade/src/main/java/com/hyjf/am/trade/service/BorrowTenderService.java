@@ -39,8 +39,29 @@ public interface BorrowTenderService {
 
     /**
      * 获取utm注册用户投资次数
-     * @param list
+     * @param list utm注册用户userid集合
      * @return
      */
     Integer getUtmTenderNum(List<Integer> list);
+
+    /**
+     * 获取utm注册用户HZT投资额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getHztTenderPrice(List<Integer> list);
+
+    /**
+     * 获取utm注册用户HXF投资额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getHxfTenderPrice(List<Integer> list);
+
+    /**
+     * 获取utm注册用户RTB投资额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    BigDecimal getRtbTenderPrice(List<Integer> list);
 }

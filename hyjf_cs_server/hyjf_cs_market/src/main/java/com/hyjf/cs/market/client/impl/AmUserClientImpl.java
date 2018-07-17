@@ -5,8 +5,8 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.trade.AccountRechargeResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
+import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderUtmRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.user.UtmRegVO;
@@ -133,12 +133,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public Integer getTenderNumber(Integer sourceId, String type) {
-		List<Integer> userIdList = geUtmRegUserIdtList();
-		BorrowTenderUtmRequest request = new BorrowTenderUtmRequest();
-		request.setList(userIdList);
-		request.setSourceId(sourceId);
+		// 获取utm注册用户id
+		List<Integer> list = geUtmRegUserIdtList();
 		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
-				"http://AM-TRADE/am-trade/borrowTender/getutmtendernum", request, BorrowTenderResponse.class);
+				"http://AM-TRADE/am-trade/borrowTender/getutmtendernum", list, BorrowTenderResponse.class);
 		if (tenderResponse != null) {
 			return tenderResponse.getTenderCount();
 		}
@@ -147,6 +145,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BigDecimal getCumulativeRecharge(Integer sourceId, String type) {
+		// 获取utm注册用户id
 		List<Integer> list = geUtmRegUserIdtList();
 		AccountRechargeResponse response = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/accountrecharge/getrechargeprice", list, AccountRechargeResponse.class);
@@ -158,32 +157,59 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BigDecimal getHztTenderPrice(Integer sourceId, String type) {
+		// 获取utm注册用户id
 		List<Integer> list = geUtmRegUserIdtList();
+		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/borrowTender/gethzttenderprice", list, BorrowTenderResponse.class);
+		if (tenderResponse != null) {
+			return tenderResponse.getHztTenderPrice();
+		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHxfTenderPrice(Integer sourceId, String type) {
+		// 获取utm注册用户id
+		List<Integer> list = geUtmRegUserIdtList();
+		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/borrowTender/gethxftenderprice", list, BorrowTenderResponse.class);
+		if (tenderResponse != null) {
+			return tenderResponse.getHxfTenderPrice();
+		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHtlTenderPrice(Integer sourceId, String type) {
-		return null;
+		return null;// todo
 	}
 
 	@Override
 	public BigDecimal getHtjTenderPrice(Integer sourceId, String type) {
-		return null;
+		return null;// todo
 	}
 
 	@Override
 	public BigDecimal getRtbTenderPrice(Integer sourceId, String type) {
+		// 获取utm注册用户id
+		List<Integer> list = geUtmRegUserIdtList();
+		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/borrowTender/getrtbtenderprice", list, BorrowTenderResponse.class);
+		if (tenderResponse != null) {
+			return tenderResponse.getHxfTenderPrice();
+		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getHzrTenderPrice(Integer sourceId, String type) {
+		// 获取utm注册用户id
+		List<Integer> list = geUtmRegUserIdtList();
+		CreditTenderResponse response = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/creditTender/gethzrtenderprice", list, CreditTenderResponse.class);
+		if (response != null) {
+			return response.getHzrTenderPrice();
+		}
 		return null;
 	}
 
@@ -252,6 +278,10 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 获取渠道用户userid集合
+	 * @return
+	 */
 	private List<Integer> geUtmRegUserIdtList() {
 		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utmreg/getutmreglist",
 				UtmResponse.class);
