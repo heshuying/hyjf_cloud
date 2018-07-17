@@ -24,12 +24,15 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -2329,4 +2332,70 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return Flag;
 	}
 	/*计划列表 end*/
+	
+	/*加入明细 start*/
+	/**
+	 * 检索加入明细列表
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	@Override
+	public AccedeListResponse getAccedeListByParam(AccedeListRequest form) {
+		AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/accedeList/getAccedeListByParam", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form) {
+		AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/accedeList/getAccedeListByParamWithoutPage", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form) {
+		HjhAccedeSumResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/accedeList/getCalcSumByParam", form,HjhAccedeSumResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+		return null;
+	}
+
+	@Override
+	public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
+        String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByNid/"+planOrderId;
+        TenderAgreementResponse response = restTemplate.getForEntity(url,TenderAgreementResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public int updateSendStatusByParam(AccedeListRequest request) {
+		String url = "http://AM-TRADE/am-trade/accedeList/updateSendStatusByParam";
+		Integer Flag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+		return Flag;
+	}
+
+	@Override
+	public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
+		UserHjhInvistDetailResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/accedeList/selectUserHjhInvistDetail", request,UserHjhInvistDetailResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+		return null;
+	}
+	/*加入明细 end*/
 }

@@ -21,12 +21,15 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1138,4 +1141,60 @@ public interface AmTradeClient {
  	 */
  	int insertRecord(PlanListRequest form);
  	/*计划列表 end*/
+ 	
+ 	/*加入明细 start*/
+	/**
+	 * 检索加入明细列表
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	AccedeListResponse getAccedeListByParam(AccedeListRequest form);
+	
+	/**
+	 * 检索加入明细列表不分页
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form);
+	
+	/**
+	 * 检索加入明细列表列总计
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form);
+	
+	/**
+	 * 通过加入订单号查询法大大协议表
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId);
+	
+	/**
+	 * 更新协议发送状态
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	int updateSendStatusByParam(AccedeListRequest request);
+	
+	/**
+	 * 查询用户投资信息
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
+	/*加入明细 end*/
 }
