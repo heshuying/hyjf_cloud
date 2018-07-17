@@ -264,77 +264,77 @@ public class BankCardManagerController extends BaseController {
 //        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 //    }
 
-
-    /**
-     * 导出方法
-     * @param request
-     * @param response
-     * @param bankCardManagerRequestBean
-     * @throws Exception
-     */
-    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄导出")
-    @PostMapping(value = "/exportnewbankcard")
-    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
-
-        // 表格sheet名称
-        String sheetName = "银行卡管理";
-        // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        // 封装查询条件
-        BankCardManagerRequest requestBank = new BankCardManagerRequest();
-        BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
-        //查找全部
-        requestBank.setLimitFlg(0);
-        // 需要输出的结果列表
-        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
-//        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
-        //序号、用户名、当前手机号、姓名、身份证号、银行卡号、绑卡时间
-        String[] titles = new String[]{"序号", "用户名", "当前手机号", "姓名", "身份证号", "银行卡号", "绑卡时间"};
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-        if (null != bankCardManagerResponse) {
-            List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
-            if (bankcardManagerVOList != null && bankcardManagerVOList.size() > 0) {
-                int sheetCount = 1;
-                int rowNum = 0;
-                for (int i = 0; i < bankcardManagerVOList.size(); i++) {
-                    rowNum++;
-                    if (i != 0 && i % 60000 == 0) {
-                        sheetCount++;
-                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-                        rowNum = 1;
-                    }
-                    // 新建一行
-                    Row row = sheet.createRow(rowNum);
-                    // 循环数据
-                    for (int celLength = 0; celLength < titles.length; celLength++) {
-                        BankcardManagerVO user = bankcardManagerVOList.get(i);
-                        // 创建相应的单元格
-                        Cell cell = row.createCell(celLength);
-                        if (celLength == 0) {// 序号
-                            cell.setCellValue(i + 1);
-                        } else if (celLength == 1) {// 用户名
-                            cell.setCellValue(user.getUserName());
-                        } else if (celLength == 2) {// 当前手机号
-                            cell.setCellValue(user.getMobile());
-                        } else if (celLength == 3) {// 姓名
-                            cell.setCellValue(user.getRealName());
-                        } else if (celLength == 4) {// 身份证号
-                            cell.setCellValue(user.getIdcard());
-                        } else if (celLength == 5) {// 银行卡号
-                            cell.setCellValue(user.getAccount());
-                        } else if (celLength == 6) {// 绑卡时间
-                            cell.setCellValue(user.getAddTime());
-                        }
-                    }
-                }
-            }
-        }
-        // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-    }
+//
+//    /**
+//     * 导出方法
+//     * @param request
+//     * @param response
+//     * @param bankCardManagerRequestBean
+//     * @throws Exception
+//     */
+//    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄导出")
+//    @PostMapping(value = "/exportnewbankcard")
+//    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+//
+//        // 表格sheet名称
+//        String sheetName = "银行卡管理";
+//        // 文件名称
+//        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+//        // 封装查询条件
+//        BankCardManagerRequest requestBank = new BankCardManagerRequest();
+//        BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
+//        //查找全部
+//        requestBank.setLimitFlg(0);
+//        // 需要输出的结果列表
+//        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
+////        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
+//        //序号、用户名、当前手机号、姓名、身份证号、银行卡号、绑卡时间
+//        String[] titles = new String[]{"序号", "用户名", "当前手机号", "姓名", "身份证号", "银行卡号", "绑卡时间"};
+//        // 声明一个工作薄
+//        HSSFWorkbook workbook = new HSSFWorkbook();
+//        // 生成一个表格
+//        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+//        if (null != bankCardManagerResponse) {
+//            List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+//            if (bankcardManagerVOList != null && bankcardManagerVOList.size() > 0) {
+//                int sheetCount = 1;
+//                int rowNum = 0;
+//                for (int i = 0; i < bankcardManagerVOList.size(); i++) {
+//                    rowNum++;
+//                    if (i != 0 && i % 60000 == 0) {
+//                        sheetCount++;
+//                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+//                        rowNum = 1;
+//                    }
+//                    // 新建一行
+//                    Row row = sheet.createRow(rowNum);
+//                    // 循环数据
+//                    for (int celLength = 0; celLength < titles.length; celLength++) {
+//                        BankcardManagerVO user = bankcardManagerVOList.get(i);
+//                        // 创建相应的单元格
+//                        Cell cell = row.createCell(celLength);
+//                        if (celLength == 0) {// 序号
+//                            cell.setCellValue(i + 1);
+//                        } else if (celLength == 1) {// 用户名
+//                            cell.setCellValue(user.getUserName());
+//                        } else if (celLength == 2) {// 当前手机号
+//                            cell.setCellValue(user.getMobile());
+//                        } else if (celLength == 3) {// 姓名
+//                            cell.setCellValue(user.getRealName());
+//                        } else if (celLength == 4) {// 身份证号
+//                            cell.setCellValue(user.getIdcard());
+//                        } else if (celLength == 5) {// 银行卡号
+//                            cell.setCellValue(user.getAccount());
+//                        } else if (celLength == 6) {// 绑卡时间
+//                            cell.setCellValue(user.getAddTime());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        // 导出
+//        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+//    }
 
     //汇付银行操作记录記錄查询
     @ApiOperation(value = "銀行卡管理", notes = "汇付银行操作记录")
