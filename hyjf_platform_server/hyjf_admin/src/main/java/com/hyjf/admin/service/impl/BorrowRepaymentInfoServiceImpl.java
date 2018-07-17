@@ -1,10 +1,10 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
-import com.hyjf.admin.client.BorrowRepaymentInfoClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhInstConfigClient;
 import com.hyjf.admin.service.BorrowRepaymentInfoService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -30,7 +30,7 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
     private HjhInstConfigClient hjhInstConfigClient;
 
     @Autowired
-    private BorrowRepaymentInfoClient borrowRepaymentInfoClient;
+    private AmTradeClient amTradeClient;
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
         List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
@@ -76,7 +76,7 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
 
         }
         BorrowRepaymentInfoBean bean=new BorrowRepaymentInfoBean();
-        Integer count = this.borrowRepaymentInfoClient.countBorrowRepaymentInfo(request);
+        Integer count = this.amTradeClient.countBorrowRepaymentInfo(request);
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         page.setTotal(count);
         request.setLimitStart(page.getOffset());
@@ -84,9 +84,9 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
         bean.setTotal(count);
         if (count != null && count > 0) {
             // 将列表查询与导出查询独立区分
-            List<BorrowRepaymentInfoCustomizeVO> recordList = this.borrowRepaymentInfoClient.selectBorrowRepaymentInfoListForView(request);
+            List<BorrowRepaymentInfoCustomizeVO> recordList = this.amTradeClient.selectBorrowRepaymentInfoListForView(request);
             bean.setRecordList(recordList);
-            BorrowRepaymentInfoCustomizeVO sumObject = this.borrowRepaymentInfoClient.sumBorrowRepaymentInfo(request);
+            BorrowRepaymentInfoCustomizeVO sumObject = this.amTradeClient.sumBorrowRepaymentInfo(request);
             bean.setSumObject(sumObject);
         }
 
@@ -95,6 +95,6 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
 
     @Override
     public List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentInfoRequset copyForm) {
-        return this.borrowRepaymentInfoClient.selectBorrowRepaymentInfoList(copyForm);
+        return this.amTradeClient.selectBorrowRepaymentInfoList(copyForm);
     }
 }

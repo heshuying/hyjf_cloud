@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+		namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowTenderCustomizeMapper">
+	<select id="getUtmTenderNum" resultType="INTEGER" parameterType="list">
+		SELECT count(*) FROM (
+			SELECT user_id FROM ht_borrow_tender
+			UNION ALL
+			SELECT user_id FROM ht_product_list
+			UNION ALL
+			SELECT user_id FROM ht_debt_plan_accede
+			UNION ALL
+			SELECT user_id FROM ht_credit_tender) a
+			<where>
+				<if test="list != null">
+					and a.user_id in
+					<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+						#{item}
+					</foreach>
+				</if>
+				<if test="dayStart != null and dayStart != ''">
+					AND a.create_time <![CDATA[>=]]> #{dayStart}
+				</if>
+				<if test="dayEnd != null and dayEnd != ''">
+					AND a.create_time <![CDATA[<=]]> #{dayEnd}
+				</if>
+			</where>
+			
+	</select>
+	
+</mapper>

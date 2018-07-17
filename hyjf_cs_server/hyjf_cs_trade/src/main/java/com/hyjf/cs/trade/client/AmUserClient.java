@@ -193,4 +193,21 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int updateCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
+
+	/**
+	 * @Author walter.limeng
+	 * @Description  根据用户ID获取用户注册时的渠道名称
+	 * @Date 16:13 2018/7/16
+	 * @Param userId
+	 * @return
+	 */
+    String getChannelNameByUserId(int userId);
+
+    /**
+     * 插入certificateAuthorityVO数据
+     * @auth sunpeikai
+     * @param certificateAuthorityVO 参数
+     * @return
+     */
+    int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
 }

@@ -788,5 +788,86 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-USER/am-user/userManager/saveCompanyInfo",updCompanyRequest, Response.class).getBody();
 		return response;
 	}
+    /**
+     * 根据参数查询用户画像信息
+     * @param request
+     * @return
+     */
+    @Override
+    public UserPortraitResponse selectRecordList(UserPortraitRequest request){
+        UserPortraitResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userPortraitManage/findUserPortraitRecord", request, UserPortraitResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
 
+    /**
+     * 根据用户id查找用户画像
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserPortraitVO selectUsersPortraitByUserId(Integer userId){
+        UserPortraitResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userPortraitManage/selectUserPortraitByUserId/"+ userId, UserPortraitResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 修改用户画像
+     */
+    @Override
+    public int updateUserPortrait(UserPortraitRequest request){
+        int response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userPortraitManage/updateUserPortraitRecord",request,Integer.class)
+                .getBody();
+        return response;
+    }
+
+
+	/**
+	 * 根据UserID查询开户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+	
+	/*加入明细start*/
+	@Override
+	public UserVO getUserByUserId(int userId) {
+        UserResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+	}
+	
+		@Override
+	public UserInfoVO selectUsersInfoByUserId(int userid) {
+        UserInfoResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-user/userInfo/findById/" + userid, UserInfoResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+		return null;
+	}
+	/*加入明细end*/
 }

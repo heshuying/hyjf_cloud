@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.controller.admin.productcenter.hjhcredit;
 
-import com.hyjf.am.common.ConvertUtils;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -9,6 +8,7 @@ import com.hyjf.am.trade.service.admin.productcenter.hjhcredit.AdminHjhDebtCredi
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.ConvertUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

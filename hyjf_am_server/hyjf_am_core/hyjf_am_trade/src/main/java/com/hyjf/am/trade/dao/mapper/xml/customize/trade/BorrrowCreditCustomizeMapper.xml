@@ -4,7 +4,7 @@
 
     <select id="getBorrowCreditDetail" resultType="com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO" parameterType="map">
         SELECT	hb.project_type type,
-        hb.company_or_personal AS comOrPer,
+        hbi.company_or_personal AS comOrPer,
         hb.borrow_nid AS borrowNid,
         hb.borrow_apr AS borrowApr,
         hb.borrow_style AS borrowStyle,
@@ -29,7 +29,7 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS creditTime,
         hbc.create_time AS creditTimeInt,
-        hui.truename AS creditUserTrueName,
+        hu.truename AS creditUserTrueName,
         hbc.credit_user_id AS creditUserId,
         hbc.credit_repay_end_time AS creditRepayEndTime,
         CASE
@@ -73,8 +73,8 @@
         FROM
         ht_borrow_credit hbc
         LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
-        LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
-        LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
+        LEFT JOIN ht_borrow_info hbi on hbi.borrow_nid = hbc.bid_nid
+        LEFT JOIN ht_r_user hu ON hu.user_id = hbc.credit_user_id
         WHERE
         hbc.credit_nid = #{creditNid}
     </select>

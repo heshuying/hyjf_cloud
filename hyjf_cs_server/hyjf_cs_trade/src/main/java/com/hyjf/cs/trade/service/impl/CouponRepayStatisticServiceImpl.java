@@ -296,12 +296,12 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
 
         List<HolidaysConfigVO> holidays = this.getHolidayList();
         for(HolidaysConfigVO holiday : holidays){
-            Long hstart = GetDate.stringToDate3(holiday.getStatrTime(), DATE_FORMAT).getTime();
-            Long hend = GetDate.stringToDate3(holiday.getEndTime(), DATE_FORMAT).getTime();
-            if(calendar.getTime().getTime() >= hstart && calendar.getTime().getTime() <= hend){
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
-                getStatisticEndTime(calendar);
-            }
+            //Long hstart = GetDate.stringToDate3(holiday.getStatrTime(), DATE_FORMAT).getTime();
+           // Long hend = GetDate.stringToDate3(holiday.getEndTime(), DATE_FORMAT).getTime();
+//            if(calendar.getTime().getTime() >= hstart && calendar.getTime().getTime() <= hend){
+//                calendar.add(Calendar.DAY_OF_MONTH, 1);
+//                getStatisticEndTime(calendar);
+//            }
         }
 
         return;
@@ -325,13 +325,13 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         }
 
         List<HolidaysConfigVO> holidays = this.getHolidayList();
-        for(HolidaysConfigVO holiday : holidays){
-            Long hstart = GetDate.stringToDate3(holiday.getStatrTime(), DATE_FORMAT).getTime();
-            Long hend = GetDate.stringToDate3(holiday.getEndTime(), DATE_FORMAT).getTime();
-            if(calendar.getTime().getTime() >= hstart && calendar.getTime().getTime() <= hend){
-                return true;
-            }
-        }
+//        for(HolidaysConfigVO holiday : holidays){
+//            Long hstart = GetDate.stringToDate3(holiday.getStatrTime(), DATE_FORMAT).getTime();
+//            Long hend = GetDate.stringToDate3(holiday.getEndTime(), DATE_FORMAT).getTime();
+//            if(calendar.getTime().getTime() >= hstart && calendar.getTime().getTime() <= hend){
+//                return true;
+//            }
+//        }
 
         return false;
     }

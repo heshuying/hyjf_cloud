@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.admin.client.AccedeListClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.controller.productcenter.plancenter.AccedeListController;
 import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
@@ -36,7 +37,10 @@ import com.hyjf.common.exception.MQException;
 public class AccedeListServiceImpl implements AccedeListService{
 	
     @Autowired
-    private AccedeListClient accedeListClient;
+    private AmTradeClient amTradeClient;
+    
+    @Autowired
+    private AmUserClient amUserClient;
     
 	@Autowired
 	private FddProducer fddProducer;
@@ -45,19 +49,19 @@ public class AccedeListServiceImpl implements AccedeListService{
 
 	@Override
 	public AccedeListResponse getAccedeListByParam(AccedeListRequest form) {
-		AccedeListResponse response = accedeListClient.getAccedeListByParam(form);
+		AccedeListResponse response = amTradeClient.getAccedeListByParam(form);
 		return response;
 	}
 
 	@Override
 	public List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form) {
-		List<AccedeListCustomizeVO> list = accedeListClient.getAccedeListByParamWithoutPage(form);
+		List<AccedeListCustomizeVO> list = amTradeClient.getAccedeListByParamWithoutPage(form);
 		return list;
 	}
 
 	@Override
 	public HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form) {
-		HjhAccedeSumVO vo = accedeListClient.getCalcSumByParam(form);
+		HjhAccedeSumVO vo = amTradeClient.getCalcSumByParam(form);
 		return vo;
 	}
 
@@ -69,25 +73,25 @@ public class AccedeListServiceImpl implements AccedeListService{
 
 	@Override
 	public UserVO getUserByUserId(int userId) {
-		UserVO vo = accedeListClient.getUserByUserId(userId);
+		UserVO vo = amUserClient.getUserByUserId(userId);
 		return vo;
 	}
 
 	@Override
 	public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
-		List<TenderAgreementVO> tenderAgreementList = accedeListClient.selectTenderAgreementByNid(planOrderId);
+		List<TenderAgreementVO> tenderAgreementList = amTradeClient.selectTenderAgreementByNid(planOrderId);
 		return tenderAgreementList;
 	}
 
 	@Override
 	public UserInfoVO getUsersInfoByUserId(int userid) {
-		UserInfoVO vo = accedeListClient.selectUsersInfoByUserId(userid);
+		UserInfoVO vo = amUserClient.selectUsersInfoByUserId(userid);
 		return vo;
 	}
 
 	@Override
 	public int updateSendStatusByParam(AccedeListRequest request) {
-		int flg = accedeListClient.updateSendStatusByParam(request);
+		int flg = amTradeClient.updateSendStatusByParam(request);
 		return flg;
 	}
 
@@ -125,7 +129,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 
 	@Override
 	public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
-		UserHjhInvistDetailVO vo = accedeListClient.selectUserHjhInvistDetail(request);
+		UserHjhInvistDetailVO vo = amTradeClient.selectUserHjhInvistDetail(request);
 		return vo;
 	}
 }

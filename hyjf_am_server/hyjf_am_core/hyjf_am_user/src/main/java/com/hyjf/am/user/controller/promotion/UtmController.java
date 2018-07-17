@@ -182,4 +182,58 @@ public class UtmController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 查询访问数
+     * @param sourceId 账户推广平台
+     * @return
+     */
+    @RequestMapping("/getaccessnumber/{sourceId}")
+    public UtmResponse getAccessNumber(@PathVariable Integer sourceId) {
+        UtmResponse response = new UtmResponse();
+        try{
+            Integer accessNumber = utmService.getAccessNumber(sourceId);
+            response.setAccessNumber(accessNumber);
+            response.setRtn(UtmResponse.SUCCESS);
+        }catch (Exception e){
+            response.setRtn(UtmResponse.FAIL);
+        }
+        return response;
+    }
+
+    /**
+     * 查询注册数量
+     * @param sourceId 账户推广平台
+     * @return
+     */
+    @RequestMapping("/getregistnumber/{sourceId}")
+    public UtmResponse getRegistNumber(@PathVariable Integer sourceId) {
+        UtmResponse response = new UtmResponse();
+        try{
+            Integer registNumber = utmService.getRegistNumber(sourceId);
+            response.setRegistNumber(registNumber);
+            response.setRtn(UtmResponse.SUCCESS);
+        }catch (Exception e){
+            response.setRtn(UtmResponse.FAIL);
+        }
+        return response;
+    }
+
+    /**
+     * 查询开户数量
+     * @param sourceId 账户推广平台
+     * @return
+     */
+    @RequestMapping("/getopenaccountnumber/{sourceId}")
+    public UtmResponse getOpenAccountNumber(@PathVariable Integer sourceId) {
+        UtmResponse response = new UtmResponse();
+        try{
+            Integer openAccountNumber = utmService.getOpenAccountNumber(sourceId);
+            response.setOpenAccountNumber(openAccountNumber);
+            response.setRtn(UtmResponse.SUCCESS);
+        }catch (Exception e){
+            response.setRtn(UtmResponse.FAIL);
+        }
+        return response;
+    }
 }

@@ -233,8 +233,8 @@ public class UserCenterServiceImpl implements UserCenterService {
      */
     @Override
     public List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request){
-//        List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
-        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
+       List<UserChangeLogVO> userChangeLogVO = userCenterClient.selectUserChageLog(request);
+//        List<UserChangeLogVO> userChangeLogVO = new ArrayList<UserChangeLogVO>();
         return userChangeLogVO;
     }
     /**

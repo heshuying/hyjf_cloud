@@ -12,7 +12,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author dxj
  * @version BatchBorrowRepayZTService.java, v0.1 2018年6月28日 下午3:06:49
  */
-public interface BatchBorrowRepayZTService {
+public interface BatchBorrowRepayZTService extends BaseService {
 
 	Map requestRepay(BorrowApicron apicron);
 
@@ -20,6 +20,8 @@ public interface BatchBorrowRepayZTService {
 
 	BankCallBean batchQuery(BorrowApicron apicron);
 
-	boolean updateBatchDetailsQuery(BorrowApicron apicron);
+	boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
+
+	BorrowApicron selApiCronByPrimaryKey(int id);
 
 }

@@ -4,27 +4,33 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -640,4 +646,860 @@ public interface AmTradeClient {
      * @author nxl
      */
     List<HjhInstConfigVO> selectInstConfigAll();
+
+    /**
+     * 借款初审总条数
+     *
+     * @param borrowFirstRequest
+     * @return
+     */
+    Integer countBorrowFirst(BorrowFirstRequest borrowFirstRequest);
+
+    /**
+     * 借款初审列表
+     *
+     * @param borrowFirstRequest
+     * @return
+     */
+    List<BorrowFirstCustomizeVO> selectBorrowFirstList(BorrowFirstRequest borrowFirstRequest);
+
+    /**
+     * 统计页面值总和
+     *
+     * @param borrowFirstRequest
+     * @return
+     */
+    String sumBorrowFirstAccount(BorrowFirstRequest borrowFirstRequest);
+
+    /**
+     * 根据code获取配置
+     *
+     * @param configCd
+     * @return
+     */
+    BorrowConfigVO getBorrowConfig(String configCd);
+
+    /**
+     * 根据标的编号查询详细信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowVO selectBorrowByNid(String borrowNid);
+
+    /**
+     * 根据标的编号查询borrowInfo
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowInfoVO selectBorrowInfoByNid(String borrowNid);
+
+    /**
+     * 交保证金
+     *
+     * @param borrowNid
+     * @return
+     */
+    boolean insertBorrowBail(String borrowNid, String currUserId);
+
+    /**
+     * 更新-发标
+     *
+     * @param borrowFireRequest
+     */
+    boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
+
+    /**
+     * 加入计划
+     *
+     * @param borrowFireRequest
+     */
+    boolean sendToMQ(BorrowFireRequest borrowFireRequest);
+
+    /**
+     * 借款复审总条数
+     *
+     * @param borrowFullRequest
+     * @return
+     */
+    Integer countBorrowFull(BorrowFullRequest borrowFullRequest);
+
+    /**
+     * 借款复审列表
+     *
+     * @param borrowFullRequest
+     * @return
+     */
+    List<BorrowFullCustomizeVO> selectBorrowFullList(BorrowFullRequest borrowFullRequest);
+
+    /**
+     * 借款复审合计
+     *
+     * @param borrowFullRequest
+     * @return
+     */
+    BorrowFullCustomizeVO sumAccount(BorrowFullRequest borrowFullRequest);
+
+    /**
+     * 复审详细信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowFullCustomizeVO getFullInfo(String borrowNid);
+
+    /**
+     * 复审详细列表条数
+     *
+     * @param borrowNid
+     * @return
+     */
+    Integer countFullList(String borrowNid);
+
+    /**
+     * 复审详细列表
+     *
+     * @param borrowFullRequest
+     * @return
+     */
+    List<BorrowFullCustomizeVO> getFullList(BorrowFullRequest borrowFullRequest);
+
+    /**
+     * 复审详细列表合计
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowFullCustomizeVO sumAmount(String borrowNid);
+
+    /**
+     * 根据UserID查询账户信息
+     *
+     * @param userId
+     * @return
+     */
+    AccountVO getAccountByUserId(int userId);
+
+    /**
+     * 标的复审数据更新
+     *
+     * @param borrowFullRequest
+     * @return
+     */
+    AdminResult updateBorrowFull(BorrowFullRequest borrowFullRequest);
+
+    /**
+     * 流标
+     *
+     * @param borrowFullRequest
+     * @return
+     */
+    AdminResult updateBorrowOver(BorrowFullRequest borrowFullRequest);
+
+    /**
+     * 投资明细记录 总数COUNT
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    Integer countBorrowInvest(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 投资明细列表
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    List<BorrowInvestCustomizeVO> selectBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 投资明细列表合计
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    String selectBorrowInvestAccount(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 投资明细导出列表
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    List<BorrowInvestCustomizeVO> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 获取用户投资协议
+     *
+     * @param nid
+     * @return
+     */
+    TenderAgreementVO selectTenderAgreement(String nid);
+
+    /**
+     * 标的放款记录
+     *
+     * @param userId
+     * @param borrowNid
+     * @param nid
+     * @return
+     */
+    BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid);
+
+    /**
+     * 获取借款列表
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowListCustomizeVO> selectBorrowList(String borrowNid);
+
+    /**
+     * 标的投资信息
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    List<WebUserInvestListCustomizeVO> selectUserInvestList(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 标的放款记录分期count
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    Integer countProjectRepayPlanRecordTotal(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 标的放款记录分期
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 更新标的放款记录
+     *
+     * @param borrowInvestRequest
+     * @return
+     */
+    Integer updateBorrowRecover(BorrowInvestRequest borrowInvestRequest);
+
+    /**
+     * 获取标的备案列表count
+     *
+     * @param borrowRegistListRequest
+     * @return
+     */
+    Integer getRegistListCount(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 获取标的备案列表
+     *
+     * @param borrowRegistListRequest
+     * @return
+     */
+    List<BorrowRegistCustomizeVO> selectRegistList(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 标的备案列表统计
+     *
+     * @param borrowRegistListRequest
+     * @return
+     */
+    String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
+
+    /**
+     * 查询信托信息
+     *
+     * @param instCode
+     * @param entrustedAccountId
+     * @return
+     */
+    STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId);
+
+    /**
+     * 备案-更新标的信息
+     *
+     * @param borrowRegistRequest
+     * @return
+     */
+    int updateBorrowRegist(BorrowRegistRequest borrowRegistRequest);
+
+    /**
+     * 更新标的信息(受托支付备案)
+     *
+     * @param borrowRegistRequest
+     * @return
+     */
+    int updateEntrustedBorrowRegist(BorrowRegistRequest borrowRegistRequest);
+
+    /**
+     * 资产来源
+     *
+     * @return
+     */
+    List<HjhInstConfigVO> selectHjhInstConfigList();
+    
+    /*资产中心 start*/
+	/**
+	 * 获取资金来源
+	 *
+	 * @param 
+	 * @return List<HjhInstConfigVO>
+	 */
+    List<HjhInstConfigVO> findHjhInstConfigList();
+
+	/**
+	 * 产品类型下拉联动
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
+    List<HjhAssetTypeVO> findHjhAssetTypeList(String instCodeSrch);
+
+    /**
+     * param
+     * @param param
+     * @return
+     */
+    Map<String, String> findParamNameMap(String param);
+
+    /**
+     * 查询资产列表
+     * @param request
+     * @return
+     */
+    AssetListCustomizeResponse findAssetList(AssetListRequest request);
+
+    /**
+     * 详情查询
+     * @param assetListRequest
+     * @return
+     */
+    AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
+    
+    /**
+     * 总计
+     * @param request
+     * @return
+     */
+    Integer getRecordCount(AssetListRequest request);
+    
+    /**列总数
+     * @param request
+     * @return
+     */
+    BigDecimal sumAccount(AssetListRequest request);
+
+    /**
+     * 处理保证金不足的资产
+     * @param assetId
+     * @param menuHide
+     */
+	void updateCashDepositeStatus(String assetId, String menuHide);
+	/*资产中心 end*/
+	
+	/*标签配置中心 start*/
+	/**
+     * 项目类型
+     * @param 
+     * @return
+     */
+    List<BorrowProjectTypeVO> findBorrowProjectTypeList();
+    /**
+     * 还款方式
+     * @param 
+     * @return
+     */
+    List<BorrowStyleVO> findBorrowStyleList();
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request);
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request);
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request);
+    
+	/**
+     * 插入标签配置列表
+     * @param request
+     */
+    void insertHjhLabelRecord(HjhLabelInfoRequest request);
+    
+	/**
+     * 更新标签配置列表
+     * @param request
+     */
+    int updateHjhLabelRecord(HjhLabelInfoRequest request);
+    
+	/**
+     * 更新引擎表
+     * @param request
+     */
+    int updateAllocationRecord(HjhLabelInfoRequest request);
+    /*标签配置中心 end*/
+    
+    /*计划列表 start*/
+    /**
+     * 获取计划列表
+     * @return
+     */
+ 	HjhPlanResponse getHjhPlanListByParam(PlanListRequest form);
+ 	
+ 	/**
+     * 获取计划列表 sum
+     * @return
+     */
+ 	HjhPlanSumVO getCalcSumByParam(PlanListRequest form);
+ 	
+ 	/**
+     * 获取计划详情列表
+     * @return
+     */
+ 	List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form);
+ 	
+ 	/**
+     * AJax
+     * @return
+     */
+ 	HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form);
+ 	
+ 	/**
+     * AJax
+     * @return
+     */
+ 	HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form);
+ 	
+ 	/**
+     * 修改计划状态
+     * @return
+     */
+ 	HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form);
+ 	
+ 	/**
+     * 修改计划显示状态
+     * @return
+     */
+ 	HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form);
+ 	
+ 	/**
+ 	 * 根据主键判断数据是否存在
+ 	 * 
+ 	 * @Title isExistsRecord
+ 	 * @param planNid
+ 	 * @return
+ 	 */
+ 	boolean isExistsRecord(String planNid);
+ 	
+ 	/**
+ 	 * 根据计划名称查询数量
+ 	 * 
+ 	 * @Title isExistsRecord
+ 	 * @param planName
+ 	 * @return
+ 	 */
+ 	int countByPlanName(String planName);
+ 	
+ 	/**
+ 	 * 根据计划还款方式，锁定期，锁定期类型获取计划数量(月)
+ 	 * 
+ 	 * @Title isDebtPlanTypeNameExist
+ 	 * @param isMonth
+ 	 * @return
+ 	 */
+ 	int isLockPeriodExist(String lockPeriod,String borrowStyle,String isMonth);
+ 	
+ 	/**
+ 	 * 更新操作
+ 	 * 
+ 	 * @Title updateRecord
+ 	 * @param form
+ 	 * @throws Exception
+ 	 */
+ 	int updateRecord(PlanListRequest form);
+ 	
+ 	/**
+ 	 * 插入操作
+ 	 * 
+ 	 * @param form
+ 	 */
+ 	int insertRecord(PlanListRequest form);
+ 	/*计划列表 end*/
+ 	
+ 	/*加入明细 start*/
+	/**
+	 * 检索加入明细列表
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	AccedeListResponse getAccedeListByParam(AccedeListRequest form);
+	
+	/**
+	 * 检索加入明细列表不分页
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	List<AccedeListCustomizeVO> getAccedeListByParamWithoutPage(AccedeListRequest form);
+	
+	/**
+	 * 检索加入明细列表列总计
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	HjhAccedeSumVO getCalcSumByParam(AccedeListRequest form);
+	
+	/**
+	 * 通过加入订单号查询法大大协议表
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param planOrderId
+	 * @return
+	 */
+	List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId);
+	
+	/**
+	 * 更新协议发送状态
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param request
+	 * @return
+	 */
+	int updateSendStatusByParam(AccedeListRequest request);
+	
+	/**
+	 * 查询用户投资信息
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param request
+	 * @return
+	 */
+	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
+	/*加入明细 end*/
+	
+	/*承接记录 start*/
+	/**
+	 * 获取详细列表
+	 * 
+	 * @param form
+	 * @return
+	 */
+	HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form);
+	
+	/**
+	 * 获取详细列表未分页
+	 * 
+	 * @param form
+	 * @return
+	 */
+	List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form);
+	
+	/**
+	 * 传参查询承接债转表
+	 * 
+	 * @param form
+	 * @return
+	 */
+	HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form);
+	/*承接记录 end*/
+	
+	/*计划引擎 start*/
+	/**
+     * 查询计划专区列表
+     * @param form
+     * @return
+     */
+	HjhRegionResponse getHjhRegionList(AllocationEngineRuquest form);
+
+    /**
+     * 查询汇计划表
+     * @param form
+     * @return
+     */
+    String getPlanNameByPlanNid(AllocationEngineRuquest form);
+    
+    /**
+     * 插入计划专区表
+     * @param request
+     * @return
+     */
+    int insertRecord(HjhRegionVO request);
+    
+    /**
+     * AJAX
+     * @param planNid
+     * @return
+     */
+    HjhRegionResponse getPlanNidAjaxCheck(String planNid);
+    
+    /**
+     * 根据主键获取 HjhRegionVO
+     * @param id
+     * @return
+     */
+    HjhRegionVO getHjhRegionVOById(String id);
+    
+    /**
+     * 更新计划专区表的状态
+     * @param vo
+     * @return
+     */
+    int updateHjhRegionRecord(HjhRegionVO vo); 
+    
+    /**
+     * 更新引擎表
+     * @param vo
+     * @return
+     */
+    HjhRegionResponse updateAllocationEngineRecord(HjhRegionVO vo); 
+    
+    /**
+     * 查询计划专区列表
+     * @param request
+     * @return
+     */
+    List<HjhRegionVO> getHjhRegionListWithOutPage(AllocationEngineRuquest request);
+    
+    /**
+     * 根据计划专区列表传入计划编号查询引擎列表
+     * @param form
+     * @return
+     */
+    HjhAllocationEngineResponse getHjhAllocationEngineList(AllocationEngineRuquest form);
+    
+    /**
+     * 根据计划专区列表传入计划编号查询引擎列表
+     * @param form
+     * @return
+     */
+    List<HjhAllocationEngineVO> getAllocationList(AllocationEngineRuquest form); 
+    
+    /**
+     * 根据主键获取 HjhRegionVO
+     * @param engineId
+     * @return
+     */
+    HjhAllocationEngineVO getPlanConfigRecord(Integer engineId);
+    
+    /**
+     * 更新计划引擎表的状态
+     * @param vo
+     * @return
+     */
+    int updateHjhAllocationEngineRecord(HjhAllocationEngineVO vo); 
+    
+    /**
+     * 根据参数获取 HjhRegionVO
+     * @param form
+     * @return
+     */
+    HjhAllocationEngineVO getPlanConfigRecordByParam(AllocationEngineRuquest form);
+    
+    /**
+     * 验证重复
+     * @param planNid
+     */
+    boolean checkRepeat(String labelName,String planNid);
+    
+    /** 获取还款方式
+     * @param planNid
+     */
+    String getPlanBorrowStyle(String planNid);
+    
+    /** 获取计划专区
+     * @param planNid
+     */
+    HjhRegionVO getHjhRegionRecordByPlanNid(String planNid);
+    
+    /**
+	 * 计划引擎配置Info画面入力后插表
+	 * 
+	 * @param request
+	 */
+    int insertHjhAllocationEngineRecord(HjhAllocationEngineVO request);
+    
+    /**
+	 * 通过计划编号获取计划列表
+	 * 
+	 * @param planNid
+	 */
+    List<HjhPlanVO> getHjhPlanByPlanNid(String planNid);
+    
+    /**
+	 * 通过计划编号获取计划专区列表
+	 * 
+	 * @param planNid
+	 */
+    List<HjhRegionVO> getHjhRegioByPlanNid(String planNid);
+    /*计划引擎 end*/
+
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRecover(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRecoverCustomizeVO> selectBorrowRecoverList(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRecoverCustomizeVO sumBorrowRecoverList(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin借款操作日志列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowLog(BorrowLogRequset request);
+    /**
+     * @Description 获取admin借款操作日志列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowLogCustomizeVO> selectBorrowLogList(BorrowLogRequset request);
+    /**
+     * @Description 获取admin借款操作日志列表导出
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowLogCustomizeVO> exportBorrowLogList(BorrowLogRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款信息列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRepayment(BorrowRepaymentRequest request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款信息列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentRequest request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款信息列表统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepaymentCustomizeVO sumBorrowRepaymentInfo(BorrowRepaymentRequest request);
+    /**
+     * @Description 获取admin数据导出--还款计划导出
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
+    /**
+     * @Description 获取admin查询延期数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    AdminRepayDelayCustomizeVO selectBorrowInfo(String borrowNid);
+    /**
+     * @Description 获取admin查询延期还款计划（不分期）
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepayVO getBorrowRepayDelay(String borrowNid, String borrowApr, String borrowStyle);
+    /**
+     * @Description 获取admin查询延期还款计划（分期）
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepayPlanVO getBorrowRepayPlanDelay(String borrowNid, String borrowApr, String borrowStyle);
+    /**
+     * @Description 延期操作
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer updateBorrowRepayDelayDays(String borrowNid, String delayDays);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRepaymentInfo(BorrowRepaymentInfoRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细查询
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentInfoListForView(BorrowRepaymentInfoRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepaymentInfoCustomizeVO sumBorrowRepaymentInfo(BorrowRepaymentInfoRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细导出列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentInfoList(BorrowRepaymentInfoRequset copyForm);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细列表查询
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentInfoListCustomizeVO> selectBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细列表统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepaymentInfoListCustomizeVO sumBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
 }

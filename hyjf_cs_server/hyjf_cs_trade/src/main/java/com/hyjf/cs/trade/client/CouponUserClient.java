@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -49,4 +50,13 @@ public interface CouponUserClient {
      * @param couponUser
      */
     Integer insertCouponUser(CouponUserVO couponUser);
+
+    /**
+     * @Author walter.limeng
+     * @Description  查询用户是否已经发送优惠券
+     * @Date 18:00 2018/7/16
+     * @Param couponUserRequest
+     * @return
+     */
+    boolean getSendRepeat(CouponUserSearchRequest couponUserRequest);
 }

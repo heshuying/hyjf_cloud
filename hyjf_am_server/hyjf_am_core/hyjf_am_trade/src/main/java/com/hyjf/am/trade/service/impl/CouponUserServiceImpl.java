@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.admin.CouponUserRequest;
+import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserListCustomizeMapper;
@@ -129,6 +131,19 @@ public class CouponUserServiceImpl implements CouponUserService {
     public int insertCouponUser(CouponUser couponUser) {
         int count = couponUserMapper.insertSelective(couponUser);
         return count;
+    }
+
+    @Override
+    public boolean getSendRepeat(CouponUserSearchRequest couponUserSearchRequest) {
+        CouponUserExample couponUserExample = new CouponUserExample();
+        CouponUserExample.Criteria criteria = couponUserExample.createCriteria();
+        criteria.andCouponCodeIn(couponUserSearchRequest.getCouponCodeList());
+        criteria.andActivityIdEqualTo(couponUserSearchRequest.getActivityId());
+        criteria.andUserIdEqualTo(new Integer(couponUserSearchRequest.getUserId()));
+        criteria.andDelFlagEqualTo(0);
+        List<CouponUser> couponUserList = this.couponUserMapper.selectByExample(couponUserExample);
+
+        return couponUserList == null || couponUserList.size() == 0 ? true : false;
     }
 
 }

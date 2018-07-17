@@ -4,6 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 
 /**
@@ -11,7 +12,7 @@ import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
  * @author zhangyk
  * @date 2018/6/19 15:29
  */
-public class CreditListResponse extends Response<TenderCreditDetailCustomizeVO> {
+public class CreditListResponse extends Response<CreditListVO> {
 
     // 数据查询条数 主要用于分页情况，原子层向组合层返回
     private  Integer  count;

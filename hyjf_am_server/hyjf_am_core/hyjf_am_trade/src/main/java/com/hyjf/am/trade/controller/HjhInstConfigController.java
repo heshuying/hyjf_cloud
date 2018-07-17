@@ -56,7 +56,7 @@ public class HjhInstConfigController extends BaseController{
 	@GetMapping("/selectInstConfigAll")
 	public HjhInstConfigResponse selectInstConfigListByInstCode(){
         HjhInstConfigResponse response = new HjhInstConfigResponse();
-		String returnCode = "00";//代表成功
+		String returnCode = "0";//代表成功
         List<HjhInstConfig> hjhInstConfigList = hjhInstConfigService.selectInstConfigAll();
         if (null!=hjhInstConfigList&&hjhInstConfigList.size()>0) {
             List<HjhInstConfigVO> hjhInstConfigVO = CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigVO.class);

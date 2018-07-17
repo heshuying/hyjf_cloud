@@ -12,7 +12,6 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Api(value = "app端用户登录接口")
 @RestController
-@RequestMapping("/app/appUser")
+@RequestMapping("/app/user/appUser")
 public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
