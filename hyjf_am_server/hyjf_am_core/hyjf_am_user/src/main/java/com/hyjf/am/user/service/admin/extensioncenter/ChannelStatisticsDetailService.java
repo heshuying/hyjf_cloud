@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.user.service.admin.extensioncenter;
 
-import com.hyjf.am.response.admin.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.admin.ChannelStatisticsDetailRequest;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 
 /**
  * @author tanyy

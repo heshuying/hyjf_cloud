@@ -1,5 +1,6 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 
 import java.util.List;
@@ -16,13 +17,13 @@ public interface ChannelStatisticsDetailCustomizeMapper {
      *
      * @return
      */
-    int countRecordTotal(Map<String, Object> paramMap);
+    int countRecordTotal(ChannelStatisticsDetailRequest request);
 
     /**
      * 根据查询条件 取得数据
-     * @param paramMap
+     * @param request
      * @return
      */
-    List<ChannelStatisticsDetailVO> queryRecordList(Map<String, Object> paramMap);
+    List<ChannelStatisticsDetailVO> queryRecordList(ChannelStatisticsDetailRequest request);
 
 }

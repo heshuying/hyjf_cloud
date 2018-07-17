@@ -3,13 +3,17 @@
  */
 package com.hyjf.am.user.service.impl.admin.extensioncenter;
 
-import com.hyjf.am.response.admin.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.admin.ChannelStatisticsDetailRequest;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.user.dao.mapper.customize.ChannelStatisticsDetailCustomizeMapper;
 import com.hyjf.am.user.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
+import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author tanyy
@@ -23,7 +27,15 @@ public class ChannelStatisticsDetailServiceImpl extends BaseServiceImpl implemen
 	@Override
 	public ChannelStatisticsDetailResponse searchAction(ChannelStatisticsDetailRequest request) {
 		ChannelStatisticsDetailResponse response = new ChannelStatisticsDetailResponse();
-		//channelStatisticsDetailCustomizeMapper.queryRecordList();
+		int count = channelStatisticsDetailCustomizeMapper.countRecordTotal(request);
+		response.setCount(count);
+		if(count>0){
+			Paginator paginator = new Paginator(request.getCurrPage(), count);
+			request.setLimitStart(paginator.getOffset());
+			request.setLimitEnd(paginator.getLimit());
+			List<ChannelStatisticsDetailVO> list = channelStatisticsDetailCustomizeMapper.queryRecordList(request);
+			response.setResultList(list);
+		}
 		return response;
 	}
 

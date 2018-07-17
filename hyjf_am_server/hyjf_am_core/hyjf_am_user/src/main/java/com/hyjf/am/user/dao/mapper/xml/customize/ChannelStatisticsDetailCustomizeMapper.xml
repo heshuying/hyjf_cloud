@@ -44,41 +44,34 @@
 		<result column="sex" property="sex" jdbcType="VARCHAR" />
 	</resultMap>
 
-	<!-- 根据条件 查询意见反馈信息  -->
-	<select id="queryRecordList" resultMap="ChannelStatisticsDetailMapResult"
-		parameterType="java.util.Map">
+	<!-- 后台展示列表 -->
+	<select id="queryRecordList" resultMap="ChannelStatisticsDetailMapResult" parameterType="com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest">
 		SELECT
-			s.id,
-			CASE
-		WHEN ISNULL(u.username)
-		OR u.username = '' THEN
-			'游客'
-		ELSE
-			u.username
-		END username,
-		 CASE8
-		WHEN (
-			pa.name_cd = '2'
-			OR pa.name_cd = '3'
-		)
-		AND ! ISNULL(s.sys_version) THEN
-			CONCAT(
-				pa.`name`,
-				'-',
-				s.sys_version
-			)
-		ELSE
-			pa.`name`
-		END sys_type,
-		 s.platform_version,
-		 s.phone_type,
-		 s.content,
-		 FROM_UNIXTIME( s.addtime, '%Y-%m-%d %H:%i:%s' ) addtime
+		t.id,
+		t.utm_id,
+		t.user_id,
+		u.username AS user_name,
+		t.create_time AS register_time,
+		FROM_UNIXTIME( t.invest_time, '%Y-%m-%d %H:%i:%S' ) AS first_invest_time,
+		c.create_time AS open_account_time,
+		CASE ui.sex
+		WHEN 1 THEN '男'
+		WHEN 2 THEN '女'
+		ELSE '未知'  END AS sex,
+		ui.truename AS true_name,
+		u.mobile,
+		utm.source_id,
+		utm.utm_source AS source_name,
+		utm.utm_term AS key_name,
+		IFNULL(t.invest_amount,0) AS invest_amount,
+		t.invest_project_type,
+		t.invest_project_period
 		FROM
-			ht_submissions s
-		LEFT JOIN huiyingdai_users u ON s.user_id = u.user_id
-		LEFT JOIN ht_param_name pa ON pa.name_class = 'CLIENT'
-		AND pa.name_cd = s.sys_type
+		ht_utm_reg t
+		LEFT JOIN ht_user_info ui ON t.user_id = ui.user_id
+		LEFT JOIN ht_user u ON t.user_id = u.user_id
+		LEFT JOIN ht_utm utm ON t.utm_id = utm.utm_id
+		LEFT JOIN ht_account_chinapnr c ON t.user_id = c.user_id
 		<include refid="Where_Clause" />
 		ORDER BY t.id DESC
 		<if test="limitStart >= 0" >
@@ -89,10 +82,13 @@
 	<!-- 根据条件 查询意见反馈信息  -->
 	<select id="countRecordTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
-			count(s.id)
+			count(1)
 		FROM
-			ht_submissions s
-		where s.user_id = #{}
+		ht_utm_reg t
+		LEFT JOIN ht_user_info ui ON t.user_id = ui.user_id
+		LEFT JOIN ht_user u ON t.user_id = u.user_id
+		LEFT JOIN ht_utm utm ON t.utm_id = utm.utm_id
+		LEFT JOIN ht_account_chinapnr c ON t.user_id = c.user_id
 		<include refid="Where_Clause" />
 	</select>
 </mapper>
