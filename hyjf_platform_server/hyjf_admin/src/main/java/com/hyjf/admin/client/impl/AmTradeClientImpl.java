@@ -9,6 +9,8 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.HjhPlanDetailResponse;
+import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -25,6 +27,8 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -2218,4 +2222,111 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return 0;
 	}
 	/*标签配置中心 end*/
+	
+	/*计划列表 start*/
+	@Override
+	public HjhPlanResponse getHjhPlanListByParam(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParam", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanSumVO getCalcSumByParam(PlanListRequest form) {
+		HjhPlanSumResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getCalcSumByParam", form,HjhPlanSumResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+		return null;
+	}
+
+	@Override
+	public List<HjhPlanDetailVO> getHjhPlanDetailByPlanNid(PlanListRequest form) {
+		HjhPlanDetailResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanDetailByPlanNid", form,HjhPlanDetailResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse getPlanNameAjaxCheck(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNameAjaxCheck", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse getPlanNidAjaxCheck(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getPlanNidAjaxCheck", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse updatePlanStatusByPlanNid(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanStatusByPlanNid", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
+
+	@Override
+	public HjhPlanResponse updatePlanDisplayByPlanNid(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/updatePlanDisplayByPlanNid", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
+
+	@Override
+	public boolean isExistsRecord(String planNid) {
+		String url = "http://AM-TRADE/am-trade/planList/isExistsRecord/" + planNid;
+		boolean Flag = restTemplate.getForEntity(url,Boolean.class).getBody();
+		return Flag;
+	}
+
+	@Override
+	public int countByPlanName(String planName) {
+		String url = "http://AM-TRADE/am-trade/planList/countByPlanName/" + planName;
+		Integer count = restTemplate.getForEntity(url,Integer.class).getBody();
+		return count;
+	}
+
+	@Override
+	public int isLockPeriodExist(String lockPeriod, String borrowStyle, String isMonth) {
+		String url = "http://AM-TRADE/am-trade/planList/isLockPeriodExist/" + lockPeriod + "/" + borrowStyle + "/" + isMonth;
+		Integer count = restTemplate.getForEntity(url,Integer.class).getBody();
+		return count;
+	}
+
+	@Override
+	public int updateRecord(PlanListRequest form) {
+		String url = "http://AM-TRADE/am-trade/planList/updateRecord";
+		Integer Flag = restTemplate.postForEntity(url,form,Integer.class).getBody();
+		return Flag;
+	}
+
+	@Override
+	public int insertRecord(PlanListRequest form) {
+		String url = "http://AM-TRADE/am-trade/planList/insertRecord";
+		Integer Flag = restTemplate.postForEntity(url,form,Integer.class).getBody();
+		return Flag;
+	}
+	/*计划列表 end*/
 }
