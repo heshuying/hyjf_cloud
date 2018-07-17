@@ -1,10 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.trade.BankRepayFreezeLogRequest;
-import com.hyjf.am.resquest.trade.RepayListRequest;
-import com.hyjf.am.resquest.trade.RepayRequest;
-import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
@@ -22,6 +19,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.MD5;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
@@ -32,6 +30,8 @@ import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayManageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3395,5 +3395,68 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             return 0;
         }
         return bankRepayFreezeLogClient.deleteFreezeLogByOrderId(orderId);
+    }
+
+    /**
+     * 更新借款API任务表
+     * @return
+     */
+    @Override
+    public Boolean updateBorrowApicron(BorrowApicronVO apicronVO, Integer status) {
+        ApiCronUpdateRequest requestBean = new ApiCronUpdateRequest();
+        requestBean.setApicronVO(apicronVO);
+        requestBean.setStatus(status);
+
+        return amTradeClient.updateBorrowApicron(requestBean);
+    }
+
+    /**
+     * 根据bankSeqNo检索
+     * @param bankSeqNO
+     * @return
+     */
+    @Override
+    public BorrowApicronVO selectBorrowApicron(String bankSeqNO) {
+        return amTradeClient.selectBorrowApicron(bankSeqNO);
+    }
+
+    /**
+     * 批次状态查询
+     * @param apicron
+     * @return
+     */
+    @Override
+    public BankCallBean batchQuery(BorrowApicronVO apicron) {
+        // 获取共同参数
+        String batchNo = apicron.getBatchNo();// 还款请求批次号
+        String batchTxDate = String.valueOf(apicron.getTxDate());// 还款请求日期
+        int userId = apicron.getUserId();
+        String channel = BankCallConstant.CHANNEL_PC;
+        for (int i = 0; i < 3; i++) {
+            String logOrderId = GetOrderIdUtils.getOrderId2(userId);
+            String orderDate = GetOrderIdUtils.getOrderDate();
+            // 调用还款接口
+            BankCallBean loanBean = new BankCallBean();
+            loanBean.setTxCode(BankCallConstant.TXCODE_BATCH_QUERY);// 消息类型(批量还款)
+            loanBean.setBatchNo(batchNo);
+            loanBean.setBatchTxDate(batchTxDate);
+            loanBean.setLogUserId(String.valueOf(apicron.getUserId()));
+            loanBean.setLogOrderId(logOrderId);
+            loanBean.setLogOrderDate(orderDate);
+            loanBean.setLogRemark("批次状态查询");
+            loanBean.setLogClient(0);
+            BankCallBean queryResult = BankCallUtils.callApiBg(loanBean);
+            if (Validator.isNotNull(queryResult)) {
+                String retCode = StringUtils.isNotBlank(queryResult.getRetCode()) ? queryResult.getRetCode() : "";
+                if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+                    return queryResult;
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+        }
+        return null;
     }
 }

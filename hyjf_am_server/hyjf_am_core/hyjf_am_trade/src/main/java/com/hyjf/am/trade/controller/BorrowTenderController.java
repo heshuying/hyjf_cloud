@@ -3,7 +3,6 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderUtmRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
@@ -128,20 +127,63 @@ public class BorrowTenderController extends BaseController{
         return borrowTenderService.saveCreditTenderAssignLog(bean);
     }
 
-	/**
-	 * 获取utm注册用户投资次数
-	 * 
-	 * @return
-	 */
+    /**
+     * 获取utm注册用户投资次数
+     * @param list utm注册用户userid集合
+     * @return
+     */
 	@PostMapping("/getutmtendernum")
-	public BorrowTenderResponse getUtmTenderNum(@RequestBody BorrowTenderUtmRequest request) {
+	public BorrowTenderResponse getUtmTenderNum(@RequestBody List<Integer> list) {
 		BorrowTenderResponse response = new BorrowTenderResponse();
-		// utm注册用户的userid集合
-		List<Integer> list = request.getList();
         Integer tenderNum = borrowTenderService.getUtmTenderNum(list);
 		if (tenderNum != null) {
 			response.setTenderCount(tenderNum);
 		}
 		return response;
 	}
+
+    /**
+     * 获取utm用户hzt金额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+	@PostMapping("/gethzttenderprice")
+	public BorrowTenderResponse getHztTenderPrice(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        BigDecimal hztTenderPrice = borrowTenderService.getHztTenderPrice(list);
+        if (hztTenderPrice != null) {
+            response.setHztTenderPrice(hztTenderPrice);
+        }
+        return response;
+    }
+
+    /**
+     * 获取utm用户hxf金额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/gethxftenderprice")
+    public BorrowTenderResponse getHxfTenderPrice(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        BigDecimal hxfTenderPrice = borrowTenderService.getHxfTenderPrice(list);
+        if (hxfTenderPrice != null) {
+            response.setHxfTenderPrice(hxfTenderPrice);
+        }
+        return response;
+    }
+
+    /**
+     * 获取utm用户rtb金额
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/getrtbtenderprice")
+    public BorrowTenderResponse getRtbTenderPrice(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        BigDecimal rtbTenderPrice = borrowTenderService.getRtbTenderPrice(list);
+        if (rtbTenderPrice != null) {
+            response.setRtbTenderPrice(rtbTenderPrice);
+        }
+        return response;
+    }
 }

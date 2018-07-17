@@ -3,6 +3,9 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+
 /**
  * @author tanyy
  * @version ChannelStatisticsDetailService.java, v0.1 2018年7月17日 下午3:04:29

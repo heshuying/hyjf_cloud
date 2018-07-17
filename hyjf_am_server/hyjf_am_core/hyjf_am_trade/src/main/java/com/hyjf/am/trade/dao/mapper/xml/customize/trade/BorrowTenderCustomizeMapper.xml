@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
 		namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowTenderCustomizeMapper">
-	<select id="getUtmTenderNum" resultType="INTEGER" parameterType="list">
+	<select id="getUtmTenderNum" resultType="INTEGER" parameterType="map">
 		SELECT count(*) FROM (
 			SELECT user_id FROM ht_borrow_tender
 			UNION ALL
@@ -26,6 +26,64 @@
 				</if>
 			</where>
 			
+	</select>
+	
+	<select id="getHztTenderPrice" resultType="DECIMAL" parameterType="map">
+		select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
+		<where>
+			hb.project_type <![CDATA[<>]]> 8
+			AND hb.project_type <![CDATA[<>]]> 13
+			<if test="list != null">
+				and hbt.user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND hbt.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND hbt.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getHxfTenderPrice" resultType="DECIMAL" parameterType="map">
+		select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
+		<where>
+			hb.project_type = 8
+			<if test="list != null">
+				and hbt.user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND hbt.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND hbt.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getRtbTenderPrice" resultType="DECIMAL" parameterType="map">
+	select sum(hbt.account) from ht_borrow_tender hbt left join ht_borrow hb on hbt.borrow_nid = hb.user_id
+		<where>
+			hb.project_type = 13
+			<if test="list != null">
+				and hbt.user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND hbt.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND hbt.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
 	</select>
 	
 </mapper>
