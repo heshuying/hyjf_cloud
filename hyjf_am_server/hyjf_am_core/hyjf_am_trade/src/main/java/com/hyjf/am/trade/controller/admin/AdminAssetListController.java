@@ -49,7 +49,7 @@ public class AdminAssetListController extends BaseController {
 		Integer registCount = assetListService.getRecordCount(request);
         Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
 		//代表成功
-		String returnCode = "00";
+		String returnCode = "0";
 		List<AssetListCustomizeVO> assetList = assetListService.findAssetList(mapParam,paginator.getOffset(), paginator.getLimit());
 		if(registCount>0){
 			if(null!=assetList&&assetList.size()>0){
