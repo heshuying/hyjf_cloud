@@ -79,4 +79,21 @@ public class BorrowApicronController extends BaseController {
 		}
 		return response;
 	}
+
+	/**
+	 * 根据bankSeqNo检索
+	 * @auther: hesy
+	 * @date: 2018/7/17
+	 */
+	@GetMapping("/getby_bankseqno/{bankSeqNO}")
+	public BorrowApicronResponse selectBorrowApicron(String bankSeqNO) {
+		BorrowApicronResponse response = new BorrowApicronResponse();
+		BorrowApicron borrowApicron = borrowApicronService.selectBorrowApicron(bankSeqNO);
+		if (borrowApicron != null) {
+			BorrowApicronVO borrowApicronVo = CommonUtils.convertBean(borrowApicron,
+					BorrowApicronVO.class);
+			response.setResult(borrowApicronVo);
+		}
+		return response;
+	}
 }
