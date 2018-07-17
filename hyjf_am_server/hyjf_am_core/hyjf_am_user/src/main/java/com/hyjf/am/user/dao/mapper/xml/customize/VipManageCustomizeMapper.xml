@@ -192,4 +192,16 @@
 		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
 		<include refid="Where_Clause" />
 	</select>
+	<select id="countRecord" resultType="com.hyjf.am.vo.user.VipAuthVO" parameterType="Map">
+		SELECT id,vip_id vipId,coupon_code couponCode,coupon_quantity couponQuantity,remark remark,
+			del_flag delFlag,create_user_id createUserId,update_user_id updateUserId,create_time createTime,update_time updateUime
+			FROM ht_vip_auth
+			WHERE 1=1
+			<if test="vipId != null and vipId != ''">
+				AND vip_id = #{vipId}
+			</if>
+	</select>
+
+
+
 </mapper>

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/am-config/holidays")
-public class HolidaysConfigController {
+public class HolidaysAmConfigController {
 
     @RequestMapping("/save")
     public String save(){

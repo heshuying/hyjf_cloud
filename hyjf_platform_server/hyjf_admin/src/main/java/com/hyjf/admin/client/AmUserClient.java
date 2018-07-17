@@ -422,4 +422,25 @@ public interface AmUserClient {
      * @return
      */
     BankOpenAccountVO getBankOpenAccountByUserId(Integer userId);
+    
+    /*加入明细 start*/
+	/**
+	 * 通过userid获取user
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	UserVO getUserByUserId(int userId);
+
+	/**
+	 * 通过
+	 * 
+	 * @Title selectAccedeRecordList
+	 * @param form
+	 * @return
+	 */
+	UserInfoVO selectUsersInfoByUserId(int userid);
+	/*加入明细 end*/
+    
 }

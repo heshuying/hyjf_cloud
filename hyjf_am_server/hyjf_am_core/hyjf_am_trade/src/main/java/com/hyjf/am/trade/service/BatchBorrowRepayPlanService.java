@@ -21,10 +21,12 @@ public interface BatchBorrowRepayPlanService extends BaseService {
 
 	BankCallBean batchQuery(BorrowApicron apicron);
 
-	boolean updateBatchDetailsQuery(BorrowApicron apicron);
+	boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
 
 	void updateQuitRepayInfo(String accedeOrderId);
 
     void updateLockRepayInfo(String accedeOrderId);
+
+	BorrowApicron selApiCronByPrimaryKey(int id);
 
 }

@@ -8,7 +8,7 @@ spring:
       name: callcenter
 
 server:
-  port: 9093
+  port: 9094
 
 logging:
   file: callcenter.log

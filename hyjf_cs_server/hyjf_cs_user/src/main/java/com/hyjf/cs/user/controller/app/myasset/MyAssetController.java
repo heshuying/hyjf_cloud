@@ -3,17 +3,6 @@
  */
 package com.hyjf.cs.user.controller.app.myasset;
 
-import java.text.DecimalFormat;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -22,8 +11,16 @@ import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myasset.MyAssetService;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
 
 /**
  * @author jun
@@ -31,7 +28,7 @@ import io.swagger.annotations.Api;
  */
 @Api(value = "app端账户总览")
 @Controller
-@RequestMapping(value = MyAssetDefine.REQUEST_MAPPING)
+@RequestMapping(value = "/app/user/myasset")
 public class MyAssetController extends BaseUserController {
 	
 	@Autowired
