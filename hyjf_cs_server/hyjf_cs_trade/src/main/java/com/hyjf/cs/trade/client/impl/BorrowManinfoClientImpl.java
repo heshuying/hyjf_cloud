@@ -18,7 +18,7 @@ public class BorrowManinfoClientImpl implements BorrowManinfoClient {
 
     @Override
     public BorrowManinfoVO getBorrowManinfo(String borrowNid) {
-        BorrowManinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowmaninfo/" + borrowNid ,BorrowManinfoResponse.class).getBody();
+        BorrowManinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowManinfo/" + borrowNid ,BorrowManinfoResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }

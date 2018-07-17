@@ -22,7 +22,7 @@ public class BorrowUserClientImpl implements BorrowUserClient {
     @Override
     public BorrowUserVO getBorrowUser(String borrowNid) {
         BorrowUserResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowuser/borrowuserinfo/" + borrowNid,
+                "http://AM-TRADE/am-trade/borrow/borrowUserInfo/" + borrowNid,
                 BorrowUserResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
