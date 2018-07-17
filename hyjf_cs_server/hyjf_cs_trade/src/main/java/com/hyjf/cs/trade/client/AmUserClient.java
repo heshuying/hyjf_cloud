@@ -202,4 +202,12 @@ public interface AmUserClient {
 	 * @return
 	 */
     String getChannelNameByUserId(int userId);
+
+    /**
+     * 插入certificateAuthorityVO数据
+     * @auth sunpeikai
+     * @param certificateAuthorityVO 参数
+     * @return
+     */
+    int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
 }
