@@ -962,7 +962,7 @@ public interface AmTradeClient {
 
     /**
      * param
-     * @param request
+     * @param param
      * @return
      */
     Map<String, String> findParamNameMap(String param);
@@ -976,7 +976,7 @@ public interface AmTradeClient {
 
     /**
      * 详情查询
-     * @param request
+     * @param assetListRequest
      * @return
      */
     AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
@@ -1112,7 +1112,7 @@ public interface AmTradeClient {
  	 * 根据计划名称查询数量
  	 * 
  	 * @Title isExistsRecord
- 	 * @param planNid
+ 	 * @param planName
  	 * @return
  	 */
  	int countByPlanName(String planName);
@@ -1121,7 +1121,7 @@ public interface AmTradeClient {
  	 * 根据计划还款方式，锁定期，锁定期类型获取计划数量(月)
  	 * 
  	 * @Title isDebtPlanTypeNameExist
- 	 * @param debtPlanTypeName
+ 	 * @param isMonth
  	 * @return
  	 */
  	int isLockPeriodExist(String lockPeriod,String borrowStyle,String isMonth);
@@ -1130,7 +1130,7 @@ public interface AmTradeClient {
  	 * 更新操作
  	 * 
  	 * @Title updateRecord
- 	 * @param planListBean
+ 	 * @param form
  	 * @throws Exception
  	 */
  	int updateRecord(PlanListRequest form);
@@ -1138,7 +1138,7 @@ public interface AmTradeClient {
  	/**
  	 * 插入操作
  	 * 
- 	 * @param record
+ 	 * @param form
  	 */
  	int insertRecord(PlanListRequest form);
  	/*计划列表 end*/
@@ -1175,7 +1175,7 @@ public interface AmTradeClient {
 	 * 通过加入订单号查询法大大协议表
 	 * 
 	 * @Title selectAccedeRecordList
-	 * @param form
+	 * @param planOrderId
 	 * @return
 	 */
 	List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId);
@@ -1184,7 +1184,7 @@ public interface AmTradeClient {
 	 * 更新协议发送状态
 	 * 
 	 * @Title selectAccedeRecordList
-	 * @param form
+	 * @param request
 	 * @return
 	 */
 	int updateSendStatusByParam(AccedeListRequest request);
@@ -1193,7 +1193,7 @@ public interface AmTradeClient {
 	 * 查询用户投资信息
 	 * 
 	 * @Title selectAccedeRecordList
-	 * @param form
+	 * @param request
 	 * @return
 	 */
 	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
@@ -1203,7 +1203,7 @@ public interface AmTradeClient {
 	/**
 	 * 获取详细列表
 	 * 
-	 * @param DebtCreditCustomize
+	 * @param form
 	 * @return
 	 */
 	HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form);
@@ -1211,7 +1211,7 @@ public interface AmTradeClient {
 	/**
 	 * 获取详细列表未分页
 	 * 
-	 * @param DebtCreditCustomize
+	 * @param form
 	 * @return
 	 */
 	List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form);
@@ -1219,7 +1219,7 @@ public interface AmTradeClient {
 	/**
 	 * 传参查询承接债转表
 	 * 
-	 * @param DebtCreditCustomize
+	 * @param form
 	 * @return
 	 */
 	HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form);
@@ -1228,14 +1228,14 @@ public interface AmTradeClient {
 	/*计划引擎 start*/
 	/**
      * 查询计划专区列表
-     * @param request
+     * @param form
      * @return
      */
 	HjhRegionResponse getHjhRegionList(AllocationEngineRuquest form);
 
     /**
      * 查询汇计划表
-     * @param request
+     * @param form
      * @return
      */
     String getPlanNameByPlanNid(AllocationEngineRuquest form);
@@ -1249,28 +1249,28 @@ public interface AmTradeClient {
     
     /**
      * AJAX
-     * @param request
+     * @param planNid
      * @return
      */
     HjhRegionResponse getPlanNidAjaxCheck(String planNid);
     
     /**
      * 根据主键获取 HjhRegionVO
-     * @param request
+     * @param id
      * @return
      */
     HjhRegionVO getHjhRegionVOById(String id);
     
     /**
      * 更新计划专区表的状态
-     * @param request
+     * @param vo
      * @return
      */
     int updateHjhRegionRecord(HjhRegionVO vo); 
     
     /**
      * 更新引擎表
-     * @param request
+     * @param vo
      * @return
      */
     HjhRegionResponse updateAllocationEngineRecord(HjhRegionVO vo); 
@@ -1284,59 +1284,59 @@ public interface AmTradeClient {
     
     /**
      * 根据计划专区列表传入计划编号查询引擎列表
-     * @param request
+     * @param form
      * @return
      */
     HjhAllocationEngineResponse getHjhAllocationEngineList(AllocationEngineRuquest form);
     
     /**
      * 根据计划专区列表传入计划编号查询引擎列表
-     * @param request
+     * @param form
      * @return
      */
     List<HjhAllocationEngineVO> getAllocationList(AllocationEngineRuquest form); 
     
     /**
      * 根据主键获取 HjhRegionVO
-     * @param request
+     * @param engineId
      * @return
      */
     HjhAllocationEngineVO getPlanConfigRecord(Integer engineId);
     
     /**
      * 更新计划引擎表的状态
-     * @param request
+     * @param vo
      * @return
      */
     int updateHjhAllocationEngineRecord(HjhAllocationEngineVO vo); 
     
     /**
      * 根据参数获取 HjhRegionVO
-     * @param request
+     * @param form
      * @return
      */
     HjhAllocationEngineVO getPlanConfigRecordByParam(AllocationEngineRuquest form);
     
     /**
      * 验证重复
-     * @param planName
+     * @param planNid
      */
     boolean checkRepeat(String labelName,String planNid);
     
     /** 获取还款方式
-     * @param planName
+     * @param planNid
      */
     String getPlanBorrowStyle(String planNid);
     
     /** 获取计划专区
-     * @param planName
+     * @param planNid
      */
     HjhRegionVO getHjhRegionRecordByPlanNid(String planNid);
     
     /**
 	 * 计划引擎配置Info画面入力后插表
 	 * 
-	 * @param planNid
+	 * @param request
 	 */
     int insertHjhAllocationEngineRecord(HjhAllocationEngineVO request);
     
@@ -1354,4 +1354,152 @@ public interface AmTradeClient {
 	 */
     List<HjhRegionVO> getHjhRegioByPlanNid(String planNid);
     /*计划引擎 end*/
+
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRecover(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRecoverCustomizeVO> selectBorrowRecoverList(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin产品中心-汇直投-放款明细统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRecoverCustomizeVO sumBorrowRecoverList(BorrowRecoverRequest borrowRecoverCustomize);
+    /**
+     * @Description 获取admin借款操作日志列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowLog(BorrowLogRequset request);
+    /**
+     * @Description 获取admin借款操作日志列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowLogCustomizeVO> selectBorrowLogList(BorrowLogRequset request);
+    /**
+     * @Description 获取admin借款操作日志列表导出
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowLogCustomizeVO> exportBorrowLogList(BorrowLogRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款信息列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRepayment(BorrowRepaymentRequest request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款信息列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentRequest request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款信息列表统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepaymentCustomizeVO sumBorrowRepaymentInfo(BorrowRepaymentRequest request);
+    /**
+     * @Description 获取admin数据导出--还款计划导出
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
+    /**
+     * @Description 获取admin查询延期数据
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    AdminRepayDelayCustomizeVO selectBorrowInfo(String borrowNid);
+    /**
+     * @Description 获取admin查询延期还款计划（不分期）
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepayVO getBorrowRepayDelay(String borrowNid, String borrowApr, String borrowStyle);
+    /**
+     * @Description 获取admin查询延期还款计划（分期）
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepayPlanVO getBorrowRepayPlanDelay(String borrowNid, String borrowApr, String borrowStyle);
+    /**
+     * @Description 延期操作
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer updateBorrowRepayDelayDays(String borrowNid, String delayDays);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRepaymentInfo(BorrowRepaymentInfoRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细查询
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentInfoListForView(BorrowRepaymentInfoRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepaymentInfoCustomizeVO sumBorrowRepaymentInfo(BorrowRepaymentInfoRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细导出列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentInfoList(BorrowRepaymentInfoRequset copyForm);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    Integer countBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细列表查询
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<BorrowRepaymentInfoListCustomizeVO> selectBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request);
+    /**
+     * @Description 获取admin产品中心-汇直投-还款明细列表统计
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    BorrowRepaymentInfoListCustomizeVO sumBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
 }
