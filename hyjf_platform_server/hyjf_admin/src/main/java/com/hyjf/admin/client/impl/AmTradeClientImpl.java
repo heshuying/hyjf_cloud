@@ -15,9 +15,6 @@ import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
@@ -33,9 +30,8 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.collections.CollectionUtils;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -1412,9 +1408,7 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public List<ParamName> getParamNameList(String code){
         String url="http://AM-CONFIG/am-config/config/accountconfig/getParamNameList";
-        List<ParamName>  response = restTemplate.
-                postForEntity(url, code, List.class).
-                getBody();
+        List<ParamName>  response = restTemplate.postForEntity(url, code, List.class).getBody();
         if (!CollectionUtils.isEmpty(response)){
             return response;
         }
