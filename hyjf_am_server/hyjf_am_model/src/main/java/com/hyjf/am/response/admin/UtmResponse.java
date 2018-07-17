@@ -32,6 +32,16 @@ public class UtmResponse<T> extends AdminResponse {
     /** 汇转让投资金额 */
     private BigDecimal hzrTenderPrice;
 
+    private String channelName;
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
     public Integer getAccessNumber() {
         return accessNumber;
     }

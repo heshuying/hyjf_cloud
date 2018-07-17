@@ -33,6 +33,14 @@ public class ChannelController extends BaseController {
         return channelName;
     }
 
+    @RequestMapping("/getchannelnamebyuserd/{userId}")
+    public UtmResponse selectChannelNameByUserId(@PathVariable Integer userId) {
+        UtmResponse response = new UtmResponse();
+        String channelName = channelService.selectChannelName(userId);
+        response.setChannelName(channelName);
+        return response;
+    }
+
     /**
      * 分页获取数据
      * @param channelCustomize 查询参数
