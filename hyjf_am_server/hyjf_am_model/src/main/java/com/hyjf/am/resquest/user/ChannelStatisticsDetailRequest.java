@@ -27,6 +27,10 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 	 */
 	private String keySrch;
 
+	protected int limitStart = -1;
+
+	protected int limitEnd = -1;
+
 	public String getSourceIdSrch() {
 		return sourceIdSrch;
 	}
@@ -49,5 +53,21 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 
 	public void setKeySrch(String keySrch) {
 		this.keySrch = keySrch;
+	}
+
+	public int getLimitStart() {
+		return limitStart;
+	}
+
+	public void setLimitStart(int limitStart) {
+		this.limitStart = limitStart;
+	}
+
+	public int getLimitEnd() {
+		return limitEnd;
+	}
+
+	public void setLimitEnd(int limitEnd) {
+		this.limitEnd = limitEnd;
 	}
 }
