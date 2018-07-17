@@ -4,13 +4,13 @@
 
 	<sql id="Where_Clause">
 		<where>
-			<if test="userName != null and userName !='' " >
-				AND u.username LIKE CONCAT('%', #{userName}, '%')
+			<if test="userNameSrch != null and userNameSrch !='' " >
+				AND u.username LIKE CONCAT('%', #{userNameSrch}, '%')
 			</if>
-			<if test="sourceId != null and sourceId != ''" >
-				AND utm.source_id <![CDATA[=]]> #{sourceId}
+			<if test="sourceIdSrch != null and sourceIdSrch != ''" >
+				AND utm.source_id <![CDATA[=]]> #{sourceIdSrch}
 			</if>
-			<if test="keyName != null and keyName != ''" >
+			<if test="keySrch != null and keySrch != ''" >
 				AND utm.utm_term LIKE CONCAT('%', #{keyName}, '%')
 			</if>
 			<if test="utmIdsSrch != null and utmIdsSrch != ''">

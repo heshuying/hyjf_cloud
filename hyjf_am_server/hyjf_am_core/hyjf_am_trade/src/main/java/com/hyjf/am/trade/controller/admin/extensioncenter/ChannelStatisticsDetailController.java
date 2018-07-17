@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.controller.admin.extensioncenter;
+package com.hyjf.am.trade.controller.admin.extensioncenter;
 
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.admin.extensioncenter.ChannelStatisticsDetailService;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version ChannelStatisticsDetailController, v0.1 2018/7/16 14:32
  */
 @RestController
-@RequestMapping("/am-user/extensioncenter/channelstatisticsdetail")
+@RequestMapping("/am-trade/extensioncenter/channelstatisticsdetail")
 public class ChannelStatisticsDetailController extends BaseController {
 	@Autowired
 	private ChannelStatisticsDetailService channelStatisticsDetailService;
