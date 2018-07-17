@@ -995,4 +995,58 @@ public interface AmTradeClient {
      */
 	void updateCashDepositeStatus(String assetId, String menuHide);
 	/*资产中心 end*/
+	
+	/*标签配置中心 start*/
+	/**
+     * 项目类型
+     * @param 
+     * @return
+     */
+    List<BorrowProjectTypeVO> findBorrowProjectTypeList();
+    /**
+     * 还款方式
+     * @param 
+     * @return
+     */
+    List<BorrowStyleVO> findBorrowStyleList();
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request);
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request);
+    
+    /**
+     * 查询标签配置列表
+     * @param request
+     * @return
+     */
+    List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request);
+    
+	/**
+     * 插入标签配置列表
+     * @param request
+     */
+    void insertHjhLabelRecord(HjhLabelInfoRequest request);
+    
+	/**
+     * 更新标签配置列表
+     * @param request
+     */
+    int updateHjhLabelRecord(HjhLabelInfoRequest request);
+    
+	/**
+     * 更新引擎表
+     * @param request
+     */
+    int updateAllocationRecord(HjhLabelInfoRequest request);
+    /*标签配置中心 end*/
 }

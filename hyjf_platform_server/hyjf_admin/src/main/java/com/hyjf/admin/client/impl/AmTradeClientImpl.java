@@ -2138,4 +2138,84 @@ public class AmTradeClientImpl implements AmTradeClient{
 		
 	}
 	/*资产中心 end*/
+	
+	/*标签配置中心 start*/
+	@Override
+	public List<BorrowProjectTypeVO> findBorrowProjectTypeList() {
+		// 复用
+        BorrowProjectTypeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowProjectByBorrowCd", BorrowProjectTypeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+		return null;
+	}
+	
+	@Override
+	public List<BorrowStyleVO> findBorrowStyleList() {
+		// 复用
+		BorrowStyleResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/hjhLabel/selectBorrowStyleList", BorrowStyleResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+		return null;
+	}
+	
+	@Override
+	public HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }			
+		return null;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelListById(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListById", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public List<HjhLabelCustomizeVO> findHjhLabelListLabelName(HjhLabelRequest request) {
+		HjhLabelCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelListLabelName", request, HjhLabelCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+		return null;
+	}
+
+	@Override
+	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
+		restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord", request,
+				Object.class);
+	}
+
+	@Override
+	public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/updateHjhLabelRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+		return 0;
+	}
+
+	@Override
+	public int updateAllocationRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/updateAllocationRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+		return 0;
+	}
+	/*标签配置中心 end*/
 }
