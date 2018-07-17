@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.FeerateModifyLogCustomizeMapper">
+    <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.FeerateModifyLog" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+        <result column="asset_type" property="assetType" jdbcType="TINYINT" />
+        <result column="borrow_period" property="borrowPeriod" jdbcType="INTEGER" />
+        <result column="borrow_periods" property="borrowPeriods" jdbcType="VARCHAR" />
+        <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+        <result column="borrow_apr" property="borrowApr" jdbcType="DECIMAL" />
+        <result column="service_fee" property="serviceFee" jdbcType="VARCHAR" />
+        <result column="manage_fee" property="manageFee" jdbcType="VARCHAR" />
+        <result column="revenue_diff_rate" property="revenueDiffRate" jdbcType="VARCHAR" />
+        <result column="late_interest_rate" property="lateInterestRate" jdbcType="VARCHAR" />
+        <result column="late_free_days" property="lateFreeDays" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="modify_type" property="modifyType" jdbcType="TINYINT" />
+        <result column="create_user" property="createUser" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="INTEGER" />
+        <result column="create_time_string" property="createTimeString" jdbcType="VARCHAR" />
+        <result column="update_user" property="updateUser" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+        <result column="del_flg" property="delFlg" jdbcType="BIT" />
+        <!-- 资产来源 -->
+        <result column="inst_name" property="instName" jdbcType="VARCHAR" />
+        <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Where_Clause">
+        <where>
+            <!-- 资产来源 -->
+            <if test="instCodeSrch != null and instCodeSrch != ''">
+                AND hfml.inst_code=#{instCodeSrch}
+            </if>
+            <!-- 产品类型	-->
+            <if test="assetTypeSrch != null and assetTypeSrch != ''">
+                AND hfml.asset_type=#{assetTypeSrch}
+            </if>
+            <!-- 期限 -->
+            <if test="borrowPeriodSrch != null and borrowPeriodSrch != ''">
+                AND hfml.borrow_period LIKE CONCAT('%', #{borrowPeriodSrch}, '%')
+            </if>
+            <!-- 修改类型 -->
+            <if test="modifyTypeSrch != null and modifyTypeSrch != ''">
+                AND hfml.modify_type=#{modifyTypeSrch}
+            </if>
+            <!-- 操作人 -->
+            <if test="userNameSrch != null and userNameSrch != ''">
+                AND hfml.create_user in(select id from hyjf_admin hui where hui.truename LIKE CONCAT('%', #{userNameSrch}, '%'))
+            </if>
+            <!-- 操作时间 -->
+            <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
+                AND hfml.create_time<![CDATA[>=]]>unix_timestamp(#{recieveTimeStartSrch})
+            </if>
+            <!-- 操作时间 -->
+            <if test="recieveTimeEndSrch != null and recieveTimeEndSrch != ''">
+                AND hfml.create_time<![CDATA[<=]]>unix_timestamp(#{recieveTimeEndSrch})+86399
+            </if>
+        </where>
+    </sql>
+    <select id="selectOperationLogCountByPage" resultType="java.lang.Integer" parameterType="Map">
+        SELECT
+        COUNT(*)
+        FROM ht_feerate_modify_log hfml
+        <include refid="Where_Clause" />
+    </select>
+    <select id="selectOperationLogListByPage" resultMap="BaseResultMap" parameterType="Map">
+        SELECT
+        <if test="distinct" >
+            distinct
+        </if>
+        <!-- <include refid="Base_Column_List" /> -->
+        id, inst_code, asset_type, CASE WHEN borrow_style = '天标' THEN CONCAT(borrow_period, '天') ELSE CONCAT(borrow_period, '个月') END borrow_periods, borrow_style, borrow_apr, service_fee,
+        manage_fee, revenue_diff_rate, late_interest_rate, late_free_days, `status`, modify_type,
+        create_user, create_time, update_user, update_time, del_flg,
+        (select distinct inst_name from hyjf_hjh_inst_config hhic where hfml.inst_code=hhic.inst_code) inst_name,
+        (select distinct asset_type_name from hyjf_hjh_asset_type hhat where hfml.inst_code=hhat.inst_code and hfml.asset_type=hhat.asset_type) asset_type_name,
+        (select distinct truename from hyjf_admin hui where hfml.create_user=hui.id) name,
+        FROM_UNIXTIME( hfml.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time_string
+        FROM ht_feerate_modify_log hfml
+        <include refid="Where_Clause" />
+        ORDER BY create_time DESC
+        <if test="limitStart != null and limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+</mapper>

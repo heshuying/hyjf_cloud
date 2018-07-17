@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Service
+@Service("adminVersionConfigService")
 public class VersionConfigServiceImpl implements VersionConfigService {
 
     @Autowired

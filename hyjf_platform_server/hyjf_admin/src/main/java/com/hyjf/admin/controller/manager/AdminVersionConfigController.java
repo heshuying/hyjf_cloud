@@ -33,11 +33,11 @@ import java.util.List;
 @Api(value = "配置中心版本配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/versionconfig")
-public class VersionConfigController extends BaseController {
+public class AdminVersionConfigController extends BaseController {
     //权限名称
     private static final String PERMISSIONS = "versionconfig";
     @Autowired
-    private VersionConfigService versionConfigService;
+    private VersionConfigService adminVersionConfigService;
 
     @ApiOperation(value = "配置中心版本配置", notes = "查询配置中心版本配置")
     @RequestMapping("/init")
@@ -50,7 +50,7 @@ public class VersionConfigController extends BaseController {
         if(StringUtils.isNotEmpty(versionRequestBean.getVersionSrh())){
             adminRequest.setVersionSrh(versionRequestBean.getVersionSrh());
         }
-        AdminVersionResponse response=versionConfigService.versionConfigInit(adminRequest);
+        AdminVersionResponse response=adminVersionConfigService.versionConfigInit(adminRequest);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -71,7 +71,7 @@ public class VersionConfigController extends BaseController {
             Integer id = Integer.valueOf(versionRequestBean.getIds());
             adminRequest.setId(id);
             // 根据主键检索数据
-            adminResponse= versionConfigService.searchVersionConfigInfo(adminRequest);
+            adminResponse= adminVersionConfigService.searchVersionConfigInfo(adminRequest);
         }
         if (adminResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -93,13 +93,13 @@ public class VersionConfigController extends BaseController {
         this.validatorFieldCheck(mv, adminRequest);
         if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
             //数据字典
-            List<ParamName> versionName = this.versionConfigService.getParamNameList("VERSION_NAME");
-            List<ParamName> isUpdate = this.versionConfigService.getParamNameList("IS_UPDATE");
+            List<ParamName> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
+            List<ParamName> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
             adminResponse.getResult().setVersionNames(versionName);
             adminResponse.getResult().setIsUpdates(isUpdate);
             return new AdminResult<VersionVO>(adminResponse.getResult()) ;
         }
-        adminResponse = versionConfigService.saveVersionConfig(adminRequest);
+        adminResponse = adminVersionConfigService.saveVersionConfig(adminRequest);
         if(adminResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -122,13 +122,13 @@ public class VersionConfigController extends BaseController {
         this.validatorFieldCheck(mv, adminRequest);
         if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
             //数据字典
-            List<ParamName> versionName = this.versionConfigService.getParamNameList("VERSION_NAME");
-            List<ParamName> isUpdate = this.versionConfigService.getParamNameList("IS_UPDATE");
+            List<ParamName> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
+            List<ParamName> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
             adminResponse.getResult().setVersionNames(versionName);
             adminResponse.getResult().setIsUpdates(isUpdate);
             return new AdminResult<VersionVO>(adminResponse.getResult()) ;
         }
-        adminResponse = versionConfigService.updateVersionConfig(adminRequest);
+        adminResponse = adminVersionConfigService.updateVersionConfig(adminRequest);
         if(adminResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -146,7 +146,7 @@ public class VersionConfigController extends BaseController {
         AdminVersionResponse adminResponse= null;
         if(StringUtils.isNotBlank(versionRequestBean.getIds())){
             Integer id = Integer.valueOf(versionRequestBean.getIds());
-            adminResponse = versionConfigService.deleteVersionConfig(id);
+            adminResponse = adminVersionConfigService.deleteVersionConfig(id);
         }
         if(adminResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -175,7 +175,7 @@ public class VersionConfigController extends BaseController {
         ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "content", form.getContent(), 500, false);
 
         if (typeFlag && verFlag && StringUtils.isNotEmpty(form.getVersion())) {
-            VersionVO version = this.versionConfigService.getVersionByCode(form.getId(), form.getType(), form.getVersion());
+            VersionVO version = this.adminVersionConfigService.getVersionByCode(form.getId(), form.getType(), form.getVersion());
             if (version != null) {
                 ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "type-verdioncode", "exists.type.versioncode");
             }
