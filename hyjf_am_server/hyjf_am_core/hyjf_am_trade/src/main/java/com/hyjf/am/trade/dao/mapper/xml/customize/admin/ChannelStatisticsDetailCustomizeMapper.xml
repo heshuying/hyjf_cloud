@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.ChannelStatisticsDetailCustomizeMapper">
+
+
+	<resultMap id="ChannelStatisticsDetailMapResult"
+		type="com.hyjf.am.vo.admin.ChannelStatisticsDetailVO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="utm_id" property="utmId" jdbcType="INTEGER" />
+		<result column="key_name" property="keyName" jdbcType="VARCHAR" />
+		<result column="source_id" property="sourceId" jdbcType="INTEGER" />
+		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="true_name" property="trueName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="register_time" property="registerTime" jdbcType="VARCHAR" />
+		<result column="open_account_time" property="openAccountTime" jdbcType="VARCHAR" />
+		<result column="first_invest_time" property="firstInvestTime" jdbcType="VARCHAR" />
+		<result column="cumulative_invest" property="cumulativeInvest" jdbcType="DECIMAL" />
+		<result column="htj_invest" property="htjInvest" jdbcType="DECIMAL" />
+		<result column="hzr_invest" property="hzrInvest" jdbcType="DECIMAL" />
+		<result column="invest_amount" property="investAmount" jdbcType="DECIMAL" />
+		<result column="invest_project_type" property="investProjectType" jdbcType="VARCHAR" />
+		<result column="invest_project_period" property="investProjectPeriod" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 后台展示列表 -->
+	<select id="queryRecordList" resultMap="ChannelStatisticsDetailMapResult" parameterType="com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest">
+		SELECT
+		tender.user_id,
+		CASE
+		WHEN SUM(tender.account) IS NULL THEN
+		0
+		ELSE
+		SUM(tender.account)
+		END cumulative_invest,
+		CASE
+		WHEN SUM(hdpa.accede_account) IS NULL THEN
+		0
+		ELSE
+		SUM(hdpa.accede_account)
+		END htj_invest,
+		CASE
+		WHEN SUM(hct.assign_capital) IS NULL THEN
+		0
+		ELSE
+		SUM(hct.assign_capital)
+		END invest_amount
+		FROM
+		huiyingdai_borrow_tender tender
+		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = tender.borrow_nid
+		AND borrow.project_type <![CDATA[<>]]> 8
+		LEFT  JOIN hyjf_debt_plan_accede hdpa ON tender.user_id = hdpa.user_id
+		LEFT JOIN huiyingdai_credit_tender hct ON hct.user_id = tender.user_id
+		WHERE
+		 1=1
+		<if test="userIds != null">
+			AND tender.user_id in
+			<foreach collection="userIds" open="(" close=")" separator="," item="userId">
+				#{userId}
+			</foreach>
+		</if>
+		GROUP BY  tender.user_id
+	</select>
+</mapper>
+
