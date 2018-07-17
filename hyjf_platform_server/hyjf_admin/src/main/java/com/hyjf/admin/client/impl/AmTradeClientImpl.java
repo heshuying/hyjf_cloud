@@ -2014,6 +2014,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
     
+    /*资产中心 start*/
     /**
 	 * 获取资金来源
 	 *
@@ -2136,4 +2137,5 @@ public class AmTradeClientImpl implements AmTradeClient{
 		restTemplate.getForEntity(url, String.class).getBody();
 		
 	}
+	/*资产中心 end*/
 }

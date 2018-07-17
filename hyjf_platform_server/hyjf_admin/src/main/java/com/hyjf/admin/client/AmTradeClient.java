@@ -937,6 +937,7 @@ public interface AmTradeClient {
      */
     List<HjhInstConfigVO> selectHjhInstConfigList();
     
+    /*资产中心 start*/
 	/**
 	 * 获取资金来源
 	 *
@@ -993,4 +994,5 @@ public interface AmTradeClient {
      * @param menuHide
      */
 	void updateCashDepositeStatus(String assetId, String menuHide);
+	/*资产中心 end*/
 }
