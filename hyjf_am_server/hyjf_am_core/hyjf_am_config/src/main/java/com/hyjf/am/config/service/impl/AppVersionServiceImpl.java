@@ -24,6 +24,7 @@ public class AppVersionServiceImpl implements AppVersionService {
     /**
      * 获取记录数
      */
+    @Override
     public Integer countRecord(VersionConfigBean version) {
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
@@ -41,6 +42,7 @@ public class AppVersionServiceImpl implements AppVersionService {
      *
      * @return
      */
+    @Override
     public List<Version> getRecordList(VersionConfigBean version, int limitStart, int limitEnd) {
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
@@ -63,6 +65,7 @@ public class AppVersionServiceImpl implements AppVersionService {
      *
      * @return
      */
+    @Override
     public Version getRecord(Integer id) {
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
@@ -78,6 +81,7 @@ public class AppVersionServiceImpl implements AppVersionService {
     /**
      * 插入记录
      */
+    @Override
     public void insertRecord(VersionConfigBean form) {
         Version record = new Version();
         BeanUtils.copyProperties(form, record);
@@ -92,6 +96,7 @@ public class AppVersionServiceImpl implements AppVersionService {
     /**
      * 更新记录
      */
+    @Override
     public void updateRecord(VersionConfigBean form) {
         Version record = new Version();
         BeanUtils.copyProperties(form, record);
@@ -101,10 +106,44 @@ public class AppVersionServiceImpl implements AppVersionService {
     /**
      * 批量删除
      */
+    @Override
     public void deleteRecord(List<Integer> ids) {
         VersionExample example = new VersionExample();
         VersionExample.Criteria cra = example.createCriteria();
         cra.andIdIn(ids);
         versionMapper.deleteByExample(example);
+    }
+
+    @Override
+    public Version getNewVersionByType(Integer type) {
+        VersionExample example = new VersionExample();
+        VersionExample.Criteria cra = example.createCriteria();
+        cra.andTypeEqualTo(type);
+        example.setOrderByClause("id desc");
+        List<Version> list = versionMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        }
+        return new Version();
+    }
+
+    @Override
+    public Version getUpdateversion(Integer type, Integer isupdate, String versionStr) {
+        VersionExample example = new VersionExample();
+        VersionExample.Criteria cri = example.createCriteria();
+        cri.andTypeEqualTo(type);
+        if(isupdate!=null){
+            cri.andIsUpdateEqualTo(isupdate);
+        }
+
+        if(versionStr!=null){
+            cri.andVersionEqualTo(versionStr);
+        }
+        example.setOrderByClause(" id desc ");
+        List<Version> list = versionMapper.selectByExample(example);
+        if(list != null && list.size()>0){
+            return list.get(0);
+        }
+        return null ;
     }
 }

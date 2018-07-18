@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
@@ -50,4 +51,20 @@ public interface AmConfigClient {
     List<ParamNameVO> getParamNameList(String nameClass);
 
     String getBankRetMsg(String retCode);
+
+    /**
+     * 获取版本信息
+     * @param type
+     * @return
+     */
+    VersionVO getNewVersionByType(Integer type);
+
+    /**
+     * 获取强制更新版本号
+     * @param type
+     * @param isupdate
+     * @param versionStr
+     * @return
+     */
+    VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr);
 }
