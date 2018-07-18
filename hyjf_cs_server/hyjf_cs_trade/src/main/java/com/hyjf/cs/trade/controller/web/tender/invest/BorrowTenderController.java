@@ -45,11 +45,6 @@ public class BorrowTenderController extends BaseTradeController {
     private BorrowTenderService borrowTenderService;
 
     @ApiOperation(value = "web端散标投资", notes = "web端散标投资")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "couponGrantId", dataType = "Integer", name = "couponGrantId", value = "优惠券id", required = true),
-            @ApiImplicitParam(paramType = "borrowNid", dataType = "String", name = "borrowNid", value = "项目编号", required = true),
-            @ApiImplicitParam(paramType = "account", dataType = "String", name = "account", value = "投资金额", required = true)
-    })
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求投资接口");
@@ -113,11 +108,6 @@ public class BorrowTenderController extends BaseTradeController {
     }
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "couponGrantId", dataType = "Integer", name = "couponGrantId", value = "优惠券id", required = true),
-            @ApiImplicitParam(paramType = "borrowNid", dataType = "String", name = "borrowNid", value = "计划编号", required = true),
-            @ApiImplicitParam(paramType = "account", dataType = "String", name = "account", value = "投资金额", required = true)
-    })
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端获取投资信息");

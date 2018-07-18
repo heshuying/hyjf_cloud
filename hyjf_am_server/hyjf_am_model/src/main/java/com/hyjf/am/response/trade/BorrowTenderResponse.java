@@ -14,6 +14,14 @@ public class BorrowTenderResponse extends Response<BorrowTenderVO> {
     private BigDecimal hxfTenderPrice;
     /** 汇金理财投资金额 */
     private BigDecimal rtbTenderPrice;
+    /** app渠道用户Android投资数 */
+    private Integer tenderNumberAndroid;
+    /** app渠道用户ios投资数 */
+    private Integer tenderNumberIos;
+    /** app渠道用户pc投资数 */
+    private Integer tenderNumberPc;
+    /** app渠道用户wechat投资数 */
+    private Integer tenderNumberWechat;
 
     public Integer getTenderCount() {
         return tenderCount;
@@ -45,5 +53,37 @@ public class BorrowTenderResponse extends Response<BorrowTenderVO> {
 
     public void setRtbTenderPrice(BigDecimal rtbTenderPrice) {
         this.rtbTenderPrice = rtbTenderPrice;
+    }
+
+    public Integer getTenderNumberAndroid() {
+        return tenderNumberAndroid;
+    }
+
+    public void setTenderNumberAndroid(Integer tenderNumberAndroid) {
+        this.tenderNumberAndroid = tenderNumberAndroid;
+    }
+
+    public Integer getTenderNumberIos() {
+        return tenderNumberIos;
+    }
+
+    public void setTenderNumberIos(Integer tenderNumberIos) {
+        this.tenderNumberIos = tenderNumberIos;
+    }
+
+    public Integer getTenderNumberPc() {
+        return tenderNumberPc;
+    }
+
+    public void setTenderNumberPc(Integer tenderNumberPc) {
+        this.tenderNumberPc = tenderNumberPc;
+    }
+
+    public Integer getTenderNumberWechat() {
+        return tenderNumberWechat;
+    }
+
+    public void setTenderNumberWechat(Integer tenderNumberWechat) {
+        this.tenderNumberWechat = tenderNumberWechat;
     }
 }

@@ -122,5 +122,5 @@ public interface UtmService extends BaseService {
      * @param sourceId 账户推广平台
      * @return
      */
-    Integer getOpenAccountNumber(Integer sourceId);
+    Integer getOpenAccountNumber(Integer sourceId, String type);
 }

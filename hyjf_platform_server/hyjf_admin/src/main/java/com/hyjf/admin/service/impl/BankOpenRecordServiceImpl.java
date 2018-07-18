@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.BankOpenRecordClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BankOpenRecordService;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class BankOpenRecordServiceImpl implements BankOpenRecordService {
     @Autowired
-    private BankOpenRecordClient bankOpenRecordClient;
+    private AmUserClient bankOpenRecordClient;
 
     /**
      * 查找汇付银行开户记录列表

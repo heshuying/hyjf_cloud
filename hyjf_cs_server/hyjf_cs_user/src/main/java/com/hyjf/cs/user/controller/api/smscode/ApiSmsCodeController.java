@@ -20,7 +20,7 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码")
+@Api(value = "api验证码",description = "api验证码")
 @RestController
 @RequestMapping("/api/smsCode")
 public class ApiSmsCodeController extends BaseUserController {

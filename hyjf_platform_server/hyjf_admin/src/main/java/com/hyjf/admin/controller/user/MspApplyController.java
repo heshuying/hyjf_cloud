@@ -1,25 +1,5 @@
 package com.hyjf.admin.controller.user;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.admin.beans.request.MspApplytRequestBean;
 import com.hyjf.admin.beans.request.MspRequestBean;
 import com.hyjf.admin.beans.response.MspApplytResponseBean;
@@ -40,9 +20,22 @@ import com.hyjf.am.vo.user.MspConfigureVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -50,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
  * @author
  *
  */
-@Api(value = "安融反欺诈")
+@Api(value = "安融反欺诈",description = "安融反欺诈")
 @RestController
 @RequestMapping("/hyjf-admin/msp")
 public class MspApplyController extends BaseController {
@@ -64,7 +57,7 @@ public class MspApplyController extends BaseController {
 	 * 列表维护画面初始化
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "预注册用户页面载入", notes = "预注册用户页面载入")
@@ -93,7 +86,7 @@ public class MspApplyController extends BaseController {
 	 * 画面迁移(含有id更新，不含有id添加)
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "新增页面初始化", notes = "新增页面初始化")
@@ -124,7 +117,7 @@ public class MspApplyController extends BaseController {
 	 * 添加活动信息
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "新增", notes = "新增")
@@ -155,7 +148,7 @@ public class MspApplyController extends BaseController {
 	 * 修改活动维护信息
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "修改", notes = "修改")
@@ -184,7 +177,7 @@ public class MspApplyController extends BaseController {
 	 * 删除胡配置信息
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "删除", notes = "删除")
@@ -237,8 +230,8 @@ public class MspApplyController extends BaseController {
 	 * 导出功能
 	 * 
 	 * @param request
-	 * @param modelAndView
-	 * @param form
+	 * @param
+	 * @param
 	 */
 	@RequestMapping("/exportAction")
 	@ApiOperation(value = "导出", notes = "导出")
@@ -317,7 +310,7 @@ public class MspApplyController extends BaseController {
 	 * 画面迁移(含有id更新，不含有id添加)
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ResponseBody
@@ -373,7 +366,7 @@ public class MspApplyController extends BaseController {
 	 * 列表维护画面初始化
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@ResponseBody
@@ -556,7 +549,7 @@ public class MspApplyController extends BaseController {
 	 * 数据导出
 	 * 
 	 * @param request
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")

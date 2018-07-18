@@ -1,6 +1,8 @@
 package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
  * 债转详情vo
@@ -220,6 +222,10 @@ public class BorrowCreditDetailVO extends BaseVO {
 
     public void setCreditUserTrueName(String creditUserTrueName) {
         String creditUserFormat = "";
+        if (StringUtils.isBlank(creditUserTrueName)){
+            this.creditUserTrueName = "";
+            return;
+        }
         if (creditUserTrueName.length() > 1) {
             char[] replaceArry = creditUserTrueName.toCharArray();
             creditUserFormat = String.valueOf(replaceArry[0]);

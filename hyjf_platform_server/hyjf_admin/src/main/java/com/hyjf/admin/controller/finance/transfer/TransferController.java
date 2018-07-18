@@ -48,7 +48,7 @@ import java.util.Map;
  * @version TransferController, v0.1 2018/7/6 17:51
  */
 
-@Api(value = "子账户间转账")
+@Api(value = "子账户间转账",description = "子账户间转账")
 @RestController
 @RequestMapping("/hyjf-admin/finance/transfer")
 public class TransferController extends BaseController {

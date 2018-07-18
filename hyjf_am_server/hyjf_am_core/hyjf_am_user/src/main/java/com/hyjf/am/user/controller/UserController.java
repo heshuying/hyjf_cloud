@@ -64,6 +64,33 @@ public class UserController extends BaseController {
         return userResponse;
     }
 
+    @PostMapping("/surongRegister")
+
+    public UserResponse surongRegister(@RequestBody @Valid RegisterUserRequest userRequest) {
+        logger.info("user register:" + JSONObject.toJSONString(userRequest));
+        UserResponse userResponse = new UserResponse();
+        User user = null;
+        try {
+            user = userService.surongRegister(userRequest);
+
+            if (user == null) {
+                userResponse.setRtn(Response.FAIL);
+                userResponse.setMessage(Response.FAIL_MSG);
+                logger.error("user register error,user " + userRequest.getMobile());
+            } else {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                userResponse.setResult(userVO);
+            }
+        } catch (MQException e) {
+            logger.error("user register error...", e);
+            userResponse.setRtn(Response.FAIL);
+            userResponse.setMessage(Response.FAIL_MSG);
+        }
+
+        return userResponse;
+    }
+
     /**
      * 根据渠道号检索渠道是否存在
      *

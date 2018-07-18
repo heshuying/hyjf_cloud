@@ -10,7 +10,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @author pangchengchao
  * @version SynBalanceService, v0.1 2018/6/19 18:05
  */
-public interface SynBalanceService {
+public interface SynBalanceService extends BaseTradeService{
     /**
      * @Description 获取用户开户信息
      * @Author pangchengchao

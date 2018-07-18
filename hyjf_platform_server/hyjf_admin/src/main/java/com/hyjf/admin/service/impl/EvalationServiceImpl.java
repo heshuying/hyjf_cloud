@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.EvalationClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.user.EvalationResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class EvalationServiceImpl implements EvalationService {
 
     @Autowired
-    private EvalationClient evalationClient;
+    private AmUserClient evalationClient;
     /**
      * 查找用户测评数据
      * @return
