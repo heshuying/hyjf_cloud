@@ -709,4 +709,30 @@ public interface AmTradeClient {
      */
     public Integer getTotalInverestCount(String userId);
 
+
+    /**
+     * 根据标的编号查询还款计划
+     * @param borrowNid
+     * @param repaySmsReminder
+     * @return
+     */
+    List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder);
+
+    /**
+     * 短信发送后更新borrowRecoverPlan
+     *
+     * @param borrowRepayPlanVO
+     * @return
+     */
+    Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO);
+
+    /**
+     * 根据borrowNid和borrowPeriod查询
+     * @param bidNid
+     * @param borrowPeriod
+     * @return
+     */
+    List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
+
+    List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid);
 }
