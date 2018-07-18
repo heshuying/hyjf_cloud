@@ -230,7 +230,6 @@ public interface AmUserClient {
 
     void clearMobileCode(Integer userId, String sign);
 
-	UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform);
 
 	UserVO surongRegister(RegisterUserRequest registerUserRequest);
 
