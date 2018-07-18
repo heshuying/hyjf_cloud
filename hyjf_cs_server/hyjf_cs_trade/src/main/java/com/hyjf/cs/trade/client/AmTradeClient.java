@@ -1000,4 +1000,30 @@ public interface AmTradeClient {
      * @Date
      */
     List<WebUserWithdrawListCustomizeVO> searchUserWithdrawList(TradeDetailBeanRequest form);
+
+    /**
+     * 取得优惠券投资信息
+     * @param couponTenderNid
+     * @return
+     */
+    BorrowTenderCpnVO getCouponTenderInfo(String couponTenderNid);
+
+    /**
+     * 获取用户优惠券投资信息
+     * @param userId
+     * @param borrowNid
+     * @param logOrdId
+     * @param couponGrantId
+     * @return
+     */
+    BorrowTenderCpnVO getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新borrowTenderCpn表
+     * @Date 10:57 2018/7/18
+     * @Param borrowTenderCpn
+     * @return
+     */
+    int updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn);
 }
