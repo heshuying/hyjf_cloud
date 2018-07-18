@@ -12,6 +12,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
+import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -56,7 +58,7 @@ public class OperationLogController  extends BaseController {
         BeanUtils.copyProperties(operationLogRequestBean, adminRequest);
         // 封装查询条件
         Map<String, Object> conditionMap = setCondition(adminRequest);
-        AdminOperationLogResponse response =operationLogService.selectOperationLogListByPage(conditionMap);
+        AdminOperationLogResponse response =operationLogService.selectOperationLogList(conditionMap,-1,-1);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -71,13 +73,21 @@ public class OperationLogController  extends BaseController {
     @RequestMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult operationLogConfigInfoList(@RequestBody OperationLogRequestBean operationLogRequestBean) {
+        AdminOperationLogResponse response = new AdminOperationLogResponse();
         AdminOperationLogRequest adminRequest= new AdminOperationLogRequest();
         //可以直接使用
         BeanUtils.copyProperties(operationLogRequestBean, adminRequest);
+        // 资产来源  inst_code机构编号 inst_name机构名称
+        List<HjhInstConfigVO> hjhInstConfigs=this.operationLogService.getHjhInstConfig();
+        response.setHjhInstConfigList(hjhInstConfigs);
+        //产品类型   asset_type  asset_type_name资产类型名称
+        List<HjhAssetTypeVO> hjhAssetTypes = this.operationLogService.getHjhAssetType();
+        response.setHjhAssetTypes(hjhAssetTypes);
+        response.setUpdateTypes( updateTypeList());
         // 封装查询条件
         Map<String, Object> conditionMap = setCondition(adminRequest);
         conditionMap.put("paginatorPage",adminRequest.getPaginatorPage());
-        AdminOperationLogResponse response =operationLogService.selectOperationLogListByPage(conditionMap);
+        response = operationLogService.selectOperationLogList(conditionMap,-1,-1);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -109,9 +119,9 @@ public class OperationLogController  extends BaseController {
 
         // 封装查询条件
         Map<String, Object> conditionMap = setCondition(form);
+        AdminOperationLogResponse operationLogResponseResponse = this.operationLogService.selectOperationLogList(conditionMap,-1,-1);
 
-        List<FeerateModifyLogVO> resultList =  this.operationLogService.selectOperationLogListExport(conditionMap,-1,-1);
-
+        List<FeerateModifyLogVO> resultList =  operationLogResponseResponse.getResultList();
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "资产来源", "产品类型", "期限", "自动发标利率", "服务费", "管理费", "收益差率", "逾期利率", "逾期免息天数", "状态", "修改类型", "操作人", "操作时间" };
@@ -147,14 +157,14 @@ public class OperationLogController  extends BaseController {
                     if (celLength == 0) {
                         cell.setCellValue(i + 1);
                     }
-//                    // 资产来源
-//                    else if (celLength == 1) {
-//                        cell.setCellValue(record.getInstName());
-//                    }
-//                    // 产品类型
-//                    else if (celLength == 2) {
-//                        cell.setCellValue(record.getAssetTypeName());
-//                    }
+                    // 资产来源
+                    else if (celLength == 1) {
+                        cell.setCellValue(record.getInstName());
+                    }
+                    // 产品类型
+                    else if (celLength == 2) {
+                        cell.setCellValue(record.getAssetTypeName());
+                    }
                     // 期限
                     else if (celLength == 3) {
                         cell.setCellValue(record.getBorrowPeriod());
@@ -192,7 +202,7 @@ public class OperationLogController  extends BaseController {
                     else if (celLength == 11) {
                         cell.setCellValue(accountEsbStates(record.getModifyType()));
                     }
-//                    // 操作人
+////                    // 操作人
 //                    else if (celLength == 12) {
 //                        cell.setCellValue(record.getName());
 //                    }

@@ -2,15 +2,16 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.OperationLogClient;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
+import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
-
 /**
  * @author by xiehuili on 2018/7/17.
  */
@@ -25,28 +26,36 @@ public class OperationLogClientImpl implements OperationLogClient {
      * @return
      */
     @Override
-    public AdminOperationLogResponse selectOperationLogListByPage(Map<String, Object> map){
-        String url = "http://AM-CONFIG/am-config/config/operationlog/list";
-        AdminOperationLogResponse response = restTemplate.postForEntity(url,map,AdminOperationLogResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
+    public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map, int limitStart, int limitEnd){
+        AdminOperationLogResponse amConfigResponse = restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list",map,AdminOperationLogResponse.class).getBody();
+        List<FeerateModifyLogVO> configList = amConfigResponse.getResultList();
+        //查询 资产来源 instCode 和 assetType的值
+        AdminOperationLogRequest adminRequest = new AdminOperationLogRequest();
+        if(!CollectionUtils.isEmpty(configList)) {
+            String [] instCodes = new String[configList.size()];
+            Integer [] assertTypes = new Integer[configList.size()];
+            for (int i=0;i<configList.size();i++){
+                instCodes[i] = configList.get(i).getInstCode();
+                assertTypes[i] = configList.get(i).getAssetType();
+            }
+            adminRequest.setInstCodes(instCodes);
+            adminRequest.setAssertTypes(assertTypes);
+            List<FeerateModifyLogVO> tradeList = restTemplate.postForEntity("http://AM-TRADE/am-trade/config/operationlog/selectInstAndAssertType", adminRequest, List.class).getBody();
+            if (!CollectionUtils.isEmpty(configList)) {
+                for (int i = 0; i < configList.size(); i++) {
+                    FeerateModifyLogVO vO = configList.get(i);
+                    for (int j = 0; j < tradeList.size(); j++) {
+                        if (vO.getInstCode().equals(tradeList.get(i).getInstCode()) && vO.getAssetType().equals(tradeList.get(i).getAssetType())) {
+                            vO.setInstName(tradeList.get(i).getInstName());
+                            vO.setAssetTypeName(tradeList.get(i).getAssetTypeName());
+                        }
+                    }
 
-    /**
-     * 配置中心操作日志配置-导出查询
-     * @param map
-     * @return
-     */
-    @Override
-    public List<FeerateModifyLogVO> selectOperationLogListExport(Map<String, Object> map, int limitStart, int limitEnd){
-        String url = "http://AM-CONFIG/am-config/config/operationlog/export";
-        List<FeerateModifyLogVO> response = restTemplate.postForEntity(url,map,List.class).getBody();
-        if (response != null) {
-            return response;
+                }
+                amConfigResponse.setResultList(configList);
+            }
         }
-        return null;
+        return amConfigResponse;
     }
     /**
      * 产品类型   asset_type  asset_type_name资产类型名称
@@ -57,11 +66,7 @@ public class OperationLogClientImpl implements OperationLogClient {
     @Override
     public List<HjhAssetTypeVO> getHjhAssetType(){
         String url = "http://AM-TRADE/am-trade/config/operationlog/getHjhAssetType";
-        List<HjhAssetTypeVO> response = restTemplate.getForEntity(url,List.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
+        return restTemplate.getForEntity(url,List.class).getBody();
     }
 
 }

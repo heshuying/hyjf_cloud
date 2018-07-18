@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.OperationLogCustomizeMapper">
+    <select id="selectInstCodeList" resultType="java.util.List" parameterType="com.hyjf.am.resquest.admin.AdminOperationLogRequest" >
+        SELECT DISTINCT
+        inst_name
+        FROM
+        ht_hjh_inst_config hhic
+        WHERE 1=1
+        <if test="instCodes != null and instCodes != ''">
+            AND hhic.inst_code in
+            <foreach collection="instCodes" open="(" close=")" separator="," item="instCode">
+                #{instCode}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectAssertTypeList" resultType="java.util.List" parameterType="com.hyjf.am.resquest.admin.AdminOperationLogRequest" >
+        SELECT DISTINCT
+        asset_type_name
+        FROM
+        ht_hjh_asset_type hhat
+        WHERE 1=1
+        <if test="instCodes != null and instCodes != ''">
+            AND hhat.inst_code in
+            <foreach collection="instCodes" open="(" close=")" separator="," item="instCode">
+                #{instCode}
+            </foreach>
+        </if>
+        AND
+        <if test="assetTypes != null">
+            hhat.asset_type in
+            <foreach collection="assetTypes" open="(" close=")" separator="," item="assetType">
+                #{assetType}
+            </foreach>
+        </if>
+    </select>
+</mapper>

@@ -8,15 +8,12 @@ import com.hyjf.am.response.admin.AdminOperationLogResponse;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +33,7 @@ public class OperationLogController extends BaseConfigController {
      * @return
      */
     @RequestMapping("/list")
-    public AdminOperationLogResponse selectOperationLogListByPage(@RequestBody  Map<String, Object> map) {
+    public AdminOperationLogResponse selectOperationLogList(@RequestBody  Map<String, Object> map) {
         logger.info("操作日志列表..." + JSONObject.toJSON(map));
         AdminOperationLogResponse  response =new AdminOperationLogResponse();
         //查询版本配置列表条数
@@ -44,8 +41,7 @@ public class OperationLogController extends BaseConfigController {
         if (recordTotal > 0) {
             Paginator paginator = new Paginator((int)map.get("paginatorPage"), recordTotal);
             //查询记录  todo
-//            List<FeerateModifyLog> recordList =operationLogService.selectOperationLogListByPage(map,paginator.getOffset(), paginator.getLimit());
-            List<FeerateModifyLog> recordList =null;
+            List<FeerateModifyLog> recordList =operationLogService.selectOperationLogListByPage(map,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<FeerateModifyLogVO> feerateModifyLogVOList = CommonUtils.convertBeanList(recordList, FeerateModifyLogVO.class);
                 for (int i = 0; i < feerateModifyLogVOList.size(); i++) {
@@ -60,57 +56,44 @@ public class OperationLogController extends BaseConfigController {
         }
         return null;
     }
-
-    /**
-     * 配置中心操作日志配置-导出查询
-     * @param map
-     * @return
-     */
-    @RequestMapping("/export")
-    public List<FeerateModifyLogVO> selectOperationLogListExport(Map<String, Object> map, int limitStart, int limitEnd){
-        List<FeerateModifyLogVO> feerateModifyLogVOList =new ArrayList<FeerateModifyLogVO>();
-        List<FeerateModifyLog> feerateModifyLogList= operationLogService.selectOperationLogListByPage(map,limitStart,limitEnd);
-        BeanUtils.copyProperties(feerateModifyLogList,feerateModifyLogVOList);
-        return feerateModifyLogVOList;
-    }
-
-    /**
-     * 修改类型
-     * @return list
-     */
-    public List<Map<String,String>> updateTypeList(){
-
-        List list=new ArrayList();
-        Integer i = 0;
-        for (; i < 4; i++) {
-            Map<String,String> map=new HashMap();
-            switch (i) {
-                case 0:
-//				map.put("typeId", i.toString());
-//				map.put("name", "全部");
-                    break;
-                case 1:
-                    map.put("typeId", i.toString());
-                    map.put("name", "增加");
-                    break;
-                case 2:
-                    map.put("typeId", i.toString());
-                    map.put("name", "修改");
-                    break;
-                case 3:
-                    map.put("typeId", i.toString());
-                    map.put("name", "删除");
-                    break;
-                default:
-                    break;
-            }
-            list.add(map);
-        }
-        return list;
-
-
-
-    }
+//
+//    /**
+//     * 修改类型
+//     * @return list
+//     */
+//    public List<Map<String,String>> updateTypeList(){
+//
+//        List list=new ArrayList();
+//        Integer i = 0;
+//        for (; i < 4; i++) {
+//            Map<String,String> map=new HashMap();
+//            switch (i) {
+//                case 0:
+////				map.put("typeId", i.toString());
+////				map.put("name", "全部");
+//                    break;
+//                case 1:
+//                    map.put("typeId", i.toString());
+//                    map.put("name", "增加");
+//                    break;
+//                case 2:
+//                    map.put("typeId", i.toString());
+//                    map.put("name", "修改");
+//                    break;
+//                case 3:
+//                    map.put("typeId", i.toString());
+//                    map.put("name", "删除");
+//                    break;
+//                default:
+//                    break;
+//            }
+//            list.add(map);
+//        }
+//        return list;
+//
+//
+//
+//    }
     //判断修改类型表
     public String accountEsbStates(Integer string) {
 //        if (string==0) {

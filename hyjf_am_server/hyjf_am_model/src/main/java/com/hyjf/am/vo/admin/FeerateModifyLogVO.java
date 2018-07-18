@@ -55,6 +55,31 @@ public class FeerateModifyLogVO extends BaseVO implements Serializable {
     // 修改类型
     private	String modifyTypeSrch;
 
+    /**
+     * 机构编号名称
+     */
+    private String instName;
+    /**
+     * 机构产品类型名称
+     */
+    private String assetTypeName;
+
+    public String getInstName() {
+        return instName;
+    }
+
+    public void setInstName(String instName) {
+        this.instName = instName;
+    }
+
+    public String getAssetTypeName() {
+        return assetTypeName;
+    }
+
+    public void setAssetTypeName(String assetTypeName) {
+        this.assetTypeName = assetTypeName;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {

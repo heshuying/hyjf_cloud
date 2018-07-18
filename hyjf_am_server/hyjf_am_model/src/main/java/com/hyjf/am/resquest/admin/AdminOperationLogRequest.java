@@ -1,7 +1,6 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.common.paginator.*;
 
 import java.math.BigDecimal;
 
@@ -26,6 +25,9 @@ public class AdminOperationLogRequest extends BasePage {
     String recieveTimeEndSrch;
     //状态名称
     String statusName;
+
+    String [] instCodes ;
+    Integer [] assertTypes ;
 
     private Integer id;
 
@@ -329,6 +331,21 @@ public class AdminOperationLogRequest extends BasePage {
         this.createTimeString = createTimeString;
     }
 
+    public String[] getInstCodes() {
+        return instCodes;
+    }
+
+    public void setInstCodes(String[] instCodes) {
+        this.instCodes = instCodes;
+    }
+
+    public Integer[] getAssertTypes() {
+        return assertTypes;
+    }
+
+    public void setAssertTypes(Integer[] assertTypes) {
+        this.assertTypes = assertTypes;
+    }
 
     /**
      * 翻页机能用的隐藏变量
