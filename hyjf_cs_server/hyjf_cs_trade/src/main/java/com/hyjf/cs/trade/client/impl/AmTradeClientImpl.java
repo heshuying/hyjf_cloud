@@ -23,10 +23,7 @@ import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
@@ -2396,6 +2393,84 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowTenderCpnResponse response = restTemplate.postForEntity(url,borrowTenderCpn,BorrowTenderCpnResponse.class).getBody();
         if (response != null) {
             return response.getFlag();
+        }
+        return 0;
+    }
+
+    /**
+     * @param couponGrantId
+     * @param userId
+     * @Description 根据优惠券ID和用户ID查询优惠券
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/19 16:20
+     */
+    @Override
+    public CouponUserVO getCouponUser(Integer couponGrantId, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/coupon/getCouponUser/" + couponGrantId + "/" + userId;
+        CoupUserResponse response = restTemplate.getForEntity(url, CoupUserResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 优惠券投资
+     *
+     * @param couponTender
+     * @return
+     */
+    @Override
+    public boolean updateCouponTender(CouponTenderVO couponTender) {
+        Integer result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/coupon/updateCouponTender", couponTender, Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhList(String orderId) {
+        CouponResponse response = new CouponResponse();
+        response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhlist/"+orderId, CouponResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhCouponOnlyList(String couponOrderId) {
+        CouponResponse response = new CouponResponse();
+        response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhcoupononlylist/"+couponOrderId, CouponResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int countByExample(String tenderNid) {
+        CouponResponse response = new CouponResponse();
+        response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/couponConfig/countbytendernid/"+tenderNid, CouponResponse.class).getBody();
+        if (response != null) {
+            return response.getTotalRecord();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer crRecoverPeriod(String tenderNid, int currentRecoverFlg, int period) {
+        CouponResponse response = new CouponResponse();
+        response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/couponConfig/crrecoverperiod/"+tenderNid+"/"+currentRecoverFlg+"/"+period, CouponResponse.class).getBody();
+        if (response != null) {
+            return response.getTotalRecord();
         }
         return 0;
     }
