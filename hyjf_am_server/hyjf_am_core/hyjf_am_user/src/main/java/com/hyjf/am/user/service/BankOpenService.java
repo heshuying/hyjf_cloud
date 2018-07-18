@@ -64,4 +64,12 @@ public interface BankOpenService extends BaseService {
 	 * @Date 2018/6/21 15:52
 	 */
     String getBankOpenAccountFiledMess(String logOrdId);
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	List<BankCard> selectBankCardByUserIdAndStatus(Integer userId, Integer status);
 }
