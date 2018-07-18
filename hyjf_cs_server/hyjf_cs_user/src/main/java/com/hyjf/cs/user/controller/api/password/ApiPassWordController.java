@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "api端密码相关服务")
+@Api(value = "api端密码相关服务",description = "api端密码相关服务")
 @Controller
 @RestController
 @RequestMapping("/api/user/password")

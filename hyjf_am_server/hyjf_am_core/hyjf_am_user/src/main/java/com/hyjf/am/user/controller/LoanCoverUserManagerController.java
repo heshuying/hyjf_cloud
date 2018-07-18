@@ -116,7 +116,7 @@ public class LoanCoverUserManagerController extends BaseController{
 
     }
     /**
-     * 根据证件号码查找借款主体CA认证记录表
+     * 根据证id查找借款主体CA认证记录表
      */
     @RequestMapping("/selectIsExistsRecordById/{strId}")
     public LoanCoverUserResponse selectIsExistsRecordById(@PathVariable String strId){

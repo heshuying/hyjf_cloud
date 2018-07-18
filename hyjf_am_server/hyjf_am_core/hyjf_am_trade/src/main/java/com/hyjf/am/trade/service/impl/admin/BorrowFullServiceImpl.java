@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.impl.admin;
 
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
@@ -87,7 +86,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
     public List<BorrowFullCustomize> selectBorrowFullList(BorrowFullRequest borrowFullRequest) {
         List<BorrowFullCustomize> list = borrowFullCustomizeMapper.selectBorrowFullList(borrowFullRequest);
         if (!CollectionUtils.isEmpty(list)) {
-            Map<String, String> map = CacheUtil.getParamNameMap("hyjf_param_name:REVERIFY_STATUS");
+            Map<String, String> map = CacheUtil.getParamNameMap("REVERIFY_STATUS");
             if (!CollectionUtils.isEmpty(map)) {
                 for (BorrowFullCustomize borrowFullCustomize : list) {
                     borrowFullCustomize.setReverifyStatusName(map.getOrDefault(borrowFullCustomize.getReverifyStatus(), null));
@@ -141,7 +140,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         List<BorrowFullCustomize> list = borrowFullCustomizeMapper.selectFullList(
                 borrowFullRequest.getBorrowNidSrch(), borrowFullRequest.getLimitStart(), borrowFullRequest.getLimitEnd());
         if (!CollectionUtils.isEmpty(list)) {
-            Map<String, String> map = CacheUtil.getParamNameMap("hyjf_param_name:CLIENT");
+            Map<String, String> map = CacheUtil.getParamNameMap("CLIENT");
             if (!CollectionUtils.isEmpty(map)) {
                 for (BorrowFullCustomize borrowFullCustomize : list) {
                     borrowFullCustomize.setOperatingDeck(map.getOrDefault(borrowFullCustomize.getOperatingDeck(), null));

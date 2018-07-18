@@ -46,4 +46,6 @@ public interface RegistService extends BaseUserService {
     int countUserByRecommendName(String recommend);
 
     AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
+
+    UserVO insertUserAction(RegisterRequest register, String ipAddr, String platform);
 }

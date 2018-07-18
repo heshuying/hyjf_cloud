@@ -3,16 +3,20 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.response.market.UtmRegResponse;
 import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -134,7 +138,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Integer getTenderNumber(Integer sourceId, String type) {
 		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList();
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
 		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/borrowTender/getutmtendernum", list, BorrowTenderResponse.class);
 		if (tenderResponse != null) {
@@ -146,7 +150,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BigDecimal getCumulativeRecharge(Integer sourceId, String type) {
 		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList();
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
 		AccountRechargeResponse response = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/accountrecharge/getrechargeprice", list, AccountRechargeResponse.class);
 		if (response != null) {
@@ -158,7 +162,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BigDecimal getHztTenderPrice(Integer sourceId, String type) {
 		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList();
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
 		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/borrowTender/gethzttenderprice", list, BorrowTenderResponse.class);
 		if (tenderResponse != null) {
@@ -170,7 +174,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BigDecimal getHxfTenderPrice(Integer sourceId, String type) {
 		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList();
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
 		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/borrowTender/gethxftenderprice", list, BorrowTenderResponse.class);
 		if (tenderResponse != null) {
@@ -192,7 +196,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BigDecimal getRtbTenderPrice(Integer sourceId, String type) {
 		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList();
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
 		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/borrowTender/getrtbtenderprice", list, BorrowTenderResponse.class);
 		if (tenderResponse != null) {
@@ -204,7 +208,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BigDecimal getHzrTenderPrice(Integer sourceId, String type) {
 		// 获取utm注册用户id
-		List<Integer> list = geUtmRegUserIdtList();
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "1");
 		CreditTenderResponse response = restTemplate.postForObject(
 				"http://AM-TRADE/am-trade/creditTender/gethzrtenderprice", list, CreditTenderResponse.class);
 		if (response != null) {
@@ -215,81 +219,202 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BigDecimal getRegisterAttrCount(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		UtmRegResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getregisterattrcount", userIdList, UtmRegResponse.class);
+		if (response != null) {
+			return response.getRegisterAttrCount();
+		}
 		return null;
 	}
 
+
+
 	@Override
 	public Integer getAccountNumberIos(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		UtmRegResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getaccountnumberios", userIdList, UtmRegResponse.class);
+		if (response != null) {
+			return response.getAccountNumberIos();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getAccountNumberPc(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		UtmRegResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getaccountnumberpc", userIdList, UtmRegResponse.class);
+		if (response != null) {
+			return response.getAccountNumberPc();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getAccountNumberAndroid(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		UtmRegResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getaccountnumberandroid", userIdList, UtmRegResponse.class);
+		if (response != null) {
+			return response.getAccountNumberAndroid();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getAccountNumberWechat(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		UtmRegResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getaccountnumberwechat", userIdList, UtmRegResponse.class);
+		if (response != null) {
+			return response.getAccountNumberWechat();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getTenderNumberAndroid(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		BorrowTenderResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-trade/borrowTender/gettendernumberandroid", userIdList, BorrowTenderResponse.class);
+		if (response != null) {
+			return response.getTenderNumberAndroid();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getTenderNumberIos(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		BorrowTenderResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-trade/borrowTender/gettendernumberios", userIdList, BorrowTenderResponse.class);
+		if (response != null) {
+			return response.getTenderNumberIos();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getTenderNumberPc(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		BorrowTenderResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-trade/borrowTender/gettendernumberpc", userIdList, BorrowTenderResponse.class);
+		if (response != null) {
+			return response.getTenderNumberPc();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getTenderNumberWechat(Integer sourceId) {
+		// 获取所有app渠道用户id
+		List<Integer> userIdList = getIAppChannerUserIdList();
+
+		BorrowTenderResponse response = restTemplate.postForObject(
+				"http://AM-USER/am-trade/borrowTender/gettendernumberwechat", userIdList, BorrowTenderResponse.class);
+		if (response != null) {
+			return response.getTenderNumberWechat();
+		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getCumulativeAttrCharge(Integer sourceId) {
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "0");
+		AccountRechargeResponse response = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/accountrecharge/getrechargeprice", list, AccountRechargeResponse.class);
+		if (response != null) {
+			return response.getRechargePrice();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getOpenAccountAttrCount(Integer sourceId) {
+		// 0无主单
+		UtmResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/promotion/utm/getopenaccountnumber/" + sourceId + "/0", UtmResponse.class);
+		if (response != null) {
+			return response.getOpenAccountNumber();
+		}
 		return null;
 	}
 
 	@Override
 	public Integer getInvestAttrNumber(Integer sourceId) {
+		// 0无主单
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "0");
+		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/borrowTender/getutmtendernum", list, BorrowTenderResponse.class);
+		if (tenderResponse != null) {
+			return tenderResponse.getTenderCount();
+		}
 		return null;
 	}
 
 	@Override
 	public BigDecimal getCumulativeAttrInvest(Integer sourceId) {
+		// 获取utm注册用户id 0无主单
+		List<Integer> list = geUtmRegUserIdtList(sourceId, "0");
+		BorrowTenderResponse tenderResponse = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/borrowTender/gethzttenderprice", list, BorrowTenderResponse.class);
+		if (tenderResponse != null) {
+			return tenderResponse.getHztTenderPrice();
+		}
 		return null;
 	}
 
 	/**
 	 * 获取渠道用户userid集合
+	 * @param type 0无主单 1有主单
 	 * @return
 	 */
-	private List<Integer> geUtmRegUserIdtList() {
-		UtmResponse response = restTemplate.getForObject("http://AM-USER/am-user/promotion/utmreg/getutmreglist",
-				UtmResponse.class);
+	private List<Integer> geUtmRegUserIdtList(Integer sourceId, String type) {
+		UtmResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/promotion/utmreg/getutmreglist/" + sourceId + "/" + type, UtmResponse.class);
 		List<Integer> userIdList = new ArrayList<>();
 		if (response != null) {
 			List<UtmRegVO> list = response.getResultList();
 			for (UtmRegVO vo : list) {
 				userIdList.add(vo.getUserId());
+			}
+		}
+		return userIdList;
+	}
+
+	/**
+	 * 获取app渠道注册用户id集合
+	 * @return
+	 */
+	private List<Integer> getIAppChannerUserIdList() {
+		AppChannelStatisticsDetailResponse detailResponse = restTemplate.getForObject(
+				"http://AM-DATA-COLLECT/am-statistics/getappchannelstatisticsdetail",
+				AppChannelStatisticsDetailResponse.class);
+		List<Integer> userIdList = new ArrayList<>();
+		if (detailResponse != null) {
+			List<AppChannelStatisticsDetailVO> resultList = detailResponse.getResultList();
+			if (!CollectionUtils.isEmpty(resultList)) {
+				for (AppChannelStatisticsDetailVO vo : resultList) {
+					userIdList.add(vo.getUserId());
+				}
 			}
 		}
 		return userIdList;

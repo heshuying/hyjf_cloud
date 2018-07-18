@@ -13,10 +13,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -132,4 +129,28 @@ public class AppVersionController {
         return response;
 
     }
+
+    @RequestMapping("/getNewVersionByType/{type}")
+    public VersionConfigBeanResponse getNewVersionByType(@PathVariable Integer type){
+        VersionConfigBeanResponse response = new VersionConfigBeanResponse();
+        Version version = appVersionService.getNewVersionByType(type);
+        if (null!= version){
+            VersionVO versionVO = CommonUtils.convertBean(version, VersionVO.class);
+            response.setResult(versionVO);
+        }
+        return response;
+    }
+
+
+    @RequestMapping("/getUpdateversion/{type}/{isupdate}/{versionStr}")
+    public VersionConfigBeanResponse getUpdateversion(@PathVariable Integer type,@PathVariable Integer isupdate,@PathVariable String versionStr ){
+        VersionConfigBeanResponse response = new VersionConfigBeanResponse();
+        Version version = appVersionService.getUpdateversion(type,isupdate,versionStr);
+        if (null!= version){
+            VersionVO versionVO = CommonUtils.convertBean(version, VersionVO.class);
+            response.setResult(versionVO);
+        }
+        return response;
+    }
+
 }

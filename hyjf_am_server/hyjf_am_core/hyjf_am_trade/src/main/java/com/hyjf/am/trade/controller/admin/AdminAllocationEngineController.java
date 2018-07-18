@@ -3,18 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.druid.util.StringUtils;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhAllocationEngineResponse;
@@ -28,14 +16,19 @@ import com.hyjf.am.vo.admin.HjhAllocationEngineVO;
 import com.hyjf.am.vo.admin.HjhRegionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.paginator.Paginator;
-
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author libin
  * @version AdminAllocationEngineController.java, v0.1 2018年7月3日 下午1:31:17
  */
-@Api(value = "标的分配引擎-计划专区列表")
+@Api(value = "标的分配引擎-计划专区列表",description = "标的分配引擎-计划专区列表")
 @RestController
 @RequestMapping("/am-trade/allocation")
 public class AdminAllocationEngineController {
@@ -123,7 +116,7 @@ public class AdminAllocationEngineController {
 	/**
 	 * 校验入力的planNid
 	 * 
-	 * @param userId
+	 * @param
 	 * @return
 	 * @author Administrator
 	 */

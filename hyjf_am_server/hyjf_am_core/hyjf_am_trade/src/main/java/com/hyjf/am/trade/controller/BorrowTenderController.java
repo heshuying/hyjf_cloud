@@ -135,7 +135,7 @@ public class BorrowTenderController extends BaseController{
 	@PostMapping("/getutmtendernum")
 	public BorrowTenderResponse getUtmTenderNum(@RequestBody List<Integer> list) {
 		BorrowTenderResponse response = new BorrowTenderResponse();
-        Integer tenderNum = borrowTenderService.getUtmTenderNum(list);
+        Integer tenderNum = borrowTenderService.getUtmTenderNum(list, null);
 		if (tenderNum != null) {
 			response.setTenderCount(tenderNum);
 		}
@@ -183,6 +183,66 @@ public class BorrowTenderController extends BaseController{
         BigDecimal rtbTenderPrice = borrowTenderService.getRtbTenderPrice(list);
         if (rtbTenderPrice != null) {
             response.setRtbTenderPrice(rtbTenderPrice);
+        }
+        return response;
+    }
+
+    /**
+     * 查询相应的app渠道用户Android投资数
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/gettendernumberandroid")
+    public BorrowTenderResponse getTenderNumberAndroid(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        Integer tenderNum = borrowTenderService.getUtmTenderNum(list, "2");
+        if (tenderNum != null) {
+            response.setTenderCount(tenderNum);
+        }
+        return response;
+    }
+
+    /**
+     * 查询相应的app渠道用户ios投资数
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/gettendernumberios")
+    public BorrowTenderResponse getTenderNumberIos(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        Integer tenderNum = borrowTenderService.getUtmTenderNum(list, "3");
+        if (tenderNum != null) {
+            response.setTenderCount(tenderNum);
+        }
+        return response;
+    }
+
+    /**
+     * 查询相应的app渠道用户pc投资数
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/gettendernumberpc")
+    public BorrowTenderResponse getTenderNumberPc(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        Integer tenderNum = borrowTenderService.getUtmTenderNum(list, "0");
+        if (tenderNum != null) {
+            response.setTenderCount(tenderNum);
+        }
+        return response;
+    }
+
+    /**
+     * 查询相应的app渠道用户wechat投资数
+     * @param list utm注册用户userid集合
+     * @return
+     */
+    @PostMapping("/gettendernumberwechat")
+    public BorrowTenderResponse getTenderNumberWechat(@RequestBody List<Integer> list) {
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        Integer tenderNum = borrowTenderService.getUtmTenderNum(list, "1");
+        if (tenderNum != null) {
+            response.setTenderCount(tenderNum);
         }
         return response;
     }

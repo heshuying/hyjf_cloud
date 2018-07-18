@@ -3,10 +3,16 @@
  */
 package com.hyjf.am.user.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.am.user.service.BankOpenService;
+import com.hyjf.am.user.utils.IdCard15To18;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,31 +20,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
-import com.hyjf.am.user.dao.mapper.auto.CorpOpenAccountRecordMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
-import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.BankCardExample;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountLogExample;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.dao.model.auto.UtmRegExample;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.am.user.service.BankOpenService;
-import com.hyjf.am.user.utils.IdCard15To18;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
@@ -315,6 +299,23 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
     }
 
     /**
+     * 根据用户Id检索用户银行卡信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BankCard> selectBankCardByUserIdAndStatus(Integer userId) {
+        BankCardExample example = new BankCardExample();
+        BankCardExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        // 银行卡是否有效 0无效 1有效
+        cra.andStatusEqualTo(0);
+        List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
+        return bankCardList;
+    }
+
+    /**
      * 根据银行卡号,用户Id检索用户银行卡信息
      *
      * @param userId
@@ -371,5 +372,6 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return null;
     }
 
-
+   /* selectAccountBank
+    List<AccountBank> selectByExample(AccountBankExample example);*/
 }

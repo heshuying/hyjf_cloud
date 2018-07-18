@@ -44,7 +44,7 @@
         <commons.io.version>2.6</commons.io.version>
         <jwt.version>3.3.0</jwt.version>
         <google.coll.version>1.0-rc2</google.coll.version>
-        <springfox.swagger.version>2.2.2</springfox.swagger.version>
+        <springfox.swagger.version>2.7.0</springfox.swagger.version>
     </properties>
 
     <dependencies>

@@ -49,4 +49,18 @@ public interface AppVersionService {
     public void deleteRecord(List<Integer> ids);
 
 
+    /**
+     * 根据type     * @param type
+     * @return
+     */
+    Version getNewVersionByType(Integer type);
+
+    /**
+     * 强制更新版本号
+     * @param type
+     * @param isupdate
+     * @param versionStr
+     * @return
+     */
+    Version getUpdateversion(Integer type, Integer isupdate, String versionStr);
 }
