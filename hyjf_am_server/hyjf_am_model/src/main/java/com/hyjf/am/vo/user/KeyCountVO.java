@@ -54,16 +54,6 @@ public class KeyCountVO extends BaseVO implements Serializable {
     private String keyWordSrch;
 
     /**
-     * 检索条件 limitStart
-     */
-    private int limitStart = -1;
-
-    /**
-     * 检索条件 limitEnd
-     */
-    private int limitEnd = -1;
-
-    /**
      * sourceName
      *
      * @return the sourceName
