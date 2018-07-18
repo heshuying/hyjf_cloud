@@ -80,6 +80,7 @@ public class AccessFilter extends ZuulFilter {
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix;
 		if (requestUrl.contains("app")) {
+			//适应原来请求
 			requestUri = requestUri.replace("/hyjf-app","");
 			if (StringUtils.isNotBlank(appKeyIgnoreUrls) && !appKeyIgnoreUrls.contains(requestUri)) {
 				String sign = request.getParameter("sign");
@@ -133,7 +134,7 @@ public class AccessFilter extends ZuulFilter {
 			ctx.setResponseBody("非法域名访问!");
 			return null;
 		}
-
+		originalRequestPath = originalRequestPath.toString().replace("/hyjf-app","");
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
 		ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
