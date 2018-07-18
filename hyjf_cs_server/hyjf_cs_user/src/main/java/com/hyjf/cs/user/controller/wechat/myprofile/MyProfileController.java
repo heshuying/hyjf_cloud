@@ -12,6 +12,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.SimpleResultBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
@@ -47,12 +48,8 @@ public class MyProfileController extends BaseUserController {
     private MyProfileService myProfileService;
     @Autowired
     private RequestUtil requestUtil;
-    @Value("${file.domain.head.url}")
-    private String FILE_DOMAIN_HEAD_URL;
-    @Value("${file.upload.head.path}")
-    private String FILE_UPLOAD_HEAD_PATH;
-    @Value("${hyjf.wechat.qrcode.url}")
-    private String HYJF_WECHAT_QRCODE_URL;
+    @Autowired
+    private SystemConfig systemConfig;
 
 
     @SignValidate
@@ -88,16 +85,16 @@ public class MyProfileController extends BaseUserController {
 
     private void getIconUrl(Integer userId, MyProfileVO myProfileVO) {
         UserVO user = myProfileService.getUsers(Integer.valueOf(userId));
-        String imghost = UploadFileUtils.getDoPath(FILE_DOMAIN_HEAD_URL);
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
         String imagePath="";
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             // 实际物理路径前缀
-            String fileUploadRealPath = UploadFileUtils.getDoPath(FILE_UPLOAD_HEAD_PATH);
+            String fileUploadRealPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
             imagePath = imghost + fileUploadRealPath + user.getIconUrl();
 
         }
         myProfileVO.getUserAccountInfo().setIconUrl(imagePath);
-        myProfileVO.getUserAccountInfo().setQrcodeUrl(HYJF_WECHAT_QRCODE_URL.replace("{userId}", String.valueOf(userId)));
+        myProfileVO.getUserAccountInfo().setQrcodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
 
     }
 

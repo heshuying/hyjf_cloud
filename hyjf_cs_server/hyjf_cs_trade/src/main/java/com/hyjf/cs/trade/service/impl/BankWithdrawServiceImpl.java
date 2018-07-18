@@ -411,14 +411,18 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * 定时任务提现
      */
     @Override
-    public void batchWithdraw() {
+    public boolean batchWithdraw() {
+        boolean ret = true;
         List<AccountWithdrawVO> withdrawList = this.bankWithdrawClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
-                this.updateWithdraw(accountWithdraw);
+                if (!updateWithdraw(accountWithdraw)){
+                    ret = false;
+                }
             }
         }
 
+        return ret;
     }
 
     /**
@@ -426,22 +430,25 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * add by jijun 20180621
      * @param accountwithdraw
      */
-    private void updateWithdraw(AccountWithdrawVO accountwithdraw) {
+    private boolean updateWithdraw(AccountWithdrawVO accountwithdraw) {
         //调用银行接口
         BankCallBeanVO bean = this.bankWithdrawClient.bankCallFundTransQuery(accountwithdraw);
+        boolean result = false;
         if (bean != null) {
             int userId = accountwithdraw.getUserId();
             BankCardVO bankCard = this.bankWithdrawClient.selectBankCardByUserId(userId);
             BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
             String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
             //调用后平台操作
-            Boolean result=this.bankWithdrawClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
+            result=this.bankWithdrawClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
             if (result){
                 logger.info("银行提现掉单修复成功!");
+
             }else{
                 logger.info("银行提现掉单修复失败！");
             }
         }
+        return result;
     }
 
 

@@ -3,12 +3,14 @@ package com.hyjf.cs.user.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SmsConfigResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
+import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
@@ -146,5 +148,19 @@ public class AmConfigClientImpl implements AmConfigClient {
         String retMsg = restTemplate
                 .getForEntity("http://AM-CONFIG/am-config/adminException/getBankRetMsg/" + retCode, String.class).getBody();
         return retMsg;
+    }
+
+    @Override
+    public VersionVO getNewVersionByType(Integer type) {
+        VersionConfigBeanResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/appversion/getNewVersionByType/" + type, VersionConfigBeanResponse.class).getBody();
+        return response.getResult();
+    }
+
+    @Override
+    public VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr) {
+        VersionConfigBeanResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/appversion/getUpdateversion/" + type+"/"+isupdate+"/"+versionStr, VersionConfigBeanResponse.class).getBody();
+        return response.getResult();
     }
 }
