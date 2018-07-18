@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "会员中心-用户画像接口")
+@Api(value = "会员中心-用户画像接口",description = "会员中心-用户画像接口")
 @RestController
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
@@ -66,7 +66,6 @@ public class UserPortraitController extends BaseController {
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<UserPortraitVO>> selectUserPortraitList(HttpServletRequest request,@RequestBody UserPortraitRequestBean userPortraitRequestBean) {
-        JSONObject jsonObject = new JSONObject();
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
         BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
         UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
@@ -149,7 +148,7 @@ public class UserPortraitController extends BaseController {
         userPortraitRequest.setUserName(userName);
         userPortraitRequest.setYesterdayBeginTime(yesterdayBegin);
         userPortraitRequest.setYesterdayEndTime(yesterdayEnd);
-        userPortraitRequest.setLimitFlg(0);
+        userPortraitRequest.setLimitFlg(true);//导出时查找全部数据
         List<UserPortraitVO> loanCoverUserVOList =new ArrayList<UserPortraitVO>();
         UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
         if(null!=responseUserPortrait){

@@ -2922,4 +2922,120 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+    /**
+     * 查找资金明细列表
+     * @author nixiaoling
+     * @param request
+     * @return
+     */
+    @Override
+    public AccountDetailResponse findAccountDetailList(AccountDetailRequest request) {
+        AccountDetailResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/adminaccountdetail/accountdetaillist", request, AccountDetailResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询交易明细最小的id
+     * @param userId
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId) {
+        AdminAccountDetailDataRepairResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/queryaccountdetailidbyuserid/" + userId, AdminAccountDetailDataRepairResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询出还款后,交易明细有问题的用户ID
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
+        AdminAccountDetailDataRepairResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/queryaccountdetailerroruserlist", AdminAccountDetailDataRepairResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据Id查询此条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AccountListResponse selectAccountById(int accountId) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectaccountbyid/" + accountId, AccountListResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountListResponse selectNextAccountList(int accountId, int userId) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectnextaccountlist/" + userId + "/" + accountId, AccountListResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AccountTradeResponse selectAccountTradeByValue(String tradeValue) {
+        AccountTradeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectaccounttradebyvalue/" + tradeValue, AccountTradeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public int updateAccountList(AccountListRequest accountListRequest) {
+        int intUpdFlg = restTemplate.
+                postForEntity("http://AM-TRADE/am-trade/adminaccountdetail/updateaccountlist", accountListRequest, Integer.class).
+                getBody();
+        return intUpdFlg;
+    }
+
 }

@@ -62,7 +62,7 @@ public class UserPortraitManagerController extends BaseController{
         int limitStart = 0;
         int limitEnd = 1000;
         //查询导出数据
-        if(request.getLimitFlg()!=0){
+        if(request.isLimitFlg()){
             limitStart = paginator.getOffset();
             limitEnd = paginator.getLimit();
         }

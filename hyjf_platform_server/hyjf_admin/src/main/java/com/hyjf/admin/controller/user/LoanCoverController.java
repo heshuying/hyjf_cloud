@@ -60,7 +60,6 @@ public class LoanCoverController extends BaseController {
     public AdminResult<ListResult<LoanCoverUserVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest  = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
-        loanCoverUserRequest.setLimitFlg(0);
         LoanCoverUserResponse loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
         if(loanCoverUserVOList==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -85,40 +84,6 @@ public class LoanCoverController extends BaseController {
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }
-
-    private LoanCoverUserRequest serParamRequest(Map<String, Object> mapParam) {
-        LoanCoverUserRequest request = new LoanCoverUserRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-
-            if (mapParam.containsKey("name")) {
-                request.setName(mapParam.get("name").toString());
-            }
-
-            if (mapParam.containsKey("idNo")) {
-                request.setIdNo(mapParam.get("idNo").toString());
-            }
-            if (mapParam.containsKey("mobile")) {
-                request.setMobile(mapParam.get("mobile").toString());
-            }
-            if (mapParam.containsKey("code")) {
-                request.setCode(mapParam.get("code").toString());
-            }
-            if (mapParam.containsKey("customerId")) {
-                request.setCustomerId(mapParam.get("customerId").toString());
-            }
-            if (mapParam.containsKey("idType")) {
-                request.setIdType(Integer.parseInt(mapParam.get("idType").toString()));
-            }
-            if (mapParam.containsKey("endCreate")) {
-                request.setEndCreate(mapParam.get("endCreate").toString());
-            }
-            if (mapParam.containsKey("startCreate")) {
-                request.setStartCreate(mapParam.get("startCreate").toString());
-            }
-        }
-        return request;
-    }
-
     /**
      * 添加借款盖章用户
      *
@@ -185,6 +150,7 @@ public class LoanCoverController extends BaseController {
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+        loanCoverUserRequest.setLimitFlg(true);
         LoanCoverUserResponse loanCoverUserResponse = loanCoverService.selectUserMemberList(loanCoverUserRequest);
         List<LoanCoverUserVO> loanCoverUserVOList = new ArrayList<LoanCoverUserVO>();
         if(null!=loanCoverUserRequest){

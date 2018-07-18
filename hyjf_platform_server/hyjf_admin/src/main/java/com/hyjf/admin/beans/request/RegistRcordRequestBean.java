@@ -1,26 +1,31 @@
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author nxl
- * @version RegisterUserRequest, v0.1 2018/4/11 12:49
+ * @version RegistRcordRequestBean, v0.1 2018/4/11 12:49
  */
-public class RegistRcordRequest extends BasePage{
+public class RegistRcordRequestBean extends BasePage {
 	//用户名
+	@ApiModelProperty(value = "用户名")
 	private String userName;
 	//手机号
+	@ApiModelProperty(value = "手机号")
 	private String mobile;
 	//推荐人
+	@ApiModelProperty(value = "推荐人")
 	private String recommendName;
 	//注册平台
+	@ApiModelProperty(value = "注册平台")
 	private String registPlat;
 	//注册时间（开始）
+	@ApiModelProperty(value = "注册时间（开始）")
 	private String regTimeStart;
 	//注册时间（结束）
+	@ApiModelProperty(value = "注册时间（结束）")
 	private String regTimeEnd;
-	//默认为true ,获取全部数据，为false时，获取部分数据
-	private boolean limitFlg = false;
 
 	public String getUserName() {
 		return userName;
@@ -68,14 +73,6 @@ public class RegistRcordRequest extends BasePage{
 
 	public void setRegTimeEnd(String regTimeEnd) {
 		this.regTimeEnd = regTimeEnd;
-	}
-
-	public boolean isLimitFlg() {
-		return limitFlg;
-	}
-
-	public void setLimitFlg(boolean limitFlg) {
-		this.limitFlg = limitFlg;
 	}
 }
 

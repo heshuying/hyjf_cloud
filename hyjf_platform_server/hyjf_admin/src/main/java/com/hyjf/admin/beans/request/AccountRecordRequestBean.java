@@ -1,37 +1,35 @@
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author nxl
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
-public class BankAccountRecordRequest extends BasePage {
-
-	private String customerAccount;
-	private String mobile;
+public class AccountRecordRequestBean extends BasePage {
+	@ApiModelProperty(value = "汇付账号")
+	private String account;
+	@ApiModelProperty(value = "开户平台")
 	private String openAccountPlat;
+	@ApiModelProperty(value = "用户名")
 	private String userName;
+	@ApiModelProperty(value = "用户属性")
+	private String userProperty;
+	@ApiModelProperty(value = "身份证号码")
 	private String idCard;
+	@ApiModelProperty(value = "姓名")
 	private String realName;
+	@ApiModelProperty(value = "开户时间(开始)")
 	private String openTimeStart;
+	@ApiModelProperty(value = "开户时间(结束)")
 	private String openTimeEnd;
-	//默认为true ,获取全部数据，为false时，获取部分数据
-	private boolean limitFlg = false;
-	public String getCustomerAccount() {
-		return customerAccount;
+	public String getAccount() {
+		return account;
 	}
 
-	public void setCustomerAccount(String customerAccount) {
-		this.customerAccount = customerAccount;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
+	public void setAccount(String account) {
+		this.account = account;
 	}
 
 	public String getOpenAccountPlat() {
@@ -48,6 +46,14 @@ public class BankAccountRecordRequest extends BasePage {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getUserProperty() {
+		return userProperty;
+	}
+
+	public void setUserProperty(String userProperty) {
+		this.userProperty = userProperty;
 	}
 
 	public String getIdCard() {
@@ -82,11 +88,4 @@ public class BankAccountRecordRequest extends BasePage {
 		this.openTimeEnd = openTimeEnd;
 	}
 
-	public boolean isLimitFlg() {
-		return limitFlg;
-	}
-
-	public void setLimitFlg(boolean limitFlg) {
-		this.limitFlg = limitFlg;
-	}
 }

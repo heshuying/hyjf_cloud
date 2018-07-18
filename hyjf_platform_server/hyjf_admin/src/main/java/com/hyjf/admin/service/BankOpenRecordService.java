@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
@@ -20,7 +21,7 @@ public interface BankOpenRecordService {
      * @param request
      * @return
      */
-    List<BankOpenAccountRecordVO> findAccountRecordList(AccountRecordRequest request);
+    BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request);
 
     /**
      * 查找江西银行开户记录列表
@@ -28,6 +29,6 @@ public interface BankOpenRecordService {
      * @param request
      * @return
      */
-    List<BankOpenAccountRecordVO> findBankAccountRecordList(BankAccountRecordRequest request);
+    BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request);
 
 }

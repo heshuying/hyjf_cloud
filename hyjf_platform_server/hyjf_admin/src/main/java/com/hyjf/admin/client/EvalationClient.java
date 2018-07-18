@@ -13,7 +13,7 @@ import com.hyjf.am.vo.user.UserEvalationResultVO;
 public interface EvalationClient {
     /**
      * 根据筛选条件查找(用户测评列表显示)
-     *
+     * @author nxl
      * @param request
      * @return
      */
@@ -22,6 +22,7 @@ public interface EvalationClient {
      * 查找用户测评结果
      * @param userId
      * @return
+     * @author nxl
      */
     UserEvalationResultVO selectEvaluationDetailById(String userId);
 }

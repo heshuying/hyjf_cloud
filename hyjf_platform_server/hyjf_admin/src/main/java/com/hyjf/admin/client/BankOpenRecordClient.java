@@ -17,7 +17,7 @@ public interface BankOpenRecordClient {
 
     /**
      * 查找汇付银行开户记录列表
-     *
+     * @author nixiaoling
      * @param request
      * @return
      */
@@ -25,7 +25,7 @@ public interface BankOpenRecordClient {
 
     /**
      * 查找江西银行开户记录列表
-     *
+     * @author nixiaoling
      * @param request
      * @return
      */

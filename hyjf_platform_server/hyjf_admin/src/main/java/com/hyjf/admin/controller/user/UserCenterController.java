@@ -91,7 +91,7 @@ public class UserCenterController extends BaseController {
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         userDetailInfoResponseBean.setUserManagerDetailVO(userManagerDetailVO);
-        //vip
+        //todo vip user 表里没有vip字段
 
         // 获取测评信息
         UserEvalationResultVO userEvalationResultInfo = userCenterService.getUserEvalationResult(userId);
@@ -391,6 +391,7 @@ public class UserCenterController extends BaseController {
                         } else if (celLength == 10) {// 身份证号
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdcard(),7));
                         } else if (celLength == 11) {// 户籍所在地
+                            // todo 户籍所在地表 hyjf_idcard_area 不存在
 //                            cell.setCellValue(usersService.getAreaByIdCard(user.getIdcard()));
                         } else if (celLength == 12) {// 手机号码
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getMobile(),3));
