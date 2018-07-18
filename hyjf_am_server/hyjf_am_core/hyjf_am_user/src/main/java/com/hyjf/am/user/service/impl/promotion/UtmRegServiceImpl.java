@@ -6,9 +6,11 @@ package com.hyjf.am.user.service.impl.promotion;
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.service.promotion.UtmRegService;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,7 +23,21 @@ public class UtmRegServiceImpl implements UtmRegService {
     private UtmRegCustomizeMapper utmRegCustomizeMapper;
 
     @Override
-    public List<UtmReg> getUtmRegList(Integer sourceId) {
-        return utmRegCustomizeMapper.getUtmRegList(sourceId);
+    public List<UtmReg> getUtmRegList(Integer sourceId, String type) {
+        return utmRegCustomizeMapper.getUtmRegList(sourceId, type);
+    }
+
+    @Override
+    public BigDecimal getRegisterAttrCount(List<Integer> list) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return utmRegCustomizeMapper.getRegisterAttrCount(list, dayStart, dayEnd);
+    }
+
+    @Override
+    public Integer getAccountNumber(List<Integer> list, String type) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return utmRegCustomizeMapper.getAccountNumber(list, dayStart, dayEnd, type);
     }
 }

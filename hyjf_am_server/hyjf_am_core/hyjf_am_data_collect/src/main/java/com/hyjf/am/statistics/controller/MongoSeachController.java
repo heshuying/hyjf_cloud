@@ -17,7 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -61,6 +65,22 @@ public class MongoSeachController {
             AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = new AppChannelStatisticsDetailVO();
             BeanUtils.copyProperties(entity, appChannelStatisticsDetailVO);
             response.setResult(appChannelStatisticsDetailVO);
+        }
+        return response;
+    }
+
+    /**
+     * 查询所有渠道投资信息
+     *
+     * @return
+     */
+    @RequestMapping("/getappchannelstatisticsdetail")
+    public AppChannelStatisticsDetailResponse selectAppChannelStatistics() {
+        List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(new Query());
+        AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<AppChannelStatisticsDetailVO> voList = CommonUtils.convertBeanList(list, AppChannelStatisticsDetailVO.class);
+            response.setResultList(voList);
         }
         return response;
     }
