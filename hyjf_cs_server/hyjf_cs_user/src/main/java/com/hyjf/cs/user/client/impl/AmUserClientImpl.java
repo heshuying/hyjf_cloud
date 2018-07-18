@@ -28,6 +28,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.*;
+
 /**
  * @author xiasq
  * @version AmUserClientImpl, v0.1 2018/4/19 12:44
@@ -35,7 +37,7 @@ import java.util.List;
 
 @Service
 public class AmUserClientImpl implements AmUserClient {
-	private static Logger logger = LoggerFactory.getLogger(AmUserClient.class);
+	private static Logger logger = getLogger(AmUserClient.class);
 
 	@Value("${am.user.service.name}")
 	private String userService;
@@ -75,6 +77,17 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public UserVO surongRegister(RegisterUserRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 
 	@Override
 	public UserVO findUserById(int userId) {
@@ -826,6 +839,16 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public void clearMobileCode(Integer userId, String sign) {
 		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
+	}
+
+	@Override
+	public UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/insertSurongUser/" + mobile, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
 	}
 
 }

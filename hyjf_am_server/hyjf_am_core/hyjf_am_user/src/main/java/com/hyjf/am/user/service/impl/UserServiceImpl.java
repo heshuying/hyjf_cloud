@@ -1214,4 +1214,27 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         return userVO;
     }
 
+	@Override
+	public User surongRegister(RegisterUserRequest userRequest) throws MQException{
+
+		String mobile=userRequest.getMobile();
+		String password=userRequest.getPassword();
+		String loginIp=userRequest.getLoginIp();
+		String platform=userRequest.getPlatform();
+		// 1. 写入用户信息表
+		User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+		logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
+		int userId = user.getUserId();
+
+		// 2. 写入用户详情表
+		this.insertUserInfo(userId, loginIp, 2);
+
+		// 3. 写入用户账户表
+		this.insertAccount(userId);
+
+		// 4. 保存用户注册日志
+		this.insertRegLog(userId, loginIp);
+		return user;
+	}
+
 }

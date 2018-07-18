@@ -98,9 +98,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private HjhAccedeClient hjhAccedeClient;
 
     @Autowired
-    private RechargeClient rechargeClient;
-
-    @Autowired
     private UserAuthClient userAuthClient;
 
     @Autowired
@@ -1307,7 +1304,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 userValidation.put("isSetPassword", false);
             }
             // 用户角色
-            UserInfoVO userInfo = rechargeClient.findUsersInfoById(userId);
+            UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
             if (userInfo != null) {
                 userValidation.put("roleId", userInfo.getRoleId());
             } else {
@@ -1450,7 +1447,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 4. 是否设置过交易密码
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
             // 检查用户角色是否能投资  合规接口改造之后需要判断
-            UserInfoVO userInfo = rechargeClient.findUsersInfoById(userId);
+            UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
             if (null != userInfo) {
                 userLoginInfo.setIsAllowedTender(Boolean.TRUE);
                 // 担保机构用户
