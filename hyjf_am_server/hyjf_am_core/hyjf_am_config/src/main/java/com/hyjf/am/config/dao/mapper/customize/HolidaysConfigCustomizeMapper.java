@@ -1,6 +1,7 @@
 package com.hyjf.am.config.dao.mapper.customize;
 
 import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,11 +26,12 @@ public interface HolidaysConfigCustomizeMapper {
     void batchUpdate(List<HolidaysConfig> updateList);
 
     /**
-     * 查询月份配置
-     * @param date  格式 yyyymm
+     * 查询指定月份配置
+     * @param year
+     * @param month
      * @return
      */
-    List<HolidaysConfig> selectByMonth(String date);
+    List<HolidaysConfig> selectByYearMonth(@Param("year") int year, @Param("month") int month);
 
     /**
      * 删除年度配置

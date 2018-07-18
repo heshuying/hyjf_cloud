@@ -61,7 +61,7 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 		for (int index = 1; index <= 12; index++) {
 			month = String.format("%02d", index);
 			String date = currentYear +"-"+ month;
-			List<HolidaysConfig> list = this.holidaysConfigCustomizeMapper.selectByMonth(date);
+			List<HolidaysConfig> list = this.holidaysConfigCustomizeMapper.selectByYearMonth(currentYear, index);
 			List<HolidaysConfig> updateList = new ArrayList<>(list.size());
 			// {"201801":{"01":"2","06":"2","07":"2","13":"1","14":"2","20":"2","21":"1","27":"2","28":"1"}}
 			String result = HttpDeal.get(url + date);
@@ -76,7 +76,9 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 				for (String dayStr : detailMap.keySet()) {
 					int holidaysFlag = Integer.parseInt((String) detailMap.get(dayStr));
 					for (HolidaysConfig holidaysConfig : list) {
-						if (date.concat("-").concat(dayStr).equals(sdf.format(holidaysConfig.getDayTime()))) {
+						String apiQueryStr = date.concat("-").concat(dayStr);
+						String sdfStr = sdf.format(holidaysConfig.getDayTime());
+						if (apiQueryStr.equals(sdfStr)) {
 							holidaysConfig.setHolidayFlag(holidaysFlag);
 							updateList.add(holidaysConfig);
 						}
