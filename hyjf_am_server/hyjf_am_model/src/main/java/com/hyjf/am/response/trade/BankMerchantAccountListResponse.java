@@ -11,4 +11,14 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
  * @version: BankMerchantAccountListResponse, v0.1 2018/7/9 18:31
  */
 public class BankMerchantAccountListResponse extends Response<BankMerchantAccountListVO> {
+    //新增或者update标识
+    private Integer flag;
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
 }

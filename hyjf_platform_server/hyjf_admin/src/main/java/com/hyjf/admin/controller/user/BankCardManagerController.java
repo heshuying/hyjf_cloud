@@ -90,7 +90,7 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
+    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordBankAccount(@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
@@ -104,45 +104,6 @@ public class BankCardManagerController extends BaseController {
         return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
     }
 
-    private BankCardManagerRequest setRequese(Map<String, Object> mapParam) {
-        BankCardManagerRequest requestBank = new BankCardManagerRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-            if (mapParam.containsKey("userName")) {
-                requestBank.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("userName")) {
-                requestBank.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("bank")) {
-                requestBank.setBank(mapParam.get("bank").toString());
-            }
-            if (mapParam.containsKey("account")) {
-                requestBank.setAccount(mapParam.get("account").toString());
-            }
-            if (mapParam.containsKey("realName")) {
-                requestBank.setRealName(mapParam.get("realName").toString());
-            }
-            if (mapParam.containsKey("cardProperty")) {
-                requestBank.setCardProperty(mapParam.get("cardProperty").toString());
-            }
-            if (mapParam.containsKey("cardType")) {
-                requestBank.setCardType(mapParam.get("cardType").toString());
-            }
-            if (mapParam.containsKey("addTimeStart")) {
-                requestBank.setAddTimeStart(mapParam.get("addTimeStart").toString());
-            }
-            if (mapParam.containsKey("addTimeEnd")) {
-                requestBank.setAddTimeEnd(mapParam.get("addTimeEnd").toString());
-            }
-            if (mapParam.containsKey("mobile")) {
-                requestBank.setMobile(mapParam.get("mobile").toString());
-            }
-           /* if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                requestBank.setLimitFlg(Integer.parseInt(mapParam.get("limit").toString()));
-            }*/
-        }
-        return requestBank;
-    }
 
 
     /**
@@ -153,9 +114,11 @@ public class BankCardManagerController extends BaseController {
      */
     @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportbankcard")
-    public void exportExcel(HttpServletResponse response, @RequestBody Map<String, Object> map) {
+    public void exportExcel(HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         // 封装查询条件
-        final BankCardManagerRequest requestBank = setRequese(map);
+        final BankCardManagerRequest requestBank = new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean,requestBank);
+        requestBank.setLimitFlg(true);
         // 表格sheet名称
         String sheetName = "银行卡管理";
 
@@ -284,7 +247,7 @@ public class BankCardManagerController extends BaseController {
         BankCardManagerRequest requestBank = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
         //查找全部
-        requestBank.setLimitFlg(0);
+        requestBank.setLimitFlg(true);
         // 需要输出的结果列表
         BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
 //        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);

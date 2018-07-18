@@ -3,15 +3,20 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper;
+import com.hyjf.am.trade.dao.mapper.auto.CouponRecoverMapper;
+import com.hyjf.am.trade.dao.mapper.auto.TransferExceptionLogMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.CouponConfigCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.CouponConfig;
-import com.hyjf.am.trade.dao.model.auto.CouponConfigExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomize;
 import com.hyjf.am.trade.service.CouponConfigService;
-import com.hyjf.common.util.CustomConstants;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,7 +35,11 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	@Resource
 	private CouponConfigMapper couponConfigMapper;
 	@Resource
-	CouponConfigCustomizeMapper couponConfigCustomizeMapper;
+	private CouponConfigCustomizeMapper couponConfigCustomizeMapper;
+	@Resource
+	private CouponRecoverMapper couponRecoverMapper;
+	@Resource
+	private TransferExceptionLogMapper transferExceptionLogMapper;
 	/**
 	 * 根据优惠券编号查找优惠券配置
 	 * 
@@ -153,6 +162,73 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	public int checkCouponSendExcess(String couponCode) {
 		int remain = couponConfigCustomizeMapper.checkCouponSendExcess(couponCode);
 		return remain;
+	}
+
+    @Override
+    public CouponConfigVO getCouponConfigByOrderId(String ordId) {
+        return couponConfigCustomizeMapper.getCouponConfigByOrderId(ordId);
+    }
+
+    @Override
+    public Integer countByTenderId(String tenderNid) {
+		CouponRecoverExample checkExample = new CouponRecoverExample();
+		checkExample.createCriteria().andTenderIdEqualTo(tenderNid);
+		int count = couponRecoverMapper.countByExample(checkExample);
+		return count;
+    }
+
+    @Override
+    public Integer crRecoverPeriod(String tenderNid, Integer currentRecoverFlg, Integer period) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("currentRecoverFlg", currentRecoverFlg);
+		paramMap.put("tenderNid", tenderNid);
+		paramMap.put("period", period);
+		couponConfigCustomizeMapper.crRecoverPeriod(paramMap);
+		return 1;
+    }
+
+	@Override
+	public Integer getCouponProfitTime(String tenderNid) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("nid", tenderNid);
+		return couponConfigCustomizeMapper.getCouponProfitTime(paramMap);
+	}
+
+	@Override
+	public Integer insertCouponRecover(CouponRecoverVO cr) {
+		return  couponRecoverMapper.insertSelective(CommonUtils.convertBean(cr,CouponRecover.class));
+	}
+
+	@Override
+	public Integer updateOfLoansTenderHjh(AccountVO account) {
+		return couponConfigCustomizeMapper.updateOfLoansTenderHjh(account);
+	}
+
+    @Override
+    public List<CouponTenderCustomizeVO> getCouponTenderListHjh(String orderId) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("orderId", orderId);
+		// 1 项目到期还款  2 收益期限到期还款
+		paramMap.put("repayTimeConfig", 1);
+        return couponConfigCustomizeMapper.getCouponTenderListHjh(paramMap);
+    }
+
+    @Override
+    public void updateCouponRecover(CouponRecoverVO cr) {
+		couponRecoverMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(cr,CouponRecover.class));
+    }
+
+	@Override
+	public List<TransferExceptionLogVO> selectByRecoverId(Integer recoverId) {
+		TransferExceptionLogExample example = new TransferExceptionLogExample();
+		example.createCriteria().andRecoverIdEqualTo(recoverId);
+		List<TransferExceptionLog> listLog = this.transferExceptionLogMapper.selectByExample(example);
+		return CommonUtils.convertBeanList(listLog,TransferExceptionLogVO.class);
+	}
+
+	@Override
+	public Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog) {
+		return transferExceptionLogMapper.insertSelective(CommonUtils.convertBean(transferExceptionLog,TransferExceptionLogWithBLOBs.class));
 	}
 
 }

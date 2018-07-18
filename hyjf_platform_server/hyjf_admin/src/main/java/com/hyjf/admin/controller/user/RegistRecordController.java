@@ -4,11 +4,17 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.RegistRcordRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
+import com.hyjf.am.vo.user.UserPortraitVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -21,11 +27,14 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +47,7 @@ import java.util.Map;
 @Api(value = "注册记录")
 @RestController
 @RequestMapping("/hyjf-admin/registRecord")
-public class RegistRecordController {
+public class RegistRecordController extends BaseController {
     @Autowired
     private RegistRecordService registRecordService;
 
@@ -57,59 +66,33 @@ public class RegistRecordController {
     @ApiOperation(value = "注册记录", notes = "注册记录列表查询")
     @PostMapping(value = "/registRecordList")
     @ResponseBody
-    public JSONObject selectRegistRecordList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        RegistRcordRequest registerRcordeRequest = setRequese(map);
-        List<RegistRecordVO> listRgistRecord = registRecordService.findRegistRecordList(registerRcordeRequest);
-        String status = Response.FAIL;
-        if (null != listRgistRecord && listRgistRecord.size() > 0) {
-            jsonObject.put("record", listRgistRecord);
-            status = Response.SUCCESS;
-        }
-        jsonObject.put("status", status);
-        return jsonObject;
-    }
-
-    private RegistRcordRequest setRequese(Map<String, Object> mapParam) {
+    public AdminResult<ListResult<RegistRecordVO>> selectRegistRecordList(@RequestBody RegistRcordRequestBean registRcordRequestBean) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-            if (mapParam.containsKey("userName")) {
-                registerRcordeRequest.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("mobile")) {
-                registerRcordeRequest.setMobile(mapParam.get("mobile").toString());
-            }
-            if (mapParam.containsKey("recommendName")) {
-                registerRcordeRequest.setRecommendName(mapParam.get("recommendName").toString());
-            }
-            if (mapParam.containsKey("registPlat")) {
-                registerRcordeRequest.setRegistPlat(mapParam.get("registPlat").toString());
-            }
-            if (mapParam.containsKey("regTimeStart")) {
-                registerRcordeRequest.setRegTimeStart(mapParam.get("regTimeStart").toString());
-            }
-            if (mapParam.containsKey("regTimeEnd")) {
-                registerRcordeRequest.setRegTimeEnd(mapParam.get("regTimeEnd").toString());
-            }
-            if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                registerRcordeRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
-            }
+        BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
+        RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordList(registerRcordeRequest);
+        if(registRecordResponse==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return registerRcordeRequest;
+        if (!Response.isSuccess(registRecordResponse)) {
+            return new AdminResult<>(FAIL, registRecordResponse.getMessage());
+        }
+        return new AdminResult<ListResult<RegistRecordVO>>(ListResult.build(registRecordResponse.getResultList(), registRecordResponse.getCount())) ;
     }
 
     /**
-     * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
+     * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷：
+     * 1.无法指定相应的列的顺序，
+     * 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
      *
-     * @param request
+     * @param registRcordRequestBean
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "注册记录", notes = "注册记录列表导出")
     @PostMapping(value = "/exportregist")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
+    public void exportExcel(HttpServletResponse response, @RequestBody RegistRcordRequestBean registRcordRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "注册记录";
@@ -117,8 +100,14 @@ public class RegistRecordController {
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 需要输出的结果列表
-        RegistRcordRequest registerRcordeRequest = setRequese(map);
-        List<RegistRecordVO> listRgistRecord = registRecordService.findRegistRecordList(registerRcordeRequest);
+        RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
+        registerRcordeRequest.setLimitFlg(true);
+        List<RegistRecordVO> listRgistRecord = new ArrayList<RegistRecordVO>();
+        RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordList(registerRcordeRequest);
+        if(null!=registRecordResponse){
+            listRgistRecord = registRecordResponse.getResultList();
+        }
         String[] titles = new String[] { "序号", "用户名", "手机号", "推荐人", "注册渠道", "注册平台", "注册IP", "注册时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

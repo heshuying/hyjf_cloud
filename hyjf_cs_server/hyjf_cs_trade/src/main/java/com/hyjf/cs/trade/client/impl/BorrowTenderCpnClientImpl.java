@@ -53,4 +53,14 @@ public class BorrowTenderCpnClientImpl implements BorrowTenderCpnClient {
         }
         return null;
     }
+
+    @Override
+    public int updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/updateborrowtendercn";
+        BorrowTenderCpnResponse response = restTemplate.postForEntity(url,borrowTenderCpn,BorrowTenderCpnResponse.class).getBody();
+        if (response != null) {
+            return response.getFlag();
+        }
+        return 0;
+    }
 }

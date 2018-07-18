@@ -877,12 +877,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public List<RegistRecordVO> findRegistRecordList(RegistRcordRequest request) {
+	public RegistRecordResponse findRegistRecordList(RegistRcordRequest request) {
 		RegistRecordResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/registRecord/registRecordList", request, RegistRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
+			return response;
 		}
 		return null;
 	}
@@ -1001,12 +1001,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public List<BankOpenAccountRecordVO> findAccountRecordList(AccountRecordRequest request) {
+	public BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request) {
 		BankAccountRecordResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findAccountRecordList", request, BankAccountRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
+			return response;
 		}
 		return null;
 	}
@@ -1017,12 +1017,12 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public List<BankOpenAccountRecordVO> findBankAccountRecordList(BankAccountRecordRequest request) {
+	public BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request) {
 		BankAccountRecordResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findBankAccountRecordList", request, BankAccountRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList();
+			return response;
 		}
 		return null;
 	}

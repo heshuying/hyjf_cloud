@@ -342,7 +342,9 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             throw new RuntimeException("更新分账记录表失败,订单号:[" + resultBean.getLogOrderId() + "].");
         }
         // 查询交易记录
-        boolean isExistFlag = amTradeClient.accountWebListByOrderId(orderId)>0;
+        AccountWebListVO accountWebListVO = new AccountWebListVO();
+        accountWebListVO.setOrdid(orderId);
+        boolean isExistFlag = amDataCollectClient.queryAccountWebList(accountWebListVO).getResultList().size()>0;
         if (isExistFlag) {
             logger.info("重复转账:转账订单号:[" + orderId + "].");
             throw new RuntimeException("重复转账:转账订单号:[" + orderId + "].");
@@ -425,7 +427,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         accountWebList.setRemark(request.getRemark()); // 备注
         accountWebList.setCreateTime(nowTime);
         accountWebList.setOperator(adminSystemVO.getUsername());
-        int webListCount = amTradeClient.accountWebListByOrderId(accountWebList.getOrdid());
+        int webListCount = amDataCollectClient.queryAccountWebList(accountWebList).getResultList().size();
         if (webListCount == 0) {
             UserInfoVO userInfo = amUserClient.findUsersInfoById(receiveUserId);
             if (userInfo != null) {
@@ -470,7 +472,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 accountWebList.setTruename(userInfo.getTruename());
                 accountWebList.setFlag(1);
             }
-            boolean accountWebListFlag = amTradeClient.insertAccountWebList(accountWebList) > 0;
+            boolean accountWebListFlag = amDataCollectClient.insertAccountWebList(accountWebList) > 0;
             if (!accountWebListFlag) {
                 throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[订单号：" + orderId + "]");
             }

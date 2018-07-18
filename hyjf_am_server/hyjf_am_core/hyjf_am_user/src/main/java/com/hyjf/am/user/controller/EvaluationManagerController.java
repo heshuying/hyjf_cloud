@@ -56,9 +56,9 @@ public class EvaluationManagerController extends BaseController{
         String returnCode = Response.FAIL;
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = evaluationManagerService.countEvalationResultRecord(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), usesrCount,request.getLimit());
-        if(request.getLimit() ==0){
-            paginator = new Paginator(request.getPaginatorPage(), usesrCount);
+        Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
+        if(request.getPageSize()==0){
+            paginator = new Paginator(request.getCurrPage(), usesrCount);
         }
         List<EvalationResultCustomize> userManagerCustomizeList = evaluationManagerService.selectUserEvalationResultList(mapParam,paginator.getOffset(), paginator.getLimit());
         if(usesrCount>0){
