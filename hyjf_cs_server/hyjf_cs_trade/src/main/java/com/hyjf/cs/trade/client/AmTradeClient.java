@@ -24,6 +24,7 @@ import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
@@ -1079,6 +1080,7 @@ public interface AmTradeClient {
      */
     Integer crRecoverPeriod(String tenderNid, int currentRecoverFlg, int period);
 
+
     CouponConfigVO selectCouponConfig(String couponCode);
 
 
@@ -1286,4 +1288,31 @@ public interface AmTradeClient {
      * @return
      */
     CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId);
+
+    /**
+     * 获取账户提现列表
+     * @return
+     */
+    List<AccountWithdrawVO> selectBankWithdrawList();
+
+    /**
+     *
+     * @param bean
+     * @param accountwithdraw
+     * @param bankCard
+     * @param withdrawFee
+     * @return
+     */
+    boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,
+                             String withdrawFee);
+
+
+    /**
+     * 查询是否已经处理过
+     * @param ordId
+     * @param string
+     * @return
+     */
+    int getAccountlistCntByOrdId(String orderId, String cashSuccess);
+
 }

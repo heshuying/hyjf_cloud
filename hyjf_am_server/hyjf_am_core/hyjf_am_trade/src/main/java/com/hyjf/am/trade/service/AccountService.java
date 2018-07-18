@@ -6,6 +6,8 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 
+import java.util.List;
+
 /**
  * @author xiasq
  * @version AccountService, v0.1 2018/4/25 10:40
@@ -19,6 +21,8 @@ public interface AccountService {
     int updateOfRTBLoansTender(Account account);
 
     Integer updateOfPlanRepayAccount(AccountVO accountVO);
+
+    List<Account> getAccountByUserIds(List<Integer> userIds);
 
     /**
      * @Author walter.limeng
