@@ -26,4 +26,13 @@ public interface BorrowTenderCpnClient {
      * @return
      */
     BorrowTenderCpnVO getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新borrowTenderCpn表
+     * @Date 10:57 2018/7/18
+     * @Param borrowTenderCpn
+     * @return
+     */
+    int updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn);
 }

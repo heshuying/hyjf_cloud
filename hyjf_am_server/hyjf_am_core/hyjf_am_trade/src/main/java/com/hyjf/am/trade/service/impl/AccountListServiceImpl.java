@@ -77,5 +77,12 @@ public class AccountListServiceImpl extends BaseServiceImpl implements AccountLi
 		return 0;
 	}
 
+    @Override
+    public Integer countByNidAndTrade(String nid, String trade) {
+		AccountListExample accountListExample = new AccountListExample();
+		accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("increase_interest_profit");
+		return this.accountListMapper.countByExample(accountListExample);
+    }
+
 
 }

@@ -556,4 +556,15 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 
+
+	@Override
+	public List<SpreadsUserVO> selectByUserId(Integer userId) {
+		SpreadsUserResponse response = restTemplate
+				.getForEntity("http://AM-USER//am-user/user/selectspreadsuserbyuserid/" + userId,SpreadsUserResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

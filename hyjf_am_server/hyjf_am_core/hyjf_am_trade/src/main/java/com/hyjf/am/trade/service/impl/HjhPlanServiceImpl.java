@@ -13,6 +13,8 @@ import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -32,25 +35,25 @@ import java.util.Map;
 @Service
 public class HjhPlanServiceImpl implements HjhPlanService {
 
-    @Autowired
+    @Resource
     private HjhInstConfigMapper hjhInstConfigMapper;
 
-    @Autowired
+    @Resource
     private HjhLabelMapper hjhLabelMapper;
 
-    @Autowired
+    @Resource
     private HjhPlanMapper hjhPlanMapper;
 
-    @Autowired
+    @Resource
     private HjhAccedeMapper hjhAccedeMapper;
 
-    @Autowired
+    @Resource
     private AccountMapper accountMapper;
 
-    @Autowired
+    @Resource
     private AccountListMapper accountListMapper;
 
-    @Autowired
+    @Resource
     private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
 
     @Override
@@ -139,6 +142,34 @@ public class HjhPlanServiceImpl implements HjhPlanService {
         param.put("limitEnd",request.getLimitEnd());
         param.put("lockFlag",request.getLockFlag());
         return hjhPlanCustomizeMapper.getHjhPlanAppList(param);
+    }
+
+    @Override
+    public HjhPlanVO getHjhPlan(String planNid) {
+        HjhPlanExample example=new HjhPlanExample();
+        HjhPlan hjhPlan = new HjhPlan();
+        example.createCriteria().andPlanNidEqualTo(planNid);
+        List<HjhPlan> list=hjhPlanMapper.selectByExample(example);
+
+        if(list !=null && !list.isEmpty()){
+            hjhPlan =  list.get(0);
+
+        }
+        return CommonUtils.convertBean(hjhPlan,HjhPlanVO.class);
+    }
+
+    @Override
+    public HjhAccedeVO getHjhAccede(String orderId) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        example.createCriteria().andAccedeOrderIdEqualTo(orderId);
+        List<HjhAccede> accedeList = hjhAccedeMapper.selectByExample(example);
+
+        if(accedeList !=null && !accedeList.isEmpty()){
+            return CommonUtils.convertBean(accedeList.get(0),HjhAccedeVO.class);
+
+        }
+
+        return null;
     }
 
     /**

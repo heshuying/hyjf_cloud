@@ -261,4 +261,12 @@ public interface AmUserClient {
 	Integer countHJHAvaliableCoupon(MyCouponListRequest request);
 
 
+    /**
+     * @Author walter.limeng
+     * @Description  根据用户ID获取推荐人
+     * @Date 11:56 2018/7/18
+     * @Param userId
+     * @return
+     */
+    List<SpreadsUserVO> selectByUserId(Integer userId);
 }
