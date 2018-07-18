@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Api(value = "验证码",description = "app验证码")
 @RestController
-@RequestMapping("/app/hyjf-app")
+@RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppSmsCodeController.class);
 
@@ -43,7 +43,7 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      * @throws MQException
      */
-    @PostMapping(value = "/appUser/sendVerificationCodeAction", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/sendVerificationCodeAction", produces = "application/json; charset=utf-8")
     @ApiImplicitParam(name = "param", value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
     public AppResult sendSmsCode(@RequestBody Map<String, String> param,
                                  @RequestHeader(value = "token", required = false) String token,
@@ -67,7 +67,7 @@ public class AppSmsCodeController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "app验证验证码",notes = "验证验证码")
-    @PostMapping(value = "/appUser/validateVerificationCodeAction", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/validateVerificationCodeAction", produces = "application/json; charset=utf-8")
     public JSONObject validateVerificationCodeAction(@RequestHeader String key, @RequestBody SmsRequest request) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/validateVerificationCodeAction");

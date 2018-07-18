@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Api(value = "api端用户注册接口",description = "api端用户注册接口")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/hyjf-api/user")
 public class ApiRegisterController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiRegisterController.class);
 

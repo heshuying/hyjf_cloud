@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 @Api(value = "app端密码相关服务",description = "app端密码相关服务")
 @Controller
 @RestController
-@RequestMapping("/app/hyjf-app")
+@RequestMapping("/hyjf-app")
 public class AppPassWordController {
 
     @Autowired

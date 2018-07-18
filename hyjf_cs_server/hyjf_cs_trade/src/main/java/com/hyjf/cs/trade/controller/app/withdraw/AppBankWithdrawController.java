@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Api(value = "app端用户提现接口")
 @Controller
-@RequestMapping("/app/withdraw")
+@RequestMapping("/hyjf-app/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppBankWithdrawController.class);

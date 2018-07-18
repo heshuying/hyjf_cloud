@@ -11,9 +11,9 @@ import com.hyjf.cs.user.service.common.CornerService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  * @version CornerController, v0.1 2018/7/18 11:21
  */
 @Api(description = "汇天利资金中心接口")
-@Controller
-@RequestMapping("/app/hyjf-app/app/common")
+@RestController
+@RequestMapping("/hyjf-app/app/common")
 public class CornerController {
 
     @Autowired
@@ -36,7 +36,7 @@ public class CornerController {
      * @return
      */
     @RequestMapping(value = "/getVersion")
-    public JSONObject getVersion(@RequestHeader(value = "key", required = true) String key, HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getVersion(@RequestHeader(value = "key") String key, HttpServletRequest request, HttpServletResponse response) {
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/getVersion");
         // 唯一标识
@@ -138,4 +138,72 @@ public class CornerController {
         }
         return map;
     }
+
+    /**
+     * 接收设备唯一标识
+     * （数据库没有 存储，有 更新）
+     * @param request
+     * @param
+     * @return
+     *//*
+    @PostMapping(value = "/mobileCode")
+    public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, HttpServletResponse response) {
+        JSONObject map = new JSONObject();
+        map.put("request", "/hyjf-app/app/common/mobileCode");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 平台
+        String clientStr = request.getParameter("platform");
+        //设备标识码
+        String mobileCodeStr = request.getParameter("mobileCode");
+        //版本号
+        String versionStr = request.getParameter("version");
+        // 取得加密用的Key
+        if (Validator.isNull(key)) {
+            map.put("status", "1");
+            map.put("statusDesc", "请求参数非法");
+            return map;
+        }
+        if(StringUtils.isEmpty(mobileCodeStr)){
+            map.put("status","1");
+            map.put("statusDesc","请求参数非法");
+            return map;
+        }
+        //用户id
+        map.put("status","0");
+        map.put("statusDesc","请求成功");
+
+        //版本号为  1.0.0.16  16为渠道号 不记版本
+        if(StringUtils.isNotEmpty(versionStr) ){
+            String vers[] = versionStr.split("\\.");
+            if(vers != null && vers.length > 0){
+                versionStr = vers[3] ;
+            }
+        }
+        try {
+
+            UserAliasVO mobileCode = appCommonService.getMobileCodeByUserId(userId);
+            if(mobileCode != null){
+                if(!mobileCode.getMobileCode().equals(mobileCodeStr)){
+                    mobileCode.setAlias(mobileCodeStr);
+                    mobileCode.setClient(clientStr);
+                    mobileCode.setPackageCode(versionStr);
+                    mobileCode.setSign(sign);
+                    appCommonService.updateMobileCode(mobileCode);
+                }
+            }else{
+                mobileCode = new UserAliasVO();
+                mobileCode.setAlias(mobileCodeStr);
+                mobileCode.setUserId(userId);
+                mobileCode.setSign(sign);
+                mobileCode.setClient(clientStr);
+                mobileCode.setPackageCode(versionStr);
+                appCommonService.insertMobileCode(mobileCode);
+            }
+        } catch (Exception e) {
+            map.put("status","1");
+            map.put("statusDesc","更新设备唯一标识异常");
+        }
+        return map;
+    }*/
 }

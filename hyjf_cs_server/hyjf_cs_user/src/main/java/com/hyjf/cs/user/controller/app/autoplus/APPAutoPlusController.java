@@ -39,7 +39,7 @@ import javax.validation.Valid;
  */
 @Api(value = "app端用户授权自动投资自动债转接口",description = "app端用户授权自动投资自动债转接口")
 @RestController
-@RequestMapping("/app/user/bank/autoplus")
+@RequestMapping("/hyjf-app/user/bank/autoplus")
 public class APPAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(APPAutoPlusController.class);

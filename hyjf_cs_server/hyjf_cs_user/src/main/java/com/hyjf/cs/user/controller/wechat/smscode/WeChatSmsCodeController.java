@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Api(value = "weChat验证码",description = "weChat验证码")
 @RestController
-@RequestMapping("/weChat/smsCode")
+@RequestMapping("/hyjf-wechat/smsCode")
 public class WeChatSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WeChatSmsCodeController.class);
 

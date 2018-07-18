@@ -30,7 +30,7 @@ import java.util.Map;
 @Api(value = "web端风险测评接口",description = "web端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebEvaluationController extends BaseUserController {
 
     @Autowired

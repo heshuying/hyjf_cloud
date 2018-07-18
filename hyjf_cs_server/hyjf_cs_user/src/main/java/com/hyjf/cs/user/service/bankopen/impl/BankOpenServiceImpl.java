@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -196,7 +195,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
         String successUrl = systemConfig.getFrontHost() +"/user/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -525,7 +524,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
             String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/web/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -579,7 +578,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
             String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/web/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);

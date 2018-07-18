@@ -34,7 +34,7 @@ import java.util.Map;
 @Api(value = "web端用户自动投标自动债转授权")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebAutoPlusController.class);

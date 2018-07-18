@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "weChat端用户登录接口",description = "weChat端用户登录接口")
 @RestController
-@RequestMapping("/wechat/user")
+@RequestMapping("/hyjf-wechat/user")
 public class WeChatLoginController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatLoginController.class);
     @Autowired
