@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * APP绑定新手机号
  * @author hesy
  * @version AppMobileModifyController, v0.1 2018/7/18 14:53
  */
