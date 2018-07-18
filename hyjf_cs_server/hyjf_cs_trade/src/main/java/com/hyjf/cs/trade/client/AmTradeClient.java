@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
@@ -735,4 +736,38 @@ public interface AmTradeClient {
     List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
 
     List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid);
+
+    List<CreditTenderLogVO> selectCreditTenderLogs();
+
+    List<CreditTenderVO> selectCreditTender(String assignNid);
+
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
+
+    Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
+
+    CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId);
+
+    AccountVO getAccount(int sellerUserId);
+
+    void handle();
+
+    CreditTenderVO selectByAssignNidAndUserId(String logOrderId, Integer userId);
+
+    boolean updateTenderCreditInfo(CreditTenderRequest request);
+
+    List<CreditTenderLogVO> getCreditTenderLogs(String logOrderId, Integer userId);
+
+    List<BorrowCreditVO> getBorrowCreditList(String creditNid, int sellerUserId, String tenderOrderId);
+
+    List<CreditTenderVO> getCreditTenderList(CreditTenderRequest request);
+
+    List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String,Object> params);
+
+    List<TenderToCreditDetailCustomizeVO> selectHJHWebCreditTenderDetail(Map<String,Object> params);
+
+    /**
+     * 保存债转的数据
+     * @param creditTenderBg
+     */
+    Integer saveCreditBgData(CreditTenderBgVO creditTenderBg);
 }
