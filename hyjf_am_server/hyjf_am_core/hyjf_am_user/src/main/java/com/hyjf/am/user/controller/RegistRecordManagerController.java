@@ -49,8 +49,18 @@ public class RegistRecordManagerController extends BaseController{
         Map<String, Object> mapParam = paramSet(request);
         RegistRecordResponse response = new RegistRecordResponse();
         Integer registCount = registRecordService.countRecordTotal(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), registCount,request.getLimit());
-        List<RegistRecordCustomize> registRecordCustomizeList = registRecordService.selectRegistList(mapParam,paginator.getOffset(), paginator.getLimit());
+        Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
+        if(request.getPageSize() ==0){
+            //参数没有显示条数的时候，默认显示i0条
+            paginator = new Paginator(request.getCurrPage(), registCount);
+        }
+        int intStart = paginator.getOffset();
+        int intEnd = paginator.getLimit();
+        if(request.isLimitFlg()){
+            intStart = 0;
+            intEnd = 0;
+        }
+        List<RegistRecordCustomize> registRecordCustomizeList = registRecordService.selectRegistList(mapParam,intStart,intEnd);
         if(registCount>0){
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<RegistRecordVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, RegistRecordVO.class);

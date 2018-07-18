@@ -1129,7 +1129,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 分期还款计划表
 		BorrowRecoverPlan borrowRecoverPlan = null;
 		// 判断该收支明细是否存在时,跳出本次循环
-		if (countAccountListByNid(repayOrderId)) {
+		if (countCreditAccountListByNid(repayOrderId)) {
 			return true;
 		}
 		// 债转的下次还款时间
@@ -1559,6 +1559,18 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	private boolean countAccountListByNid(String nid) {
 		AccountListExample accountListExample = new AccountListExample();
 		accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("tender_recover_yes");
+		return this.accountListMapper.countByExample(accountListExample) > 0 ? true : false;
+	}
+
+	/**
+	 * 判断该收支明细是否存在
+	 *
+	 * @param accountList
+	 * @return
+	 */
+	private boolean countCreditAccountListByNid(String nid) {
+		AccountListExample accountListExample = new AccountListExample();
+		accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("credit_tender_recover_yes");
 		return this.accountListMapper.countByExample(accountListExample) > 0 ? true : false;
 	}
 

@@ -5,9 +5,9 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BankOpenRecordService;
+import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
-import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class BankOpenRecordServiceImpl implements BankOpenRecordService {
      * @return
      */
     @Override
-    public List<BankOpenAccountRecordVO> findAccountRecordList(AccountRecordRequest request) {
+    public BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request) {
         return bankOpenRecordClient.findAccountRecordList(request);
     }
 
@@ -40,7 +40,7 @@ public class BankOpenRecordServiceImpl implements BankOpenRecordService {
      * @return
      */
     @Override
-    public List<BankOpenAccountRecordVO> findBankAccountRecordList(BankAccountRecordRequest request) {
+    public BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request) {
         return bankOpenRecordClient.findBankAccountRecordList(request);
     }
 

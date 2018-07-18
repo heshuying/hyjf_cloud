@@ -8,6 +8,8 @@ import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 
+import java.util.List;
+
 /**
  * @Description 优惠券相关
  * @Author sunss
@@ -53,4 +55,31 @@ public interface CouponService {
      * @return
      */
     BorrowTenderCpn getCouponTenderInfoByNid(String nid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  获取汇计划投资列表（优惠券）
+     * @Date 10:37 2018/7/17
+     * @Param orderId 订单ID
+     * @return
+     */
+    List<BorrowTenderCpn> getBorrowTenderCpnHjhList(String orderId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  优惠券单独投资时用
+     * @Date 10:50 2018/7/17
+     * @Param couponOrderId   nid
+     * @return
+     */
+    List<BorrowTenderCpn> getBorrowTenderCpnHjhCouponOnlyList(String couponOrderId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新放款状态(优惠券)
+     * @Date 10:58 2018/7/17
+     * @Param borrowTenderCpn
+     * @return 
+     */
+    int updateBorrowTenderCpn(BorrowTenderCpn borrowTenderCpn);
 }

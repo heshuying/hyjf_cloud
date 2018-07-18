@@ -76,15 +76,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public UserVO surongRegister(RegisterUserRequest request) {
-		UserResponse response = restTemplate
-				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
-	}
+
 
 	@Override
 	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId) {
@@ -848,11 +840,10 @@ public class AmUserClientImpl implements AmUserClient {
 	public void clearMobileCode(Integer userId, String sign) {
 		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
 	}
-
 	@Override
-	public UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform) {
+	public UserVO surongRegister(RegisterUserRequest request) {
 		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/insertSurongUser/" + mobile, UserResponse.class).getBody();
+				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}

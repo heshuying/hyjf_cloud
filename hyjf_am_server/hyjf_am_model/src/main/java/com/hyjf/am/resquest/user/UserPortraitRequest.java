@@ -63,8 +63,8 @@ public class UserPortraitRequest extends BasePage {
     private String mobile;
 
     private static final long serialVersionUID = 1L;
-    //限定标识，导出时为0
-    public int limitFlg = 1;
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    public boolean limitFlg = false;
     //查询用
     public String yesterdayEndTime;
     public String yesterdayBeginTime;
@@ -302,11 +302,11 @@ public class UserPortraitRequest extends BasePage {
         this.yesterdayBeginTime = yesterdayBeginTime;
     }
 
-    public int getLimitFlg() {
+    public boolean isLimitFlg() {
         return limitFlg;
     }
 
-    public void setLimitFlg(int limitFlg) {
+    public void setLimitFlg(boolean limitFlg) {
         this.limitFlg = limitFlg;
     }
 }

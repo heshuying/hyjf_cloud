@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+
 /**
  * @author nxl
  * @version EvaluationRequest, v0.1 2018/6/25 17:51
  */
-public class EvalationRequest {
+public class EvalationRequest extends BasePage {
     private String userName;
     private String realName;
     private String mobile;
@@ -16,18 +18,6 @@ public class EvalationRequest {
     private String is51;
     private String evaluationStatus;
     private String evaluationType;
-    public int limit;
-
-    private int paginatorPage = 1;
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
 
     public String getUserName() {
         return userName;
@@ -93,11 +83,4 @@ public class EvalationRequest {
         this.evaluationType = evaluationType;
     }
 
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
 }

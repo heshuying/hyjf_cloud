@@ -49,9 +49,8 @@ public class LoanCoverUserRequest extends BasePage {
     private  String startCreate;
     //结束时间
     private  String endCreate;
-
-    //默认去去全部数据
-    private int limitFlg = 1;
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    private boolean limitFlg = false;
 
 
     public Integer getId() {
@@ -198,11 +197,11 @@ public class LoanCoverUserRequest extends BasePage {
         this.updateTime = updateTime;
     }
 
-    public int getLimitFlg() {
+    public boolean isLimitFlg() {
         return limitFlg;
     }
 
-    public void setLimitFlg(int limitFlg) {
+    public void setLimitFlg(boolean limitFlg) {
         this.limitFlg = limitFlg;
     }
 }

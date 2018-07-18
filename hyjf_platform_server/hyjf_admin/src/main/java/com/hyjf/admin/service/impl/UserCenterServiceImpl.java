@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
@@ -35,7 +36,7 @@ import java.util.Map;
  * @version UserCenterServiceImpl, v0.1 2018/6/20 15:36
  */
 @Service
-public class UserCenterServiceImpl implements UserCenterService {
+public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenterService  {
 
 
     @Autowired
@@ -467,7 +468,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         return userCenterClient.selectSpreadsUsersByUserId(userId);
     }
     /**
-     * 根据推荐人姓名查找用户
+     * 根据姓名查找用户
      * @param recommendName
      * @return
      */

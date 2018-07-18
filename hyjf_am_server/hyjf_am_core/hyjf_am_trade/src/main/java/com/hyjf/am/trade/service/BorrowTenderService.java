@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
-import com.hyjf.am.trade.dao.model.auto.FddTemplet;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -65,4 +64,32 @@ public interface BorrowTenderService {
      * @return
      */
     BigDecimal getRtbTenderPrice(List<Integer> list);
+
+    /**
+     * @Author walter.limeng
+     * @Description  取得优惠券投资信息
+     * @Date 17:25 2018/7/17
+     * @Param couponTenderNid
+     * @return
+     */
+    BorrowTenderCpn getCouponTenderInfo(String couponTenderNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据订单编号取得该订单的还款列表
+     * @Date 17:37 2018/7/17
+     * @Param couponTenderNid
+     * @Param periodNow
+     * @return
+     */
+    CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, Integer periodNow);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新borrowTenderCpn表
+     * @Date 11:16 2018/7/18
+     * @Param borrowTenderCpn
+     * @return
+     */
+    Integer updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn);
 }

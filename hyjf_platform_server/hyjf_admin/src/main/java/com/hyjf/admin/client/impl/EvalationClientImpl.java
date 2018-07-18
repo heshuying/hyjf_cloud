@@ -25,7 +25,7 @@ public class EvalationClientImpl implements EvalationClient {
 
     /**
      * 根据筛选条件查找(用户测评列表显示)
-     *
+     * @author nxl
      * @param request
      * @return
      */
@@ -42,7 +42,7 @@ public class EvalationClientImpl implements EvalationClient {
 
     /**
      * 查找用户测评结果
-     *
+     * @author nxl
      * @param userId
      * @return
      */

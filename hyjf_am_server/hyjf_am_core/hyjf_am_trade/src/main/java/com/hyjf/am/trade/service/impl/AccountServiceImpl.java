@@ -1,9 +1,12 @@
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +53,47 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
 		BeanUtils.copyProperties(accountVO,account);
 		boolean result =  batchHjhBorrowRepayCustomizeMapper.updateOfPlanRepayAccount(account) >0 ? true:false;
 		return result?1:0;
+	}
+
+	@Override
+	public int updateOfRepayCouponHjh(AccountVO accountVO) {
+		return adminAccountCustomizeMapper.updateOfRepayCouponHjh(CommonUtils.convertBean(accountVO, Account.class));
+	}
+
+    @Override
+    public Integer countAccountWebList(String nid, String trade) {
+		AccountWebListExample example = new AccountWebListExample();
+		example.createCriteria().andOrdidEqualTo(nid).andTradeEqualTo(trade);
+		return this.accountWebListMapper.countByExample(example);
+    }
+
+    @Override
+    public Integer insertAccountWebList(AccountWebListVO accountWebList) {
+        return accountWebListMapper.insertSelective(CommonUtils.convertBean(accountWebList,AccountWebList.class));
+    }
+
+	@Override
+	public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
+		BankMerchantAccountVO bankMerchantAccountVO = null;
+		BankMerchantAccountExample bankMerchantAccountExample = new BankMerchantAccountExample();
+		bankMerchantAccountExample.createCriteria().andAccountCodeEqualTo(accountCode);
+		List<BankMerchantAccount> bankMerchantAccounts = bankMerchantAccountMapper.selectByExample(bankMerchantAccountExample);
+		if (bankMerchantAccounts != null && bankMerchantAccounts.size() != 0) {
+			bankMerchantAccountVO = CommonUtils.convertBean(bankMerchantAccounts.get(0),BankMerchantAccountVO.class);
+			return bankMerchantAccountVO;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public Integer updateBankMerchatAccount(BankMerchantAccountVO bankMerchantAccountVO) {
+		return bankMerchantAccountMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(bankMerchantAccountVO,BankMerchantAccount.class));
+	}
+
+	@Override
+	public Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountList) {
+		return bankMerchantAccountListMapper.insertSelective(CommonUtils.convertBean(bankMerchantAccountList,BankMerchantAccountList.class));
 	}
 
 }

@@ -61,7 +61,6 @@ public class LoanCoverUserManagerController extends BaseController{
                 e.printStackTrace();
             }
         }
-
         LoanCoverUserResponse response = new LoanCoverUserResponse();
         Integer registCount = loanCoverUserManagerService.countLoanSubjectCertificateAuthority(request,dateStart,dateEnd);
         Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
@@ -70,7 +69,7 @@ public class LoanCoverUserManagerController extends BaseController{
         }
         int limitStart = paginator.getOffset();
         int limitEnd =  paginator.getLimit();
-        if(request.getLimitFlg()==1){
+        if(request.isLimitFlg()){
             limitEnd = 0;
             limitStart = 0;
         }

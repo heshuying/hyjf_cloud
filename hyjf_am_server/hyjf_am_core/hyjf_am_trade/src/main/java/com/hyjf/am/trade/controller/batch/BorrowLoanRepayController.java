@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.task.BorrowLoanRepayToMQService;
+import com.hyjf.common.cache.CacheUtil;
 
 /**
  * @author dxj
@@ -28,5 +31,11 @@ public class BorrowLoanRepayController extends BaseController {
        borrowLoanRepayToMQService.taskAssign();
         
        return "ok";
+    }
+
+    @GetMapping("/testRedis")
+    public Map testRedis() {
+        
+    	return CacheUtil.getParamNameMap("ACCOUNT_STATUS");
     }
 }
