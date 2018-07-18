@@ -18,6 +18,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
@@ -635,7 +636,172 @@ public interface AmTradeClient {
      */
     Integer countAccountWebListByOrdId(String logOrderId, String tenderType);
 
+    /**
+     * @Description 插入计划交易明细表  加入计划成功后 操作计划表和明细表
+     * @Author sunss
+     * @Date 2018/6/22 10:34
+     */
+    boolean insertHJHPlanAccede(HjhAccedeVO planAccede);
+
+    /**
+     * 检索正在还款中的标的
+     * @return
+     */
+    List<BorrowVO> selectBorrowList();
+
+    /**
+     * 获取borrow对象
+     * @param borrowId
+     * @return
+     */
+    BorrowVO getBorrowByNid(String borrowId);
+
+    /**
+     * 投资之前插入tmp表
+     * @param request
+     */
+    boolean updateBeforeChinaPnR(TenderRequest request);
+
+    /**
+     * 用户投资散标操作表
+     * @param tenderBg
+     * @return
+     */
+    boolean borrowTender(TenderBgVO tenderBg);
+
+    /**
+     * 修改状态临时表结果
+     * @param logUserId
+     * @param logOrderId
+     * @param respCode
+     * @param retMsg
+     * @param productId
+     */
+    boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId);
+
+    /**
+     * 获取投资异步结果
+     * @param userId
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 
 
+    /**
+     * 获取还款方式
+     * @param borrowStyle
+     * @return
+     */
+    public BorrowStyleVO getBorrowStyle(String borrowStyle);
 
+    /**
+     * 会计划投资详情
+     * @param params
+     * @return
+     */
+    public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
+
+    /**
+     * 根据用户id获取总投资笔数
+     * @author zhangyk
+     * @date 2018/7/5 18:04
+     */
+    public Integer getTotalInverestCount(String userId);
+
+
+    /**
+     * 根据标的编号查询还款计划
+     * @param borrowNid
+     * @param repaySmsReminder
+     * @return
+     */
+    List<BorrowRepayPlanVO> selectBorrowRepayPlan(String borrowNid, Integer repaySmsReminder);
+
+    /**
+     * 短信发送后更新borrowRecoverPlan
+     *
+     * @param borrowRepayPlanVO
+     * @return
+     */
+    Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO);
+
+    /**
+     * 根据borrowNid和borrowPeriod查询
+     * @param bidNid
+     * @param borrowPeriod
+     * @return
+     */
+    List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
+
+    List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid);
+
+    List<CreditTenderLogVO> selectCreditTenderLogs();
+
+    List<CreditTenderVO> selectCreditTender(String assignNid);
+
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
+
+    Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
+
+    CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId);
+
+    AccountVO getAccount(int sellerUserId);
+
+    void handle();
+
+    CreditTenderVO selectByAssignNidAndUserId(String logOrderId, Integer userId);
+
+    boolean updateTenderCreditInfo(CreditTenderRequest request);
+
+    List<CreditTenderLogVO> getCreditTenderLogs(String logOrderId, Integer userId);
+
+    List<BorrowCreditVO> getBorrowCreditList(String creditNid, int sellerUserId, String tenderOrderId);
+
+    List<CreditTenderVO> getCreditTenderList(CreditTenderRequest request);
+
+    List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String,Object> params);
+
+    List<TenderToCreditDetailCustomizeVO> selectHJHWebCreditTenderDetail(Map<String,Object> params);
+
+    /**
+     * 保存债转的数据
+     * @param creditTenderBg
+     */
+    Integer saveCreditBgData(CreditTenderBgVO creditTenderBg);
+
+    BorrowRecoverVO selectBorrowRecoverByTenderNid(String tenderAgreementID);
+
+    BorrowRecoverVO selectBorrowRecoverById(Integer id);
+
+    BorrowRecoverVO selectBorrowRecoverByNid(String nid);
+
+    List<BorrowRecoverVO> selectBorrowRecoverByBorrowNid(String borrowNid);
+
+    void updateBorrowRecover(BorrowRecoverVO borrowRecover);
+
+    /**
+     * 根据tenderNid   和  bidNid 查询
+     * @param tenderNid
+     * @param bidNid
+     * @return
+     */
+    BorrowRecoverVO getBorrowRecoverByTenderNidBidNid(String tenderNid, String bidNid);
+
+    /**
+     * 根据tenderNid 查询
+     * @param tenderNid
+     * @return
+     */
+    BorrowRecoverVO getBorrowRecoverByTenderNid(String tenderNid);
+
+    /**
+     * 获取borrow_recover_plan更新每次还款时间
+     * @param bidNid
+     * @param creditTenderNid
+     * @param periodNow
+     * @return
+     */
+    BorrowRecoverPlanVO getPlanByBidTidPeriod(String bidNid, String creditTenderNid, int periodNow);
 }
