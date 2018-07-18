@@ -76,4 +76,22 @@ public interface AccountClient {
      * @return
      */
     int insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountList);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新Account
+     * @Date 17:15 2018/7/18
+     * @Param AccountVO
+     * @return 
+     */
+    int updateOfRepayTender(AccountVO account);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新用户散标账户
+     * @Date 18:32 2018/7/18
+     * @Param AccountVO
+     * @return
+     */
+    int updateOfLoansTender(AccountVO account);
 }

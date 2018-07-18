@@ -108,4 +108,14 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
         return bankMerchantAccountListMapper.insertSelective(CommonUtils.convertBean(bankMerchantAccountList,BankMerchantAccountList.class));
     }
 
+    @Override
+    public int updateOfRepayTender(AccountVO accountVO) {
+        return adminAccountCustomizeMapper.updateOfRepayTender(CommonUtils.convertBean(accountVO,Account.class));
+    }
+
+    @Override
+    public int updateOfLoansTender(AccountVO accountVO) {
+        return adminAccountCustomizeMapper.updateOfLoansTender(CommonUtils.convertBean(accountVO,Account.class));
+    }
+
 }

@@ -170,4 +170,22 @@ public class CouponConfigClientImpl implements CouponConfigClient {
         return 0;
     }
 
+    @Override
+    public List<CouponTenderCustomizeVO> getCouponTenderList(String borrowNid) {
+        CouponTenderCustomizeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/getcoupontenderlist/"+borrowNid , CouponTenderCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer crRecoverPeriod(String tenderNid, int period) {
+        CouponRecoverResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/updaterecoverperiod/"+tenderNid + "/" + period ,CouponRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getRecordTotal();
+        }
+        return null;
+    }
+
 }

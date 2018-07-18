@@ -8,8 +8,10 @@ import com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponRecoverMapper;
 import com.hyjf.am.trade.dao.mapper.auto.TransferExceptionLogMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.CouponConfigCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponTenderCustomize;
 import com.hyjf.am.trade.service.CouponConfigService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
@@ -40,6 +42,8 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	private CouponRecoverMapper couponRecoverMapper;
 	@Resource
 	private TransferExceptionLogMapper transferExceptionLogMapper;
+	@Resource
+	private CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
 	/**
 	 * 根据优惠券编号查找优惠券配置
 	 * 
@@ -229,6 +233,26 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	@Override
 	public Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog) {
 		return transferExceptionLogMapper.insertSelective(CommonUtils.convertBean(transferExceptionLog,TransferExceptionLogWithBLOBs.class));
+	}
+
+    @Override
+    public List<CouponTenderCustomizeVO> getCouponTenderList(String borrowNid) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("borrowNid", borrowNid);
+		// 1 项目到期还款  2 收益期限到期还款
+		paramMap.put("repayTimeConfig", 1);
+		List<CouponTenderCustomize> list = this.couponRecoverCustomizeMapper.selectCouponRecoverAll(paramMap);
+		return CommonUtils.convertBeanList(list,CouponTenderCustomizeVO.class);
+    }
+
+	@Override
+	public Integer updateRecoverPeriod(String tenderNid, Integer period) {
+		Map<String, Object> paramMapCurrent = new HashMap<String, Object>();
+		paramMapCurrent.put("currentRecoverFlg", 1);
+		paramMapCurrent.put("tenderNid", tenderNid);
+		paramMapCurrent.put("period", period);
+		this.couponRecoverCustomizeMapper.crRecoverPeriod(paramMapCurrent);
+		return 1;
 	}
 
 }

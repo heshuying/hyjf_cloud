@@ -170,4 +170,38 @@ public class AccountController extends BaseController {
         response.setFlag(flag);
         return response;
     }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新account用户散标信息
+     * @Date 17:17 2018/7/18
+     * @Param AccountVO
+     * @return
+     */
+    @PostMapping("/updateofrepaytender")
+    public AccountResponse updateOfRepayTender(@RequestBody AccountVO accountVO) {
+        AccountResponse response = new AccountResponse();
+        if (accountVO != null) {
+            int updateFlag = accountService.updateOfRepayTender(accountVO);
+            response.setUpdateFlag(updateFlag);
+        }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新用户散标账户
+     * @Date 18:33 2018/7/18
+     * @Param AccountVO
+     * @return
+     */
+    @PostMapping("/updateofloanstender")
+    public AccountResponse updateOfLoansTender(@RequestBody AccountVO accountVO) {
+        AccountResponse response = new AccountResponse();
+        if (accountVO != null) {
+            int updateFlag = accountService.updateOfLoansTender(accountVO);
+            response.setUpdateFlag(updateFlag);
+        }
+        return response;
+    }
 }
