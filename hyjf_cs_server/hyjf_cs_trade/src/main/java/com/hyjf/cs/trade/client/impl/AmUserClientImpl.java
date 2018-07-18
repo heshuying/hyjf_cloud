@@ -2,17 +2,20 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.BankCardResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -487,4 +490,70 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+
+	@Override
+	public CouponConfigVO selectCouponConfig(String couponCode) {
+		CouponConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/selectCouponConfig/" + couponCode, CouponConfigResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
+		MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer countAvaliableCoupon(MyCouponListRequest request) {
+		MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/countAvaliableCoupon",request, MyBestCouponListResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCouponCount();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer checkCouponSendExcess(String couponCode) {
+		CouponConfigCustomizeResponse cccr = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/checkCouponSendExcess/"+couponCode,CouponConfigCustomizeResponse.class).getBody();
+		if (Response.isSuccess(cccr)) {
+			return cccr.getCount();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询汇计划最优优惠券
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request) {
+		MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/selectHJHBestCoupon",request, MyBestCouponListResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询HJH可用优惠券数量
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public Integer countHJHAvaliableCoupon(MyCouponListRequest request) {
+		Integer response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/getHJHUserCouponAvailableCount", request,Integer.class).getBody();
+		return response;
+	}
+
+
 }
