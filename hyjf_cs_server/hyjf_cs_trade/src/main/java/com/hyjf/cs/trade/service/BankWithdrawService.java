@@ -65,5 +65,5 @@ public interface BankWithdrawService extends BaseTradeService {
      * 定时任务提现
      * add by jijun 20180621
      */
-    boolean batchWithdraw();
+    Boolean batchWithdraw();
 }

@@ -5,18 +5,21 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
+import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.vo.trade.account.AccountVO;
+import java.util.List;
 
 /**
  * @author ${yaoy}
@@ -57,6 +60,23 @@ public class AccountController extends BaseController {
     public Integer updateOfPlanRepayAccount(@RequestBody AccountVO accountVO){
         return this.accountService.updateOfPlanRepayAccount(accountVO);
     }
+
+
+    /**
+     * userIds范围查询
+     * @param
+     * @return
+     */
+    @PostMapping("/getAccountByUserIds")
+    public AccountResponse getAccountByUserIds(@RequestBody List<Integer> userIds) {
+        AccountResponse response = new AccountResponse();
+        List<Account> accounts = accountService.getAccountByUserIds(userIds);
+        if (CollectionUtils.isNotEmpty(accounts)) {
+            response.setResultList(CommonUtils.convertBeanList(accounts,AccountVO.class));
+        }
+        return response;
+    }
+
 
     /**
      * @Author walter.limeng

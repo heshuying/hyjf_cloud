@@ -23,7 +23,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountDirectionalTransferController, v0.1 2018/7/4 16:51
  */
-@Api(value = "资金中心-定向转账-定向转账")
+@Api(value = "资金中心-定向转账-定向转账",description = "资金中心-定向转账-定向转账")
 @RestController
 @RequestMapping("/am-trade/accountdirectionaltransfer")
 public class AccountDirectionalTransferController extends BaseController {

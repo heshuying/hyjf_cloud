@@ -171,9 +171,9 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				msg.append("详细错误信息：<br/>").append(sbError.toString());
 				String[] toMail = new String[] {};
 				if ("测试环境".equals(online)) {
-					toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com" };
+					toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com", "dengxiaojiang@hyjf.com" };
 				} else {
-					toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com", };
+					toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com","zhangjinpeng@hyjf.com" };
 				}
 				MailMessage mailmessage = new MailMessage(null, null,
 						"[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail,
