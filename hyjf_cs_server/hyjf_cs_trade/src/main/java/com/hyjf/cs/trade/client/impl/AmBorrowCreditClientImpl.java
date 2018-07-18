@@ -16,9 +16,9 @@ public class AmBorrowCreditClientImpl implements AmBorrowCreditClient {
 
     @Override
     public BorrowCreditDetailVO getCreditDetail(String creditNid) {
-        BorrowCreditDetailResponse response = restTemplate.getForEntity("",BorrowCreditDetailResponse.class).getBody();
+        BorrowCreditDetailResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid,BorrowCreditDetailResponse.class).getBody();
         if (Response.isSuccess(response)){
-            response.getResult();
+           return response.getResult();
         }
         return null;
     }

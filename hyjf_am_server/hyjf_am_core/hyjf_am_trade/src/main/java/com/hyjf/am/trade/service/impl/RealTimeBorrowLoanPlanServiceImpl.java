@@ -4,21 +4,49 @@
 package com.hyjf.am.trade.service.impl;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountBorrow;
+import com.hyjf.am.trade.dao.model.auto.AccountBorrowExample;
+import com.hyjf.am.trade.dao.model.auto.AccountExample;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
+import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
+import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
+import com.hyjf.am.trade.dao.model.auto.FreezeList;
+import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
+import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
@@ -44,72 +72,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @version RealTimeBorrowLoanPlanServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
  */
 @Service
-public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlanService {
-
-	private static final Logger logger = LoggerFactory.getLogger(RealTimeBorrowLoanPlanServiceImpl.class);
-
-    @Autowired
-    private AccountMapper accountMapper;
-
-    @Autowired
-    private BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    private BorrowApicronMapper borrowApicronMapper;
-
-    @Autowired
-    private CalculateInvestInterestMapper calculateInvestInterestMapper;
-
-    @Autowired
-    private BorrowMapper borrowMapper;
-
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-	@Autowired
-	private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
-    @Autowired
-    private BorrowProjectTypeMapper borrowProjectTypeMapper;
-
-    @Autowired
-    private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
-
-    @Autowired
-    private FreezeListMapper freezeListMapper;
-
-    @Autowired
-    private BorrowRepayMapper borrowRepayMapper;
-
-    @Autowired
-    private BorrowRecoverMapper borrowRecoverMapper;
-
-    @Autowired
-    private BorrowRecoverPlanMapper borrowRecoverPlanMapper;
-
-    @Autowired
-    private BorrowRepayPlanMapper borrowRepayPlanMapper;
-
-    @Autowired
-    private AccountBorrowMapper accountBorrowMapper;
-
-    @Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-
-    @Autowired
-    private AccountListMapper accountListMapper;
-
-    @Autowired
-    private HjhDebtDetailMapper hjhDebtDetailMapper;
-
-    @Autowired
-    private HjhAccedeMapper hjhAccedeMapper;
-
-	@Autowired
-	private BatchHjhAccedeCustomizeMapper batchHjhAccedeCustomizeMapper;
-
-    @Autowired
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
+public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implements RealTimeBorrowLoanPlanService {
     
 	@Autowired
 	private MailProducer mailProducer;
@@ -251,6 +214,18 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 	
 	
 	/**
+	 * 根据主键从主库查询apicron 表
+	 * 这里不加select是想直接从主库查询
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public BorrowApicron selApiCronByPrimaryKey(int id) {
+		return borrowApicronMapper.selectByPrimaryKey(id);
+	}
+	
+	
+	/**
 	 * 自动扣款（放款）(调用江西银行满标接口)
 	 *
 	 * @param outCustId
@@ -287,74 +262,74 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 			if (!apicronFlag) {
 				throw new Exception("更新放款任务为进行中失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
 			}
-			for (int i = 0; i < 3; i++) {
-				// 调用放款接口
-				BankCallBean loanBean = new BankCallBean();
-				loanBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-				loanBean.setTxCode(BankCallConstant.TXCODE_AUTOLEND_PAY);// 消息类型(实时接口自动放款)
-				loanBean.setTxDate(txDate);
-				loanBean.setTxTime(txTime);
-				loanBean.setSeqNo(seqNo);
-				loanBean.setChannel(channel);
-				loanBean.setAccountId(accountId);//借款人电子账号
-				loanBean.setOrderId(logOrderId);
-				loanBean.setTxAmount(txAmount);//投资总额
-				loanBean.setFeeAmount(feeAmount);//手续费金额
-				loanBean.setRiskAmount("0");//风险准备金
-				loanBean.setProductId(borrowNid);//标的号
-				loanBean.setLogUserId(String.valueOf(userId));
-				loanBean.setLogOrderId(logOrderId);
-				loanBean.setLogOrderDate(orderDate);
-				loanBean.setLogRemark("实时接口自动放款请求");
-				loanBean.setLogClient(0);
-				BankCallBean loanResult = BankCallUtils.callApiBg(loanBean);
-				if (Validator.isNotNull(loanResult)) {
-					String retCode = StringUtils.isNotBlank(loanResult.getRetCode()) ? loanResult.getRetCode() : "";
-					if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)) {//放款成功 
-						// 更新任务API状态
-						boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-						if (apicronResultFlag) {
-							return loanResult;
-						} else {
-							throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-						}
-					} else if ("".equals(retCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {//重新查询处理结果
-						String oldOrdid = apicron.getOrdid();
-						if(StringUtils.isNotBlank(oldOrdid)){
-							loanBean.setOrderId(oldOrdid);
-						}
-						BankCallBean result = queryAutoLendResult(loanBean);
-						if (result != null) {
-							// 更新任务API状态
-							boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-							if (apicronResultFlag) {
-								loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
-								return loanResult;
-							} else {
-								throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-							}
-						}else{
-							boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SEND_FAIL);
-							if (apicronResultFlag) {
-								return loanResult;
-							} else {
-								throw new Exception("更新状态为（放款处理请求失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-							}
-						}
-					}else{// 放款失败
-						// 更新任务API状态
-						boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-						if (apicronResultFlag) {
-							return loanResult;
-						} else {
-							throw new Exception("更新状态为（放款失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-						}
+			// 调用放款接口
+			BankCallBean loanBean = new BankCallBean();
+			loanBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+			loanBean.setTxCode(BankCallConstant.TXCODE_AUTOLEND_PAY);// 消息类型(实时接口自动放款)
+			loanBean.setTxDate(txDate);
+			loanBean.setTxTime(txTime);
+			loanBean.setSeqNo(seqNo);
+			loanBean.setChannel(channel);
+			loanBean.setAccountId(accountId);//借款人电子账号
+			loanBean.setOrderId(logOrderId);
+			loanBean.setTxAmount(txAmount);//投资总额
+			loanBean.setFeeAmount(feeAmount);//手续费金额
+			loanBean.setRiskAmount("0");//风险准备金
+			loanBean.setProductId(borrowNid);//标的号
+			loanBean.setLogUserId(String.valueOf(userId));
+			loanBean.setLogOrderId(logOrderId);
+			loanBean.setLogOrderDate(orderDate);
+			loanBean.setLogRemark("实时接口自动放款请求");
+			loanBean.setLogClient(0);
+			BankCallBean loanResult = BankCallUtils.callApiBg(loanBean);
+			if (loanResult != null && StringUtils.isNotBlank(loanResult.getRetCode())) {
+				String retCode = loanResult.getRetCode();
+				logger.info(borrowNid+" 实时放款请求银行返回: " + retCode);
+				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)) {//放款成功 
+					// 更新任务API状态
+					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+					if (apicronResultFlag) {
+						return loanResult;
+					} else {
+						throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
 					}
-				} else {
-					// 掉单,重新请求
-					continue;
+				} else{
+					// 更新任务API状态
+					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
+					if (apicronResultFlag) {
+						return loanResult;
+					} else {
+						throw new Exception("更新状态为（放款失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
+					}
 				}
+			} else {
+				
+				//重新查询处理结果
+				String oldOrdid = apicron.getOrdid();
+				if(StringUtils.isNotBlank(oldOrdid)){
+					loanBean.setOrderId(oldOrdid);
+				}
+				BankCallBean result = queryAutoLendResult(loanBean);
+				if (result != null) {
+					// 更新任务API状态
+					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+					if (apicronResultFlag) {
+						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
+						return loanResult;
+					} else {
+						throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
+					}
+				}else{
+					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SEND_FAIL);
+					if (apicronResultFlag) {
+						return loanResult;
+					} else {
+						throw new Exception("更新状态为（放款处理请求失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
+					}
+				}
+				
 			}
+		
 		} catch (Exception e) {
 			logger.info("==============标的号:" + borrowNid + "cwyang 放款异常:" + e.getMessage());
 		}
@@ -369,7 +344,7 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 	}
 
 	/**
-	 * 更新放款订单号
+	 * 更新放款订单号//TODO:这个方法需要改动
 	 * @param apicron
 	 * @param logOrderId 
 	 * @throws Exception 
@@ -442,7 +417,7 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 	}
 
 	@Override
-	public boolean updateBatchDetailsQuery(BorrowApicron apicron, BankCallBean bean) {
+	public boolean planLoanBatchUpdateDetails(BorrowApicron apicron, BankCallBean bean) {
 
 		String borrowNid = apicron.getBorrowNid();// 項目编号
 		Borrow borrow = this.getBorrowByNid(borrowNid);
@@ -450,11 +425,11 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 		
 		// 放款成功后后续操作
 		try {
-			apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+//			apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
 			boolean loanFlag = this.borrowLoans(apicron, borrow, borrowInfo, bean);
 			if (loanFlag) {
 				try {
-					apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+//					apicron = borrowApicronMapper.selectByPrimaryKey(apicron.getId());
 					boolean borrowFlag = this.updateBorrowStatus(apicron, borrow, borrowInfo);
 					if (borrowFlag) {
 						return true;
@@ -585,7 +560,7 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 	private boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception {
 
 		int nowTime = GetDate.getNowTime10();// 当前时间
-		apicron = this.borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+//		apicron = this.borrowApicronMapper.selectByPrimaryKey(apicron.getId());
 		String borrowNid = apicron.getBorrowNid();// 项目编号
 		String nid = apicron.getNid();// 放款唯一号
 		int borrowUserId = apicron.getUserId();// 借款人
@@ -1748,18 +1723,6 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 		return null;
 	}
 
-	private BorrowInfo getBorrowInfoByNid(String borrowNid) {
-		BorrowInfoExample example = new BorrowInfoExample();
-		BorrowInfoExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-
 	/**
 	 * 取出冻结订单
 	 *
@@ -1770,23 +1733,6 @@ public class RealTimeBorrowLoanPlanServiceImpl implements RealTimeBorrowLoanPlan
 		FreezeListExample.Criteria criteria = example.createCriteria();
 		criteria.andOrdidEqualTo(ordId);
 		List<FreezeList> list = this.freezeListMapper.selectByExample(example);
-		if (list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * 取得借款信息
-	 *
-	 * @return
-	 */
-	private BorrowRepay getBorrowRepay(String borrowNid) {
-		BorrowRepayExample example = new BorrowRepayExample();
-		BorrowRepayExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
-
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}

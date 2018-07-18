@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.admin.client.HjhCreditTenderClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.HjhCreditTenderService;
@@ -34,7 +34,8 @@ import com.hyjf.common.exception.MQException;
 public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 	
     @Autowired
-    private HjhCreditTenderClient hjhCreditTenderClient;
+    private AmTradeClient amTradeClient;
+    
 	@Autowired
 	private FddProducer fddProducer;
 	private static final Logger _log = LoggerFactory.getLogger(HjhCreditTenderServiceImpl.class);
@@ -46,19 +47,19 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 	 */
 	@Override
 	public HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form) {
-		HjhCreditTenderResponse response = hjhCreditTenderClient.getHjhCreditTenderListByParam(form);
+		HjhCreditTenderResponse response = amTradeClient.getHjhCreditTenderListByParam(form);
 		return response;
 	}
 
 	@Override
 	public List<HjhCreditTenderCustomizeVO> getHjhCreditTenderListByParamWithOutPage(HjhCreditTenderRequest form) {
-		List<HjhCreditTenderCustomizeVO> list = hjhCreditTenderClient.getHjhCreditTenderListByParamWithOutPage(form);
+		List<HjhCreditTenderCustomizeVO> list = amTradeClient.getHjhCreditTenderListByParamWithOutPage(form);
 		return list;
 	}
 
 	@Override
 	public HjhDebtCreditTenderVO selectHjhCreditTenderRecord(HjhCreditTenderRequest form) {
-		HjhDebtCreditTenderVO vo = hjhCreditTenderClient.selectHjhCreditTenderRecord(form);
+		HjhDebtCreditTenderVO vo = amTradeClient.selectHjhCreditTenderRecord(form);
 		return vo;
 	}
 

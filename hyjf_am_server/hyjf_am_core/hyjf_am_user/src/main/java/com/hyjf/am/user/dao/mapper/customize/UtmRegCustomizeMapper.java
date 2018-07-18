@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -83,4 +84,6 @@ public interface UtmRegCustomizeMapper {
 	 */
 	Integer getOpenAccountNumber(@Param("sourceId") Integer sourceId, @Param("dayStart") String dayStart,
 			@Param("dayEnd") String dayEnd);
+
+	List<UtmReg> getUtmRegList(Integer sourceId);
 }

@@ -18,7 +18,7 @@ public class CacheUtil {
 	 */
 	public static Map<String, String> getParamNameMap(String nameClass) {
 		
-		return RedisUtils.hgetall(nameClass);
+		return RedisUtils.hgetall(RedisConstants.CACHE_PARAM_NAME+nameClass);
 	}
 
 	/**
@@ -28,6 +28,6 @@ public class CacheUtil {
 	 */
 	public static String getParamName(String nameClass, String key) {
 		
-		return RedisUtils.hget(nameClass, key);
+		return RedisUtils.hget(RedisConstants.CACHE_PARAM_NAME+nameClass, key);
 	}
 }

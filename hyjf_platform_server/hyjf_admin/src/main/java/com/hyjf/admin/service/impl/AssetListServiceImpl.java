@@ -7,12 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.AssetListClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AssetListService;
 import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
@@ -24,7 +23,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 public class AssetListServiceImpl implements AssetListService {
 
 	@Autowired
-	public AssetListClient assetListClient;
+	public AmTradeClient amTradeClient;
 
 	/**
 	 * 获取资金来源
@@ -34,7 +33,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public List<HjhInstConfigVO> getHjhInstConfigList() {
-		List<HjhInstConfigVO> hjhInstConfigList = assetListClient.findHjhInstConfigList();
+		List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
 		return hjhInstConfigList;
 	}
 
@@ -46,7 +45,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public List<HjhAssetTypeVO> hjhAssetTypeList(String instCodeSrch) {
-		List<HjhAssetTypeVO> hjhAssetTypeList = assetListClient.findHjhAssetTypeList(instCodeSrch);
+		List<HjhAssetTypeVO> hjhAssetTypeList = amTradeClient.findHjhAssetTypeList(instCodeSrch);
 		return hjhAssetTypeList;
 	}
 	
@@ -58,7 +57,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public Map<String, String> getParamNameMap(String param) {
-		Map<String, String> paramMap = assetListClient.findParamNameMap(param);
+		Map<String, String> paramMap = amTradeClient.findParamNameMap(param);
 		return paramMap;
 	}
 
@@ -70,7 +69,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public AssetListCustomizeResponse findAssetList(AssetListRequest request) {
-		AssetListCustomizeResponse response = assetListClient.findAssetList(request);
+		AssetListCustomizeResponse response = amTradeClient.findAssetList(request);
 		return response;
 	}
 	
@@ -82,7 +81,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public AssetDetailCustomizeVO getDetailById(AssetListRequest assetListRequest) {
-		AssetDetailCustomizeVO assetDetailCustomizeVO = assetListClient.findDetailById(assetListRequest);
+		AssetDetailCustomizeVO assetDetailCustomizeVO = amTradeClient.findDetailById(assetListRequest);
 		return assetDetailCustomizeVO;
 	}
 
@@ -94,7 +93,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public Integer getRecordCount(AssetListRequest request) {
-		Integer count = assetListClient.getRecordCount(request);
+		Integer count = amTradeClient.getRecordCount(request);
 		return count;
 	}
 
@@ -106,7 +105,7 @@ public class AssetListServiceImpl implements AssetListService {
 	 */
 	@Override
 	public BigDecimal sumAccount(AssetListRequest request) {
-		BigDecimal sum = assetListClient.sumAccount(request);
+		BigDecimal sum = amTradeClient.sumAccount(request);
 		return sum;
 	}
 }

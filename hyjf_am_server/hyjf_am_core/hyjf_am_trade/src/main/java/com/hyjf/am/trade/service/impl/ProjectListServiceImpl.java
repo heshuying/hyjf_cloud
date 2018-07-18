@@ -9,9 +9,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.*;
+import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +18,7 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebProjectListCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 
 /**
  * Web端项目列表Service实现类
@@ -129,7 +126,7 @@ public class ProjectListServiceImpl implements ProjectListService {
      * @date 2018/6/19 16:03
      */
     @Override
-    public List<TenderCreditDetailCustomizeVO> searchCreditList(@Valid CreditListRequest request) {
+    public List<CreditListVO> searchCreditList(@Valid CreditListRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
         // 获取项目期限
         params.put("borrowPeriodMin", request.getBorrowPeriodMin());
@@ -147,7 +144,7 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("inProgressSort",request.getInProgressSort());
         params.put("limitStart",request.getLimitStart());
         params.put("limitEnd", request.getLimitEnd());
-        List<TenderCreditDetailCustomizeVO> list = webProjectListCustomizeMapper.searchCreditList(params);
+        List<CreditListVO> list = webProjectListCustomizeMapper.searchCreditList(params);
         return list;
     }
 

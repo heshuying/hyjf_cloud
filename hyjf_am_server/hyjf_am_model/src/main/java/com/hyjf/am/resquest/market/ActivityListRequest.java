@@ -11,7 +11,7 @@ package com.hyjf.am.resquest.market;
 public class ActivityListRequest {
 
     private int id;
-    //活动名称
+    /** 活动名称 */
     private String title;
     /**
      * 前台时间接收
@@ -50,7 +50,7 @@ public class ActivityListRequest {
 
     private String description;
 
-    private int createTime;
+    private String createTime;
 
     private int updateTime;
 
@@ -227,11 +227,11 @@ public class ActivityListRequest {
         this.description = description;
     }
 
-    public int getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

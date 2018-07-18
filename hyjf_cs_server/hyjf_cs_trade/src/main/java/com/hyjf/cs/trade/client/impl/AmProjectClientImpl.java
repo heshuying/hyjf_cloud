@@ -17,7 +17,7 @@ public class AmProjectClientImpl implements AmProjectClient {
 
     @Override
     public ProjectCustomeDetailVO selectProjectDetail(String borrowNid) {
-        ProjectDetailResponse response = restTemplate.getForEntity("/am-trade/borrow/getProjectDetail/" + borrowNid, ProjectDetailResponse.class).getBody();
+        ProjectDetailResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/getProjectDetail/" + borrowNid, ProjectDetailResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
         }

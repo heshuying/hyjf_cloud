@@ -11,6 +11,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
+import com.hyjf.am.response.market.ActivityListResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +44,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "活动列表接口")
 @RestController
 @RequestMapping("/hyjf-admin/activity")
-public class ActivityListController {
+public class ActivityListController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ActivityListController.class);
 
     @Value("${http://cdn.huiyingdai.com/}")
@@ -60,56 +64,31 @@ public class ActivityListController {
     }
 
     @PostMapping("/activityRecordList")
-    public JSONObject selectActivityList(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        ActivityListRequest activityListRequest = setRequest(map);
-        List<ActivityListVO> recordActivityList = activityListService.getRecordList(activityListRequest);
-        List<ActivityListRequest> forBack = forBack(recordActivityList);
-        String status = Response.FAIL;
-        if (null != recordActivityList && recordActivityList.size() > 0) {
-            jsonObject.put("record", recordActivityList);
-            status = Response.SUCCESS;
+    public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, ActivityListRequest activityListRequest) {
+        ActivityListResponse response = activityListService.getRecordList(activityListRequest);
+        List<ActivityListVO> forBack = forBack(response);
+        if(response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status", status);
-        return jsonObject;
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount())) ;
     }
 
-    private ActivityListRequest setRequest(Map<String, Object> mapParam) {
-        ActivityListRequest activityListRequest = new ActivityListRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-            if (mapParam.containsKey("title")) {
-                activityListRequest.setTitle(mapParam.get("title").toString());
-            }
-            if (mapParam.containsKey("startTime")) {
-                activityListRequest.setStartTime(Integer.valueOf(mapParam.get("startTime").toString()));
-            }
-            if (mapParam.containsKey("endTime")) {
-                activityListRequest.setEndTime(Integer.valueOf(mapParam.get("endTime").toString()));
-            }
-            if (mapParam.containsKey("startCreate")) {
-                activityListRequest.setStartCreate(mapParam.get("startCreate").toString());
-            }
-            if (mapParam.containsKey("endCreate")) {
-                activityListRequest.setEndCreate(mapParam.get("endCreate").toString());
-            }
-            if (mapParam.containsKey("limit") && StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                activityListRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
-            }
-        }
-        return activityListRequest;
-    }
+
 
     /**
      * 调用封装回显
      *
-     * @param recordList
+     * @param response
      * @return
      */
-    private List<ActivityListRequest> forBack(List<ActivityListVO> recordList) {
-        List<ActivityListRequest> forBack = new ArrayList<ActivityListRequest>();
+    private List<ActivityListVO> forBack(ActivityListResponse response) {
+        List<ActivityListVO> forBack = new ArrayList<ActivityListVO>();
 
-        for (ActivityListVO activityList : recordList) {
-            ActivityListRequest request = new ActivityListRequest();
+        for (ActivityListVO activityList : response.getResultList()) {
+            ActivityListVO request = new ActivityListVO();
             BeanUtils.copyProperties(activityList, request);
             request.setId(activityList.getId());
             request.setTitle(activityList.getTitle());
@@ -123,8 +102,8 @@ public class ActivityListController {
             map.put("4", "其他");
             map.put("5", "微可车贷");
             request.setPlatform(map.get(platform));
-            request.setStartTime(activityList.getTimeStart());
-            request.setEndTime(activityList.getTimeEnd());
+            request.setTimeStart(activityList.getTimeStart());
+            request.setTimeEnd(activityList.getTimeEnd());
             if (activityList.getTimeStart() >= GetDate.getNowTime10()) {
                 request.setStatus("未开始");
             }
@@ -135,7 +114,7 @@ public class ActivityListController {
                     && activityList.getTimeStart() <= GetDate.getNowTime10()) {
                 request.setStatus("进行中");
             }
-            request.setStartCreate(GetDate.getDateTimeMyTime(activityList.getCreateTime()));
+            request.setStartCreate(activityList.getCreateTime());
 //            if("汇盈F1大师赛".equals(activityList.getTitle())){
 //                request.setIsMayActivity("1");
 //            }
@@ -146,10 +125,10 @@ public class ActivityListController {
 
     @ApiOperation(value = "活动列表", notes = "添加活动配置")
     @PostMapping("/insertAction")
-    public JSONObject insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
+    public JSONObject insertAction(HttpServletResponse response, @RequestBody ActivityListRequest request) {
         JSONObject jsonObject = new JSONObject();
         //1代表插入成功， 0为失败
-        int insertFlag = activityListService.insertRecord(map);
+        int insertFlag = activityListService.insertRecord(request);
         if (insertFlag == 1) {
             jsonObject.put("insertFlag", "success");
         } else {

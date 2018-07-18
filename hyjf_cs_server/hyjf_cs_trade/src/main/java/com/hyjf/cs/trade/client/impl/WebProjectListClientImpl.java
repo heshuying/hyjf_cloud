@@ -69,7 +69,7 @@ public class WebProjectListClientImpl implements WebProjectListClient {
 
     @Override
     public CreditListResponse searchCreditList(CreditListRequest request) {
-        CreditListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchCreditList",request,CreditListResponse.class).getBody();
+        CreditListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchWebCreditList",request,CreditListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchCreditList --> response = {}",response);
         return response;
     }

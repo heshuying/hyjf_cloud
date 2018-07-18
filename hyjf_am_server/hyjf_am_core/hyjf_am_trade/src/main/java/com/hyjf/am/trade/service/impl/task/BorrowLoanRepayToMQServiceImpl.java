@@ -7,17 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
@@ -25,12 +19,14 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.BorrowLoanRepayToMQService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -42,27 +38,19 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @version BorrowLoanRepayToMQServiceImpl.java, v0.1 2018年6月19日 上午11:27:25
  */
 @Service
-public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQService {
-	
+public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements BorrowLoanRepayToMQService {
 
-    private Logger _log = LoggerFactory.getLogger(BorrowLoanRepayToMQServiceImpl.class);
 	
 	/** 任务类别（1：还款） */
 	private static final Integer TASK_REPAY_TYPE = 1;
 	/**任务类别（0：放款） */
 	private static final Integer TASK_LOAN_TYPE = 0;
-
-    @Autowired
-    protected BorrowApicronMapper borrowApicronMapper;
-    
-    @Autowired
-    private SmsProducer smsProducer;
     
     @Autowired
     private BorrowLoanRepayProducer borrowLoanRepayProducer;
     
     @Autowired
-    private AccountMapper accountMapper;
+    private SmsProducer smsProducer;
 
 	/**
 	 * 对放款、还款任务进行分派
@@ -74,7 +62,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 		
         // 还款请求件数
         int repayRequestCount = 0;
-		_log.info("自动放/还款消息推送任务开始。");
+		logger.info("自动放/还款消息推送任务开始。");
 		
 		try {
 			// 取得直投类未还款任务，状态不是 0，6 的
@@ -83,30 +71,30 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 			if(listZhitouApicron == null || listZhitouApicron.size() == 0){
 				return;
 			}
-	        _log.info("任务总数："+listZhitouApicron.size());
+	        logger.info("任务总数："+listZhitouApicron.size());
 	        
 			// 循环进行将还款任务压入队列中还款
 			for (BorrowApicron apicron : listZhitouApicron) {
-				_log.info(apicron.getApiType()+" :项目编号:[" + apicron.getBorrowNid() + "].计划编号:[" + (StringUtils.isEmpty(apicron.getPlanNid()) ? "" : apicron.getPlanNid()) + "].");
+				logger.info(apicron.getApiType()+" :项目编号:[" + apicron.getBorrowNid() + "].计划编号:[" + (StringUtils.isEmpty(apicron.getPlanNid()) ? "" : apicron.getPlanNid()) + "].");
 				
 				Integer status = apicron.getStatus();
 				// 放、还款请求，
 				if(status.equals(CustomConstants.BANK_BATCH_STATUS_SENDING) || status.equals(CustomConstants.BANK_BATCH_STATUS_SEND_FAIL)){
 					if(TASK_REPAY_TYPE.equals(apicron.getApiType())){
-						_log.info("发起还款消息:还款项目编号:[" + apicron.getBorrowNid() + ",还款期数:[第" + apicron.getPeriodNow() + "],计划编号:[" + (StringUtils.isEmpty(apicron.getPlanNid()) ? "" : apicron.getPlanNid()));
+						logger.info("发起还款消息:还款项目编号:[" + apicron.getBorrowNid() + ",还款期数:[第" + apicron.getPeriodNow() + "],计划编号:[" + (StringUtils.isEmpty(apicron.getPlanNid()) ? "" : apicron.getPlanNid()));
 						// 还款请求
 						sendMessage(MQConstant.BORROW_REPAY_REQUEST_TOPIC, apicron);
                         repayRequestCount++;
-                        _log.info("发起还款请求总数:[" + repayRequestCount + "].");
+                        logger.info("发起还款请求总数:[" + repayRequestCount + "].");
                         
                     }else if(TASK_LOAN_TYPE.equals(apicron.getApiType()) && StringUtils.isBlank(apicron.getPlanNid())){
                     	//直投放款请求
                     	sendMessage(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, apicron);
-                    	_log.info("发送放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
+                    	logger.info("发送放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
                     }else if(TASK_LOAN_TYPE.equals(apicron.getApiType()) && StringUtils.isNotBlank(apicron.getPlanNid())){
                     	//计划放款请求
                     	sendMessage(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, apicron);
-                    	_log.info("发送放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
+                    	logger.info("发送放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
                     }
 					
 				}else if(status.equals(CustomConstants.BANK_BATCH_STATUS_SENDED) || status.equals(CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS)
@@ -115,12 +103,12 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 					if(TASK_REPAY_TYPE.equals(apicron.getApiType()) && StringUtils.isBlank(apicron.getPlanNid())){
 						// 直投类还款
 						sendMessage(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC, apicron);
-                    	_log.info("发送散标还款结果处理消息:还款项目编号:[" + apicron.getBorrowNid() + "]");
+                    	logger.info("发送散标还款结果处理消息:还款项目编号:[" + apicron.getBorrowNid() + "]");
 						
 					}else if(TASK_REPAY_TYPE.equals(apicron.getApiType()) && StringUtils.isNotBlank(apicron.getPlanNid())){
 						// 计划类还款
 						sendMessage(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC, apicron);
-                    	_log.info("发送计划还款结果处理消息:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
+                    	logger.info("发送计划还款结果处理消息:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
 					}
 					
 				}else if(status.equals(CustomConstants.BANK_BATCH_STATUS_FAIL)){
@@ -129,13 +117,13 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 						//直投类异常修复
 						boolean flag = updateBatchFailLoan(apicron);
 						if (flag) {
-							_log.info("------------开始修复标的号:" + apicron.getBorrowNid() + ",放款异常!计划编号:" + apicron.getPlanNid());
+							logger.info("------------开始修复标的号:" + apicron.getBorrowNid() + ",放款异常!计划编号:" + apicron.getPlanNid());
 							if (StringUtils.isBlank(apicron.getPlanNid())) {//直投标的
 								sendMessage(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, apicron);
-		                    	_log.info("发送散标放款请求:还款项目编号:[" + apicron.getBorrowNid() + "]");
+		                    	logger.info("发送散标放款请求:还款项目编号:[" + apicron.getBorrowNid() + "]");
 							}else if(StringUtils.isNotBlank(apicron.getPlanNid())){//计划标的
 								sendMessage(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, apicron);
-		                    	_log.info("发送计划放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
+		                    	logger.info("发送计划放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
 							}
 						}
 					}
@@ -167,7 +155,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 		String borrowNid = apicron.getBorrowNid();
 		try {
 			if (failTimes >= 3) {
-				_log.info("---------" + borrowNid + "放款失败异常修复次数超出3次,请联系开发人员!---------");
+				logger.info("---------" + borrowNid + "放款失败异常修复次数超出3次,请联系开发人员!---------");
 				return false;
 			}
 			String bankSeqNo = apicron.getBankSeqNo();
@@ -175,14 +163,14 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 			if (Validator.isNull(batchResult)) {
 				throw new Exception("放款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
 			}
-			_log.info("标的编号："+ borrowNid +"，批次查询成功了！");
+			logger.info("标的编号："+ borrowNid +"，批次查询成功了！");
 			apicron.setStatus(1);
 			this.borrowApicronMapper.updateByPrimaryKey(apicron);
 			return true;
 		} catch (Exception e) {
 			apicron.setFailTimes(failTimes + 1);
 			this.borrowApicronMapper.updateByPrimaryKey(apicron);
-			_log.info("放款失败处理异常:" + borrowNid + e.getMessage());
+			logger.info("放款失败处理异常:" + borrowNid + e.getMessage());
 			//TODO 发送放款失败的短信
 			sendSmsForManager(borrowNid);
 		}
@@ -192,7 +180,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 	private BankCallBean batchQuery(BorrowApicron apicron) {
 		//开始处理
 		String orderId = apicron.getOrdid();
-		_log.info("标的号:" + apicron.getBorrowNid() + "开始查询批次结果,orderId is :" + orderId);
+		logger.info("标的号:" + apicron.getBorrowNid() + "开始查询批次结果,orderId is :" + orderId);
 		String channel = BankCallConstant.CHANNEL_PC;
 		String txDate = GetOrderIdUtils.getTxDate();
 		String txTime = GetOrderIdUtils.getTxTime();
@@ -202,7 +190,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
 		// 电子账户从资金表放
 		Account borrowUserAccount = this.getAccountByUserId(apicron.getUserId());
 		if(borrowUserAccount == null || StringUtils.isEmpty(borrowUserAccount.getAccountId())){
-			_log.info("根据借款人用户ID查询借款人电子账户号失败,借款人用户ID:["+apicron.getUserId()+"]");
+			logger.info("根据借款人用户ID查询借款人电子账户号失败,借款人用户ID:["+apicron.getUserId()+"]");
 			return null;
 		}
 		// 借款人用户ID
@@ -251,7 +239,7 @@ public class BorrowLoanRepayToMQServiceImpl implements BorrowLoanRepayToMQServic
             smsProducer.messageSend(
                     new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
-        	_log.error("短信发送失败...", e);
+        	logger.error("短信发送失败...", e);
         }
 
 	}

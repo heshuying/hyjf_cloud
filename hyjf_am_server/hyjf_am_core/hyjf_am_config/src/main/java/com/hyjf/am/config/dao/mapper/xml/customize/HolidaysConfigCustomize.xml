@@ -3,11 +3,11 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.customize.HolidaysConfigCustomizeMapper">
 	
 	<insert id="batchInsert" parameterType="List">
-
+<!--
 		INSERT INTO ht_holidays_config(day)
 		<foreach collection="list" item="item" index="index" open="("close=")"separator="union all">
 			SELECT #{item.day} as a FROM DUAL
-		</foreach>
+		</foreach>-->
 
 	</insert>
 </mapper>
