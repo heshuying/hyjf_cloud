@@ -31,6 +31,14 @@ public class UtmResponse<T> extends AdminResponse {
     private BigDecimal rtbTenderPrice;
     /** 汇转让投资金额 */
     private BigDecimal hzrTenderPrice;
+    /** app渠道Ios开户数 */
+    private Integer accountNumberIos;
+    /** app渠道pc开户数 */
+    private Integer accountNumberPc;
+    /** app渠道android开户数 */
+    private Integer accountNumberAndroid;
+    /** app渠道微信开户数  */
+    private Integer accountNumberWechat;
 
     private String channelName;
 
@@ -128,5 +136,29 @@ public class UtmResponse<T> extends AdminResponse {
 
     public void setHzrTenderPrice(BigDecimal hzrTenderPrice) {
         this.hzrTenderPrice = hzrTenderPrice;
+    }
+
+    public Integer getAccountNumberIos() {
+        return accountNumberIos;
+    }
+
+    public void setAccountNumberIos(Integer accountNumberIos) {
+        this.accountNumberIos = accountNumberIos;
+    }
+
+    public Integer getAccountNumberPc() {
+        return accountNumberPc;
+    }
+
+    public void setAccountNumberPc(Integer accountNumberPc) {
+        this.accountNumberPc = accountNumberPc;
+    }
+
+    public Integer getAccountNumberAndroid() {
+        return accountNumberAndroid;
+    }
+
+    public void setAccountNumberAndroid(Integer accountNumberAndroid) {
+        this.accountNumberAndroid = accountNumberAndroid;
     }
 }

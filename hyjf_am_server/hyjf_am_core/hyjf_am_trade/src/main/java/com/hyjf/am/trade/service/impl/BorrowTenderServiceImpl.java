@@ -117,10 +117,10 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     }
 
     @Override
-    public Integer getUtmTenderNum(List<Integer> list) {
+    public Integer getUtmTenderNum(List<Integer> list, String type) {
         String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
         String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
-        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd);
+        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd, type);
     }
 
     @Override

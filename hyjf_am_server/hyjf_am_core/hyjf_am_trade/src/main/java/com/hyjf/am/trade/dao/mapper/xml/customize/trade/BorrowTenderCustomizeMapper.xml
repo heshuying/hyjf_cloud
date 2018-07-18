@@ -4,14 +4,15 @@
 		namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BorrowTenderCustomizeMapper">
 	<select id="getUtmTenderNum" resultType="INTEGER" parameterType="map">
 		SELECT count(*) FROM (
-			SELECT user_id FROM ht_borrow_tender
+			SELECT user_id FROM ht_borrow_tender where client=#{type}
 			UNION ALL
-			SELECT user_id FROM ht_product_list
+			SELECT user_id FROM ht_product_list where client=#{type}
 			UNION ALL
-			SELECT user_id FROM ht_debt_plan_accede
+			SELECT user_id FROM ht_debt_plan_accede where client=#{type}
 			UNION ALL
 			SELECT user_id FROM ht_credit_tender) a
 			<where>
+				a.client=#{type}
 				<if test="list != null">
 					and a.user_id in
 					<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >

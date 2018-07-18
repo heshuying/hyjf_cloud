@@ -9,6 +9,7 @@ import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -80,10 +81,32 @@ public interface UtmRegCustomizeMapper {
 	 * 查询开户数量
 	 * 
 	 * @param sourceId 账户推广平台
+	 * @param type 0无主单1有主单
 	 * @return
 	 */
 	Integer getOpenAccountNumber(@Param("sourceId") Integer sourceId, @Param("dayStart") String dayStart,
+			@Param("dayEnd") String dayEnd, @Param("type") String type);
+
+	List<UtmReg> getUtmRegList(@Param("sourceId") Integer sourceId, @Param("type") String type);
+
+	/**
+	 * 查询相应的app渠道主单注册数
+	 * @param list
+	 * @param dayStart
+	 * @param dayEnd
+	 * @return
+	 */
+	BigDecimal getRegisterAttrCount(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
 			@Param("dayEnd") String dayEnd);
 
-	List<UtmReg> getUtmRegList(Integer sourceId);
+	/**
+	 * 查询相应的渠道开户数
+	 * @param list
+	 * @param dayStart
+	 * @param dayEnd
+	 * @param type 0:pc 1:微信 2:安卓 3:ios
+	 * @return
+	 */
+	Integer getAccountNumber(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
+			@Param("dayEnd") String dayEnd, @Param("type") String type);
 }
