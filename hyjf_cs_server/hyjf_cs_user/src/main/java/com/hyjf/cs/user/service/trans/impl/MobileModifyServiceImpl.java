@@ -3,14 +3,22 @@
  */
 package com.hyjf.cs.user.service.trans.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
@@ -23,6 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.UUID;
+
 /**
  * @author zhangqingqing
  * @version MobileModifyServiceImpl, v0.1 2018/6/14 16:48
@@ -33,6 +45,10 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
 
     @Autowired
     AmUserClient amUserClient;
+    @Autowired
+    AmConfigClient amConfigClient;
+    @Autowired
+    FddCertificateProducer fddProducer;
     
     /**
      * 更换手机号条件校验
@@ -112,5 +128,26 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     
     	return retBean;
     }
+
+    @Override
+    public void updateUserCAMQ(int userId) throws ParseException, MQException {
+        // add by liuyang 20180209 开户成功后,将用户ID加入到CA认证消息队列 start
+        // 加入到消息队列
+
+        String startTime = GetDate.dateToString(new Date());
+        // 循环去做CA认证
+
+        FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
+        fddCertificateAuthorityVO.setUserId(userId);
+        fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
+                UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+
+        // 处理结束时间
+        String endTime = GetDate.dateToString(new Date());
+        // 处理用时
+        String consumeTime = GetDate.countTime(GetDate.stringToDate(startTime), GetDate.stringToDate(endTime));
+        logger.info("处理用时:" + startTime + "减去" + endTime + "等于" + consumeTime);
+    }
+
 
 }

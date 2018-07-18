@@ -1,10 +1,12 @@
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+
 /**
  * @author nxl
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
-public class BankAccountRecordRequest {
+public class BankAccountRecordRequest extends BasePage {
 
 	private String customerAccount;
 	private String mobile;
@@ -14,18 +16,8 @@ public class BankAccountRecordRequest {
 	private String realName;
 	private String openTimeStart;
 	private String openTimeEnd;
-	public int limit;
-	private int paginatorPage = 1;
-	public int getPaginatorPage() {
-		if (paginatorPage == 0) {
-			paginatorPage = 1;
-		}
-		return paginatorPage;
-	}
-
-	public void setPaginatorPage(int paginatorPage) {
-		this.paginatorPage = paginatorPage;
-	}
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
 	public String getCustomerAccount() {
 		return customerAccount;
 	}
@@ -90,12 +82,11 @@ public class BankAccountRecordRequest {
 		this.openTimeEnd = openTimeEnd;
 	}
 
-	public int getLimit() {
-		return limit;
+	public boolean isLimitFlg() {
+		return limitFlg;
 	}
 
-	public void setLimit(int limit) {
-		this.limit = limit;
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
 	}
-
 }

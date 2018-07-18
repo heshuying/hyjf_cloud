@@ -72,6 +72,8 @@ public class AdminUtmReadPermissionsRequest extends BasePage implements Serializ
      * 查询开始时间
      */
     private String timeStartSrch;
+
+    private String timeEndSrch;
     /*
      * 查询结束时间
      */
@@ -185,6 +187,14 @@ public class AdminUtmReadPermissionsRequest extends BasePage implements Serializ
 
     public void setTimeStartSrch(String timeStartSrch) {
         this.timeStartSrch = timeStartSrch;
+    }
+
+    public String getTimeEndSrch() {
+        return timeEndSrch;
+    }
+
+    public void setTimeEndSrch(String timeEndSrch) {
+        this.timeEndSrch = timeEndSrch;
     }
 }
 

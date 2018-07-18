@@ -52,36 +52,6 @@ public class EvalationController extends BaseController {
         }
         return new AdminResult<ListResult<EvalationVO>>(ListResult.build(evalationResponse.getResultList(), evalationResponse.getCount())) ;
     }
-    private EvalationRequest serParamRequest(Map<String, Object> mapParam) {
-        EvalationRequest request = new EvalationRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-            if (mapParam.containsKey("userName")) {
-                request.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("realName")) {
-                request.setRealName(mapParam.get("realName").toString());
-            }
-            if (mapParam.containsKey("mobile")) {
-                request.setMobile(mapParam.get("mobile").toString());
-            }
-            if (mapParam.containsKey("userProperty")) {
-                request.setUserProperty(mapParam.get("userProperty").toString());
-            }
-            if (mapParam.containsKey("accountStatus")) {
-                request.setAccountStatus(mapParam.get("accountStatus").toString());
-            }
-            if (mapParam.containsKey("evaluationStatus")) {
-                request.setEvaluationStatus(mapParam.get("evaluationStatus").toString());
-            }
-            if (mapParam.containsKey("evaluationType")) {
-                request.setEvaluationType(mapParam.get("evaluationType").toString());
-            }
-            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                request.setLimit((Integer)mapParam.get("limit"));
-            }
-        }
-        return request;
-    }
 
     @ApiOperation(value = "用户测评", notes = "用户测评结果显示")
     @PostMapping(value = "/selectEvaluationDetailById")

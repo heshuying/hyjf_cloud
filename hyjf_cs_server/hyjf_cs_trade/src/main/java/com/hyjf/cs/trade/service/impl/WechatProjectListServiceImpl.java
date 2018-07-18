@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.cs.trade.client.*;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,17 +45,6 @@ import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
 import com.hyjf.cs.trade.bean.ProjectInfo;
 import com.hyjf.cs.trade.bean.UserLoginInfo;
 import com.hyjf.cs.trade.bean.WebViewUser;
-import com.hyjf.cs.trade.client.AmBorrowRepayClient;
-import com.hyjf.cs.trade.client.AmHjhPlanClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BorrowClient;
-import com.hyjf.cs.trade.client.BorrowManinfoClient;
-import com.hyjf.cs.trade.client.BorrowTenderClient;
-import com.hyjf.cs.trade.client.BorrowUserClient;
-import com.hyjf.cs.trade.client.HjhAccedeClient;
-import com.hyjf.cs.trade.client.HjhDebtCreditClient;
-import com.hyjf.cs.trade.client.UserAuthClient;
-import com.hyjf.cs.trade.client.WebProjectListClient;
 import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.service.WechatProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -69,40 +59,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
     @Autowired
-    private WebProjectListClient webProjectListClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmUserClient amUserClient;
 
     @Autowired
-    private BorrowUserClient borrowUserClient;
-
-    @Autowired
-    private BorrowManinfoClient borrowManinfoClient;
-
-    @Autowired
-    private AmBorrowRepayClient amBorrowRepayClient;
-
-    @Autowired
     private RepayPlanService repayPlanService;
 
-    @Autowired
-    private BorrowTenderClient borrowTenderClient;
-
-    @Autowired
-    private HjhDebtCreditClient hjhDebtCreditClient;
-
-    @Autowired
-    private BorrowClient borrowClient;
-
-    @Autowired
-    private AmHjhPlanClient amHjhPlanClient;
-
-    @Autowired
-    private HjhAccedeClient hjhAccedeClient;
-
-    @Autowired
-    private UserAuthClient userAuthClient;
 
 
 
@@ -202,10 +166,10 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
         map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-        ProjectCustomeDetailVO borrow = webProjectListClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO borrow = amTradeClient.searchProjectDetail(map);
         // 获取还款信息 add by jijun 2018/04/27
         BorrowRepayVO borrowRepay = null;
-        List<BorrowRepayVO> list = amBorrowRepayClient.selectBorrowRepayList(borrowNid, null);
+        List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
         if (!CollectionUtils.isEmpty(list)) {
             borrowRepay = list.get(0);
         }
@@ -262,9 +226,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             //获取项目详情信息
             //借款人企业信息
-            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
             //项目介绍
@@ -387,7 +351,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
 
         // 根据计划编号获取相应的计划详情信息
-        PlanDetailCustomizeVO customize = amHjhPlanClient.getPlanDetailByPlanNid(planId);
+        PlanDetailCustomizeVO customize = amTradeClient.getPlanDetailByPlanNid(planId);
         if (customize == null) {
             logger.error("传入计划id无对应计划,planNid is {}...", planId);
             throw new RuntimeException("传入计划id无对应计划信息");
@@ -458,7 +422,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             }
             try {
                 // 6. 用户是否完成自动授权标识: 0: 未授权 1:已授权
-                HjhUserAuthVO userAuthVO = userAuthClient.getUserAuthByUserId(userId);
+                HjhUserAuthVO userAuthVO = amTradeClient.getUserAuthByUserId(userId);
                 if (userAuthVO != null && userAuthVO.getAutoInvesStatus() == 1) {
                     userLoginInfo.setAutoInves(Boolean.TRUE);
                 } else {
@@ -515,7 +479,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         // 计划的加入人次
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(customize.getPlanNid());
-        int count = hjhAccedeClient.countPlanAccedeRecordTotal(request);
+        int count = amTradeClient.countPlanAccedeRecordTotal(request);
         projectInfo.setPlanPersonTime(String.valueOf(count));
 
         // 项目进度 本期预留，填写固定值
@@ -595,7 +559,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     private boolean isTenderBorrow(Integer userId, String borrowNid,
                                    String borrowType) {
         //根据borrowNid查询borrow表
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow.getPlanNid() != null && borrow.getPlanNid().length() > 1) {
             return true;
         }
@@ -603,9 +567,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         try {
             Map<String, Object> param = new HashMap<>();
             if (borrowType != null && borrowType.contains("1")) {
-                count = hjhDebtCreditClient.countCreditTenderByBorrowNidAndUserId(param);
+                count = amTradeClient.countCreditTenderByBorrowNidAndUserId(param);
             } else {
-                count = borrowTenderClient.countUserInvest(userId, borrowNid);
+                count = amTradeClient.countUserInvest(userId, borrowNid);
             }
         } catch (Exception e) {
             // logger.error("查询承接信息出错...", e);

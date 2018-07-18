@@ -7,6 +7,10 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author fuqiang
@@ -53,4 +57,13 @@ public interface BorrowTenderCustomizeMapper {
 	 */
 	BigDecimal getRtbTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
 			@Param("dayStart") String dayEnd);
+
+	/**
+	 * @Author walter.limeng
+	 * @Description  根据订单编号取得该订单的还款列表
+	 * @Date 17:38 2018/7/17
+	 * @Param paramMap
+	 * @return
+	 */
+    CouponRecoverCustomizeVO getCurrentCouponRecover(Map<String,Object> paramMap);
 }

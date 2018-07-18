@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.AccountDetailClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AccountDetailService;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountDetailServiceImpl implements AccountDetailService {
     @Autowired
-    private AccountDetailClient accountDetailClient;
+    private AmTradeClient accountDetailClient;
 
     /**
      * 查找资金明细列表

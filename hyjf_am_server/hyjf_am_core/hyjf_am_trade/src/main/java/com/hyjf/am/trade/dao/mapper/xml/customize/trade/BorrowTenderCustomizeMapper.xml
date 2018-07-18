@@ -86,5 +86,38 @@
 			</if>
 		</where>
 	</select>
+
+	<resultMap id="currentCouponRecover" type="com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
+		<result column="recover_account" property="recoverAccount" jdbcType="VARCHAR" />
+		<result column="recover_capital" property="recoverCapital" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="INTEGER" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getCurrentCouponRecover" resultMap="currentCouponRecover" parameterType="java.util.Map">
+			SELECT
+				cr.id,
+				cr.recover_interest,
+				cr.recover_account,
+				cr.recover_capital,
+				cc.coupon_type,
+				cu.coupon_user_code
+			FROM
+				ht_coupon_recover cr
+			INNER JOIN ht_coupon_tender ct ON cr.tender_id = ct.order_id
+			INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+			INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+			WHERE
+				cr.tender_id = #{tenderNid}
+			AND cr.recover_period = #{periodNow}
+			AND cr.recover_status = 0
+			AND cr.received_flg = 1
+			AND cr.del_flag = 0
+			AND ct.del_flag = 0
+			AND cu.del_flag = 0
+			AND cc.del_flag = 0
+	</select>
 	
 </mapper>

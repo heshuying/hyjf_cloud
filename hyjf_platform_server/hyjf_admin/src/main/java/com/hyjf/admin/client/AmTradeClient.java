@@ -6,16 +6,13 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.trade.BorrowApicronResponse;
-import com.hyjf.am.response.trade.HjhAccedeResponse;
-import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
+import com.hyjf.am.response.admin.HjhPlanResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -70,20 +67,7 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
-    /**
-     * 查询关联记录列表count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer getAssociatedRecordsCount(AssociatedRecordListRequest request);
-    /**
-     * 根据筛选条件查询关联记录list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
+
     /**
      * 根据筛选条件查询绑定日志count
      * @auth sunpeikai
@@ -297,14 +281,6 @@ public interface AmTradeClient {
     Integer insertAccountList(AccountListVO accountListVO);
 
     /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表
-     * @return
-     */
-    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
-
-    /**
      * 根据账户id查询BankMerchantAccount
      * @auth sunpeikai
      * @param accountId 账户id
@@ -358,14 +334,6 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateSubCommission(SubCommissionVO subCommissionVO);
-
-    /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    Integer accountWebListByOrderId(String orderId);
 
     /**
      *  获取银行转账异常列表 jijun 20180710
@@ -1502,4 +1470,60 @@ public interface AmTradeClient {
      * @Date
      */
     BorrowRepaymentInfoListCustomizeVO sumBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
+
+    /**
+     * 获取admin资金中心-资金明细列表
+     * @author nixiaoling
+     * @param request
+     * @return
+     */
+    AccountDetailResponse findAccountDetailList(AccountDetailRequest request);
+
+    /**
+     * 查询交易明细最小的id
+     * @param userId
+     * @author nixiaoling
+     * @return
+     */
+    AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId);
+
+    /**
+     * 查询出还款后,交易明细有问题的用户ID
+     * @author nixiaoling
+     * @return
+     */
+    AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList();
+
+    /**
+     * 根据Id查询此条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @return
+     */
+    AccountListResponse selectAccountById(int accountId);
+
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @param userId
+     * @return
+     */
+    AccountListResponse selectNextAccountList(int accountId, int userId);
+
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @author nixiaoling
+     * @return
+     */
+    AccountTradeResponse selectAccountTradeByValue(String tradeValue);
+
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @author nixiaoling
+     * @return
+     */
+    int updateAccountList(AccountListRequest accountListRequest);
 }

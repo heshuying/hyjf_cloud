@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.trade.CoupUserResponse;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -10,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @Description 
@@ -57,4 +61,59 @@ public class CouponClientImpl implements CouponClient {
 		}
 		return false;
 	}
+
+	@Override
+	public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhList(String orderId) {
+		CouponResponse response = new CouponResponse();
+		response = restTemplate
+				.getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhlist/"+orderId, CouponResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<BorrowTenderCpnVO> getBorrowTenderCpnHjhCouponOnlyList(String couponOrderId) {
+		CouponResponse response = new CouponResponse();
+		response = restTemplate
+				.getForEntity("http://AM-TRADE/am-trade/coupon/getborrowtendercpnhjhcoupononlylist/"+couponOrderId, CouponResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public Integer updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn) {
+		CouponResponse response = new CouponResponse();
+		response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/coupon/updateborrowtendercpn",borrowTenderCpn, CouponResponse.class).getBody();
+		if (response != null) {
+			return response.getTotalRecord();
+		}
+		return 0;
+	}
+
+    @Override
+    public int countByExample(String tenderNid) {
+		CouponResponse response = new CouponResponse();
+		response = restTemplate
+				.getForEntity("http://AM-TRADE/am-trade/couponConfig/countbytendernid/"+tenderNid, CouponResponse.class).getBody();
+		if (response != null) {
+			return response.getTotalRecord();
+		}
+        return 0;
+    }
+
+    @Override
+    public Integer crRecoverPeriod(String tenderNid, int currentRecoverFlg, int period) {
+		CouponResponse response = new CouponResponse();
+		response = restTemplate
+				.getForEntity("http://AM-TRADE/am-trade/couponConfig/crrecoverperiod/"+tenderNid+"/"+currentRecoverFlg+"/"+period, CouponResponse.class).getBody();
+		if (response != null) {
+			return response.getTotalRecord();
+		}
+		return 0;
+    }
 }
