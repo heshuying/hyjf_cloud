@@ -81,7 +81,6 @@ public class AccessFilter extends ZuulFilter {
 		String prefix;
 		if (requestUrl.contains("app")) {
 			//适应原来请求
-			requestUri = requestUri.replace("/hyjf-app","");
 			if (StringUtils.isNotBlank(appKeyIgnoreUrls) && !appKeyIgnoreUrls.contains(requestUri)) {
 				String sign = request.getParameter("sign");
 				if (sign == null) {
@@ -114,19 +113,20 @@ public class AccessFilter extends ZuulFilter {
 				ctx.addZuulRequestHeader("appId", appId);
 				ctx.addZuulRequestHeader("version", version);
 			}
-			prefix = "/app";
+			// app自带hyjf-app 直接返回即可
+			return null;
 		} else if (requestUrl.contains("web")) {
 			if (secureVisitFlag) {
 				ctx = setUserIdByToken(request, ctx);
 			}
-			prefix = "/web";
+			prefix = "/hyjf-web";
 		} else if (requestUrl.contains("wechat")) {
 			if (secureVisitFlag) {
 				ctx = setUserIdByToken(request, ctx);
 			}
-			prefix = "/wechat";
+			prefix = "/hyjf-wechat";
 		} else if (requestUrl.contains("api")) {
-			prefix = "/api";
+			prefix = "/hyjf-api";
 		} else {
 			// 不对其进行路由
 			ctx.setSendZuulResponse(false);
@@ -134,7 +134,6 @@ public class AccessFilter extends ZuulFilter {
 			ctx.setResponseBody("非法域名访问!");
 			return null;
 		}
-		originalRequestPath = originalRequestPath.toString().replace("/hyjf-app","");
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
 		ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
