@@ -2,6 +2,7 @@ package com.hyjf.am.statistics.mongo;
 
 import com.hyjf.am.statistics.bean.AccountWebList;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
@@ -54,6 +55,12 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         Criteria criteria;
         if(null!=accountWebList){
             criteria = Criteria.where("id").gt(0);
+            if(StringUtils.isNoneBlank(accountWebList.getOrdid())){
+                criteria = criteria.and("ordid").is(accountWebList.getOrdid());
+            }
+            if(StringUtils.isNoneBlank(accountWebList.getBorrowNid())){
+                criteria = criteria.and("borrowNid").is(accountWebList.getBorrowNid());
+            }
             if(StringUtils.isNotBlank( accountWebList.getTruenameSearch())){
                 criteria = criteria.and("truename").is(accountWebList.getTruenameSearch());
             }
@@ -88,6 +95,17 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
             total += list.get(0);
         }
         return total;
+    }
+
+    public int insertAccountWebList(AccountWebListVO accountWebListVO){
+        AccountWebList accountWebList = CommonUtils.convertBean(accountWebListVO,AccountWebList.class);
+        // 执行插入语句
+        mongoTemplate.insert(accountWebList);
+        // 查询插入条数
+        Query query = new Query();
+        Criteria criteria = createCriteria(accountWebListVO);
+        query.addCriteria(criteria);
+        return mongoTemplate.find(query,getEntityClass()).size();
     }
 
 }
