@@ -66,8 +66,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
 
+
+
     @Autowired
-    private WebProjectListClient webProjectListClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -76,40 +78,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private CouponConfigClient couponConfigClient;
 
     @Autowired
-    private BorrowTenderClient borrowTenderClient;
-
-    @Autowired
-    private AccountClient accountClient;
-
-    @Autowired
-    private BorrowUserClient borrowUserClient;
-
-    @Autowired
-    private BorrowManinfoClient borrowManinfoClient;
-
-    @Autowired
-    private BorrowHousesClient borrowHousesClient;
-
-    @Autowired
-    private BorrowCarinfoClient borrowCarinfoClient;
-
-    @Autowired
     private RepayPlanServiceImpl repayPlanService;
-
-    @Autowired
-    private AmBorrowRepayClient amBorrowRepayClient;
-
-    @Autowired
-    private AmBorrowCreditClient amBorrowCreditClient;
-
-    @Autowired
-    private BorrowClient borrowClient;
-
-    @Autowired
-    private AmProjectClient amProjectClient;
-
-    @Autowired
-    private HjhAccedeClient hjhAccedeClient;
 
     @Autowired
     private BaseClient baseClient;
@@ -131,7 +100,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         // ①查询count
-        Integer count = webProjectListClient.countProjectList(request);
+        Integer count = amTradeClient.countProjectList(request);
         // 对调用返回的结果进行转换和拼装
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
@@ -144,7 +113,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         webResult.setData(new ArrayList<>());
         if (count > 0) {
             List<WebProjectListCsVO> result = new ArrayList<>();
-            List<WebProjectListCustomizeVO> list = webProjectListClient.searchProjectList(request);
+            List<WebProjectListCustomizeVO> list = amTradeClient.searchProjectList(request);
             if (CollectionUtils.isEmpty(list)) {
                 logger.error("查询散标投资列表原子层List异常");
                 throw new RuntimeException("查询散标投资列表原子层list数据异常");
@@ -161,7 +130,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             page.setTotal(count);
             if (count > 0){
                 List<WebProjectListCsVO> result = new ArrayList<>();
-                ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
+                ProjectListResponse dataResponse = amTradeClient.searchProjectList(request);
                 if (Response.isSuccess(dataResponse)){
                     result = CommonUtils.convertBeanList(dataResponse.getResultList(),WebProjectListCsVO.class);
                     webResult.setData(result);
@@ -183,7 +152,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         ProjectListRequest request = new ProjectListRequest();
         // ① 先查出标的基本信息  ② 根据是否是新标的，进行参数组装
-        ProjectCustomeDetailVO projectCustomeDetail = webProjectListClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO projectCustomeDetail = amTradeClient.searchProjectDetail(map);
         if (projectCustomeDetail == null) {
             CheckUtil.check(false, MsgEnum.STATUS_CE000013);
         }
@@ -285,7 +254,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 other.put("openFlag", "0");
             }
             // 用户是否投资项目
-            int count = borrowTenderClient.countUserInvest(userId, borrowNid);
+            int count = amTradeClient.countUserInvest(userId, borrowNid);
             if (count > 0) {
                 other.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
             } else {
@@ -298,7 +267,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 other.put("setPwdFlag", "0");
             }
             //账户信息
-            AccountVO account = accountClient.getAccountByUserId(userId);
+            AccountVO account = amTradeClient.getAccountByUserId(userId);
             String userBalance = account.getBankBalance().toString();
             other.put("userBalance", userBalance);
 
@@ -384,13 +353,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             other.put(ProjectConstant.PARAM_BORROW_TYPE, borrow.getComOrPer());
             //借款人企业信息
-            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
             //房产抵押信息
-            List<BorrowHousesVO> borrowHousesList = borrowHousesClient.getBorrowHousesByNid(borrowNid);
+            List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
-            List<BorrowCarinfoVO> borrowCarinfoList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+            List<BorrowCarinfoVO> borrowCarinfoList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             other.put("repayPlanList", repayPlanList);
@@ -399,7 +368,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("fileList", files);*/  // TODO: 2018/6/25  文件后期处理
             // 还款信息
             BorrowRepayVO borrowRepay = null;
-            List<BorrowRepayVO> list = amBorrowRepayClient.selectBorrowRepayList(borrowNid, null);
+            List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
             if (!CollectionUtils.isEmpty(list)) {
                 borrowRepay = list.get(0);
             }
@@ -609,7 +578,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 企业标的用户标的区分
         String comOrPer = StringUtils.isBlank(borrow.getCompanyOrPersonal()) ? "0" : borrow.getCompanyOrPersonal();
         result.put("creditDetail", creditDetail);
-        ProjectCustomeDetailVO projectDetail = amProjectClient.selectProjectDetail(borrowNid);
+        ProjectCustomeDetailVO projectDetail = amTradeClient.selectProjectDetail(borrowNid);
         result.put(ProjectConstant.RES_PROJECT_INFO, projectDetail);
         BorrowInfoResponse borrowInfoResponse = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/"+borrowNid,BorrowInfoResponse.class);
         BorrowInfoVO borrowInfoVO =borrowInfoResponse.getResult();
@@ -628,11 +597,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 4查询非汇资产项目的项目信息
                 if ("1".equals(comOrPer)) {
                     // 查询相应的企业项目详情
-                    ProjectCompanyDetailVO borrowInfo = borrowUserClient.searchProjectCompanyDetail(borrowNid);
+                    ProjectCompanyDetailVO borrowInfo = amTradeClient.searchProjectCompanyDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
                 } else if ("2".equals(comOrPer)) {
                     // 查询相应的汇直投个人项目详情
-                    WebProjectPersonDetailVO borrowInfo = borrowUserClient.searchProjectPersonDetail(borrowNid);
+                    WebProjectPersonDetailVO borrowInfo = amTradeClient.searchProjectPersonDetail(borrowNid);
                     result.put("borrowInfo", borrowInfo);
                 }
                 // 风控信息
@@ -641,7 +610,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 //                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
 //                // 添加风控信息
 //                result.put("riskControl", riskControl);
-                List<BorrowCarinfoVO> borrowCarinfoVOList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+                List<BorrowCarinfoVO> borrowCarinfoVOList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
                 if (!CollectionUtils.isEmpty(borrowCarinfoVOList)){
                     List<WebCarinfoVO> vehiclePledgeList = new ArrayList<>();
                     WebCarinfoVO  temp ;
@@ -673,14 +642,14 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             result.put(ProjectConstant.PARAM_BORROW_TYPE, comOrPer);
             // 借款人企业信息
-            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
 
             //借款人信息
-            BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
             //房产抵押信息
-            List<BorrowHousesVO> borrowHousesList = borrowHousesClient.getBorrowHousesByNid(borrowNid);
+            List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
-            List<BorrowCarinfoVO> borrowCarinfoList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+            List<BorrowCarinfoVO> borrowCarinfoList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
             //还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             result.put("repayPlanList", repayPlanList);
@@ -689,7 +658,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             result.put("fileList", files);  // TODO: 2018/6/26  图片后期处理 */
             // 还款信息
             BorrowRepayVO borrowRepay = null;
-            List<BorrowRepayVO> list = amBorrowRepayClient.selectBorrowRepayList(borrowNid, null);
+            List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
             if (!CollectionUtils.isEmpty(list)) {
                 borrowRepay = list.get(0);
             }
@@ -787,7 +756,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("paymentAuthStatus", ""); // 缴费授权
 
                 // 获取用户信息
-                AccountVO account = accountClient.getAccountByUserId(Integer.valueOf(userId));
+                AccountVO account = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
                 // 可用余额
                 result.put("balance", account.getBankBalance().toString());
                 // 风险测评改造 mod by liuyang 20180111 start
@@ -840,7 +809,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
-        Integer count = webProjectListClient.countPlanList(request);
+        Integer count = amTradeClient.countPlanList(request);
         WebResult webResult = new WebResult();
         webResult.setData(new ArrayList<>());
         Map<String,Object> result = new HashMap<>();
@@ -849,13 +818,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
       /*  // 上部统计数据
-        Map<String, Object> map = webProjectListClient.searchPlanData(request);
+        Map<String, Object> map = amTradeClient.searchPlanData(request);
         if (map == null) {
             logger.error("web查询原子层计划专区统计数据异常");
             throw new RuntimeException("web查询原子层计划专区统计数据异常");
         }*/
         if (count > 0) {
-            List<HjhPlanCustomizeVO> list = webProjectListClient.searchPlanList(request);
+            List<HjhPlanCustomizeVO> list = amTradeClient.searchPlanList(request);
             if (CollectionUtils.isEmpty(list)){
                 logger.error("web查询原子层计划专区计划列表数据异常");
                 throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
@@ -886,11 +855,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         params.put(ProjectConstant.PARAM_PLAN_NID, planNid);
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(planNid);
-        int joinPeopleNum = hjhAccedeClient.countPlanAccedeRecordTotal(request);
+        int joinPeopleNum = amTradeClient.countPlanAccedeRecordTotal(request);
         result.put("joinPeopleNum", String.valueOf(joinPeopleNum));
 
         // 根据项目标号获取相应的计划信息
-        PlanDetailCustomizeVO planDetail = webProjectListClient.getPlanDetail(planNid);
+        PlanDetailCustomizeVO planDetail = amTradeClient.getPlanDetail(planNid);
 
         // 线上异常处理 如果为空的话直接返回
         if(planDetail==null){
@@ -1019,7 +988,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 用户是否加入过项目
                 request.setUserId(userId);
 
-                int count = this.hjhAccedeClient.countPlanAccedeRecordTotal(request);
+                int count = this.amTradeClient.countPlanAccedeRecordTotal(request);
                 if (count > 0) {
                     investFlag = "1";
                 }else{
@@ -1050,7 +1019,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
 
                 // 获取用户账户余额
-                AccountVO account = accountClient.getAccountByUserId(Integer.valueOf(userId));
+                AccountVO account = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
                 if (Validator.isNotNull(account)) {
                     String userBalance = account.getBankBalance().toString();
                     result.put("userBalance", userBalance);

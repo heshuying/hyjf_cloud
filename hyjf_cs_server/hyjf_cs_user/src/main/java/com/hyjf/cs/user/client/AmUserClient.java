@@ -234,4 +234,10 @@ public interface AmUserClient {
 
 	UserVO surongRegister(RegisterUserRequest registerUserRequest);
 
+	/**
+	 * 获取银行卡信息，status=0
+	 * @param userId
+	 * @return
+	 */
+	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
 }

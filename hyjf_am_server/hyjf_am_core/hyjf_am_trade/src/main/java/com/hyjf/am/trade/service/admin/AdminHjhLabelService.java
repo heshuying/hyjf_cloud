@@ -7,6 +7,10 @@ import java.util.List;
 
 import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -69,4 +73,9 @@ public interface AdminHjhLabelService {
     * @param request
     */
    int updateAllocationRecord(HjhLabelInfoRequest request);
+
+   /**
+    * 获取最优标签
+    */
+	HjhLabel getBestLabel(Borrow borrow , BorrowInfo borrowInfo, HjhPlanAsset hjhPlanAsset);
 }
