@@ -80,6 +80,7 @@ public class AccessFilter extends ZuulFilter {
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix;
 		if (requestUrl.contains("app")) {
+			requestUri = requestUri.replace("/hyjf-app","");
 			if (StringUtils.isNotBlank(appKeyIgnoreUrls) && !appKeyIgnoreUrls.contains(requestUri)) {
 				String sign = request.getParameter("sign");
 				if (sign == null) {
