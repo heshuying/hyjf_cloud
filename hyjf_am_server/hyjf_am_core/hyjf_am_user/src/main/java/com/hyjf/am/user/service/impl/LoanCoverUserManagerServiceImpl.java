@@ -180,7 +180,7 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
         if(null!=lll&&lll.size()>0) {
             loanSubjectCertificateAuthority = lll.get(0);
-            return new LoanSubjectCertificateAuthority();
+            return loanSubjectCertificateAuthority;
         }
         return null;
     }

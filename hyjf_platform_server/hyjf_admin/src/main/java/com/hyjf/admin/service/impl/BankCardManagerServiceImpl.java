@@ -3,7 +3,8 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.BankCardManagerClient;
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BankCardManagerService;
 import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
@@ -27,7 +28,9 @@ import java.util.Map;
 public class BankCardManagerServiceImpl implements BankCardManagerService {
 
     @Autowired
-    private BankCardManagerClient bankCardManagerClient;
+    private AmUserClient bankCardManagerClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
 
     /**
      * 获取银行列表
@@ -36,7 +39,7 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
      */
     @Override
     public List<BanksConfigVO> selectBankConfigList() {
-        return bankCardManagerClient.selectBankConfigList();
+        return amConfigClient.selectBankConfigList();
     }
 
 
@@ -65,7 +68,7 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
      * @param bankcardManagerVO
      */
     private void setBankCardName(BankcardManagerVO bankcardManagerVO){
-        List<BanksConfigVO> banksConfigVOList = bankCardManagerClient.selectBankConfigList();
+        List<BanksConfigVO> banksConfigVOList = amConfigClient.selectBankConfigList();
         if(null!=banksConfigVOList&&banksConfigVOList.size()>0){
             for (BanksConfigVO banksConfigVO : banksConfigVOList) {
                 if (bankcardManagerVO.getBank().equals(banksConfigVO.getBankCode())) {
