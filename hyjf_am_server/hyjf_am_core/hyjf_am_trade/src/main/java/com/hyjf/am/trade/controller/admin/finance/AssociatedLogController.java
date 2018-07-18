@@ -23,7 +23,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AssociatedLogController, v0.1 2018/7/5 15:44
  */
-@Api(value = "资金中心-定向转账-定向转账")
+@Api(value = "资金中心-定向转账-定向转账",description = "资金中心-定向转账-定向转账")
 @RestController
 @RequestMapping("/am-trade/associatedlog")
 public class AssociatedLogController extends BaseController {

@@ -35,7 +35,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/hyjf-admin/accountexception")
-@Api(value = "异常中心-汇付对账")
+@Api(value = "异常中心-汇付对账",description = "异常中心-汇付对账")
 public class AccountExceptionController extends BaseController {
 
     @Autowired
