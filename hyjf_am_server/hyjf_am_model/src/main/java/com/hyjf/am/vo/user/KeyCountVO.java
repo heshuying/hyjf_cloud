@@ -205,41 +205,4 @@ public class KeyCountVO extends BaseVO implements Serializable {
         this.keyWordSrch = keyWordSrch;
     }
 
-    /**
-     * limitStart
-     *
-     * @return the limitStart
-     */
-
-    public int getLimitStart() {
-        return limitStart;
-    }
-
-    /**
-     * @param limitStart
-     *            the limitStart to set
-     */
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    /**
-     * limitEnd
-     *
-     * @return the limitEnd
-     */
-
-    public int getLimitEnd() {
-        return limitEnd;
-    }
-
-    /**
-     * @param limitEnd
-     *            the limitEnd to set
-     */
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
-    }
 }
