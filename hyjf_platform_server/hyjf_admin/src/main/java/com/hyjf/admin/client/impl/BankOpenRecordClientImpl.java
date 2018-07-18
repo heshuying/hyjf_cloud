@@ -25,7 +25,7 @@ public class BankOpenRecordClientImpl implements BankOpenRecordClient {
     private RestTemplate restTemplate;
     /**
      * 查找汇付银行开户记录列表
-     *
+     * @author nixiaoling
      * @param request
      * @return
      */
@@ -41,7 +41,7 @@ public class BankOpenRecordClientImpl implements BankOpenRecordClient {
     }
     /**
      * 查找江西银行开户记录列表
-     *
+     * @author nixiaoling
      * @param request
      * @return
      */

@@ -674,4 +674,19 @@ public class UserController extends BaseController {
         response.setResult(userVO);
         return response;
     }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据userId查询用户推荐人
+     * @Date 14:00 2018/7/18
+     * @Param userId
+     * @return
+     */
+    @RequestMapping("/selectspreadsuserbyuserid/{userId}")
+    public SpreadsUserResponse selectByUserId(@PathVariable String userId) {
+        SpreadsUserResponse response = new SpreadsUserResponse();
+        List<SpreadsUserVO> list = userService.selectByUserId(userId);
+        response.setResultList(list);
+        return response;
+    }
 }

@@ -50,8 +50,17 @@ public class BankOpenRecordManagerController extends BaseController{
         BankAccountRecordResponse response = new BankAccountRecordResponse();
         Map<String,String> mapParam = setBankAccountRecordRequest(request);
         int countBankRecordTotal = bankOpenRecordService.countBankRecordTotal(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), countBankRecordTotal,request.getLimit());
-        List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
+        Paginator paginator = new Paginator(request.getCurrPage(), countBankRecordTotal,request.getPageSize());
+        if(request.getPageSize()==0){
+            paginator = new Paginator(request.getCurrPage(), countBankRecordTotal);
+        }
+        int limitStart = paginator.getOffset();
+        int limitEnd =  paginator.getLimit();
+        if(request.isLimitFlg()){
+            limitEnd = 0;
+            limitStart = 0;
+        }
+        List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(mapParam,limitStart,limitEnd);
         if (countBankRecordTotal > 0) {
             if (!CollectionUtils.isEmpty(bankOpenAccountRecordCustomizeList)) {
                 List<BankOpenAccountRecordVO> userBankRecord = CommonUtils.convertBeanList(bankOpenAccountRecordCustomizeList, BankOpenAccountRecordVO.class);
@@ -75,7 +84,7 @@ public class BankOpenRecordManagerController extends BaseController{
         BankAccountRecordResponse response = new BankAccountRecordResponse();
         Map<String,String> mapParam = setAccountRecordRequest(request);
         int countRecordTotal = bankOpenRecordService.countRecordTotal(mapParam);
-        Paginator paginator = new Paginator(request.getPaginatorPage(), countRecordTotal,request.getLimit());
+        Paginator paginator = new Paginator(request.getCurrPage(), countRecordTotal,request.getPageSize());
         List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
         if (countRecordTotal > 0) {
             if (!CollectionUtils.isEmpty(accountList)) {

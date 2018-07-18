@@ -61,7 +61,7 @@ public class AdminAccountDetailController {
         }
         mapParam.put("limitStart", paginator.getOffset());
         mapParam.put("limitEnd", paginator.getLimit());
-        if (!request.isLimitFlg()) {
+        if (request.isLimitFlg()) {
             //代表获取全部
             mapParam.put("limitStart", 0);
             mapParam.put("limitEnd", 0);
@@ -108,7 +108,10 @@ public class AdminAccountDetailController {
         return mapParam;
     }
 
-    //查询出20170120还款后,交易明细有问题的用户ID
+    /**
+     * 查询出还款后,交易明细有问题的用户ID
+     * @return
+     */
     @GetMapping("/queryaccountdetailerroruserlist")
     public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
         AdminAccountDetailDataRepairResponse repairResponse = new AdminAccountDetailDataRepairResponse();

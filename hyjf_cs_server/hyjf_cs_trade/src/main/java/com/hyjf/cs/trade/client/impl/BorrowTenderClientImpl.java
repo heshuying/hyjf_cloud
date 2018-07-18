@@ -1,13 +1,17 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BorrowTenderClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,5 +116,25 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 	public Integer countAccountWebListByOrdId(String logOrderId, String tenderType) {
 		String url = "http://AM-TRADE/am-trade/borrowTender/countAccountWebListByOrdId/"+tenderType+"/"+tenderType;
 		return restTemplate.getForEntity(url,Integer.class).getBody();
+	}
+
+    @Override
+    public BorrowTenderCpnVO getCouponTenderInfo(String couponTenderNid) {
+		String url = "http://AM-TRADE/am-trade/borrowTender/getcoupontenderinfo/"+couponTenderNid;
+		BorrowTenderCpnResponse response = restTemplate.getForEntity(url,BorrowTenderCpnResponse.class).getBody();
+		if(Validator.isNotNull(response)) {
+			return response.getResult();
+		}
+        return null;
+    }
+
+	@Override
+	public CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow) {
+		String url = "http://AM-TRADE/am-trade/borrowTender/getcurrentcouponrecover/"+couponTenderNid+"/"+periodNow;
+		CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
+		if(Validator.isNotNull(response)) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

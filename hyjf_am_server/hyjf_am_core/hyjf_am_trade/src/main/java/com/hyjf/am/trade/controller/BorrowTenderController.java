@@ -1,17 +1,18 @@
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
-import com.hyjf.am.trade.dao.model.auto.FddTemplet;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowTenderService;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
@@ -244,6 +245,44 @@ public class BorrowTenderController extends BaseController{
         if (tenderNum != null) {
             response.setTenderCount(tenderNum);
         }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  取得优惠券投资信息
+     * @Date 17:24 2018/7/17
+     * @Param couponTenderNid
+     * @return
+     */
+    @GetMapping("/getcoupontenderinfo/{couponTenderNid}")
+    public BorrowTenderCpnResponse getCouponTenderInfo(@PathVariable String couponTenderNid){
+        BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
+        BorrowTenderCpn borrowTenderCpn = borrowTenderService.getCouponTenderInfo(couponTenderNid);
+        response.setResult(CommonUtils.convertBean(borrowTenderCpn,BorrowTenderCpnVO.class));
+        return response;
+    }
+
+    @GetMapping("/getcurrentcouponrecover/{couponTenderNid}/{periodNow}")
+    public CouponRecoverCustomizeResponse getCurrentCouponRecover(@PathVariable String couponTenderNid, @PathVariable Integer periodNow){
+        CouponRecoverCustomizeResponse response = new CouponRecoverCustomizeResponse();
+        CouponRecoverCustomizeVO couponRecoverCustomizeVO = borrowTenderService.getCurrentCouponRecover(couponTenderNid,periodNow);
+        response.setResult(couponRecoverCustomizeVO);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新borrowTenderCpn表
+     * @Date 11:12 2018/7/18
+     * @Param
+     * @return
+     */
+    @PostMapping("/updateborrowtendercn")
+    public BorrowTenderCpnResponse updateBorrowTenderCpn(@RequestBody BorrowTenderCpnVO borrowTenderCpn){
+        BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
+        Integer flag = borrowTenderService.updateBorrowTenderCpn(borrowTenderCpn);
+        response.setFlag(flag);
         return response;
     }
 }

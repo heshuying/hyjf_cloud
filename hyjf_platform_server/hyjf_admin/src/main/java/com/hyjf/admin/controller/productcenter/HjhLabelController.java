@@ -77,15 +77,18 @@ public class HjhLabelController extends BaseController{
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
 		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+		jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
 		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型(可复用)
 		/*List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());*/
 		/*jsonObject.put("assetTypeList", assetTypeList);*/
 		// 3.项目类型(可复用)
 		List<BorrowProjectTypeVO> borrowProjectTypeList = this.labelService.getBorrowProjectTypeList();
+		jsonObject.put("项目类型下拉列表", "borrowProjectTypeList");
 		jsonObject.put("borrowProjectTypeList", borrowProjectTypeList);
 		// 4.还款方式(可复用)
 		List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
+		jsonObject.put("还款方式下拉列表", "borrowStyleList");
 		jsonObject.put("borrowStyleList", borrowStyleList);
 		return jsonObject;
 	}
@@ -114,6 +117,7 @@ public class HjhLabelController extends BaseController{
 					resultList.add(mapTemp);
 				}
 			}
+			jsonObject.put("产品类型下拉列表", "assetTypeList");
 			jsonObject.put("assetTypeList", assetTypeList);
 			return jsonObject;
 		} else {
