@@ -20,4 +20,6 @@ public interface HolidaysConfigCustomizeMapper {
     List<HolidaysConfig> selectByMonth(String date);
 
     void batchUpdate(List<HolidaysConfig> updateList);
+
+    void deleteByYear(int year);
 }

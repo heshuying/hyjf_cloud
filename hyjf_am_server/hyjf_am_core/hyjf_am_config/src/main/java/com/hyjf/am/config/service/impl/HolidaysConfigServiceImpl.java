@@ -48,9 +48,6 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 		// 1. 初始化年度数据
 		this.initCurrentYearConfig(currentYear);
 
-
-
-		//HolidaysConfig holidaysConfig = null;
 		String month = "";
 		// 录入本年
 		for (int index = 1; index <= 12; index++) {
@@ -105,6 +102,7 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 				list.add(holidaysConfig);
 			}
 		}
+		holidaysConfigCustomizeMapper.deleteByYear(year);
 		holidaysConfigCustomizeMapper.batchInsert(list);
 	}
 
