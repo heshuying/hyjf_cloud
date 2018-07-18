@@ -146,4 +146,6 @@ public interface BaseUserService extends BaseService{
 	 * @Date
 	 */
 	List<BankCardVO> getBankOpenAccountById(UserVO userVO);
+
+    String getBankReturnErrorMsg(String retCode);
 }
