@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -33,6 +34,14 @@ public class AccessFilter extends ZuulFilter {
 
 	@Value("${ignore.urls.app.key}")
 	private String appKeyIgnoreUrls;
+
+	private static final String APP_CHANNEL = "app";
+	private static final String WEB_CHANNEL = "web";
+	private static final String WEB_VISIT_URL = "/hyjf-web";
+	private static final String WECHAT_CHANNEL = "wechat";
+	private static final String WECHAT_VISIT_URL = "/hyjf-wechat";
+	private static final String API_CHANNEL = "api";
+	private static final String API_VISIT_URL = "/hyjf-api";
 
 	@Override
 	public String filterType() {
@@ -79,9 +88,9 @@ public class AccessFilter extends ZuulFilter {
 		// 截取访问域名
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix;
-		if (requestUrl.contains("app")) {
-			//适应原来请求
-			if (StringUtils.isNotBlank(appKeyIgnoreUrls) && !appKeyIgnoreUrls.contains(requestUri)) {
+		if (requestUrl.contains(APP_CHANNEL)) {
+			Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
+			if (!appKeyIgnoreUrls.contains(requestUri)) {
 				String sign = request.getParameter("sign");
 				if (sign == null) {
 					logger.error("sign is empty");
@@ -99,34 +108,30 @@ public class AccessFilter extends ZuulFilter {
 				ctx.addZuulRequestHeader("sign", sign);
 
 				if (secureVisitFlag) {
-					ctx = setUserIdByToken(request, ctx);
+					setUserIdByToken(request, ctx, secureVisitFlag);
 				}
 			} else {
-				String platform = request.getParameter("platform");
-				String randomString = request.getParameter("randomString");
-				String secretKey = request.getParameter("secretKey");
-				String appId = request.getParameter("appId");
-				String version = request.getParameter("version");
-				ctx.addZuulRequestHeader("platform", platform);
-				ctx.addZuulRequestHeader("randomString", randomString);
-				ctx.addZuulRequestHeader("secretKey", secretKey);
-				ctx.addZuulRequestHeader("appId", appId);
-				ctx.addZuulRequestHeader("version", version);
+				// 获取最优服务器
+				ctx.addZuulRequestHeader("platform", request.getParameter("platform"));
+				ctx.addZuulRequestHeader("randomString", request.getParameter("randomString"));
+				ctx.addZuulRequestHeader("secretKey", request.getParameter("secretKey"));
+				ctx.addZuulRequestHeader("appId", request.getParameter("appId"));
+				ctx.addZuulRequestHeader("version", request.getParameter("version"));
 			}
 			// app自带hyjf-app 直接返回即可
 			return null;
-		} else if (requestUrl.contains("web")) {
+		} else if (requestUrl.contains(WEB_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag);
 			}
-			prefix = "/hyjf-web";
-		} else if (requestUrl.contains("wechat")) {
+			prefix = WEB_VISIT_URL;
+		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag);
 			}
-			prefix = "/hyjf-wechat";
-		} else if (requestUrl.contains("api")) {
-			prefix = "/hyjf-api";
+			prefix = WECHAT_VISIT_URL;
+		} else if (requestUrl.contains(API_CHANNEL)) {
+			prefix = API_VISIT_URL;
 		} else {
 			// 不对其进行路由
 			ctx.setSendZuulResponse(false);
@@ -145,11 +150,13 @@ public class AccessFilter extends ZuulFilter {
 	 * 
 	 * @param request
 	 * @param ctx
+	 * @param isNecessary
+	 *            true 登录才能访问 false 登录不登录均可访问
 	 * @return
 	 */
-	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx) {
+	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
 		String token = request.getHeader("token");
-		if (token == null) {
+		if (token == null && isNecessary) {
 			logger.error("token is empty...");
 			// 不对其进行路由
 			ctx.setSendZuulResponse(false);
@@ -159,12 +166,16 @@ public class AccessFilter extends ZuulFilter {
 		}
 		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
 		if (webViewUserVO == null) {
-			logger.error("user is not exist...");
-			// 不对其进行路由
-			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(400);
-			ctx.setResponseBody("user is not exist");
-			return ctx;
+			if (isNecessary) {
+				logger.error("user is not exist...");
+				// 不对其进行路由
+				ctx.setSendZuulResponse(false);
+				ctx.setResponseStatusCode(400);
+				ctx.setResponseBody("user is not exist");
+				return ctx;
+			} else {
+				return ctx;
+			}
 		}
 		ctx.addZuulRequestHeader("userId", webViewUserVO.getUserId() + "");
 		logger.info(String.format("user token:%s userId:%s", token, webViewUserVO.getUserId()));
