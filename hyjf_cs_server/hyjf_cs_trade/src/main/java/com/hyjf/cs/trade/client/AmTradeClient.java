@@ -635,7 +635,78 @@ public interface AmTradeClient {
      */
     Integer countAccountWebListByOrdId(String logOrderId, String tenderType);
 
+    /**
+     * @Description 插入计划交易明细表  加入计划成功后 操作计划表和明细表
+     * @Author sunss
+     * @Date 2018/6/22 10:34
+     */
+    boolean insertHJHPlanAccede(HjhAccedeVO planAccede);
+
+    /**
+     * 检索正在还款中的标的
+     * @return
+     */
+    List<BorrowVO> selectBorrowList();
+
+    /**
+     * 获取borrow对象
+     * @param borrowId
+     * @return
+     */
+    BorrowVO getBorrowByNid(String borrowId);
+
+    /**
+     * 投资之前插入tmp表
+     * @param request
+     */
+    boolean updateBeforeChinaPnR(TenderRequest request);
+
+    /**
+     * 用户投资散标操作表
+     * @param tenderBg
+     * @return
+     */
+    boolean borrowTender(TenderBgVO tenderBg);
+
+    /**
+     * 修改状态临时表结果
+     * @param logUserId
+     * @param logOrderId
+     * @param respCode
+     * @param retMsg
+     * @param productId
+     */
+    boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId);
+
+    /**
+     * 获取投资异步结果
+     * @param userId
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 
 
+    /**
+     * 获取还款方式
+     * @param borrowStyle
+     * @return
+     */
+    public BorrowStyleVO getBorrowStyle(String borrowStyle);
+
+    /**
+     * 会计划投资详情
+     * @param params
+     * @return
+     */
+    public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
+
+    /**
+     * 根据用户id获取总投资笔数
+     * @author zhangyk
+     * @date 2018/7/5 18:04
+     */
+    public Integer getTotalInverestCount(String userId);
 
 }

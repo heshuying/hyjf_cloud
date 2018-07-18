@@ -1461,6 +1461,152 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.getForEntity(url,Integer.class).getBody();
     }
 
+    /**
+     * @param planAccede
+     * @Description 插入计划交易明细表
+     * @Author sunss
+     * @Date 2018/6/22 10:34
+     */
+    @Override
+    public boolean insertHJHPlanAccede(HjhAccedeVO planAccede) {
+        Integer result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/hjhPlan/insertHJHPlanAccede", planAccede, Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
 
+    /**
+     * 检索正在还款中的标的
+     *
+     * @Author liushouyi
+     * @return
+     */
+    @Override
+    public List<BorrowVO> selectBorrowList() {
+        BorrowResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/trade/selectRepayBorrowList/",
+                BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取borrow对象
+     * @param borrowId
+     * @return
+     */
+    @Override
+    public BorrowVO getBorrowByNid(String borrowId) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowByNid/"+borrowId;
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 投资之前插入tmp表
+     *
+     * @param request
+     */
+    @Override
+    public boolean updateBeforeChinaPnR(TenderRequest request) {
+        Integer result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
+
+    /**
+     * 用户投资散标操作表
+     *
+     * @param tenderBg
+     * @return
+     */
+    @Override
+    public boolean borrowTender(TenderBgVO tenderBg) {
+        Integer result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
+
+    /**
+     * 修改状态临时表结果
+     *  @param logUserId
+     * @param logOrderId
+     * @param respCode
+     * @param retMsg
+     * @param productId
+     */
+    @Override
+    public boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId) {
+        TenderRetMsg tenderRetMsg = new TenderRetMsg();
+        tenderRetMsg.setLogOrderId(logOrderId);
+        tenderRetMsg.setLogUserId(logUserId);
+        tenderRetMsg.setRespCode(respCode);
+        tenderRetMsg.setRetMsg(retMsg);
+        tenderRetMsg.setProductId(productId);
+        Integer result = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrow/updateTenderResult", tenderRetMsg, Integer.class).getBody();
+        if (result != null) {
+            return result == 0 ? false : true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取投资异步结果
+     *
+     * @param userId
+     * @param logOrdId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowTenderResult/" + userId + "/" + logOrdId + "/" + borrowNid;
+        String response = restTemplate.getForEntity(url, String.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";
+        return null;
+    }
+    /**
+     * 获取还款方式
+     */
+    @Override
+    public BorrowStyleVO getBorrowStyle(String borrowStyle) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowStyle/"+borrowStyle;
+        BorrowStyleResponse response=restTemplate.getForEntity(url,BorrowStyleResponse.class).getBody();
+        if(response!=null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getTotalInverestCount(String userId) {
+        ProjectListResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/inverestCount/" + userId,ProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return null;
+    }
 
 }
