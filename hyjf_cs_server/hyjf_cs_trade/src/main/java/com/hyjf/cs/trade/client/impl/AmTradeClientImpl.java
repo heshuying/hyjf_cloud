@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.response.trade.*;

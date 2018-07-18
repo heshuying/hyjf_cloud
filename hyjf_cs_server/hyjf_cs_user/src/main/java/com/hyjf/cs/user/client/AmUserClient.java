@@ -239,4 +239,13 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
+
 }

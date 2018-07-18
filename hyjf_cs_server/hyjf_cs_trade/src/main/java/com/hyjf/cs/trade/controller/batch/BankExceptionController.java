@@ -59,7 +59,7 @@ public class BankExceptionController {
      */
     @ApiOperation(value = "提现掉单异常处理", notes = "提现掉单异常处理")
     @GetMapping(value = "/bankWithdrawExceptionHandle")
-    public boolean bankWithdrawExceptionHandle(){
+    public Boolean bankWithdrawExceptionHandle(){
          return bankWithdrawService.batchWithdraw();
     }
 	
