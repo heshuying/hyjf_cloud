@@ -2930,7 +2930,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 分期还款计划表
 		BorrowRecoverPlan borrowRecoverPlan = null;
 		// 判断该收支明细是否存在时,跳出本次循环
-		if (countAccountListByNid(repayOrderId)) {
+		if (countCreditAccountListByNid(repayOrderId)) {
 			return true;
 		}
 		//承接计划订单号
@@ -4277,6 +4277,18 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	private boolean countAccountListByNid(String nid) {
 		AccountListExample accountListExample = new AccountListExample();
 		accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("tender_recover_yes");
+		return this.accountListMapper.countByExample(accountListExample) > 0 ? true : false;
+	}
+
+	/**
+	 * 判断该收支明细是否存在
+	 *
+	 * @param accountList
+	 * @return
+	 */
+	private boolean countCreditAccountListByNid(String nid) {
+		AccountListExample accountListExample = new AccountListExample();
+		accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("credit_tender_recover_yes");
 		return this.accountListMapper.countByExample(accountListExample) > 0 ? true : false;
 	}
 

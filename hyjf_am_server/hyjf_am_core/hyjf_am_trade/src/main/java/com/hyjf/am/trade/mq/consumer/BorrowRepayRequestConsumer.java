@@ -99,6 +99,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 				MessageExt msg = msgs.get(0);
 				borrowApicron = JSONObject.parseObject(msg.getBody(), BorrowApicron.class);
 	            if(borrowApicron == null || borrowApicron.getBorrowNid() == null){
+	            	logger.info(" 还款请求异常消息：" + msg.getMsgId());
 	            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	            }
 	            
@@ -177,7 +178,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        	msg.append("详细错误信息：<br/>").append(sbError.toString());
 	        	String[] toMail = new String[] {};
 	        	if ("测试环境".equals(online)) {
-	        		toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com" };
+	        		toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com", "dengxiaojiang@hyjf.com" };
 	        	} else {
 	        		toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com","zhangjinpeng@hyjf.com" };
 	        	}
