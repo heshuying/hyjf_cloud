@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -95,9 +96,21 @@ public class AccessFilter extends ZuulFilter {
 				ctx.addZuulRequestHeader("version", signValue.getVersion());
 				ctx.addZuulRequestHeader("token", signValue.getToken());
 				ctx.addZuulRequestHeader("sign", sign);
-			}
-			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx);
+
+				if (secureVisitFlag) {
+					ctx = setUserIdByToken(request, ctx);
+				}
+			} else {
+				String platform = request.getParameter("platform");
+				String randomString = request.getParameter("randomString");
+				String secretKey = request.getParameter("secretKey");
+				String appId = request.getParameter("appId");
+				String version = request.getParameter("version");
+				ctx.addZuulRequestHeader("platform", platform);
+				ctx.addZuulRequestHeader("randomString", randomString);
+				ctx.addZuulRequestHeader("secretKey", secretKey);
+				ctx.addZuulRequestHeader("appId", appId);
+				ctx.addZuulRequestHeader("version", version);
 			}
 			prefix = "/app";
 		} else if (requestUrl.contains("web")) {
@@ -112,7 +125,7 @@ public class AccessFilter extends ZuulFilter {
 			prefix = "/wechat";
 		} else if (requestUrl.contains("api")) {
 			prefix = "/api";
-		}else {
+		} else {
 			// 不对其进行路由
 			ctx.setSendZuulResponse(false);
 			ctx.setResponseStatusCode(502);
@@ -128,6 +141,7 @@ public class AccessFilter extends ZuulFilter {
 
 	/**
 	 * token查找用户
+	 * 
 	 * @param request
 	 * @param ctx
 	 * @return
@@ -158,6 +172,7 @@ public class AccessFilter extends ZuulFilter {
 
 	/**
 	 * 判断是否需要登陆访问
+	 * 
 	 * @param map
 	 * @param originalRequestPath
 	 * @return
@@ -174,7 +189,7 @@ public class AccessFilter extends ZuulFilter {
 			// 路径匹配
 			if (originalRequestPath.startsWith(key)) {
 				// 判断是否是安全访问
-				GatewayApiConfigVO vo =  JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class) ;
+				GatewayApiConfigVO vo = JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class);
 				if (vo.getSecureVisitFlag() == 1) {
 					secureVisitFlag = true;
 				}
