@@ -1,13 +1,13 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
-import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -16,10 +16,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
@@ -397,4 +394,182 @@ public interface AmTradeClient {
      * @return
      */
     boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
+
+
+
+    /**
+     * 获取项目列表
+     * @param request
+     * @return
+     */
+    List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request);
+
+    /**
+     * 查询所有分页总数
+     * @param request
+     * @return
+     */
+    public Integer countProjectList(ProjectListRequest request);
+
+    /**
+     * 获取标的详情
+     * @author zhangyk
+     * @date 2018/6/22 19:24
+     */
+    public ProjectCustomeDetailVO searchProjectDetail(Map map);
+
+    /**
+     *  查询债权转让所有分页总数
+     * @author zhangyk
+     * @date 2018/6/19 16:39
+     */
+    public CreditListResponse countCreditList(CreditListRequest request);
+
+    /**
+     *  查询债权转让数据列表
+     * @author zhangyk
+     * @date 2018/6/19 16:39
+     */
+    public CreditListResponse searchCreditList(CreditListRequest request);
+
+
+    /**
+     * 查询计划专区上部统计数据
+     * @author zhangyk
+     * @date 2018/6/21 15:27
+     */
+    public Map<String,Object>  searchPlanData(ProjectListRequest request);
+
+    /**
+     * 查询计划专区总数据count
+     * @author zhangyk
+     * @date 2018/6/21 15:28
+     */
+    public Integer  countPlanList(ProjectListRequest request);
+
+    /**
+     * 查询计划专区总数据list
+     * @author zhangyk
+     * @date 2018/6/21 15:29
+     */
+    public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request);
+
+    /**
+     * 查询计划基本详情
+     * @author zhangyk
+     * @date 2018/7/14 18:20
+     */
+    public PlanDetailCustomizeVO getPlanDetail(String planNid);
+
+    // --------------------------- web end  -----------------------------------
+
+    /* ************************  app start  **************************************/
+
+    /**
+     *  app端获取散标投资项目count
+     * @author zhangyk
+     * @date 2018/6/20 17:23
+     */
+    public Integer countAppProjectList(AppProjectListRequest request);
+
+    /**
+     * app端获取散标投资项目列表
+     * @author zhangyk
+     * @date 2018/6/20 17:24
+     */
+    public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request);
+
+    /**
+     *  app端查询债权转让所有分页总数
+     * @author zhangyk
+     * @date 2018/6/19 16:39
+     */
+    public ProjectListResponse countAppCreditList(ProjectListRequest request);
+
+    /**
+     *  APP端查询债权转让数据列表
+     * @author zhangyk
+     * @date 2018/6/19 16:39
+     */
+    public ProjectListResponse searchAppCreditList(ProjectListRequest request);
+
+    /**
+     * APP端查询计划数据count
+     * @author zhangyk
+     * @date 2018/6/21 19:17
+     */
+    public Integer countAppPlanList(ProjectListRequest request);
+
+    /**
+     * APP端查询计划数据list
+     * @author zhangyk
+     * @date 2018/6/21 19:17
+     */
+    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request);
+    /* ************************  app end  **************************************/
+
+    public BorrowUserVO getBorrowUser(String borrowNid);
+
+    /**
+     * 公司项目详情
+     * @author zhangyk
+     * @date 2018/6/26 15:58
+     */
+    public ProjectCompanyDetailVO searchProjectCompanyDetail(String borrowNid);
+
+    /**
+     * 个人项目详情
+     * @author zhangyk
+     * @date 2018/6/26 15:59
+     */
+    public WebProjectPersonDetailVO searchProjectPersonDetail(String borrowNid);
+
+    /**
+     * 借款信息
+     * @param borrowNid
+     * @return
+     */
+    BorrowManinfoVO getBorrowManinfo(String borrowNid);
+
+    /**
+     * 房屋抵押信息
+     * @author zhangyk
+     * @date 2018/7/18 13:59
+     */
+    List<BorrowHousesVO> getBorrowHousesByNid(String borrowNid);
+
+    /**
+     * 车辆抵押信息
+     * @author zhangyk
+     * @date 2018/7/18 14:00
+     */
+    List<BorrowCarinfoVO> getBorrowCarinfoByNid(String borrowNid);
+
+
+    /**
+     * 检索borrowRecover数据
+     *
+     * @param borrowNid
+     * @param repaySmsReminder
+     * @return
+     */
+    List<BorrowRepayVO> selectBorrowRepayList(String borrowNid, Integer repaySmsReminder);
+
+    /**
+     * 更新borrowRepay
+     *
+     * @param borrowRepayVO
+     * @return
+     */
+    Integer updateBorrowRepay(BorrowRepayVO borrowRepayVO);
+
+
+    /**
+     * 根据borrowNid 获取还款信息
+     * @author zhangyk
+     * @date 2018/6/30 14:01
+     */
+    List<BorrowRepayVO> getBorrowRepayList(String borrowNid);
+
+    BorrowRepayVO getBorrowRepay(String borrowNid);
 }
