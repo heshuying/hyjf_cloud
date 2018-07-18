@@ -83,8 +83,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private CouponClient couponClient;
 
-    @Autowired
-    private RechargeClient rechargeClient;
 
     @Autowired
     private AmMongoClient amMongoClient;
@@ -160,7 +158,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 查询用户账户表-投资账户
-        AccountVO tenderAccount = rechargeClient.getAccount(userId);
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 检查投资金额
         checkTenderMoney(request, plan, account, cuc, tenderAccount);
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());

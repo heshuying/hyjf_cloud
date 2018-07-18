@@ -130,12 +130,16 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public Integer getRegistNumber(Integer sourceId) {
-        return null;
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return utmRegCustomizeMapper.getRegistNumber(sourceId, dayStart, dayEnd);
     }
 
     @Override
-    public Integer getOpenAccountNumber(Integer sourceId) {
-        return null;
+    public Integer getOpenAccountNumber(Integer sourceId, String type) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return utmRegCustomizeMapper.getOpenAccountNumber(sourceId, dayStart, dayEnd, type);
     }
 
     /**

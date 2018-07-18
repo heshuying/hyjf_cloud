@@ -2,10 +2,15 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -297,4 +302,99 @@ public interface AmTradeClient {
     Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean);
 
     BorrowApicronVO selectBorrowApicron(String bankSeqNO);
+
+    /**
+     * 根据订单号查询充值信息
+     * @param orderId
+     * @return
+     */
+    AccountRechargeVO selectByOrderId(String orderId);
+
+    /**
+     * 更新充值详情信息
+     * @param accountRecharge
+     */
+    void updateAccountRecharge(AccountRechargeVO accountRecharge);
+    /**
+     * 根据订单号查询充值数量
+     * @param ordId
+     * @return
+     */
+    int selectByOrdId(String ordId);
+
+    /**
+     * 插入银行卡信息
+     * @param bankRequest
+     * @return
+     */
+    int insertSelectiveBank(BankRequest bankRequest);
+
+    /**
+     * 修改银行卡信息
+     * @param bankAccountBeanRequest
+     * @return
+     */
+    boolean updateBanks(BankAccountBeanRequest bankAccountBeanRequest);
+
+    /**
+     * 根据用户userId查询账号体系
+     * @param userId
+     * @return
+     */
+    AccountVO getAccount(Integer userId);
+
+    /**
+     * 根据订单号查询用户提现记录列表
+     * @param ordId
+     * @return
+     */
+    List<AccountWithdrawVO> selectAccountWithdrawByOrdId(String ordId);
+
+    /**
+     * 插入提现记录
+     * @param record
+     */
+    void insertAccountWithdrawLog(AccountWithdrawVO record);
+
+    /**
+     * 根据订单号查询用户提现记录信息
+     * @param logOrderId
+     * @return
+     */
+    AccountWithdrawVO getAccountWithdrawByOrdId(String logOrderId);
+
+    /**
+     * 更新用户提现记录
+     * @param accountwithdraw
+     * @return
+     */
+    int updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw);
+
+    /**
+     * 提现后续操作
+     * @param bankWithdrawBeanRequest
+     * @return
+     */
+    int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest);
+
+    /**
+     * 查询用户标的投资数量
+     * @param userId
+     * @return
+     */
+    Integer getBorrowTender(Integer userId);
+
+    /**
+     * 根据用户id查询当前充值信息
+     * @param userId
+     * @return
+     */
+    List<AccountRechargeVO> getTodayRecharge(Integer userId);
+
+    /**
+     * 插入线下充值同步余额信息账户明细
+     * @param synBalanceBeanRequest
+     * @return
+     */
+    boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
 }

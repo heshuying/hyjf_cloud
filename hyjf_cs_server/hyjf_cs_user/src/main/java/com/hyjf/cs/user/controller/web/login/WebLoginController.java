@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangqingqing
  * @version LoginController, v0.1 2018/6/11 13:56
  */
-@Api(value = "web端用户登录接口")
+@Api(value = "web端用户登录接口", description = "web端用户登录接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/web/user")

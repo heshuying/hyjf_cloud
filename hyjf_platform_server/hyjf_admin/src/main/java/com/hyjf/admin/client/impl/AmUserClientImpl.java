@@ -870,4 +870,209 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 	/*加入明细end*/
+	/**
+	 * 查找注册记录列表
+	 * @author nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<RegistRecordVO> findRegistRecordList(RegistRcordRequest request) {
+		RegistRecordResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/registRecord/registRecordList", request, RegistRecordResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	/**
+	 * 查找借款盖章用户信息
+	 * @author nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request) {
+		LoanCoverUserResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/loanCoverUser/loanCoverUserRecord", request, LoanCoverUserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 保存借款盖章用户信息
+     * @param request
+	 * @author nxl
+	 */
+	@Override
+	public int insertLoanCoverUser(LoanCoverUserRequest request){
+		int updFlg = restTemplate.
+				postForEntity("http://AM-USER/am-user/loanCoverUser/insertLoanCoverUserRecord", request, Integer.class).
+				getBody();
+		return updFlg;
+	}
+	/**
+	 * 根据证件号码查找借款主体CA认证记录表
+	 * @param strIdNo
+	 * @author nxl
+	 * @return
+	 */
+	@Override
+	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo){
+		LoanCoverUserResponse response = restTemplate.
+				getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordByIdNo/"+strIdNo, LoanCoverUserResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+
+		}
+		return null;
+	}
+	/**
+	 * 根据id查找借款主体CA认证记录表
+	 * @param strId
+	 * @author nxl
+	 * @return
+	 */
+	@Override
+	public  LoanCoverUserResponse selectIsExistsRecordById(String strId){
+		LoanCoverUserResponse response = restTemplate.
+				getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordById/"+strId, LoanCoverUserResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 * 更新借款盖章用户记录
+	 * @param request
+	 * @author nxl
+	 * @return
+	 */
+	@Override
+	public int updateLoanCoverUserRecord(LoanCoverUserRequest request){
+		int updFlg = restTemplate.
+				postForEntity("http://AM-USER/am-user/loanCoverUser/updateLoanCoverUserRecord", request, Integer.class).
+				getBody();
+		return updFlg;
+	}
+
+	/**
+	 * 根据筛选条件查找(用户测评列表显示)
+	 * @author nxl
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public EvalationResponse selectUserEvalationResultList(EvalationRequest request) {
+		EvalationResponse response = restTemplate.
+				postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request, EvalationResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 查找用户测评结果
+	 * @author nxl
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserEvalationResultVO selectEvaluationDetailById(String userId) {
+		UserEvalationResultResponse response = restTemplate.
+				getForEntity("http://AM-USER/am-user/evaluationManager/selectEvaluationDetailById/" + userId, UserEvalationResultResponse.class).
+				getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	/**
+	 * 查找汇付银行开户记录列表
+	 * @author nixiaoling
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<BankOpenAccountRecordVO> findAccountRecordList(AccountRecordRequest request) {
+		BankAccountRecordResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findAccountRecordList", request, BankAccountRecordResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	/**
+	 * 查找江西银行开户记录列表
+	 * @author nixiaoling
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<BankOpenAccountRecordVO> findBankAccountRecordList(BankAccountRecordRequest request) {
+		BankAccountRecordResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findBankAccountRecordList", request, BankAccountRecordResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	/**
+	 *  根据筛选条件查找汇付银行卡信息列表
+	 * @param request 筛选条件
+	 * @return
+	 */
+	@Override
+	public BankCardManagerResponse selectBankCardList(BankCardManagerRequest request){
+		BankCardManagerResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistHF",request, BankCardManagerResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+
+	/**
+	 * 根据筛选条件查找江西银行卡信息列表
+	 * @author nixiaoling
+	 * @return
+	 */
+	@Override
+	public BankCardManagerResponse selectNewBankCardList (BankCardManagerRequest request){
+		BankCardManagerResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistJX",request, BankCardManagerResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 查找用户银行卡操作记录表
+	 * @param request
+	 * @author nixiaoling
+	 * @return
+	 */
+	@Override
+	public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
+		BankCardLogResponse response =  restTemplate
+				.postForEntity("http://AM-USER/am-user/bankCardManager/selectBankCardLogByExample",request, BankCardLogResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }

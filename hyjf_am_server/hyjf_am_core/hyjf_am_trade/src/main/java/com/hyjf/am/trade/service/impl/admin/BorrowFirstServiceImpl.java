@@ -85,7 +85,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
     public List<BorrowFirstCustomize> selectBorrowFirstList(BorrowFirstRequest borrowFirstRequest) {
         List<BorrowFirstCustomize> list = borrowFirstCustomizeMapper.selectBorrowFirstList(borrowFirstRequest);
         if (!CollectionUtils.isEmpty(list)) {
-            Map<String, String> map = CacheUtil.getParamNameMap("hyjf_param_name:VERIFY_STATUS");
+            Map<String, String> map = CacheUtil.getParamNameMap("VERIFY_STATUS");
             if (!CollectionUtils.isEmpty(map)) {
                 for (BorrowFirstCustomize borrowFirstCustomize : list) {
                     borrowFirstCustomize.setVerifyStatusName(map.getOrDefault(borrowFirstCustomize.getVerifyStatus(), null));

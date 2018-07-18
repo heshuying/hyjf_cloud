@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
+import com.hyjf.am.response.trade.BorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.resquest.trade.CreditListRequest;
@@ -24,6 +25,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -588,8 +590,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
         Map<String,Object> result = new HashMap<>();
         // 获取债转的详细参数
-
-        BorrowCreditDetailResponse response= baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid,BorrowCreditDetailResponse.class);//amBorrowCreditClient.getCreditDetail(creditNid);
+        //BorrowCreditDetailVO creditDetail = amBorrowCreditClient.getCreditDetail(creditNid);
+        BorrowCreditDetailResponse response= baseClient.getExe("http://AM-TRADE/am-trade/borrowCredit/borrowCreditDetail/" + creditNid,BorrowCreditDetailResponse.class);//
         BorrowCreditDetailVO creditDetail = response.getResult();
         if (Validator.isNull(creditDetail)) {
            throw new RuntimeException("债转详情不存在");
@@ -603,13 +605,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             throw new RuntimeException("标的详情不存在");
         }
         // 项目类型
-        int projectType = borrow.getProjectType();
+        Integer projectType = borrow.getProjectType();
         // 企业标的用户标的区分
         String comOrPer = StringUtils.isBlank(borrow.getCompanyOrPersonal()) ? "0" : borrow.getCompanyOrPersonal();
         result.put("creditDetail", creditDetail);
         ProjectCustomeDetailVO projectDetail = amProjectClient.selectProjectDetail(borrowNid);
         result.put(ProjectConstant.RES_PROJECT_INFO, projectDetail);
-        if (borrow.getIsNew() == 0) {
+        BorrowInfoResponse borrowInfoResponse = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/"+borrowNid,BorrowInfoResponse.class);
+        BorrowInfoVO borrowInfoVO =borrowInfoResponse.getResult();
+        if (borrowInfoVO.getIsNew() == 0) {
             // 如果项目为汇资产项目
             if (projectType == 9) {  // TODO: 2018/6/26 汇资产暂不处理
                 // 4查询相应的汇资产的首页信息
@@ -769,7 +773,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             result.put("isLast", "0");
         }
         // 登陆用户
-        UserVO userVO = amUserClient.findUserById(Integer.valueOf(userId));
+        UserVO userVO= null;
+        if (StringUtils.isNotBlank(userId)){
+             userVO = amUserClient.findUserById(Integer.valueOf(userId));
+        }
         try {
             if (userVO != null) {
                 result.put("loginFlag", "1");// 判断是否登录

@@ -28,7 +28,7 @@ public class BorrowUserController extends BaseController{
      * @author zhangyk
      * @date 2018/6/25 16:35
      */
-    @GetMapping("/borrowuserinfo/{borrowNid}")
+    @GetMapping("/borrowUserInfo/{borrowNid}")
     public BorrowUserResponse getborrowUser(String borrowNid) {
         BorrowUserResponse response = new BorrowUserResponse();
         BorrowUser borrowUsers = borrowUserService.getBorrowUserByNid(borrowNid);

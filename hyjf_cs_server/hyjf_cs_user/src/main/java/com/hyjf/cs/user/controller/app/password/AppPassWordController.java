@@ -45,10 +45,10 @@ import java.util.regex.Pattern;
 /**
  * @author wangc
  */
-@Api(value = "app端密码相关服务")
+@Api(value = "app端密码相关服务",description = "app端密码相关服务")
 @Controller
 @RestController
-@RequestMapping("/app/user/password")
+@RequestMapping("/app/hyjf-app")
 public class AppPassWordController {
 
     @Autowired
@@ -71,11 +71,11 @@ public class AppPassWordController {
      */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @ResponseBody
-    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/appUser/updatePasswordAction", method = RequestMethod.POST)
     public JSONObject updatePasswordAction(@RequestHeader(value = "key") String key, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
 
         JSONObject ret = new JSONObject();
-        ret.put("request", "/user/password/updatePassword");
+        ret.put("request", "/hyjf-app/appUser/updatePasswordAction");
         // 版本号
         String version = request.getParameter("version");
         // 网络状态
@@ -408,10 +408,11 @@ public class AppPassWordController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/getBackPasswordAction", method = RequestMethod.POST)
+    @ApiOperation(value = "找回密码",notes = "找回密码")
+    @RequestMapping(value = "/appUser/getBackPasswordAction", method = RequestMethod.POST)
     public JSONObject getBackPasswordAction(@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/user/password/getBackPasswordAction");
+        ret.put("request", "/hyjf-app/appUser/getBackPasswordAction");
 
         // 版本号
         String version = request.getParameter("version");

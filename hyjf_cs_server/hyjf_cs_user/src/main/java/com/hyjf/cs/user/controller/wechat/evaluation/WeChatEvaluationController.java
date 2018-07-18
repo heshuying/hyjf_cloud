@@ -27,7 +27,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version WeChatEvaluationController, v0.1 2018/7/3 19:24
  */
-@Api(value = "weChat端风险测评接口")
+@Api(value = "weChat端风险测评接口",description = "weChat端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/weChat/user/evaluation")
