@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.KeyCountCustomMapper">
+    <sql id="Select_Clause">
+        SELECT
+        a.utm_source AS source_name,
+        a.utm_term AS key_word,
+        (
+        SELECT
+        COUNT(visit.id)
+        FROM
+        ht_utm_visit visit
+        WHERE
+        visit.utm_id = a.utm_id
+        ) AS access_number,
+        (
+        SELECT
+        COUNT(reg.id)
+        FROM
+        ht_utm_reg reg
+        WHERE
+        reg.utm_id = a.utm_id
+        ) AS regist_number,
+        (
+        SELECT
+        COUNT(users.user_id)
+        FROM
+        ht_utm_reg reg
+        INNER JOIN ht_user users ON users.user_id = reg.user_id
+        AND users.open_account = 1
+        WHERE
+        reg.utm_id = a.utm_id
+        ) AS account_number
+        FROM
+        (
+        SELECT DISTINCT
+        utm.utm_source,
+        utm.utm_id,
+        utm.utm_term
+        FROM
+        ht_utm utm
+        <where>
+            <if test="sourceIdSrch != null and sourceIdSrch != ''">
+                AND utm.utm_source = #{sourceIdSrch}
+            </if>
+            <if test="keyWordSrch != null and keyWordSrch != ''">
+                AND utm.utm_term LIKE CONCAT('%', #{keyWordSrch}, '%')
+            </if>
+        </where>
+        ) a
+    </sql>
+
+    <select id="countTotal" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.user.KeyCountRequest">
+        SELECT COUNT(1) FROM ht_utm
+        <where>
+            <if test="sourceIdSrch != null and sourceIdSrch != ''">
+                AND utm_source = #{sourceIdSrch}
+            </if>
+            <if test="keyWordSrch != null and keyWordSrch != ''">
+                AND utm_term LIKE CONCAT('%', #{keyWordSrch}, '%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="selectListMap" type="com.hyjf.am.vo.user.KeyCountVO">
+        <result column="source_name" property="sourceName" jdbcType="VARCHAR" />
+        <result column="key_word" property="keyWord" jdbcType="VARCHAR" />
+        <result column="access_number" property="accessNumber" jdbcType="VARCHAR" />
+        <result column="regist_number" property="registNumber" jdbcType="VARCHAR" />
+        <result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="searchAction" resultMap="selectListMap" parameterType="com.hyjf.am.resquest.user.KeyCountRequest">
+        <include refid="Select_Clause" />
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+
+</mapper>
