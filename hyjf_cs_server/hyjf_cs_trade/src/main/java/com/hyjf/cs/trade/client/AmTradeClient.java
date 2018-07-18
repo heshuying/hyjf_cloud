@@ -572,4 +572,70 @@ public interface AmTradeClient {
     List<BorrowRepayVO> getBorrowRepayList(String borrowNid);
 
     BorrowRepayVO getBorrowRepay(String borrowNid);
+
+    /**
+     * 项目详情
+     * @author zhangyk
+     * @date 2018/7/18 14:06
+     */
+    ProjectCustomeDetailVO selectProjectDetail(String borrowNid);
+
+
+    /**
+     * 统计计划加入总数
+     * @author zhangyk
+     * @date 2018/6/27 19:05
+     */
+    Integer countPlanAccedeRecordTotal(HjhAccedeRequest request);
+
+
+    AccountVO getAccountByUserId(Integer userId);
+
+    /**
+     * 计划退出更新状态用
+     * @Author liushouyi
+     * @param account
+     * @return
+     */
+    Integer updateOfPlanRepayAccount(AccountVO account);
+
+
+
+    public Integer  countUserInvest(Integer userId, String borrowNid);
+
+    public BorrowTenderVO selectBorrowTender(BorrowTenderRequest btRequest);
+
+    public List<FddTempletVO> getFddTempletList(Integer protocolType);
+
+    public int saveTenderAgreement(TenderAgreementVO info);
+
+    public int updateTenderAgreement(TenderAgreementVO tenderAgreement);
+
+    List<BorrowTenderVO> getBorrowTenderListByNid(String nid);
+
+    /**
+     * 根据投资订单号查询已承接金额
+     * @param tenderNid
+     * @return
+     */
+    BigDecimal getAssignCapital(String tenderNid);
+
+    /**
+     * 保存债转日志
+     * @param creditTenderLog
+     * @return
+     */
+    Integer saveCreditTenderAssignLog(CreditTenderLogVO creditTenderLog);
+
+    /**
+     * 查看是否已经插入网站收支明细
+     * @param logOrderId
+     * @param tenderType  交易类型
+     * @return
+     */
+    Integer countAccountWebListByOrdId(String logOrderId, String tenderType);
+
+
+
+
 }
