@@ -11,6 +11,10 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
@@ -18,6 +22,9 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
@@ -873,4 +880,124 @@ public interface AmTradeClient {
      * @return
      */
     BorrowRecoverPlanVO getPlanByBidTidPeriod(String bidNid, String creditTenderNid, int periodNow);
+
+    /**
+     * 获取用户当前持有债权列表
+     * @param request
+     * @return
+     */
+    List<CurrentHoldObligatoryRightListCustomizeVO> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
+    /**
+     * 获取用户当前持有债权列表总数
+     * @param request
+     * @return
+     */
+    int selectCurrentHoldObligatoryRightListTotal(AssetManageBeanRequest request);
+    /**
+     * 获取用户已回款债权列表总数
+     * @param request
+     * @return
+     */
+    int selectRepaymentListTotal(AssetManageBeanRequest request);
+    /**
+     * 获取用户债权转让列表总数
+     * @param request
+     * @return
+     */
+    int countCreditRecordTotal(AssetManageBeanRequest request);
+
+    /**
+     * 根据投资订单号获取协议列表
+     * @param nid
+     * @return
+     */
+    List<TenderAgreementVO> selectTenderAgreementByNid(String nid);
+
+    /**
+     * 获取用户已回款债权列表
+     * @param request
+     * @return
+     */
+    List<RepayMentListCustomizeVO> selectRepaymentList(AssetManageBeanRequest request);
+    /**
+     *获取用户债权转让列表
+     * @param request
+     * @return
+     */
+    List<TenderCreditDetailCustomizeVO> selectCreditRecordList(AssetManageBeanRequest request);
+
+    /**
+     * 获取当前持有计划列表总数
+     * @param request
+     * @return
+     */
+    int countCurrentHoldPlanTotal(AssetManageBeanRequest request);
+    /**
+     * 获取当前持有计划列表
+     * @param request
+     * @return
+     */
+    List<CurrentHoldPlanListCustomizeVO> selectCurrentHoldPlanList(AssetManageBeanRequest request);
+    /**
+     * 获取已回款计划列表总数
+     * @param request
+     * @return
+     */
+    Integer countRepayMentPlanTotal(AssetManageBeanRequest request);
+    /**
+     * 获取已回款计划列表
+     * @param request
+     * @return
+     */
+    List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request);
+
+    /**
+     * @Description 获取交易类型列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<AccountTradeVO> selectTradeTypes();
+    /**
+     * @Description "获取用户收支明细列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    int countUserTradeRecordTotal(TradeDetailBeanRequest form);
+    /**
+     * @Description 获取用户收支明细列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<WebUserTradeListCustomizeVO> searchUserTradeList(TradeDetailBeanRequest form);
+    /**
+     * @Description 获取用户充值列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    int countUserRechargeRecordTotal(TradeDetailBeanRequest form);
+    /**
+     * @Description 获取用户充值列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<WebUserRechargeListCustomizeVO> searchUserRechargeList(TradeDetailBeanRequest form);
+    /**
+     * @Description 获取用户提现列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    int countUserWithdrawRecordTotal(TradeDetailBeanRequest form);
+    /**
+     * @Description 获取用户提现列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<WebUserWithdrawListCustomizeVO> searchUserWithdrawList(TradeDetailBeanRequest form);
 }
