@@ -26,7 +26,7 @@ import java.util.Map;
  * @version AppUserController, v0.1 2018/6/11 14:51
  */
 
-@Api(value = "app端用户接口",description = "app端用户接口")
+@Api(value = "app端用户账户设置",description = "app端用户账户设置")
 @RestController
 @RequestMapping("/app/appUser")
 public class AppSafeController extends BaseUserController {
