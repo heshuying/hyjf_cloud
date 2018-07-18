@@ -13,8 +13,6 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -69,20 +67,7 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
-    /**
-     * 查询关联记录列表count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer getAssociatedRecordsCount(AssociatedRecordListRequest request);
-    /**
-     * 根据筛选条件查询关联记录list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
+
     /**
      * 根据筛选条件查询绑定日志count
      * @auth sunpeikai
@@ -296,14 +281,6 @@ public interface AmTradeClient {
     Integer insertAccountList(AccountListVO accountListVO);
 
     /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表
-     * @return
-     */
-    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
-
-    /**
      * 根据账户id查询BankMerchantAccount
      * @auth sunpeikai
      * @param accountId 账户id
@@ -357,14 +334,6 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateSubCommission(SubCommissionVO subCommissionVO);
-
-    /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    Integer accountWebListByOrderId(String orderId);
 
     /**
      *  获取银行转账异常列表 jijun 20180710
