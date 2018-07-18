@@ -5,6 +5,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 
 import java.util.List;
 
@@ -59,5 +60,11 @@ public interface AmConfigClient {
      * @return
      */
     BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
+    /**
+     * 获取银行列表
+     * @author nixiaoling
+     * @return
+     */
+    List<BanksConfigVO> selectBankConfigList();
 
 }

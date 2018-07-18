@@ -25,9 +25,9 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码")
+@Api(value = "验证码",description = "app验证码")
 @RestController
-@RequestMapping("/app/usr/sms")
+@RequestMapping("/app/hyjf-app")
 public class AppSmsCodeController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppSmsCodeController.class);
 
@@ -43,7 +43,7 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      * @throws MQException
      */
-    @PostMapping(value = "/send", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/appUser/sendVerificationCodeAction", produces = "application/json; charset=utf-8")
     @ApiImplicitParam(name = "param", value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
     public AppResult sendSmsCode(@RequestBody Map<String, String> param,
                                  @RequestHeader(value = "token", required = false) String token,
@@ -67,10 +67,10 @@ public class AppSmsCodeController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "app验证验证码",notes = "验证验证码")
-    @PostMapping(value = "/verification", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/appUser/validateVerificationCodeAction", produces = "application/json; charset=utf-8")
     public JSONObject validateVerificationCodeAction(@RequestHeader String key, @RequestBody SmsRequest request) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/user/smsCode/verification");
+        ret.put("request", "/hyjf-app/appUser/validateVerificationCodeAction");
         // 验证方式
         String verificationType = request.getVerificationType();
         // 验证码

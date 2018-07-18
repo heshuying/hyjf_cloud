@@ -66,8 +66,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
 
+
+
     @Autowired
-    private WebProjectListClient webProjectListClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -131,7 +133,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         // ①查询count
-        Integer count = webProjectListClient.countProjectList(request);
+        Integer count = amTradeClient.countProjectList(request);
         // 对调用返回的结果进行转换和拼装
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
@@ -144,7 +146,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         webResult.setData(new ArrayList<>());
         if (count > 0) {
             List<WebProjectListCsVO> result = new ArrayList<>();
-            List<WebProjectListCustomizeVO> list = webProjectListClient.searchProjectList(request);
+            List<WebProjectListCustomizeVO> list = amTradeClient.searchProjectList(request);
             if (CollectionUtils.isEmpty(list)) {
                 logger.error("查询散标投资列表原子层List异常");
                 throw new RuntimeException("查询散标投资列表原子层list数据异常");
@@ -161,7 +163,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             page.setTotal(count);
             if (count > 0){
                 List<WebProjectListCsVO> result = new ArrayList<>();
-                ProjectListResponse dataResponse = webProjectListClient.searchProjectList(request);
+                ProjectListResponse dataResponse = amTradeClient.searchProjectList(request);
                 if (Response.isSuccess(dataResponse)){
                     result = CommonUtils.convertBeanList(dataResponse.getResultList(),WebProjectListCsVO.class);
                     webResult.setData(result);
@@ -183,7 +185,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         ProjectListRequest request = new ProjectListRequest();
         // ① 先查出标的基本信息  ② 根据是否是新标的，进行参数组装
-        ProjectCustomeDetailVO projectCustomeDetail = webProjectListClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO projectCustomeDetail = amTradeClient.searchProjectDetail(map);
         if (projectCustomeDetail == null) {
             CheckUtil.check(false, MsgEnum.STATUS_CE000013);
         }
@@ -840,7 +842,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
-        Integer count = webProjectListClient.countPlanList(request);
+        Integer count = amTradeClient.countPlanList(request);
         WebResult webResult = new WebResult();
         webResult.setData(new ArrayList<>());
         Map<String,Object> result = new HashMap<>();
@@ -849,13 +851,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             throw new RuntimeException("web查询原子层计划专区计划列表数据count异常");
         }
       /*  // 上部统计数据
-        Map<String, Object> map = webProjectListClient.searchPlanData(request);
+        Map<String, Object> map = amTradeClient.searchPlanData(request);
         if (map == null) {
             logger.error("web查询原子层计划专区统计数据异常");
             throw new RuntimeException("web查询原子层计划专区统计数据异常");
         }*/
         if (count > 0) {
-            List<HjhPlanCustomizeVO> list = webProjectListClient.searchPlanList(request);
+            List<HjhPlanCustomizeVO> list = amTradeClient.searchPlanList(request);
             if (CollectionUtils.isEmpty(list)){
                 logger.error("web查询原子层计划专区计划列表数据异常");
                 throw new RuntimeException("web查询原子层计划专区计划列表数据异常");
@@ -890,7 +892,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.put("joinPeopleNum", String.valueOf(joinPeopleNum));
 
         // 根据项目标号获取相应的计划信息
-        PlanDetailCustomizeVO planDetail = webProjectListClient.getPlanDetail(planNid);
+        PlanDetailCustomizeVO planDetail = amTradeClient.getPlanDetail(planNid);
 
         // 线上异常处理 如果为空的话直接返回
         if(planDetail==null){

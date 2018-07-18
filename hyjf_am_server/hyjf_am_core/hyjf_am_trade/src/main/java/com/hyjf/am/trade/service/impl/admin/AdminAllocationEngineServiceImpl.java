@@ -396,4 +396,23 @@ public class AdminAllocationEngineServiceImpl implements AdminAllocationEngineSe
 		List<HjhRegionVO> volist = CommonUtils.convertBeanList(regionList, HjhRegionVO.class);
 		return volist;
 	}
+
+	@Override
+	public String getPlanNidByLable(Integer labelId) {
+		HjhAllocationEngineExample example = new HjhAllocationEngineExample();
+		HjhAllocationEngineExample.Criteria cra = example.createCriteria();
+
+		cra.andDelFlagEqualTo(0);
+		cra.andLabelIdEqualTo(labelId);
+		cra.andConfigStatusEqualTo(1);
+		cra.andLabelStatusEqualTo(1);
+		List<HjhAllocationEngine> list = this.hjhAllocationEngineMapper.selectByExample(example);
+		if (list != null && list.size() > 0) {
+			return list.get(0).getPlanNid();
+		}
+
+		return null;
+	}
+
+
 }

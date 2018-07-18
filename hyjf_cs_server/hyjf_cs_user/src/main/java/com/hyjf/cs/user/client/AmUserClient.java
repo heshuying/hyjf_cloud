@@ -229,4 +229,15 @@ public interface AmUserClient {
 	Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
 
     void clearMobileCode(Integer userId, String sign);
+
+	UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform);
+
+	UserVO surongRegister(RegisterUserRequest registerUserRequest);
+
+	/**
+	 * 获取银行卡信息，status=0
+	 * @param userId
+	 * @return
+	 */
+	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
 }

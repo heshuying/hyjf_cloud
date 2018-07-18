@@ -75,8 +75,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private CouponClient couponClient;
 
-    @Autowired
-    private RechargeClient rechargeClient;
 
     @Autowired
     private AmMongoClient amMongoClient;
@@ -163,7 +161,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 查询用户账户表-投资账户
-        AccountVO tenderAccount = rechargeClient.getAccount(userId);
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 投资检查参数
         this.checkParam(request, borrow, account, userInfo);
         // 检查金额

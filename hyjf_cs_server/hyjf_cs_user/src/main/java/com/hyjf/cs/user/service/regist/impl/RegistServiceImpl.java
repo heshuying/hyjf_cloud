@@ -366,4 +366,15 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         return amMarketClient.searchBanner(adsRequest);
     }
 
+    @Override
+    public UserVO insertUserAction(RegisterRequest registerRequest, String ipAddr, String platform) {
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+        BeanUtils.copyProperties(registerRequest, registerUserRequest);
+        registerUserRequest.setLoginIp(ipAddr);
+        registerUserRequest.setInstCode("10000017");
+        registerUserRequest.setPlatform(platform);
+        UserVO userVO = amUserClient.surongRegister(registerUserRequest);
+        return userVO;
+    }
+
 }

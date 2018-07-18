@@ -24,7 +24,7 @@ import javax.validation.Valid;
  * @version AutoStateQueryController, v0.1 2018/6/12 9:21
  */
 
-@Api(value = "api端授权状态查询")
+@Api(value = "api端授权状态查询",description = "api端授权状态查询")
 @RestController
 @RequestMapping("/api/user")
 public class AutoStateQueryController extends BaseUserController {

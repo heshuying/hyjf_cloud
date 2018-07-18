@@ -13,12 +13,10 @@ import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import com.netflix.discovery.converters.Auto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +26,6 @@ import java.math.BigDecimal;
 public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    public RechargeClient rechargeClient;
 
     @Autowired
     public AmUserClient amUserClient;
@@ -70,7 +66,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        BankOpenAccountVO bankAccount = this.rechargeClient.selectById(userId);
+        BankOpenAccountVO bankAccount = this.amUserClient.selectBankAccountById(userId);
         return bankAccount;
     }
 

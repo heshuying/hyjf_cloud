@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hyjf.cs.trade.service.BankCreditTenderService;
@@ -26,19 +27,19 @@ public class BankExceptionController {
 
 	@Autowired
 	private BankTenderCancelExceptionService bankTenderCancelExceptionService;
-	
+
 	@Autowired
 	private BankWithdrawService bankWithdrawService;
-	
+
 	@Autowired
 	private BankCreditTenderService bankCreditTenderExceptionService;
-	
+
 	@Autowired
 	private BatchBankInvestService batchBankInvestService;
-	
+
 	@Autowired
 	private BatchBankInvestAllService batchBankInvestAllService;
-	
+
 	/**
 	 * 处理债转投资异常
 	 * @return
@@ -57,11 +58,9 @@ public class BankExceptionController {
      * @return
      */
     @ApiOperation(value = "提现掉单异常处理", notes = "提现掉单异常处理")
-    @RequestMapping(value = "/bankWithdrawExceptionHandle")
-    public void bankWithdrawExceptionHandle(){
-        logger.info("提现掉单异常处理start...");
-        bankWithdrawService.batchWithdraw();
-        logger.info("提现掉单异常处理end...");
+    @GetMapping(value = "/bankWithdrawExceptionHandle")
+    public boolean bankWithdrawExceptionHandle(){
+         return bankWithdrawService.batchWithdraw();
     }
 	
     

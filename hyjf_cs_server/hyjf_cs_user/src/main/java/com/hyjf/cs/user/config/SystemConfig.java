@@ -72,6 +72,17 @@ public class SystemConfig {
     @Value("${hyjf.app.version.new}")
     private String newVersion;
 
+    @Value("${hyjf.wechat.qrcode.url}")
+    private String wechatQrcodeUrl;
+
+    public String getWechatQrcodeUrl() {
+        return wechatQrcodeUrl;
+    }
+
+    public void setWechatQrcodeUrl(String wechatQrcodeUrl) {
+        this.wechatQrcodeUrl = wechatQrcodeUrl;
+    }
+
     public String getWeChatHost() {
         return weChatHost;
     }

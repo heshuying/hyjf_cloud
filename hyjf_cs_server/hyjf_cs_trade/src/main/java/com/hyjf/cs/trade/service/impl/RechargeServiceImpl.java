@@ -1,18 +1,5 @@
 package com.hyjf.cs.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -24,28 +11,19 @@ import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.BankCardUtil;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankInterfaceClient;
 import com.hyjf.cs.trade.client.BindCardClient;
-import com.hyjf.cs.trade.client.RechargeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
@@ -56,6 +34,18 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 用户充值Service实现类
@@ -67,8 +57,6 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 public class RechargeServiceImpl extends BaseTradeServiceImpl implements RechargeService  {
 	Logger  logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
 
-	@Autowired
-	RechargeClient rechargeClient;
 
 	@Autowired
 	BindCardClient bindCardClient;
@@ -97,35 +85,35 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 
 	@Override
 	public BankCardVO selectBankCardByUserId(Integer userId) {
-		BankCardVO bankCard = rechargeClient.selectBankCardByUserId(userId);
+		BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
 		return bankCard;
 	}
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
-		AccountVO account = rechargeClient.getAccount(userId);
+		AccountVO account = amTradeClient.getAccount(userId);
 		return account;
 	}
 
 	@Override
 	public UserVO getUsers(Integer userId) {
-		UserVO users = rechargeClient.getUsers(userId);
+		UserVO users = amUserClient.findUserById(userId);
 		return users;
 	}
 
 	@Override
 	public int insertRechargeInfo(BankCallBean bean) {
 		String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
-		int ret = rechargeClient.selectByOrdId(ordId);
+		int ret = amTradeClient.selectByOrdId(ordId);
 		if (ret == 0) {
 			return ret;
 		}
 		String cardNo = bean.getCardNo();
-		BankCardVO bankCard = rechargeClient.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
+		BankCardVO bankCard = amUserClient.getBankCardByCardNo(Integer.parseInt(bean.getLogUserId()), cardNo);
 		BankRequest bankRequest = new BankRequest();
 		BeanUtils.copyProperties(bean,bankRequest);
 		bankRequest.setBank(bankCard.getBank());
-		int response = rechargeClient.insertSelectiveBank(bankRequest);
+		int response = amTradeClient.insertSelectiveBank(bankRequest);
 		return response;
 	}
 	/**
@@ -158,7 +146,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
 			// 查询充值记录
-			AccountRechargeVO accountRecharge = rechargeClient.selectByOrderId(orderId);
+			AccountRechargeVO accountRecharge = amTradeClient.selectByOrderId(orderId);
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				//redis防重校验
@@ -191,9 +179,9 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
 						bankAccountBeanRequest.setIp(ip);
-						boolean flag = rechargeClient.updateBanks(bankAccountBeanRequest);
+						boolean flag = amTradeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
-							UserVO users = rechargeClient.getUsers(userId);
+							UserVO users = amUserClient.findUserById(userId);
 							// 可以发送充值短信时
 							if (users != null && users.getRechargeSms() != null && users.getRechargeSms() == 0) {
 								// 替换参数
@@ -229,7 +217,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 							return jsonMessage("充值成功!", "0");
 						} else {
 							// 查询充值交易状态
-                            accountRecharge = rechargeClient.selectByOrderId(orderId);
+                            accountRecharge = amTradeClient.selectByOrderId(orderId);
 							if (RECHARGE_STATUS_SUCCESS == accountRecharge.getStatus()) {
 								return jsonMessage("充值成功!", "0");
 							} else {
@@ -247,7 +235,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			}
 		} else {
 			// 更新订单信息
-			AccountRechargeVO accountRecharge =this.rechargeClient.selectByOrderId(orderId);
+			AccountRechargeVO accountRecharge =this.amTradeClient.selectByOrderId(orderId);
 			if (accountRecharge != null ) {
 				if (RECHARGE_STATUS_WAIT == accountRecharge.getStatus()) {
 					accountRecharge.setStatus(RECHARGE_STATUS_FAIL);
@@ -255,7 +243,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 					accountRecharge.setMessage(errorMsg);
 					accountRecharge.setAccountId(accountId);
 					accountRecharge.setBankSeqNo(txDate + txTime + seqNo);
-					this.rechargeClient.updateByPrimaryKeySelective(accountRecharge);
+					this.amTradeClient.updateAccountRecharge(accountRecharge);
 				}
 			}
 			return jsonMessage(errorMsg, "1");
@@ -267,7 +255,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	@Override
 	public String getBankRetMsg(String retCode) {
 		if (StringUtils.isNotBlank(retCode)) {
-			BankReturnCodeConfigVO codeConfig = this.rechargeClient.getBankReturnCodeConfig(retCode);
+			BankReturnCodeConfigVO codeConfig = this.amUserClient.getBankReturnCodeConfig(retCode);
 			if (codeConfig != null ) {
 				String retMsg = codeConfig.getErrorMsg();
 				if (StringUtils.isNotBlank(retMsg)) {
@@ -309,7 +297,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	@Override
 	public UserInfoVO getUsersInfoByUserId(Integer userId) {
 		if (userId != null) {
-			UserInfoVO usersInfo = this.rechargeClient.findUsersInfoById(userId);
+			UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(userId);
 			return usersInfo;
 		}
 		return null;

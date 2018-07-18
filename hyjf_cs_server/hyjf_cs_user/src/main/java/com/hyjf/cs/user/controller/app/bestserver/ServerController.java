@@ -22,7 +22,7 @@ import com.hyjf.cs.user.result.ServerResultBean;
  * @version ServerController, v0.1 2018/4/25 19:21
  */
 @RestController
-@RequestMapping("/app/server")
+@RequestMapping("/app/hyjf-app/server")
 public class ServerController extends BaseUserController {
 	private Logger logger = LoggerFactory.getLogger(ServerController.class);
 
