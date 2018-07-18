@@ -104,4 +104,11 @@ public interface AdminAllocationEngineService {
    List<HjhPlanVO> selectHjhPlanByPlanNid(String planNid);
    
    List<HjhRegionVO> selectHjhRegioByPlanNid(String planNid);
+
+   /**
+    * 根据标签查询计划编号
+    * @author zhangyk
+    * @date 2018/7/18 10:18
+    */
+   String getPlanNidByLable(Integer labelId);
 }

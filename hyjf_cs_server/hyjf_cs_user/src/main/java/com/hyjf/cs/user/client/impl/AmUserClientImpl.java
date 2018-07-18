@@ -14,11 +14,9 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import static org.slf4j.LoggerFactory.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author xiasq
@@ -84,6 +82,16 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId) {
+		BankCardResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
 		}
 		return null;
 	}
