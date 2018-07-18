@@ -34,7 +34,7 @@ import java.net.URLEncoder;
  * @version RegistController, v0.1 2018/6/11 14:35
  */
 
-@Api(value = "weChat端用户注册接口")
+@Api(value = "weChat端用户注册接口",description = "weChat端用户注册接口")
 @RestController
 @RequestMapping("/wechat/user")
 public class WeChatRegistController extends BaseUserController {

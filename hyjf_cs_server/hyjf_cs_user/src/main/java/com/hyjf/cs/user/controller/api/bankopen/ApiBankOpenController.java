@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * @author sunss
  */
-@Api(value = "第三方用户开户")
+@Api(value = "第三方用户开户",description = "第三方用户开户")
 @Controller
 @RequestMapping("/api/user/open")
 public class ApiBankOpenController extends BaseUserController {

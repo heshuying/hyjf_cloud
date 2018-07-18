@@ -1,12 +1,5 @@
 package com.hyjf.admin.controller.exception.cashdepositexception;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssetListService;
@@ -15,16 +8,21 @@ import com.hyjf.am.response.admin.AssetListCustomizeResponse;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 保证金不足
  * @author jijun
  * @date 20180706
  */
-@Api(value = "保证金不足")
+@Api(value = "保证金不足",description = "保证金不足")
 @RestController
 @RequestMapping("/exception/cashdepositexception")
 public class CashDepositeController extends BaseController {

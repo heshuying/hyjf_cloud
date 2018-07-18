@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "web端密码相关服务")
+@Api(value = "web端密码相关服务",description = "web端密码相关服务")
 @RestController
 @RequestMapping("/web/user/password")
 public class WebPassWordController {

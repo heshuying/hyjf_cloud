@@ -37,7 +37,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/5 18:00
  */
-@Api(value = "资金中心-转账管理-用户转账")
+@Api(value = "资金中心-转账管理-用户转账",description = "资金中心-转账管理-用户转账")
 @RestController
 @RequestMapping(value = "/hyjf-admin/customertransfer")
 public class CustomerTransferController extends BaseController {

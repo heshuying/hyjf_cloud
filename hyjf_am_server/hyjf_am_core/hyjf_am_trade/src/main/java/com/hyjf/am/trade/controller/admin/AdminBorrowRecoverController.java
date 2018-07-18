@@ -3,15 +3,12 @@ package com.hyjf.am.trade.controller.admin;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowRecoverResponse;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
-import com.hyjf.am.trade.controller.AssetManageController;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
 import com.hyjf.am.trade.service.admin.AdminBorrowRecoverService;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +22,7 @@ import java.util.List;
  * @author pangchengchao
  * @version AdminBorrowRecoverController, v0.1 2018/7/2 16:23
  */
-@Api(value = "产品中心-汇直投-放款明细查询")
+@Api(value = "产品中心-汇直投-放款明细查询",description = "产品中心-汇直投-放款明细查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRecover")
 public class AdminBorrowRecoverController extends BaseController {

@@ -25,7 +25,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/6 9:27
  */
-@Api(value = "资金中心-转账管理-用户转账")
+@Api(value = "资金中心-转账管理-用户转账",description = "资金中心-转账管理-用户转账")
 @RestController
 @RequestMapping(value = "/am-user/customertransfer")
 public class CustomerTransferController extends BaseController {
