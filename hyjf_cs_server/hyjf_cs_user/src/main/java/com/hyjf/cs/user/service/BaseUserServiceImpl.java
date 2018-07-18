@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
@@ -612,6 +613,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			result.setUsersContact(usersContactVO);
 		}
 		return result;
+	}
+
+	@Override
+	public List<BankCardVO> getBankOpenAccountById(UserVO userVO) {
+		return  amUserClient.getBankOpenAccountById(userVO);
 	}
 
 

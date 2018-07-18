@@ -2,6 +2,8 @@ package com.hyjf.am.vo.market;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.util.Date;
+
 /**
  * @author xiasq
  * @version ActivityListVO, v0.1 2018/5/14 16:13
@@ -17,17 +19,39 @@ public class ActivityListVO extends BaseVO {
 
     private int timeEnd;
 
-    private int startCreate;
+    private Date startCreate;
 
-    private int endCreate;
+    private Date endCreate;
 
     private String platform;
 
     private String status;
 
+    private String imgPc;
+
+    private String imgApp;
+
+    private String imgWei;
+
+    private String activityPcUrl;
+
+    private String activityAppUrl;
+
+    private String activityWeiUrl;
+
+    private String img;
+
+    private String qr;
+
     private String urlForeground;
 
-    private int createTime;
+    private String urlBackground;
+
+    private String description;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public int getTimeStart() {
         return timeStart;
@@ -61,19 +85,19 @@ public class ActivityListVO extends BaseVO {
         this.title = title;
     }
 
-    public int getStartCreate() {
+    public Date getStartCreate() {
         return startCreate;
     }
 
-    public void setStartCreate(int startCreate) {
+    public void setStartCreate(Date startCreate) {
         this.startCreate = startCreate;
     }
 
-    public int getEndCreate() {
+    public Date getEndCreate() {
         return endCreate;
     }
 
-    public void setEndCreate(int endCreate) {
+    public void setEndCreate(Date endCreate) {
         this.endCreate = endCreate;
     }
 
@@ -101,11 +125,99 @@ public class ActivityListVO extends BaseVO {
         this.urlForeground = urlForeground;
     }
 
-    public int getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getImgPc() {
+        return imgPc;
+    }
+
+    public void setImgPc(String imgPc) {
+        this.imgPc = imgPc;
+    }
+
+    public String getImgApp() {
+        return imgApp;
+    }
+
+    public void setImgApp(String imgApp) {
+        this.imgApp = imgApp;
+    }
+
+    public String getImgWei() {
+        return imgWei;
+    }
+
+    public void setImgWei(String imgWei) {
+        this.imgWei = imgWei;
+    }
+
+    public String getActivityPcUrl() {
+        return activityPcUrl;
+    }
+
+    public void setActivityPcUrl(String activityPcUrl) {
+        this.activityPcUrl = activityPcUrl;
+    }
+
+    public String getActivityAppUrl() {
+        return activityAppUrl;
+    }
+
+    public void setActivityAppUrl(String activityAppUrl) {
+        this.activityAppUrl = activityAppUrl;
+    }
+
+    public String getActivityWeiUrl() {
+        return activityWeiUrl;
+    }
+
+    public void setActivityWeiUrl(String activityWeiUrl) {
+        this.activityWeiUrl = activityWeiUrl;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getQr() {
+        return qr;
+    }
+
+    public void setQr(String qr) {
+        this.qr = qr;
+    }
+
+    public String getUrlBackground() {
+        return urlBackground;
+    }
+
+    public void setUrlBackground(String urlBackground) {
+        this.urlBackground = urlBackground;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

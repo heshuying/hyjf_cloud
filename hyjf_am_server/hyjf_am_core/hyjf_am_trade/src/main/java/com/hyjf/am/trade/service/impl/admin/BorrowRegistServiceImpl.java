@@ -97,7 +97,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         List<BorrowRegistCustomize> list = borrowRegistCustomizeMapper.selectBorrowRegistList(borrowRegistListRequest);
         if (!CollectionUtils.isEmpty(list)) {
             //处理标的备案状态
-            Map<String, String> map = CacheUtil.getParamNameMap("hyjf_param_name:REGIST_STATUS");
+            Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
             if (!CollectionUtils.isEmpty(map)) {
                 for (BorrowRegistCustomize borrowRegistCustomize : list) {
                     borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(), null));

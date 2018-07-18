@@ -51,8 +51,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/synbalance")
 public class SynBalanceController extends BaseTradeController {
-
-    private static final Logger logger = LoggerFactory.getLogger(SynBalanceController.class);
     @Autowired
     private SynBalanceService synBalanceService;
     @ApiOperation(value = "用户银行提现", notes = "用户提现")

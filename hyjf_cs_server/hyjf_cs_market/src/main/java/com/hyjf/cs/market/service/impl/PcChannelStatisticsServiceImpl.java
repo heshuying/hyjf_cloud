@@ -77,6 +77,8 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 				PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO(sourceId, vo.getSourceName(),
 						accessNumber, registNumber, openaccountnumber, tenderNumber, cumulativeRecharge, hztTenderPrice,
 						hxfTenderPrice, htlTenderPrice, htjTenderPrice, rtbTenderPrice, hzrTenderPrice, new Date());
+				statisticsVO.setCumulativeInvestment(hztTenderPrice.add(hxfTenderPrice).add(htlTenderPrice)
+						.add(htjTenderPrice).add(rtbTenderPrice).add(hzrTenderPrice));
 				try {
 					producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
 							System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));

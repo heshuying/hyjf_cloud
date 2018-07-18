@@ -1,20 +1,25 @@
 package com.hyjf.cs.user.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class BankOpenVO {
 
 	/** 用户真实姓名 */
+	@ApiModelProperty(value = "用户真实姓名")
 	private String trueName;
 	/** 用户身份证号码 */
+	@ApiModelProperty(value = "用户身份证号码")
 	private String idNo;
-	/** 用户银行卡号 */
-	private String cardNo;
 	/** 用户手机号 */
+	@ApiModelProperty(value = "用户手机号")
 	private String mobile;
 	/**用户的验证码*/
+	@ApiModelProperty(value = "用户的验证码")
 	private String smsCode;
 	
 	private Integer userId;
 
+	@ApiModelProperty(value = "平台移动端需要传送")
 	private String platform;
 
 	@Override
@@ -22,7 +27,6 @@ public class BankOpenVO {
 		return "BankOpenVO{" +
 				"trueName='" + trueName + '\'' +
 				", idNo='" + idNo + '\'' +
-				", cardNo='" + cardNo + '\'' +
 				", mobile='" + mobile + '\'' +
 				", smsCode='" + smsCode + '\'' +
 				", userId=" + userId +
@@ -43,14 +47,6 @@ public class BankOpenVO {
 
 	public void setIdNo(String idNo) {
 		this.idNo = idNo;
-	}
-
-	public String getCardNo() {
-		return cardNo;
-	}
-
-	public void setCardNo(String cardNo) {
-		this.cardNo = cardNo;
 	}
 
 	public String getSmsCode() {

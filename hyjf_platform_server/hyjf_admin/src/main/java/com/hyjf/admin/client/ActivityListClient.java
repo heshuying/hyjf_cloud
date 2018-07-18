@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 
@@ -18,7 +19,7 @@ public interface ActivityListClient {
      * @param activityListRequest
      * @return
      */
-    List<ActivityListVO> getRecordList(ActivityListRequest activityListRequest);
+    ActivityListResponse getRecordList(ActivityListRequest activityListRequest);
 
     /**
      * 添加活动信息

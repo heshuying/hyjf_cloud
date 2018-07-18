@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -459,5 +460,31 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return result;
+	}
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankCardVO selectBankCardByUserId(Integer userId) {
+		com.hyjf.am.response.trade.BankCardResponse response = restTemplate
+				.getForEntity(urlBase +"bankCard/getBankCard/" + userId, BankCardResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+	@Override
+	public BankCardVO getBankCardByCardNo(Integer userId, String cardNo){
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankCard/getBankCard/" + userId+"/"+cardNo, BankCardResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

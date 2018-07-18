@@ -2,10 +2,13 @@ package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -210,4 +213,21 @@ public interface AmUserClient {
      * @return
      */
     int insertCertificateAuthority(CertificateAuthorityVO certificateAuthorityVO);
+
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param
+	 * @param userId
+	 * @return
+	 */
+	BankCardVO selectBankCardByUserId(Integer userId);
+	/**
+	 * 根据用户Id,银行卡号检索用户银行卡信息
+	 * @param
+	 * @param userId
+	 * @return
+	 */
+	BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
+
+
 }

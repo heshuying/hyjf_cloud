@@ -3,24 +3,12 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.*;
-
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
@@ -46,6 +34,18 @@ import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * 银行债转异常处理
@@ -63,6 +63,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	private AccountWebListProducer accountWebListProducer;
 	@Autowired
 	private AppMessageProducer appMsProcesser;
+	@Autowired
+    private BorrowCreditTenderCustomizeMapper creditTenderCustomizeMapper;
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
@@ -1506,6 +1508,13 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			return CommonUtils.convertBean(list.get(0), CreditTenderVO.class);
 		}
 		return null;
+	}
+
+	@Override
+	public BigDecimal getHzrTenderPrice(List<Integer> list) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+		return creditTenderCustomizeMapper.getHzrTenderPrice(list, dayStart, dayEnd);
 	}
 
 

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.ActivityListClient;
 import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.file.UploadFileUtils;
@@ -38,61 +39,60 @@ public class ActivityListServiceImpl implements ActivityListService {
     private String FILEUPLOADTEMPPATH;
 
     @Override
-    public List<ActivityListVO> getRecordList(ActivityListRequest activityListRequest) {
-        List<ActivityListVO> activityListVOList = activityListClient.getRecordList(activityListRequest);
-        return activityListVOList;
+    public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
+        return activityListClient.getRecordList(activityListRequest);
     }
 
     @Override
-    public int insertRecord(Map<String, String> map) {
-        ActivityListRequest request = null;
-        if (null != map && map.size() > 0) {
-            if (map.containsKey("title") && null != map.get("title")) {
-                request.setTitle(map.get("title"));
-            }
-            if (map.containsKey("imgPc") && null != map.get("imgPc")) {
-                request.setImgPc(map.get("imgPc"));
-            }
-            if (map.containsKey("imgApp") && null != map.get("imgApp")) {
-                request.setImgApp(map.get("imgApp"));
-            }
-            if (map.containsKey("imgWei") && null != map.get("imgWei")) {
-                request.setImgWei(map.get("imgWei"));
-            }
-            if (map.containsKey("qr") && null != map.get("qr")) {
-                request.setQr(map.get("qr"));
-            }
-            if (map.containsKey("platform") && null != map.get("platform")) {
-                request.setPlatform(map.get("platform"));
-            }
-            if (map.containsKey("activityPcUrl") && null != map.get("activityPcUrl")) {
-                request.setActivityPcUrl(map.get("activityPcUrl"));
-            }
-            if (map.containsKey("activityAppUrl") && null != map.get("activityAppUrl")) {
-                request.setActivityAppUrl(map.get("activityAppUrl"));
-            }
-            if (map.containsKey("activityWeiUrl") && null != map.get("activityWeiUrl")) {
-                request.setActivityWeiUrl(map.get("activityWeiUrl"));
-            }
-            if (map.containsKey("urlBackground") && null != map.get("urlBackground")) {
-                request.setUrlBackground(map.get("urlBackground"));
-            }
-            if (map.containsKey("description") && null != map.get("description")) {
-                request.setDescription(map.get("description"));
-            }
-            if (map.containsKey("timeStart") && null != map.get("timeStart")) {
-                request.setStartTime(Integer.parseInt(map.get("timeStart")));
-            }
-            if (map.containsKey("timeEnd") && null != map.get("timeEnd")) {
-                request.setEndTime(Integer.parseInt(map.get("timeEnd")));
-            }
-            if (map.containsKey("createTime") && null != map.get("createTime")) {
-                request.setCreateTime(Integer.parseInt(map.get("createTime")));
-            }
-            if (map.containsKey("updateTime") && null != map.get("updateTime")) {
-                request.setUpdateTime(Integer.parseInt(map.get("updateTime")));
-            }
-        }
+    public int insertRecord(ActivityListRequest request) {
+//        ActivityListRequest request = null;
+//        if (null != map && map.size() > 0) {
+//            if (map.containsKey("title") && null != map.get("title")) {
+//                request.setTitle(map.get("title"));
+//            }
+//            if (map.containsKey("imgPc") && null != map.get("imgPc")) {
+//                request.setImgPc(map.get("imgPc"));
+//            }
+//            if (map.containsKey("imgApp") && null != map.get("imgApp")) {
+//                request.setImgApp(map.get("imgApp"));
+//            }
+//            if (map.containsKey("imgWei") && null != map.get("imgWei")) {
+//                request.setImgWei(map.get("imgWei"));
+//            }
+//            if (map.containsKey("qr") && null != map.get("qr")) {
+//                request.setQr(map.get("qr"));
+//            }
+//            if (map.containsKey("platform") && null != map.get("platform")) {
+//                request.setPlatform(map.get("platform"));
+//            }
+//            if (map.containsKey("activityPcUrl") && null != map.get("activityPcUrl")) {
+//                request.setActivityPcUrl(map.get("activityPcUrl"));
+//            }
+//            if (map.containsKey("activityAppUrl") && null != map.get("activityAppUrl")) {
+//                request.setActivityAppUrl(map.get("activityAppUrl"));
+//            }
+//            if (map.containsKey("activityWeiUrl") && null != map.get("activityWeiUrl")) {
+//                request.setActivityWeiUrl(map.get("activityWeiUrl"));
+//            }
+//            if (map.containsKey("urlBackground") && null != map.get("urlBackground")) {
+//                request.setUrlBackground(map.get("urlBackground"));
+//            }
+//            if (map.containsKey("description") && null != map.get("description")) {
+//                request.setDescription(map.get("description"));
+//            }
+//            if (map.containsKey("timeStart") && null != map.get("timeStart")) {
+//                request.setStartTime(Integer.parseInt(map.get("timeStart")));
+//            }
+//            if (map.containsKey("timeEnd") && null != map.get("timeEnd")) {
+//                request.setEndTime(Integer.parseInt(map.get("timeEnd")));
+//            }
+//            if (map.containsKey("createTime") && null != map.get("createTime")) {
+//                request.setCreateTime(Integer.parseInt(map.get("createTime")));
+//            }
+//            if (map.containsKey("updateTime") && null != map.get("updateTime")) {
+//                request.setUpdateTime(Integer.parseInt(map.get("updateTime")));
+//            }
+//        }
         int insertFlag = activityListClient.insertRecord(request);
         return insertFlag;
     }

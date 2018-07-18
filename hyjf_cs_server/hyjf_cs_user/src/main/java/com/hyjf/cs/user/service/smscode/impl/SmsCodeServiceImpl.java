@@ -17,6 +17,7 @@ import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -151,10 +152,10 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
         logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
         CheckUtil.check(StringUtils.isBlank(intervalTime), MsgEnum.ERR_SMSCODE_SEND_TOO_FAST);
-        String ipCount = RedisUtils.get(ip + ":MaxIpCount");
+        String ipCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
         if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
             ipCount = "0";
-            RedisUtils.set(ip + ":MaxIpCount", "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0");
         }
         logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
         SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
@@ -178,13 +179,13 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             } catch (Exception e) {
                 CheckUtil.check(false, MsgEnum.ERR_IP_VISIT_TOO_MANNY);
             }
-            RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
+            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT + ip, (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
         }
         // 判断最大发送数max_phone_count
-        String count = RedisUtils.get(mobile + ":MaxPhoneCount");
+        String count = RedisUtils.get(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT);
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(mobile + ":MaxPhoneCount", "0");
+            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, "0");
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
@@ -206,7 +207,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             } catch (Exception e) {
                 CheckUtil.check(false, MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
             }
-            RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
         }
 
         // 发送checkCode最大时间间隔，默认60秒

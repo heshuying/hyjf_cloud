@@ -5,6 +5,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -14,10 +15,42 @@ import java.util.List;
 public interface BorrowTenderCustomizeMapper {
 	/**
 	 * 获取utm注册用户投资次数
-	 * 
-	 * @param list
+	 * @param list utm注册用户userid集合
+	 * @param dayStart
+	 * @param dayEnd
+	 * @param type
 	 * @return
 	 */
 	Integer getUtmTenderNum(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
-			@Param("dayEnd") String dayEnd);
+			@Param("dayEnd") String dayEnd, @Param("type") String type);
+
+	/**
+	 * 获取utm注册用户HZT投资额
+	 * @param list utm注册用户userid集合
+	 * @param dayStart
+	 * @param dayEnd
+	 * @return
+	 */
+	BigDecimal getHztTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
+			@Param("dayStart") String dayEnd);
+
+	/**
+	 * 获取utm注册用户HXF投资额
+	 * @param list utm注册用户userid集合
+	 * @param dayStart
+	 * @param dayEnd
+	 * @return
+	 */
+	BigDecimal getHxfTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
+			@Param("dayStart") String dayEnd);
+
+	/**
+	 * 获取utm注册用户HXF投资额
+	 * @param list utm注册用户userid集合
+	 * @param dayStart
+	 * @param dayEnd
+	 * @return
+	 */
+	BigDecimal getRtbTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
+			@Param("dayStart") String dayEnd);
 }

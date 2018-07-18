@@ -2,6 +2,8 @@ package com.hyjf.admin.controller.assetcenter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AssetListViewRequest;
+import com.hyjf.admin.beans.vo.AdminAssetDetailCustomizeVO;
+import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -16,6 +18,7 @@ import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -68,18 +71,22 @@ public class AssetListController extends BaseController {
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
 		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+		jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
 		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型(请求下拉联动接口-可复用)
 		// List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());
 		// jsonObject.put("assetTypeList", assetTypeList);
 		// 3.开户状态
 		Map<String, String> accountStatusMap = this.assetListService.getParamNameMap(ACCOUNT_STATUS);
+		jsonObject.put("开户状态下拉列表", "accountStatusMap");
 		jsonObject.put("accountStatusMap", accountStatusMap);
 		// 4.审核状态
 		Map<String, String> assetApplyStatusMap = this.assetListService.getParamNameMap(ASSET_APPLY_STATUS);
+		jsonObject.put("审核状态下拉列表", "assetApplyStatusMap");
 		jsonObject.put("assetApplyStatusMap", assetApplyStatusMap);
 		// 5.项目状态
 		Map<String, String> assetStatusMap = this.assetListService.getParamNameMap(ASSET_STATUS);
+		jsonObject.put("项目状态下拉列表", "assetStatusMap");
 		jsonObject.put("assetStatusMap", assetStatusMap);
 		return jsonObject;
 	}
@@ -108,6 +115,7 @@ public class AssetListController extends BaseController {
 					resultList.add(mapTemp);
 				}
 			}
+			jsonObject.put("产品类型下拉列表", "assetTypeList");
 			jsonObject.put("assetTypeList", assetTypeList);
 			return jsonObject;
 		} else {
@@ -126,11 +134,14 @@ public class AssetListController extends BaseController {
 	@PostMapping(value = "/search")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-	public AdminResult<ListResult<AssetListCustomizeVO>> init(HttpServletRequest request, @RequestBody AssetListViewRequest viewRequest) { 
+	public AdminResult<ListResult<AdminAssetListCustomizeVO>> init(HttpServletRequest request, @RequestBody AssetListViewRequest viewRequest) { 
 		// 初始化原子层请求实体
 		AssetListRequest form = new AssetListRequest();
-		// 将画面请求request赋值给原子层 request
+		// 初始化返回LIST
+		List<AdminAssetListCustomizeVO> volist = null;
+		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
+		// 查询不改动是因为多出有调用
 		AssetListCustomizeResponse response = assetListService.findAssetList(form);
 		if(response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -138,7 +149,9 @@ public class AssetListController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<AssetListCustomizeVO>>(ListResult.build(response.getResultList(), response.getCount()));
+		// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+		volist = CommonUtils.convertBeanList(response.getResultList(), AdminAssetListCustomizeVO.class);
+		return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, response.getCount()));
 	}
 	
 	/**
@@ -161,6 +174,7 @@ public class AssetListController extends BaseController {
 		String status = Response.FAIL;
 		// 总计数大于0
 		if(sumAccount.compareTo(BigDecimal.ZERO)==1){
+			jsonObject.put("借款金额(元)列总计", "sumAccount");
 			jsonObject.put("sumAccount", sumAccount);
 			status = Response.SUCCESS;
 		}
@@ -181,12 +195,17 @@ public class AssetListController extends BaseController {
 	public JSONObject searchUserDetail(HttpServletRequest request, @RequestBody AssetListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		AssetListRequest assetListRequest = new AssetListRequest();
+		AdminAssetDetailCustomizeVO vo = null;
 		// 将画面请求request赋值给原子层 request 
 		if(StringUtils.isNotEmpty(viewRequest.getAssetIdSrch())  && StringUtils.isNotEmpty(viewRequest.getInstCodeSrch())){
 			assetListRequest.setAssetIdSrch(viewRequest.getAssetIdSrch());
 			assetListRequest.setInstCodeSrch(viewRequest.getInstCodeSrch());
+			// 获取到原子层查询的VO(多处调用)
 			AssetDetailCustomizeVO assetDetailCustomizeVO = assetListService.getDetailById(assetListRequest);
-			jsonObject.put("assetDetailCustomizeVO", assetDetailCustomizeVO);
+			// 将原子层查询的VO转型为组合层VO
+			BeanUtils.copyProperties(assetDetailCustomizeVO,vo);
+			jsonObject.put("返回实体类", "vo");
+			jsonObject.put("vo", vo);
 		} else {
 			jsonObject.put("message", "未传入assetId和instCode");
 		}

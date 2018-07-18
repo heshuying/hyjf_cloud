@@ -108,30 +108,13 @@
 		</where>
 	</select>
 	
-	<!--<select id="getOpenAccountNumber" resultType="INTEGER" parameterType="map">
-		SELECT
-			count(*)
-		from ht_utm_reg a INNER JOIN ht_utm b
-		on a.utm_id = b.utm_id
-		<where>
-			<if test="sourceId != null and sourceId != ''">
-				AND b.source_id = #{sourceId}
-			</if>
-			<if test="dayStart != null and dayStart != ''">
-				AND a.create_time <![CDATA[>=]]> #{dayStart}
-			</if>
-			<if test="dayEnd != null and dayEnd != ''">
-				AND a.create_time <![CDATA[<=]]> #{dayEnd}
-			</if>
-		</where>
-	</select>-->
-	
 	<select id="getOpenAccountNumber" resultType="INTEGER" parameterType="map">
 		SELECT
 			count(*)
 		FROM
 			ht_utm_reg a
-		INNER JOIN hyjf_bank_open_account b ON a.user_id = b.user_id
+		INNER JOIN ht_bank_open_account b ON a.user_id = b.user_id
+		INNER JOIN ht_user_info c ON a.user_id = c.user_id
 		<where>
 			<if test="sourceId != null and sourceId != ''">
 				AND b.source_id = #{sourceId}
@@ -142,19 +125,71 @@
 			<if test="dayEnd != null and dayEnd != ''">
 				AND a.create_time <![CDATA[<=]]> #{dayEnd}
 			</if>
+			<if test="type != null">
+				AND c.attribute = #{type}
+			</if>
 		</where>
 	</select>
 	
 	<select id="getUtmRegList" resultType="com.hyjf.am.user.dao.model.auto.UtmReg" parameterType="INTEGER">
-			select * from ht_utm_reg a
+		select * from ht_utm_reg a
 			inner join ht_utm b
 			on a.utm_id = b.utm_id
+			left join ht_user_info c
+			on a.user_id = c.user_id
 			<where>
 				<if test="sourceId != null and sourceId != ''">
 					b.source_id = #{sourceId}
 				</if>
+				<if test="type !=null">
+					c.attribute = 0
+				</if>
 			</where>
 	</select>
 
+	<select id="getRegisterAttrCount" resultType="DECIMAL" parameterType="map">
+		SELECT
+			count(*)
+		FROM
+			ht_user_info a
+		<where>
+			a.user_id in
+			<if test="list != null">
+				and hbt.user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getAccountNumber" resultType="DECIMAL" parameterType="map">
+		SELECT
+			count(*)
+		FROM
+			ht_user_info a
+		<where>
+			a.user_id in
+			and a.account_esb = #{type}
+			<if test="list != null">
+				and hbt.user_id in
+				<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+					#{item}
+				</foreach>
+			</if>
+			<if test="dayStart != null and dayStart != ''">
+				AND a.create_time <![CDATA[>=]]> #{dayStart}
+			</if>
+			<if test="dayEnd != null and dayEnd != ''">
+				AND a.create_time <![CDATA[<=]]> #{dayEnd}
+			</if>
+		</where>
+	</select>
 
 </mapper>

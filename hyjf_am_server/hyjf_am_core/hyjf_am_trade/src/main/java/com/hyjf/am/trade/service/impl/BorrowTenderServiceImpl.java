@@ -117,9 +117,30 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     }
 
     @Override
-    public Integer getUtmTenderNum(List<Integer> list) {
+    public Integer getUtmTenderNum(List<Integer> list, String type) {
         String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
         String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
-        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd);
+        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd, type);
+    }
+
+    @Override
+    public BigDecimal getHztTenderPrice(List<Integer> list) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return borrowTenderCustomizeMapper.getHztTenderPrice(list, dayStart, dayEnd);
+    }
+
+    @Override
+    public BigDecimal getHxfTenderPrice(List<Integer> list) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return borrowTenderCustomizeMapper.getHxfTenderPrice(list, dayStart, dayEnd);
+    }
+
+    @Override
+    public BigDecimal getRtbTenderPrice(List<Integer> list) {
+        String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
+        String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
+        return borrowTenderCustomizeMapper.getRtbTenderPrice(list, dayStart, dayEnd);
     }
 }

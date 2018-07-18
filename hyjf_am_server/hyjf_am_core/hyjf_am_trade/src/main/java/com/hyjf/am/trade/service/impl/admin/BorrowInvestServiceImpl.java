@@ -65,9 +65,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     public List<BorrowInvestCustomize> selectBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
         List<BorrowInvestCustomize> list = borrowInvestCustomizeMapper.selectBorrowInvestList(borrowInvestRequest);
         if (!CollectionUtils.isEmpty(list)) {
-            Map<String, String> clientMap = CacheUtil.getParamNameMap("hyjf_param_name:CLIENT");
-            Map<String, String> propertyMap = CacheUtil.getParamNameMap("hyjf_param_name:USER_PROPERTY");
-            Map<String, String> investMap = CacheUtil.getParamNameMap("hyjf_param_name:INVEST_TYPE");
+            Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> propertyMap = CacheUtil.getParamNameMap("USER_PROPERTY");
+            Map<String, String> investMap = CacheUtil.getParamNameMap("INVEST_TYPE");
             for (BorrowInvestCustomize borrowInvestCustomize : list) {
                 borrowInvestCustomize.setOperatingDeck(clientMap.getOrDefault(borrowInvestCustomize.getOperatingDeck(), null));
                 borrowInvestCustomize.setTenderUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getTenderUserAttribute(), null));
@@ -98,9 +98,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     public List<BorrowInvestCustomize> exportBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
         List<BorrowInvestCustomize> list = borrowInvestCustomizeMapper.exportBorrowInvestList(borrowInvestRequest);
         if (!CollectionUtils.isEmpty(list)) {
-            Map<String, String> clientMap = CacheUtil.getParamNameMap("hyjf_param_name:CLIENT");
-            Map<String, String> propertyMap = CacheUtil.getParamNameMap("hyjf_param_name:USER_PROPERTY");
-            Map<String, String> investMap = CacheUtil.getParamNameMap("hyjf_param_name:INVEST_TYPE");
+            Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
+            Map<String, String> propertyMap = CacheUtil.getParamNameMap("USER_PROPERTY");
+            Map<String, String> investMap = CacheUtil.getParamNameMap("INVEST_TYPE");
             for (BorrowInvestCustomize borrowInvestCustomize : list) {
                 borrowInvestCustomize.setOperatingDeck(clientMap.getOrDefault(borrowInvestCustomize.getOperatingDeck(), null));
                 borrowInvestCustomize.setTenderUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getTenderUserAttribute(), null));

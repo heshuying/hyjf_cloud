@@ -10,14 +10,16 @@ import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.BankAccountBeanRequest;
+import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
@@ -787,6 +789,209 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-	
-	
+
+    /**
+     * 更新借款API任务表
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @Override
+    public Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repay/update_apicron";
+        Response<Boolean> response =
+                restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据bankSeqNo检索
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @Override
+    public BorrowApicronVO selectBorrowApicron(String bankSeqNO) {
+        String url = "http://AM-TRADE/am-trade/borrowApicron/getby_bankseqno/" + bankSeqNO;
+        Response<BorrowApicronVO> response =
+                restTemplate.getForEntity(url,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 根据订单号查询充值信息
+     * @param orderId
+     * @return
+     */
+    @Override
+    public AccountRechargeVO selectByOrderId(String orderId) {
+        AccountRechargeResponse response = restTemplate
+                .getForEntity(urlBase +"trade/selectByOrderId/"+orderId,AccountRechargeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 更新充值详情信息
+     * @param accountRecharge
+     */
+    @Override
+    public void updateAccountRecharge(AccountRechargeVO accountRecharge) {
+        restTemplate.put(urlBase +"trade/updateByPrimaryKeySelective",accountRecharge);
+    }
+    /**
+     * 根据订单号查询充值数量
+     * @param ordId
+     * @return
+     */
+    @Override
+    public int selectByOrdId(String ordId){
+        Integer response = restTemplate
+                .getForEntity(urlBase +"trade/selectByOrdId/"+ordId, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return -1;
+    }
+    /**
+     * 插入银行卡信息
+     * @param bankRequest
+     * @return
+     */
+    @Override
+    public int insertSelectiveBank(BankRequest bankRequest){
+        Integer response = restTemplate
+                .postForEntity(urlBase +"trade/insertSelectiveBank",bankRequest, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return 0;
+    }
+    /**
+     * 修改银行卡信息
+     * @param bankAccountBeanRequest
+     * @return
+     */
+    @Override
+    public boolean updateBanks(BankAccountBeanRequest bankAccountBeanRequest) {
+        boolean response = restTemplate
+                .postForEntity(urlBase +"trade/updateBanks",bankAccountBeanRequest, boolean.class).getBody();
+        return response;
+    }
+    /**
+     * 根据用户userId查询账号体系
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountVO getAccount(Integer userId) {
+        AccountResponse response = restTemplate
+                .getForEntity(urlBase +"trade/getAccount/" + userId, AccountResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据订单号查询用户提现记录列表
+     * @param ordId
+     * @return
+     */
+    @Override
+    public List<AccountWithdrawVO> selectAccountWithdrawByOrdId(String ordId) {
+        AccountWithdrawResponse response = restTemplate
+                .getForEntity(urlBase +"accountWithdraw/findByOrdId/" + ordId, AccountWithdrawResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 插入提现记录
+     * @param record
+     */
+    @Override
+    public void insertAccountWithdrawLog(AccountWithdrawVO record) {
+        restTemplate.put(urlBase +"accountWithdraw/insertAccountWithdrawLog",record);
+    }
+    /**
+     * 根据订单号查询用户提现记录信息
+     * @param logOrderId
+     * @return
+     */
+    @Override
+    public AccountWithdrawVO getAccountWithdrawByOrdId(String logOrderId) {
+        AccountWithdrawResponse response = restTemplate
+                .getForEntity(urlBase +"accountWithdraw/getAccountWithdrawByOrdId/" + logOrderId, AccountWithdrawResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户提现记录
+     * @param accountwithdraw
+     * @return
+     */
+    @Override
+    public int updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
+        int result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, Integer.class).getBody();
+        return result;
+    }
+    /**
+     * 提现后续操作
+     * @param bankWithdrawBeanRequest
+     * @return
+     */
+    @Override
+    public int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest) {
+        int result = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/updatUserBankWithdrawHandler", bankWithdrawBeanRequest, Integer.class).getBody();
+        return result;
+    }
+    /**
+     * 查询用户标的投资数量
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer getBorrowTender(Integer userId) {
+        String url = urlBase +"accountWithdraw/getBorrowTender/"+userId;
+        AccountWithdrawResponse response= restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
+        if (response != null) {
+            return response.getUserBorrowTenderCounte();
+        }
+        return 0;
+    }
+    /**
+     * 根据用户id查询当前充值信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<AccountRechargeVO> getTodayRecharge(Integer userId) {
+        AccountRechargeResponse response = restTemplate
+                .getForEntity(urlBase +"accountWithdraw/getTodayRecharge/" + userId, AccountRechargeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 插入线下充值同步余额信息账户明细
+     * @param synBalanceBeanRequest
+     * @return
+     */
+    @Override
+    public boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest) {
+        String url = urlBase +"synBalance/insertAccountDetails";
+        return restTemplate.postForEntity(url, synBalanceBeanRequest, Boolean.class).getBody();
+    }
 }

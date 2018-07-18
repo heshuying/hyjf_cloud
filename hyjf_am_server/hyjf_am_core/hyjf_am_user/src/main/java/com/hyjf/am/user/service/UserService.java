@@ -188,4 +188,11 @@ public interface UserService extends BaseService {
      * @return
      */
     UserVO getUser(String utmReferrer, String userId);
+	/**
+	 * 融东风注册
+	 * @param userRequest
+	 * @return
+	 * @throws ServiceException
+	 */
+    User surongRegister(RegisterUserRequest userRequest)throws MQException;
 }

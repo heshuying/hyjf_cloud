@@ -1,7 +1,9 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.trade.bean.WebViewUser;
@@ -44,4 +46,10 @@ public interface RepayManageService extends BaseTradeService{
                          String userName);
 
     Integer deleteFreezeLogByOrderId(String orderId);
+
+    Boolean updateBorrowApicron(BorrowApicronVO apicronVO, Integer status);
+
+    BorrowApicronVO selectBorrowApicron(String bankSeqNO);
+
+    BankCallBean batchQuery(BorrowApicronVO apicron);
 }
