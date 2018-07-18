@@ -16,14 +16,21 @@ public interface HolidaysConfigService {
 
     /**
      * 更新节假日配置表
+     * @param year
      * @return
      * @throws ReturnMessageException
      */
-    boolean updateHolidaysConfig() throws ReturnMessageException;
+    boolean updateHolidaysConfig(int year) throws ReturnMessageException;
     /**
      * 倒序查询假期配置表
      * @param orderByClause
      * @return
      */
     List<HolidaysConfig> selectHolidaysConfig(String orderByClause);
+
+    /**
+     * 初始化年度配置
+     * @param year
+     */
+    void initCurrentYearConfig(int year);
 }

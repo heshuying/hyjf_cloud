@@ -17,9 +17,23 @@ public interface HolidaysConfigCustomizeMapper {
      */
     void batchInsert(List<HolidaysConfig> list);
 
-    List<HolidaysConfig> selectByMonth(String date);
-
+    /**
+     * 批量更新状态
+     * @param list
+     * @throws Exception
+     */
     void batchUpdate(List<HolidaysConfig> updateList);
 
+    /**
+     * 查询月份配置
+     * @param date  格式 yyyymm
+     * @return
+     */
+    List<HolidaysConfig> selectByMonth(String date);
+
+    /**
+     * 删除年度配置
+     * @param year
+     */
     void deleteByYear(int year);
 }
