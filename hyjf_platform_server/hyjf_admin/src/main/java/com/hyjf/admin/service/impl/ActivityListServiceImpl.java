@@ -31,13 +31,10 @@ public class ActivityListServiceImpl implements ActivityListService {
 
     @Autowired
     ActivityListClient activityListClient;
-//    @Value("${http://cdn.huiyingdai.com/}")
     @Value("${file.domain.url}")
     private String FILEDOMAILURL;
-//    @Value("${/hyjfdata}")
     @Value("${file.physical.path}")
     private String FILEPHYSICALPATH;
-//    @Value("${/data/upfiles/image/activity}")
     @Value("${file.upload.activity.img.path}")
     private String FILEUPLOADTEMPPATH;
 

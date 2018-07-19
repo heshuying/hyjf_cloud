@@ -39,7 +39,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Autowired
     CouponCheckClient couponCheckClient;
-//    @Value("${/data/upfiles/image/activity}")
     @Value("${file.upload.activity.img.path}")
     private String FILEUPLOADTEMPPATH;
 
