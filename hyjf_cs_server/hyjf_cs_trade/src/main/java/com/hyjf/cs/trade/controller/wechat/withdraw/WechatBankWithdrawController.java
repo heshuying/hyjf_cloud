@@ -58,9 +58,12 @@ public class WechatBankWithdrawController extends BaseTradeController {
         String transAmt = request.getParameter("transAmt");// 交易金额
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
         String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
-
         WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
+        //是否设置交易密码、是否汇付开户、是否银行开户
+        if(null!=userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
+            return  new ModelAndView();
+        }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ip);

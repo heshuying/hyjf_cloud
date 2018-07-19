@@ -48,12 +48,4 @@ public interface BorrowTenderCpnClient {
      */
     List<BorrowTenderCpnVO> getBorrowTenderCpnList(String borrowNid);
 
-    /**
-     * @Author walter.limeng
-     * @Description  更新放款状态(优惠券)
-     * @Date 18:23 2018/7/18
-     * @Param 
-     * @return 
-     */
-    List<Map<String,String>> updateCouponRecover(BorrowTenderCpnVO borrowTenderCpn);
 }
