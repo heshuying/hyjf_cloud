@@ -135,13 +135,14 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 		holidaysConfigCustomizeMapper.batchInsert(list);
 	}
 
-	@Override
-	public List<HolidaysConfig> selectHolidaysConfig(String orderByClause) {
-		HolidaysConfigExample example = new HolidaysConfigExample();
-		example.setOrderByClause("statr_time asc");
-		List<HolidaysConfig> holidaysConfigList = holidaysConfigMapper.selectByExample(example);
-		return holidaysConfigList;
-	}
+
+	//@Override
+//	public List<HolidaysConfig> selectHolidaysConfig(String orderByClause) {
+//		HolidaysConfigExample example = new HolidaysConfigExample();
+//		example.setOrderByClause("statr_time asc");
+//		List<HolidaysConfig> holidaysConfigList = holidaysConfigMapper.selectByExample(example);
+//		return holidaysConfigList;
+//	}
 
 	private Map<String, Object> json2map(String str_json) {
 		Map<String, Object> res = null;
