@@ -150,6 +150,18 @@ public class BankConfigServiceImpl implements BankConfigService {
 		return banks;
 	}
 
+	/**
+	 * 获取status=1的银行列表
+	 */
+	@Override
+	public List<BankConfig> getBankConfigListByStatus(BankConfigVO bankConfigVO){
+		BankConfigExample example = new BankConfigExample();
+		BankConfigExample.Criteria criteria = example.createCriteria();
+		// 条件查询
+		criteria.andStatusEqualTo(1);
+		return bankConfigMapper.selectByExample(example);
+	}
+
 	@Override
 	public List<ParamName> getParamNameList(String nameClass) {
 		ParamNameExample example = new ParamNameExample();

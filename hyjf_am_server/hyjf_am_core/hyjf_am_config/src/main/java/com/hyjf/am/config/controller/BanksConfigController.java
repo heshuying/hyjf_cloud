@@ -121,7 +121,21 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
-
+    /**
+     * 获取status=1的银行列表
+     */
+    @RequestMapping("/getBankConfigListByStatus")
+    public AdminBankConfigResponse getBankConfigListByStatus(BankConfigVO bankConfigVO){
+        AdminBankConfigResponse response=new AdminBankConfigResponse();
+        List<BankConfig> listBankConfig = bankConfigService.getBankConfigListByStatus(bankConfigVO);
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+            response.setResultList(listBanksConfig);
+            //代表成功
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 
     @GetMapping("/getParamNameList/{nameClass}")
     public ParamNameResponse getParamNameList(@PathVariable String nameClass){
@@ -175,11 +189,11 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @RequestMapping("/selectBankConfigByBankName")
-    public List<BanksConfigVO> selectBankConfigByBankName(@RequestBody String bankName){
+    public List<BankConfigVO> selectBankConfigByBankName(@RequestBody String bankName){
         BankConfigVO bankConfig = new BankConfigVO();
         bankConfig.setName(bankName);
         List<BankConfig> list = bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
-        List<BanksConfigVO> res=null;
+        List<BankConfigVO> res=null;
         BeanUtils.copyProperties(list,res);
         return res;
     }
