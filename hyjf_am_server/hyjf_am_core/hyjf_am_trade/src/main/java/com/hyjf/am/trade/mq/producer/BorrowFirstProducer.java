@@ -20,7 +20,7 @@ public class BorrowFirstProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.HYJF_BORROW_ISSUE_GROUP);
+        wrapper.setGroup(MQConstant.ROCKETMQ_BORROW_ISSUE_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

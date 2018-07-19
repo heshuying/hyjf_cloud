@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -1578,4 +1579,12 @@ public interface AmTradeClient {
      * @return
      */
     int updateAccountList(AccountListRequest accountListRequest);
+
+    /**
+     * 查询数据中心优惠券数据
+     * @param requestBean
+     * @param type 优惠券类型
+     * @return
+     */
+    DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
 }
