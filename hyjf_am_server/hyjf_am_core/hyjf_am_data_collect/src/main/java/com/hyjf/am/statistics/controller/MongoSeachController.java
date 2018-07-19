@@ -4,6 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
@@ -14,6 +15,7 @@ import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -218,5 +220,31 @@ public class MongoSeachController {
             response.setResultList(associatedRecordListVoList);
         }
         return response;
+    }
+
+    @Autowired
+    private HjhPlanCapitalDao hjhPlanCapitalDao;
+
+    /**
+     * 汇计划 -- 资金列表
+     * @param hjhPlanCapitalVO
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/getPlanCapitalList")
+    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalVO hjhPlanCapitalVO){
+        HjhPlanCapitalResponse hjhPlanCapitalResponse = new HjhPlanCapitalResponse();
+
+        int recordTotal = (int) hjhPlanCapitalDao.getCount(hjhPlanCapitalVO);
+
+        if (recordTotal > 0) {
+            List<HjhPlanCapital> responseList = hjhPlanCapitalDao.findAllList(hjhPlanCapitalVO);
+
+            if (responseList != null) {
+                List<HjhPlanCapitalVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalVO.class);
+                hjhPlanCapitalResponse.setResultList(voList);
+            }
+        }
+        return hjhPlanCapitalResponse;
     }
 }
