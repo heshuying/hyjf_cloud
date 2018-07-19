@@ -12,7 +12,6 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -20,7 +19,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * @author yaoy
@@ -31,10 +32,13 @@ public class ActivityListServiceImpl implements ActivityListService {
 
     @Autowired
     ActivityListClient activityListClient;
+//    @Value("${http://cdn.huiyingdai.com/}")
     @Value("${file.domain.url}")
     private String FILEDOMAILURL;
+//    @Value("${/hyjfdata}")
     @Value("${file.physical.path}")
     private String FILEPHYSICALPATH;
+//    @Value("${/data/upfiles/image/activity}")
     @Value("${file.upload.activity.img.path}")
     private String FILEUPLOADTEMPPATH;
 

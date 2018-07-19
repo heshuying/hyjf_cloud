@@ -150,10 +150,10 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 	@Autowired
 	private SmsProducer smsProducer;
 
-	@Value("${hyjf.bank.instcode}")
+//	@Value("${hyjf.bank.instcode}")
 	private String BANK_INSTCODE;
 
-	@Value("${hyjf.bank.bankcode}")
+//	@Value("${hyjf.bank.bankcode}")
 	private String BANK_BANKCODE;
 
 
