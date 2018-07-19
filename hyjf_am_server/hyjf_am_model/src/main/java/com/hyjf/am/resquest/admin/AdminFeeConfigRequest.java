@@ -181,4 +181,24 @@ public class AdminFeeConfigRequest extends BasePage {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+    /**
+     * 列表画面自定义标签上的用翻页对象：paginator
+     */
+    private com.hyjf.common.paginator.Paginator paginator;
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
+
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
+    }
 }

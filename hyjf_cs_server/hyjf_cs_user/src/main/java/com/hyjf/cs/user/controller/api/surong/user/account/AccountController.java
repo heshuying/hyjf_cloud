@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.controller.api.surong.user.account;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api(value = "融东风用户账户接口")
@@ -35,6 +37,7 @@ public class AccountController extends BaseUserController{
     private RdfRechargeService rdfRechargeService;
 	@Autowired
 	private SystemConfig systemConfig;
+
 
     @ApiOperation(value = "获取用户余额", notes = "获取用户余额")
     @RequestMapping("/getBalance")
@@ -98,6 +101,33 @@ public class AccountController extends BaseUserController{
         }
         return result;
     }
+
+    /**
+     * 融东风余额同步
+     * @param request
+     * @return
+     */
+    @RequestMapping("/balanceSync")
+    @ResponseBody
+    public Object balanceSync(HttpServletRequest request){
+        String sign = request.getParameter("sign");
+        String ids = request.getParameter("ids");
+        String random = request.getParameter("random");
+        if(!checkSign(random,sign)){
+            logger.info("融东风同步余额sign非法");
+            return null;
+        }
+        logger.info("融东风同步余额:ids="+ids);
+        List<Integer> userIds = null;
+        try {
+            userIds = (List<Integer>) JSONArray.parseArray(ids,Integer.class);
+        } catch (Exception e) {
+            logger.info("json集合转换出错! ids="+ids);
+        }
+
+        return rdfAccountService.balanceSync(userIds);
+    }
+
 
 
 

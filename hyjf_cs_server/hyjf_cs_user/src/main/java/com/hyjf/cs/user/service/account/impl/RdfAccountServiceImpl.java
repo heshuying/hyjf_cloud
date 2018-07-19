@@ -23,7 +23,7 @@ public class RdfAccountServiceImpl extends BaseUserServiceImpl implements RdfAcc
 
 	@Autowired
 	private AmUserClient amUserClient;
-	
+	@Autowired
 	private AmTradeClient amTradeClient;
 	
 	@Override

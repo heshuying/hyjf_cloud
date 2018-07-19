@@ -26,6 +26,10 @@ public interface BankConfigService {
      * 获取银行列表
      */
     List<BankConfig> selectBankConfigList();
+    /**
+     * 获取status=1的银行列表
+     */
+    List<BankConfig> getBankConfigListByStatus(BankConfigVO bankConfigVO);
 
     List<ParamName> getParamNameList(String nameClass);
     /**

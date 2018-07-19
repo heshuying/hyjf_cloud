@@ -1,21 +1,30 @@
 package com.hyjf.am.trade.mq.consumer;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.HjhLabel;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.service.AssetPushService;
 import com.hyjf.am.trade.service.admin.AdminAllocationEngineService;
 import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
+import com.hyjf.am.vo.task.autoissue.AutoIssueMsg;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,30 +45,19 @@ public class AutoIssueConsumer extends Consumer {
     private static final String CONSUMER_QUIT = "消费退出";
 
 
-//    @Autowired
+    @Autowired
     private AssetPushService assetPushService;
 
-//    @Autowired
+    @Autowired
     private AdminHjhLabelService adminHjhLabelService;
 
-//    @Autowired
+    @Autowired
     private AdminAllocationEngineService adminAllocationEngineService;
-//    @Autowired
-//    private BaseService baseService;
-//
-//    @Autowired
-//    private AssetPushService assetPushService;
-//
-//    @Autowired
-//    private AdminHjhLabelService adminHjhLabelService;
-//
-//    @Autowired
-//    private AdminAllocationEngineService adminAllocationEngineService;
 
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-       /* defaultMQPushConsumer.setConsumerGroup(MQConstant.HYJF_BORROW_ISSUE_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.HYJF_BORROW_ISSUE_GROUP);
         defaultMQPushConsumer.subscribe(MQConstant.HYJF_BORROW_ISSUE_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
@@ -73,7 +71,7 @@ public class AutoIssueConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
         //defaultMQPushConsumer.start();   // 工作已经由其他同事完成,  该消费者暂时不用启动
-        logger.info("====" + TASK_NAME + "监听初始化完成, 启动完毕=====");*/
+        logger.info("====" + TASK_NAME + "监听初始化完成, 启动完毕=====");
     }
 
 
@@ -81,7 +79,7 @@ public class AutoIssueConsumer extends Consumer {
     public class MessageListener implements MessageListenerConcurrently {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-           /* logger.info("========" + TASK_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs));
+            logger.info("========" + TASK_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs));
 
             try {
                 MessageExt msg = msgs.get(0);
@@ -132,7 +130,7 @@ public class AutoIssueConsumer extends Consumer {
                     }
 
                     // 分配计划引擎
-                   String planNid = adminAllocationEngineService.getPlanNidByLable(borrow.getLabelId());
+                    String planNid = adminAllocationEngineService.getPlanNidByLable(borrow.getLabelId());
                     if(planNid == null || borrow.getLabelId() == null || borrow.getLabelId().intValue()==0){
                         logger.info("====="+TASK_NAME+" 该标的标签[{}]没有关联到计划=====", borrow.getLabelId());
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -146,7 +144,7 @@ public class AutoIssueConsumer extends Consumer {
 
             } catch (Exception e) {
 
-            }*/
+            }
             return null;
         }
 
@@ -166,7 +164,6 @@ public class AutoIssueConsumer extends Consumer {
             }
 
             borrow = assetPushService.getBorrow(borrowNid);
-            borrow = null;//baseService.getBorrow(borrowNid);
             if (borrow == null) {
                 logger.info("=====" + TASK_NAME + " 该标的[{}]在数据表不存在," + CONSUMER_QUIT + "=====", borrowNid);
                 return Boolean.TRUE;
