@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.ContentArticleCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.ContentArticle" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="imgUrl" property="imgurl" jdbcType="VARCHAR" />
+		<result column="summary" property="summary" jdbcType="VARCHAR" />
+		<result column="click" property="click" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+		<result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="title != null and title != ''">
+				AND title LIKE CONCAT('%', #{title}, '%')
+			</if>
+			<if test="status != 3">
+				AND status = #{status}
+			</if>
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+			<if test="startCreateTime != null and startCreateTime != ''">
+				AND create_time <![CDATA[>=]]> #{startCreateTime}
+			</if>
+			<if test="endCreateTime != null and endCreateTime != ''">
+				AND create_time <![CDATA[<=]]> #{endCreateTime}
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="selectContentArticle" resultMap="BaseResultMap"
+			parameterType="com.hyjf.am.config.dao.model.auto.ContentArticle">
+		SELECT * FROM ht_content_article
+		<include refid="Where_Clause" />
+		ORDER BY create_time DESC
+		<if test="limitStart >= 0">
+			limit #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+	<select id="countContentArticle" resultType="java.lang.Integer"
+			parameterType="com.hyjf.am.config.dao.model.auto.ContentArticle">
+		SELECT  COUNT(1) FROM ht_content_article
+		<include refid="Where_Clause" />
+		ORDER BY create_time DESC
+		<if test="limitStart >= 0">
+			limit #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+</mapper>
