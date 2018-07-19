@@ -46,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private SmsProducer smsProducer;
 
     @Autowired
-    SystemConfig systemConfig;
+    private SystemConfig systemConfig;
 
     /**
      * 修改用户登录密码
@@ -468,6 +469,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private void sendSms(SendSmsVO sendSmsVO,SmsConfigVO smsConfig) throws MQException {
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);
+        if(systemConfig.isHyjfEnvTest()){
+            // 测试环境验证码111111
+            checkCode = "111111";
+        }
         Map<String, String> param = new HashMap<String, String>();
         param.put("val_code", checkCode);
 

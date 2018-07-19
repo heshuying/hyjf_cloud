@@ -83,6 +83,9 @@ public class SystemConfig {
     // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd 
     private String resetpassword;
 
+    @Value("${hyjf.env.test}")
+    private boolean hyjfEnvTest;
+
     public String getWechatQrcodeUrl() {
         return wechatQrcodeUrl;
     }
@@ -279,7 +282,15 @@ public class SystemConfig {
 		return resetpassword;
 	}
 
-	public void setResetpassword(String resetpassword) {
-		this.resetpassword = resetpassword;
-	}
+    public void setResetpassword(String resetpassword) {
+        this.resetpassword = resetpassword;
+    }
+
+    public boolean isHyjfEnvTest() {
+        return hyjfEnvTest;
+    }
+
+    public void setHyjfEnvTest(boolean hyjfEnvTest) {
+        this.hyjfEnvTest = hyjfEnvTest;
+    }
 }

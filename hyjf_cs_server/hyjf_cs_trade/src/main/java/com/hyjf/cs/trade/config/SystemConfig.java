@@ -87,7 +87,8 @@ public class SystemConfig {
     @Value("${hyjf.req.password}")
     private String hyjfReqPasswordPath;
 
-
+    @Value("${hyjf.env.test}")
+    private boolean hyjfEnvTest;
 
     public String getBankInstcode() {
         return bankInstcode;
@@ -303,5 +304,13 @@ public class SystemConfig {
 
     public void setHyjfReqPasswordPath(String hyjfReqPasswordPath) {
         this.hyjfReqPasswordPath = hyjfReqPasswordPath;
+    }
+
+    public boolean isHyjfEnvTest() {
+        return hyjfEnvTest;
+    }
+
+    public void setHyjfEnvTest(boolean hyjfEnvTest) {
+        this.hyjfEnvTest = hyjfEnvTest;
     }
 }
