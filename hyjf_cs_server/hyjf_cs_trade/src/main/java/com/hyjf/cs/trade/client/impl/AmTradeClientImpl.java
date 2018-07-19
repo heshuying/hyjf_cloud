@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
@@ -34,6 +35,7 @@ import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
@@ -1471,6 +1473,44 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/borrowTender/countAccountWebListByOrdId/"+tenderType+"/"+tenderType;
         return restTemplate.getForEntity(url,Integer.class).getBody();
     }
+
+    /**
+     * 获取账户提现列表
+     */
+    @Override
+    public List<AccountWithdrawVO> selectBankWithdrawList() {
+        String url = "http://AM-TRADE/am-trade/bankException/selectBankWithdrawList";
+        AccountWithdrawResponse response = restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 调用后平台操作
+     */
+    @Override
+    public boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,
+                                    String withdrawFee) {
+        JSONObject para = new JSONObject();
+        para.put("bankCallBeanVO",bean);
+        para.put("accountWithdrawVO",accountwithdraw);
+        para.put("bankCardVO",bankCard);
+        para.put("withdrawFee",withdrawFee);
+        String url = "http://AM-TRADE/am-trade/bankException/handlerAfterCash";
+        return restTemplate.postForEntity(url,para,Boolean.class).getBody();
+    }
+
+    /**
+     * 查询是否已经处理过
+     */
+    @Override
+    public int getAccountlistCntByOrdId(String orderId, String cashSuccess) {
+        String url = "http://AM-TRADE/am-trade/account/getAccountlistCntByOrdId/" + orderId + "/" + cashSuccess;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
 
     /**
      * @param planAccede
