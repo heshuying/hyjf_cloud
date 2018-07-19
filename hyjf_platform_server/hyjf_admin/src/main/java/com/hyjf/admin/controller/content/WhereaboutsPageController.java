@@ -60,7 +60,7 @@ public class WhereaboutsPageController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "着路页管理", notes = "修改着路页管理")
+	@ApiOperation(value = "移动端着陆页管理", notes = "修改移动端着陆页管理")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.updateAction(requestBean);
@@ -72,8 +72,19 @@ public class WhereaboutsPageController extends BaseController {
 		}
 		return new AdminResult<>();
 	}
-
-	@ApiOperation(value = "着路页管理", notes = "删除着路页管理")
+	@ApiOperation(value = "移动端着陆页管理", notes = "修改移动端着陆页管理状态")
+	@RequestMapping("/updatestatus")
+	public AdminResult updateStatus(@RequestBody WhereaboutsPageRequestBean requestBean) {
+		WhereaboutsPageResponse response = whereaboutsPageService.updateStatus(requestBean);
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		return new AdminResult<>();
+	}
+	@ApiOperation(value = "移动端着陆页管理", notes = "删除着路页管理")
 	@RequestMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		WhereaboutsPageResponse response = whereaboutsPageService.deleteById(id);

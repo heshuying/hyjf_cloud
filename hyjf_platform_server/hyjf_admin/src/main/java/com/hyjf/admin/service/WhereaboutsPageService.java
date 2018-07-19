@@ -34,7 +34,13 @@ public interface WhereaboutsPageService {
 	 * @return
 	 */
 	WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean);
-
+	/**
+	 * 修改状态
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean);
 	/**
 	 * 根据id删除
 	 *

@@ -36,7 +36,13 @@ public interface WhereaboutsPageClient {
 	 * @return
 	 */
 	WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean);
-
+	/**
+	 * 修改移动端着陆页管理状态
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean);
 	/**
 	 * 根据id删除移动端着陆页管理
 	 *

@@ -46,7 +46,11 @@ public class WhereaboutsPageClientImpl implements WhereaboutsPageClient {
 		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/update",
 				requestBean, WhereaboutsPageResponse.class);
 	}
-
+	@Override
+	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean){
+		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/updatestatus",
+				requestBean, WhereaboutsPageResponse.class);
+	}
 
 	@Override
 	public WhereaboutsPageResponse deleteById(Integer id) {

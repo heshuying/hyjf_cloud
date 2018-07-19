@@ -85,10 +85,10 @@ public class WhereaboutsPageController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/statusAction")
-	public WhereaboutsPageResponse statusAction(@RequestBody WhereaboutsPageRequest request) {
+	@RequestMapping("/updatestatus")
+	public WhereaboutsPageResponse updateStatus(@RequestBody WhereaboutsPageRequest request) {
 		WhereaboutsPageResponse response = new WhereaboutsPageResponse();
-		whereaboutsPageService.updateAction(request);
+		whereaboutsPageService.statusAction(request);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}

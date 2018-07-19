@@ -37,7 +37,10 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 	public WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean) {
 		return whereaboutsPageClient.updateAction(requestBean);
 	}
-
+	@Override
+	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean) {
+		return whereaboutsPageClient.updateStatus(requestBean);
+	}
 
 	@Override
 	public WhereaboutsPageResponse deleteById(Integer id) {
