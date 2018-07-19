@@ -11,10 +11,11 @@ import java.util.Date;
  * @version StatisticsTzjHour, v0.1 2018/7/6 16:56
  */
 @Document(collection = "t_statistics_tzj_hour")
+@Deprecated
 public class StatisticsTzjHour implements Serializable {
     private static final long serialVersionUID = 6385345438848569447L;
 
-    private Integer id;
+    private String id;
 
     private String day;
 
@@ -28,11 +29,11 @@ public class StatisticsTzjHour implements Serializable {
 
     private Date updateTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

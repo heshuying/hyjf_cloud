@@ -13,8 +13,9 @@ import java.math.BigDecimal;
  * @version StatisticsTzjUtm, v0.1 2018/7/2 11:17
  */
 @Document(collection = "t_statistics_tzj_utm")
+@Deprecated
 public class StatisticsTzjUtm implements Serializable {
-    private Integer id;
+    private String id;
 
     private String day;
 
@@ -58,11 +59,11 @@ public class StatisticsTzjUtm implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

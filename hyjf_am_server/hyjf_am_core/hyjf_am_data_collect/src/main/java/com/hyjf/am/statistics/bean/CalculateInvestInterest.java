@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  */
 @Document(collection = "t_calculate_invest_interest")
 public class CalculateInvestInterest implements Serializable {
-    private Integer id;
+    private String id;
 
     private BigDecimal tenderSum;
 
@@ -51,11 +51,11 @@ public class CalculateInvestInterest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

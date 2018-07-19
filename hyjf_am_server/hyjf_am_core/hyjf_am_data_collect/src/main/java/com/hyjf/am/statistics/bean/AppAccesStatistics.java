@@ -1,6 +1,3 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.am.statistics.bean;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,11 +7,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author fuqiang
- * @version AppChannelStatistics, v0.1 2018/7/2 10:51
+ * @author xiasq
+ * @version AppAccesStatistics, v0.1 2018/7/19 14:15
+ * app登录渠道统计
  */
-@Document(collection = "t_app_channel_statistics")
-public class AppChannelStatistics implements Serializable {
+@Document(collection = "t_app_access_statistics")
+public class AppAccesStatistics implements Serializable {
     private String id;
 
     private Integer sourceId;
@@ -75,11 +73,11 @@ public class AppChannelStatistics implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
