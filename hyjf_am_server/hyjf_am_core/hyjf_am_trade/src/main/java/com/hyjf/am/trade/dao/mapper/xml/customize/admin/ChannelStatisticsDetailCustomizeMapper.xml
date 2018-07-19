@@ -49,11 +49,11 @@
 		SUM(hct.assign_capital)
 		END invest_amount
 		FROM
-		huiyingdai_borrow_tender tender
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = tender.borrow_nid
+		ht_borrow_tender tender
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = tender.borrow_nid
 		AND borrow.project_type <![CDATA[<>]]> 8
-		LEFT  JOIN hyjf_debt_plan_accede hdpa ON tender.user_id = hdpa.user_id
-		LEFT JOIN huiyingdai_credit_tender hct ON hct.user_id = tender.user_id
+		LEFT  JOIN ht_debt_plan_accede hdpa ON tender.user_id = hdpa.user_id
+		LEFT JOIN ht_credit_tender hct ON hct.user_id = tender.user_id
 		WHERE
 		 1=1
 		<if test="userIds != null">

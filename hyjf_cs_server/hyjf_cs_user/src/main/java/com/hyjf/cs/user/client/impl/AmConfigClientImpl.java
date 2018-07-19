@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +96,17 @@ public class AmConfigClientImpl implements AmConfigClient {
         return result;
     }
 
+
+	@Override
+	public String getBankRetMsg(String retCode) {
+		BankReturnCodeConfigVO vo = this.getBankReturnCodeConfig(retCode);
+		if (vo == null) {
+			return Response.ERROR_MSG;
+		}
+		return StringUtils.isNotBlank(vo.getRetMsg()) ? vo.getRetMsg() : Response.ERROR_MSG;
+	}
+
+
     @Override
     public BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode) {
         BankReturnCodeConfigResponse response = restTemplate
@@ -141,13 +153,6 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getResultList();
         }
         return null;
-    }
-
-    @Override
-    public String getBankRetMsg(String retCode) {
-        String retMsg = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/adminException/getBankRetMsg/" + retCode, String.class).getBody();
-        return retMsg;
     }
 
     @Override

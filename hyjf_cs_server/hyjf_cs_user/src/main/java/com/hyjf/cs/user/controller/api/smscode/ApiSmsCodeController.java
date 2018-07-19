@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Api(value = "api验证码",description = "api验证码")
 @RestController
-@RequestMapping("/api/smsCode")
+@RequestMapping("/hyjf-api/smsCode")
 public class ApiSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(ApiSmsCodeController.class);
 

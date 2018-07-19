@@ -41,7 +41,7 @@ import java.util.Map;
  */
 @Api(value = "web端密码相关服务",description = "web端密码相关服务")
 @RestController
-@RequestMapping("/web/user/password")
+@RequestMapping("/hyjf-web/user/password")
 public class WebPassWordController {
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
 

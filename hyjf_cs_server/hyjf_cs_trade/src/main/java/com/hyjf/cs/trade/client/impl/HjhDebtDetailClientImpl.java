@@ -30,7 +30,7 @@ public class HjhDebtDetailClientImpl implements HjhDebtDetailClient {
     @Override
     public List<HjhDebtDetailVO> selectHjhDebtDetailListByAccedeOrderId(String accedeOrderId) {
         HjhDebtDetailResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-trade/hjhDebtDetail/selectHjhDebtDetailListByAccedeOrderId/" + accedeOrderId , HjhDebtDetailResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/hjhDebtDetail/selectHjhDebtDetailListByAccedeOrderId/" + accedeOrderId , HjhDebtDetailResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

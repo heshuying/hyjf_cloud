@@ -123,4 +123,20 @@ public class CouponController extends BaseController{
         return response;
     }
 
+    /**
+     * @Author walter.limeng
+     * @Description  根据borrowNid获取优惠券放款数据
+     * @Date 18:18 2018/7/18
+     * @Param
+     * @return
+     */
+    @ApiOperation(value = "根据borrowNid获取优惠券放款数据")
+    @GetMapping("/getborrowtendercpnlist/{borrowNid}")
+    public BorrowTenderCpnResponse getBorrowTenderCpnList(@PathVariable String borrowNid){
+        BorrowTenderCpnResponse response=new BorrowTenderCpnResponse();
+        List<BorrowTenderCpn> list = couponService.getBorrowTenderCpnList(borrowNid);
+        response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
+        return response;
+    }
+
 }

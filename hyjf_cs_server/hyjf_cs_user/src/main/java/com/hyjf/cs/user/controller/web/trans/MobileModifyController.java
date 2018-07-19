@@ -39,7 +39,7 @@ import java.util.Map;
 @Api(value = "web修改手机号",description = "web修改手机号")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class MobileModifyController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(MobileModifyController.class);
     @Autowired

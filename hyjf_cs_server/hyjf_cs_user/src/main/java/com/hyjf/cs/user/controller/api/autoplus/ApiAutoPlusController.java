@@ -37,7 +37,7 @@ import java.util.Map;
 
 @Api(value = "api端用户授权自动投资自动授权接口")
 @RestController
-@RequestMapping("/api/user/auto")
+@RequestMapping("/hyjf-api/user/auto")
 public class ApiAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiAutoPlusController.class);

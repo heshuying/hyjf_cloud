@@ -82,4 +82,13 @@ public interface CouponService {
      * @return 
      */
     int updateBorrowTenderCpn(BorrowTenderCpn borrowTenderCpn);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据borrowNid获取优惠券放款数据
+     * @Date 18:19 2018/7/18
+     * @Param borrowNid
+     * @return
+     */
+    List<BorrowTenderCpn> getBorrowTenderCpnList(String borrowNid);
 }

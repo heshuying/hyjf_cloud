@@ -13,7 +13,7 @@ import java.util.List;
  * @author fuqiang
  * @version AssetPushService, v0.1 2018/6/12 10:07
  */
-public interface AssetPushService {
+public interface AssetPushService extends BaseService {
 
     /**
      * 获取机构信息

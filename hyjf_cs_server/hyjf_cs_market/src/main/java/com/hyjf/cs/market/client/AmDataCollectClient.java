@@ -15,4 +15,11 @@ public interface AmDataCollectClient {
      * @return
      */
     BorrowUserStatisticVO selectBorrowUserStatistic();
+
+    /**
+     * 获取累计投资金额
+     *
+     * @return
+     */
+    String getTotalInvestmentAmount();
 }

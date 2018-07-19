@@ -12,7 +12,7 @@ public class Response<T> {
 	public static final String FAIL = "1";
 	public static final String FAIL_MSG = "失败";
 	public static final String ERROR = "99";
-	public static final String ERROR_MSG = "系统异常";
+	public static final String ERROR_MSG = "未知错误";
 
 	private String rtn;
 	private String message;

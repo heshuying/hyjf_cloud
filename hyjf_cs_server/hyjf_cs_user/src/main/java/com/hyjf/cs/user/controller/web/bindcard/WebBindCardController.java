@@ -34,7 +34,7 @@ import java.text.ParseException;
 @Api(value = "web端用户解绑卡接口",description = "web端用户解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/card")
+@RequestMapping("/hyjf-web/card")
 public class WebBindCardController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBindCardController.class);
 

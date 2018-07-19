@@ -230,7 +230,6 @@ public interface AmUserClient {
 
     void clearMobileCode(Integer userId, String sign);
 
-	UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform);
 
 	UserVO surongRegister(RegisterUserRequest registerUserRequest);
 
@@ -240,4 +239,31 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
+
+	/**
+	 *查询唯一标识
+	 * @param userId
+	 * @return
+	 */
+    UserAliasVO findAliasesByUserId(Integer userId);
+
+	/**
+	 * 更新唯一标识
+	 * @param mobileCode
+	 */
+	void updateAliases(UserAliasVO mobileCode);
+
+	/**
+	 * 插入唯一标识
+	 * @param mobileCode
+	 */
+	void insertMobileCode(UserAliasVO mobileCode);
 }

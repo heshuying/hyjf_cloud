@@ -1,21 +1,12 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowLogCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRecoverCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentInfoCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminBorrowRepaymentInfoListCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhDebtCreditCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminTransferExceptionLogCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BatchCenterCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.WithdrawCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
@@ -127,5 +118,14 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
+
+	@Autowired
+	protected HjhReInvestDetailCustomizeMapper hjhReInvestDetailCustomizeMapper;
+
+	@Autowired
+	protected HjhReInvestDebtCustomizeMapper hjhReInvestDebtCustomizeMapper;
+
+	@Autowired
+	protected HjhDayCreditDetailCustomizeMapper hjhDayCreditDetailCustomizeMapper;
 
 }

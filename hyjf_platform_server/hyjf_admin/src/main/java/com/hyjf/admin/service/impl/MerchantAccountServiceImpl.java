@@ -8,8 +8,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.MerchantAccountService;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
+import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
+import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
@@ -104,4 +106,70 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
         MerchantAccountResponse merchantAccounts = amTradeClient.selectRecordList(request);
         return merchantAccounts;
     }
+
+
+    /**
+     * 分页查询账户平台设置列表
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest request){
+        return amTradeClient.selectMerchantAccountListByPage(request);
+    }
+    /**
+     * 根据id查询账户平台设置
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse searchAccountConfigInfo(Integer id){
+        return amTradeClient.searchAccountConfigInfo(id);
+    }
+    /**
+     * 添加账户平台设置
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse saveAccountConfig(AdminMerchantAccountRequest request){
+        return amTradeClient.saveAccountConfig(request);
+    }
+    /**
+     * 修改账户平台设置
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse updateAccountConfig(AdminMerchantAccountRequest request){
+        return amTradeClient.updateAccountConfig(request);
+    }
+
+    /**
+     * 子账户类型 查询
+     * @return
+     */
+    @Override
+    public List<ParamName> getParamNameList(String code){
+        return amTradeClient.getParamNameList(code);
+    }
+    /**
+     *
+     * 根据子账户名称检索
+     * @param subAccountName
+     * @return
+     */
+    @Override
+    public int countAccountListInfoBySubAccountName(String ids, String subAccountName){
+        return amTradeClient.countAccountListInfoBySubAccountName(ids,subAccountName);
+    }
+
+    /**
+     *
+     * 根据子账户代号检索
+     * @param subAccountCode
+     * @return
+     */
+    @Override
+    public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode){
+        return amTradeClient.countAccountListInfoBySubAccountCode(ids,subAccountCode);
+    }
+
+
 }

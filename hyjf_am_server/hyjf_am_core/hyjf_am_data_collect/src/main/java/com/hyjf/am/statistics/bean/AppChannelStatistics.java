@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Document(collection = "t_app_channel_statistics")
 public class AppChannelStatistics implements Serializable {
-    private Integer id;
+    private String id;
 
     private Integer sourceId;
 
@@ -75,11 +75,11 @@ public class AppChannelStatistics implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

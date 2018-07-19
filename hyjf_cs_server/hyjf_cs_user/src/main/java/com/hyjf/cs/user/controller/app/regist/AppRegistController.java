@@ -39,7 +39,7 @@ import java.net.URLEncoder;
  */
 @Api(value = "app端用户注册接口",description = "app端用户注册接口")
 @RestController
-@RequestMapping("/app/hyjf-app/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);

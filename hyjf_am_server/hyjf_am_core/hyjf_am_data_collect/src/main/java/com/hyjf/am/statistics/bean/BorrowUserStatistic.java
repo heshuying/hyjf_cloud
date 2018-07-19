@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @version BorrowUserStatistic, v0.1 2018/7/18 13:51
  */
 public class BorrowUserStatistic implements Serializable {
-    private Integer id;
+    private String id;
 
     private Integer borrowuserCountTotal;
 
@@ -31,11 +31,11 @@ public class BorrowUserStatistic implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

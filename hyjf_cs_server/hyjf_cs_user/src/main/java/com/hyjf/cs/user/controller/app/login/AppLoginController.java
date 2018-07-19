@@ -17,7 +17,6 @@ import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ import java.io.File;
 
 @Api(value = "app端用户登录接口",description = "app端用户登录接口")
 @RestController
-@RequestMapping("/app/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
@@ -180,7 +179,7 @@ public class AppLoginController extends BaseUserController {
      * @param response
      * @return
      */
-    @ResponseBody
+/*    @ResponseBody
     @PostMapping(value = "/getUserinfoAction")
     public JSONObject getUserinfoAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -237,7 +236,7 @@ public class AppLoginController extends BaseUserController {
             ret.put("statusDesc", "获取用户相关数据发生错误");
         }
         return ret;
-    }
+    }*/
 
     /**
      * 上传头像
@@ -341,7 +340,6 @@ public class AppLoginController extends BaseUserController {
                     ret.put("statusDesc", returnMessage);
                     return ret;
                 }
-
                 // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
                 String iconUrl = fileRealName;
                 // 保存到数据库

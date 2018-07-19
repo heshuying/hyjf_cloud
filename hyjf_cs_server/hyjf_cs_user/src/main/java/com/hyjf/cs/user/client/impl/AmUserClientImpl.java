@@ -76,15 +76,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public UserVO surongRegister(RegisterUserRequest request) {
-		UserResponse response = restTemplate
-				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
-	}
+
 
 	@Override
 	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId) {
@@ -94,6 +86,45 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+		BankCardResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId+"/"+status, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UserAliasVO findAliasesByUserId(Integer userId) {
+		UserAliasResponse response = restTemplate
+				.getForEntity(userService+"/userAlias/findAliasesByUserId/" + userId, UserAliasResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAliases(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/updateMobileCode", mobileCode, Integer.class).getBody();
+
+	}
+
+	@Override
+	public void insertMobileCode(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/insertMobileCode", mobileCode, Integer.class).getBody();
 	}
 
 
@@ -848,11 +879,10 @@ public class AmUserClientImpl implements AmUserClient {
 	public void clearMobileCode(Integer userId, String sign) {
 		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
 	}
-
 	@Override
-	public UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform) {
+	public UserVO surongRegister(RegisterUserRequest request) {
 		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/insertSurongUser/" + mobile, UserResponse.class).getBody();
+				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}

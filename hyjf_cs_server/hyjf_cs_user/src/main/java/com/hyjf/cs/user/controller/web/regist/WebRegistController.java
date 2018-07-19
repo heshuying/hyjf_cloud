@@ -36,7 +36,7 @@ import java.util.Map;
 @Api(value = "web端用户注册接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebRegistController.class);

@@ -34,7 +34,7 @@ import java.util.Map;
 @Api(value = "web端用户解绑卡接口",description = "web端用户解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/card")
+@RequestMapping("/hyjf-web/card")
 public class WebBindCardPageController {
     private static final Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
 

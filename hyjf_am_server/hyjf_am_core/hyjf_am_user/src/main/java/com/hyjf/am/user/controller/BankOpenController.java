@@ -212,4 +212,20 @@ public class BankOpenController extends BaseController{
 		}
 		return response;
 	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/selectBankCardByUserIdAndStatus/{userId}/{status}")
+	public BankCardResponse selectBankCardByUserIdAndStatus(@PathVariable Integer userId,@PathVariable Integer status){
+		BankCardResponse response = new BankCardResponse();
+		List<BankCard> bankCard = bankOpenService.selectBankCardByUserIdAndStatus(userId,status);
+		if(null!=bankCard){
+			List<BankCardVO> bankCardVO = CommonUtils.convertBeanList(bankCard,BankCardVO.class);
+			response.setResultList(bankCardVO);
+		}
+		return response;
+	}
 }

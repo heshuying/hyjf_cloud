@@ -29,6 +29,7 @@ import com.hyjf.common.constants.MQConstant;
  * @version StatisticsTzjUtmConsumer, v0.1 2018/7/2 11:19
  */
 @Component
+@Deprecated
 public class StatisticsTzjUtmConsumer extends Consumer {
     Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -35,6 +35,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.FddProducer;
 import com.hyjf.cs.trade.mq.producer.MailProducer;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import com.hyjf.pay.lib.fadada.util.DzqzConstant;
@@ -76,13 +77,13 @@ public class FddHandle {
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
+	private AmTradeClient amTradeClient;
+	@Autowired
 	private BorrowManinfoClient borrowManinfoClient;
 	@Autowired
 	private BorrowUserClient borrowUserClient;
 	@Autowired
 	private BorrowTenderClient borrowTenderClient;
-	@Autowired
-	private AssetManageClient assetManageClient;
 	@Autowired
 	private BankCreditTenderClient bankCreditTenderClient;
 	@Autowired
@@ -449,7 +450,7 @@ public class FddHandle {
 	 * @return
 	 */
 	private boolean isCreatContract(String nid) {
-		List<TenderAgreementVO> tenderAgreementList = assetManageClient.selectTenderAgreementByNid(nid);
+		List<TenderAgreementVO> tenderAgreementList = amTradeClient.selectTenderAgreementByNid(nid);
 		if (CollectionUtils.isNotEmpty(tenderAgreementList)) {
 			return true;
 		} else {

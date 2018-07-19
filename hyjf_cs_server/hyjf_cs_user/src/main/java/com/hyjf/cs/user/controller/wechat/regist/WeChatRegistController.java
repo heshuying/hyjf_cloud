@@ -36,7 +36,7 @@ import java.net.URLEncoder;
 
 @Api(value = "weChat端用户注册接口",description = "weChat端用户注册接口")
 @RestController
-@RequestMapping("/wechat/user")
+@RequestMapping("/hyjf-wechat/user")
 public class WeChatRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WeChatRegistController.class);

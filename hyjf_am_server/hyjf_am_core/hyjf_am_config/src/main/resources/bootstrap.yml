@@ -39,3 +39,5 @@ management:
 
 logging:
   file: am-config.log
+  level:
+    com.hyjf.am.config.dao.mapper: DEBUG

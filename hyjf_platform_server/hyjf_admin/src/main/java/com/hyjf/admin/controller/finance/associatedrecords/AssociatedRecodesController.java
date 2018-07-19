@@ -29,7 +29,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AssociatedRecodesController, v0.1 2018/7/5 11:25
  */
-@Api(value = "资金中心-定向转账-关联记录")
+@Api(value = "资金中心-定向转账-关联记录",description = "资金中心-定向转账-关联记录")
 @RestController
 @RequestMapping(value = "/hyjf-admin/associatedrecords")
 public class AssociatedRecodesController extends BaseController {

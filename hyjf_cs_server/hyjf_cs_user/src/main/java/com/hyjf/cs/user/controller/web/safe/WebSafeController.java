@@ -41,7 +41,7 @@ import java.util.Map;
 @Api(value = "web端用户账户设置", description = "web端用户账户设置")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebSafeController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebSafeController.class);
