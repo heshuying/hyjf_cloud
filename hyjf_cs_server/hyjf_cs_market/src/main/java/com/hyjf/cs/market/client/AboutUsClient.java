@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public interface AboutUsClient {
      * 获取网贷知识
      * @return
      */
-    public List<ContentArticleVO> getknowsList();
+    public List<ContentArticleVO> getknowsList(ContentArticleRequest request);
 
     /**
      * 获取合作伙伴列表
@@ -80,4 +81,11 @@ public interface AboutUsClient {
      * @return
      */
     List<LinkVO> getPartnersList(Integer partnerType);
+
+    /**
+     * 获取
+     * @param request
+     * @return
+     */
+    public List<ContentArticleVO> getIndexList(ContentArticleRequest request);
 }

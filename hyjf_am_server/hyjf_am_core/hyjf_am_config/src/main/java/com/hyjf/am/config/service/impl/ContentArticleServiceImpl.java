@@ -1,20 +1,28 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.ContentArticleMapper;
+import com.hyjf.am.config.dao.mapper.customize.HelpCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.auto.ContentArticleExample;
+import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
+import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {
 
     @Autowired
     private ContentArticleMapper contentArticleMapper;
+
+    @Autowired
+    private HelpCustomizeMapper helpCustomizeMapper;
 
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
@@ -87,6 +95,55 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         example.setOrderByClause("create_time Desc");
         List<ContentArticle> conlist = contentArticleMapper.selectByExample(example);
         return conlist;
+    }
+
+
+
+    /**
+     * 获取风险教育总数
+     *
+     * @return List
+     */
+    @Override
+    public int countHomeNoticeList(String noticeType) {
+        ContentArticleExample example = new ContentArticleExample();
+        ContentArticleExample.Criteria crt = example.createCriteria();
+        crt.andTypeEqualTo(noticeType);
+        crt.andStatusEqualTo(1);
+        return contentArticleMapper.countByExample(example);
+    }
+
+    @Override
+    public List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit) {
+        ContentArticleExample example = new ContentArticleExample();
+        if (offset != -1) {
+            example.setLimitStart(offset);
+            example.setLimitEnd(limit);
+        }
+        ContentArticleExample.Criteria crt = example.createCriteria();
+        crt.andTypeEqualTo(noticeType);
+        crt.andStatusEqualTo(1);
+        example.setOrderByClause("create_time Desc");
+        List<ContentArticle> contentArticles = contentArticleMapper.selectByExample(example);
+        return contentArticles;
+    }
+
+    @Override
+    public List<HelpCategoryCustomize> selectCategory(String group) {
+        return helpCustomizeMapper.selectCategory(group);
+    }
+
+    @Override
+    public List<HelpCategoryCustomize> selectSunCategory(String pageName) {
+        return helpCustomizeMapper.selectSunCategory(pageName);
+    }
+
+    @Override
+    public List<HelpContentCustomize> selectSunContentCategory(String type,String pid) {
+        Map<String, Object> tmpmap=new HashMap<String, Object>();
+        tmpmap.put("type", type);
+        tmpmap.put("pid", pid);
+        return helpCustomizeMapper.selectSunContentCategory(tmpmap);
     }
 
 

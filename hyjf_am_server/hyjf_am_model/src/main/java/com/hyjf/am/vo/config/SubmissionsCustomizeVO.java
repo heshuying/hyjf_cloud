@@ -6,6 +6,8 @@ package com.hyjf.am.vo.config;
  */
 
 public class SubmissionsCustomizeVO {
+
+
     private String submissionsId;
 
     /**
@@ -47,6 +49,13 @@ public class SubmissionsCustomizeVO {
      * 处理状态
      */
     private String subState;
+
+    /**
+     * 用戶id
+     */
+    private Integer userId;
+
+    private String status;
 
     public String getUserName() {
         return userName;
@@ -118,5 +127,21 @@ public class SubmissionsCustomizeVO {
 
     public void setSysVersion(String sysVersion) {
         this.sysVersion = sysVersion;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

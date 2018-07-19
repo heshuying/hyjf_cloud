@@ -11,10 +11,12 @@ import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.common.file.UploadFileUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -32,12 +34,22 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
+@Api(value = "admin移动客户端 ")
 @RestController
 @RequestMapping("app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     AppBorrowImageService appBorrowImageService;
+
+    @Value("${file.domain.url}")
+    private String DOMAIN_URL;
+
+    @Value("${file.physical.path}")
+    private String PHYSICAL_PATH;
+
+    @Value("${file.upload.temp.path}")
+    private String TEMP_PATH;
 
 
     @ApiOperation(value = "产品图片列表查询", notes = "产品图片列表查询")
@@ -117,11 +129,11 @@ public class AppBorrowImageController extends BaseController {
        // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         //TODO PropUtils.getSystem("file.domain.url")
-        String fileDomainUrl = UploadFileUtils.getDoPath("");
+        String fileDomainUrl = DOMAIN_URL;
         // TODO PropUtils.getSystem("file.physical.path")
-        String filePhysicalPath = UploadFileUtils.getDoPath("");
+        String filePhysicalPath = PHYSICAL_PATH;
         // TODO PropUtils.getSystem("file.upload.temp.path")
-        String fileUploadTempPath = UploadFileUtils.getDoPath("");
+        String fileUploadTempPath = TEMP_PATH;
 
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 

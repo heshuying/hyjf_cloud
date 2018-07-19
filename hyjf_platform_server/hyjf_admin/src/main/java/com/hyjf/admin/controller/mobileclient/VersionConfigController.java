@@ -16,6 +16,7 @@ import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.netflix.discovery.converters.Auto;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @author lisheng
  * @version VersionConfigController, v0.1 2018/7/11 11:24
  */
+@Api(value = "admin移动客户端")
 @RestController
 @RequestMapping("config/versionconfig")
 public class VersionConfigController extends BaseController {
