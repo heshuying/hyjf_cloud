@@ -55,6 +55,9 @@ public class MongoSeachController {
     @Autowired
     private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
 
+    @Autowired
+    private HjhPlanCapitalDao hjhPlanCapitalDao;
+
     /**
      * 根据userId查询渠道投资信息
      *
@@ -221,9 +224,6 @@ public class MongoSeachController {
         }
         return response;
     }
-
-    @Autowired
-    private HjhPlanCapitalDao hjhPlanCapitalDao;
 
     /**
      * 汇计划 -- 资金列表
