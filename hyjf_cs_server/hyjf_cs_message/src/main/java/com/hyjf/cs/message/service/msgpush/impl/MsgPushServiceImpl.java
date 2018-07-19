@@ -19,7 +19,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.MessagePush;
 import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
-import com.hyjf.cs.message.client.messagePushTemplateClient.MessagePushTemplateClient;
 import com.hyjf.cs.message.mongo.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
