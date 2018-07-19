@@ -1122,7 +1122,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer countAppProjectList(AppProjectListRequest request) {
-        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,AppProjectListResponse.class).getBody();
+        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppProjectList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getCount();
