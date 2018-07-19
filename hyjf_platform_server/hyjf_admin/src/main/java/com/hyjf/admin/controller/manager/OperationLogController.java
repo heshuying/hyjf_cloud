@@ -233,7 +233,6 @@ public class OperationLogController  extends BaseController {
         String userNameSrch = StringUtils.isNotEmpty(form.getUserNameSrch()) ? form.getUserNameSrch() : null;
         String recieveTimeStartSrch = StringUtils.isNotEmpty(form.getRecieveTimeStartSrch()) ? form.getRecieveTimeStartSrch() : null;
         String recieveTimeEndSrch = StringUtils.isNotEmpty(form.getRecieveTimeEndSrch()) ? form.getRecieveTimeEndSrch() : null;
-
         Map<String, Object> conditionMap = new HashMap<String, Object>();
         conditionMap.put("instCodeSrch", instCodeSrch);
         conditionMap.put("assetTypeSrch", assetTypeSrch);
@@ -242,6 +241,7 @@ public class OperationLogController  extends BaseController {
         conditionMap.put("userNameSrch", userNameSrch);
         conditionMap.put("recieveTimeStartSrch", recieveTimeStartSrch);
         conditionMap.put("recieveTimeEndSrch", recieveTimeEndSrch);
+        conditionMap.put("paginatorPage",form.getPaginatorPage());
         return conditionMap;
     }
     /**

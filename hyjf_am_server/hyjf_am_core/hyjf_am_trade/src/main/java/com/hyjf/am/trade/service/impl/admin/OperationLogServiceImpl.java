@@ -5,10 +5,12 @@ import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.OperationLogCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetTypeExample;
+import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.admin.OperationLogService;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
-import org.springframework.beans.BeanUtils;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +37,7 @@ public class OperationLogServiceImpl implements OperationLogService {
         // TODO Auto-generated method stub
         HjhAssetTypeExample hjhAssetTypeExample =new HjhAssetTypeExample();
         List<HjhAssetType> hjhAssetTypes=hjhAssetTypeMapper.selectByExample(hjhAssetTypeExample);
-        List<HjhAssetTypeVO> list=new ArrayList<HjhAssetTypeVO>();
-        BeanUtils.copyProperties(hjhAssetTypes,list);
+        List<HjhAssetTypeVO> list= CommonUtils.convertBeanList(hjhAssetTypes,HjhAssetTypeVO.class);
         return list;
     }
     /**
@@ -46,19 +47,29 @@ public class OperationLogServiceImpl implements OperationLogService {
     @Override
     public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest){
         List<FeerateModifyLogVO> list = null;
-        List<String> instList= operationLogCustomizeMapper.selectInstCodeList(adminRequest);
-        List<String> assertTypeList= operationLogCustomizeMapper.selectAssertTypeList(adminRequest);
+        List<HjhInstConfig> instList= operationLogCustomizeMapper.selectInstCodeList(adminRequest);
+        List<HjhAssetType> assertTypeList= operationLogCustomizeMapper.selectAssertTypeList(adminRequest);
         int size =0;
        if(instList.size()>0||assertTypeList.size()>0){
-           if(instList.size()>assertTypeList.size()){
+           if(instList.size()>=assertTypeList.size()){
                size=instList.size();
            }else {
                size=assertTypeList.size();
            }
-           list =new ArrayList<>(size);
+           list =new ArrayList<FeerateModifyLogVO>(size);
            for(int i=0; i<size;i++){
-               list.get(i).setInstName(instList.get(i));
-               list.get(i).setAssetTypeName(assertTypeList.get(i));
+               if(!CollectionUtils.isEmpty(instList)){
+                   String inst=instList.get(i).getInstName();
+                   String dd =instList.get(i).getInstCode();
+                   list.get(i).setInstName(instList.get(i).getInstName());
+                   list.get(i).setInstCode(instList.get(i).getInstCode());
+               }
+               if(!CollectionUtils.isEmpty(assertTypeList)){
+                   if(list.get(i).getInstCode().equals(assertTypeList.get(i).getInstCode())){
+                       list.get(i).setAssetTypeName(assertTypeList.get(i).getAssetTypeName());
+                       list.get(i).setAssetType(assertTypeList.get(i).getAssetType());
+                   }
+               }
            }
        }
          return list;

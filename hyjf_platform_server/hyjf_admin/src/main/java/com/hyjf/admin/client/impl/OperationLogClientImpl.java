@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 /**
@@ -32,11 +33,11 @@ public class OperationLogClientImpl implements OperationLogClient {
         //查询 资产来源 instCode 和 assetType的值
         AdminOperationLogRequest adminRequest = new AdminOperationLogRequest();
         if(!CollectionUtils.isEmpty(configList)) {
-            String [] instCodes = new String[configList.size()];
-            Integer [] assertTypes = new Integer[configList.size()];
+            List<String> instCodes = new ArrayList<>(configList.size());
+            List<Integer> assertTypes = new ArrayList<>(configList.size());
             for (int i=0;i<configList.size();i++){
-                instCodes[i] = configList.get(i).getInstCode();
-                assertTypes[i] = configList.get(i).getAssetType();
+                instCodes.add(configList.get(i).getInstCode());
+                assertTypes.add(configList.get(i).getAssetType());
             }
             adminRequest.setInstCodes(instCodes);
             adminRequest.setAssertTypes(assertTypes);

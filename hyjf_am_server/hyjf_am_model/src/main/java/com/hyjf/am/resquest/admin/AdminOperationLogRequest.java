@@ -3,6 +3,7 @@ package com.hyjf.am.resquest.admin;
 import com.hyjf.am.vo.BasePage;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/17.
@@ -26,8 +27,8 @@ public class AdminOperationLogRequest extends BasePage {
     //状态名称
     String statusName;
 
-    String [] instCodes ;
-    Integer [] assertTypes ;
+    List<String> instCodes ;
+    List<Integer>  assetTypes ;
 
     private Integer id;
 
@@ -331,20 +332,20 @@ public class AdminOperationLogRequest extends BasePage {
         this.createTimeString = createTimeString;
     }
 
-    public String[] getInstCodes() {
+    public List<String> getInstCodes() {
         return instCodes;
     }
 
-    public void setInstCodes(String[] instCodes) {
+    public void setInstCodes(List<String> instCodes) {
         this.instCodes = instCodes;
     }
 
-    public Integer[] getAssertTypes() {
-        return assertTypes;
+    public List<Integer> getAssetTypes() {
+        return assetTypes;
     }
 
-    public void setAssertTypes(Integer[] assertTypes) {
-        this.assertTypes = assertTypes;
+    public void setAssetTypes(List<Integer> assetTypes) {
+        this.assetTypes = assetTypes;
     }
 
     /**

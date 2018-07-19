@@ -5,6 +5,7 @@ import com.hyjf.am.trade.service.admin.OperationLogService;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class OperationLogController {
      * @return
      */
     @RequestMapping("/selectInstAndAssertType")
-    public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest) {
+    public List<FeerateModifyLogVO> selectInstAndAssertType(@RequestBody AdminOperationLogRequest adminRequest) {
         //查询 资产来源
         return this.operationLogService.selectInstAndAssertType(adminRequest);
     }
