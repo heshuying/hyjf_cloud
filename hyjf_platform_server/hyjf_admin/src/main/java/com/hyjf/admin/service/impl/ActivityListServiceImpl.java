@@ -9,9 +9,9 @@ import com.hyjf.admin.client.ActivityListClient;
 import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.file.UploadFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * @author yaoy
