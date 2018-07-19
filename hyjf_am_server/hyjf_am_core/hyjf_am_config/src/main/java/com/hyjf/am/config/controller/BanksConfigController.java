@@ -137,6 +137,19 @@ public class BanksConfigController extends BaseConfigController{
         return response;
     }
 
+    /**
+     * 获取银行列表(快捷支付卡)
+     */
+    @RequestMapping("/getBankRecordListByQuickPayment")
+    public List<BankConfigVO> getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
+        List<BankConfigVO> listBanksConfig=null;
+        List<BankConfig> listBankConfig = bankConfigService.getBankRecordListByQuickPayment(bankConfigVO);
+        if(!CollectionUtils.isEmpty(listBankConfig)){
+            listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+        }
+        return listBanksConfig;
+    }
+
     @GetMapping("/getParamNameList/{nameClass}")
     public ParamNameResponse getParamNameList(@PathVariable String nameClass){
         ParamNameResponse response = new ParamNameResponse();
