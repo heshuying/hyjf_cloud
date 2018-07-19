@@ -11,6 +11,7 @@ import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ public class OperationLogServiceImpl implements OperationLogService {
      */
     @Override
     public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest){
-        List<FeerateModifyLogVO> list = null;
+        List<FeerateModifyLogVO> list = new ArrayList<FeerateModifyLogVO>();
         List<HjhInstConfig> instList= operationLogCustomizeMapper.selectInstCodeList(adminRequest);
         List<HjhAssetType> assertTypeList= operationLogCustomizeMapper.selectAssertTypeList(adminRequest);
         int size =0;
@@ -56,20 +57,20 @@ public class OperationLogServiceImpl implements OperationLogService {
            }else {
                size=assertTypeList.size();
            }
-           list =new ArrayList<FeerateModifyLogVO>(size);
            for(int i=0; i<size;i++){
+               FeerateModifyLogVO vo= new FeerateModifyLogVO();
                if(!CollectionUtils.isEmpty(instList)){
-                   String inst=instList.get(i).getInstName();
-                   String dd =instList.get(i).getInstCode();
-                   list.get(i).setInstName(instList.get(i).getInstName());
-                   list.get(i).setInstCode(instList.get(i).getInstCode());
+                   vo.setInstName(instList.get(i).getInstName());
+                   vo.setInstCode(instList.get(i).getInstCode());
                }
                if(!CollectionUtils.isEmpty(assertTypeList)){
-                   if(list.get(i).getInstCode().equals(assertTypeList.get(i).getInstCode())){
-                       list.get(i).setAssetTypeName(assertTypeList.get(i).getAssetTypeName());
-                       list.get(i).setAssetType(assertTypeList.get(i).getAssetType());
+                   if(vo.getInstCode().equals(assertTypeList.get(i).getInstCode())){
+                       vo.setAssetTypeName(assertTypeList.get(i).getAssetTypeName());
+                       vo.setAssetType(assertTypeList.get(i).getAssetType());
                    }
                }
+               list.add(vo);
+               vo=null;
            }
        }
          return list;
