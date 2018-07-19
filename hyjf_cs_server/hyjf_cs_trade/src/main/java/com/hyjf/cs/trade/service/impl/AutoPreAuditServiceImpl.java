@@ -43,7 +43,7 @@ public class AutoPreAuditServiceImpl extends BaseTradeServiceImpl implements Aut
             params.put("creditNid", mqBorrow.getCreditNid());
         }
         try {
-            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             _log.error("发送自动关联计划消息失败...");
         }
