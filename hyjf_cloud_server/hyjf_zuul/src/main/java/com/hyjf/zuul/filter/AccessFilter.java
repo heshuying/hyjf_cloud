@@ -79,7 +79,7 @@ public class AccessFilter extends ZuulFilter {
 			secureVisitFlag = isSecureVisit(map, originalRequestPath);
 		} else {
 			// 不对其进行路由
-			return this.buildErrorRequestContext(ctx, 502, "网关内部错误!");
+			return this.buildErrorRequestContext(ctx, 502, "gateway inner error!");
 		}
 
 		// 截取访问域名
@@ -128,7 +128,7 @@ public class AccessFilter extends ZuulFilter {
 			prefix = API_VISIT_URL;
 		} else {
 			// 不对其进行路由
-			return this.buildErrorRequestContext(ctx, 502, "非法域名访问!");
+			return this.buildErrorRequestContext(ctx, 502, "illegal visit!");
 		}
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
@@ -160,11 +160,11 @@ public class AccessFilter extends ZuulFilter {
 	 * @return
 	 */
 	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
-		String token = request.getHeader("token");
-		if (token == null && isNecessary) {
+		String token = request.getParameter("token");
+		if (StringUtils.isBlank(token) && isNecessary) {
 			logger.error("token is empty...");
 			// 不对其进行路由
-			this.buildErrorRequestContext(ctx, 400, "token is empty");
+			this.buildErrorRequestContext(ctx, 400, "token is empty!");
 			return ctx;
 		}
 		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
@@ -172,7 +172,7 @@ public class AccessFilter extends ZuulFilter {
 			if (isNecessary) {
 				logger.error("user is not exist...");
 				// 不对其进行路由
-				this.buildErrorRequestContext(ctx, 400, "user is not exist");
+				this.buildErrorRequestContext(ctx, 400, "user is not exist!");
 				return ctx;
 			} else {
 				return ctx;
