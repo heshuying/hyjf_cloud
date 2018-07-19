@@ -567,4 +567,19 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+		com.hyjf.am.response.user.BankCardResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/bankopen/selectBankCardByUserIdAndStatus/" + userId+"/"+status, com.hyjf.am.response.user.BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }
