@@ -5,12 +5,15 @@ package com.hyjf.cs.user.controller.app.common;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.common.CornerService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +32,9 @@ public class CornerController {
 
     @Autowired
     CornerService cornerService;
+
+    @Autowired
+    AmUserClient amUserClient;
     /**
      * 获取版本号
      * @param request
@@ -145,7 +151,7 @@ public class CornerController {
      * @param request
      * @param
      * @return
-     *//*
+     */
     @PostMapping(value = "/mobileCode")
     public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, HttpServletResponse response) {
         JSONObject map = new JSONObject();
@@ -181,15 +187,14 @@ public class CornerController {
             }
         }
         try {
-
-            UserAliasVO mobileCode = appCommonService.getMobileCodeByUserId(userId);
+            UserAliasVO mobileCode = amUserClient.findAliasesByUserId(userId);
             if(mobileCode != null){
-                if(!mobileCode.getMobileCode().equals(mobileCodeStr)){
+                if(!mobileCode.getAlias().equals(mobileCodeStr)){
                     mobileCode.setAlias(mobileCodeStr);
                     mobileCode.setClient(clientStr);
                     mobileCode.setPackageCode(versionStr);
                     mobileCode.setSign(sign);
-                    appCommonService.updateMobileCode(mobileCode);
+                    amUserClient.updateAliases(mobileCode);
                 }
             }else{
                 mobileCode = new UserAliasVO();
@@ -198,12 +203,12 @@ public class CornerController {
                 mobileCode.setSign(sign);
                 mobileCode.setClient(clientStr);
                 mobileCode.setPackageCode(versionStr);
-                appCommonService.insertMobileCode(mobileCode);
+                amUserClient.insertMobileCode(mobileCode);
             }
         } catch (Exception e) {
             map.put("status","1");
             map.put("statusDesc","更新设备唯一标识异常");
         }
         return map;
-    }*/
+    }
 }
