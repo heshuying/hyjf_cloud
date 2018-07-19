@@ -11,7 +11,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.vo.SmsRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码",description = "app验证码")
+@Api(value = "app端验证码",description = "app端验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
@@ -47,21 +46,61 @@ public class AppSmsCodeController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "app验证验证码",notes = "验证验证码")
     @PostMapping(value = "/validateVerificationCodeAction", produces = "application/json; charset=utf-8")
-    public JSONObject validateVerificationCodeAction(@RequestHeader String key, @RequestBody SmsRequest request) {
+    public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/validateVerificationCodeAction");
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+
         // 验证方式
-        String verificationType = request.getVerificationType();
+        String verificationType = request.getParameter("verificationType");
         // 验证码
-        String verificationCode = request.getVerificationCode();
+        String verificationCode = request.getParameter("verificationCode");
         // 手机号
-        String mobile = request.getMobile();
-       smsCodeService.appCheckParam(request, verificationType, verificationCode, mobile, key);
-        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, request.getPlatform(), CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN);
+        String mobile = request.getParameter("mobile");
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        if (Validator.isNull(verificationType)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "验证码类型不能为空");
+            return ret;
+        }
+        if (Validator.isNull(verificationCode)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "验证码不能为空");
+            return ret;
+        }
+        if (!(verificationType.equals(CommonConstant.PARAM_TPL_ZHUCE) || verificationType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA) || verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH) || verificationType.equals(CommonConstant.PARAM_TPL_YZYSJH))) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "无效的验证码类型");
+            return ret;
+        }
+        mobile = DES.decodeValue(key, mobile);
+        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
         return ret;
     }
-
 
     /**
      * 发送验证码
