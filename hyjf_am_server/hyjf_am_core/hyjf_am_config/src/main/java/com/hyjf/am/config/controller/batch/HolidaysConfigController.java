@@ -6,8 +6,11 @@ package com.hyjf.am.config.controller.batch;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
 import com.hyjf.am.config.service.HolidaysConfigService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import com.hyjf.am.resquest.admin.AdminHolidaysConfigRequest;
 import com.hyjf.am.vo.trade.HolidaysConfigVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -39,4 +42,83 @@ public class HolidaysConfigController extends BaseConfigController {
         }
         return response;
     }
+
+    /**
+     * 分页查询节假日配置
+     * @param adminRequest
+     * @return
+     */
+    @RequestMapping ("/list")
+    public HolidaysConfigResponse selectHolidaysConfigListByPage( AdminHolidaysConfigRequest adminRequest) {
+        HolidaysConfigResponse response = new HolidaysConfigResponse();
+        List<HolidaysConfig> holidaysConfigList = holidaysConfigService.selectHolidaysConfigListByPage(new HolidaysConfig(), -1, -1);
+        if (!CollectionUtils.isEmpty(holidaysConfigList)) {
+            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), holidaysConfigList.size());
+            holidaysConfigList = this.holidaysConfigService.selectHolidaysConfigListByPage(new HolidaysConfig(), paginator.getOffset(),
+                    paginator.getLimit());
+            List<HolidaysConfigVO> holidaysConfigVOList = CommonUtils.convertBeanList(holidaysConfigList,HolidaysConfigVO.class);
+            response.setResultList(holidaysConfigVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 查询节假日配置详情页面
+     * @param id
+     * @return
+     */
+    @RequestMapping ("/info")
+    public HolidaysConfigResponse selectHolidaysConfigInfo( Integer id) {
+        HolidaysConfigResponse response = new HolidaysConfigResponse();
+        HolidaysConfig holidaysConfig = holidaysConfigService.selectHolidaysConfigInfo(id);
+        if (null != holidaysConfig) {
+            HolidaysConfigVO holidaysConfigVO = CommonUtils.convertBean(holidaysConfig,HolidaysConfigVO.class);
+            response.setResult(holidaysConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * 添加节假日配置详情页面
+     * @param req
+     * @return
+     */
+    @RequestMapping ("/insert")
+    public HolidaysConfigResponse insertHolidaysConfigInfo( AdminHolidaysConfigRequest req) {
+        HolidaysConfigResponse response = new HolidaysConfigResponse();
+
+        try{
+            int result =holidaysConfigService.insertHolidaysConfigInfo(req);
+            if(result > 0){
+                response.setRtn("SUCCESS");
+            }
+            response.setRtn("FAIL");
+        }catch (Exception e){
+            response.setRtn("FAIL");
+        }
+        return response;
+    }
+    /**
+     * 修改节假日配置详情页面
+     * @param req
+     * @return
+     */
+    @RequestMapping ("/update")
+    public HolidaysConfigResponse updateHolidaysConfigInfo( AdminHolidaysConfigRequest req) {
+        HolidaysConfigResponse response = new HolidaysConfigResponse();
+
+        try{
+            int result =holidaysConfigService.updateHolidaysConfigInfo(req);
+            if(result > 0){
+                response.setRtn("SUCCESS");
+            }
+            response.setRtn("FAIL");
+        }catch (Exception e){
+            response.setRtn("FAIL");
+        }
+        return response;
+    }
+
 }
