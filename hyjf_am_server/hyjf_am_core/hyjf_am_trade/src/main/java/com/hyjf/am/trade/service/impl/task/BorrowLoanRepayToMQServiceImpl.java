@@ -45,7 +45,7 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 	private static final Integer TASK_REPAY_TYPE = 1;
 	/**任务类别（0：放款） */
 	private static final Integer TASK_LOAN_TYPE = 0;
-    
+
     @Autowired
     private BorrowLoanRepayProducer borrowLoanRepayProducer;
     

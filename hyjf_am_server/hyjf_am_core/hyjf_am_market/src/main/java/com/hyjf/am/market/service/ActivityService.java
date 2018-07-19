@@ -16,38 +16,38 @@ public interface ActivityService {
 
     /**
      *查询活动列表条数
-     * @param mapParam
+     * @param request
      * @return
      */
-    int countActivityList(Map<String, Object> mapParam);
+    int countActivityList(ActivityListRequest request);
 
     /**
      * 获取活动列表
-     * @param mapParam
+     * @param request
      * @param offset
      * @param limit
      * @return
      */
-    List<ActivityList> getRecordList(Map<String, Object> mapParam, int offset, int limit);
+    List<ActivityList> getRecordList(ActivityListRequest request, int offset, int limit);
 
     /**
      * 添加活动
      * @param activityList
      * @return
      */
-    int insertRecord(ActivityList activityList);
+    Map<String, Object> insertRecord(ActivityList activityList);
 
     /**
      * 更改活动
      * @param activityList
      * @return
      */
-    int updateActivity(ActivityList activityList);
+    Map<String, Object> updateActivity(ActivityList activityList);
 
     /**
      * 删除活动
      * @param id
      * @return
      */
-    int deleteActivity(int id);
+    Map<String, Object> deleteActivity(int id);
 }

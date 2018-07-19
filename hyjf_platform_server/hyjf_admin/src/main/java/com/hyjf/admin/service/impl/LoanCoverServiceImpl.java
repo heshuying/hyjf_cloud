@@ -3,12 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
-import com.hyjf.admin.client.LoanCoverClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.LoanCoverService;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
@@ -21,8 +19,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +28,7 @@ import java.util.Map;
 @Service
 public class LoanCoverServiceImpl implements LoanCoverService {
     @Autowired
-    private LoanCoverClient loanCoverClient;
+    private AmUserClient loanCoverClient;
     /**
      * 查找借款盖章用户信息
      *

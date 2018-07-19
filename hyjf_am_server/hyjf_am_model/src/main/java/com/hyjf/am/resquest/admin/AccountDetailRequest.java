@@ -17,9 +17,6 @@ public class AccountDetailRequest extends BasePage {
     private String endDate; // 创建时间 结束
     private String tradeTypeSearch; // 交易类型
     private String typeSearch;
-    private Integer limitStart;
-    private Integer limitEnd;
-
     private String remarkSrch;// 备注查询
     //推荐人id
     private String referrerId;
@@ -129,7 +126,7 @@ public class AccountDetailRequest extends BasePage {
      */
     private String tradeStatus;
     //分页区分
-    private  boolean limitFlg =true ;
+    private  boolean limitFlg =false ;
 
 
     public String getStartDate() {
@@ -338,22 +335,6 @@ public class AccountDetailRequest extends BasePage {
 
     public void setBankTotal(String bankTotal) {
         this.bankTotal = bankTotal;
-    }
-
-    public Integer getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(Integer limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public Integer getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(Integer limitEnd) {
-        this.limitEnd = limitEnd;
     }
 
     public Integer getId() {

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
+import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -12,6 +13,7 @@ import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.AccountProducer;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -19,10 +21,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -57,6 +56,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
 	@Resource
 	private UserMapper userMapper;
+	@Resource
+	private SpreadsUserMapper spreadsUserMapper;
 
 
 
@@ -1213,5 +1214,40 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
         return userVO;
     }
+
+	@Override
+	public User surongRegister(RegisterUserRequest userRequest) throws MQException{
+
+		String mobile=userRequest.getMobile();
+		String password=userRequest.getPassword();
+		String loginIp=userRequest.getLoginIp();
+		String platform=userRequest.getPlatform();
+		// 1. 写入用户信息表
+		User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+		logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
+		int userId = user.getUserId();
+
+		// 2. 写入用户详情表
+		this.insertUserInfo(userId, loginIp, 2);
+
+		// 3. 写入用户账户表
+		this.insertAccount(userId);
+
+		// 4. 保存用户注册日志
+		this.insertRegLog(userId, loginIp);
+		return user;
+	}
+
+	@Override
+	public List<SpreadsUserVO> selectByUserId(String userId) {
+		if(StringUtils.isNotEmpty(userId)){
+			SpreadsUserExample spreadsUsersExample = new SpreadsUserExample();
+			SpreadsUserExample.Criteria spreadsUsersExampleCriteria = spreadsUsersExample.createCriteria();
+			spreadsUsersExampleCriteria.andUserIdEqualTo(Integer.parseInt(userId));
+			List<SpreadsUser> sList = spreadsUserMapper.selectByExample(spreadsUsersExample);
+			return CommonUtils.convertBeanList(sList,SpreadsUserVO.class);
+		}
+		return null;
+	}
 
 }

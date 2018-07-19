@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author dongzeshan
  */
-@Api(value = "CA认证记录")
+@Api(value = "CA认证记录",description = "CA认证记录")
 @RestController
 @RequestMapping("/hyjf-admin/certificate")
 public class CertificateAuthorityExceptionController extends BaseController {
@@ -42,8 +42,8 @@ public class CertificateAuthorityExceptionController extends BaseController {
     /**
      * 画面初始化
      *
-     * @param request
-     * @param form
+     * @param
+     * @param
      * @return
      */
     @RequestMapping("/search")
@@ -70,8 +70,8 @@ public class CertificateAuthorityExceptionController extends BaseController {
     /**
      * 异常处理更新Action
      *
-     * @param request
-     * @param form
+     * @param
+     * @param
      * @return
      */
     @RequestMapping("/modifyAction")

@@ -11,14 +11,14 @@ package com.hyjf.am.resquest.market;
 public class ActivityListRequest {
 
     private int id;
-    //活动名称
+    /** 活动名称 */
     private String title;
     /**
      * 前台时间接收
      */
-    private int startTime;
+    private Integer startTime;
 
-    private int endTime;
+    private Integer endTime;
 
     private String startCreate;
 
@@ -50,7 +50,7 @@ public class ActivityListRequest {
 
     private String description;
 
-    private int createTime;
+    private String createTime;
 
     private int updateTime;
 
@@ -91,19 +91,19 @@ public class ActivityListRequest {
         this.endCreate = endCreate;
     }
 
-    public int getStartTime() {
+    public Integer getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(Integer startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 
@@ -227,11 +227,11 @@ public class ActivityListRequest {
         this.description = description;
     }
 
-    public int getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

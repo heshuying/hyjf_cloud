@@ -573,7 +573,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     }
 
     /**
-     * 获取推荐人姓名查找用户
+     * 获取姓名查找用户
      * @param recommendName
      * @return
      */

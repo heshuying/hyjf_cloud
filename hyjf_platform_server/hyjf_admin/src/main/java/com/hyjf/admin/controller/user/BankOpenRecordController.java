@@ -4,11 +4,19 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AccountRecordRequestBean;
+import com.hyjf.admin.beans.request.BankAccountRecordRequestBean;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankOpenRecordService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
+import com.hyjf.am.vo.user.UserPortraitVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -21,12 +29,15 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +50,7 @@ import java.util.Map;
 @Api(value = "会员中心-开户记录")
 @RestController
 @RequestMapping("/hyjf-admin/bankOpenRecord")
-public class BankOpenRecordController {
+public class BankOpenRecordController extends BaseController {
     @Autowired
     private BankOpenRecordService bankOpenRecordService;
 
@@ -63,96 +74,33 @@ public class BankOpenRecordController {
     @ApiOperation(value = "开户记录", notes = "汇付银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
-    public JSONObject bankOpenRecordAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
-        JSONObject jsonObject = new JSONObject();
-        AccountRecordRequest accountRecordRequest =setRequese(map);
-        List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
-        String status="error";
-        if(null!=bankOpenRecordServiceAccountRecordList&&bankOpenRecordServiceAccountRecordList.size()>0){
-            jsonObject.put("record",bankOpenRecordServiceAccountRecordList);
-            status="success";
+    public AdminResult<ListResult<BankOpenAccountRecordVO>> bankOpenRecordAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
+        AccountRecordRequest accountRecordRequest =  new AccountRecordRequest();
+        BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
+        BankAccountRecordResponse bankOpenRecordServiceAccountRecordList =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
+        if(bankOpenRecordServiceAccountRecordList==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status",status);
-        return jsonObject;
+        if (!Response.isSuccess(bankOpenRecordServiceAccountRecordList)) {
+            return new AdminResult<>(FAIL, bankOpenRecordServiceAccountRecordList.getMessage());
+        }
+        return new AdminResult<ListResult<BankOpenAccountRecordVO>>(ListResult.build(bankOpenRecordServiceAccountRecordList.getResultList(), bankOpenRecordServiceAccountRecordList.getCount())) ;
     }
     @ApiOperation(value = "开户记录", notes = "江西银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public JSONObject bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public AdminResult<ListResult<BankOpenAccountRecordVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRecordRequestBean accountRecordRequestBean){
         JSONObject jsonObject = new JSONObject();
-        BankAccountRecordRequest registerRcordeRequest =setBankRequese(map);
-        List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
-        String status="error";
-        if(null!=bankOpenRecordServiceAccountRecordList&&bankOpenRecordServiceAccountRecordList.size()>0){
-            jsonObject.put("record",bankOpenRecordServiceAccountRecordList);
-            status="success";
+        BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
+        BeanUtils.copyProperties(accountRecordRequestBean,registerRcordeRequest);
+        BankAccountRecordResponse bankOpenRecordServiceAccountRecordList=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
+        if(bankOpenRecordServiceAccountRecordList==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status",status);
-        return jsonObject;
-    }
-    private AccountRecordRequest  setRequese(Map<String,Object> mapParam){
-        AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
-        if(null!=mapParam&&mapParam.size()>0){
-            if(mapParam.containsKey("openAccountPlat")){
-                accountRecordRequest.setOpenAccountPlat(mapParam.get("openAccountPlat").toString());
-            }
-            if(mapParam.containsKey("userName")){
-                accountRecordRequest.setUserName(mapParam.get("userName").toString());
-            }
-            if(mapParam.containsKey("userProperty")){
-                accountRecordRequest.setUserProperty(mapParam.get("userProperty").toString());
-            }
-            if(mapParam.containsKey("idCard")){
-                accountRecordRequest.setIdCard(mapParam.get("idCard").toString());
-            }
-            if(mapParam.containsKey("realName")){
-                accountRecordRequest.setRealName(mapParam.get("realName").toString());
-            }
-            if(mapParam.containsKey("openTimeStart")){
-                accountRecordRequest.setOpenTimeStart(mapParam.get("openTimeStart").toString());
-            }
-            if(mapParam.containsKey("openTimeEnd")){
-                accountRecordRequest.setOpenTimeEnd(mapParam.get("openTimeEnd").toString());
-            }
-            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                accountRecordRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
-            }
+        if (!Response.isSuccess(bankOpenRecordServiceAccountRecordList)) {
+            return new AdminResult<>(FAIL, bankOpenRecordServiceAccountRecordList.getMessage());
         }
-        return accountRecordRequest;
-    }
-
-    private BankAccountRecordRequest setBankRequese(Map<String,Object> mapParam){
-        BankAccountRecordRequest bankAccountRecordRequest = new BankAccountRecordRequest();
-        if(null!=mapParam&&mapParam.size()>0){
-            if(mapParam.containsKey("customerAccount")){
-                bankAccountRecordRequest.setCustomerAccount(mapParam.get("customerAccount").toString());
-            }
-            if(mapParam.containsKey("mobile")){
-                bankAccountRecordRequest.setMobile(mapParam.get("mobile").toString());
-            }
-            if(mapParam.containsKey("openAccountPlat")){
-                bankAccountRecordRequest.setOpenAccountPlat(mapParam.get("openAccountPlat").toString());
-            }
-            if(mapParam.containsKey("userName")){
-                bankAccountRecordRequest.setUserName(mapParam.get("userName").toString());
-            }
-            if(mapParam.containsKey("idCard")){
-                bankAccountRecordRequest.setIdCard(mapParam.get("idCard").toString());
-            }
-            if(mapParam.containsKey("realName")){
-                bankAccountRecordRequest.setRealName(mapParam.get("realName").toString());
-            }
-            if(mapParam.containsKey("openTimeStart")){
-                bankAccountRecordRequest.setOpenTimeStart(mapParam.get("openTimeStart").toString());
-            }
-            if(mapParam.containsKey("openTimeEnd")){
-                bankAccountRecordRequest.setOpenTimeEnd(mapParam.get("openTimeEnd").toString());
-            }
-            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                bankAccountRecordRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
-            }
-        }
-        return bankAccountRecordRequest;
+        return new AdminResult<ListResult<BankOpenAccountRecordVO>>(ListResult.build(bankOpenRecordServiceAccountRecordList.getResultList(), bankOpenRecordServiceAccountRecordList.getCount())) ;
     }
 
     /**
@@ -166,14 +114,21 @@ public class BankOpenRecordController {
      */
     @ApiOperation(value = "开户记录", notes = "汇付银行开户记录导出")
     @PostMapping(value = "/exportaccount")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
+    public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "开户记录";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        AccountRecordRequest accountRecordRequest =setRequese(map);
+        AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
+        BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
+        accountRecordRequest.setLimitFlg(true);
         // 需要输出的结果列表
-        List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
+        List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList = new ArrayList<BankOpenAccountRecordVO>();
+        BankAccountRecordResponse bankAccountRecordResponse =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
+        if(null!=bankAccountRecordResponse){
+            bankOpenRecordServiceAccountRecordList = bankAccountRecordResponse.getResultList();
+        }
+
         String[] titles = new String[] { "序号", "用户名", "姓名", "性别", "年龄", "生日", "户籍所在地", "身份证号码", "开户状态", "汇付账号", "开户平台", "开户时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -239,22 +194,27 @@ public class BankOpenRecordController {
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
      *
-     * @param request
+     * @param bankAccountRecordRequestBeans
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "开户记录", notes = "江西银行开户记录导出")
     @PostMapping(value = "/exportbankaccount")
-    public void exportBankExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
+    public void exportBankExcel( HttpServletResponse response, @RequestBody BankAccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
 
-        BankAccountRecordRequest registerRcordeRequest =setBankRequese(map);
+        BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
+        BeanUtils.copyProperties(bankAccountRecordRequestBeans,bankAccountRecordRequestBeans);
+        registerRcordeRequest.setLimitFlg(true);
         // 表格sheet名称
         String sheetName = "江西银行开户记录";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
-        List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
-
+        List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=new ArrayList<BankOpenAccountRecordVO>();
+        BankAccountRecordResponse bankAccountRecordResponse=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
+        if(null!=bankAccountRecordResponse){
+            bankOpenRecordServiceAccountRecordList = bankAccountRecordResponse.getResultList();
+        }
         String[] titles = new String[] { "序号", "用户名","当前手机号", "姓名", "身份证号码","银行卡号", "银行电子账户", "开户平台", "开户时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

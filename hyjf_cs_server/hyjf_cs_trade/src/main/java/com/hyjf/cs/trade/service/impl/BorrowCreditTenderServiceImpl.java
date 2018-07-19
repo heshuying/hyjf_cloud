@@ -3,22 +3,6 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.hyjf.am.vo.trade.*;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -26,18 +10,13 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmRegVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -52,28 +31,10 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.AmBorrowRepayPlanClient;
-import com.hyjf.cs.trade.client.AmConfigClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.AutoSendClient;
-import com.hyjf.cs.trade.client.BankCreditTenderClient;
-import com.hyjf.cs.trade.client.BorrowClient;
-import com.hyjf.cs.trade.client.BorrowRecoverClient;
-import com.hyjf.cs.trade.client.BorrowTenderClient;
-import com.hyjf.cs.trade.client.CouponClient;
-import com.hyjf.cs.trade.client.CreditClient;
-import com.hyjf.cs.trade.client.RechargeClient;
+import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.base.Producer;
-import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
+import com.hyjf.cs.trade.mq.producer.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.BorrowCreditTenderService;
 import com.hyjf.cs.trade.service.CouponService;
@@ -81,6 +42,16 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @Description 投资接口
@@ -100,8 +71,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Autowired
     private CouponClient couponClient;
 
-    @Autowired
-    private RechargeClient rechargeClient;
 
     @Autowired
     private AmMongoClient amMongoClient;
@@ -182,7 +151,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 检查用户状态  角色  授权状态等  是否允许投资
         this.checkUser(user,userInfo,bankOpenAccount,borrowCredit);
         // 查询用户账户表-投资账户
-        AccountVO tenderAccount = rechargeClient.getAccount(userId);
+        AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
         TenderToCreditAssignCustomizeVO creditAssign = this.creditClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
         // 检查金额
@@ -348,9 +317,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 取得债权出让人的用户电子账户号
             BankOpenAccountVO sellerBankAccount = this.getBankOpenAccount(sellerUserId);
             // 出让人账户信息
-            AccountVO sellerAccount = this.rechargeClient.getAccount(sellerUserId);
+            AccountVO sellerAccount = this.amTradeClient.getAccount(sellerUserId);
             // 承接人账户信息
-            AccountVO assignAccount = this.rechargeClient.getAccount(userId);
+            AccountVO assignAccount = this.amTradeClient.getAccount(userId);
             // 项目详情
             BorrowVO borrow = this.borrowClient.selectBorrowByNid(borrowNid);
             // 还款方式

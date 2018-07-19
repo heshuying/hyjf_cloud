@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhLabelResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.UserHjhInvistDetailCustomizeResponse;
@@ -124,6 +125,36 @@ public class HjhPlanController extends BaseController{
         if (!CollectionUtils.isEmpty(list)){
             response.setResultList(CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class));
         }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据plannid获取计划标的
+     * @Date 11:25 2018/7/17
+     * @Param planNid
+     * @return
+     */
+    @RequestMapping("/gethjhplan/{planNid}")
+    public com.hyjf.am.response.user.HjhPlanResponse getHjhPlan(@PathVariable String planNid) {
+        com.hyjf.am.response.user.HjhPlanResponse response = new com.hyjf.am.response.user.HjhPlanResponse();
+        HjhPlanVO hjhPlanVO = hjhPlanService.getHjhPlan(planNid);
+        response.setResult(hjhPlanVO);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据plannid获取计划标的
+     * @Date 11:25 2018/7/17
+     * @Param planNid
+     * @return
+     */
+    @RequestMapping("/gethjhaccede/{orderId}")
+    public HjhAccedeResponse getHjhAccede(@PathVariable String orderId) {
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        HjhAccedeVO hjhAccede = hjhPlanService.getHjhAccede(orderId);
+        response.setResult(hjhAccede);
         return response;
     }
 

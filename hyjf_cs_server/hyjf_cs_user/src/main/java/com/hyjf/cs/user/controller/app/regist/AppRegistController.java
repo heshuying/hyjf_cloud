@@ -37,9 +37,9 @@ import java.net.URLEncoder;
  * @author zhangqingqing
  * @version RegistController, v0.1 2018/6/11 14:42
  */
-@Api(value = "app端用户注册接口")
+@Api(value = "app端用户注册接口",description = "app端用户注册接口")
 @RestController
-@RequestMapping("/app/user/bank/")
+@RequestMapping("/hyjf-app/appUser")
 public class AppRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);
@@ -58,10 +58,10 @@ public class AppRegistController extends BaseUserController {
      * @throws UnsupportedEncodingException
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/registAction", produces = "application/json; charset=utf-8")
     public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/user/bank/register");
+        ret.put("request", "/hyjf-app/appUser/registAction");
         // 版本号
         String version = request.getParameter("version");
         // 网络状态

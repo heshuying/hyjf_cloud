@@ -42,7 +42,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "web端用户开户接口")
 @CrossOrigin(origins = "*")
 @Controller
-@RequestMapping("/web/user/secure/open")
+@RequestMapping("/hyjf-web/user/secure/open")
 public class WebBankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBankOpenController.class);
 

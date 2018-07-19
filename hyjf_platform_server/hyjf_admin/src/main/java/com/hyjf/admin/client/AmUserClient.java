@@ -2,9 +2,7 @@ package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.AdminUserAuthListResponse;
-import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.response.user.UserPortraitResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -442,5 +440,96 @@ public interface AmUserClient {
 	 */
 	UserInfoVO selectUsersInfoByUserId(int userid);
 	/*加入明细 end*/
-    
+
+    /**
+     * 查找注册记录列表
+     * @author nxl
+     * @param request
+     * @return
+     */
+    RegistRecordResponse findRegistRecordList(RegistRcordRequest request);
+    /**
+     * 查找借款盖章用户信息
+     * @author nxl
+     * @param request
+     * @return
+     */
+    LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request);
+
+    /**
+     * 保存借款盖章用户信息
+     * @param request
+     * @return
+     * @author nxl
+     */
+    int insertLoanCoverUser(LoanCoverUserRequest request);
+    /**
+     * 根据证件号码查找借款主体CA认证记录表
+     * @param strIdNo
+     * @author nxl
+     * @return
+     */
+    LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo);
+    /**
+     * 更新记录
+     */
+    int updateLoanCoverUserRecord(LoanCoverUserRequest request);
+    /**
+     * 根据id查找借款主体CA认证记录表
+     * @param strId
+     * @author nxl
+     * @return
+     */
+    LoanCoverUserResponse selectIsExistsRecordById(String strId);
+    /**
+     * 根据筛选条件查找(用户测评列表显示)
+     * @author nxl
+     * @param request
+     * @return
+     */
+    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
+    /**
+     * 根据id查找用户测评结果
+     * @param userId
+     * @return
+     * @author nxl
+     */
+    UserEvalationResultVO selectEvaluationDetailById(String userId);
+    /**
+     * 查找汇付银行开户记录列表
+     * @author nixiaoling
+     * @param request
+     * @return
+     */
+    BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request);
+
+    /**
+     * 查找江西银行开户记录列表
+     * @author nixiaoling
+     * @param request
+     * @return
+     */
+    BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request);
+    /**
+     *  根据筛选条件查找汇付银行卡信息列表
+     * @author nixiaoling
+     * @param request 筛选条件
+     * @return
+     */
+    BankCardManagerResponse selectBankCardList(BankCardManagerRequest request);
+
+    /**
+     * 根据筛选条件查找江西银行卡信息列表
+     * @author nixiaoling
+     * @param request
+     * @return
+     */
+    BankCardManagerResponse selectNewBankCardList (BankCardManagerRequest request);
+    /**
+     * 查找用户银行卡操作记录表
+     * @param request
+     * @author nixiaoling
+     * @return
+     */
+    BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request);
 }

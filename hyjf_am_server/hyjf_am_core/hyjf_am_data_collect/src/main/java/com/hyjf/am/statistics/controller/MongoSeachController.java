@@ -1,12 +1,16 @@
 package com.hyjf.am.statistics.controller;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AccountDirectionalTransferResponse;
 import com.hyjf.am.response.admin.AccountWebListResponse;
+import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
+import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.statistics.bean.*;
 import com.hyjf.am.statistics.mongo.*;
+import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
@@ -17,10 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -61,6 +67,22 @@ public class MongoSeachController {
             AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = new AppChannelStatisticsDetailVO();
             BeanUtils.copyProperties(entity, appChannelStatisticsDetailVO);
             response.setResult(appChannelStatisticsDetailVO);
+        }
+        return response;
+    }
+
+    /**
+     * 查询所有渠道投资信息
+     *
+     * @return
+     */
+    @RequestMapping("/getappchannelstatisticsdetail")
+    public AppChannelStatisticsDetailResponse selectAppChannelStatistics() {
+        List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(new Query());
+        AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<AppChannelStatisticsDetailVO> voList = CommonUtils.convertBeanList(list, AppChannelStatisticsDetailVO.class);
+            response.setResultList(voList);
         }
         return response;
     }
@@ -109,7 +131,7 @@ public class MongoSeachController {
     }
 
     @RequestMapping(value = "/queryAccountWebList")
-    public AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList) {
+    public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
         List<AccountWebList> recordList = accountWebListDao.queryAccountWebList(accountWebList);
         if (null != recordList) {
@@ -160,6 +182,42 @@ public class MongoSeachController {
        }
 	   return response;
 
+    }
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedRecords的count
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    @PostMapping(value = "/getassociatedrecordscount")
+    public long getDirectionalTransferCount(@RequestBody AssociatedRecordListRequest request){
+        return directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
+    }
+
+    /**
+     * 根据筛选参数从mongo中查询DirectionalTransferAssociatedRecords的list
+     * @auth sunpeikai
+     * @param request 前端给传的筛选参数
+     * @return
+     */
+    @PostMapping("/searchassociatedrecordlist")
+    public AssociatedRecordListResponse searchDirectionalTransferList(@RequestBody AssociatedRecordListRequest request){
+        AssociatedRecordListResponse response = new AssociatedRecordListResponse();
+        Long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count.intValue());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+        logger.info("searchDirectionalTransferList::::::::::limitStart=[{}],limitEnd=[{}]",request.getLimitStart(),request.getLimitEnd());
+        List<DirectionalTransferAssociatedRecords> directionalTransferAssociatedRecords = directionalTransferAssociatedRecordsDao.searchDirectionalTransferList(request);
+        if(!CollectionUtils.isEmpty(directionalTransferAssociatedRecords)){
+            List<AssociatedRecordListVo> associatedRecordListVoList = CommonUtils.convertBeanList(directionalTransferAssociatedRecords,AssociatedRecordListVo.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(associatedRecordListVoList);
+        }
+        return response;
     }
 
 }

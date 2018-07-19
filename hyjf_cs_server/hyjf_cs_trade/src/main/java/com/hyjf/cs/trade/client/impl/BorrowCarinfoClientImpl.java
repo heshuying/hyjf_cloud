@@ -19,7 +19,7 @@ public class BorrowCarinfoClientImpl implements BorrowCarinfoClient {
 
     @Override
     public List<BorrowCarinfoVO> getBorrowCarinfoByNid(String borrowNid) {
-        BorrowCarinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowcarinfo/" + borrowNid,BorrowCarinfoResponse.class).getBody();
+        BorrowCarinfoResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrow/borrowCarinfo/" + borrowNid,BorrowCarinfoResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }

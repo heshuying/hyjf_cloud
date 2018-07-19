@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
 import com.hyjf.am.response.trade.AccountListResponse;
@@ -16,33 +17,60 @@ import com.hyjf.am.resquest.admin.AccountListRequest;
  */
 public interface AccountDetailClient {
 
+
     /**
      * 查找资金明细列表
-     *
+     * @author nixiaoling
      * @param request
      * @return
      */
-    AccountDetailResponse findAccountDetailList(AccountDetailRequest request);
+   AccountDetailResponse findAccountDetailList(AccountDetailRequest request);
 
     /**
      * 查询交易明细最小的id
+     * @param userId
+     * @author nixiaoling
+     * @return
      */
     AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId);
 
     /**
-     * 查询出20170120还款后,交易明细有问题的用户ID
+     * 查询出还款后,交易明细有问题的用户ID
+     * @author nixiaoling
+     * @return
      */
     AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList();
 
-    // 根据Id查询此条交易明细
+    /**
+     * 根据Id查询此条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @return
+     */
     AccountListResponse selectAccountById(int accountId);
 
-    // 查询此用户的下一条交易明细
-    AccountListResponse selectNextAccountList(int accountId, int userId);
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @param userId
+     * @return
+     */
+   AccountListResponse selectNextAccountList(int accountId, int userId);
 
-    // 根据查询用交易类型查询用户操作金额
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @author nixiaoling
+     * @return
+     */
     AccountTradeResponse selectAccountTradeByValue(String tradeValue);
 
-    // 更新用户的交易明细
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @author nixiaoling
+     * @return
+     */
     int updateAccountList(AccountListRequest accountListRequest);
 }

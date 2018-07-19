@@ -28,7 +28,7 @@ import java.util.Map;
 @Api(value = "app端用户优惠券接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/app/coupon")
+@RequestMapping(value = "/hyjf-app/coupon")
 public class CouponController extends BaseTradeController {
     Logger logger = LoggerFactory.getLogger(CouponController.class);
 
@@ -56,7 +56,7 @@ public class CouponController extends BaseTradeController {
             resultMap.put("couponTotal",count);
             resultMap.put("couponStatus",couponStatus);
             resultMap.put("couponList",couponList);
-            resultMap.put("request","/app/coupon/getUserCoupons");
+            resultMap.put("request","/hyjf-app/coupon/getUserCoupons");
             result.setData(resultMap);
         }else{
             result.setStatus(WebResult.FAIL);

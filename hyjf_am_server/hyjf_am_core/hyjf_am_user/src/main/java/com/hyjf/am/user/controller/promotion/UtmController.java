@@ -222,13 +222,15 @@ public class UtmController extends BaseController {
     /**
      * 查询开户数量
      * @param sourceId 账户推广平台
+     * @param type 0无主单 1有主单
      * @return
      */
-    @RequestMapping("/getopenaccountnumber/{sourceId}")
-    public UtmResponse getOpenAccountNumber(@PathVariable Integer sourceId) {
+    @RequestMapping("/getopenaccountnumber/{sourceId}/{type}")
+    public UtmResponse getOpenAccountNumber(@PathVariable Integer sourceId,
+                                            @PathVariable String type) {
         UtmResponse response = new UtmResponse();
         try{
-            Integer openAccountNumber = utmService.getOpenAccountNumber(sourceId);
+            Integer openAccountNumber = utmService.getOpenAccountNumber(sourceId, type);
             response.setOpenAccountNumber(openAccountNumber);
             response.setRtn(UtmResponse.SUCCESS);
         }catch (Exception e){

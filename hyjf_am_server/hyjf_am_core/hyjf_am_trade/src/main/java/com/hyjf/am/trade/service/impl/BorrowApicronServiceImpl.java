@@ -86,4 +86,20 @@ public class BorrowApicronServiceImpl implements BorrowApicronService {
 		example.createCriteria().andBorrowNidEqualTo(borrowNid).andApiTypeEqualTo(1).andStatusNotEqualTo(6);
 		return this.borrowApicronMapper.selectByExample(example);
 	}
+
+	/**
+	 * 根据bankSeqNo检索
+	 * @auther: hesy
+	 * @date: 2018/7/17
+	 */
+	@Override
+	public BorrowApicron selectBorrowApicron(String bankSeqNo) {
+		BorrowApicronExample example = new BorrowApicronExample();
+		example.createCriteria().andBankSeqNoEqualTo(bankSeqNo);
+		List<BorrowApicron> apicronList = this.borrowApicronMapper.selectByExample(example);
+		if (apicronList != null && apicronList.size() == 1) {
+			return apicronList.get(0);
+		}
+		return null;
+	}
 }

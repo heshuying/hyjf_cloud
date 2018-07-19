@@ -5,13 +5,19 @@ import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowTenderService;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BorrowTenderServiceImpl implements BorrowTenderService {
@@ -29,6 +35,8 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     private CreditTenderLogMapper creditTenderLogMapper;
     @Autowired
     private BorrowTenderCustomizeMapper borrowTenderCustomizeMapper;
+    @Resource
+    private BorrowTenderCpnMapper borrowTenderCpnMapper;
 
     @Override
     public Integer getCountBorrowTenderService(Integer userId, String borrowNid) {
@@ -117,10 +125,10 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     }
 
     @Override
-    public Integer getUtmTenderNum(List<Integer> list) {
+    public Integer getUtmTenderNum(List<Integer> list, String type) {
         String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
         String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
-        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd);
+        return borrowTenderCustomizeMapper.getUtmTenderNum(list, dayStart, dayEnd, type);
     }
 
     @Override
@@ -142,5 +150,29 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
         String dayStart = GetDate.getDayStart(GetDate.date2Str(GetDate.date_sdf));
         String dayEnd = GetDate.getDayEnd(GetDate.date2Str(GetDate.date_sdf));
         return borrowTenderCustomizeMapper.getRtbTenderPrice(list, dayStart, dayEnd);
+    }
+
+    @Override
+    public BorrowTenderCpn getCouponTenderInfo(String couponTenderNid) {
+        BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+        example.createCriteria().andNidEqualTo(couponTenderNid);
+        List<BorrowTenderCpn> btList = this.borrowTenderCpnMapper.selectByExample(example);
+        if (btList != null && btList.size() > 0) {
+            return btList.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, Integer periodNow) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("tenderNid", couponTenderNid);
+        paramMap.put("periodNow", periodNow);
+        return borrowTenderCustomizeMapper.getCurrentCouponRecover(paramMap);
+    }
+
+    @Override
+    public Integer updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn) {
+        return borrowTenderCpnMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(borrowTenderCpn,BorrowTenderCpn.class));
     }
 }

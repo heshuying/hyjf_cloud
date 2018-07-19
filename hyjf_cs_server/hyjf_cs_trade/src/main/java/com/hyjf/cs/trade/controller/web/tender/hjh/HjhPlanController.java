@@ -14,8 +14,6 @@ import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.HjhTenderService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +32,7 @@ import java.util.Map;
  */
 @Api(value = "Web端加入计划")
 @RestController
-@RequestMapping("/web/tender/hjh")
+@RequestMapping("/hyjf-web/tender/hjh")
 public class HjhPlanController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(HjhPlanController.class);
 
@@ -42,11 +40,6 @@ public class HjhPlanController extends BaseTradeController {
     private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "web端加入计划", notes = "web端加入计划")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "couponGrantId", dataType = "Integer", name = "couponGrantId", value = "优惠券id", required = true),
-            @ApiImplicitParam(paramType = "borrowNid", dataType = "String", name = "borrowNid", value = "计划编号", required = true),
-            @ApiImplicitParam(paramType = "account", dataType = "String", name = "account", value = "投资金额", required = true)
-    })
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
@@ -65,11 +58,6 @@ public class HjhPlanController extends BaseTradeController {
     }
 
     @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "couponGrantId", dataType = "Integer", name = "couponGrantId", value = "优惠券id", required = true),
-            @ApiImplicitParam(paramType = "borrowNid", dataType = "String", name = "borrowNid", value = "计划编号", required = true),
-            @ApiImplicitParam(paramType = "account", dataType = "String", name = "account", value = "投资金额", required = true)
-    })
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender) {
         tender.setToken(token);

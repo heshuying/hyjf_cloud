@@ -3,6 +3,8 @@ package com.hyjf.am.user.service;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 
+import java.util.List;
+
 public interface BankOpenService extends BaseService {
 	
 	/**
@@ -40,6 +42,14 @@ public interface BankOpenService extends BaseService {
 	 */
 	BankCard selectBankCardByUserId(Integer userId);
 
+	/**
+	 * 根据用户Id和status,银行卡号检索用户银行卡信息
+	 * @param userId
+	 * @return
+	 */
+	List<BankCard> selectBankCardByUserIdAndStatus(Integer userId);
+
+
 	BankCard getBankCardByCardNo(Integer userId, String cardNo);
 	/**
 	 * 开户成功后保存用户银行卡信息
@@ -54,4 +64,12 @@ public interface BankOpenService extends BaseService {
 	 * @Date 2018/6/21 15:52
 	 */
     String getBankOpenAccountFiledMess(String logOrdId);
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	List<BankCard> selectBankCardByUserIdAndStatus(Integer userId, Integer status);
 }

@@ -39,7 +39,8 @@ public class UserManagerRequest extends BasePage {
     public String customerId;
     // 用户来源
     public String instCodeSrch;
-
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    public boolean limitFlg = false;
     //
     public String getRegTimeStart() {
         return regTimeStart;
@@ -151,5 +152,13 @@ public class UserManagerRequest extends BasePage {
 
     public void setInstCodeSrch(String instCodeSrch) {
         this.instCodeSrch = instCodeSrch;
+    }
+
+    public boolean isLimitFlg() {
+        return limitFlg;
+    }
+
+    public void setLimitFlg(boolean limitFlg) {
+        this.limitFlg = limitFlg;
     }
 }

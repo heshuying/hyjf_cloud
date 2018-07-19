@@ -26,9 +26,9 @@ import java.text.DecimalFormat;
  * @author jun
  * @version MyAssetController, v0.1 2018/7/5 17:04
  */
-@Api(value = "app端账户总览")
+@Api(value = "app端账户总览",description = "app端账户总览")
 @Controller
-@RequestMapping(value = "/app/user/myasset")
+@RequestMapping(value = "/hyjf-app/myasset")
 public class MyAssetController extends BaseUserController {
 	
 	@Autowired

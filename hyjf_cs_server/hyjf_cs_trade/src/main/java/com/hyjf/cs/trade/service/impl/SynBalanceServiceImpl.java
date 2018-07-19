@@ -10,7 +10,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankOpenClient;
 import com.hyjf.cs.trade.client.BindCardClient;
-import com.hyjf.cs.trade.client.SynBalanceClient;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.SynBalanceService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  * @version SynBalanceServiceImpl, v0.1 2018/6/19 18:05
  */
 @Service
-public class SynBalanceServiceImpl implements SynBalanceService {
+public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBalanceService {
     @Autowired
     BankOpenClient bankOpenClient;
 
@@ -34,8 +34,6 @@ public class SynBalanceServiceImpl implements SynBalanceService {
     @Autowired
     BindCardClient bindCardClient;
 
-    @Autowired
-    SynBalanceClient synBalanceClient;
 
     @Override
     public BankOpenAccountVO getBankOpenAccount(String accountId) {
@@ -127,7 +125,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
         synBalanceBeanRequest.setUsername(username);
         synBalanceBeanRequest.setIpAddr(ipAddr);
 
-        return  synBalanceClient.insertAccountDetails(synBalanceBeanRequest);
+        return  amTradeClient.insertAccountDetails(synBalanceBeanRequest);
 
 
     }

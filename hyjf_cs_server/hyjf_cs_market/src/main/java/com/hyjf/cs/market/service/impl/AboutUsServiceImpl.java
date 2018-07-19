@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.service.impl;
 
+import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
@@ -19,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.cs.market.client.AboutUsClient;
+import com.hyjf.am.vo.config.*;
+import com.hyjf.cs.market.client.AmConfigClient;
+import com.hyjf.cs.market.client.AmDataCollectClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 
@@ -36,7 +39,10 @@ import java.util.Map;
 public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUsService {
 
     @Autowired
-    private AboutUsClient aboutUsClient;
+    private AmConfigClient amConfigClient;
+
+    @Autowired
+    private AmDataCollectClient amDataCollectClient;
 
     @Autowired
     private BaseClient baseClient;
@@ -51,57 +57,58 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistics/search/getTotalInvestAndInterestEntity";
     @Override
     public ContentArticleVO getAboutUs() {
-        return aboutUsClient.getAboutUs();
+        return amConfigClient.getAboutUs();
     }
 
     @Override
     public String getTotalInvestmentAmount() {
-        return aboutUsClient.getTotalInvestmentAmount();
+        return amDataCollectClient.getTotalInvestmentAmount();
     }
 
     @Override
     public TeamVO getFounder() {
-        return aboutUsClient.getFounder();
+        return amConfigClient.getFounder();
     }
 
     @Override
     public List<LinkVO> getPartnersList(Integer partnerType) {
-        return aboutUsClient.getPartnersList(partnerType);
+        return amConfigClient.getPartnersList(partnerType);
     }
 
     @Override
     public List<EventVO> getEventsList() {
-        return aboutUsClient.getEventsList();
+        return amConfigClient.getEventsList();
     }
 
     @Override
     public List<ContentArticleVO> getNoticeListCount() {
-        return aboutUsClient.aboutUsClient();
+        return amConfigClient.aboutUsClient();
     }
 
     @Override
     public ContentArticleVO getNoticeInfo(Integer id) {
-        return aboutUsClient.getNoticeInfo(id);
+        return amConfigClient.getNoticeInfo(id);
     }
 
     @Override
     public List<JobsVo> getJobsList() {
-        return aboutUsClient.getJobsList();
+        return amConfigClient.getJobsList();
     }
 
     @Override
     public ContentArticleVO getContactUs() {
-        return aboutUsClient.contactUs();
+        return amConfigClient.contactUs();
     }
 
     @Override
     public List<ContentArticleVO> getHomeNoticeList(ContentArticleRequest request) {
-        return aboutUsClient.getknowsList(request);
+        return amConfigClient.getknowsList(request);
     }
+
 
     @Override
     public List<ContentArticleVO> getIndex(ContentArticleRequest request) {
-        return aboutUsClient.getIndexList(request);
+        return amConfigClient.getIndexList(request);
     }
 
     /**

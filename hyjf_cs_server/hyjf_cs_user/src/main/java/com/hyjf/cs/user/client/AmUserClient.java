@@ -229,4 +229,41 @@ public interface AmUserClient {
 	Integer updateUserEvaluationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
 
     void clearMobileCode(Integer userId, String sign);
+
+
+	UserVO surongRegister(RegisterUserRequest registerUserRequest);
+
+	/**
+	 * 获取银行卡信息，status=0
+	 * @param userId
+	 * @return
+	 */
+	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
+
+	/**
+	 *查询唯一标识
+	 * @param userId
+	 * @return
+	 */
+    UserAliasVO findAliasesByUserId(Integer userId);
+
+	/**
+	 * 更新唯一标识
+	 * @param mobileCode
+	 */
+	void updateAliases(UserAliasVO mobileCode);
+
+	/**
+	 * 插入唯一标识
+	 * @param mobileCode
+	 */
+	void insertMobileCode(UserAliasVO mobileCode);
 }

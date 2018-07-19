@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +30,17 @@ import java.util.Map;
 @Service
 public class CouponServiceImpl implements CouponService {
 
-	@Autowired
+	@Resource
 	private CouponCustomizeMapper couponCustomizeMapper;
-	@Autowired
+	@Resource
 	private BorrowTenderCpnMapper borrowTenderCpnMapper;
-	@Autowired
+	@Resource
 	private CouponTenderMapper couponTenderMapper;
-	@Autowired
+	@Resource
 	private CouponRealTenderMapper couponRealTenderMapper;
-	@Autowired
+	@Resource
 	private CouponUserMapper couponUserMapper;
-	@Autowired
+	@Resource
 	private CouponRecoverMapper couponRecoverMapper;
 	/**
 	 * @param couponGrantId
@@ -134,4 +136,52 @@ public class CouponServiceImpl implements CouponService {
 		}
 		return null;
 	}
+
+    @Override
+    public List<BorrowTenderCpn> getBorrowTenderCpnHjhList(String orderId) {
+		CouponRealTenderExample realExample = new CouponRealTenderExample();
+		CouponRealTenderExample.Criteria realCriteria = realExample.createCriteria();
+		realCriteria.andRealTenderIdEqualTo(orderId);
+		List<CouponRealTender> realTenderList = couponRealTenderMapper.selectByExample(realExample);
+		if(realTenderList == null || realTenderList.isEmpty()){
+			return new ArrayList<BorrowTenderCpn>();
+		}
+
+		BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+		BorrowTenderCpnExample.Criteria criteria = example.createCriteria();
+		criteria.andNidEqualTo(realTenderList.get(0).getCouponTenderId());
+		criteria.andApiStatusEqualTo(0);
+		example.setOrderByClause(" id asc ");
+		List<BorrowTenderCpn> list = this.borrowTenderCpnMapper.selectByExample(example);
+		return list;
+	}
+
+	@Override
+	public List<BorrowTenderCpn> getBorrowTenderCpnHjhCouponOnlyList(String couponOrderId) {
+		BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+		BorrowTenderCpnExample.Criteria criteria = example.createCriteria();
+		criteria.andNidEqualTo(couponOrderId);
+		criteria.andApiStatusEqualTo(0);
+		example.setOrderByClause(" id asc ");
+		List<BorrowTenderCpn> list = this.borrowTenderCpnMapper.selectByExample(example);
+
+		return list;
+	}
+
+	@Override
+	public int updateBorrowTenderCpn(BorrowTenderCpn borrowTenderCpn) {
+		return borrowTenderCpnMapper.updateByPrimaryKeySelective(borrowTenderCpn);
+	}
+
+    @Override
+    public List<BorrowTenderCpn> getBorrowTenderCpnList(String borrowNid) {
+		BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+		BorrowTenderCpnExample.Criteria criteria = example.createCriteria();
+		criteria.andBorrowNidEqualTo(borrowNid);
+		criteria.andApiStatusEqualTo(0);
+		example.setOrderByClause(" id asc ");
+		List<BorrowTenderCpn> list = this.borrowTenderCpnMapper.selectByExample(example);
+
+		return list;
+    }
 }

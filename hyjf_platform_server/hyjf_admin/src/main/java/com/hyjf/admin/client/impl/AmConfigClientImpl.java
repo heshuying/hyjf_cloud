@@ -1,17 +1,21 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,12 +102,21 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @param retCode 错误码
      * @return
      */
-    @Override
-    public String getBankRetMsg(String retCode) {
-        String retMsg = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/adminException/getBankRetMsg/" + retCode, String.class).getBody();
-        return retMsg;
-    }
+	@Override
+	public String getBankRetMsg(String retCode) {
+		BankReturnCodeConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/config/getBankReturnCodeConfig/" + retCode,
+						BankReturnCodeConfigResponse.class)
+				.getBody();
+		if (response != null) {
+			BankReturnCodeConfigVO vo = response.getResult();
+			if (vo == null) {
+				return Response.ERROR_MSG;
+			}
+			return StringUtils.isNotBlank(vo.getRetMsg()) ? vo.getRetMsg() : Response.ERROR_MSG;
+		}
+		return Response.ERROR_MSG;
+	}
 
     /**
      * 获取银行返回码
@@ -117,6 +130,21 @@ public class AmConfigClientImpl implements AmConfigClient {
         BankReturnCodeConfigResponse response = restTemplate.getForEntity(url, BankReturnCodeConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 获取银行列表
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public List<BanksConfigVO> selectBankConfigList() {
+        BanksConfigResponse response = restTemplate
+                .getForEntity("http://AM-USER/am-config/config/selectBankConfigList", BanksConfigResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
         }
         return null;
     }

@@ -18,10 +18,8 @@ public class BankCardManagerRequest extends BasePage{
 	private String mobile;
 	private String realName;
 
-	//分页区分,
-	// 导出时设置为0,代表查找全部,
-	// 默认为1,代表分页
-	private int limitFlg = 1;
+	//默认为true ,获取全部数据，为false时，获取部分数据
+	private boolean limitFlg = false;
 
 	public String getUserName() {
 		return userName;
@@ -96,11 +94,11 @@ public class BankCardManagerRequest extends BasePage{
 		this.realName = realName;
 	}
 
-	public int getLimitFlg() {
+	public boolean isLimitFlg() {
 		return limitFlg;
 	}
 
-	public void setLimitFlg(int limitFlg) {
+	public void setLimitFlg(boolean limitFlg) {
 		this.limitFlg = limitFlg;
 	}
 }

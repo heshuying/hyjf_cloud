@@ -26,7 +26,7 @@ import java.util.Map;
  * @author hesy
  * @version BorrowAuthController, v0.1 2018/7/6 14:15
  */
-@Api(value = "借款人受托支付相关")
+@Api(value = "借款人受托支付相关", description ="借款人受托支付相关")
 @RestController
 @RequestMapping("/web/borrowauth")
 public class BorrowAuthController extends BaseTradeController {

@@ -7,6 +7,8 @@ import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.BaseBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.util.List;
+
 
 public interface BaseUserService extends BaseService{
 
@@ -137,4 +139,13 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
 	WebViewUserVO getWebViewUserByUserId(Integer userId);
+	/**
+	 * @Description 根据用户信息查询用户绑卡列表
+	 * @Author pangchengchao
+	 * @Version v0.1
+	 * @Date
+	 */
+	List<BankCardVO> getBankOpenAccountById(UserVO userVO);
+
+    String getBankReturnErrorMsg(String retCode);
 }

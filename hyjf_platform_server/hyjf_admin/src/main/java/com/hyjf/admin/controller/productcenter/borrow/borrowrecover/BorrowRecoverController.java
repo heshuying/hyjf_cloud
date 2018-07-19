@@ -36,7 +36,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BorrowRecoverController, v0.1 2018/7/2 10:13
  */
-@Api(value = "产品中心-汇直投-放款明细")
+@Api(value = "产品中心-汇直投-放款明细",description = "产品中心-汇直投-放款明细")
 @RestController
 @RequestMapping("/borrow/borrowrecover")
 public class BorrowRecoverController extends BaseController {

@@ -5,10 +5,15 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
 import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.trade.bean.repay.RepayBean;
+import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -138,6 +143,30 @@ public class RepayManageController extends BaseController {
             logger.error("还款申请更新数据库失败", e);
             return false;
         }
+    }
+
+    /**
+     * 更新借款API任务表
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/update_apicron")
+    public Response<Boolean> updateBorrowApicron(@RequestBody ApiCronUpdateRequest requestBean){
+        Integer status = requestBean.getStatus();
+        BorrowApicronVO apicronVO = requestBean.getApicronVO();
+        if(status == null || apicronVO == null){
+            return new Response<>(Response.FAIL, "请求信息不全");
+        }
+        BorrowApicron apicron = new BorrowApicron();
+        BeanUtils.copyProperties(apicronVO, apicron);
+
+        try {
+            repayManageService.updateBorrowApicron(apicron, requestBean.getStatus());
+        } catch (Exception e) {
+            return new Response(Response.ERROR, "api任务表更新异常");
+        }
+
+        return new Response(true);
     }
 
 }

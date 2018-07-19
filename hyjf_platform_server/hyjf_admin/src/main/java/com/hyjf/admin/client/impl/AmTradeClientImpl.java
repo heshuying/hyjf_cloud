@@ -17,6 +17,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.*;
@@ -35,10 +36,12 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -107,38 +110,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     public List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request) {
         AccountDirectionalTransferResponse response = restTemplate
                 .postForEntity(tradeService+"/accountdirectionaltransfer/searchdirectionaltransferlist", request, AccountDirectionalTransferResponse.class)
-                .getBody();
-        if(Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
-     * 查询关联记录列表count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @Override
-    public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
-        Integer count = restTemplate
-                .postForEntity(tradeService+"/associatedrecords/getassociatedrecordscount", request, Integer.class)
-                .getBody();
-
-        return count;
-    }
-
-    /**
-     * 根据筛选条件查询关联记录list
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @Override
-    public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
-        AssociatedRecordListResponse response = restTemplate
-                .postForEntity(tradeService+"/associatedrecords/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
@@ -519,19 +490,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表
-     * @return
-     */
-    @Override
-    public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
-        String url = "http://AM-TRADE/am-trade/platformtransfer/insertaccountlist";
-        Integer response = restTemplate.postForEntity(url,accountWebListVO,Integer.class).getBody();
-        return response;
-    }
-
-    /**
      * 根据账户id查询BankMerchantAccount
      * @auth sunpeikai
      * @param accountId 账户id
@@ -714,19 +672,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
         String url = "http://AM-TRADE/am-trade/subcommission/updatesubcommission";
         Integer response = restTemplate.postForEntity(url,subCommissionVO,Integer.class).getBody();
-        return response;
-    }
-
-    /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    @Override
-    public Integer accountWebListByOrderId(String orderId) {
-        String url = "http://AM-TRADE/am-trade/subcommission/accountweblistbyorderid/" + orderId;
-        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
         return response;
     }
 
@@ -1379,6 +1324,115 @@ public class AmTradeClientImpl implements AmTradeClient{
         return true;
     }
 
+
+    /**
+     * 分页查询平台设置账户列表
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest request){
+        String url="http://AM-TRADE/am-trade/config/accountconfig/selectMerchantAccountListByPage";
+        MerchantAccountResponse response = restTemplate.
+                postForEntity(url, request, MerchantAccountResponse.class).
+                getBody();
+        List paramList =getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            if(!CollectionUtils.isEmpty(paramList)){
+                response.setParamNameList(paramList);
+            }
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 根据id查询账户平台设置
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse searchAccountConfigInfo(Integer id){
+        String url="http://AM-TRADE/am-trade/config/accountconfig/searchAccountConfigInfo";
+        MerchantAccountResponse response = restTemplate.
+                postForEntity(url, id, MerchantAccountResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 添加账户平台设置
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse saveAccountConfig(AdminMerchantAccountRequest request){
+        String url="http://AM-TRADE/am-trade/config/accountconfig/saveAccountConfig";
+        MerchantAccountResponse response = restTemplate.
+                postForEntity(url, request, MerchantAccountResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+    /**
+     * 修改账户平台设置
+     * @return
+     */
+    @Override
+    public MerchantAccountResponse updateAccountConfig(AdminMerchantAccountRequest request){
+        String url="http://AM-TRADE/am-trade/config/accountconfig/updateAccountConfig";
+        MerchantAccountResponse response = restTemplate.
+                postForEntity(url, request, MerchantAccountResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 子账户类型 查询
+     * @return
+     */
+    @Override
+    public List<ParamName> getParamNameList(String code){
+        String url="http://AM-CONFIG/am-config/config/accountconfig/getParamNameList";
+        List<ParamName>  response = restTemplate.postForEntity(url, code, List.class).getBody();
+        if (!CollectionUtils.isEmpty(response)){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     *
+     * 根据子账户名称检索
+     * @param subAccountName
+     * @return
+     */
+    @Override
+    public int countAccountListInfoBySubAccountName(String ids, String subAccountName){
+        Map map =new HashMap();
+        map.put("ids",ids);
+        map.put("subAccountName",subAccountName);
+        return restTemplate.
+                postForEntity("http://AM-TRADE/am-trade/config/accountconfig/countAccountListInfoBySubAccountName", map, Integer.class).getBody();
+    }
+
+    /**
+     *
+     * 根据子账户代号检索
+     * @param subAccountCode
+     * @return
+     */
+    @Override
+    public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode){
+        Map map =new HashMap();
+        map.put("ids",ids);
+        map.put("subAccountName",subAccountCode);
+        return restTemplate.
+                postForEntity("http://AM-TRADE/am-trade/config/accountconfig/countAccountListInfoBySubAccountCode", map, Integer.class).getBody();
+    }
     /**
      * 根据机构编号获取机构列表
      * @return
@@ -2021,12 +2075,12 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
-    
+
     /*资产中心 start*/
     /**
 	 * 获取资金来源
 	 *
-	 * @param 
+	 * @param
 	 * @return List<HjhInstConfigVO>
 	 */
 	@Override
@@ -2039,7 +2093,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 产品类型下拉联动
 	 *
@@ -2083,7 +2137,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 查询详情
 	 *
@@ -2100,7 +2154,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 查询记录总数
 	 *
@@ -2141,10 +2195,10 @@ public class AmTradeClientImpl implements AmTradeClient{
 	public void updateCashDepositeStatus(String assetId, String menuHide) {
 		String url = "http://AM-TRADE/am-trade/assetList/updateCashDepositeStatus/"+assetId+"/"+menuHide;
 		restTemplate.getForEntity(url, String.class).getBody();
-		
+
 	}
 	/*资产中心 end*/
-	
+
 	/*标签配置中心 start*/
 	@Override
 	public List<BorrowProjectTypeVO> findBorrowProjectTypeList() {
@@ -2156,7 +2210,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
 		return null;
 	}
-	
+
 	@Override
 	public List<BorrowStyleVO> findBorrowStyleList() {
 		// 复用
@@ -2167,14 +2221,14 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
 		return null;
 	}
-	
+
 	@Override
 	public HjhLabelCustomizeResponse findHjhLabelList(HjhLabelRequest request) {
 		HjhLabelCustomizeResponse response = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/hjhLabel/selectHjhLabelList", request, HjhLabelCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
-        }			
+        }
 		return null;
 	}
 
@@ -2224,7 +2278,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return 0;
 	}
 	/*标签配置中心 end*/
-	
+
 	/*计划列表 start*/
 	@Override
 	public HjhPlanResponse getHjhPlanListByParam(PlanListRequest form) {
@@ -2331,11 +2385,11 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return Flag;
 	}
 	/*计划列表 end*/
-	
+
 	/*加入明细 start*/
 	/**
 	 * 检索加入明细列表
-	 * 
+	 *
 	 * @Title selectAccedeRecordList
 	 * @param form
 	 * @return
@@ -2397,7 +2451,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return null;
 	}
 	/*加入明细 end*/
-	
+
 	/*承接记录 start*/
 	@Override
 	public HjhCreditTenderResponse getHjhCreditTenderListByParam(HjhCreditTenderRequest form) {
@@ -2429,7 +2483,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return null;
 	}
 	/*承接记录 end*/
-	
+
 	/*计划引擎 start*/
 	/**
      * 查询计划专区列表
@@ -2441,7 +2495,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .postForEntity("http://AM-TRADE/am-trade/allocation/selectHjhRegionList", form, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
-        }			
+        }
 		return null;
 	}
 
@@ -2451,7 +2505,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .postForEntity("http://AM-TRADE/am-trade/allocation/selectPlanNameByPlanNid", form, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getPlanName();
-        }	
+        }
 		return null;
 	}
 
@@ -2468,7 +2522,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getForEntity("http://AM-TRADE/am-trade/allocation/getPlanNidAjaxCheck/"+planNid, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
-        }	
+        }
 		return null;
 	}
 
@@ -2478,7 +2532,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getForEntity("http://AM-TRADE/am-trade/allocation/getHjhRegionVOById/"+id, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
-        }	
+        }
 		return null;
 	}
 
@@ -2526,7 +2580,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
-		return null;	
+		return null;
 	}
 
 	@Override
@@ -2576,7 +2630,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getForEntity("http://AM-TRADE/am-trade/allocation/getHjhRegionRecordByPlanNid/"+planNid, HjhRegionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
-        }	
+        }
 		return null;
 	}
 
@@ -2922,4 +2976,120 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return null;
     }
+    /**
+     * 查找资金明细列表
+     * @author nixiaoling
+     * @param request
+     * @return
+     */
+    @Override
+    public AccountDetailResponse findAccountDetailList(AccountDetailRequest request) {
+        AccountDetailResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/adminaccountdetail/accountdetaillist", request, AccountDetailResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询交易明细最小的id
+     * @param userId
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId) {
+        AdminAccountDetailDataRepairResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/queryaccountdetailidbyuserid/" + userId, AdminAccountDetailDataRepairResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询出还款后,交易明细有问题的用户ID
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
+        AdminAccountDetailDataRepairResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/queryaccountdetailerroruserlist", AdminAccountDetailDataRepairResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据Id查询此条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AccountListResponse selectAccountById(int accountId) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectaccountbyid/" + accountId, AccountListResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountListResponse selectNextAccountList(int accountId, int userId) {
+        AccountListResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectnextaccountlist/" + userId + "/" + accountId, AccountListResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public AccountTradeResponse selectAccountTradeByValue(String tradeValue) {
+        AccountTradeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/adminaccountdetail/selectaccounttradebyvalue/" + tradeValue, AccountTradeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @author nixiaoling
+     * @return
+     */
+    @Override
+    public int updateAccountList(AccountListRequest accountListRequest) {
+        int intUpdFlg = restTemplate.
+                postForEntity("http://AM-TRADE/am-trade/adminaccountdetail/updateaccountlist", accountListRequest, Integer.class).
+                getBody();
+        return intUpdFlg;
+    }
+
 }

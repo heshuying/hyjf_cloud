@@ -20,106 +20,105 @@ import java.util.List;
 public interface BatchHjhBorrowRepayClient {
 
     /**
-     *
      * @param accedeOrderId
      * @return
      */
     List<BorrowTenderVO> selectBorrowTenderListByAccedeOrderId(String accedeOrderId);
 
     /**
-     *
      * @param accedeOrderId
      * @return
      */
     List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId);
 
     /**
-     *
      * @param Id
      * @return
      */
     List<HjhAccedeVO> selectHjhAccedeListById(Integer Id);
+
     /**
-     *
      * @param planNid
      * @return
      */
     List<HjhPlanVO> selectHjhPlanListByPlanNid(String planNid);
 
     /**
-     *
      * @return
      */
     Integer updateHjhBorrowRepayInterest(HjhAccedeVO hjhAccedeVO);
 
     /**
-     *
      * @param hjhAccedeVO
      * @return
      */
     Integer updateHjhAccedeByPrimaryKey(HjhAccedeVO hjhAccedeVO);
 
     /**
-     *
      * @param accedeOrderId
      * @return
      */
     List<BorrowRecoverVO> selectBorrowRecoverListByAccedeOrderId(String accedeOrderId);
 
     /**
-     *
      * @param accedeOrderId
      * @return
      */
     List<HjhRepayVO> selectHjhRepayListByAccedeOrderId(String accedeOrderId);
 
     /**
-     *
      * @param Id
      * @return
      */
     HjhRepayVO selectHjhRepayListById(Integer Id);
 
     /**
-     *
      * @param hjhRepayVO
      * @return
      */
     Integer insertHjhBorrowRepay(HjhRepayVO hjhRepayVO);
 
     /**
-     *
      * @param accountVO
      * @return
      */
     Integer updateBankTotalForLockPlan(AccountVO accountVO);
 
     /**
-     *
      * @param hjhRepayVO
      * @return
      */
     Integer updateHjhRepayByPrimaryKey(HjhRepayVO hjhRepayVO);
 
     /**
-     *
      * @param hjhPlanVO
      * @return
      */
     Integer updateHjhPlanByPrimaryKey(HjhPlanVO hjhPlanVO);
 
     /**
-     *
      * @return
      */
     List<CalculateInvestInterestVO> selectCalculateInvestInterest();
 
     /**
-     *
      * @param calculateInvestInterestVO
      * @return
      */
     Integer updateCalculateInvestByPrimaryKey(CalculateInvestInterestVO calculateInvestInterestVO);
 
+    /**
+     * 计划锁定
+     *
+     * @param accedeOrderId
+     */
+    void updateForLock(String accedeOrderId);
+
+    /**
+     * 计划退出
+     *
+     * @param accedeOrderId
+     */
+    void updateForQuit(String accedeOrderId);
 }
 

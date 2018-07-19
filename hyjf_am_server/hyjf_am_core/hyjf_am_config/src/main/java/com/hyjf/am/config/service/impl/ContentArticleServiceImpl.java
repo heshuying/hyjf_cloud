@@ -1,15 +1,24 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.ContentArticleMapper;
+import com.hyjf.am.config.dao.mapper.customize.ContentArticleCustomizeMapper;
 import com.hyjf.am.config.dao.mapper.customize.HelpCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.auto.ContentArticleExample;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
-import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.response.admin.ContentArticleResponse;
+import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +32,9 @@ public class ContentArticleServiceImpl implements ContentArticleService {
 
     @Autowired
     private HelpCustomizeMapper helpCustomizeMapper;
+
+    @Autowired
+    private ContentArticleCustomizeMapper contentArticleCustomizeMapper;
 
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
@@ -64,8 +76,10 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     public ContentArticle getContactUs() {
         ContentArticleExample example = new ContentArticleExample();
         ContentArticleExample.Criteria cra = example.createCriteria();
-        cra.andTypeEqualTo("8");// 联系我们
-        cra.andStatusEqualTo(1);// 启用状态
+        // 联系我们
+        cra.andTypeEqualTo("8");
+        // 启用状态
+        cra.andStatusEqualTo(1);
 
         List<ContentArticle> conlist = contentArticleMapper.selectByExample(example);
         if (conlist != null && conlist.size() > 0) {
@@ -147,4 +161,32 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     }
 
 
+
+    @Override
+    public void insertAction(ContentArticleRequest request) {
+        if (request != null) {
+
+            request.setCreateTime(GetDate.getDate());
+            request.setUpdateTime(GetDate.getDate());
+            request.setClick(0);
+
+            ContentArticle contentArticle = new ContentArticle();
+            BeanUtils.copyProperties(request, contentArticle);
+            contentArticleMapper.insert(contentArticle);
+        }
+    }
+
+    @Override
+    public void updateAction(ContentArticleRequest request) {
+        if (request != null) {
+            ContentArticle contentArticle = new ContentArticle();
+            BeanUtils.copyProperties(request, contentArticle);
+            contentArticleMapper.updateByPrimaryKey(contentArticle);
+        }
+    }
+
+    @Override
+    public void delectAction(Integer id) {
+        contentArticleMapper.deleteByPrimaryKey(id);
+    }
 }

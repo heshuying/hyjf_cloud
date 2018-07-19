@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/hyjf-admin/borrow_regist_exception")
-@Api(value = "异常中心-标的备案掉单")
+@Api(value = "异常中心-标的备案掉单",description = "异常中心-标的备案掉单")
 public class BorrowRegistExceptionController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

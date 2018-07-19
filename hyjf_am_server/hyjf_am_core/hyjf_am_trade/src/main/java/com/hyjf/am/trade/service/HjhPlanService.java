@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import java.util.List;
 import java.util.Map;
@@ -64,4 +65,22 @@ public interface HjhPlanService {
      * @date 2018/7/9 11:42
      */
     List<HjhPlanCustomize> selectAppHomeHjhPlan(HjhPlanRequest request);
+
+    /**
+     * @Author walter.limeng
+     * @Description   根据plannid获取计划标的
+     * @Date 11:26 2018/7/17
+     * @Param planNid
+     * @return
+     */
+    HjhPlanVO getHjhPlan(String planNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  取得计划加入记录
+     * @Date 11:48 2018/7/17
+     * @Param orderId
+     * @return
+     */
+    HjhAccedeVO getHjhAccede(String orderId);
 }

@@ -3,6 +3,7 @@ package com.hyjf.am.user.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
@@ -188,4 +189,20 @@ public interface UserService extends BaseService {
      * @return
      */
     UserVO getUser(String utmReferrer, String userId);
+	/**
+	 * 融东风注册
+	 * @param userRequest
+	 * @return
+	 * @throws ServiceException
+	 */
+    User surongRegister(RegisterUserRequest userRequest)throws MQException;
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据用户ID查询推荐人
+     * @Date 14:00 2018/7/18
+     * @Param userId
+     * @return
+     */
+	List<SpreadsUserVO> selectByUserId(String userId);
 }

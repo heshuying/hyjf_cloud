@@ -1,25 +1,25 @@
 package com.hyjf.am.user.controller;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BankOpenService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/am-user/bankopen")
@@ -202,4 +202,30 @@ public class BankOpenController extends BaseController{
 		return bankOpenService.getBankOpenAccountFiledMess(logOrdId);
 	}
 
+	@GetMapping("/selectBankCardByUserIdAndStatus/{userId}")
+	public BankCardResponse selectBankCardByUserIdAndStatus(@PathVariable Integer userId){
+		BankCardResponse response = new BankCardResponse();
+		List<BankCard> bankCard = bankOpenService.selectBankCardByUserIdAndStatus(userId);
+		if(null!=bankCard){
+			List<BankCardVO> bankCardVO = CommonUtils.convertBeanList(bankCard,BankCardVO.class);
+			response.setResultList(bankCardVO);
+		}
+		return response;
+	}
+
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/selectBankCardByUserIdAndStatus/{userId}/{status}")
+	public BankCardResponse selectBankCardByUserIdAndStatus(@PathVariable Integer userId,@PathVariable Integer status){
+		BankCardResponse response = new BankCardResponse();
+		List<BankCard> bankCard = bankOpenService.selectBankCardByUserIdAndStatus(userId,status);
+		if(null!=bankCard){
+			List<BankCardVO> bankCardVO = CommonUtils.convertBeanList(bankCard,BankCardVO.class);
+			response.setResultList(bankCardVO);
+		}
+		return response;
+	}
 }

@@ -3,10 +3,14 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.AccountRechargeCustomizeMapper">
 
 	<select id="getRechargePrice" resultType="DECIMAL" parameterType="list">
-		select sum(money) from ht_account_recharge
+		select sum(money) from ht_account_recharge a
+		left join ht_user_info b on a.user_id = b.user_id
 		<where>
+			<if test="type != null">
+				b.attribute=0
+			</if>
 			<if test="list != null">
-				and user_id in
+				and a.user_id in
 					<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
 						#{item}
 					</foreach>

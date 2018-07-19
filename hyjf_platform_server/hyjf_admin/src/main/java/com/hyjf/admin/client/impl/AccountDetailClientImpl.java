@@ -26,7 +26,7 @@ public class AccountDetailClientImpl implements AccountDetailClient {
 
     /**
      * 查找资金明细列表
-     *
+     * @author nixiaoling
      * @param request
      * @return
      */
@@ -43,6 +43,9 @@ public class AccountDetailClientImpl implements AccountDetailClient {
 
     /**
      * 查询交易明细最小的id
+     * @param userId
+     * @author nixiaoling
+     * @return
      */
     @Override
     public AdminAccountDetailDataRepairResponse accountdetailDataRepair(int userId) {
@@ -56,7 +59,9 @@ public class AccountDetailClientImpl implements AccountDetailClient {
     }
 
     /**
-     * 查询出20170120还款后,交易明细有问题的用户ID
+     * 查询出还款后,交易明细有问题的用户ID
+     * @author nixiaoling
+     * @return
      */
     @Override
     public AdminAccountDetailDataRepairResponse queryAccountDetailErrorUserList() {
@@ -69,7 +74,12 @@ public class AccountDetailClientImpl implements AccountDetailClient {
         return null;
     }
 
-    // 根据Id查询此条交易明细
+    /**
+     * 根据Id查询此条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @return
+     */
     @Override
     public AccountListResponse selectAccountById(int accountId) {
         AccountListResponse response = restTemplate
@@ -81,7 +91,13 @@ public class AccountDetailClientImpl implements AccountDetailClient {
         return null;
     }
 
-    // 查询此用户的下一条交易明细
+    /**
+     * 查询此用户的下一条交易明细
+     * @param accountId
+     * @author nixiaoling
+     * @param userId
+     * @return
+     */
     @Override
     public AccountListResponse selectNextAccountList(int accountId, int userId) {
         AccountListResponse response = restTemplate
@@ -93,7 +109,12 @@ public class AccountDetailClientImpl implements AccountDetailClient {
         return null;
     }
 
-    // 根据查询用交易类型查询用户操作金额
+    /**
+     * 根据查询用交易类型查询用户操作金额
+     * @param tradeValue
+     * @author nixiaoling
+     * @return
+     */
     @Override
     public AccountTradeResponse selectAccountTradeByValue(String tradeValue) {
         AccountTradeResponse response = restTemplate
@@ -105,7 +126,12 @@ public class AccountDetailClientImpl implements AccountDetailClient {
         return null;
     }
 
-    // 更新用户的交易明细
+    /**
+     * 更新用户的交易明细
+     * @param accountListRequest
+     * @author nixiaoling
+     * @return
+     */
     @Override
     public int updateAccountList(AccountListRequest accountListRequest) {
         int intUpdFlg = restTemplate.

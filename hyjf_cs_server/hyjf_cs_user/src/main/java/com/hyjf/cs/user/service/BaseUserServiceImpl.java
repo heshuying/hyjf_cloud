@@ -2,6 +2,7 @@ package com.hyjf.cs.user.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
@@ -15,6 +16,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
@@ -39,6 +42,9 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Autowired
 	public SystemConfig systemConfig;
+
+	@Autowired
+	public AmConfigClient amConfigClient;
 
 	@Override
 	public boolean existUser(String mobile) {
@@ -612,6 +618,20 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			result.setUsersContact(usersContactVO);
 		}
 		return result;
+	}
+
+	@Override
+	public List<BankCardVO> getBankOpenAccountById(UserVO userVO) {
+		return  amUserClient.getBankOpenAccountById(userVO);
+	}
+
+	@Override
+	public String getBankReturnErrorMsg(String retCode){
+		BankReturnCodeConfigVO returnCodeConfigVO = amConfigClient.getBankReturnCodeConfig(retCode);
+		if(returnCodeConfigVO != null){
+			return returnCodeConfigVO.getErrorMsg();
+		}
+		return "请联系客服";
 	}
 
 

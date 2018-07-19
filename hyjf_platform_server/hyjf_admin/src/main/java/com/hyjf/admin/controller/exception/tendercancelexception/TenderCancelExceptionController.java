@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/hyjf-admin/tendercancelexception")
-@Api(value = "异常中心-银行投资撤销异常")
+@Api(value = "异常中心-银行投资撤销异常",description = "异常中心-银行投资撤销异常")
 public class TenderCancelExceptionController {
 
     @Autowired

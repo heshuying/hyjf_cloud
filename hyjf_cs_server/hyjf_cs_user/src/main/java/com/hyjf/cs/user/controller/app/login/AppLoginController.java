@@ -5,6 +5,8 @@ package com.hyjf.cs.user.controller.app.login;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
@@ -19,18 +21,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 /**
  * @author zhangqingqing
  * @version LoginController, v0.1 2018/6/11 14:43
  */
 
-@Api(value = "app端用户登录接口")
+@Api(value = "app端用户登录接口",description = "app端用户登录接口")
 @RestController
-@RequestMapping("/app/user/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
@@ -47,10 +53,10 @@ public class AppLoginController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "登录", notes = "登录")
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = "/loginInAction")
     public JSONObject loginInAction(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/login");
+        ret.put("request", "/appUser/loginInAction");
         // 网络状态
         String netStatus = request.getParameter("netStatus");
         // 平台
@@ -119,10 +125,10 @@ public class AppLoginController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "登出", notes = "登出")
-    @PostMapping(value = "/logout")
+    @PostMapping(value = "/loginOutAction")
     public JSONObject loginOutAction(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "version") String version,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/logout");
+        ret.put("request", "/appUser/loginOutAction");
         // 网络状态
         String netStatus = request.getParameter("netStatus");
         // 平台
@@ -162,6 +168,194 @@ public class AppLoginController extends BaseUserController {
         } catch (Exception e) {
             ret.put("status", "1");
             ret.put("statusDesc", "退出登录发生错误");
+        }
+        return ret;
+    }
+
+    /**
+     * 获取用户相关数据
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+/*    @ResponseBody
+    @PostMapping(value = "/getUserinfoAction")
+    public JSONObject getUserinfoAction(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/getUserinfoAction");
+
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        // 业务逻辑
+        try {
+            // 取得用户ID
+            Integer userId = SecretUtil.getUserId(sign);
+            if (userId != null) {
+                UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
+                if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
+                    userParameters.setIdcard("000000000000000000");
+                }
+                ret.put("status", "0");
+                ret.put("params", userParameters);
+                ret.put("statusDesc", "获取用户相关数据成功");
+            } else {
+                ret.put("status", "1");
+                ret.put("statusDesc", "用户信息不存在");
+            }
+
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "获取用户相关数据发生错误");
+        }
+        return ret;
+    }*/
+
+    /**
+     * 上传头像
+     *
+     * @param request
+     * @param response
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/uploadAvatarAction")
+    public JSONObject uploadAvatarAction(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/uploadAvatarAction");
+
+        // 转型为MultipartHttpRequest(重点的所在)
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+
+        // 版本号
+        String version = multipartRequest.getParameter("version");
+        // 网络状态
+        String netStatus = multipartRequest.getParameter("netStatus");
+        // 平台
+        String platform = multipartRequest.getParameter("platform");
+        // token
+        String token = multipartRequest.getParameter("token");
+        // 唯一标识
+        String sign = multipartRequest.getParameter("sign");
+        // 随机字符串
+        String randomString = multipartRequest.getParameter("randomString");
+        // Order
+        String order = multipartRequest.getParameter("order");
+        // 获得第1张图片（根据前台的name名称得到上传的文件）
+        MultipartFile iconImg = multipartRequest.getFile("iconImg");
+
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 验证sign
+        if (RedisUtils.get(sign) == null) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        // 验证key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        // 验证Order
+        if (!SecretUtil.checkOrder(key, token, randomString, order)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        // 业务逻辑
+        try {
+            if (Validator.isNull(iconImg)) {
+                ret.put("status", "1");
+                ret.put("statusDesc", "上传图片不能为空");
+                return ret;
+            }
+            // 单位字节
+            Long allowFileLength = 5000000L;
+
+            // 取得用户ID
+            Integer userId = SecretUtil.getUserId(sign);
+
+            if (userId != null) {
+                // 从配置文件获取上传文件的各个URL
+                // 上传文件的CDNURL
+                // 实际物理路径前缀1
+                String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
+                // 实际物理路径前缀2
+                String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+
+                // 如果文件夹(前缀+后缀)不存在,则新建文件夹
+                String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
+                File logoSaveFile = new File(logoRealPathDir);
+                if (!logoSaveFile.exists()) {
+                    logoSaveFile.mkdirs();
+                }
+
+                // 生成图片文件名
+                String fileRealName = String.valueOf(System.currentTimeMillis());
+                fileRealName = "appIconImg_" + userId + fileRealName + UploadFileUtils.getSuffix(iconImg.getOriginalFilename());
+
+                // 上传至服务器
+                String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
+                if (!returnMessage.equals("上传文件成功！")) {
+                    ret.put("status", "1");
+                    ret.put("statusDesc", returnMessage);
+                    return ret;
+                }
+                // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
+                String iconUrl = fileRealName;
+                // 保存到数据库
+                loginService.updateUserIconImg(userId, iconUrl);
+                String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
+                imghost = imghost.substring(0, imghost.length() - 1);
+                ret.put("iconUrl", imghost + fileUploadTempPath + fileRealName);
+                ret.put("status", "0");
+                ret.put("statusDesc", "头像上传成功");
+            } else {
+                ret.put("status", "1");
+                ret.put("statusDesc", "用户信息不存在");
+            }
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "上传头像发生错误");
         }
         return ret;
     }

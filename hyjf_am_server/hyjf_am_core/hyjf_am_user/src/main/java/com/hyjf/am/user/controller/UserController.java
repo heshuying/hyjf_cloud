@@ -64,6 +64,33 @@ public class UserController extends BaseController {
         return userResponse;
     }
 
+    @PostMapping("/surongRegister")
+
+    public UserResponse surongRegister(@RequestBody @Valid RegisterUserRequest userRequest) {
+        logger.info("user register:" + JSONObject.toJSONString(userRequest));
+        UserResponse userResponse = new UserResponse();
+        User user = null;
+        try {
+            user = userService.surongRegister(userRequest);
+
+            if (user == null) {
+                userResponse.setRtn(Response.FAIL);
+                userResponse.setMessage(Response.FAIL_MSG);
+                logger.error("user register error,user " + userRequest.getMobile());
+            } else {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                userResponse.setResult(userVO);
+            }
+        } catch (MQException e) {
+            logger.error("user register error...", e);
+            userResponse.setRtn(Response.FAIL);
+            userResponse.setMessage(Response.FAIL_MSG);
+        }
+
+        return userResponse;
+    }
+
     /**
      * 根据渠道号检索渠道是否存在
      *
@@ -645,6 +672,21 @@ public class UserController extends BaseController {
         UtmResponse response = new UtmResponse();
         UserVO userVO = userService.getUser(utmReferrer,userId);
         response.setResult(userVO);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据userId查询用户推荐人
+     * @Date 14:00 2018/7/18
+     * @Param userId
+     * @return
+     */
+    @RequestMapping("/selectspreadsuserbyuserid/{userId}")
+    public SpreadsUserResponse selectByUserId(@PathVariable String userId) {
+        SpreadsUserResponse response = new SpreadsUserResponse();
+        List<SpreadsUserVO> list = userService.selectByUserId(userId);
+        response.setResultList(list);
         return response;
     }
 }

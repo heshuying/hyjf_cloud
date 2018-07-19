@@ -63,7 +63,14 @@ public class UserManagerController extends BaseController{
         if(request.getPageSize()==0){
             paginator = new Paginator(request.getCurrPage(), usesrCount);
         }
-        List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,paginator.getOffset(), paginator.getLimit());
+
+        int limitStart = paginator.getOffset();
+        int limitEnd =  paginator.getLimit();
+        if(request.isLimitFlg()){
+            limitEnd = 0;
+            limitStart = 0;
+        }
+        List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,limitStart,limitEnd);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
@@ -531,7 +538,7 @@ public class UserManagerController extends BaseController{
     }
 
     /**
-     * 获取推荐人姓名查找用户
+     * 获取姓名查找用户
      * @param recommendName
      * @return
      */

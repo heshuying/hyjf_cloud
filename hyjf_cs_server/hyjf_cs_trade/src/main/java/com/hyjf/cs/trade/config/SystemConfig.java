@@ -72,6 +72,9 @@ public class SystemConfig {
     @Value("${hyjf.bank.bankcode}")
     private String bankBankcode;
 
+    @Value("${hyjf.bank.merrp.account}")
+    private String BANK_MERRP_ACCOUNT;
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -254,5 +257,13 @@ public class SystemConfig {
 
     public void setPasswordWDZJ(String passwordWDZJ) {
         this.passwordWDZJ = passwordWDZJ;
+    }
+
+    public String getBANK_MERRP_ACCOUNT() {
+        return BANK_MERRP_ACCOUNT;
+    }
+
+    public void setBANK_MERRP_ACCOUNT(String BANK_MERRP_ACCOUNT) {
+        this.BANK_MERRP_ACCOUNT = BANK_MERRP_ACCOUNT;
     }
 }

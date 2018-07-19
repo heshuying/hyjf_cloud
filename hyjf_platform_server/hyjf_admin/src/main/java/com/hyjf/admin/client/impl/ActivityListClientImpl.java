@@ -25,52 +25,52 @@ public class ActivityListClientImpl implements ActivityListClient {
     RestTemplate restTemplate;
 
     @Override
-    public List<ActivityListVO> getRecordList(ActivityListRequest activityListRequest) {
+    public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
         String url = "http://AM-MARKET/am-market/activity/getRecordList";
-        ActivityListResponse response = restTemplate.postForEntity(url,activityListRequest,ActivityListResponse.class).getBody();
+        ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultList();
+            return response;
         }
         return null;
     }
 
     @Override
-    public int insertRecord(ActivityListRequest request) {
+    public ActivityListResponse insertRecord(ActivityListRequest request) {
         String url = "http://AM-MARKET/am-market/activity/insertRecord";
-        ActivityListResponse response = restTemplate.postForEntity(url,request,ActivityListResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getFlag();
-        }
-        return 0;
-    }
-
-    @Override
-    public ActivityListVO selectActivityById(int activityId) {
-        String url = "http://AM-MARKET/am-market/activity/selectActivityById/"+activityId;
-        ActivityListResponse response = restTemplate.getForEntity(url,ActivityListResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
+        ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
+        if (response != null) {
+            return response;
         }
         return null;
     }
 
     @Override
-    public int updateActivity(ActivityListRequest request) {
-        String url = "http://AM-MARKET/am-market/activity/updateActivity";
-        ActivityListResponse response = restTemplate.postForEntity(url,request,ActivityListResponse.class).getBody();
+    public ActivityListResponse selectActivityById(ActivityListRequest activityListRequest) {
+        String url = "http://AM-MARKET/am-market/activity/selectActivityList";
+        ActivityListResponse response = restTemplate.postForEntity(url, activityListRequest, ActivityListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getFlag();
+            return response;
         }
-        return 0;
+        return null;
     }
 
     @Override
-    public int deleteActivity(int id) {
-        String url = "http://AM-MARKET/am-market/activity/deleteActivity/"+ id;
-        ActivityListResponse response = restTemplate.getForEntity(url,ActivityListResponse.class).getBody();
+    public ActivityListResponse updateActivity(ActivityListRequest request) {
+        String url = "http://AM-MARKET/am-market/activity/updateActivity";
+        ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getFlag();
+            return response;
         }
-        return 0;
+        return null;
+    }
+
+    @Override
+    public ActivityListResponse deleteActivity(ActivityListRequest request) {
+        String url = "http://AM-MARKET/am-market/activity/deleteActivity";
+        ActivityListResponse response = restTemplate.postForEntity(url, request, ActivityListResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
     }
 }

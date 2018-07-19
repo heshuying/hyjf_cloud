@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author wangc
  */
-@Api(value = "密码相关服务")
+@Api(value = "密码相关服务",description = "密码相关服务")
 @RestController
-@RequestMapping("/weChat/user/password")
+@RequestMapping("/hyjf-wechat/user/password")
 public class WeChatPassWordController {
 
     @Autowired

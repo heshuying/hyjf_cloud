@@ -34,7 +34,7 @@ public class HjhDebtCreditClientImpl implements HjhDebtCreditClient {
     @Override
     public List<HjhDebtCreditVO> selectHjhDebtCreditListByAccedeOrderId(String accedeOrderId) {
         HjhDebtCreditResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByAccedeOrderId/",
+                "http://AM-TRADE/am-trade/hjhDebtCredit/selectHjhDebtCreditListByAccedeOrderId/" + accedeOrderId,
                 HjhDebtCreditResponse.class).getBody();
         if (response != null) {
             return response.getResultList();

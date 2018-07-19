@@ -35,11 +35,11 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
-    @RequestMapping("/selectActivityList/{activityId}")
-    public ActivityListResponse selectActivityList(@PathVariable int activityId){
-        ActivityList activityList = activityService.selectActivityList(activityId);
+    @PostMapping("/selectActivityList")
+    public ActivityListResponse selectActivityList(@RequestBody @Valid ActivityListRequest activityListRequest){
         ActivityListResponse response = new ActivityListResponse();
-        if(null != activityList){
+        ActivityList activityList = activityService.selectActivityList(activityListRequest.getId());
+        if(activityList != null){
             ActivityListVO activityListVO = new ActivityListVO();
             BeanUtils.copyProperties(activityList,activityListVO);
             response.setResult(activityListVO);
@@ -52,20 +52,19 @@ public class ActivityController {
         logger.info("---getRecordList by param---  " + JSONObject.toJSON(request));
         ActivityListResponse response = new ActivityListResponse();
         String returnCode = Response.FAIL;
-        Map<String,Object> mapParam = paramSet(request);
-        int recordCount = activityService.countActivityList(mapParam);
+//        Map<String,Object> mapParam = paramSet(request);
+        int recordCount = activityService.countActivityList(request);
         Paginator paginator = new Paginator(request.getPaginatorPage(), recordCount,request.getLimit());
         if(request.getLimit()==0){
             paginator = new Paginator(request.getPaginatorPage(), recordCount);
         }
-        List<ActivityList> activityLists = activityService.getRecordList(mapParam,paginator.getOffset(), paginator.getLimit());
+        List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
         if(recordCount>0){
             if (!CollectionUtils.isEmpty(activityLists)) {
                 List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activityLists, ActivityListVO.class);
                 response.setResultList(activityListVOS);
                 response.setCount(recordCount);
                 returnCode = Response.SUCCESS;
-
             }
         }
         response.setRtn(returnCode);
@@ -77,10 +76,24 @@ public class ActivityController {
     @PostMapping("/insertRecord")
     public ActivityListResponse insertRecord(@RequestBody @Valid ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
-        ActivityList activityList = new ActivityList();
-        BeanUtils.copyProperties(request,activityList);
-        int insertFlag = activityService.insertRecord(activityList);
-        response.setFlag(insertFlag);
+        try {
+            ActivityList activityList = new ActivityList();
+            BeanUtils.copyProperties(request, activityList);
+            activityList.setTimeStart(request.getStartTime());
+            activityList.setTimeEnd(request.getEndTime());
+            Map<String, Object> resultMap = activityService.insertRecord(activityList);
+            if ((Boolean) resultMap.get("success")) {
+                return response;
+            } else {
+                response.setRtn("failed");
+                response.setMessage((String) resultMap.get("msg"));
+                return response;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        response.setMessage("添加失败");
+        response.setRtn("1");
         return response;
     }
 
@@ -88,21 +101,43 @@ public class ActivityController {
     @PostMapping("/updateActivity")
     public ActivityListResponse updateActivity(@RequestBody @Valid ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
+        try {
         ActivityList activityList = new ActivityList();
         BeanUtils.copyProperties(request,activityList);
-        int updateFlag = activityService.updateActivity(activityList);
-        response.setFlag(updateFlag);
+        activityList.setTimeStart(request.getStartTime());
+        activityList.setTimeEnd(request.getEndTime());
+        Map<String, Object> resultMap = activityService.updateActivity(activityList);
+        if ((Boolean) resultMap.get("success")) {
+            return response;
+        } else {
+            response.setRtn("failed");
+            response.setMessage((String) resultMap.get("msg"));
+            return response;
+        }
+    }catch (Exception e) {
+        e.printStackTrace();
+    }
+        response.setMessage("修改失败");
+        response.setRtn("1");
         return response;
     }
 
 
-    @GetMapping("/deleteActivity/{id}")
-    public ActivityListResponse deleteActivity(@PathVariable int id) {
+    @PostMapping("/deleteActivity")
+    public ActivityListResponse deleteActivity(@RequestBody @Valid ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
-        int deletFlag = activityService.deleteActivity(id);
-        response.setFlag(deletFlag);
-        return response;
+        int id = request.getId();
+        Map<String, Object> resultMap = activityService.deleteActivity(id);
+        if ((Boolean) resultMap.get("success")) {
+            return response;
+        } else {
+            response.setRtn("failed");
+            response.setMessage((String) resultMap.get("msg"));
+            return response;
+        }
     }
+
+
 
 
     /**

@@ -54,195 +54,134 @@
 		SELECT
 		hydb.borrow_nid,
 		hydbpt.borrow_project_type AS project_type,
-		hydbpt.borrow_cd AS type,
+		hydbpt.borrow_cd AS TYPE,
 		hydbpt.borrow_name AS type_name,
-		hydb.`name`
-		AS borrow_name,
-		IFNULL(hydb.project_name,hydb.borrow_nid) as
+		hbi.`name` AS borrow_name, IFNULL(hbi.project_name,hydb.borrow_nid) AS
 		project_name,
-		hydb.borrow_contents,
-		hydb.borrow_measures_mea,
-		hydb.is_new,
-		hydb.finance_purpose,
-		hydb.monthly_income,
-		hydb.payment,
-		hydb.first_payment,
-		hydb.second_payment,
-		hydb.cost_introdution,
-		hydb.fiance_condition,
+		hbi.borrow_contents,
+		hbi.borrow_measures_mea,
+		hbi.is_new,
+		hbi.finance_purpose,
+		hbi.monthly_income,
+		hbi.payment,
+		hbi.first_payment,
+		hbi.second_payment,
+		hbi.cost_introdution,
+		hbi.fiance_condition,
 		hydb.borrow_style,
-		hydb.inst_code,
-		hydb.asset_type,
-		hydb.is_show,
-		CASE
-		WHEN hydb.company_or_personal = 2
-		THEN
+		hbi.inst_code,
+		hbi.asset_type,
+		hydb.is_show, CASE WHEN hbi.company_or_personal = 2 THEN
 		(
-		SELECT
-		m.credit
-		FROM
-		ht_borrow_maninfo m
-		WHERE
-		m.borrow_nid =
-		hydb.borrow_nid
-		)
-		ELSE
+			SELECT
+					m.credit
+			FROM
+					ht_borrow_maninfo m
+			WHERE
+					m.borrow_nid =
+					hydb.borrow_nid
+		) ELSE
 		(
-		SELECT
-		u.credit
-		FROM
-		ht_borrow_users u
-		WHERE
-		u.borrow_nid = hydb.borrow_nid
-		)
-		END AS user_credit,
-		hydb.borrow_measures_instit AS measures_instit,
+			SELECT
+					u.credit
+			FROM
+					ht_borrow_user u
+			WHERE
+					u.borrow_nid = hydb.borrow_nid
+		) END AS user_credit,
+		hbi.borrow_measures_instit AS measures_instit,
 		hydb.account AS
 		borrow_account,
-		truncate(hydb.account/10000,2) AS borrow_account_wan,
+		TRUNCATE(hydb.account/10000,2) AS borrow_account_wan,
 		hydb.borrow_apr,
-		hydb.borrow_period,
-		CASE WHEN hydb.borrow_style =
+		hydb.borrow_period, CASE WHEN hydb.borrow_style =
 		'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
 		hydb.borrow_account_wait AS invest_account,
-		hydb.company_or_personal AS
+		hbi.company_or_personal AS
 		com_or_per,
 		hydbs.`name` AS repay_style,
-		hydb.borrow_account_scale AS
-		borrow_schedule,
-		hydb.booking_status,
-		hydb.booking_begin_time,
-		hydb.booking_end_time,
-		hydb.borrow_account_wait_appoint,
-		hydb.borrow_account_scale_appoint,
-		hydb.tender_account_min,
-		truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
-		hydb.tender_account_max,
-		CASE
-		WHEN hydb.`status` = 1 AND
-		hydb.verify_status = 3
-		THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d
-		%H:%i' )
-		ELSE
-		FROM_UNIXTIME(
+
+		TRUNCATE(hbi.tender_account_min/10000,2) tender_account_min_wan,
+		hbi.tender_account_max, CASE WHEN hydb.`status` = 1 AND
+		hydb.verify_status = 3 THEN FROM_UNIXTIME(hydb.ontime, '%Y-%m-%d
+		%H:%i') ELSE FROM_UNIXTIME(
 		hydb.verify_time,
 		'%Y-%m-%d %H:%i'
-		)
-		END AS
-		send_time,
-		FROM_UNIXTIME(
+		) END AS
+		send_time, FROM_UNIXTIME(
 		hydb.borrow_full_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS
-		full_time,
-		FROM_UNIXTIME(
+		full_time, FROM_UNIXTIME(
 		(hydb.verify_time + hydb.borrow_valid_time *
 		24 * 60 * 60),
 		'%Y-%m-%d %H:%i:%s'
-		) AS borrow_end_time,
-		CASE
-		WHEN
-		hydb.`status` = 1 AND hydb.verify_status = 3
-		THEN FROM_UNIXTIME(
-		hydb.ontime, '%Y-%m-%d %H:%i:%s' )
-		ELSE ''
-		END AS on_time,
-		CASE
-		WHEN
-		hydb.`status` = 1 AND hydb.booking_status =0
-		THEN FROM_UNIXTIME(
-		hydb.booking_begin_time, '%Y-%m-%d %H:%i:%s' )
-		ELSE ''
-		END AS
-		on_appoint_time,
-		CASE
-		WHEN hydb.`status` = 1 AND hydb.verify_status = 3
-		THEN hydb.ontime
-		ELSE ''
-		END AS time,
-		CASE
-		WHEN hydb.`status` = 1 AND
-		hydb.verify_status = 3 THEN '10'
-		WHEN hydb.`status` = 2 AND
-		hydb.borrow_full_status = 0
-		AND (
+		) AS borrow_end_time, CASE WHEN
+		hydb.`status` = 1 AND hydb.verify_status = 3 THEN FROM_UNIXTIME(
+		hydb.ontime, '%Y-%m-%d %H:%i:%s') ELSE '' END AS on_time,  CASE WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN hydb.ontime ELSE '' END AS TIME, CASE WHEN hydb.`status` = 1 AND
+		hydb.verify_status = 3 THEN '10' WHEN hydb.`status` = 2 AND
+		hydb.borrow_full_status = 0 AND (
 		hydb.verify_time + (
 		hydb.borrow_valid_time * 24 * 60 * 60
 		) > UNIX_TIMESTAMP(NOW())
 		) THEN
-		'11'
-		WHEN hydb.`status` = 3
-		THEN
-		'12'
-		WHEN hydb.`status` = 4 THEN
-		'13'
-		WHEN
+		'11' WHEN hydb.`status` = 3 THEN
+		'12' WHEN hydb.`status` = 4 THEN
+		'13' WHEN
 		hydb.`status` = 5 THEN
 		'14'
-		<!-- WHEN hydb.`status` = 2 THEN '15' -->
 		ELSE
-		''
-		END AS `status`,
+		'' END AS `status`,
 		hydb.`status` AS status_orginal,
-		hydb.borrow_increase_money increase_money,
-		hydb.borrow_interest_coupon
+		hbi.borrow_increase_money increase_money,
+		hbi.borrow_interest_coupon
 		interest_coupon,
-		hydb.borrow_taste_money taste_money,
-		hydb.borrow_asset_number,
-		hydb.borrow_project_source,
-		hydb.borrow_interest_time,
-		hydb.borrow_due_time,
-		hydb.borrow_safeguard_way,
-		hydb.borrow_income_description,
-		hydb.borrow_publisher,
-		hydb.borrow_extra_yield,
-		hydb.contract_period,
-		FROM_UNIXTIME(
+		hbi.borrow_taste_money taste_money,
+		hbi.borrow_asset_number,
+		hbi.borrow_project_source,
+		hbi.borrow_interest_time,
+		hbi.borrow_due_time,
+		hbi.borrow_safeguard_way,
+		hbi.borrow_income_description,
+		hbi.borrow_publisher,
+		hbi.borrow_extra_yield,
+		hbi.contract_period, FROM_UNIXTIME(
 		hydb.recover_last_time,
 		'%Y年%m月%d日'
 		) recover_last_time,
-		hydb.borrow_level
-		FROM
+		hbi.borrow_level
+FROM
 		ht_borrow hydb
-		LEFT JOIN ht_borrow_project_type
+LEFT JOIN ht_borrow_project_type
 		hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN
+		left join ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
+LEFT JOIN
 		ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
-		WHERE
+WHERE
 		(
-		hydbpt.borrow_project_type = 'HZT'
-		OR hydbpt.borrow_project_type =
+		hydbpt.borrow_project_type = 'HZT' OR hydbpt.borrow_project_type =
 		'HXF'
-		)
-		AND (
+		) AND (
 		(
 		(
-		hydb.`status` = 1
-		AND hydb.verify_status = 3
+		hydb.`status` = 1 AND hydb.verify_status = 3
 		)
-		)
-		OR (
-		hydb.`status` = 2
-		AND hydb.borrow_full_status = 0
-		AND (
+		) OR (
+		hydb.`status` = 2 AND hydb.borrow_full_status = 0 AND (
 		hydb.verify_time
 		+ (
 		hydb.borrow_valid_time * 24 * 60 * 60
 		) > UNIX_TIMESTAMP(NOW())
 		)
-		)
-		OR
+		) OR
 		(
 		hydb.`status` = 3
-		)
-		OR (
+		) OR (
 		hydb.`status` = 4
-		)
-		OR (
+		) OR (
 		hydb.`status` = 5
 		)
-		)
-		AND
+		) and
 		hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
 
 	</select>

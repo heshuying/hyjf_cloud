@@ -59,5 +59,15 @@ public class AccountListClientImpl implements AccountListClient {
 
     }
 
+    @Override
+    public int countByNidAndTrade(String nid, String trade) {
+        String url = "http://AM-TRADE/am-trade/accountList/countbynidandtrade/"+nid+"/"+trade;
+        AccountListResponse response = restTemplate.getForEntity(url,AccountListResponse.class).getBody();
+        if (response != null && response.getResult() != null) {
+            return response.getTotalRecord();
+        }
+        return 1;
+    }
+
 
 }

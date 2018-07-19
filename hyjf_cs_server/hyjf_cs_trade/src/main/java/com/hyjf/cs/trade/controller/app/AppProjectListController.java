@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Api(value = "移动端项目列表")
 @RestController
-@RequestMapping("/app/projectlist")
+@RequestMapping("/hyjf-app/projectlist")
 public class AppProjectListController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(AppProjectListController.class);
 

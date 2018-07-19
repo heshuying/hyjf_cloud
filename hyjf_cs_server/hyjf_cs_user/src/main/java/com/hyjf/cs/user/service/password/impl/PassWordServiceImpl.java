@@ -3,18 +3,6 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -32,13 +20,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -60,6 +42,17 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wangc
@@ -197,7 +190,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
         String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.webHost + "/web/user/password/resetPasswordBgreturn";
+        String bgRetUrl = systemConfig.webHost + "/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -441,7 +434,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
          retUrl = systemConfig.getFrontHost() + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
          String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
         // 异步调用路
-         bgRetUrl = systemConfig.webHost + "/api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
+         bgRetUrl = systemConfig.webHost + "/hyjf-api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
         // 调用设置密码接口
         System.out.println(retUrl+"..."+bgRetUrl);
         BankCallBean bean = new BankCallBean();
