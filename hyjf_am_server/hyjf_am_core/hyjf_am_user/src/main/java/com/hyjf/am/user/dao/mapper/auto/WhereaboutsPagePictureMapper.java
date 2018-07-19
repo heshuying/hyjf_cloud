@@ -1,9 +1,10 @@
-package com.hyjf.am.config.dao.mapper.auto;
+package com.hyjf.am.user.dao.mapper.auto;
 
-import com.hyjf.am.config.dao.model.auto.WhereaboutsPagePicture;
-import com.hyjf.am.config.dao.model.auto.WhereaboutsPagePictureExample;
-import java.util.List;
+import com.hyjf.am.user.dao.model.auto.WhereaboutsPagePicture;
+import com.hyjf.am.user.dao.model.auto.WhereaboutsPagePictureExample;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface WhereaboutsPagePictureMapper {
     int countByExample(WhereaboutsPagePictureExample example);
