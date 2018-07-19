@@ -6,6 +6,7 @@ package com.hyjf.cs.message.service.msgpush.impl;
 import java.util.List;
 import java.util.UUID;
 
+import com.hyjf.cs.message.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.MessagePush;
 import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
-import com.hyjf.cs.message.client.messagePushTemplateClient.MessagePushTemplateClient;
 import com.hyjf.cs.message.mongo.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
@@ -42,7 +42,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 	private AppMessageProducer appMessageProducer;
 
 	@Autowired
-	private MessagePushTemplateClient messagePushTemplateClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public void pushMessage() {
@@ -64,7 +64,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 	@Override
 	public List<MessagePushTemplateVO> getAllTemplates() {
 		// 获取所有模板
-		List<MessagePushTemplateVO> templateList = messagePushTemplateClient.getAllTemplates();
+		List<MessagePushTemplateVO> templateList = amConfigClient.getAllTemplates();
 		// 插入统计数据
 		for (int i = 0; i < templateList.size(); i++) {
 			this.insertTemplateStatics(templateList.get(i));

@@ -12,7 +12,7 @@ import java.util.List;
  * @author fuqiang
  * @version UserAliasService, v0.1 2018/5/8 10:55
  */
-public interface UserAliasService {
+public interface UserAliasService extends BaseService{
     /**
      * 根据手机号查询推送别名
      *

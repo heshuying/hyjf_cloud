@@ -16,9 +16,9 @@ public class ActivityListRequest {
     /**
      * 前台时间接收
      */
-    private int startTime;
+    private Integer startTime;
 
-    private int endTime;
+    private Integer endTime;
 
     private String startCreate;
 
@@ -91,19 +91,19 @@ public class ActivityListRequest {
         this.endCreate = endCreate;
     }
 
-    public int getStartTime() {
+    public Integer getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(Integer startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 

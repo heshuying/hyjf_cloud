@@ -7,11 +7,31 @@ public class UserAliasVO implements Serializable {
 
 	private String sign;
 
+	/**
+	 * 设备唯一标识码（极光别名）
+	 */
 	private String alias;
-
-	private String client;
-
+	/**
+	 * 手机号
+	 *
+	 * @return
+	 */
+	private String mobile;
+	/**
+	 * 手机号
+	 *
+	 * @return
+	 */
+	private String[] mobiles;
+	/**
+	 * 包号，39 新极光 79老极光 推送
+	 */
 	private String packageCode;
+
+	/**
+	 * 所属平台（2 安卓 3 ios）
+	 */
+	private String client;
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +48,7 @@ public class UserAliasVO implements Serializable {
 	}
 
 	public void setSign(String sign) {
-		this.sign = sign == null ? null : sign.trim();
+		this.sign = sign;
 	}
 
 	public String getAlias() {
@@ -36,15 +56,23 @@ public class UserAliasVO implements Serializable {
 	}
 
 	public void setAlias(String alias) {
-		this.alias = alias == null ? null : alias.trim();
+		this.alias = alias;
 	}
 
-	public String getClient() {
-		return client;
+	public String getMobile() {
+		return mobile;
 	}
 
-	public void setClient(String client) {
-		this.client = client == null ? null : client.trim();
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String[] getMobiles() {
+		return mobiles;
+	}
+
+	public void setMobiles(String[] mobiles) {
+		this.mobiles = mobiles;
 	}
 
 	public String getPackageCode() {
@@ -52,6 +80,14 @@ public class UserAliasVO implements Serializable {
 	}
 
 	public void setPackageCode(String packageCode) {
-		this.packageCode = packageCode == null ? null : packageCode.trim();
+		this.packageCode = packageCode;
+	}
+
+	public String getClient() {
+		return client;
+	}
+
+	public void setClient(String client) {
+		this.client = client;
 	}
 }

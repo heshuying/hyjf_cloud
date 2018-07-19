@@ -354,11 +354,11 @@ public class MsgPushHandle {
 				userId = commonBean.getUserId();
 				pcode = commonBean.getPackageCode();
 				client = commonBean.getClient();
-				if (StringUtils.isEmpty(commonBean.getMobileCode())) {
+				if (StringUtils.isEmpty(commonBean.getAlias())) {
 					errorMsg = "该用户设备不存在";
 				} else {
 					payload = JPush.buildPushObject_all_alias_alert(HtmlUtil.getTextFromHtml(msg.getMsgContent()),
-							msg.getId(), msg.getMsgAction(), msg.getMsgActionUrl(), commonBean.getMobileCode());
+							msg.getId(), msg.getMsgAction(), msg.getMsgActionUrl(), commonBean.getAlias());
 				}
 			} else {
 				errorMsg = "该用户设备不存在";
