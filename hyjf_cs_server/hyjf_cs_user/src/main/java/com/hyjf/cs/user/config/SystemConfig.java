@@ -78,6 +78,10 @@ public class SystemConfig {
     @Value("${wcsr.retranspassword}")
     // 需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack 
     private String retransPassword;
+    
+    @Value("${wcsr.resetpassword}")
+    // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd 
+    private String resetpassword;
 
     public String getWechatQrcodeUrl() {
         return wechatQrcodeUrl;
@@ -269,5 +273,13 @@ public class SystemConfig {
 
 	public void setRetransPassword(String retransPassword) {
 		this.retransPassword = retransPassword;
+	}
+
+	public String getResetpassword() {
+		return resetpassword;
+	}
+
+	public void setResetpassword(String resetpassword) {
+		this.resetpassword = resetpassword;
 	}
 }

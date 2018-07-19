@@ -14,8 +14,9 @@ import java.util.Date;
  * @version StatisticsTzj, v0.1 2018/7/2 11:11
  */
 @Document(collection = "t_statistics_tzj")
+@Deprecated
 public class StatisticsTzj implements Serializable {
-    private Integer id;
+    private String id;
 
     private String day;
 
@@ -59,11 +60,11 @@ public class StatisticsTzj implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

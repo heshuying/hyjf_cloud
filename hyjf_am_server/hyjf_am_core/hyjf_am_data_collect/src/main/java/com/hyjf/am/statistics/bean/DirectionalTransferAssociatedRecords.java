@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 @Document(collection = "ht_directional_transfer_associated_records")
 public class DirectionalTransferAssociatedRecords implements Serializable {
-    private Integer id;
+    private String id;
 
     private String turnOutUsername;
 
@@ -30,11 +30,11 @@ public class DirectionalTransferAssociatedRecords implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
