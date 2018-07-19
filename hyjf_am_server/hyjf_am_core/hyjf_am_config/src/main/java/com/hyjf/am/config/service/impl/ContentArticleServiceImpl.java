@@ -7,7 +7,7 @@ import com.hyjf.am.config.dao.model.auto.ContentArticleExample;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.admin.Paginator;
-import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
@@ -36,7 +36,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
         ContentArticleExample example = new ContentArticleExample();
-        if (request.getLimitStart() != -1) {
+        if (request.getLimitStart() !=null) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
         }
@@ -55,7 +55,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public ContentArticleResponse getContentArticleListPage(ContentArticleRequest request) {
+    public ContentArticleResponse getContentArticleListPage(com.hyjf.am.resquest.config.ContentArticleRequest request) {
         List<ContentArticle> list = null;
         ContentArticleResponse response = new ContentArticleResponse();
 
@@ -154,7 +154,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
 
 
     @Override
-    public void insertAction(ContentArticleRequest request) {
+    public void insertAction(com.hyjf.am.resquest.config.ContentArticleRequest request) {
         if (request != null) {
 
             request.setCreateTime(GetDate.getDate());
@@ -168,7 +168,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     }
 
     @Override
-    public void updateAction(ContentArticleRequest request) {
+    public void updateAction(com.hyjf.am.resquest.config.ContentArticleRequest request) {
         if (request != null) {
             ContentArticle contentArticle = new ContentArticle();
             BeanUtils.copyProperties(request, contentArticle);
