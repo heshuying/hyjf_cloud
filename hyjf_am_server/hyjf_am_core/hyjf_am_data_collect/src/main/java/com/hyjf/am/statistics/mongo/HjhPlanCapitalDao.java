@@ -40,7 +40,7 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
         if (null != hjhPlanCapitalVO){
             criteria = Criteria.where("id").gt(0);
             if (hjhPlanCapitalVO.getPlanName() != null){
-                criteria = criteria.and("planName").is(hjhPlanCapitalVO.getPlanNameSrch());
+                criteria = criteria.and("planName").is(hjhPlanCapitalVO.getPlanName());
             }
             return criteria;
         }
