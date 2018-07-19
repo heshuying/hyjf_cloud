@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.web.pandect;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,7 +43,7 @@ public class PandectController {
     @PostMapping(value = "/pandect")
         public WebResult<Map<String,Object>> pandect(@RequestHeader(value = "token") String token,Model model) {
             WebResult<Map<String,Object>> result = new WebResult<>();
-            Map<String,Object> map = new HashMap<>();
+            JSONObject map = new JSONObject();
             UserVO user = pandectService.getUsers(token);
             CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
             map = pandectService.pandect(user);

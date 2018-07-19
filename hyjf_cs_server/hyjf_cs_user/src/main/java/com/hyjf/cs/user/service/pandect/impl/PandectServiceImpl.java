@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.pandect.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.file.UploadFileUtils;
@@ -20,9 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,8 +47,8 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
     AmDataCollectClient amDataCollectClient;
 
     @Override
-    public Map<String, Object> pandect(UserVO user) {
-        Map<String,Object> result = new HashMap<>();
+    public JSONObject pandect(UserVO user) {
+        JSONObject result = new JSONObject();
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(user,webViewUserVO);
         Integer userId = user.getUserId();
