@@ -2,6 +2,9 @@ package com.hyjf.am.trade.mq.consumer;
 
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.mq.base.Consumer;
+import com.hyjf.am.trade.service.AssetPushService;
+import com.hyjf.am.trade.service.admin.AdminAllocationEngineService;
+import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +35,15 @@ public class AutoIssueConsumer extends Consumer {
 
     private static final String CONSUMER_QUIT = "消费退出";
 
+
+//    @Autowired
+    private AssetPushService assetPushService;
+
+//    @Autowired
+    private AdminHjhLabelService adminHjhLabelService;
+
+//    @Autowired
+    private AdminAllocationEngineService adminAllocationEngineService;
 //    @Autowired
 //    private BaseService baseService;
 //
@@ -93,7 +105,7 @@ public class AutoIssueConsumer extends Consumer {
                     }
 
                     // 拆库后，instcode字段放在了borrowInfo表，查询资产需要用instcode
-                    BorrowInfo borrowInfo = baseService.getBorrowInfoByNid(borrowNid);
+                    BorrowInfo borrowInfo = assetPushService.getBorrowInfoByNid(borrowNid);
                     if (borrowInfo == null || StringUtils.isBlank(borrowInfo.getInstCode())) {
                         logger.info("=====" + TASK_NAME + "该标的[{}]详情不存在,或者机构编号为空," + CONSUMER_QUIT + "=====", borrowNid);
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -153,6 +165,7 @@ public class AutoIssueConsumer extends Consumer {
                 return Boolean.TRUE;
             }
 
+            borrow = assetPushService.getBorrow(borrowNid);
             borrow = null;//baseService.getBorrow(borrowNid);
             if (borrow == null) {
                 logger.info("=====" + TASK_NAME + " 该标的[{}]在数据表不存在," + CONSUMER_QUIT + "=====", borrowNid);

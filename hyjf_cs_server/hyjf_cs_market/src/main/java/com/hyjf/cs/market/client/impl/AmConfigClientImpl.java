@@ -10,7 +10,7 @@ import com.hyjf.am.response.config.TeamResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.vo.config.*;
-import com.hyjf.cs.market.client.AboutUsClient;
+import com.hyjf.cs.market.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,10 +20,10 @@ import java.util.List;
 
 /**
  * @author fuqiang
- * @version AboutUsClientImpl, v0.1 2018/7/9 10:09
+ * @version AmConfigClientImpl, v0.1 2018/7/9 10:09
  */
 @Service
-public class AboutUsClientImpl implements AboutUsClient {
+public class AmConfigClientImpl implements AmConfigClient {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -37,19 +37,6 @@ public class AboutUsClientImpl implements AboutUsClient {
         return null;
     }
 
-	@Override
-	public String getTotalInvestmentAmount() {
-		CalculateInvestInterestResponse response = restTemplate.getForObject(
-				"http://AM-DATA-COLLECT/am-statistics/search/gettotalinvestmentamount",
-				CalculateInvestInterestResponse.class);
-		if (response != null) {
-			BigDecimal interestSum = response.getInterestSum();
-			if (interestSum != null) {
-				return String.valueOf(interestSum.divide(new BigDecimal("100000000")));
-			}
-		}
-		return null;
-	}
 
     @Override
 	public TeamVO getFounder() {
