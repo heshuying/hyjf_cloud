@@ -9,22 +9,15 @@ import java.util.List;
 
 /**
  * @author fuqiang
- * @version AboutUsClient, v0.1 2018/7/9 10:09
+ * @version AmConfigClient, v0.1 2018/7/9 10:09
  */
-public interface AboutUsClient {
+public interface AmConfigClient {
     /**
      * 获取公司简介
      *
      * @return
      */
     ContentArticleVO getAboutUs();
-
-    /**
-     * 获取累计投资金额
-     *
-     * @return
-     */
-    String getTotalInvestmentAmount();
 
     /**
      * 获取创始人信息
