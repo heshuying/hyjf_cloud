@@ -11,6 +11,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.common.CornerService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,8 @@ public class CornerController {
      * @param
      * @return
      */
-    @RequestMapping(value = "/getVersion")
+    @ApiOperation(value = "获取版本号",notes = "获取版本号")
+    @PostMapping(value = "/getVersion")
     public JSONObject getVersion(@RequestHeader(value = "key") String key, HttpServletRequest request, HttpServletResponse response) {
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/getVersion");
@@ -152,6 +154,7 @@ public class CornerController {
      * @param
      * @return
      */
+    @ApiOperation(value = "接收设备唯一标识",notes = "接收设备唯一标识")
     @PostMapping(value = "/mobileCode")
     public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, HttpServletResponse response) {
         JSONObject map = new JSONObject();

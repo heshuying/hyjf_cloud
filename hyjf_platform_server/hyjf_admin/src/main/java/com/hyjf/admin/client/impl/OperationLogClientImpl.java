@@ -40,7 +40,7 @@ public class OperationLogClientImpl implements OperationLogClient {
                 assertTypes.add(configList.get(i).getAssetType());
             }
             adminRequest.setInstCodes(instCodes);
-            adminRequest.setAssertTypes(assertTypes);
+            adminRequest.setAssetTypes(assertTypes);
             List<FeerateModifyLogVO> tradeList = restTemplate.postForEntity("http://AM-TRADE/am-trade/config/operationlog/selectInstAndAssertType", adminRequest, List.class).getBody();
             if (!CollectionUtils.isEmpty(configList)) {
                 for (int i = 0; i < configList.size(); i++) {

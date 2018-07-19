@@ -1,8 +1,10 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.trade.BankConfigVO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/11.
@@ -39,6 +41,16 @@ public class AdminFeeConfigRequest extends BasePage {
     private Date createTime;
 
     private Date updateTime;
+
+    private List<BankConfigVO> BankConfigList;
+
+    public List<BankConfigVO> getBankConfigList() {
+        return BankConfigList;
+    }
+
+    public void setBankConfigList(List<BankConfigVO> bankConfigList) {
+        BankConfigList = bankConfigList;
+    }
 
     private static final long serialVersionUID = 1L;
 
