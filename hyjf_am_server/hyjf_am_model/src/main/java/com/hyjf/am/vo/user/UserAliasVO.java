@@ -1,46 +1,19 @@
 package com.hyjf.am.vo.user;
 
-import com.hyjf.am.vo.BaseVO;
-
 import java.io.Serializable;
-import java.util.Arrays;
 
-/**
- * @author xiasq
- * @version UserAliasVO, v0.1 2018/5/4 10:46
- */
-public class UserAliasVO extends BaseVO implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-	/*
-	 * 用户id
-	 */
+public class UserAliasVO implements Serializable {
 	private Integer userId;
-	/**
-	 * 设备唯一标识码（极光别名）
-	 */
-	private String mobileCode;
-	/**
-	 * 手机号
-	 * 
-	 * @return
-	 */
-	private String mobile;
-    /**
-     * 手机号
-     *
-     * @return
-     */
-    private String[] mobiles;
-	/**
-	 * 包号，39 新极光 79老极光 推送
-	 */
+
+	private String sign;
+
+	private String alias;
+
+	private String client;
+
 	private String packageCode;
 
-	/**
-	 * 所属平台（2 安卓 3 ios）
-	 */
-	private String client;
+	private static final long serialVersionUID = 1L;
 
 	public Integer getUserId() {
 		return userId;
@@ -50,36 +23,20 @@ public class UserAliasVO extends BaseVO implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getMobileCode() {
-		return mobileCode;
+	public String getSign() {
+		return sign;
 	}
 
-	public void setMobileCode(String mobileCode) {
-		this.mobileCode = mobileCode;
+	public void setSign(String sign) {
+		this.sign = sign == null ? null : sign.trim();
 	}
 
-	public String getMobile() {
-		return mobile;
+	public String getAlias() {
+		return alias;
 	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String[] getMobiles() {
-		return mobiles;
-	}
-
-	public void setMobiles(String[] mobiles) {
-		this.mobiles = mobiles;
-	}
-
-	public String getPackageCode() {
-		return packageCode;
-	}
-
-	public void setPackageCode(String packageCode) {
-		this.packageCode = packageCode;
+	public void setAlias(String alias) {
+		this.alias = alias == null ? null : alias.trim();
 	}
 
 	public String getClient() {
@@ -87,18 +44,14 @@ public class UserAliasVO extends BaseVO implements Serializable {
 	}
 
 	public void setClient(String client) {
-		this.client = client;
+		this.client = client == null ? null : client.trim();
 	}
 
-	@Override
-	public String toString() {
-		return "UserAliasVO{" +
-				"userId=" + userId +
-				", mobileCode='" + mobileCode + '\'' +
-				", mobile='" + mobile + '\'' +
-				", mobiles=" + Arrays.toString(mobiles) +
-				", packageCode='" + packageCode + '\'' +
-				", client='" + client + '\'' +
-				'}';
+	public String getPackageCode() {
+		return packageCode;
+	}
+
+	public void setPackageCode(String packageCode) {
+		this.packageCode = packageCode == null ? null : packageCode.trim();
 	}
 }

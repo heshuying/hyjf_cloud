@@ -6,6 +6,8 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 
+import java.util.List;
+
 /**
  * @author xiasq
  * @version AccountService, v0.1 2018/4/25 10:40
@@ -19,6 +21,8 @@ public interface AccountService {
     int updateOfRTBLoansTender(Account account);
 
     Integer updateOfPlanRepayAccount(AccountVO accountVO);
+
+    List<Account> getAccountByUserIds(List<Integer> userIds);
 
     /**
      * @Author walter.limeng
@@ -74,4 +78,22 @@ public interface AccountService {
      * @return
      */
     Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountList);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新用户散标账户
+     * @Date 17:18 2018/7/18
+     * @Param AccountVO
+     * @return
+     */
+    int updateOfRepayTender(AccountVO accountVO);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新用户散标账户
+     * @Date 18:34 2018/7/18
+     * @Param accountVO
+     * @return
+     */
+    int updateOfLoansTender(AccountVO accountVO);
 }

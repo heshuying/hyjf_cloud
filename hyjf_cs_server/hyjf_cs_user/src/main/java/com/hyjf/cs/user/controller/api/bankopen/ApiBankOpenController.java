@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Api(value = "第三方用户开户",description = "第三方用户开户")
 @Controller
-@RequestMapping("/api/user/open")
+@RequestMapping("/hyjf-api/user/open")
 public class ApiBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiBankOpenController.class);
 

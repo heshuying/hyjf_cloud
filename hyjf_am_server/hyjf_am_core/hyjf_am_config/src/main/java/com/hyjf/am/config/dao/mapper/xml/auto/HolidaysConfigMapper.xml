@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.auto.HolidaysConfigMapper" >
   <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="day" property="day" jdbcType="DATE" />
+    <result column="day_time" property="dayTime" jdbcType="DATE" />
     <result column="holiday_flag" property="holidayFlag" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -67,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `day`, holiday_flag, create_time, update_time
+    id, day_time, holiday_flag, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigExample" >
     select
@@ -106,9 +106,9 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_holidays_config (`day`, holiday_flag, create_time, 
+    insert into ht_holidays_config (day_time, holiday_flag, create_time, 
       update_time)
-    values (#{day,jdbcType=DATE}, #{holidayFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{dayTime,jdbcType=DATE}, #{holidayFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
@@ -117,8 +117,8 @@
     </selectKey>
     insert into ht_holidays_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="day != null" >
-        `day`,
+      <if test="dayTime != null" >
+        day_time,
       </if>
       <if test="holidayFlag != null" >
         holiday_flag,
@@ -131,8 +131,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="day != null" >
-        #{day,jdbcType=DATE},
+      <if test="dayTime != null" >
+        #{dayTime,jdbcType=DATE},
       </if>
       <if test="holidayFlag != null" >
         #{holidayFlag,jdbcType=TINYINT},
@@ -157,8 +157,8 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.day != null" >
-        `day` = #{record.day,jdbcType=DATE},
+      <if test="record.dayTime != null" >
+        day_time = #{record.dayTime,jdbcType=DATE},
       </if>
       <if test="record.holidayFlag != null" >
         holiday_flag = #{record.holidayFlag,jdbcType=TINYINT},
@@ -177,7 +177,7 @@
   <update id="updateByExample" parameterType="map" >
     update ht_holidays_config
     set id = #{record.id,jdbcType=INTEGER},
-      `day` = #{record.day,jdbcType=DATE},
+      day_time = #{record.dayTime,jdbcType=DATE},
       holiday_flag = #{record.holidayFlag,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -188,8 +188,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     update ht_holidays_config
     <set >
-      <if test="day != null" >
-        `day` = #{day,jdbcType=DATE},
+      <if test="dayTime != null" >
+        day_time = #{dayTime,jdbcType=DATE},
       </if>
       <if test="holidayFlag != null" >
         holiday_flag = #{holidayFlag,jdbcType=TINYINT},
@@ -205,7 +205,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     update ht_holidays_config
-    set `day` = #{day,jdbcType=DATE},
+    set day_time = #{dayTime,jdbcType=DATE},
       holiday_flag = #{holidayFlag,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

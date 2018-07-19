@@ -39,7 +39,7 @@ import java.util.Map;
 @Api(value = "web端担保账户开户",description = "web端担保账户开户")
 @CrossOrigin(origins = "*")
 @Controller
-@RequestMapping("/web/user/secure/assurebankopen")
+@RequestMapping("/hyjf-web/user/secure/assurebankopen")
 public class AssureBankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(AssureBankOpenController.class);
 

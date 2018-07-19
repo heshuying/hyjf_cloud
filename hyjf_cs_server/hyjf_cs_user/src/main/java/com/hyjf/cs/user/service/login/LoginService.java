@@ -28,7 +28,7 @@ public interface LoginService extends BaseUserService {
 
     void clearMobileCode(Integer userId, String sign);
 
-    UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request);
+    //UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request);
 
     /**
      * 上传用户头像

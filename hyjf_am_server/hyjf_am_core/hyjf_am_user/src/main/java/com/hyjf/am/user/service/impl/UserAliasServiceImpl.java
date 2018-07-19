@@ -63,4 +63,29 @@ public class UserAliasServiceImpl implements UserAliasService {
 		userAliasMapper.deleteByExample(example);
 
 	}
+
+	@Override
+	public UserAlias findAliasesByUserId(Integer userId) {
+		UserAliasExample example = new UserAliasExample();
+		example.createCriteria().andUserIdEqualTo(userId);
+		List<UserAlias> UserAliasList = userAliasMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(UserAliasList)) {
+			return UserAliasList.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public int updateAliases(UserAlias userAlias) {
+		int cnt = userAliasMapper.updateByPrimaryKeySelective(userAlias);
+		return cnt;
+	}
+
+	@Override
+	public int insertMobileCode(UserAlias userAlias) {
+		int cnt = userAliasMapper.insertSelective(userAlias);
+		return cnt;
+	}
+
+
 }

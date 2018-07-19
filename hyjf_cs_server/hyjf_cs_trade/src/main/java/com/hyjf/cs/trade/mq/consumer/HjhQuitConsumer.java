@@ -22,11 +22,13 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.handle.BorrowRepayPlanQuitMessageHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
+import org.springframework.stereotype.Component;
 
 /**
  * @author PC-LIUSHOUYI
  * @version HjhQuitConsumer, v0.1 2018/6/27 18:26
  */
+@Component
 public class HjhQuitConsumer extends Consumer  {
 
     private static final Logger logger = LoggerFactory.getLogger(AutoPreAuditConsumer.class);
@@ -49,7 +51,7 @@ public class HjhQuitConsumer extends Consumer  {
         defaultMQPushConsumer.registerMessageListener(new HjhQuitConsumer.MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
         defaultMQPushConsumer.start();
-        logger.info("====autoPreAudit consumer=====");
+        logger.info("====计划锁定/退出 消费端开始运行=====");
     }
 
 
@@ -62,7 +64,7 @@ public class HjhQuitConsumer extends Consumer  {
             MessageExt msg = list.get(0);
             if(msg == null || msg.getBody() == null){
                 logger.error("【汇计划计划进入锁定期/退出计划】接收到的消息为null");
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
 
             // --> 消息转换
@@ -74,17 +76,17 @@ public class HjhQuitConsumer extends Consumer  {
                 mqHjhAccede = JSONObject.parseObject(msgBody, HjhAccedeVO.class);
                 if(mqHjhAccede == null || mqHjhAccede.getAccedeOrderId() == null || mqHjhAccede.getOrderStatus() == null ||mqHjhAccede.getCreditCompleteFlag() == null){
                     logger.info("解析为空：" + msgBody);
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             } catch (Exception e1) {
-                e1.printStackTrace();
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                logger.error("计划锁定/退出参数解释失败：" + msgBody, e1);
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
             try {
                 borrowRepayPlanQuitMessageHandle.sendMessage(mqHjhAccede.getAccedeOrderId(), mqHjhAccede.getOrderStatus(),mqHjhAccede.getCreditCompleteFlag());
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e){
-                e.printStackTrace();
+                logger.error("计划锁定/退出失败：" + mqHjhAccede.getAccedeOrderId(), e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
         }

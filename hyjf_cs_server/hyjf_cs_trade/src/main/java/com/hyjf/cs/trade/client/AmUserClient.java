@@ -232,33 +232,33 @@ public interface AmUserClient {
 	 */
 	BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
 
-	CouponConfigVO selectCouponConfig(String couponCode);
+    CouponConfigVO selectCouponConfig(String couponCode);
 
 
-	BestCouponListVO selectBestCoupon(MyCouponListRequest request);
+    BestCouponListVO selectBestCoupon(MyCouponListRequest request);
 
 
-	Integer countAvaliableCoupon(MyCouponListRequest request);
+    Integer countAvaliableCoupon(MyCouponListRequest request);
 
-	/**
-	 * 查询汇计划最优优惠券
-	 * @param request
-	 * @return
-	 */
-	BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
+    /**
+     * 查询汇计划最优优惠券
+     * @param request
+     * @return
+     */
+    BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
 
-	/**
-	 *
-	 * @param couponCode
-	 * @return
-	 */
-	Integer checkCouponSendExcess(String couponCode);
-	/**
-	 * 查询HJH可用优惠券数量
-	 * @param request
-	 * @return
-	 */
-	Integer countHJHAvaliableCoupon(MyCouponListRequest request);
+    /**
+     *
+     * @param couponCode
+     * @return
+     */
+    Integer checkCouponSendExcess(String couponCode);
+    /**
+     * 查询HJH可用优惠券数量
+     * @param request
+     * @return
+     */
+    Integer countHJHAvaliableCoupon(MyCouponListRequest request);
 
 
     /**
@@ -269,4 +269,5 @@ public interface AmUserClient {
      * @return
      */
     List<SpreadsUserVO> selectByUserId(Integer userId);
+
 }

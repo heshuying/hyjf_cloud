@@ -88,6 +88,45 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+		BankCardResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId+"/"+status, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UserAliasVO findAliasesByUserId(Integer userId) {
+		UserAliasResponse response = restTemplate
+				.getForEntity(userService+"/userAlias/findAliasesByUserId/" + userId, UserAliasResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAliases(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/updateMobileCode", mobileCode, Integer.class).getBody();
+
+	}
+
+	@Override
+	public void insertMobileCode(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/insertMobileCode", mobileCode, Integer.class).getBody();
+	}
+
 
 	@Override
 	public UserVO findUserById(int userId) {

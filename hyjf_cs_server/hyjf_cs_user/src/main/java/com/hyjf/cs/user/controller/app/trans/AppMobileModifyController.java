@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "APP绑定新手机号",description = "APP绑定新手机号")
 @RestController
-@RequestMapping("/app/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppMobileModifyController extends BaseUserController {
     @Autowired
     MobileModifyService mobileModifyService;

@@ -35,7 +35,7 @@ import javax.validation.Valid;
  */
 @Api(value = "app端用户开户",description = "app端用户开户")
 @Controller
-@RequestMapping("/app/user/open")
+@RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppBankOpenController.class);
 

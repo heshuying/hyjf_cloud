@@ -26,7 +26,7 @@ import javax.validation.Valid;
 
 @Api(value = "api端授权状态查询",description = "api端授权状态查询")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/hyjf-api/user")
 public class AutoStateQueryController extends BaseUserController {
 
     @Autowired

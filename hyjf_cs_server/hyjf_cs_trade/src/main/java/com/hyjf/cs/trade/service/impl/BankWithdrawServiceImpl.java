@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.hyjf.am.bean.result.CheckResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
@@ -51,9 +51,9 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.client.AccountListClient;
+import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.BankOpenClient;
-import com.hyjf.cs.trade.client.BankWithdrawClient;
 import com.hyjf.cs.trade.client.BindCardClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
@@ -79,7 +79,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Autowired
     AmUserClient amUserClient;
-
+    @Autowired
+    AmConfigClient amConfigClient;
+    
     @Autowired
     BankOpenClient bankOpenClient;
 
@@ -98,9 +100,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Autowired
     SmsProducer smsProducer;
-
-    @Autowired
-    private BankWithdrawClient bankWithdrawClient;//银行提现掉单
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
@@ -411,15 +410,17 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * 定时任务提现
      */
     @Override
-    public boolean batchWithdraw() {
-        boolean ret = true;
-        List<AccountWithdrawVO> withdrawList = this.bankWithdrawClient.selectBankWithdrawList();
+    public Boolean batchWithdraw() {
+        Boolean ret = true;
+        List<AccountWithdrawVO> withdrawList = this.amTradeClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
                 if (!updateWithdraw(accountWithdraw)){
                     ret = false;
                 }
             }
+        }else{
+            ret = false;
         }
 
         return ret;
@@ -432,15 +433,15 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     private boolean updateWithdraw(AccountWithdrawVO accountwithdraw) {
         //调用银行接口
-        BankCallBeanVO bean = this.bankWithdrawClient.bankCallFundTransQuery(accountwithdraw);
+        BankCallBeanVO bean = this.amConfigClient.bankCallFundTransQuery(accountwithdraw);
         boolean result = false;
         if (bean != null) {
             int userId = accountwithdraw.getUserId();
-            BankCardVO bankCard = this.bankWithdrawClient.selectBankCardByUserId(userId);
+            BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
             BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
             String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
             //调用后平台操作
-            result=this.bankWithdrawClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
+            result=this.amTradeClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
             if (result){
                 logger.info("银行提现掉单修复成功!");
 
@@ -473,7 +474,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             resultMsg = msg;
         }
         // 查询是否已经处理过
-        int accountlistCnt = this.bankWithdrawClient.getAccountlistCntByOrdId(ordId,"cash_success");
+        int accountlistCnt = this.amTradeClient.getAccountlistCntByOrdId(ordId,"cash_success");
         // 如果信息已被处理
         if (accountlistCnt != 0) {
             resultBool = false;
@@ -488,14 +489,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     private String getWithdrawFee(Integer userId, String bankId, BigDecimal amount) {
-        BankCardVO bankCard = this.bankWithdrawClient.getBankInfo(userId, bankId);
+        BankCardVO bankCard = this.amUserClient.getBankCardByCardNo(userId, bankId);
         if (FEETMP == null) {
             FEETMP = "1";
         }
         if (bankCard != null) {
             String bankCode = bankCard.getBank();
             // 取得费率
-            List<FeeConfigVO> listFeeConfig = this.bankWithdrawClient.getFeeConfig(bankCode);
+            List<FeeConfigVO> listFeeConfig = this.amConfigClient.getFeeConfig(bankCode);
 
             if (listFeeConfig != null && listFeeConfig.size() > 0) {
                 FeeConfigVO feeConfig = listFeeConfig.get(0);

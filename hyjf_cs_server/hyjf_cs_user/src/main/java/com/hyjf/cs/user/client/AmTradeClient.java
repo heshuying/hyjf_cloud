@@ -32,4 +32,10 @@ public interface AmTradeClient {
 
     List<CouponUserListCustomizeVO> selectCouponUserList(Map<String,Object> mapParameter);
 
+    /**
+     * 获取账户信息通过userId范围
+     * @param ids
+     * @return
+     */
+    List<AccountVO> getAccountByUserIds(List<Integer> ids);
 }

@@ -32,7 +32,7 @@ import javax.validation.Valid;
  */
 @Api(value = "微信端用户开户",description = "微信端用户开户")
 @RestController
-@RequestMapping("/wechat/user/open")
+@RequestMapping("/hyjf-wechat/user/open")
 public class WeChatBankOpenController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatBankOpenController.class);
 

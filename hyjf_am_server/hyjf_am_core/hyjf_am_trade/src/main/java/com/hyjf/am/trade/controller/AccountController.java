@@ -5,18 +5,21 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
+import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.vo.trade.account.AccountVO;
+import java.util.List;
 
 /**
  * @author ${yaoy}
@@ -57,6 +60,23 @@ public class AccountController extends BaseController {
     public Integer updateOfPlanRepayAccount(@RequestBody AccountVO accountVO){
         return this.accountService.updateOfPlanRepayAccount(accountVO);
     }
+
+
+    /**
+     * userIds范围查询
+     * @param
+     * @return
+     */
+    @PostMapping("/getAccountByUserIds")
+    public AccountResponse getAccountByUserIds(@RequestBody List<Integer> userIds) {
+        AccountResponse response = new AccountResponse();
+        List<Account> accounts = accountService.getAccountByUserIds(userIds);
+        if (CollectionUtils.isNotEmpty(accounts)) {
+            response.setResultList(CommonUtils.convertBeanList(accounts,AccountVO.class));
+        }
+        return response;
+    }
+
 
     /**
      * @Author walter.limeng
@@ -148,6 +168,40 @@ public class AccountController extends BaseController {
         BankMerchantAccountListResponse response = new BankMerchantAccountListResponse();
         Integer flag = accountService.insertBankMerchantAccountList(bankMerchantAccountList);
         response.setFlag(flag);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新account用户散标信息
+     * @Date 17:17 2018/7/18
+     * @Param AccountVO
+     * @return
+     */
+    @PostMapping("/updateofrepaytender")
+    public AccountResponse updateOfRepayTender(@RequestBody AccountVO accountVO) {
+        AccountResponse response = new AccountResponse();
+        if (accountVO != null) {
+            int updateFlag = accountService.updateOfRepayTender(accountVO);
+            response.setUpdateFlag(updateFlag);
+        }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新用户散标账户
+     * @Date 18:33 2018/7/18
+     * @Param AccountVO
+     * @return
+     */
+    @PostMapping("/updateofloanstender")
+    public AccountResponse updateOfLoansTender(@RequestBody AccountVO accountVO) {
+        AccountResponse response = new AccountResponse();
+        if (accountVO != null) {
+            int updateFlag = accountService.updateOfLoansTender(accountVO);
+            response.setUpdateFlag(updateFlag);
+        }
         return response;
     }
 }

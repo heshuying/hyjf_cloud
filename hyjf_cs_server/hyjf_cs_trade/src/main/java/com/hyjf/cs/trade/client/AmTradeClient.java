@@ -1,11 +1,13 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -22,6 +24,7 @@ import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
@@ -1076,4 +1079,240 @@ public interface AmTradeClient {
      * @return
      */
     Integer crRecoverPeriod(String tenderNid, int currentRecoverFlg, int period);
+
+
+    CouponConfigVO selectCouponConfig(String couponCode);
+
+
+    BestCouponListVO selectBestCoupon(MyCouponListRequest request);
+
+
+    Integer countAvaliableCoupon(MyCouponListRequest request);
+
+    /**
+     * 查询汇计划最优优惠券
+     * @param request
+     * @return
+     */
+    BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
+
+    /**
+     *
+     * @param couponCode
+     * @return
+     */
+    Integer checkCouponSendExcess(String couponCode);
+    /**
+     * 查询HJH可用优惠券数量
+     * @param request
+     * @return
+     */
+    Integer countHJHAvaliableCoupon(MyCouponListRequest request);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据优惠券投资订单编号，取得优惠券信息
+     * @Date 11:51 2018/7/17
+     * @Param ordId
+     * @return
+     */
+    CouponConfigVO getCouponConfig(String ordId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  取得体验金收益期限
+     * @Date 14:30 2018/7/17
+     * @Param tenderNid
+     * @return
+     */
+    Integer getCouponProfitTime(String tenderNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  保存CouponRecover
+     * @Date 14:38 2018/7/17
+     * @Param CouponRecoverVO
+     * @return Integer 1:成功  ；0 失败
+     */
+    Integer insertSelective(CouponRecoverVO cr);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新账户信息(投资人)
+     * @Date 14:47 2018/7/17
+     * @Param account
+     * @return
+     */
+    int updateOfLoansTenderHjh(AccountVO account);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据订单ID查询所有的优惠券还款
+     * @Date 16:55 2018/7/17
+     * @Param orderId
+     * @return
+     */
+    List<CouponTenderCustomizeVO> getCouponTenderListHjh(String orderId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新couponRecover对象
+     * @Date 9:31 2018/7/18
+     * @Param cr
+     * @return
+     */
+    CouponRecoverVO updateByPrimaryKeySelective(CouponRecoverVO cr);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据recoverid查询交易记录
+     * @Date 9:41 2018/7/18
+     * @Param recoverId
+     * @return
+     */
+    List<TransferExceptionLogVO> selectByRecoverId(int recoverId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  新增日志
+     * @Date 9:52 2018/7/18
+     * @Param transferExceptionLog
+     * @return
+     */
+    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+
+    /**
+     * 判断用户所处的渠道如果不允许债转，可债转金额为0  start
+     * @param userId
+     * @return
+     */
+    boolean isAllowChannelAttorn(Integer userId);
+
+    /**
+     * 获取可债转金额   转让中本金   累计已转让本金
+     * @param userId
+     * @return
+     */
+    CreditPageVO selectCreditPageMoneyTotal(Integer userId);
+
+    /**
+     * 查询可债转列表数量
+     * @param request
+     * @return
+     */
+    MyCreditListQueryResponse countMyCreditList(MyCreditListQueryRequest request);
+
+    /**
+     * 查询可债转列表
+     * @param request
+     * @return
+     */
+    MyCreditListQueryResponse searchMyCreditList(MyCreditListQueryRequest request);
+
+    /**
+     * 查询债转详情
+     * @param userId
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    TenderCreditCustomizeVO selectTenderToCreditDetail(Integer userId, String borrowNid, String tenderNid);
+
+    /**
+     * 债转详细预计服务费计算
+     * @param borrowNid
+     * @param tenderNid
+     * @return
+     */
+    ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
+
+    /**
+     * 验证投资人当天是否可以债转
+     * @param userId
+     * @return
+     */
+    Integer tenderAbleToCredit(Integer userId);
+
+    /**
+     * 根据投资订单号检索已债转还款信息
+     * @param tenderId
+     * @return
+     */
+    List<CreditRepayVO> selectCreditRepayList(Integer tenderId);
+
+    List<CreditRepayVO> selectCreditRepayList(String borrowNid, String tenderOrderId, Integer periodNow, Integer status);
+
+    /**
+     * 插入债转  我要债转
+     * @param borrowCredit
+     */
+    Integer insertCredit(BorrowCreditVO borrowCredit);
+
+    /**
+     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * @param creditNid
+     * @param assignCapital
+     * @param userId
+     * @return
+     */
+    TenderToCreditAssignCustomizeVO getInterestInfo(String creditNid, String assignCapital, Integer userId);
+
+    /**
+     * 获取债转数据
+     * @param creditNid
+     * @return
+     */
+    BorrowCreditVO getBorrowCreditByCreditNid(String creditNid);
+
+    /**
+     * 债转修改日志表状态
+     * @param logOrderId
+     * @param logUserId
+     * @param retCode
+     * @param retMsg
+     */
+    Integer updateCreditTenderResult(String logOrderId, String logUserId, String retCode, String retMsg);
+
+    /**
+     * 查询债转失败原因
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    String getFailResult(String logOrdId, Integer userId);
+
+    /**
+     * 根据logOrdId和userId 查询债转信息
+     * @param logOrdId
+     * @param userId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByUserIdOrdId(String logOrdId, Integer userId);
+
+    /**
+     * 获取账户提现列表
+     * @return
+     */
+    List<AccountWithdrawVO> selectBankWithdrawList();
+
+    /**
+     *
+     * @param bean
+     * @param accountwithdraw
+     * @param bankCard
+     * @param withdrawFee
+     * @return
+     */
+    boolean handlerAfterCash(BankCallBeanVO bean, AccountWithdrawVO accountwithdraw, BankCardVO bankCard,
+                             String withdrawFee);
+
+
+    /**
+     * 查询是否已经处理过
+     * @param ordId
+     * @param string
+     * @return
+     */
+    int getAccountlistCntByOrdId(String orderId, String cashSuccess);
+
 }

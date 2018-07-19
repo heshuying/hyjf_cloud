@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Api(value = "app端用户账户设置",description = "app端用户账户设置")
 @RestController
-@RequestMapping("/app/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppSafeController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppSafeController.class);

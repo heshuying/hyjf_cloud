@@ -106,4 +106,26 @@ public class AccountClientImpl implements AccountClient {
         }
         return 0;
     }
+
+    @Override
+    public int updateOfRepayTender(AccountVO account) {
+        AccountResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updateofrepaytender",account,
+                AccountResponse.class).getBody();
+        if (result == null) {
+            return result.getUpdateFlag();
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateOfLoansTender(AccountVO account) {
+        AccountResponse result = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/account/updateofloanstender",account,
+                AccountResponse.class).getBody();
+        if (result == null) {
+            return result.getUpdateFlag();
+        }
+        return 0;
+    }
 }

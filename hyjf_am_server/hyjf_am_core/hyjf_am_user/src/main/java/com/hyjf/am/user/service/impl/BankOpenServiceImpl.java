@@ -372,6 +372,20 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return null;
     }
 
-   /* selectAccountBank
-    List<AccountBank> selectByExample(AccountBankExample example);*/
+    /**
+     * 获取银行卡信息
+     * @param userId
+     * @param status
+     * @return
+     */
+    @Override
+    public List<BankCard> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+        BankCardExample accountBankExample = new BankCardExample();
+        BankCardExample.Criteria aCriteria = accountBankExample.createCriteria();
+        aCriteria.andUserIdEqualTo(userId);
+        aCriteria.andStatusEqualTo(1);
+        return this.bankCardMapper.selectByExample(accountBankExample);
+    }
+
+
 }

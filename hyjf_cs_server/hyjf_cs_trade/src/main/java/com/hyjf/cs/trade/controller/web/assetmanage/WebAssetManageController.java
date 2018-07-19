@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -27,7 +26,7 @@ import java.util.Map;
  */
 @Api(value = "Web资产管理页面")
 @RestController
-@RequestMapping("/web/assetmanage")
+@RequestMapping("/hyjf-web/assetmanage")
 public class WebAssetManageController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebAssetManageController.class);
 

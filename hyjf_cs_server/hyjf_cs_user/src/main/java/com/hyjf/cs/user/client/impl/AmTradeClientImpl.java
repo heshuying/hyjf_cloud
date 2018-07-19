@@ -98,4 +98,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 获取账户信息通过userId范围
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<AccountVO> getAccountByUserIds(List<Integer> ids) {
+        String url="http://AM-TRADE/am-trade/account/getAccountByUserIds";
+        AccountResponse response=restTemplate.postForEntity(url,ids,AccountResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

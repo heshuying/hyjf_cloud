@@ -39,7 +39,7 @@ import java.util.Map;
 @Api(value = "web端借款人开户")
 @CrossOrigin(origins = "*")
 @Controller
-@RequestMapping("/web/user/secure/loanbankopen")
+@RequestMapping("/hyjf-web/user/secure/loanbankopen")
 public class LoanBankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(LoanBankOpenController.class);
 

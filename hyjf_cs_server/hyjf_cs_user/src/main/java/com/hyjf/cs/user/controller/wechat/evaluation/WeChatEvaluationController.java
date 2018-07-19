@@ -30,7 +30,7 @@ import java.util.Map;
 @Api(value = "weChat端风险测评接口",description = "weChat端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/weChat/user/evaluation")
+@RequestMapping("/hyjf-wechat/user/evaluation")
 public class WeChatEvaluationController {
 
     @Autowired

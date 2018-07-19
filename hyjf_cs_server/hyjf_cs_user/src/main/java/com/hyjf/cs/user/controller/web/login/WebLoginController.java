@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "web端用户登录接口", description = "web端用户登录接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebLoginController.class);

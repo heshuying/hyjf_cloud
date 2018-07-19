@@ -195,7 +195,7 @@ public class AssetListController extends BaseController {
 	public JSONObject searchUserDetail(HttpServletRequest request, @RequestBody AssetListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		AssetListRequest assetListRequest = new AssetListRequest();
-		AdminAssetDetailCustomizeVO vo = null;
+		/*AdminAssetDetailCustomizeVO vo = null;*/
 		// 将画面请求request赋值给原子层 request 
 		if(StringUtils.isNotEmpty(viewRequest.getAssetIdSrch())  && StringUtils.isNotEmpty(viewRequest.getInstCodeSrch())){
 			assetListRequest.setAssetIdSrch(viewRequest.getAssetIdSrch());
@@ -203,9 +203,9 @@ public class AssetListController extends BaseController {
 			// 获取到原子层查询的VO(多处调用)
 			AssetDetailCustomizeVO assetDetailCustomizeVO = assetListService.getDetailById(assetListRequest);
 			// 将原子层查询的VO转型为组合层VO
-			BeanUtils.copyProperties(assetDetailCustomizeVO,vo);
-			jsonObject.put("返回实体类", "vo");
-			jsonObject.put("vo", vo);
+			/*BeanUtils.copyProperties(assetDetailCustomizeVO,vo);*/
+			jsonObject.put("返回实体类", "assetDetailCustomizeVO");
+			jsonObject.put("assetDetailCustomizeVO", assetDetailCustomizeVO);
 		} else {
 			jsonObject.put("message", "未传入assetId和instCode");
 		}

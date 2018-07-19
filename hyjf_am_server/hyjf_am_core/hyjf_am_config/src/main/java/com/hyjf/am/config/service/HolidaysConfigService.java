@@ -17,10 +17,11 @@ public interface HolidaysConfigService {
 
     /**
      * 更新节假日配置表
+     * @param year
      * @return
      * @throws ReturnMessageException
      */
-    boolean updateHolidaysConfig() throws ReturnMessageException;
+    boolean updateHolidaysConfig(int year) throws ReturnMessageException;
     /**
      * 倒序查询假期配置表
      * @param orderByClause
@@ -53,4 +54,10 @@ public interface HolidaysConfigService {
     Integer  updateHolidaysConfigInfo(AdminHolidaysConfigRequest adminRequest);
 
 
+
+    /**
+     * 初始化年度配置
+     * @param year
+     */
+    void initCurrentYearConfig(int year);
 }

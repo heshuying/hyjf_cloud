@@ -28,7 +28,7 @@ import java.text.DecimalFormat;
  */
 @Api(value = "app端账户总览",description = "app端账户总览")
 @Controller
-@RequestMapping(value = "/app/hyjf-app/myasset")
+@RequestMapping(value = "/hyjf-app/myasset")
 public class MyAssetController extends BaseUserController {
 	
 	@Autowired

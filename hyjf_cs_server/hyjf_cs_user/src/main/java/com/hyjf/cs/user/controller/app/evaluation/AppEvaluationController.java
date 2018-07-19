@@ -32,7 +32,7 @@ import java.util.Map;
 @Api(value = "App端风险测评接口",description = "App端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/app/user/financialAdvisor")
+@RequestMapping("/hyjf-app/user/financialAdvisor")
 public class AppEvaluationController {
 
     @Autowired

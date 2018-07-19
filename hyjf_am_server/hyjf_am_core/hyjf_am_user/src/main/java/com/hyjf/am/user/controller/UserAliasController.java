@@ -9,9 +9,7 @@ import com.hyjf.am.user.service.UserAliasService;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +64,31 @@ public class UserAliasController extends BaseController{
 		}
 		return list;
 	}
+
+	@GetMapping("/findAliasesByUserId/{userId}")
+	public UserAliasResponse findAliasesByUserId(@PathVariable Integer userId) {
+		UserAliasResponse response = new UserAliasResponse();
+		UserAlias userAlias = userAliasService.findAliasesByUserId(userId);
+		if(null!=userAlias){
+			UserAliasVO userAliasVO = new UserAliasVO();
+			 BeanUtils.copyProperties(userAlias,userAliasVO);
+			 response.setResult(userAliasVO);
+		}
+		return response;
+	}
+
+
+	@PostMapping("/updateMobileCode")
+	public int updateAliases(@RequestBody UserAlias userAlias) {
+		int cnt = userAliasService.updateAliases(userAlias);
+		return cnt;
+	}
+
+	@PostMapping("/insertMobileCode")
+	public int insertMobileCode(@RequestBody UserAlias userAlias){
+		int cnt = userAliasService.insertMobileCode(userAlias);
+		return cnt;
+    }
 
 	/**
 	 * 根据设备类型统计用户人数
