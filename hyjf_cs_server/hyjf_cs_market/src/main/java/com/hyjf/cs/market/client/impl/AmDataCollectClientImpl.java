@@ -32,7 +32,7 @@ public class AmDataCollectClientImpl implements AmDataCollectClient {
     @Override
     public String getTotalInvestmentAmount() {
         CalculateInvestInterestResponse response = restTemplate.getForObject(
-                "http://AM-DATA-COLLECT/am-statistics/search/gettotalinvestmentamount",
+                "http://CS-MESSAGE/cs-message/search/gettotalinvestmentamount",
                 CalculateInvestInterestResponse.class);
         if (response != null) {
             BigDecimal interestSum = response.getInterestSum();

@@ -9,7 +9,9 @@ import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
@@ -40,9 +42,9 @@ import java.util.Map;
  * @author wangjun
  * @version BorrowInvestController, v0.1 2018/7/10 9:06
  */
-@Api(value = "汇直投-投资明细接口")
+@Api(value = "汇直投-投资明细接口", description = "汇直投-投资明细接口")
 @RestController
-@RequestMapping("/hyjf-admin/borrow_full")
+@RequestMapping("/hyjf-admin/borrow_invest")
 public class BorrowInvestController extends BaseController {
     @Autowired
     BorrowInvestService borrowInvestService;
@@ -50,11 +52,13 @@ public class BorrowInvestController extends BaseController {
     @Autowired
     AdminCommonService adminCommonService;
 
-    private static final String PARAM_NAME = "hyjf_param_name:";
+    /** 权限 */
+    public static final String PERMISSIONS = "borrowinvest";
 
     @ApiOperation(value = "投资明细初始化", notes = "投资明细初始化")
     @PostMapping("/init")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
@@ -66,17 +70,18 @@ public class BorrowInvestController extends BaseController {
         List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
         //操作平台
-        Map<String, String> clientList = adminCommonService.getParamNameMap(PARAM_NAME + "CLIENT");
+        Map<String, String> clientList = adminCommonService.getParamNameMap("CLIENT");
         responseBean.setClientList(clientList);
         //投资方式
-        Map<String, String> investTypeList = adminCommonService.getParamNameMap(PARAM_NAME + "INVEST_TYPE");
+        Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
     }
 
     @ApiOperation(value = "投资明细列表查询", notes = "投资明细列表查询")
-    @PostMapping("/get_borrow_invest_list")
+    @PostMapping("/search")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
@@ -87,6 +92,7 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "投资明细列表导出", notes = "投资明细列表导出")
     @PostMapping("/export_list")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportList(HttpServletRequest request, HttpServletResponse response, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) throws Exception {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
@@ -325,6 +331,7 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
     @PostMapping("/debt_info")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
     public AdminResult debtInfo(@RequestBody InvestorRequest investorRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
         BeanUtils.copyProperties(investorRequest, investorDebtBean);
@@ -334,6 +341,7 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
     @GetMapping("/pdf_preview/{nid}")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
     public AdminResult pdfPreview(@PathVariable String nid) {
         return borrowInvestService.pdfPreview(nid);
     }
@@ -341,6 +349,7 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdf_sign")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)
     public AdminResult pdfSign(@RequestBody InvestorRequest investorRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
         BeanUtils.copyProperties(investorRequest, investorDebtBean);
@@ -350,6 +359,7 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "发送协议", notes = "发送协议")
     @ResponseBody
     @PostMapping("/send_agreement")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT_AGREEMENT)
     public AdminResult sendAgreement(@RequestBody InvestorRequest investorRequest) {
         return borrowInvestService.sendAgreement(investorRequest);
     }
