@@ -308,6 +308,11 @@ public interface MQConstant {
 	String CRM_ROUTINGKEY_BANCKOPEN_GROUP = "CRM_ROUTINGKEY_BANCKOPEN_GROUP";
 	String CRM_ROUTINGKEY_BANCKOPEN_TOPIC = "CRM_ROUTINGKEY_BANCKOPEN_TOPIC";
 
+    /**
+     * crm投资信息推送
+     */
+    String CRM_TENDER_INFO_TOPIC = "CRM_TENDER_INFO_TOPIC";
+
 	/**
 	 * 存款业务红包流水全明细数据文件下载定时任务相关
 	 */

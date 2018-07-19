@@ -24,9 +24,9 @@ import java.util.Map;
  * @author liuyang
  * @version WebProjectListController, v0.1 2018/6/13 10:21
  */
-@Api(value = "Web端项目列表")
+@Api(description = "Web端项目列表")
 @RestController
-@RequestMapping("/web/projectlist")
+@RequestMapping("/hyjf-web/projectlist")
 public class WebProjectListController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(WebProjectListController.class);
 
@@ -52,7 +52,7 @@ public class WebProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "获取新手专区列表", notes = "新手专区列表")
-    @PostMapping(value = "/newBorrowProjectList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getNewProjectList", produces = "application/json; charset=utf-8")
     public Object newBorrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
         WebResult result =  webProjectListService.searchProjectList(request);
@@ -77,8 +77,8 @@ public class WebProjectListController extends BaseTradeController {
      * @author zhangyk
      * @date 2018/6/22 16:06
      */
-    @ApiOperation(value = "web端新手标和散标标的详情", notes = "web端新手标和散标标的详情")
-    @PostMapping(value = "/borrowDetail", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "新手标和散标标的详情", notes = "web端新手标和散标标的详情")
+    @PostMapping(value = "/getBorrowDetail", produces = "application/json; charset=utf-8")
     public Object webBorrowDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
         WebResult result =  webProjectListService.getBorrowDetail(map,userId);
         return result;
@@ -90,7 +90,7 @@ public class WebProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "散标专区债权转让列表", notes = "散标专区债权转让列表")
-    @PostMapping(value = "/creditList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getCreditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@RequestBody @Valid CreditListRequest request){
         WebResult result =  webProjectListService.searchCreditList(request);
         return result;
@@ -102,7 +102,7 @@ public class WebProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")
-    @PostMapping(value = "/creditDetail", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getCreditDetail", produces = "application/json; charset=utf-8")
     public Object creditDetail(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
         WebResult result =  webProjectListService.getCreditDetail(map,userId);
         return result;
@@ -128,7 +128,7 @@ public class WebProjectListController extends BaseTradeController {
      * @date 2018/6/21 15:18
      */
     @ApiOperation(value = "计划专区计划列表", notes = "计划专区计划列表")
-    @PostMapping(value = "/searchPlanList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/getPlanList", produces = "application/json; charset=utf-8")
     public Object getPlanList(@RequestBody @Valid ProjectListRequest request){
         WebResult result =  webProjectListService.searchPlanList(request);
         return result;
