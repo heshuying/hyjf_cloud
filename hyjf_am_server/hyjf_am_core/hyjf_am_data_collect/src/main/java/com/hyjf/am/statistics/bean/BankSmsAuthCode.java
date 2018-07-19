@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Document(collection = "ht_bank_sms_auth_code")
 public class BankSmsAuthCode implements Serializable {
-    private Integer id;
+    private String id;
 
     private Integer userId;
 
@@ -33,11 +33,11 @@ public class BankSmsAuthCode implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

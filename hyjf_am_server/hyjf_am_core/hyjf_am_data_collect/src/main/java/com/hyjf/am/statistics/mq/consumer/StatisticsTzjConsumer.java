@@ -38,6 +38,7 @@ import com.hyjf.common.util.GetDate;
  * @version StatisticsTzjConsumer, v0.1 2018/7/2 11:12
  */
 @Component
+@Deprecated
 public class StatisticsTzjConsumer extends Consumer {
 	Logger logger = LoggerFactory.getLogger(getClass());
 
