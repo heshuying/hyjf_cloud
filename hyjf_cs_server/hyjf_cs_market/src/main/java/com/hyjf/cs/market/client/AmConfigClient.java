@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 
@@ -81,4 +82,7 @@ public interface AmConfigClient {
      * @return
      */
     public List<ContentArticleVO> getIndexList(ContentArticleRequest request);
+
+
+    TotalInvestAndInterestResponse searchData();
 }

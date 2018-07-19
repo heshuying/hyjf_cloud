@@ -7,6 +7,7 @@ import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.config.RecruitResponse;
 import com.hyjf.am.response.config.TeamResponse;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
@@ -130,4 +131,11 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 
 	}
+
+    @Override
+    public TotalInvestAndInterestResponse searchData() {
+		TotalInvestAndInterestResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/article/index",TotalInvestAndInterestResponse.class);
+		return response;
+
+    }
 }

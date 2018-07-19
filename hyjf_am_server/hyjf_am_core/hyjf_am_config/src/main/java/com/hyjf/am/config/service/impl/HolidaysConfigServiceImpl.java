@@ -154,13 +154,7 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 		}
 		return res;
 	}
-    @Override
-    public List<HolidaysConfig> selectHolidaysConfig(String orderByClause) {
-        HolidaysConfigExample example=new HolidaysConfigExample();
-        example.setOrderByClause("statr_time asc");
-        List<HolidaysConfig> holidaysConfigList = holidaysConfigMapper.selectByExample(example);
-        return holidaysConfigList;
-    }
+
 
     /**
      * 分页查询节假日配置

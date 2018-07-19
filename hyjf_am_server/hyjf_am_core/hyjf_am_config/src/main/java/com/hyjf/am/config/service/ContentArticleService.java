@@ -3,8 +3,8 @@ package com.hyjf.am.config.service;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
-import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.response.admin.ContentArticleResponse;
+import com.hyjf.am.resquest.config.ContentArticleRequest;
 
 
 import java.util.List;

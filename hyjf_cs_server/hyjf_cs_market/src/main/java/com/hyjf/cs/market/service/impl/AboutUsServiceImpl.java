@@ -3,30 +3,21 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
-
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.PropertiesConstants;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.vo.config.*;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmDataCollectClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +35,6 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     @Autowired
     private AmDataCollectClient amDataCollectClient;
 
-    @Autowired
-    private BaseClient baseClient;
 
     //TODO 路径配置
     @Value("${hyjf.api.web.url}")
@@ -116,7 +105,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
      */
     @Override
     public TotalInvestAndInterestVO searchData() {
-        TotalInvestAndInterestResponse response = baseClient.getExe(INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse response = amConfigClient.searchData();
         TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();
         return totalInvestAndInterestVO;
     }
@@ -132,6 +121,11 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
         JSONObject status = JSONObject.parseObject(result);
         return status;
 
+    }
+
+    @Override
+    public List<ContentArticleVO> getHomeNoticeList() {
+        return null;
     }
 
 }

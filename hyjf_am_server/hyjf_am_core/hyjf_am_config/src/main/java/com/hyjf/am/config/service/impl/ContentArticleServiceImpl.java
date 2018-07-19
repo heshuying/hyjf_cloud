@@ -9,16 +9,11 @@ import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.admin.ContentArticleResponse;
-import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +45,12 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         List<ContentArticle> list = contentArticleMapper.selectByExample(example);
         return list;
     }
+
+    @Override
+    public ContentArticleResponse getContentArticleListPage(ContentArticleRequest request) {
+        return null;
+    }
+
 
     @Override
     public ContentArticle getAboutUs() {
