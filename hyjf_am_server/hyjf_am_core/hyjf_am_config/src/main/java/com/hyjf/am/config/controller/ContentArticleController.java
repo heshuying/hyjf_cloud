@@ -3,7 +3,7 @@ package com.hyjf.am.config.controller;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.trade.ContentArticleResponse;
-import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -37,7 +37,7 @@ public class ContentArticleController {
      * @date 2018/7/5 9:40
      */
     @PostMapping("/contentArticleList")
-    public ContentArticleResponse getContentArticleList(ContentArticleRequest request) {
+    public ContentArticleResponse getContentArticleList(@RequestBody  ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
         List<ContentArticle> list = contentArticleService.getContentArticleList(request);
         if (!CollectionUtils.isEmpty(list)) {
