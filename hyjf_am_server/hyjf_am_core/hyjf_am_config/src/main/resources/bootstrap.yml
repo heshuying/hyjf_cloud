@@ -39,3 +39,6 @@ management:
 
 logging:
   file: am-config.log
+
+file.domain.url: http://test.hyjf.com:8083/hyjf-admin/
+hyjf.web.host: http://test.hyjf.com:8080/hyjf-web

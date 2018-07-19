@@ -76,7 +76,6 @@ public class AppBorrowImageController {
             record = appBorrowImageService.getRecord(form.getId());
             if (record != null) {
                 record.setBorrowImageUrl(filePhysicalPath + record.getBorrowImageUrl());
-                //TODO modelAndView.addObject("isEdit", "Y");
             }
         }
         AppBorrowImageVO appBorrowImageVO = CommonUtils.convertBean(record, AppBorrowImageVO.class);
