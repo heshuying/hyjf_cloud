@@ -40,6 +40,9 @@ public class ServerController extends BaseUserController {
 	@Value("${hyjf.app.serverip.test}")
 	private String testServerIp;
 
+	@Value("${hyjf.app.server.host}")
+	private String hyjf_app_server_host;
+
 	@Autowired
 	SystemConfig systemConfig;
 
@@ -105,7 +108,7 @@ public class ServerController extends BaseUserController {
 					signValue.setVersion(version);
 					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
-					resultBean.setServerIp(DES.encryptDES_ECB(systemConfig.getWebHost(), initKey));
+					resultBean.setServerIp(DES.encryptDES_ECB(hyjf_app_server_host, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
