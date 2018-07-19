@@ -30,6 +30,10 @@ public interface BankConfigService {
      * 获取status=1的银行列表
      */
     List<BankConfig> getBankConfigListByStatus(BankConfigVO bankConfigVO);
+    /**
+     * 获取银行列表(快捷支付卡)
+     */
+    List<BankConfig> getBankRecordListByQuickPayment(BankConfigVO bankConfigVO);
 
     List<ParamName> getParamNameList(String nameClass);
     /**

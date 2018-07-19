@@ -15,7 +15,7 @@ import javax.validation.Valid;
  * @author zhangyk
  * @date 2018/7/4 13:47
  */
-@Api(value = "Web端首页")
+@Api(value = "Web端首页",description = "Web端首页")
 @RestController
 @RequestMapping("/web/home")
 public class WebHomeController {
