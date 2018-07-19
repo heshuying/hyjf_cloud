@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ import java.util.List;
  * @author jun
  * @version AdminTransferExceptionLogController, v0.1 2018/7/10 11:19
  */
-@Api(value = "异常中心-银行转账异常")
+@Api(value = "异常中心-银行转账异常",description = "异常中心-银行转账异常")
 @RestController
 @RequestMapping("/am-trade/transferExceptionLog")
 public class AdminTransferExceptionLogController extends BaseController {
@@ -34,6 +35,8 @@ public class AdminTransferExceptionLogController extends BaseController {
     @Autowired
     private AdminTransferExceptionLogService adminTransferExceptionLogService;
 
+
+    @ApiOperation(value = "银行转账异常列表", notes = "银行转账异常列表")
     @PostMapping("/getRecordList")
     public AdminTransferExceptionLogResponse getRecordList(@RequestBody AdminTransferExceptionLogRequest request){
         AdminTransferExceptionLogResponse response = new AdminTransferExceptionLogResponse();
@@ -45,21 +48,27 @@ public class AdminTransferExceptionLogController extends BaseController {
     }
 
 
+    @ApiOperation(value = "银行转账异常数据条数", notes = "银行转账异常数据条数")
     @PostMapping("/getCountRecord")
     public Integer getCountRecord(@RequestBody AdminTransferExceptionLogRequest request){
         return adminTransferExceptionLogService.getCountRecord(request);
     }
 
+
+    @ApiOperation(value = "根据UUID更新admin转账异常日志", notes = "根据UUID更新admin转账异常日志")
     @PostMapping("/updateTransferExceptionLogByUUID")
     public Integer updateTransferExceptionLogByUUID(@RequestBody AdminTransferExceptionLogRequest request){
         return adminTransferExceptionLogService.updateTransferExceptionLogByUUID(request);
     }
 
+
+    @ApiOperation(value = "根据UUID更新转账异常日志", notes = "根据UUID更新转账异常日志")
     @PostMapping("/updateTransferExceptionLogByUUID1")
     public Integer updateTransferExceptionLogByUUID1(@RequestBody TransferExceptionLogVO transferExceptionLog){
         return adminTransferExceptionLogService.updateTransferExceptionLogByUUID(transferExceptionLog);
     }
 
+    @ApiOperation(value = "通过UUID获取转账异常日志", notes = "通过UUID获取转账异常日志")
     @GetMapping("/getTransferExceptionLogByUUID/{uuid}")
     public TransferExceptionLogResponse getTransferExceptionLogByUUID(@PathVariable String uuid){
         TransferExceptionLogResponse response=new TransferExceptionLogResponse();
@@ -70,7 +79,7 @@ public class AdminTransferExceptionLogController extends BaseController {
         return response;
     }
 
-
+    @ApiOperation(value = "处理银行转账异常", notes = "处理银行转账异常")
     @PostMapping("/transferAfter")
     public boolean transferAfter(@RequestBody JSONObject jsonObject){
         boolean ret = false;
