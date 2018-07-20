@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.exception.accountexception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountExceptionService;
@@ -27,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -49,15 +52,15 @@ public class AccountExceptionController extends BaseController {
      */
     @ApiOperation(value = "汇付对账列表", notes = "汇付对账列表")
     @PostMapping(value = "/accountexceptionlist")
-    public JSONObject accountExceptionList(@RequestBody AccountExceptionRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult accountExceptionList(@RequestBody AccountExceptionRequest request){
+        Map<String,Object> map = new HashMap<>();
         // 数据总数
         Integer count = accountExceptionService.getAccountExceptionCount(request);
-        jsonObject.put("count",count);
+        map.put("count",count);
         // 异常列表list
         List<AccountExceptionVO> accountExceptionVOList = accountExceptionService.searchAccountExceptionList(request);
-        jsonObject.put("accountExceptionVOList",accountExceptionVOList);
-        return jsonObject;
+        map.put("accountExceptionVOList",accountExceptionVOList);
+        return new AdminResult(map);
     }
 
     /**
@@ -68,10 +71,9 @@ public class AccountExceptionController extends BaseController {
      */
     @ApiOperation(value = "更新信息", notes = "更新信息")
     @PostMapping(value = "/sync")
-    public JSONObject sync(@RequestBody AccountExceptionRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult sync(@RequestBody AccountExceptionRequest request){
         accountExceptionService.syncAccount(request.getId());
-        return jsonObject;
+        return new AdminResult(SUCCESS,SUCCESS_DESC);
     }
     /**
      * 汇付对账列表导出

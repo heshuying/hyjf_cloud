@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,14 +55,14 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-查询转账列表",notes = "用户转账-查询转账列表")
     @PostMapping(value = "/transferlist")
-    public JSONObject transferList(@RequestBody CustomerTransferListRequest request){
-        JSONObject result = new JSONObject();
+    public AdminResult transferList(@RequestBody CustomerTransferListRequest request){
+        Map<String,Object> map = new HashMap<>();
         Integer count = customerTransferService.getTransferCount(request);
         count = (count == null)?0:count;
-        result.put("count",count);
+        map.put("count",count);
         List<UserTransferVO> userTransferVOList = customerTransferService.searchUserTransferList(request);
-        result.put("userTransferVOList",userTransferVOList);
-        return result;
+        map.put("userTransferVOList",userTransferVOList);
+        return new AdminResult(map);
     }
 
     /**
@@ -186,17 +187,22 @@ public class CustomerTransferController extends BaseController {
     })
     @ApiOperation(value = "查询余额",notes = "根据用户账号查询余额-发起转账")
     @PostMapping(value = "/searchbalance")
-    public JSONObject searchBalanceByUsername(@RequestBody Map map){
+    public AdminResult searchBalanceByUsername(@RequestBody Map map){
         String outUserName = map.get("outUserName").toString();
         logger.info("outUserName=[{}]",outUserName);
-        JSONObject result = new JSONObject();
+        Map<String,Object> resultMap = new HashMap<>();
+        JSONObject jsonObject = new JSONObject();
         if(StringUtils.isNotEmpty(outUserName)){
-            result = customerTransferService.searchBalanceByUsername(outUserName);
+            jsonObject = customerTransferService.searchBalanceByUsername(outUserName);
         }else{
-            result.put("status","error");
-            result.put("result","用户账号不能为空");
+            return new AdminResult(FAIL,"用户账号不能为空");
         }
-        return result;
+        if("0".equals(jsonObject.get("status"))){
+            resultMap.put(SUCCESS,jsonObject.get("result"));
+        }else{
+            resultMap.put(FAIL,jsonObject.get("result"));
+        }
+        return new AdminResult(resultMap);
     }
 
     /**
@@ -207,7 +213,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "发起转账-提交",notes = "发起转账-提交")
     @PostMapping(value = "/addtransfer")
-    public JSONObject addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
+    public AdminResult addTransfer(@RequestHeader Integer userId,@RequestBody CustomerTransferRequest request){
         JSONObject result = new JSONObject();
         result = customerTransferService.checkCustomerTransferParam(request);
         if(result != null && "0".equals(result.get("status"))){
@@ -216,14 +222,10 @@ public class CustomerTransferController extends BaseController {
             request.setCreateUserName(adminSystemVO.getUsername());
             boolean success = customerTransferService.insertTransfer(request);
             if(success){
-                result.put("status","0");
-                result.put("result","成功");
-            }else{
-                result.put("status","error");
-                result.put("result","数据插入失败");
+                return new AdminResult(SUCCESS,SUCCESS_DESC);
             }
         }
-        return result;
+        return new AdminResult(FAIL,FAIL_DESC);
     }
 
     /**
@@ -240,7 +242,7 @@ public class CustomerTransferController extends BaseController {
     public AdminResult transferSendMail(@RequestBody Map map){
         Integer transferId = (Integer) map.get("transferId");
         customerTransferService.transferSendMail(transferId);
-        return new AdminResult();
+        return new AdminResult(SUCCESS,SUCCESS_DESC);
     }
 
 
