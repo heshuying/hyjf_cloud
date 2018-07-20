@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -66,4 +67,13 @@ public interface BorrowTenderCustomizeMapper {
 	 * @return
 	 */
     CouponRecoverCustomizeVO getCurrentCouponRecover(Map<String,Object> paramMap);
+
+    /**
+     * @Author walter.limeng
+     * @Description  风车理财根据投资订单号查询投资信息
+     * @Date 14:25 2018/7/20
+     * @Param paramMap
+     * @return
+     */
+	WrbTenderNotifyCustomizeVO searchBorrowTenderByNid(Map<String,Object> paramMap);
 }
