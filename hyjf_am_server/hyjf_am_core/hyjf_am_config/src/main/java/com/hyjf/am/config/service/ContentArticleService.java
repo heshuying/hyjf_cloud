@@ -33,7 +33,7 @@ public interface ContentArticleService {
      * @param request
      * @return
      */
-    ContentArticleResponse getContentArticleListPage(com.hyjf.am.resquest.config.ContentArticleRequest request);
+    ContentArticleResponse getContentArticleListPage(ContentArticleRequest request);
 
     /**
      * 获取公司简介
