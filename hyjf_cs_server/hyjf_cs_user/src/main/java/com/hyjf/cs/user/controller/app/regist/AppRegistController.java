@@ -136,7 +136,12 @@ public class AppRegistController extends BaseUserController {
             adsRequest.setLimitEnd(1);
             adsRequest.setHost(systemConfig.getDomainAppUrl());
             adsRequest.setCode("registpop");
-            AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
+            AppAdsCustomizeVO record = new AppAdsCustomizeVO();
+            try {
+                 record = registService.searchBanner(adsRequest);
+            }catch (Exception e){
+                logger.info("获取活动信息失败...");
+            }
             // 注册成功发券提示
             String operationUrl = jumpCommand + "://jumpCouponsList/?";
             BaseMapBean baseMapBean = new BaseMapBean();
