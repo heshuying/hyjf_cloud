@@ -28,7 +28,7 @@ import com.hyjf.cs.message.service.msgpushstatics.MsgPushStaticsService;
  * @version MessagePushMsgController, v0.1 2018/6/21 15:52
  */
 @RestController
-@RequestMapping("/cs-message/messagePush")
+@RequestMapping("/cs-message/app_message")
 public class MessagePushMsgController extends BaseController {
 
 	@Autowired
@@ -43,13 +43,13 @@ public class MessagePushMsgController extends BaseController {
 	@Autowired
 	private MessagePushTemplateStaticsDao msgStaticsDao;
 
-	@RequestMapping("/msgPush")
+	@RequestMapping("/push_all")
 	public void messagePush() {
 		logger.info("消息推送定时任务开始......");
 		msgPushService.pushMessage();
 	}
 
-	@RequestMapping("/msgPushStatics")
+	@RequestMapping("/push_statics")
 	public void messagePushStatics() {
 		logger.info("消息推送统计定时任务开始......");
 		// 时间戳定义

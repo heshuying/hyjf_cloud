@@ -3,16 +3,24 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.common.http.HttpClientUtils;
+import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmDataCollectClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -27,6 +35,15 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     @Autowired
     private AmDataCollectClient amDataCollectClient;
 
+
+    //TODO 路径配置
+    @Value("${hyjf.api.web.url}")
+    private String HYJF_API_WEB_URL;
+
+    // 快捷银行列表
+    private static final String BANK_LIST = "/quickbanklist/getbanklist.json";
+
+    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistics/search/getTotalInvestAndInterestEntity";
     @Override
     public ContentArticleVO getAboutUs() {
         return amConfigClient.getAboutUs();
@@ -73,8 +90,42 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     @Override
+    public List<ContentArticleVO> getHomeNoticeList(ContentArticleRequest request) {
+        return amConfigClient.getknowsList(request);
+    }
+
+
+    @Override
+    public List<ContentArticleVO> getIndex(ContentArticleRequest request) {
+        return amConfigClient.getIndexList(request);
+    }
+
+    /**
+     * 统计数据
+     */
+    @Override
+    public TotalInvestAndInterestVO searchData() {
+        TotalInvestAndInterestResponse response = amConfigClient.searchData();
+        TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();
+        return totalInvestAndInterestVO;
+    }
+
+    /**
+     * 返回快捷银行充值限额
+     */
+    @Override
+    public  JSONObject getBanksList() {
+        Map<String, String> params = new HashMap<String, String>();
+        String requestUrl = HYJF_API_WEB_URL + BANK_LIST;
+        String result = HttpClientUtils.post(requestUrl, params);
+        JSONObject status = JSONObject.parseObject(result);
+        return status;
+
+    }
+
+    @Override
     public List<ContentArticleVO> getHomeNoticeList() {
-        return amConfigClient.getknowsList();
+        return null;
     }
 
 }

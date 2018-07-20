@@ -45,8 +45,23 @@ public class SystemConfig {
     @Value("${file.upload.head.path}")
     public String uploadHeadPath;
 
+    /**
+     * pc前端地址
+     */
     @Value("${hyjf.front.host}")
     public String frontHost;
+
+    /**
+     * app前端地址
+     */
+    @Value("${hyjf.front.app.host}")
+    public String AppFrontHost;
+
+    /**
+     * 微信前端地址
+     */
+    @Value("${hyjf.front.wei.host}")
+    public String WeiFrontHost;
 
     @Value("${hyjf.activity.id}")
     public String activityId;
@@ -74,13 +89,13 @@ public class SystemConfig {
 
     @Value("${hyjf.wechat.qrcode.url}")
     private String wechatQrcodeUrl;
-    
+
     @Value("${wcsr.retranspassword}")
-    // 需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack 
+    // 需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack
     private String retransPassword;
-    
+
     @Value("${wcsr.resetpassword}")
-    // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd 
+    // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd
     private String resetpassword;
 
     @Value("${hyjf.env.test}")
@@ -268,6 +283,22 @@ public class SystemConfig {
 
     public void setFrontHost(String frontHost) {
         this.frontHost = frontHost;
+    }
+
+    public String getAppFrontHost() {
+        return AppFrontHost;
+    }
+
+    public void setAppFrontHost(String appFrontHost) {
+        AppFrontHost = appFrontHost;
+    }
+
+    public String getWeiFrontHost() {
+        return WeiFrontHost;
+    }
+
+    public void setWeiFrontHost(String weiFrontHost) {
+        WeiFrontHost = weiFrontHost;
     }
 
 	public String getRetransPassword() {

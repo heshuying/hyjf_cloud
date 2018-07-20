@@ -83,10 +83,10 @@ public class AppConfigServiceImpl implements AppConfigService {
         if (bean.getStatus() != null) {
             criteria.andStatusEqualTo(bean.getStatus());
         }
-        if (StringUtils.isNotEmpty(bean.getStartCreate()) && StringUtils.isNotEmpty(bean.getEndCreate())) {
+        if (StringUtils.isNotBlank(bean.getStartCreate()) && StringUtils.isNotBlank(bean.getEndCreate())) {
             criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(GetDate.getDayStart(bean.getStartCreate())));
         }
-        if(StringUtils.isNotEmpty(bean.getEndCreate())){
+        if(StringUtils.isNotBlank(bean.getEndCreate())){
             criteria.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(GetDate.getDayEnd(bean.getEndCreate())));
         }
 

@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author sunss
@@ -72,10 +73,9 @@ public class AppBankOpenController extends BaseUserController {
 
     @ApiOperation(value = "app端用户开户", notes = "app端-用户开户")
     @PostMapping(value = "/openBankAccount")
-    public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
-        String platform = request.getParameter("platform");
-        ModelAndView reuslt = new ModelAndView();
+        AppResult<Object> result = new AppResult<Object>();
         // 验证请求参数
         if (token == null) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
@@ -97,16 +97,18 @@ public class AppBankOpenController extends BaseUserController {
         openBean.setUserId(user.getUserId());
         openBean.setIp(CustomUtil.getIpAddr(request));
         openBean.setClientHeader(ClientConstants.CLIENT_HEADER_APP);
-        openBean.setPlatform(platform);
+        // 开户角色
+        openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_3);
         // 组装调用江西银行的MV
-        //reuslt = bankOpenService.getOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getOpenAccountMV(openBean);
+        result.setData(data);
         //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), platform, openBean.getTrueName(), openBean.getIdNo(), "");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         logger.info("开户end");
-        return reuslt;
+        return result;
     }
 }

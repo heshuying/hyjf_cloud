@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -33,6 +34,7 @@ import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
@@ -47,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -65,18 +68,16 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
     @Autowired
     private AmUserClient amUserClient;
-
     @Autowired
-    private AmTradeClient amTradeClient;
-
+    private AccountProducer accountProducer;
     @Autowired
     private CouponProducer couponProducer;
-
     @Autowired
     private SmsProducer smsProducer;
-
     @Autowired
-    SystemConfig systemConfig;
+    private SystemConfig systemConfig;
+    @Autowired
+    private AmMarketClient amMarketClient;
 
     @Value("${file.domain.head.url}")
     private String fileHeadUrl;
@@ -210,6 +211,23 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
+
+        // 3. 注册成功用户保存账户表
+        sendMqToSaveAccount(userVO.getUserId());
+        return userVO;
+    }
+
+    @Override
+    public UserVO surongRegister(RegisterRequest registerRequest, String ipAddr, String platform) {
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+        BeanUtils.copyProperties(registerRequest, registerUserRequest);
+        registerUserRequest.setLoginIp(ipAddr);
+        registerUserRequest.setInstCode("10000017");
+        registerUserRequest.setPlatform(platform);
+        UserVO userVO = amUserClient.surongRegister(registerUserRequest);
+        CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
+        // 注册成功用户保存账户表
+        sendMqToSaveAccount(userVO.getUserId());
         return userVO;
     }
 
@@ -225,7 +243,11 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO);
         webViewUserVO.setToken(token);
         RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
-        // 2. 注册送188元新手红包
+
+        // 2. 注册成功用户保存账户表
+        sendMqToSaveAccount(webViewUserVO.getUserId());
+
+        // 3. 注册送188元新手红包
         // 活动有效期校验
         try {
             Integer activityId = systemConfig.getActivity888Id();
@@ -237,6 +259,95 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         }
 
         return webViewUserVO;
+    }
+
+    @Override
+    public boolean checkActivityIfAvailable(Integer activityId) {
+        if (activityId == null) {
+            return false;
+        }
+
+        AdsVO adsVO = amMarketClient.findAdsById(activityId);
+
+        if (adsVO == null) {
+            return false;
+        }
+        if (adsVO.getTimeStart() > GetDate.getNowTime10()) {
+            return false;
+        }
+        if (adsVO.getTimeEnd() < GetDate.getNowTime10()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int countUserByRecommendName(String reffer) {
+        int cnt = amUserClient.countUserByRecommendName(reffer);
+        return cnt;
+    }
+
+    @Override
+    public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest) {
+        return amMarketClient.searchBanner(adsRequest);
+    }
+
+    /**
+     * 注册保存账户表
+     *
+     * @param userId
+     * @throws MQException
+     */
+    private void sendMqToSaveAccount(int userId) {
+        AccountVO account = new AccountVO();
+        account.setUserId(userId);
+        // 银行存管相关
+        account.setBankBalance(BigDecimal.ZERO);
+        account.setBankBalanceCash(BigDecimal.ZERO);
+        account.setBankFrost(BigDecimal.ZERO);
+        account.setBankFrostCash(BigDecimal.ZERO);
+        account.setBankInterestSum(BigDecimal.ZERO);
+        account.setBankInvestSum(BigDecimal.ZERO);
+        account.setBankWaitCapital(BigDecimal.ZERO);
+        account.setBankWaitInterest(BigDecimal.ZERO);
+        account.setBankWaitRepay(BigDecimal.ZERO);
+        account.setBankTotal(BigDecimal.ZERO);
+        account.setBankAwaitCapital(BigDecimal.ZERO);
+        account.setBankAwaitInterest(BigDecimal.ZERO);
+        account.setBankAwait(BigDecimal.ZERO);
+        account.setBankWaitRepayOrg(BigDecimal.ZERO);
+        account.setBankAwaitOrg(BigDecimal.ZERO);
+        // 汇付相关
+        account.setTotal(BigDecimal.ZERO);
+        account.setIncome(BigDecimal.ZERO);
+        account.setExpend(BigDecimal.ZERO);
+        account.setBalance(BigDecimal.ZERO);
+        account.setBalanceCash(BigDecimal.ZERO);
+        account.setBalanceFrost(BigDecimal.ZERO);
+        account.setFrost(BigDecimal.ZERO);
+        account.setAwait(BigDecimal.ZERO);
+        account.setRepay(BigDecimal.ZERO);
+        account.setFrostCash(BigDecimal.ZERO);
+        account.setRecMoney(BigDecimal.ZERO);
+        account.setFee(BigDecimal.ZERO);
+        account.setInMoney(BigDecimal.ZERO);
+        account.setInMoneyFlag(0);
+        account.setPlanAccedeTotal(BigDecimal.ZERO);
+        account.setPlanBalance(BigDecimal.ZERO);
+        account.setPlanFrost(BigDecimal.ZERO);
+        account.setPlanAccountWait(BigDecimal.ZERO);
+        account.setPlanCapitalWait(BigDecimal.ZERO);
+        account.setPlanInterestWait(BigDecimal.ZERO);
+        account.setPlanRepayInterest(BigDecimal.ZERO);
+        account.setVersion(BigDecimal.ZERO);
+        logger.info("注册插入account：{}", JSON.toJSONString(account));
+        try {
+            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
+        } catch (MQException e) {
+            logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
+            throw new RuntimeException("注册成功推送account——mq失败...");
+        }
     }
 
     /**
@@ -268,6 +379,11 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         }
     }
 
+    /**
+     * 组装 userVO
+     * @param userVO
+     * @return
+     */
     private WebViewUserVO assembleWebViewUserVO(UserVO userVO) {
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(userVO, webViewUserVO);
@@ -335,51 +451,4 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         String token = JwtHelper.genToken(map);
         return token;
     }
-
-    @Autowired
-    private AmMarketClient amMarketClient;
-
-    @Override
-    public boolean checkActivityIfAvailable(Integer activityId) {
-        if (activityId == null) {
-            return false;
-        }
-
-        AdsVO adsVO = amMarketClient.findAdsById(activityId);
-
-        if (adsVO == null) {
-            return false;
-        }
-        if (adsVO.getTimeStart() > GetDate.getNowTime10()) {
-            return false;
-        }
-        if (adsVO.getTimeEnd() < GetDate.getNowTime10()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int countUserByRecommendName(String reffer) {
-        int cnt = amUserClient.countUserByRecommendName(reffer);
-        return cnt;
-    }
-
-    @Override
-    public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest) {
-        return amMarketClient.searchBanner(adsRequest);
-    }
-
-    @Override
-    public UserVO insertUserAction(RegisterRequest registerRequest, String ipAddr, String platform) {
-        RegisterUserRequest registerUserRequest = new RegisterUserRequest();
-        BeanUtils.copyProperties(registerRequest, registerUserRequest);
-        registerUserRequest.setLoginIp(ipAddr);
-        registerUserRequest.setInstCode("10000017");
-        registerUserRequest.setPlatform(platform);
-        UserVO userVO = amUserClient.surongRegister(registerUserRequest);
-        return userVO;
-    }
-
 }

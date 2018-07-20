@@ -10,7 +10,6 @@ import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1069,6 +1068,23 @@ public class AmUserClientImpl implements AmUserClient {
 	public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
 		BankCardLogResponse response =  restTemplate
 				.postForEntity("http://AM-USER/am-user/bankCardManager/selectBankCardLogByExample",request, BankCardLogResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 根据证件号码和姓名查找用户CA认证记录表
+	 * @param strIdNo
+	 * @param tureName
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName){
+		CertificateAuthorityResponse response =  restTemplate
+				.getForEntity("http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/"+strIdNo+"/"+tureName, CertificateAuthorityResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;

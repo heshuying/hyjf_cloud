@@ -17,14 +17,21 @@ import com.hyjf.cs.user.vo.RegisterRequest;
  */
 public interface RegistService extends BaseUserService {
 
-
-
+    /**
+     * 注册参数检查
+     * @param registerRequest
+     */
     void checkParam(RegisterRequest registerRequest);
 
+    /**
+     * api渠道注册参数校验
+     *
+     * @param
+     */
     void apiCheckParam(RegisterRequest registerRequest);
 
     /**
-     * 注册
+     * 通用注册功能实现
      * @param registerRequest
      * @param ip
      * @return
@@ -41,11 +48,33 @@ public interface RegistService extends BaseUserService {
      */
     UserVO apiRegister(RegisterRequest registerRequest, String ipAddr);
 
+    /**
+     * 融东风注册
+     * @param register
+     * @param ipAddr
+     * @param platform
+     * @return
+     */
+    UserVO surongRegister(RegisterRequest register, String ipAddr, String platform);
+
+    /**
+     * 检查活动是否有效
+     * @param activityId 活动id
+     * @return
+     */
     boolean checkActivityIfAvailable(Integer activityId);
 
+    /**
+     * 判断推荐人是否存在
+     * @param recommend
+     * @return  1-存在 0-不存在
+     */
     int countUserByRecommendName(String recommend);
 
+    /**
+     * app查询banner
+     * @param adsRequest
+     * @return
+     */
     AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
-
-    UserVO insertUserAction(RegisterRequest register, String ipAddr, String platform);
 }
