@@ -1,18 +1,9 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +25,7 @@ public class AppDeleteCardController extends BaseUserController {
 
     @RequestMapping("/deleteCard")
     public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId,  HttpServletRequest request) {
-        String cardId = request.getParameter("cardId");
+       /* String cardId = request.getParameter("cardId");
         JSONObject ret = new JSONObject();
         // 检查参数
         if(userId == null || userId == 0){
@@ -98,6 +89,8 @@ public class AppDeleteCardController extends BaseUserController {
             ret.put("status", "false");
         }
         LogUtil.endLog(THIS_CLASS, DeleteCardDefine.REQUEST_MAPPING);
-        return ret;
+        return ret;*/
+
+       return null;
     }
 }
