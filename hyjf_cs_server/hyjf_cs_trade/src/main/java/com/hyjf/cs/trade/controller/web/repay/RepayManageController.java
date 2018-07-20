@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @Api(value = "web端-还款管理相关页面接口", description ="web端-还款管理相关页面接口")
 @RestController
-@RequestMapping("/web/repay")
+@RequestMapping("/hyjf-web/repay")
 public class RepayManageController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(RepayManageController.class);
 
