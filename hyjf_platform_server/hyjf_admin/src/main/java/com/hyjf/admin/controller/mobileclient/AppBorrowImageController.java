@@ -48,10 +48,8 @@ public class AppBorrowImageController extends BaseController {
     @Value("${file.physical.path}")
     private String PHYSICAL_PATH;
 
-/*
     @Value("${file.upload.temp.path}")
     private String TEMP_PATH;
-*/
 
 
     @ApiOperation(value = "产品图片列表查询", notes = "产品图片列表查询")
@@ -135,8 +133,8 @@ public class AppBorrowImageController extends BaseController {
         // TODO PropUtils.getSystem("file.physical.path")
         String filePhysicalPath = PHYSICAL_PATH;
         // TODO PropUtils.getSystem("file.upload.temp.path")
-//        String fileUploadTempPath = TEMP_PATH;
-        String fileUploadTempPath = null;
+        String fileUploadTempPath = TEMP_PATH;
+
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 
         File logoSaveFile = new File(logoRealPathDir);
