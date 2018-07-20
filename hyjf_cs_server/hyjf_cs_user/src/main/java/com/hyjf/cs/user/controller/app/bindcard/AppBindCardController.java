@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hesy
  * @version AppBindCardController, v0.1 2018/7/19 9:34
  */
-@Api(value = "App端绑卡",description = "App端绑卡")
+@Api(value = "app端-绑卡",description = "app端-绑卡")
 @RestController
 @RequestMapping("/app/bindCard")
 public class AppBindCardController extends BaseUserController {

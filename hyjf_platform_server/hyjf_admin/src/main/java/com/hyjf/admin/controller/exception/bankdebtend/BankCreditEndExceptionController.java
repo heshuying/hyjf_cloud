@@ -11,6 +11,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author hesy
  * @version BankCreditEndController, v0.1 2018/7/12 16:55
  */
-@Api(value = "异常中心-结束债权异常处理")
+@Api(value = "异常中心-结束债权异常处理", description = "异常中心-结束债权异常处理")
 @RestController
 @RequestMapping("/hyjf-admin/exception/creditend")
 public class BankCreditEndExceptionController extends BaseController {
@@ -35,7 +36,7 @@ public class BankCreditEndExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
-    @RequestMapping("/list")
+    @PostMapping("/list")
     public JSONObject getList(@RequestBody BankCreditEndListRequest requestBean){
         Integer count = bankCreditEndService.getCreditEndCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
@@ -55,7 +56,7 @@ public class BankCreditEndExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "结束债权(新)同步", notes = "结束债权(新)同步")
-    @RequestMapping("/update_frombank")
+    @PostMapping("/update_frombank")
     public JSONObject updateFromBank(@RequestBody BankCreditEndUpdateRequest requestBean){
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdate(requestBean);
@@ -82,7 +83,7 @@ public class BankCreditEndExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "结束债权(新)更新为初始状态", notes = "结束债权(新)更新为初始状态")
-    @RequestMapping("/update_forinitial")
+    @PostMapping("/update_forinitial")
     public JSONObject updateForInitial(@RequestBody BankCreditEndUpdateRequest requestBean){
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdateInitial(requestBean);

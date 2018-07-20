@@ -42,7 +42,7 @@ import java.util.Map;
  * @author hesy
  * @version RepayManageController, v0.1 2018/6/23 14:09
  */
-@Api(value = "Web端还款管理相关页面接口")
+@Api(value = "web端-还款管理相关页面接口", description ="web端-还款管理相关页面接口")
 @RestController
 @RequestMapping("/web/repay")
 public class RepayManageController extends BaseTradeController {
@@ -314,8 +314,8 @@ public class RepayManageController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/17
      */
-    @ResponseBody
-    @RequestMapping("/repayVerifyReturn")
+    @ApiOperation(value = "收到报文后对合法性检查后的异步回调", notes = "收到报文后对合法性检查后的异步回调")
+    @PostMapping("/repayVerifyReturn")
     public String repayVerifyReturnAction(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
 
         logger.info("批次还款请求,收到报文后对合法性检查后的异步回调开始");
@@ -374,7 +374,7 @@ public class RepayManageController extends BaseTradeController {
      * @param bean
      * @throws Exception
      */
-    @ResponseBody
+    @ApiOperation(value = "业务处理结果的异步回调", notes = "业务处理结果的异步回调")
     @RequestMapping("/repayResultReturn")
     public String repayResultReturn(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
 

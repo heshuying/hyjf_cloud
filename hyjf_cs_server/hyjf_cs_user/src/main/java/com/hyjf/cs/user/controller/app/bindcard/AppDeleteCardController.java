@@ -5,6 +5,7 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,14 +17,14 @@ import javax.servlet.http.HttpServletRequest;
  * @author hesy
  * @version AppDeleteCardController, v0.1 2018/7/19 9:38
  */
-@Api(value = "app端解绑银行卡",description = "app端解绑银行卡")
+@Api(value = "app端-解绑银行卡",description = "app端-解绑银行卡")
 @RestController
 @RequestMapping("/app/deleteCard")
 public class AppDeleteCardController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
 
-    @RequestMapping("/deleteCard")
+    @PostMapping("/deleteCard")
     public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId,  HttpServletRequest request) {
        /* String cardId = request.getParameter("cardId");
         JSONObject ret = new JSONObject();
