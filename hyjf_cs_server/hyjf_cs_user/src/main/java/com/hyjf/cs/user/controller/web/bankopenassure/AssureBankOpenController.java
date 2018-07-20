@@ -36,7 +36,7 @@ import java.util.Map;
  * @author sunss
  *
  */
-@Api(value = "web端担保账户开户",description = "web端担保账户开户")
+@Api(value = "web端-担保账户开户",description = "web端-担保账户开户")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user/secure/assurebankopen")
@@ -73,7 +73,7 @@ public class AssureBankOpenController extends BaseUserController {
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "web端担保账户开户", notes = "用户开户")
+    @ApiOperation(value = "web端-担保账户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
     @ResponseBody
 	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
@@ -119,11 +119,11 @@ public class AssureBankOpenController extends BaseUserController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "web端页面开户异步处理", notes = "web端页面开户异步处理")
+    @ApiOperation(value = "web端-页面开户异步处理", notes = "web端-页面开户异步处理")
     @RequestMapping("/bgReturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
-        logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
+        logger.info("web端-开户异步处理start,userId:{}", bean.getLogUserId());
         bean.setMobile(mobile);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
         return result;

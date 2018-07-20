@@ -29,7 +29,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version RegisterController, v0.1 2018/6/11 14:27
  */
-@Api(value = "api端用户注册接口",description = "api端用户注册接口")
+@Api(value = "api端-用户注册接口",description = "api端-用户注册接口")
 @RestController
 @RequestMapping("/hyjf-api/user")
 public class ApiRegisterController extends BaseUserController {

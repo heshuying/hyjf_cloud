@@ -23,7 +23,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version PandectController, v0.1 2018/6/21 14:31
  */
-@Api(value = "web端账户总览",description = "web端账户总览")
+@Api(value = "web端账户总览",description = "web端-账户总览")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")

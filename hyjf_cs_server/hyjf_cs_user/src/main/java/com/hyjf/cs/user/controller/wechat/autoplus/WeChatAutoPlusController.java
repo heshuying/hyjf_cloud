@@ -55,7 +55,7 @@ public class WeChatAutoPlusController extends BaseUserController {
     @Autowired
     AutoPlusService autoPlusService;
 
-    @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
+    @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
     @ApiImplicitParam(name = "param",value = "{userAutoType: string} type=0授权自动投标；type=1授权自动债转", dataType = "Map")
     @PostMapping(value = "/autoPlusSendCode", produces = "application/json; charset=utf-8")
     public WebResult<Object> autoPlusSendCode(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String,String> param) {
@@ -133,7 +133,7 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @Date: 16:36 2018/5/30
      * @Return: ModelAndView
      */
-    @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
+    @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
     @PostMapping(value ="/userAuthCredit", produces = "application/json; charset=utf-8")
     public WebResult<Object> userAuthCredit(@RequestHeader(value = "token") String token,  @RequestBody AuthorizedVO authorizedVO){
         WebResult<Object> result = new WebResult<Object>();

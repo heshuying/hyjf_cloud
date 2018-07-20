@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author hesy
  * @version AppMobileModifyController, v0.1 2018/7/18 14:53
  */
-@Api(value = "APP绑定新手机号",description = "APP绑定新手机号")
+@Api(value = "APP绑定新手机号",description = "app端-绑定新手机号")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppMobileModifyController extends BaseUserController {

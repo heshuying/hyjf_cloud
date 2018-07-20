@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.user.config.SystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -69,8 +70,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     @Override
     public void sendSmsCode(String validCodeType, String mobile,String platform, String token, String ip) throws MQException {
 
-        this.sendSmsCodeCheckParam(validCodeType, mobile, token, ip);
-
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);
 
@@ -128,7 +127,8 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      * @param token
      * @param ip
      */
-    private void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
+    @Override
+    public void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
 
         List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
                 CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
@@ -221,6 +221,163 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         // 发送checkCode最大时间间隔，默认60秒
         RedisUtils.set(mobile + ":" + validCodeType + ":IntervalTime", mobile,
                 smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime());
+    }
+
+    /**
+     * 参数检查
+     *
+     * @param validCodeType
+     * @param mobile
+     * @param token
+     * @param ip
+     */
+    @Override
+    public JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
+        JSONObject ret = new JSONObject();
+        List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
+                CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
+        //无效的验证码类型
+        if(Validator.isNull(validCodeType) || !codeTypes.contains(validCodeType)){
+            ret.put("status", "1");
+            ret.put("statusDesc", "验证码类型错误");
+            return ret;
+        }
+        if(Validator.isNull(mobile) || !Validator.isMobile(mobile)){
+            ret.put("status", "1");
+            ret.put("statusDesc", "请输入您的真实手机号码");
+            return ret;
+        }
+        if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
+            // 注册时要判断不能重复
+            if(existUser(mobile)){
+                ret.put("status", "1");
+                ret.put("statusDesc", "该手机号已经注册");
+                return ret;
+            }
+        }
+        if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
+            if (StringUtils.isNotEmpty(token)) {
+                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+                if (webViewUserVO == null){
+                    ret.put("status", "1");
+                    ret.put("statusDesc", "用户不存在");
+                    return ret;
+                }
+                // 验证原手机号校验
+                if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
+                    if (StringUtils.isBlank(webViewUserVO.getMobile())){
+                        ret.put("status", "1");
+                        ret.put("statusDesc", "不存在用户");
+                        return ret;
+                    }
+                    if (!webViewUserVO.getMobile().equals(mobile)){
+                        ret.put("status", "1");
+                        ret.put("statusDesc", "获取验证码手机号与注册手机号不一致");
+                        return ret;
+                    }
+                }
+                // 绑定新手机号校验
+                if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
+                    if (webViewUserVO.getMobile().equals(mobile)){
+                        ret.put("status", "1");
+                        ret.put("statusDesc", "获取验证码手机号与注册手机号不一致");
+                        return ret;
+                    }
+                    if (existUser(mobile)){
+                        ret.put("status", "1");
+                        ret.put("statusDesc", "该手机号已经注册");
+                        return ret;
+                    }
+                }
+            }
+        }
+
+        // 判断发送间隔时间
+        String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
+        logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
+        if (StringUtils.isNotBlank(intervalTime)){
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求验证码操作过快");
+            return ret;
+        }
+        String ipCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
+        if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
+            ipCount = "0";
+            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0");
+        }
+        logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
+        SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
+        if (smsConfig == null){
+            ret.put("status", "1");
+            ret.put("statusDesc", "获取短信配置失败");
+            return ret;
+        }
+        if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
+            if (!Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount())){
+                ret.put("status", "1");
+                ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
+                return ret;
+            }
+            try {
+                // 发送短信通知
+                Map<String, String> replaceStrs = new HashMap<String, String>();
+                replaceStrs.put("var_phonenu", mobile);
+                replaceStrs.put("val_reason", "IP访问次数超限");
+                SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
+                        MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
+                        CustomConstants.CHANNEL_TYPE_NORMAL);
+                try {
+                    smsProducer.messageSend(
+                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                } catch (MQException e) {
+                    logger.error("短信发送失败...", e);
+                }
+            } catch (Exception e) {
+                    ret.put("status", "1");
+                    ret.put("statusDesc", "IP访问次数超限");
+                    return ret;
+            }
+            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT + ip, (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
+        }
+        // 判断最大发送数max_phone_count
+        String count = RedisUtils.get(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT);
+        if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
+            count = "0";
+            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, "0");
+        }
+        logger.info(mobile + "----------MaxPhoneCount-----------" + count);
+        if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
+            if (!Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount())){
+                ret.put("status", "1");
+                ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
+                return ret;
+            }
+            try {
+                // 发送短信通知
+                Map<String, String> replaceStrs = new HashMap<String, String>();
+                replaceStrs.put("var_phonenu", mobile);
+                replaceStrs.put("val_reason", "手机验证码发送次数超限");
+                SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null,
+                        MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
+                        CustomConstants.CHANNEL_TYPE_NORMAL);
+                try {
+                    smsProducer.messageSend(
+                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                } catch (MQException e) {
+                    logger.error("短信发送失败...", e);
+                }
+            } catch (Exception e) {
+                    ret.put("status", "1");
+                    ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
+                    return ret;
+            }
+            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+        }
+
+        // 发送checkCode最大时间间隔，默认60秒
+        RedisUtils.set(mobile + ":" + validCodeType + ":IntervalTime", mobile,
+        smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime());
+        return ret;
     }
 
     @Override
