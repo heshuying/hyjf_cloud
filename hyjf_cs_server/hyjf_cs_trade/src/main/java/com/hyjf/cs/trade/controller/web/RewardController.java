@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Api(value = "Web端奖励记录")
 @RestController
-@RequestMapping("/web/invite")
+@RequestMapping("/hyjf-web/invite")
 public class RewardController {
     private static final Logger logger = LoggerFactory.getLogger(RewardController.class);
 
