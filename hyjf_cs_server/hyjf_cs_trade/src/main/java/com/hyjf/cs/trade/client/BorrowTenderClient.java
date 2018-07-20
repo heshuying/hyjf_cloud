@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.admin.TenderCommissionRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
@@ -65,4 +66,12 @@ public interface BorrowTenderClient {
      * @return
      */
 	CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
+
+	/**
+	 * 获取计算提成数据
+	 * @param request
+	 * @return
+	 */
+	Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
+
 }
