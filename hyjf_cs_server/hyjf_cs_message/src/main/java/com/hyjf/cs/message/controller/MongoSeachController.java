@@ -131,6 +131,11 @@ public class MongoSeachController extends BaseController {
         return response;
     }
 
+    /**
+     * 绝对错误的写法,list是使内存瞬间飙升  todo ....
+     * @param accountWebList
+     * @return
+     */
     @RequestMapping(value = "/queryAccountWebList")
     public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
