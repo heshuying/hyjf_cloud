@@ -44,8 +44,8 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
 
 
     @Override
-    public void insertAccountWithdrawLog(AccountWithdraw accountWithdraw) {
-        accountWithdrawMapper.insertSelective(accountWithdraw);
+    public int insertAccountWithdrawLog(AccountWithdraw accountWithdraw) {
+        return accountWithdrawMapper.insertSelective(accountWithdraw);
     }
 
     @Override
