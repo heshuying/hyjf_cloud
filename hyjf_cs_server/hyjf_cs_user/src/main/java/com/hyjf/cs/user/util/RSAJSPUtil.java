@@ -29,20 +29,41 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.hyjf.common.util.RSAKeyUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RSAJSPUtil {
 
 	private static String RSAKeyStore = "RSAKey.txt";
 
-	@Value("${hyjf.req.pri.key}")
+
 	private static String HYJF_REQ_PRI_KEY_PATH;
-	@Value("${hyjf.req.pub.key}")
+
 	private static String HYJF_REQ_PUB_KEY_PATH;
 
 	// 私钥文件名
 	private static final String PRIK_NAME = "prik.crt";
 	// 公钥文件名
 	private static final String PUBK_NAME = "pubk.crt";
+
+
+	public static String getHyjfReqPriKeyPath() {
+		return RSAJSPUtil.HYJF_REQ_PRI_KEY_PATH;
+	}
+
+	@Value("${hyjf.req.pri.key}")
+	public void setHyjfReqPriKeyPath(String hyjfReqPriKeyPath) {
+		RSAJSPUtil.HYJF_REQ_PRI_KEY_PATH = hyjfReqPriKeyPath;
+	}
+
+	public static String getHyjfReqPubKeyPath() {
+		return RSAJSPUtil.HYJF_REQ_PUB_KEY_PATH;
+	}
+
+	@Value("${hyjf.req.pub.key}")
+	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
+		RSAJSPUtil.HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
+	}
 
 	/**
 	 * 生成秘钥对
@@ -206,7 +227,8 @@ public class RSAJSPUtil {
 			// DPlhyzu6yya5op4h21BpZhopBQ6o2jamdN6KxC2oxQxPAkGBtO2Kao35jikN
 			// WSYs6QJ+CghZNNXSW8XlrnFqHQNTlpwehsdxpqH8N4OcPC3jl/ZkZdYhvfoY
 			// CkG9ljdDE06fVSJZ40x3LSqXJCYbvkS2ppywkLkCAQACAQACAQACAQACAQA=");
-			prik = readToString(HYJF_REQ_PRI_KEY_PATH + PRIK_NAME);
+			String req = getHyjfReqPriKeyPath();
+			prik = readToString(req + PRIK_NAME);
 			byte[] keyBytes3 = Base64.decodeBase64(prik);
 			PrivateKey privateKey = RSAKeyUtil.getPrivateKey(keyBytes3);
 
@@ -233,7 +255,7 @@ public class RSAJSPUtil {
 	 * @return
 	 */
 	public static String getPunlicKeys() {
-		String filePath = HYJF_REQ_PUB_KEY_PATH + PUBK_NAME;
+		String filePath = getHyjfReqPubKeyPath() + PUBK_NAME;
 		return readToString(filePath);
 	}
 

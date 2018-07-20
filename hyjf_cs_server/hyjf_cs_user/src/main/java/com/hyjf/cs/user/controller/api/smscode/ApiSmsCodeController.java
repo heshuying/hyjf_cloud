@@ -50,7 +50,7 @@ public class ApiSmsCodeController extends BaseUserController {
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		ApiResult resultBean = new ApiResult();
-		sendSmsCode.appSendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
+		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}
