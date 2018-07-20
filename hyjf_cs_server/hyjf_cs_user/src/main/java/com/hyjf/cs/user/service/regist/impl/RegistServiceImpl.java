@@ -162,6 +162,91 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
     }
 
     /**
+     * 参数校验
+     *
+     * @param registerRequest
+     */
+    @Override
+    public JSONObject appCheckParam(RegisterRequest registerRequest) {
+        JSONObject ret = new JSONObject();
+        String mobile = registerRequest.getMobile();
+        //手机号未填写
+        if(StringUtils.isEmpty(mobile)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "手机号不能为空");
+            return ret;
+        }
+        if(!Validator.isMobile(mobile)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "请填写您的真实手机号码");
+            return ret;
+        }
+        if(existUser(mobile)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "手机号已存在");
+            return ret;
+        }
+        String smsCode = registerRequest.getVerificationCode();
+        //验证码不能为空
+        if(StringUtils.isEmpty(smsCode)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "验证码不能为空");
+            return ret;
+        }
+        String password = registerRequest.getPassword();
+        //密码不能为空
+        if(StringUtils.isEmpty(password)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "密码不能为空");
+            return ret;
+        }
+        if(password.length() < 6 || password.length() > 16){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "密码长度6-16位");
+            return ret;
+        }
+        boolean hasNumber = false;
+        for (int i = 0; i < password.length(); i++) {
+            if (Validator.isNumber(password.substring(i, i + 1))) {
+                hasNumber = true;
+                break;
+            }
+        }
+        if(!hasNumber){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "密码必须包含数字");
+            return ret;
+        }
+        String regEx = "^[a-zA-Z0-9]+$";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(password);
+        if(!m.matches()){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "密码必须由数字和字母组成，如abc123");
+            return ret;
+        }
+        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        if(cnt == 0){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
+            return ret;
+        }
+        String reffer = registerRequest.getReffer();
+        if (StringUtils.isNotEmpty(reffer)) {
+            //无效推荐人
+            if(amUserClient.countUserByRecommendName(reffer) <= 0){
+                ret.put(CustomConstants.APP_STATUS, 1);
+                ret.put(CustomConstants.APP_STATUS_DESC, "推荐人无效");
+                return ret;
+            }
+        }
+        return ret;
+    }
+
+
+    /**
      * 1. 必要参数检查 2. 注册 3. 注册后处理
      *
      * @param registerRequest

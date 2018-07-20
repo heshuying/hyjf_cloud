@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.regist;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -29,6 +30,8 @@ public interface RegistService extends BaseUserService {
      * @param
      */
     void apiCheckParam(RegisterRequest registerRequest);
+
+    JSONObject appCheckParam(RegisterRequest registerRequest);
 
     /**
      * 通用注册功能实现

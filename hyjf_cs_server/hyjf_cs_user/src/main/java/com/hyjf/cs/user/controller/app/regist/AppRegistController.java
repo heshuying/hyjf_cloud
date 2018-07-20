@@ -88,11 +88,19 @@ public class AppRegistController extends BaseUserController {
         if(version.length()>=5){
             version = version.substring(0, 5);
         }
-        CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
+        if(version.compareTo("1.4.0")<=0){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "此版本暂不可用，请更新至最新版本");
+            return ret;
+        }
         logger.info("当前注册手机号: {}", mobile);
 
         // 取得加密用的Key
-        CheckUtil.check(StringUtils.isNotBlank(key),MsgEnum.STATUS_CE000001);
+        if(StringUtils.isBlank(key)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "请求参数异常");
+            return ret;
+        }
         mobile = DES.decodeValue(key, mobile);
         verificationCode = DES.decodeValue(key, verificationCode);
         password = DES.decodeValue(key, password);
@@ -102,7 +110,7 @@ public class AppRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
-        registService.checkParam(register);
+        ret = registService.appCheckParam(register);
         registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
         boolean active = false;
