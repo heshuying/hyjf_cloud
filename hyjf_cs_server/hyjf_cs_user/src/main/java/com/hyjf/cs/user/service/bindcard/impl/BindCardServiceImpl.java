@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
@@ -500,6 +501,24 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			}
 		}
 		
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 */
+	@Override
+	public boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo, Integer cardId){
+		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
+		if(bankCard == null){
+			return false;
+		}
+
+		BankCardUpdateRequest requestBean = new BankCardUpdateRequest();
+		requestBean.setUserId(userId);
+		requestBean.setCardNo(cardNo);
+		requestBean.setUserName(userName);
+		requestBean.setCardId(cardId);
+		return amUserClient.updateAfterDeleteCard(requestBean);
 	}
 }
 
