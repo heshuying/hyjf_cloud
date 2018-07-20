@@ -6,6 +6,7 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.vo.config.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -73,4 +74,23 @@ public interface AmConfigClient {
      * @return
      */
     List<LinkVO> getPartnersList(Integer partnerType);
+
+    /**
+     * 查询文章条数
+     * @return
+     */
+    Integer countContentArticleByType();
+
+    /**
+     * 查询文章列表
+     * @return
+     */
+    List<ContentArticleCustomizeVO> getContentArticleListByType(Map<String, Object> params);
+
+    /**
+     * 根据文章id查找文章
+     * @param contentArticleId
+     * @return
+     */
+    ContentArticleVO getContentArticleById(Integer contentArticleId);
 }

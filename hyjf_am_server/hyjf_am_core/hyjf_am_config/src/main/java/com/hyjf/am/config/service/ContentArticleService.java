@@ -1,10 +1,12 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
+import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 内容管理 - 文章管理 - 公司动态
@@ -80,5 +82,16 @@ public interface ContentArticleService {
      */
     void delectAction(Integer id);
 
+    /**
+     * 查询文章条数
+     * @return
+     */
+    Integer countContentArticleByType(Map<String, Object> params);
 
+    /**
+     * 查询文章列表
+     * @param params
+     * @return
+     */
+    List<ContentArticleCustomize> getContentArticleListByType(Map<String,Object> params);
 }

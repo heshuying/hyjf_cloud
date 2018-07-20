@@ -27,9 +27,9 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.collections.CollectionUtils;
@@ -3083,9 +3083,13 @@ public class AmTradeClientImpl implements AmTradeClient{
         return intUpdFlg;
     }
 
-    @Override
-    public DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type) {
-        return null;
-    }
+	@Override
+	public DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type) {
+		if (requestBean != null) {
+			requestBean.setType(type);
+		}
+		return restTemplate.postForObject("http://AM-TRADE/am-trade/datacenter/coupon/getdatacentercouponlist",
+				requestBean, DataCenterCouponResponse.class);
+	}
 
 }

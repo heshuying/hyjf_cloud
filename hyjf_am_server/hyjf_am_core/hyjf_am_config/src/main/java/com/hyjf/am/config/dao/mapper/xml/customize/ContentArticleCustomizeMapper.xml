@@ -57,4 +57,47 @@
 			limit #{limitStart} , #{limitEnd}
 		</if>
 	</select>
+	
+	<select id="countContentArticleByType" resultType="java.lang.Integer"
+	        parameterType="Map">
+		SELECT count(1) FROM ht_content_article
+		<where>
+			AND status = 1
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+				ORDER BY create_time DESC
+			<if test="limitStart >= 0">
+				limit #{limitStart} , #{limitEnd}
+			</if>
+		</where>
+	</select>
+	
+	<resultMap id="contentArticleMap" type="com.hyjf.am.config.dao.model.auto.ContentArticle" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="author" property="author" jdbcType="VARCHAR" />
+	    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="summary" property="summary" jdbcType="TIMESTAMP" />
+  	</resultMap>
+	
+	<select id="getContentArticleListByType" resultMap="contentArticleMap"
+	        parameterType="Map">
+		SELECT * FROM ht_content_article
+		<where>
+			AND status = 1
+			<if test="type != null and type != ''">
+				AND type = #{type}
+			</if>
+				ORDER BY create_time DESC
+			<if test="limitStart >= 0">
+				limit #{limitStart} , #{limitEnd}
+			</if>
+		</where>
+	</select>
 </mapper>

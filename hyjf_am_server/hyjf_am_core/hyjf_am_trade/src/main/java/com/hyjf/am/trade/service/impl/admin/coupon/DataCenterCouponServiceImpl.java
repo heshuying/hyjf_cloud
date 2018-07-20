@@ -3,9 +3,15 @@
  */
 package com.hyjf.am.trade.service.impl.admin.coupon;
 
+
+
+import com.hyjf.am.resquest.trade.DataCenterCouponRequest;
+import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
 import com.hyjf.am.trade.service.admin.coupon.DataCenterCouponService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -14,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataCenterCouponServiceImpl extends BaseServiceImpl implements DataCenterCouponService {
 
+    @Override
+    public List<DataCenterCouponCustomize> getDataCenterCouponList(DataCenterCouponRequest request) {
+        return null;//todo
+    }
 }
