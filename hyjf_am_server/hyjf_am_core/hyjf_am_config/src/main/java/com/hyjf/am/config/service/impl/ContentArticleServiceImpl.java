@@ -7,6 +7,7 @@ import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.auto.ContentArticleExample;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
+import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
@@ -14,9 +15,12 @@ import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +35,9 @@ public class ContentArticleServiceImpl implements ContentArticleService {
 
     @Autowired
     private ContentArticleCustomizeMapper contentArticleCustomizeMapper;
+
+    @Value("hyjf.web.host")
+    private String webUrl;
 
     @Override
     public List<ContentArticle> getContentArticleList(ContentArticleRequest request) {
@@ -190,5 +197,32 @@ public class ContentArticleServiceImpl implements ContentArticleService {
     @Override
     public void delectAction(Integer id) {
         contentArticleMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Integer countContentArticleByType(Map<String, Object> params) {
+        return contentArticleCustomizeMapper.countContentArticleByType(params);
+    }
+
+    @Override
+    public List<ContentArticleCustomize> getContentArticleListByType(Map<String, Object> params) {
+        List<ContentArticle> list = contentArticleCustomizeMapper.getContentArticleListByType(params);
+        List<ContentArticleCustomize> knowledgeCustomizes=new ArrayList<ContentArticleCustomize>();
+        for (ContentArticle contentArticle : list) {
+            ContentArticleCustomize customize=new ContentArticleCustomize();
+            customize.setTitle(contentArticle.getTitle());
+            customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
+            customize.setMessageId(contentArticle.getId()+"");
+            customize.setMessageUrl(webUrl +"/find/contentArticle"+
+                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+            customize.setShareTitle(contentArticle.getTitle());
+            customize.setShareContent(contentArticle.getSummary());
+            customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+            customize.setShareUrl(webUrl +"/find/contentArticle"+
+                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+
+            knowledgeCustomizes.add(customize);
+        }
+        return knowledgeCustomizes;
     }
 }

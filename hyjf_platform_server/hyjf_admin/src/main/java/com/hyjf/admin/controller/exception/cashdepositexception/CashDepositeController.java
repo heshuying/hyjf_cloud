@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AssetListViewRequest;
 import com.hyjf.admin.beans.response.InitCashDepositListResponse;
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
-import com.hyjf.admin.beans.vo.HjhInstConfigAPIVO;
+import com.hyjf.admin.beans.vo.AdminHjhInstConfigAPIVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssetListService;
@@ -68,7 +68,7 @@ public class CashDepositeController extends BaseController {
         // 资金来源 下拉框
         List<HjhInstConfigVO> hjhInstConfigList=assetListService.getHjhInstConfigList();
     	if (CollectionUtils.isNotEmpty(hjhInstConfigList)){
-            initCashDepositResponse.setHjhInstConfigList(CommonUtils.convertBeanList(hjhInstConfigList,HjhInstConfigAPIVO.class));
+            initCashDepositResponse.setHjhInstConfigList(CommonUtils.convertBeanList(hjhInstConfigList,AdminHjhInstConfigAPIVO.class));
         }
 
         return new AdminResult<InitCashDepositListResponse>(initCashDepositResponse);

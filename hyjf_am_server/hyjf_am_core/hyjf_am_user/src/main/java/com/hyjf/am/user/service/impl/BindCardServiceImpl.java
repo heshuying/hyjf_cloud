@@ -3,6 +3,10 @@ package com.hyjf.am.user.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.resquest.user.BankCardUpdateRequest;
+import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -193,6 +197,40 @@ public class BindCardServiceImpl implements BindCardService {
 			return smsAuthCode.getSrvAuthCode();
 		}
 		return null;
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 * @auther: hesy
+	 * @date: 2018/7/19
+	 */
+	@Override
+	public synchronized boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean) throws Exception {
+		int nowTime = GetDate.getNowTime10(); // 当前时间
+		boolean ret = false;
+		BankCardExample bankCardExample = new BankCardExample();
+		BankCardExample.Criteria aCriteria = bankCardExample.createCriteria();
+		aCriteria.andUserIdEqualTo(requestBean.getUserId());
+		aCriteria.andCardNoEqualTo(requestBean.getCardNo()); // 银行卡账号
+		aCriteria.andIdEqualTo(requestBean.getCardId());// 银行卡Id
+		List<BankCard> accountBank = this.bankCardMapper.selectByExample(bankCardExample);
+		boolean isDeleteFlag = this.bankCardMapper.deleteByExample(bankCardExample) > 0 ? true : false;
+		if (!isDeleteFlag) {
+			throw new Exception("删除银行卡失败,请联系客服人员!");
+		}
+		// 插入操作记录表
+		BankCardLog bankCardLog = new BankCardLog();
+		bankCardLog.setUserId(requestBean.getUserId());
+		bankCardLog.setUserName(requestBean.getUserName());
+		bankCardLog.setBankCode(String.valueOf(accountBank.get(0).getBankId()));
+		bankCardLog.setCardNo(requestBean.getCardNo());
+		bankCardLog.setBankName(accountBank.get(0).getBank());
+		bankCardLog.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
+		bankCardLog.setOperationType(1);// 操作类型 0绑定 1删除
+		bankCardLog.setStatus(0);// 成功
+		bankCardLog.setCreateTime(GetDate.getNowTime());// 操作时间
+		ret = this.bankCardLogMapper.insertSelective(bankCardLog) > 0 ? true : false;
+		return ret;
 	}
 	
 }
