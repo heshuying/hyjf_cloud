@@ -1,7 +1,7 @@
 package com.hyjf.cs.user.controller.app.bestserver;
 
-import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.BaseUserController;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.util.*;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.DES;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.SignValue;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.AppAccessStatisticsProducer;
 import com.hyjf.cs.user.result.ServerResultBean;
 
 /**
@@ -33,19 +43,23 @@ public class ServerController extends BaseUserController {
 	@Value("${hyjf.app.serverip.test}")
 	private String testServerIp;
 
+	@Value("${hyjf.app.server.host}")
+	private String hyjf_app_server_host;
+
 	@Autowired
 	SystemConfig systemConfig;
+
+	@Autowired
+	AppAccessStatisticsProducer producer;
+
 	/**
 	 * 获取最优服务器
 	 *
 	 * @return
 	 */
 	@RequestMapping("/getBestServerAction")
-	public ServerResultBean getBestServer(@RequestHeader String platform,
-                                          @RequestHeader String randomString,
-                                          @RequestHeader String secretKey,
-                                          @RequestHeader String appId,
-                                          @RequestHeader String version) {
+	public AppResult getBestServer(@RequestHeader String platform, @RequestHeader String randomString,
+								   @RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		String appKey = "";
@@ -97,8 +111,7 @@ public class ServerController extends BaseUserController {
 					signValue.setVersion(version);
 					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
-					resultBean.setServerIp(
-							DES.encryptDES_ECB(systemConfig.getWebHost(), initKey));
+					resultBean.setServerIp(DES.encryptDES_ECB(hyjf_app_server_host, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
@@ -114,17 +127,14 @@ public class ServerController extends BaseUserController {
 		return resultBean;
 	}
 
-
-
-    /**
-     * 获取算法密钥
-     *
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/getKeyAction")
-    public ServerResultBean getKey(@RequestHeader String sign,
-                                   @RequestHeader String version) {
+	/**
+	 * 获取算法密钥
+	 *
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getKeyAction")
+	public AppResult getKey(@RequestHeader String sign, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		try {
@@ -156,8 +166,12 @@ public class ServerController extends BaseUserController {
 			// 获取渠道编号
 			String[] temp = version.split("\\.");
 			if (temp.length > 3) {
+				AppAccesStatisticsVO vo = new AppAccesStatisticsVO();
 				int sourceId = Integer.parseInt(temp[3]);
-				// todo
+				vo.setSourceId(sourceId);
+				vo.setAccessTime(new Date());
+				producer.messageSend(
+						new MessageContent(MQConstant.APP_ACCESS_STATISTICS_TOPIC, sign, JSON.toJSONBytes(vo)));
 			}
 
 		} catch (Exception e) {
@@ -165,6 +179,6 @@ public class ServerController extends BaseUserController {
 			resultBean.setStatus("获取算法密钥发生错误");
 		}
 		return resultBean;
-    }
+	}
 
 }

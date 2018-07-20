@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
  * @version TzjDataCollectService, v0.1 2018/7/6 10:57
  */
 @Service
+@Deprecated
 public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 	private Logger logger = LoggerFactory.getLogger(TzjDataCollectServiceImpl.class);
 

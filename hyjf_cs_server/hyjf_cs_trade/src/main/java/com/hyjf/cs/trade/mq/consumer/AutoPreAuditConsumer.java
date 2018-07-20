@@ -3,8 +3,11 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.handle.AutoPreAuditHandle;
+import com.hyjf.cs.trade.mq.base.Consumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,17 +19,15 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.AutoPreAuditHandle;
-import com.hyjf.cs.trade.mq.base.Consumer;
+import java.util.List;
 
 /**
  * @author fuqiang
  * @version AutoPreAuditConsumer, v0.1 2018/6/14 14:30
  */
+@Component
 public class AutoPreAuditConsumer extends Consumer {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoPreAuditConsumer.class);

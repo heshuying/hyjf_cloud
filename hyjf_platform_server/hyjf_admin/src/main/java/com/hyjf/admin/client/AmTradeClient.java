@@ -4,6 +4,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -13,6 +14,9 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -536,6 +540,55 @@ public interface AmTradeClient {
      * @return
      */
     BorrowApicronResponse getBorrowApicronByID(String id);
+
+
+    /**
+     * 分页查询平台设置账户列表
+     * @return
+     */
+    public MerchantAccountResponse selectMerchantAccountListByPage(AdminMerchantAccountRequest request);
+
+    /**
+     * 根据id查询账户平台设置
+     * @return
+     */
+    public MerchantAccountResponse searchAccountConfigInfo(Integer id);
+
+    /**
+     * 添加账户平台设置
+     * @return
+     */
+    public MerchantAccountResponse saveAccountConfig(AdminMerchantAccountRequest request);
+
+    /**
+     * 修改账户平台设置
+     * @return
+     */
+    public MerchantAccountResponse updateAccountConfig(AdminMerchantAccountRequest request);
+
+
+    /**
+     * 子账户类型 查询
+     * @return
+     */
+    public List<ParamName> getParamNameList(String code);
+    /**
+     *
+     * 根据子账户名称检索
+     * @param subAccountName
+     * @return
+     */
+    public int countAccountListInfoBySubAccountName(String ids, String subAccountName);
+
+    /**
+     *
+     * 根据子账户代号检索
+     * @param subAccountCode
+     * @return
+     */
+    public int countAccountListInfoBySubAccountCode(String ids, String subAccountCode);
+
+
 
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
 
@@ -1526,4 +1579,12 @@ public interface AmTradeClient {
      * @return
      */
     int updateAccountList(AccountListRequest accountListRequest);
+
+    /**
+     * 查询数据中心优惠券数据
+     * @param requestBean
+     * @param type 优惠券类型
+     * @return
+     */
+    DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
 }

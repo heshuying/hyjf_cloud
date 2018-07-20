@@ -35,19 +35,19 @@ public interface ActivityService {
      * @param activityList
      * @return
      */
-    int insertRecord(ActivityList activityList);
+    Map<String, Object> insertRecord(ActivityList activityList);
 
     /**
      * 更改活动
      * @param activityList
      * @return
      */
-    int updateActivity(ActivityList activityList);
+    Map<String, Object> updateActivity(ActivityList activityList);
 
     /**
      * 删除活动
      * @param id
      * @return
      */
-    int deleteActivity(int id);
+    Map<String, Object> deleteActivity(int id);
 }

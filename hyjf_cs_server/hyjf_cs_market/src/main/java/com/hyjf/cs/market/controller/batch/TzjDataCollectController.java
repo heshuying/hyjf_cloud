@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/cs-market/tzj")
+@Deprecated
 public class TzjDataCollectController extends BaseMarketController {
     @Autowired
     TzjDataCollectService tzjDataCollectService;

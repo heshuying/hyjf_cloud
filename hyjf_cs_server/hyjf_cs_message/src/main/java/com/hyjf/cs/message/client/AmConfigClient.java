@@ -58,4 +58,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<UserVO> queryUser(JSONObject params);
+
+	/**
+	 * 获取所有模版
+	 *
+	 * @return
+	 */
+	List<MessagePushTemplateVO> getAllTemplates();
 }

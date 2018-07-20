@@ -3,16 +3,16 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.hyjf.am.vo.config.*;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.cs.market.client.AboutUsClient;
+import com.hyjf.am.vo.config.*;
+import com.hyjf.cs.market.client.AmConfigClient;
+import com.hyjf.cs.market.client.AmDataCollectClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
-
-import java.util.List;
 
 /**
  * @author fuqiang
@@ -22,56 +22,59 @@ import java.util.List;
 public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUsService {
 
     @Autowired
-    private AboutUsClient aboutUsClient;
+    private AmConfigClient amConfigClient;
+
+    @Autowired
+    private AmDataCollectClient amDataCollectClient;
 
     @Override
     public ContentArticleVO getAboutUs() {
-        return aboutUsClient.getAboutUs();
+        return amConfigClient.getAboutUs();
     }
 
     @Override
     public String getTotalInvestmentAmount() {
-        return aboutUsClient.getTotalInvestmentAmount();
+        return amDataCollectClient.getTotalInvestmentAmount();
     }
 
     @Override
     public TeamVO getFounder() {
-        return aboutUsClient.getFounder();
+        return amConfigClient.getFounder();
     }
 
     @Override
     public List<LinkVO> getPartnersList(Integer partnerType) {
-        return aboutUsClient.getPartnersList(partnerType);
+        return amConfigClient.getPartnersList(partnerType);
     }
 
     @Override
     public List<EventVO> getEventsList() {
-        return aboutUsClient.getEventsList();
+        return amConfigClient.getEventsList();
     }
 
     @Override
     public List<ContentArticleVO> getNoticeListCount() {
-        return aboutUsClient.aboutUsClient();
+        return amConfigClient.aboutUsClient();
     }
 
     @Override
     public ContentArticleVO getNoticeInfo(Integer id) {
-        return aboutUsClient.getNoticeInfo(id);
+        return amConfigClient.getNoticeInfo(id);
     }
 
     @Override
     public List<JobsVo> getJobsList() {
-        return aboutUsClient.getJobsList();
+        return amConfigClient.getJobsList();
     }
 
     @Override
     public ContentArticleVO getContactUs() {
-        return aboutUsClient.contactUs();
+        return amConfigClient.contactUs();
     }
 
     @Override
     public List<ContentArticleVO> getHomeNoticeList() {
-        return aboutUsClient.getknowsList();
+        return amConfigClient.getknowsList();
     }
 
 }

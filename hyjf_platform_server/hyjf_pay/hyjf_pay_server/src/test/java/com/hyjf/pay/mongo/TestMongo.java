@@ -30,8 +30,16 @@ public class TestMongo {
     public void testMongo(){
     	
     	Query query = new Query();
-        Criteria criteria = Criteria.where("ordid").exists(true);
+        Criteria criteria = Criteria.where("ordid").is("111");
         query.addCriteria(criteria);
+        
+        BankExclusiveLog log = new BankExclusiveLog();
+        
+        log.setChannel("teste");
+        log.setCmdid("sdf");
+        log.setOrdid("111");
+        
+        dao.insert(log);
         
         BankExclusiveLog oneEN = dao.findOne(query);
         

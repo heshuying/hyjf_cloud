@@ -120,4 +120,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public List<UserVO> queryUser(JSONObject params) {
 		return null;// todo
 	}
+
+	@Override
+	public List<MessagePushTemplateVO> getAllTemplates() {
+		MessagePushTemplateResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/messagePushTemplate/getAllTemplates", MessagePushTemplateResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

@@ -26,6 +26,6 @@ public class SwaggerConfiguration {
 	}
 
 	private ApiInfo buildApiInf() {
-		return new ApiInfoBuilder().title("admin swagger2 UI构建API文档").contact("").version("1.0").build();
+		return new ApiInfoBuilder().title("admin swagger2 UI构建API文档").version("1.0").build();
 	}
 }
