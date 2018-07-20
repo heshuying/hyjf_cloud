@@ -46,7 +46,7 @@ import static com.hyjf.admin.controller.productcenter.borrow.borrowrepayment.Bor
 
 /**
  * @author tanyy
- * @version ExtensionCenterController, v0.1 2018/7/16 16:03
+ * @version ChannelStatisticsDetailController, v0.1 2018/7/16 16:03
  */
 @Api(value = "PC统计明细")
 @RestController
