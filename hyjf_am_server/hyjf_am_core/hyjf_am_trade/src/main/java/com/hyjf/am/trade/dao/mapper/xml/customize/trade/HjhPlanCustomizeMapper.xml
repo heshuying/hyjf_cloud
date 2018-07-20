@@ -94,15 +94,15 @@
 		hha.order_status order_status,
 		<!-- 新加实际退出时间 -->
 		FROM_UNIXTIME(hhr.repay_actual_time, '%Y-%m-%d') AS repay_actual_time
-		FROM hyjf_hjh_accede hha
-		LEFT JOIN hyjf_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
-		LEFT JOIN hyjf_hjh_repay hhr ON hhr.accede_order_id = hha.accede_order_id
+		FROM ht_hjh_accede hha
+		LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
+		LEFT JOIN ht_hjh_repay hhr ON hhr.accede_order_id = hha.accede_order_id
 		WHERE hha.accede_order_id = #{accedeOrderId} and hha.user_id =#{userId}
 	</select>
 
 	<!--还款/终止未完全承接的债权时,减扣计划的开放额度-->
 	<update id="updateRepayPlanAccount" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">
-		update hyjf_hjh_plan
+		update ht_hjh_plan
 		set
 		available_invest_account = IFNULL(available_invest_account,0) - #{availableInvestAccount,jdbcType=DECIMAL}
 		where
@@ -110,7 +110,7 @@
 	</update>
 	
 	<update id="updateHjhRepayForHjhRepay" parameterType="com.hyjf.am.trade.dao.model.auto.HjhRepay">
-		update hyjf_hjh_repay
+		update ht_hjh_repay
 		set
 		repay_total = IFNULL(repay_total,0) + #{repayTotal,jdbcType=DECIMAL},
 		plan_repay_capital = IFNULL(plan_repay_capital,0) + #{planRepayCapital,jdbcType=DECIMAL},
@@ -125,7 +125,7 @@
 	 add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start;-->
 	<!--add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end-->
 	<update id="updateHjhAccedeForHjhProcess" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-		update hyjf_hjh_accede
+		update ht_hjh_accede
 		<set>
 			<if test="alreadyInvest != null">
 				already_invest = IFNULL(already_invest,0) + #{alreadyInvest,jdbcType=DECIMAL},
@@ -286,8 +286,8 @@
           END AS order_by_lock_period,
           coupon_config
         FROM
-          hyjf_hjh_plan hp
-        WHERE hp.del_flg = 0 AND hp.plan_display_status = 1) t
+          ht_hjh_plan hp
+        WHERE hp.del_flag = 0 AND hp.plan_display_status = 1) t
 	</sql>
 
 	<update id="updatePlanAccount" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlan">

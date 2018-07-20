@@ -7,7 +7,7 @@ package com.hyjf.cs.trade.util;
 public class AppHomePageDefine {
 
 	/** 首页接口  @RequestMapping值 */
-	public static final String REQUEST_MAPPING = "/homepage";
+	public static final String REQUEST_MAPPING = "/hyjf-app/homepage";
 
 	/** 首页项目列表  @RequestMapping值 */
 	public static final String PROJECT_LIST_ACTION = "/getProjectList";
@@ -64,4 +64,7 @@ public class AppHomePageDefine {
 
 	/** 首页module地址 */
     public static String MODULE_URL = "/data/upfiles/appmodule/";
+
+    public static String  INVEST_INVEREST_AMOUNT_URL = "http://CS-MESSAGE/cs-message/search/getTotalInvestAndInterestEntity";
+
 }
