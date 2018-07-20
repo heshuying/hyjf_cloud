@@ -9,19 +9,19 @@ public class SystemConfig {
     @Value("${hyjf.web.host}")
     public String webHost;
 
-    @Value("${http.hyjf.web.host}")
+//    @Value("${http.hyjf.web.host}")
     public String httpWebHost;
 
-    @Value("${hyjf.web.bank.forgetpassword}")
+//    @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetPassword;
 
-    @Value("${hyjf.web.user.host}")
+//    @Value("${hyjf.web.user.host}")
     public String webUserHost;
 
-    @Value("${hyjf.front.host}")
+//    @Value("${hyjf.front.host}")
     public String frontHost;
 
-    @Value("${hyjf.web.bank.forgetpassword}")
+//    @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
     
     @Value("${hyjf.makepdf.temppath}")
@@ -42,7 +42,7 @@ public class SystemConfig {
     /**
      * 银行代码
      */
-    @Value("${hyjf.bank.bankcode}")
+//    @Value("${hyjf.bank.bankcode}")
     private String BANK_BANKCODE;
 
     /**

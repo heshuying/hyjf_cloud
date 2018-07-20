@@ -15,6 +15,10 @@ import java.util.List;
  * @version AmConfigClient, v0.1 2018/4/23 20:00
  */
 public interface AmConfigClient {
+    /**
+     * 获取短信配置表-最大量，有效时间等 配置只有一条
+     * @return
+     */
     SmsConfigVO findSmsConfig();
 
     /**
@@ -33,14 +37,44 @@ public interface AmConfigClient {
      */
     BanksConfigVO getBankNameByBankId(String bankId);
 
+    /**
+     * 测评问题列表
+     * @return
+     */
     List<QuestionCustomizeVO> getNewQuestionList();
 
+    /**
+     * 计算测评得分
+     * @param answerList
+     * @return
+     */
     int countScore(AnswerRequest answerList);
+    /**
+     * 根据返回码获取返回信息
+     * @param retCode
+     * @return
+     */
+    String getBankRetMsg(String retCode);
 
+    /**
+     * 根据返回码获取返回码配置
+     * @param retCode
+     * @return
+     */
     BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
+    /**
+     * 根据银行卡号查询银行id
+     * @param cardNo
+     * @return
+     */
     String queryBankIdByCardNo(String cardNo);
 
+    /**
+     * 根据银行id查询银行配置
+     * @param bankId
+     * @return
+     */
     BanksConfigVO getBanksConfigByBankId(String bankId);
 
     /**
@@ -49,8 +83,6 @@ public interface AmConfigClient {
      * @return
      */
     List<ParamNameVO> getParamNameList(String nameClass);
-
-    String getBankRetMsg(String retCode);
 
     /**
      * 获取版本信息

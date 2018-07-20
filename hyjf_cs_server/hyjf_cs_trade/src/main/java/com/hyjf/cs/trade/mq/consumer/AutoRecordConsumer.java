@@ -3,8 +3,11 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.handle.AutoRecordMessageHandle;
+import com.hyjf.cs.trade.mq.base.Consumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,18 +19,16 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.AutoRecordMessageHandle;
-import com.hyjf.cs.trade.mq.base.Consumer;
+import java.util.List;
 
 /**
  * 自动备案
  * @author fuqiang
  * @version AutoRecordConsumer, v0.1 2018/6/14 9:57
  */
+@Component
 public class AutoRecordConsumer extends Consumer {
 
     private static final Logger _log = LoggerFactory.getLogger(AutoRecordConsumer.class);
@@ -38,7 +39,7 @@ public class AutoRecordConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_RECORD_GROUP);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.ROCKETMQ_BORROW_RECORD_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
         defaultMQPushConsumer.subscribe(MQConstant.ASSET_PUST_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费

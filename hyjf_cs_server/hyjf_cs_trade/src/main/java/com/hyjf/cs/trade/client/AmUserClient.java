@@ -269,5 +269,17 @@ public interface AmUserClient {
      * @return
      */
     List<SpreadsUserVO> selectByUserId(Integer userId);
-
+	/**
+	 * 根据手机号查询User
+	 * @param mobile
+	 * @return
+	 */
+	UserVO findUserByMobile(String mobile);
+    /**
+     * 获取银行卡信息
+     * @param userId
+     * @param status
+     * @return
+     */
+    List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
 }

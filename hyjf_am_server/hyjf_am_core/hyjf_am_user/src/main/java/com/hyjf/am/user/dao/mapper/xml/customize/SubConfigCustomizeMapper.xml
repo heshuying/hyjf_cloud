@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.SubConfigCustomizeMapper">
+
+    <select id="selectUserInfoByUserName" parameterType="String" resultType="Map" >
+        SELECT
+        users.user_id ,
+        users.status,
+        userinfo.truename ,
+        userinfo.role_id,
+        CASE userinfo.role_id
+        WHEN '1' THEN
+        '投资人'
+        WHEN '2' THEN
+        '借款人'
+        WHEN ' 3 ' THEN
+        ' 垫付机构'
+        END AS roleId,
+        users.user_type,
+        CASE users.user_type
+        WHEN '0' THEN
+        '个人用户'
+        WHEN '1' THEN
+        '企业用户'
+        END AS userType,
+        <!-- 当用户角色为借款人时，才调取其用户的合作机构编号；投资人则不调取且不显示该字段 start-->
+        CASE userinfo.role_id
+        WHEN '2' THEN
+        users.inst_code
+        END AS cooperateNum,
+        <!-- 合作机构编号 end -->
+        users.bank_open_account,
+        CASE users.bank_open_account
+        WHEN ' 0 ' THEN
+        ' 未开户 '
+        WHEN ' 1 ' THEN
+        ' 已开户'
+        END AS OPEN,
+        hboa.account
+        FROM
+        ht_users users LEFT JOIN ht_users_info userinfo ON (users.user_id=userinfo.user_id)
+        LEFT JOIN ht_bank_open_account hboa ON (users.user_id=hboa.user_id)
+        WHERE
+        users.username = #{userName,jdbcType=CHAR}
+    </select>
+</mapper>

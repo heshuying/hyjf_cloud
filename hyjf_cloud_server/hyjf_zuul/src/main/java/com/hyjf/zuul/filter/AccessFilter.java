@@ -79,10 +79,7 @@ public class AccessFilter extends ZuulFilter {
 			secureVisitFlag = isSecureVisit(map, originalRequestPath);
 		} else {
 			// 不对其进行路由
-			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(502);
-			ctx.setResponseBody("网关内部错误!");
-			return null;
+			return this.buildErrorRequestContext(ctx, 502, "gateway inner error!");
 		}
 
 		// 截取访问域名
@@ -95,10 +92,7 @@ public class AccessFilter extends ZuulFilter {
 				if (sign == null) {
 					logger.error("sign is empty");
 					// 不对其进行路由
-					ctx.setSendZuulResponse(false);
-					ctx.setResponseStatusCode(400);
-					ctx.setResponseBody("sign is empty");
-					return null;
+					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
 				SignValue signValue = RedisUtils.getObj(sign, SignValue.class);
 				ctx.addZuulRequestHeader("key", signValue.getKey());
@@ -134,14 +128,25 @@ public class AccessFilter extends ZuulFilter {
 			prefix = API_VISIT_URL;
 		} else {
 			// 不对其进行路由
-			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(502);
-			ctx.setResponseBody("非法域名访问!");
-			return null;
+			return this.buildErrorRequestContext(ctx, 502, "illegal visit!");
 		}
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
 		ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
+		return null;
+	}
+
+	/**
+	 * zuul拦截, 不对其进行路由
+	 * @param ctx
+	 * @param gatewayCode
+	 * @param errorMessage
+	 * @return
+	 */
+	private Object buildErrorRequestContext(RequestContext ctx, int gatewayCode, String errorMessage){
+		ctx.setSendZuulResponse(false);
+		ctx.setResponseStatusCode(gatewayCode);
+		ctx.setResponseBody(errorMessage);
 		return null;
 	}
 
@@ -155,13 +160,11 @@ public class AccessFilter extends ZuulFilter {
 	 * @return
 	 */
 	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
-		String token = request.getHeader("token");
-		if (token == null && isNecessary) {
+		String token = request.getParameter("token");
+		if (StringUtils.isBlank(token) && isNecessary) {
 			logger.error("token is empty...");
 			// 不对其进行路由
-			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(400);
-			ctx.setResponseBody("token is empty");
+			this.buildErrorRequestContext(ctx, 400, "token is empty!");
 			return ctx;
 		}
 		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
@@ -169,9 +172,7 @@ public class AccessFilter extends ZuulFilter {
 			if (isNecessary) {
 				logger.error("user is not exist...");
 				// 不对其进行路由
-				ctx.setSendZuulResponse(false);
-				ctx.setResponseStatusCode(400);
-				ctx.setResponseBody("user is not exist");
+				this.buildErrorRequestContext(ctx, 400, "user is not exist!");
 				return ctx;
 			} else {
 				return ctx;

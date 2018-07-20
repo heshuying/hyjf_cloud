@@ -8,7 +8,7 @@ import com.hyjf.am.vo.config.LandingPageVo;
 
 /**
  * @author tanyy
- * @version JobResponse, v0.1 2018/7/16 14:19
+ * @version LandingPageResponse, v0.1 2018/7/16 14:19
  */
 public class LandingPageResponse extends Response<LandingPageVo> {
     private int count;

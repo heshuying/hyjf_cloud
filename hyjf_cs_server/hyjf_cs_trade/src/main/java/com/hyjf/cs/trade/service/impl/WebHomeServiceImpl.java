@@ -1,11 +1,13 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.WebProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,6 +44,8 @@ public class WebHomeServiceImpl implements WebHomeService {
     private static final  String NOTICE_LIST_URL = "http://AM-CONFIG/am-config/article/noticeList";
     // banner 列表
     private static final  String BANNER_LIST_URL = "http://AM-MARKET/am-market/ads/getBannerList";
+    // 运营数据
+    private static final  String INVEST_INVEREST_AMOUNT_URL = "http://CS-MESSAGE/cs-message/search/getTotalInvestAndInterestEntity";
 
     /**
      * 平台上线时间
@@ -139,11 +144,11 @@ public class WebHomeServiceImpl implements WebHomeService {
         }
 
         // 标的信息 和 统计信息
-        //投资总额(亿元)
-        //modelAndView.addObject("tenderSum", statisticsService.selectTotalInvest().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString());
-        //收益总额(亿元)
-       // modelAndView.addObject("interestSum", statisticsService.selectTotalInterest().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString());
 
+        TotalInvestAndInterestResponse res2 = baseClient.getExe(INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
+        BigDecimal interestSum = totalInvestAndInterestVO.getTotalInvestAmount() == null ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInvestAmount();
+        result.setInterestSum(interestSum.divide(new BigDecimal("100000000")).setScale(0,BigDecimal.ROUND_DOWN).toString());
         //累计上线年数
         Integer yearSum = GetDate.getYearFromDate(PUT_ONLINE_TIME);
         //上线年数
@@ -169,6 +174,8 @@ public class WebHomeServiceImpl implements WebHomeService {
         List<AppAdsCustomizeVO> bannerList = res.getResultList();
         if ( !CollectionUtils.isEmpty(bannerList)){
             result.setBannerList(bannerList);
+        }else {
+            result.setBannerList(new ArrayList<>());
         }
 
 
@@ -181,7 +188,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitStart(0);
         request.setLimitEnd(1);
         List<WebProjectListCustomizeVO> newProjectList = webProjectListClient.searchProjectList(request);
-        result.setNewProjectList(newProjectList);
+        result.setNewProjectList(CollectionUtils.isEmpty(newProjectList) ? new ArrayList<>() : newProjectList);
 
         //首页散标推荐
         request.setProjectType("HZT");
@@ -189,7 +196,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitStart(0);
         request.setLimitEnd(4);
         List<WebProjectListCustomizeVO> projectList = webProjectListClient.searchProjectList(request);
-        result.setProjectList(projectList);
+        result.setProjectList(CollectionUtils.isEmpty(projectList) ? new ArrayList<>() : projectList);
 
 
         request = new ProjectListRequest();
@@ -219,12 +226,16 @@ public class WebHomeServiceImpl implements WebHomeService {
         req.setLimitStart(1);
         req.setLimitEnd(3);
         List<ContentArticleVO> list2 = contentArticleClient.searchContentArticleList(req);
-        for (ContentArticleVO companyDynamics : list2) {
-            if (companyDynamics.getContent().contains("../../../..")) {
-                companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", systemConfig.getWebHost() ));
-            } else if (companyDynamics.getContent().contains("src=\"/")) {
-                companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/","src=\"" + systemConfig.getWebHost() )+ "//");
+        if (!CollectionUtils.isEmpty(list2)){
+            for (ContentArticleVO companyDynamics : list2) {
+                if (companyDynamics.getContent().contains("../../../..")) {
+                    companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", systemConfig.getWebHost() ));
+                } else if (companyDynamics.getContent().contains("src=\"/")) {
+                    companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/","src=\"" + systemConfig.getWebHost() )+ "//");
+                }
             }
+        }else{
+            list2 = new ArrayList<>();
         }
         result.setCompanyDynamicsList(list2);
         result.setNowTime(GetDate.formatDate(System.currentTimeMillis()));

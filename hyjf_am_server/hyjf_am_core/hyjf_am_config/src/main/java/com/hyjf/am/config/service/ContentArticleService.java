@@ -2,7 +2,7 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.response.admin.ContentArticleResponse;
-import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface ContentArticleService {
      * @param request
      * @return
      */
-    ContentArticleResponse getContentArticleListPage(ContentArticleRequest request);
+    ContentArticleResponse getContentArticleListPage(com.hyjf.am.resquest.config.ContentArticleRequest request);
 
     /**
      * 获取公司简介
@@ -64,14 +64,14 @@ public interface ContentArticleService {
      *
      * @param request
      */
-    void insertAction(ContentArticleRequest request);
+    void insertAction(com.hyjf.am.resquest.config.ContentArticleRequest request);
 
     /**
      * 修改文章
      *
      * @param request
      */
-    void updateAction(ContentArticleRequest request);
+    void updateAction(com.hyjf.am.resquest.config.ContentArticleRequest request);
 
     /**
      * 删除文章
