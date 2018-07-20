@@ -9,7 +9,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
@@ -34,7 +33,7 @@ import java.util.Map;
  * @author hesy
  * @version WebBindCardPageController, v0.1 2018/6/21 14:26
  */
-@Api(value = "web端-用户解绑卡接口",description = "web端-用户解绑卡接口")
+@Api(value = "web端-用户绑卡及解绑卡接口",description = "web端-用户绑卡及解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/card")
@@ -83,7 +82,7 @@ public class WebBindCardPageController extends BaseUserController{
      * @return
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
-    @RequestMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 
