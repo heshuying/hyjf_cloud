@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class HjhInstConfigVO extends BaseVO implements Serializable {
+
     private Integer id;
 
     private String instCode;
