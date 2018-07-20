@@ -147,7 +147,7 @@ public class AutoRecordMessageHandle {
             if(hjhPlanAssetVO.getEntrustedFlg() != null && hjhPlanAssetVO.getEntrustedFlg().intValue() ==1){
                 _log.info(hjhPlanAssetVO.getAssetId()+"  未推送，等待授权");
             }else{
-                this.autoRecordService.sendToMQ(hjhPlanAssetVO,  MQConstant.BORROW_PREAUDIT_GROUP);
+                this.autoRecordService.sendToMQ(hjhPlanAssetVO,  MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
                 _log.info(hjhPlanAssetVO.getAssetId()+" 成功发送到初审队列");
             }
 

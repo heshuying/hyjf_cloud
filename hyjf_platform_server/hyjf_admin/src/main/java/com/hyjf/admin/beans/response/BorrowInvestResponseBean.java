@@ -6,6 +6,7 @@ package com.hyjf.admin.beans.response;
 import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 import java.util.Map;
@@ -16,40 +17,31 @@ import java.util.Map;
  * @version BorrowInvestResponseBean, v0.1 2018/7/10 17:15
  */
 public class BorrowInvestResponseBean {
+    @ApiModelProperty(value = "投资明细列表")
     private List<BorrowInvestCustomizeVO> recordList;
 
+    @ApiModelProperty(value = "列表统计")
     private String sumAccount;
 
+    @ApiModelProperty(value = "总条数")
     private Integer total;
 
-    /**
-     * 操作平台
-     */
+    @ApiModelProperty(value = "操作平台")
     private Map<String,String> clientList;
 
-    /**
-     * 还款方式
-     */
+    @ApiModelProperty(value = "还款方式")
     private List<BorrowStyleVO> borrowStyleList;
 
-    /**
-     * 投资方式
-     */
+    @ApiModelProperty(value = "投资方式")
     private Map<String,String> investTypeList;
 
-    /**
-     * 投资人债权明细
-     */
+    @ApiModelProperty(value = "投资人债券明晰")
     List<InvestorDebtBean> detailList;
 
-    /**
-     * PDF脱敏图片
-     */
+    @ApiModelProperty(value = "PDF脱敏图片")
     List<String> imgList;
 
-    /**
-     * 文件服务器
-     */
+    @ApiModelProperty(value = "文件服务器")
     String fileDomainUrl;
 
     public List<BorrowInvestCustomizeVO> getRecordList() {

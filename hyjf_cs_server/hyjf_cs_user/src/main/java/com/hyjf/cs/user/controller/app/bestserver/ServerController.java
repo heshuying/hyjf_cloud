@@ -1,11 +1,7 @@
 package com.hyjf.cs.user.controller.app.bestserver;
 
-import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.AppAccessStatisticsProducer;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +12,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.util.*;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.DES;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.SignValue;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.AppAccessStatisticsProducer;
 import com.hyjf.cs.user.result.ServerResultBean;
-import springfox.documentation.spring.web.json.Json;
-
-import java.util.Date;
 
 /**
  * @author xiasq
@@ -40,6 +43,9 @@ public class ServerController extends BaseUserController {
 	@Value("${hyjf.app.serverip.test}")
 	private String testServerIp;
 
+	@Value("${hyjf.app.server.host}")
+	private String hyjf_app_server_host;
+
 	@Autowired
 	SystemConfig systemConfig;
 
@@ -52,8 +58,8 @@ public class ServerController extends BaseUserController {
 	 * @return
 	 */
 	@RequestMapping("/getBestServerAction")
-	public ServerResultBean getBestServer(@RequestHeader String platform, @RequestHeader String randomString,
-			@RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
+	public AppResult getBestServer(@RequestHeader String platform, @RequestHeader String randomString,
+								   @RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		String appKey = "";
@@ -105,7 +111,7 @@ public class ServerController extends BaseUserController {
 					signValue.setVersion(version);
 					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
-					resultBean.setServerIp(DES.encryptDES_ECB(systemConfig.getWebHost(), initKey));
+					resultBean.setServerIp(DES.encryptDES_ECB(hyjf_app_server_host, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
 					resultBean.setSign(sign);
 					// 保存InitKey
@@ -128,7 +134,7 @@ public class ServerController extends BaseUserController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getKeyAction")
-	public ServerResultBean getKey(@RequestHeader String sign, @RequestHeader String version) {
+	public AppResult getKey(@RequestHeader String sign, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
 
 		try {

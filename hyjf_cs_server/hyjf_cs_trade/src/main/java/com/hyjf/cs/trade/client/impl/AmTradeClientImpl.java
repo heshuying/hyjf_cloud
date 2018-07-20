@@ -926,8 +926,15 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param record
      */
     @Override
-    public void insertAccountWithdrawLog(AccountWithdrawVO record) {
-        restTemplate.put(urlBase +"accountWithdraw/insertAccountWithdrawLog",record);
+    public int insertAccountWithdrawLog(AccountWithdrawVO record) {
+        restTemplate.put(urlBase +"",record);
+        Integer response = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return 0;
+
     }
     /**
      * 根据订单号查询用户提现记录信息
@@ -1122,7 +1129,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer countAppProjectList(AppProjectListRequest request) {
-        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,AppProjectListResponse.class).getBody();
+        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppProjectList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getCount();

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.cs.trade.config.SystemConfig;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
     @Autowired
     private SmsProducer smsProducer;
+
+    @Autowired
+    private SystemConfig systemConfig;
 
 
     /**
@@ -356,6 +360,12 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         }
         WebResult result = new WebResult();
         String checkCode = GetCode.getRandomSMSCode(6);
+
+
+        if(systemConfig.isHyjfEnvTest()){
+            // 测试环境验证码111111
+            checkCode = "111111";
+        }
         Map<String, String> param = new HashMap<String, String>();
         param.put("val_code", checkCode);
         SmsMessage smsMessage = new SmsMessage(userId, param, user.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,

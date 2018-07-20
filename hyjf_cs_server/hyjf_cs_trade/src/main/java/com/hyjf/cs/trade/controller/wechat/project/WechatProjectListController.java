@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Api(value = "Web端项目列表")
 @RestController
-@RequestMapping("/wechat/projectlist")
+@RequestMapping("/hyjf-wechat/projectlist")
 public class WechatProjectListController extends BaseTradeController {
 
     @Autowired

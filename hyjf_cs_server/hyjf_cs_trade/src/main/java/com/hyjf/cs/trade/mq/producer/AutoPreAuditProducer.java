@@ -21,7 +21,7 @@ public class AutoPreAuditProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
         ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-        wrapper.setGroup(MQConstant.BORROW_PREAUDIT_GROUP);
+        wrapper.setGroup(MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP);
         wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
         return wrapper;
     }

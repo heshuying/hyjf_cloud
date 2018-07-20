@@ -161,6 +161,17 @@ public class BankConfigServiceImpl implements BankConfigService {
 		criteria.andStatusEqualTo(1);
 		return bankConfigMapper.selectByExample(example);
 	}
+	/**
+	 * 获取银行列表(快捷支付卡)
+	 */
+	@Override
+	public List<BankConfig> getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
+		BankConfigExample example = new BankConfigExample();
+		BankConfigExample.Criteria cra = example.createCriteria();
+		cra.andQuickPaymentEqualTo(1);//支持快捷支付
+		example.setOrderByClause(" id");
+		return bankConfigMapper.selectByExample(example);
+	}
 
 	@Override
 	public List<ParamName> getParamNameList(String nameClass) {

@@ -1,10 +1,12 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
     private Integer id;
@@ -28,6 +30,8 @@ public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
     private Integer updateBy;
 
     private Date updateTime;
+//    获取银行列表（快捷卡）
+    private List<BankConfigVO> bankConfigs;
 
     private static final long serialVersionUID = 1L;
 
@@ -117,5 +121,13 @@ public class BankRechargeLimitConfigVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public List<BankConfigVO> getBankConfigs() {
+        return bankConfigs;
+    }
+
+    public void setBankConfigs(List<BankConfigVO> bankConfigs) {
+        this.bankConfigs = bankConfigs;
     }
 }

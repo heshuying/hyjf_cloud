@@ -5,7 +5,7 @@ package com.hyjf.cs.message.service.message;
 
 import java.util.List;
 
-import com.hyjf.cs.message.bean.SmsOntime;
+import com.hyjf.cs.message.bean.mc.SmsOntime;
 
 /**
  * @author fuqiang

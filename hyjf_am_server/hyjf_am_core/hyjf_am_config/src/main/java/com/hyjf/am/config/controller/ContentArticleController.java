@@ -5,7 +5,7 @@ import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.trade.ContentArticleResponse;
-import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -53,7 +53,7 @@ public class ContentArticleController {
      * @date 2018/7/5 9:40
      */
     @PostMapping("/contentArticleList")
-    public ContentArticleResponse getContentArticleList(ContentArticleRequest request) {
+    public ContentArticleResponse getContentArticleList(@RequestBody  ContentArticleRequest request) {
         ContentArticleResponse response = new ContentArticleResponse();
         List<ContentArticle> list = contentArticleService.getContentArticleList(request);
         if (!CollectionUtils.isEmpty(list)) {
