@@ -1128,7 +1128,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:23
      */
     @Override
-    public Integer countAppProjectList(AppProjectListRequest request) {
+    public Integer countAppProjectList(ProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppProjectList --> response = {}",response);
         if (Response.isSuccess(response)){
@@ -1160,7 +1160,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public ProjectListResponse countAppCreditList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppCreditList",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countCreditList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
         return response;
     }
@@ -1172,7 +1172,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectListResponse searchAppCreditList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchCreditList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
         return response;
     }
@@ -1184,7 +1184,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer countAppPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countPlanList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getCount();
@@ -1199,8 +1199,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/22 9:59
      */
     @Override
-    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+    public List<HjhPlanCustomizeVO> searchAppPlanList(ProjectListRequest request) {
+        com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getResultList();

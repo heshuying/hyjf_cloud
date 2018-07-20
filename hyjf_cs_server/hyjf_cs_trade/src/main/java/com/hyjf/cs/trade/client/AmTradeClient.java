@@ -478,7 +478,7 @@ public interface AmTradeClient {
      * @author zhangyk
      * @date 2018/6/20 17:23
      */
-    public Integer countAppProjectList(AppProjectListRequest request);
+    public Integer countAppProjectList(ProjectListRequest request);
 
     /**
      * app端获取散标投资项目列表
@@ -513,7 +513,7 @@ public interface AmTradeClient {
      * @author zhangyk
      * @date 2018/6/21 19:17
      */
-    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request);
+    public List<HjhPlanCustomizeVO> searchAppPlanList(ProjectListRequest request);
     /* ************************  app end  **************************************/
 
     public BorrowUserVO getBorrowUser(String borrowNid);

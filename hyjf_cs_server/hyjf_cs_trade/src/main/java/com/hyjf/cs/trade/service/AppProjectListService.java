@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -22,7 +23,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @return
      */
-    public AppResult searchAppProjectList(AppProjectListRequest request);
+    public JSONObject searchAppProjectList(ProjectListRequest request);
 
 
     /**
@@ -38,7 +39,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @date 2018/6/20 15:26
      */
-    public AppResult searchAppCreditList(ProjectListRequest request);
+    public JSONObject searchAppCreditList(ProjectListRequest request);
 
     /**
      * 获取移动端债转详情
@@ -52,7 +53,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @date 2018/6/21 19:12
      */
-    public AppResult searchAppPlanList(ProjectListRequest request);
+    public JSONObject searchAppPlanList(ProjectListRequest request);
 
     /**
      * 移动端计划详情
