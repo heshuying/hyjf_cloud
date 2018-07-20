@@ -3,23 +3,19 @@
  */
 package com.hyjf.am.trade.controller.admin;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
-import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.BorrowRegistService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
-import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -112,49 +108,14 @@ public class BorrowRegistController {
     }
 
     /**
-     * 获取受托支付电子账户列表
-     *
-     * @param instCode
-     * @param entrustedAccountId
+     * 标的备案
+     * @param borrowNid
+     * @param currUserId
+     * @param currUserName
      * @return
      */
-    @GetMapping("/select_stzf_white_list/{instCode}/{entrustedAccountId}")
-    public STZHWhiteListResponse selectStzfWhiteList(@PathVariable String instCode, @PathVariable String entrustedAccountId) {
-        STZHWhiteListResponse response = new STZHWhiteListResponse();
-        StzhWhiteList stzhWhiteList = borrowRegistService.selectStzfWhiteList(instCode, entrustedAccountId);
-        if (stzhWhiteList != null) {
-            STZHWhiteListVO stzhWhiteListVO = new STZHWhiteListVO();
-            BeanUtils.copyProperties(stzhWhiteList, stzhWhiteListVO);
-            response.setResult(stzhWhiteListVO);
-        }
-        return response;
-    }
-
-    /**
-     * 更新标的信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping("/update_borrow_regist")
-    public BorrowRegistCustomizeResponse updateBorrowRegist(@RequestBody BorrowRegistRequest request) {
-        BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
-        int updateCount = borrowRegistService.updateBorrowRegistFromList(request);
-        response.setTotal(updateCount);
-        return response;
-    }
-
-    /**
-     * 更新标的信息(受托支付备案)
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping("/update_entrusted_borrow_regist")
-    public BorrowRegistCustomizeResponse updateEntrustedBorrowRegist(@RequestBody BorrowRegistRequest request) {
-        BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
-        int updateCount = borrowRegistService.updateEntrustedBorrowRegist(request);
-        response.setTotal(updateCount);
-        return response;
+    @GetMapping("/update_borrow_regist/{borrowNid}/{currUserId}/{currUserName}")
+    public Response updateBorrowRegist(@PathVariable String borrowNid, @PathVariable String currUserId, @PathVariable String currUserName) {
+        return borrowRegistService.debtRegist(borrowNid, currUserId, currUserName);
     }
 }
