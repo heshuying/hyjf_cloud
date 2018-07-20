@@ -39,6 +39,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -188,7 +189,10 @@ public class ChannelStatisticsDetailController extends BaseController {
 					}
 					// 累计投资金额
 					else if (celLength == 12) {
-						cell.setCellValue(record.getCumulativeInvest().add(record.getHtjInvest()).add(record.getHzrInvest()).toString());
+						BigDecimal cumulativeInvest = record.getCumulativeInvest()==null?new BigDecimal(0):record.getCumulativeInvest();
+						BigDecimal htjInvest = record.getHtjInvest()==null?new BigDecimal(0):record.getHtjInvest();
+						BigDecimal hzrInvest = record.getHzrInvest()==null?new BigDecimal(0):record.getHzrInvest();
+						cell.setCellValue(cumulativeInvest.add(htjInvest).add(hzrInvest).toString());
 					}
 				}
 			}
