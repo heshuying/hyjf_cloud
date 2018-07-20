@@ -32,13 +32,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -81,7 +75,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private SmsProducer smsProducer;
 
     @Autowired
-    SystemConfig systemConfig;
+    private SystemConfig systemConfig;
 
     /**
      * 修改用户登录密码
@@ -197,7 +191,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
         String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.webHost + "/web/user/password/resetPasswordBgreturn";
+        String bgRetUrl = systemConfig.webHost + "/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -441,7 +435,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
          retUrl = systemConfig.getFrontHost() + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
          String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
         // 异步调用路
-         bgRetUrl = systemConfig.webHost + "/api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
+         bgRetUrl = systemConfig.webHost + "/hyjf-api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
         // 调用设置密码接口
         System.out.println(retUrl+"..."+bgRetUrl);
         BankCallBean bean = new BankCallBean();
@@ -475,6 +469,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private void sendSms(SendSmsVO sendSmsVO,SmsConfigVO smsConfig) throws MQException {
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);
+        if(systemConfig.isHyjfEnvTest()){
+            // 测试环境验证码111111
+            checkCode = "111111";
+        }
         Map<String, String> param = new HashMap<String, String>();
         param.put("val_code", checkCode);
 

@@ -25,6 +25,7 @@ import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,7 +361,6 @@ public class CouponConfigController extends BaseController {
         response.setResultList(list);
         return response;
     }
-
     /**
      * @Author walter.limeng
      * @Description  新增交易日志数据
@@ -373,6 +373,37 @@ public class CouponConfigController extends BaseController {
         TransferExceptionLogResponse response = new TransferExceptionLogResponse();
         Integer flag = couponConfigService.insertTransferExLog(transferExceptionLog);
         response.setFlag(flag);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据borrowNid查询所有优惠券散标还款
+     * @Date 16:47 2018/7/18
+     * @Param borrowNid
+     * @return
+     */
+    @RequestMapping("/getcoupontenderlist/{borrowNid}")
+    public CouponTenderCustomizeResponse getCouponTenderList(@PathVariable String borrowNid) {
+        CouponTenderCustomizeResponse response = new CouponTenderCustomizeResponse();
+        List<CouponTenderCustomizeVO> list = couponConfigService.getCouponTenderList(borrowNid);
+        response.setResultList(list);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新还款期
+     * @Date 17:09 2018/7/18
+     * @Param tenderNid
+     * @Param period
+     * @return
+     */
+    @RequestMapping("/updaterecoverperiod/{tenderNid}/{period}")
+    public CouponRecoverResponse updateRecoverPeriod(@PathVariable String tenderNid,@PathVariable Integer period) {
+        CouponRecoverResponse response = new CouponRecoverResponse();
+        Integer flag = couponConfigService.updateRecoverPeriod(tenderNid,period);
+        response.setRecordTotal(flag);
         return response;
     }
 }

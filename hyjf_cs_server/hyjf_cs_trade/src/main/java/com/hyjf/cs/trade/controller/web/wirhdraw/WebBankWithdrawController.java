@@ -3,16 +3,13 @@ package com.hyjf.cs.trade.controller.web.wirhdraw;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
-import com.hyjf.cs.trade.service.WebBorrowService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -23,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -55,6 +51,9 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
+        if(null!=user||0==user.getIsSetPassword()){
+            return new WebResult<>();
+        }
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
         return objectWebResult;
     }
@@ -76,6 +75,9 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
+        if(null!=userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
+            return result;
+        }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,withdrawmoney,widCard,payAllianceCode,CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);

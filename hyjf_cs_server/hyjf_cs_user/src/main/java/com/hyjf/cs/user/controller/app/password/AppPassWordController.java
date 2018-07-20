@@ -45,10 +45,10 @@ import java.util.regex.Pattern;
 /**
  * @author wangc
  */
-@Api(value = "app端密码相关服务",description = "app端密码相关服务")
+@Api(value = "app端密码相关服务",description = "app端-密码相关服务")
 @Controller
 @RestController
-@RequestMapping("/app/hyjf-app")
+@RequestMapping("/hyjf-app")
 public class AppPassWordController {
 
     @Autowired

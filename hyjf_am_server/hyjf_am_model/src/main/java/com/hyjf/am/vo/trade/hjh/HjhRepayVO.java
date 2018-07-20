@@ -16,7 +16,7 @@ import java.util.Date;
 public class HjhRepayVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = -4055933025341268189L;
-    
+
     private Integer id;
 
     private String accedeOrderId;
@@ -66,6 +66,10 @@ public class HjhRepayVO extends BaseVO implements Serializable {
     private BigDecimal waitTotal;
 
     private BigDecimal serviceFee;
+
+    private BigDecimal actualRevenue;
+
+    private BigDecimal actualPayTotal;
 
     private Integer delFlag;
 
@@ -275,6 +279,22 @@ public class HjhRepayVO extends BaseVO implements Serializable {
 
     public void setServiceFee(BigDecimal serviceFee) {
         this.serviceFee = serviceFee;
+    }
+
+    public BigDecimal getActualRevenue() {
+        return actualRevenue;
+    }
+
+    public void setActualRevenue(BigDecimal actualRevenue) {
+        this.actualRevenue = actualRevenue;
+    }
+
+    public BigDecimal getActualPayTotal() {
+        return actualPayTotal;
+    }
+
+    public void setActualPayTotal(BigDecimal actualPayTotal) {
+        this.actualPayTotal = actualPayTotal;
     }
 
     public Integer getDelFlag() {

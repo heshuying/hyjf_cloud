@@ -37,9 +37,9 @@ import java.net.URLEncoder;
  * @author zhangqingqing
  * @version RegistController, v0.1 2018/6/11 14:42
  */
-@Api(value = "app端用户注册接口",description = "app端用户注册接口")
+@Api(value = "app端用户注册接口",description = "app端-用户注册接口")
 @RestController
-@RequestMapping("/app/hyjf-app/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);
@@ -57,7 +57,7 @@ public class AppRegistController extends BaseUserController {
      * @return
      * @throws UnsupportedEncodingException
      */
-    @ApiOperation(value = "用户注册", notes = "用户注册")
+    @ApiOperation(value = "用户注册", notes = "app端-用户注册")
     @PostMapping(value = "/registAction", produces = "application/json; charset=utf-8")
     public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
         JSONObject ret = new JSONObject();
@@ -88,11 +88,19 @@ public class AppRegistController extends BaseUserController {
         if(version.length()>=5){
             version = version.substring(0, 5);
         }
-        CheckUtil.check(version.compareTo("1.4.0")>0,MsgEnum.STATUS_CE000014);
+        if(version.compareTo("1.4.0")<=0){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "此版本暂不可用，请更新至最新版本");
+            return ret;
+        }
         logger.info("当前注册手机号: {}", mobile);
 
         // 取得加密用的Key
-        CheckUtil.check(StringUtils.isNotBlank(key),MsgEnum.STATUS_CE000001);
+        if(StringUtils.isBlank(key)){
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "请求参数异常");
+            return ret;
+        }
         mobile = DES.decodeValue(key, mobile);
         verificationCode = DES.decodeValue(key, verificationCode);
         password = DES.decodeValue(key, password);
@@ -102,10 +110,16 @@ public class AppRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
-        registService.checkParam(register);
+        ret = registService.appCheckParam(register);
         registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
-        if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
+        boolean active = false;
+        try {
+             active = registService.checkActivityIfAvailable(systemConfig.getActivity888Id());
+        }catch (Exception e){
+            logger.info("获取活动信息失败...");
+        }
+        if (active) {
             BaseMapBean baseMapBean=new BaseMapBean();
             baseMapBean.set("imageUrl", "");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);

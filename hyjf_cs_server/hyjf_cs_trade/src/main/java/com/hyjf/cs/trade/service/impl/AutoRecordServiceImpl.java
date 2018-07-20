@@ -122,7 +122,7 @@ public class AutoRecordServiceImpl extends BaseTradeServiceImpl implements AutoR
         params.put("assetId", hjhPlanAssetVO.getAssetId());
         params.put("instCode", hjhPlanAssetVO.getInstCode());
         try {
-            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.BORROW_PREAUDIT_TOPIC,UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            autoPreAuditProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC,UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             e.printStackTrace();
             _log.error("自动初审发送消息失败...", e);

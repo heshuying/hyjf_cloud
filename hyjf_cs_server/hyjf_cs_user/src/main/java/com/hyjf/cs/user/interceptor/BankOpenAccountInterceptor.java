@@ -57,7 +57,7 @@ public class BankOpenAccountInterceptor implements HandlerInterceptor {
                     return true;
                 } else {
                     // 重定向到开户页面
-                    WebUtils.redirectTargetPage(response, "/bank/web/user/bankopen/init");
+                    WebUtils.redirectTargetPage(response, "/bank/hyjf-web/user/bankopen/init");
                 }
         }
         return false;

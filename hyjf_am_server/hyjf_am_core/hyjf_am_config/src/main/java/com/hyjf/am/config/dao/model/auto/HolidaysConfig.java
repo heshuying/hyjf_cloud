@@ -6,7 +6,7 @@ import java.util.Date;
 public class HolidaysConfig implements Serializable {
     private Integer id;
 
-    private Date day;
+    private Date dayTime;
 
     private Integer holidayFlag;
 
@@ -24,12 +24,12 @@ public class HolidaysConfig implements Serializable {
         this.id = id;
     }
 
-    public Date getDay() {
-        return day;
+    public Date getDayTime() {
+        return dayTime;
     }
 
-    public void setDay(Date day) {
-        this.day = day;
+    public void setDayTime(Date dayTime) {
+        this.dayTime = dayTime;
     }
 
     public Integer getHolidayFlag() {

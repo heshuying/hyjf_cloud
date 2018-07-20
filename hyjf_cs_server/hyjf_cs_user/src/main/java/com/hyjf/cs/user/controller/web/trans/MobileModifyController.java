@@ -36,10 +36,10 @@ import java.util.Map;
  * @author zhangqingqing
  * @version MobileModifyController, v0.1 2018/6/14 16:46
  */
-@Api(value = "web修改手机号",description = "web修改手机号")
+@Api(value = "web端-修改手机号",description = "web端-修改手机号")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class MobileModifyController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(MobileModifyController.class);
     @Autowired

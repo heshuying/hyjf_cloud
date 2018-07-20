@@ -172,4 +172,16 @@ public class CouponServiceImpl implements CouponService {
 	public int updateBorrowTenderCpn(BorrowTenderCpn borrowTenderCpn) {
 		return borrowTenderCpnMapper.updateByPrimaryKeySelective(borrowTenderCpn);
 	}
+
+    @Override
+    public List<BorrowTenderCpn> getBorrowTenderCpnList(String borrowNid) {
+		BorrowTenderCpnExample example = new BorrowTenderCpnExample();
+		BorrowTenderCpnExample.Criteria criteria = example.createCriteria();
+		criteria.andBorrowNidEqualTo(borrowNid);
+		criteria.andApiStatusEqualTo(0);
+		example.setOrderByClause(" id asc ");
+		List<BorrowTenderCpn> list = this.borrowTenderCpnMapper.selectByExample(example);
+
+		return list;
+    }
 }

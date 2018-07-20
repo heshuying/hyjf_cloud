@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,7 @@ import java.util.Map;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-开户记录")
+@Api(value = "会员中心-开户记录",description = "会员中心-开户记录")
 @RestController
 @RequestMapping("/hyjf-admin/bankOpenRecord")
 public class BankOpenRecordController extends BaseController {
@@ -55,7 +56,7 @@ public class BankOpenRecordController extends BaseController {
     private BankOpenRecordService bankOpenRecordService;
 
 
-    @ApiOperation(value = "开户记录", notes = "开户记录页面初始化")
+    @ApiOperation(value = "开户记录页面初始化", notes = "开户记录页面初始化")
     @PostMapping(value = "/bankOpenRecordInit")
     @ResponseBody
     public JSONObject userManagerInit() {
@@ -71,7 +72,7 @@ public class BankOpenRecordController extends BaseController {
     }
 
     //会员管理列表查询
-    @ApiOperation(value = "开户记录", notes = "汇付银行开户记录查询")
+    @ApiOperation(value = "汇付银行开户记录查询", notes = "汇付银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
     public AdminResult<ListResult<BankOpenAccountRecordVO>> bankOpenRecordAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
@@ -86,7 +87,7 @@ public class BankOpenRecordController extends BaseController {
         }
         return new AdminResult<ListResult<BankOpenAccountRecordVO>>(ListResult.build(bankOpenRecordServiceAccountRecordList.getResultList(), bankOpenRecordServiceAccountRecordList.getCount())) ;
     }
-    @ApiOperation(value = "开户记录", notes = "江西银行开户记录查询")
+    @ApiOperation(value = "江西银行开户记录查询", notes = "江西银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
     public AdminResult<ListResult<BankOpenAccountRecordVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRecordRequestBean accountRecordRequestBean){
@@ -112,13 +113,13 @@ public class BankOpenRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "开户记录", notes = "汇付银行开户记录导出")
+    @ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
     @PostMapping(value = "/exportaccount")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "开户记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
         accountRecordRequest.setLimitFlg(true);
@@ -198,7 +199,7 @@ public class BankOpenRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "开户记录", notes = "江西银行开户记录导出")
+    @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
     @PostMapping(value = "/exportbankaccount")
     public void exportBankExcel( HttpServletResponse response, @RequestBody BankAccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
 
@@ -208,7 +209,7 @@ public class BankOpenRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "江西银行开户记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=new ArrayList<BankOpenAccountRecordVO>();
         BankAccountRecordResponse bankAccountRecordResponse=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);

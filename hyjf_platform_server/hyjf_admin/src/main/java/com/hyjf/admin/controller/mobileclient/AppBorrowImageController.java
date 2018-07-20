@@ -11,10 +11,12 @@ import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.common.file.UploadFileUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -32,6 +34,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
+@Api(value = "admin移动客户端")
 @RestController
 @RequestMapping("app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
@@ -39,11 +42,20 @@ public class AppBorrowImageController extends BaseController {
     @Autowired
     AppBorrowImageService appBorrowImageService;
 
+    @Value("${file.domain.url}")
+    private String DOMAIN_URL;
+
+    @Value("${file.physical.path}")
+    private String PHYSICAL_PATH;
+
+    @Value("${file.upload.temp.path}")
+    private String TEMP_PATH;
+
 
     @ApiOperation(value = "产品图片列表查询", notes = "产品图片列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
-    public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody AppBorrowImageRequest request) {
+    public AdminResult<ListResult<AppBorrowImageVO>> search(AppBorrowImageRequest request) {
         AppBorrowImageResponse recordList = appBorrowImageService.getRecordList(request);
         if (!Response.isSuccess(recordList)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -55,7 +67,7 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "获取详细画面", notes = "获取详细画面")
     @PostMapping(value = "/searchinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> searchinfo(@RequestBody AppBorrowImageRequest request) {
+    public AdminResult<AppBorrowImageVO> searchinfo( AppBorrowImageRequest request) {
         AppBorrowImageResponse record = appBorrowImageService.getRecord(request);
         if (!Response.isSuccess(record)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -67,7 +79,7 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "添加维护信息", notes = "添加维护信息")
     @PostMapping(value = "/insertinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+    public AdminResult<AppBorrowImageVO> insertinfo( AppBorrowImageRequest request) throws Exception {
         // TODO 校验参数方法
         //this.validatorFieldCheck();
         AppBorrowImageResponse response = appBorrowImageService.insertRecord(request);
@@ -80,7 +92,7 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "修改维护信息", notes = "修改维护信息")
     @PostMapping(value = "/updateinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+    public AdminResult<AppBorrowImageVO> updateinfo( AppBorrowImageRequest request) throws Exception {
         // TODO 校验参数方法
         //this.validatorFieldCheck();
         AppBorrowImageResponse response = appBorrowImageService.updateRecord(request);
@@ -93,7 +105,7 @@ public class AppBorrowImageController extends BaseController {
     @ApiOperation(value = "刪除信息", notes = "刪除信息")
     @PostMapping(value = "/deleteinfo")
     @ResponseBody
-    public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
+    public AdminResult<AppBorrowImageVO> deleteinfo( AppBorrowImageRequest request) throws Exception {
         AppBorrowImageResponse response = appBorrowImageService.deleteRecord(request);
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -117,11 +129,11 @@ public class AppBorrowImageController extends BaseController {
        // MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         //TODO PropUtils.getSystem("file.domain.url")
-        String fileDomainUrl = UploadFileUtils.getDoPath("");
+        String fileDomainUrl = DOMAIN_URL;
         // TODO PropUtils.getSystem("file.physical.path")
-        String filePhysicalPath = UploadFileUtils.getDoPath("");
+        String filePhysicalPath = PHYSICAL_PATH;
         // TODO PropUtils.getSystem("file.upload.temp.path")
-        String fileUploadTempPath = UploadFileUtils.getDoPath("");
+        String fileUploadTempPath = TEMP_PATH;
 
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 

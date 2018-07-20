@@ -26,6 +26,7 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	
     public int limit;
     
+    @ApiModelProperty(value = "标签编号")
     private String labelId; 
     
     @ApiModelProperty(value = "标签名称查询")

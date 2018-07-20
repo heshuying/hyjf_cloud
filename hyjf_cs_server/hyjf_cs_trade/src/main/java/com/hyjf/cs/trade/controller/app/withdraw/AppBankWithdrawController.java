@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Api(value = "app端用户提现接口")
 @Controller
-@RequestMapping("/app/withdraw")
+@RequestMapping("/hyjf-app/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppBankWithdrawController.class);
@@ -61,6 +61,9 @@ public class AppBankWithdrawController extends BaseTradeController {
         String platform = request.getParameter("platform");
         WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
+        if(null!=userVO||0==userVO.getIsSetPassword()){
+            return  new ModelAndView();
+        }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ip);

@@ -26,9 +26,9 @@ import java.util.Map;
  * @author hesy
  * @version InviteController, v0.1 2018/6/23 17:14
  */
-@Api(value = "Web端邀记录",description = "Web端邀记录")
+@Api(value = "web端-邀记录",description = "web端-邀记录")
 @RestController
-@RequestMapping("/web/user/invite")
+@RequestMapping("/hyjf-web/user/invite")
 public class InviteController {
     private static final Logger logger = LoggerFactory.getLogger(InviteController.class);
 

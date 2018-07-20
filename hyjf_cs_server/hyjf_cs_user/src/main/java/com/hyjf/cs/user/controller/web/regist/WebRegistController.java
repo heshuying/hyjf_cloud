@@ -33,10 +33,10 @@ import java.util.Map;
  * @version RegistController, v0.1 2018/6/11 13:59
  */
 
-@Api(value = "web端用户注册接口")
+@Api(value = "web端用户注册接口",description = "web端-用户注册接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebRegistController.class);
@@ -138,6 +138,7 @@ public class WebRegistController extends BaseUserController {
      * @param request
      * @param
      */
+    @ApiOperation(value = "生成图片验证码",notes = "生成图片验证码")
     @PostMapping(value = "getcaptcha", produces = "application/json; charset=utf-8")
     public void randomCode(HttpServletRequest request) {
 
@@ -149,6 +150,7 @@ public class WebRegistController extends BaseUserController {
      * @param request
      * @param
      */
+    @ApiOperation(value = "检查图片验证码",notes = "检查图片验证码")
     @PostMapping(value = "checkcaptcha", produces = "application/json; charset=utf-8")
     public boolean checkcaptcha(HttpServletRequest request) {
         RandomValidateCode randomValidateCode = new RandomValidateCode();
@@ -163,6 +165,7 @@ public class WebRegistController extends BaseUserController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = " 判断推荐人是否存在",notes = " 判断推荐人是否存在")
     @PostMapping(value = "checkRecommend", produces = "application/json; charset=utf-8")
     public boolean checkRecommend(@RequestBody Map<String,String> param) {
         logger.info("Web端判断推荐人是否存在, param is :{}",JSONObject.toJSONString(param));

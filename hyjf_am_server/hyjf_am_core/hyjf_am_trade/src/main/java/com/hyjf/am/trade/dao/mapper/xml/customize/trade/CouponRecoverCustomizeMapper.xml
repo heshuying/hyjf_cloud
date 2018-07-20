@@ -133,7 +133,7 @@
 				<if test="repayTimeConfig != null">
 				AND cc.repay_time_config = #{repayTimeConfig}
 				</if>
-			AND ct.del_flg = 0
+			AND ct.del_flag = 0
 	</select>
 	<!---->
 	<!--<select id="selectCouponRecoverHjh" resultMap="couponRecoverAll" parameterType="java.util.Map">-->

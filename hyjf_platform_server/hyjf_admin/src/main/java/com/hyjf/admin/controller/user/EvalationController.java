@@ -28,14 +28,14 @@ import java.util.Map;
  * @author nxl
  * @version EvaluationController, v0.1 2018/6/25 17:23
  */
-@Api(value = "会员中心-用户测评")
+@Api(value = "会员中心-用户测评",description = "会员中心-用户测评")
 @RestController
 @RequestMapping("/hyjf-admin/evaluation")
 public class EvalationController extends BaseController {
     @Autowired
     private EvalationService evalationService;
 
-    @ApiOperation(value = "用户测评", notes = "用户测评列表显示")
+    @ApiOperation(value = "用户测评列表查询", notes = "用户测评列表查询")
     @PostMapping(value = "/evalationRecord")
     @ResponseBody
     public AdminResult<ListResult<EvalationVO>> getUserEvaluation(HttpServletRequest request, HttpServletResponse response, @RequestBody EvalationRequestBean evalationRequestBean){
@@ -53,7 +53,7 @@ public class EvalationController extends BaseController {
         return new AdminResult<ListResult<EvalationVO>>(ListResult.build(evalationResponse.getResultList(), evalationResponse.getCount())) ;
     }
 
-    @ApiOperation(value = "用户测评", notes = "用户测评结果显示")
+    @ApiOperation(value = "用户测评结果显示", notes = "用户测评结果显示")
     @PostMapping(value = "/selectEvaluationDetailById")
     @ResponseBody
     public AdminResult<UserEvalationResultVO> selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response,@RequestBody String  userId){

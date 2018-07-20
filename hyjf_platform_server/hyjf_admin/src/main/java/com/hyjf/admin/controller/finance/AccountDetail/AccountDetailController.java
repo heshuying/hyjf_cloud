@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -48,7 +49,7 @@ import java.util.*;
  * @version AccountdetailController, v0.1 2018/6/29 13:38
  *          后台管理系统，资金中心->资金明细
  */
-@Api(value = "资金明细")
+@Api(value = "资金中心->资金明细",description = "资金中心->资金明细")
 @RestController
 @RequestMapping("/hyjf-admin/accountDetail")
 public class AccountDetailController extends BaseController {
@@ -58,7 +59,7 @@ public class AccountDetailController extends BaseController {
     @Autowired
     private UserCenterService userCenterService;
 
-    @ApiOperation(value = "资金明细", notes = "资金明细页面初始化")
+    @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
     public JSONObject userManagerInit() {
@@ -131,7 +132,7 @@ public class AccountDetailController extends BaseController {
 
 
 
-    @ApiOperation(value = "资金明细", notes = "交易明细修复")
+    @ApiOperation(value = "交易明细修复", notes = "交易明细修复")
     @PostMapping(value = "/accountdetailDataRepair")
     @ResponseBody
     public AdminResult accountdetailDataRepair() {
@@ -235,7 +236,7 @@ public class AccountDetailController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "资金明细", notes = "导出资金明细列表")
+    @ApiOperation(value = "导出资金明细列表", notes = "导出资金明细列表")
     @PostMapping(value = "/exportqueryaccountdetail")
     public void exportAccountsExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
         // 表格sheet名称
@@ -247,7 +248,7 @@ public class AccountDetailController extends BaseController {
         requestAccountDetail.setLimitFlg(true);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
         String[] titles = new String[]{"序号", "明细ID", "用户名", "电子账号", "推荐人", "推荐组", "资金托管平台", "流水号", "订单号", "操作类型", "交易类型", "操作金额", "银行总资产", "银行可用余额", "银行冻结金额", "汇付可用金额", "汇付冻结金额", "汇添金可用余额",
                 "汇添金冻结金额", "交易状态", "对账状态", "备注说明", "时间"};

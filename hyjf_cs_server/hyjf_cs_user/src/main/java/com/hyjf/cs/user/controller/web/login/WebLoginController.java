@@ -28,10 +28,10 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangqingqing
  * @version LoginController, v0.1 2018/6/11 13:56
  */
-@Api(value = "web端用户登录接口", description = "web端用户登录接口")
+@Api(value = "web端-用户登录接口", description = "web端-用户登录接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebLoginController.class);
@@ -73,7 +73,7 @@ public class WebLoginController extends BaseUserController {
      * @Param: * @param token
      * @Date: 16:29 2018/6/5
      */
-    @ApiOperation(value = "登出", notes = "登出")
+    @ApiOperation(value = "登出", notes = "web端-登出")
     @PostMapping(value = "logout")
     public WebResult<Object> loginout(@RequestHeader(value = "token") String token){
         WebResult<Object> result = new WebResult<>();

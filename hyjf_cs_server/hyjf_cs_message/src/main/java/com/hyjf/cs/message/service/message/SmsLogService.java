@@ -4,7 +4,7 @@
 package com.hyjf.cs.message.service.message;
 
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.cs.message.bean.SmsLog;
+import com.hyjf.cs.message.bean.mc.SmsLog;
 
 import java.util.List;
 

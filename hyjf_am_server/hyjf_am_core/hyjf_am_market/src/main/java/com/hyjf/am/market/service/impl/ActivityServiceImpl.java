@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.market.service.ActivityService;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,24 +82,42 @@ public class ActivityServiceImpl implements ActivityService {
      * @return
      */
     @Override
-    public int insertRecord(ActivityList activityList) {
+    public Map<String, Object> insertRecord(ActivityList activityList) {
         activityList.setCreateTime(GetDate.getTimestamp());
         activityList.setUpdateTime(GetDate.getTimestamp());
-        int insertFlag = activityListMapper.insertSelective(activityList);
-        return insertFlag;
+        int insert = activityListMapper.insertSelective(activityList);
+        Map<String,Object> map = new HashMap<>();
+        if (insert > 0) {
+            map.put("success", true);
+        } else {
+            map.put("msg", "添加失败");
+        }
+        return map;
     }
 
     @Override
-    public int updateActivity(ActivityList activityList) {
+    public Map<String, Object> updateActivity(ActivityList activityList) {
         activityList.setUpdateTime(GetDate.getTimestamp());
-        int updateFlag = activityListMapper.updateByPrimaryKeySelective(activityList);
-        return updateFlag;
+        int update = activityListMapper.updateByPrimaryKey(activityList);
+        Map<String,Object> map = new HashMap<>();
+        if (update > 0) {
+            map.put("success", true);
+        } else {
+            map.put("msg", "修改失败");
+        }
+        return map;
     }
 
     @Override
-    public int deleteActivity(int id) {
-        int deleteFlag = activityListMapper.deleteByPrimaryKey(id);
-        return deleteFlag;
+    public Map<String, Object> deleteActivity(int id) {
+        int delete = activityListMapper.deleteByPrimaryKey(id);
+        Map<String,Object> map = new HashMap<>();
+        if (delete > 0) {
+            map.put("success", true);
+        } else {
+            map.put("msg", "删除失败");
+        }
+        return map;
     }
 
 

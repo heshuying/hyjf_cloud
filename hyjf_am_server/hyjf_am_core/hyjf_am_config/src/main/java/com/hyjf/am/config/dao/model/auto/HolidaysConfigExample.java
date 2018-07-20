@@ -212,63 +212,63 @@ public class HolidaysConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andDayIsNull() {
-            addCriterion("`day` is null");
+        public Criteria andDayTimeIsNull() {
+            addCriterion("day_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andDayIsNotNull() {
-            addCriterion("`day` is not null");
+        public Criteria andDayTimeIsNotNull() {
+            addCriterion("day_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDayEqualTo(Date value) {
-            addCriterionForJDBCDate("`day` =", value, "day");
+        public Criteria andDayTimeEqualTo(Date value) {
+            addCriterionForJDBCDate("day_time =", value, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotEqualTo(Date value) {
-            addCriterionForJDBCDate("`day` <>", value, "day");
+        public Criteria andDayTimeNotEqualTo(Date value) {
+            addCriterionForJDBCDate("day_time <>", value, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayGreaterThan(Date value) {
-            addCriterionForJDBCDate("`day` >", value, "day");
+        public Criteria andDayTimeGreaterThan(Date value) {
+            addCriterionForJDBCDate("day_time >", value, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("`day` >=", value, "day");
+        public Criteria andDayTimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("day_time >=", value, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayLessThan(Date value) {
-            addCriterionForJDBCDate("`day` <", value, "day");
+        public Criteria andDayTimeLessThan(Date value) {
+            addCriterionForJDBCDate("day_time <", value, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("`day` <=", value, "day");
+        public Criteria andDayTimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("day_time <=", value, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayIn(List<Date> values) {
-            addCriterionForJDBCDate("`day` in", values, "day");
+        public Criteria andDayTimeIn(List<Date> values) {
+            addCriterionForJDBCDate("day_time in", values, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotIn(List<Date> values) {
-            addCriterionForJDBCDate("`day` not in", values, "day");
+        public Criteria andDayTimeNotIn(List<Date> values) {
+            addCriterionForJDBCDate("day_time not in", values, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("`day` between", value1, value2, "day");
+        public Criteria andDayTimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("day_time between", value1, value2, "dayTime");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("`day` not between", value1, value2, "day");
+        public Criteria andDayTimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("day_time not between", value1, value2, "dayTime");
             return (Criteria) this;
         }
 

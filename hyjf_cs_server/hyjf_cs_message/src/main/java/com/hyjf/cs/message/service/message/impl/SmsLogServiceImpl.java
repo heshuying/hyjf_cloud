@@ -5,8 +5,8 @@ package com.hyjf.cs.message.service.message.impl;
 
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.SmsLog;
-import com.hyjf.cs.message.mongo.SmsLogDao;
+import com.hyjf.cs.message.bean.mc.SmsLog;
+import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

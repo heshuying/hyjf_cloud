@@ -34,11 +34,13 @@ import java.util.Map;
  * @author hesy
  * @version WebBindCardPageController, v0.1 2018/6/21 14:26
  */
-@Api(value = "web端用户解绑卡接口",description = "web端用户解绑卡接口")
+@Api(value = "web端-用户解绑卡接口",description = "web端-用户解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/card")
-public class WebBindCardPageController extends BaseUserController {
+@RequestMapping("/hyjf-web/card")
+public class WebBindCardPageController extends BaseUserController{
+    private static final Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
+
     @Autowired
     BindCardService bindCardService;
 

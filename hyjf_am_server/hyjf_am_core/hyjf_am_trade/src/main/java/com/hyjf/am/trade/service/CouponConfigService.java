@@ -162,4 +162,23 @@ public interface CouponConfigService {
      * @return
      */
     Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据borrowNid查询所有优惠券散标还款
+     * @Date 16:48 2018/7/18
+     * @Param borrowNid
+     * @return
+     */
+    List<CouponTenderCustomizeVO> getCouponTenderList(String borrowNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新还款期
+     * @Date 17:11 2018/7/18
+     * @Param tenderNid
+     * @Param period
+     * @return
+     */
+    Integer updateRecoverPeriod(String tenderNid, Integer period);
 }

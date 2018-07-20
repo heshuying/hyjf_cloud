@@ -6,6 +6,7 @@ package com.hyjf.admin.beans.response;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 import java.util.Map;
@@ -15,16 +16,22 @@ import java.util.Map;
  * @version BorrowRegistResponseBean, v0.1 2018/7/5 18:24
  */
 public class BorrowRegistResponseBean {
+    @ApiModelProperty(value = "项目类型")
     List<BorrowProjectTypeVO> borrowProjectTypeList;
 
+    @ApiModelProperty(value = "还款方式")
     List<BorrowStyleVO> borrowStyleList;
 
+    @ApiModelProperty(value = "备案状态")
     private Map<String, String> borrowRegistStatusList;
 
+    @ApiModelProperty(value = "标的备案列表")
     private List<BorrowRegistCustomizeVO> recordList;
 
+    @ApiModelProperty(value = "列表统计")
     private String sumAccount;
 
+    @ApiModelProperty(value = "总条数")
     private Integer total;
 
     public List<BorrowProjectTypeVO> getBorrowProjectTypeList() {

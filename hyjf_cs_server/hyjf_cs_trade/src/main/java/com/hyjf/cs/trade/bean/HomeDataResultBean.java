@@ -38,7 +38,7 @@ public class HomeDataResultBean implements Serializable {
     private BigDecimal tenderSum;
 
     /*收益总额*/
-    private BigDecimal interestSum;
+    private String interestSum;
 
     /*上线总年数*/
     private Integer yearSum;
@@ -116,11 +116,11 @@ public class HomeDataResultBean implements Serializable {
         this.tenderSum = tenderSum;
     }
 
-    public BigDecimal getInterestSum() {
+    public String getInterestSum() {
         return interestSum;
     }
 
-    public void setInterestSum(BigDecimal interestSum) {
+    public void setInterestSum(String interestSum) {
         this.interestSum = interestSum;
     }
 

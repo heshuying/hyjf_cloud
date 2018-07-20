@@ -3,8 +3,8 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.RegistRcordRequestBean;
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -14,25 +14,20 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,26 +39,24 @@ import java.util.Map;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "注册记录")
+@Api(value = "会员中心-注册记录",description = "会员中心-注册记录")
 @RestController
 @RequestMapping("/hyjf-admin/registRecord")
 public class RegistRecordController extends BaseController {
     @Autowired
     private RegistRecordService registRecordService;
 
-    @ApiOperation(value = "注册记录", notes = "注册记录页面初始化")
-    @PostMapping(value = "/usersInit")
+    @ApiOperation(value = "注册记录页面初始化", notes = "注册记录页面初始化")
+    @PostMapping(value = "/userRegistInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<UserManagerInitResponseBean>  userRegistInit() {
         // 注册平台
-        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
-        jsonObject.put("registPlat", registPlat);
-        return jsonObject;
+        UserManagerInitResponseBean userManagerInitResponseBean = registRecordService.initRegist();
+        return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
     }
 
     //会员管理列表查询
-    @ApiOperation(value = "注册记录", notes = "注册记录列表查询")
+    @ApiOperation(value = "注册记录列表查询", notes = "注册记录列表查询")
     @PostMapping(value = "/registRecordList")
     @ResponseBody
     public AdminResult<ListResult<RegistRecordVO>> selectRegistRecordList(@RequestBody RegistRcordRequestBean registRcordRequestBean) {
@@ -90,7 +83,7 @@ public class RegistRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "注册记录", notes = "注册记录列表导出")
+    @ApiOperation(value = "注册记录列表导出", notes = "注册记录列表导出")
     @PostMapping(value = "/exportregist")
     public void exportExcel(HttpServletResponse response, @RequestBody RegistRcordRequestBean registRcordRequestBean) throws Exception {
 

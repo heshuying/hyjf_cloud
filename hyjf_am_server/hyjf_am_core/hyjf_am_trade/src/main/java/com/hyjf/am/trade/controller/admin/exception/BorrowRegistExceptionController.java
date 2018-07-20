@@ -33,7 +33,7 @@ import java.util.List;
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 15:05
  * 异常中心-标的备案掉单
  */
-@Api(value = "异常中心-标的备案掉单")
+@Api(value = "异常中心-标的备案掉单",description = "异常中心-标的备案掉单")
 @RestController
 @RequestMapping("/am-trade/borrow_regist_exception")
 public class BorrowRegistExceptionController extends BaseController {

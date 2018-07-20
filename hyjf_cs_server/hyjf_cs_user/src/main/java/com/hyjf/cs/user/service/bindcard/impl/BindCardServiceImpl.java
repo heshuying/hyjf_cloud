@@ -144,7 +144,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         // 交易成功跳转链接
         String successfulUrl = systemConfig.getFrontHost().trim();
 		// 商户后台应答地址(必须)
-		String notifyUrl = systemConfig.getWebHost().trim() + "/web/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
+		String notifyUrl = systemConfig.getWebHost().trim() + "/hyjf-web/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getWebHost().trim();
 

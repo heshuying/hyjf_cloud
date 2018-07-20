@@ -16,15 +16,12 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.app.login.UserParameters;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhangqingqing
@@ -157,13 +154,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         return false;
     }
 
-    /** 获取各种用户属性 */
+ /*   *//** 获取各种用户属性 *//*
     @Override
     public UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request) {
         UserParameters result = new UserParameters();
-       /* String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
+        String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
-        String webhost = UploadFileUtils.getDoPath(systemConfig.getWebHost()) + BaseDefine.REQUEST_HOME.substring(1, AppUserDefine.REQUEST_HOME.length()) + "/";
+        String webhost = UploadFileUtils.getDoPath(systemConfig.getWebHost()) + BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
         webhost = webhost.substring(0, webhost.length() - 1);
         String iconUrl = "";
         {
@@ -317,7 +314,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 } else {
                     result.setIconUrl(webhost + "/img/" + "icon.png");
                 }
-                *//** 获取用户信息中vip信息开始 *//*
                 if (userInfo.getVipId() != null && userInfo.getVipId() > 0) {
                     result.setIsVip("1");
                     VipInfo vipInfo = vipInfoMapper.selectByPrimaryKey(userInfo.getVipId());
@@ -335,7 +331,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     // vip等级显示图片
                     result.setVipJumpUrl(webhost + ApplyDefine.REQUEST_MAPPING + ApplyDefine.INIT + packageStr(request));
                 }
-                *//** 获取用户信息中vip信息结束 *//*
 
                 // 用户角色：1投资人2借款人3担保机构
                 Integer roleId = userInfo.getRoleId();
@@ -483,12 +478,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             // 优惠券总收益 add by hesy 优惠券相关 start
             BigDecimal couponInterestTotalDec = BigDecimal.ZERO;
             String couponInterestTotal = couponRecoverCustomizeMapper.selectCouponReceivedInterestTotal(userId);
-            LogUtil.infoLog(this.getClass().getName(), "getMyAsset", "优惠券已得收益：" + couponInterestTotal);
             if (org.apache.commons.lang3.StringUtils.isNotEmpty(couponInterestTotal)) {
                 couponInterestTotalDec = new BigDecimal(couponInterestTotal);
             }
-            // add by hesy 优惠券相关 end
-
             BigDecimal CreditInterestYes = BigDecimal.ZERO;
             if (creditTender != null) {
                 CreditInterestYes = creditTender.getCreditInterestYes();
@@ -498,17 +490,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 CreditInterestAmountYes = recoverYesInfo.getCreditInterestAmount();
             }
             // 已回收的利息 (累计收益)
-            BigDecimal recoverInterest = RecoverInterest // 已回收的利息
+            BigDecimal recoverInterest = RecoverInterest
                     .add(interestall) // +汇天利
                     .add(couponInterestTotalDec).add(CreditInterestYes) // +债转
                     .subtract(CreditInterestAmountYes); // -已债转
             if (request.getParameter("version").startsWith("1.1.0")) {
                 result.setWaitInterest(list.get(0).getBankAwaitInterest().add(list.get(0).getPlanInterestWait()) + "");
-//				result.setInterestTotle(list.get(0).getBankInvestSum() + ""); modify by cwyang 累计收益取bank_interest_sum字段
                 result.setInterestTotle(list.get(0).getBankInterestSum() + "");
             } else {
                 result.setWaitInterest(DF_FOR_VIEW.format(list.get(0).getBankAwaitInterest().add(list.get(0).getPlanInterestWait())));
-                result.setInterestTotle(DF_FOR_VIEW.format(list.get(0).getBankInterestSum()));//modify by cwyang 累计收益取bank_interest_sum字段
+                result.setInterestTotle(DF_FOR_VIEW.format(list.get(0).getBankInterestSum()));
             }
             BigDecimal bankTotal = list.get(0).getBankTotal() == null? BigDecimal.ZERO : list.get(0).getBankTotal();
             result.setAccountTotle(DF_FOR_VIEW.format(bankTotal));
@@ -528,21 +519,18 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             }
         }
         {
-            UsersContractExample example = new UsersContractExample();
-            example.createCriteria().andUserIdEqualTo(userId);
-            List<UsersContract> list = usersContractMapper.selectByExample(example);
-            if (list != null && list.size() > 0) {
+            UsersContactVO userContract = amUserClient.selectUserContact(userId);
+            if (userContract != null ) {
                 // 联系人关系映射
-                List<ParamName> paramList = getParamNameList("USER_RELATION");
-                if (paramList != null && paramList.size() > 0) {
-                    for (ParamName param : paramList) {
-                        if (param.getNameCd().equals(list.get(0).getRelation() + "")) {
-                            result.setRelation(param.getName());
-                        }
+                Map<String, String> relation = CacheUtil.getParamNameMap("USER_RELATION");
+                Set<String> relationKey = relation.keySet();
+                for (String key: relationKey){
+                    if (relation.get(key).equals(userContract.getRelation() + "")) {
+                        result.setRelation(relation.get(key));
                     }
                 }
-                result.setRl_name(list.get(0).getRlName());
-                result.setRl_phone(list.get(0).getRlPhone());
+                result.setRl_name(userContract.getRlName());
+                result.setRl_phone(userContract.getRlPhone());
             }
         }
         {
@@ -553,7 +541,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             result.setBankCardAccount("");
             result.setBankCardAccountLogoUrl("");
             result.setBankCardCode("");
-            if (list != null && list.size() > 0) {
+            if (bankCardVO != null && list.size() > 0) {
                 result.setBankCardCount(list.size() + "");
                 for (AccountBank accountBank : list) {
                     Boolean hasQuick = false;// 存在快捷卡
@@ -725,9 +713,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request,PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BaseDefine.REQUEST_HOME
                     + AutoDefine.PAYMENT_AUTH_ACTION + ".do?1=1"));
         }
-        result.setInvitationCode(userId);*/
+        result.setInvitationCode(userId);
         return result;
-    }
+    }*/
 
     @Override
     public void updateUserIconImg(Integer userId, String iconUrl) {

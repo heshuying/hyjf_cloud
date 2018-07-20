@@ -127,4 +127,34 @@ public class AmTradeClientImpl implements AmTradeClient {
 	public BigDecimal getRepayTotal(Date lastDay) {
 		return null;
 	}
+
+	@Override
+	public Integer countBorrowUser() {
+		return null;
+	}
+
+	@Override
+	public Integer countCurrentBorrowUser() {
+		return null;
+	}
+
+	@Override
+	public Integer countCurrentTenderUser() {
+		return null;
+	}
+
+	@Override
+	public BigDecimal sumBorrowUserMoney(Date lastDay) {
+		return null;
+	}
+
+	@Override
+	public BigDecimal sumBorrowUserMoneyTopTen() {
+		return null;
+	}
+
+	@Override
+	public BigDecimal sumBorrowUserMoneyTopOne() {
+		return null;
+	}
 }

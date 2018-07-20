@@ -26,26 +26,26 @@ public interface ActivityListClient {
      * @param request
      * @return
      */
-    int insertRecord(ActivityListRequest request);
+    ActivityListResponse insertRecord(ActivityListRequest request);
 
     /**
      * 根据活动id查询活动信息
-     * @param id
+     * @param activityListRequest
      * @return
      */
-    ActivityListVO selectActivityById(int id);
+    ActivityListResponse selectActivityById(ActivityListRequest activityListRequest);
 
     /**
      * 修改活动信息
      * @param request
      * @return
      */
-    int updateActivity(ActivityListRequest request);
+    ActivityListResponse updateActivity(ActivityListRequest request);
 
     /**
      * 删除活动配置信息
-     * @param id
+     * @param request
      * @return
      */
-    int deleteActivity(int id);
+    ActivityListResponse deleteActivity(ActivityListRequest request);
 }

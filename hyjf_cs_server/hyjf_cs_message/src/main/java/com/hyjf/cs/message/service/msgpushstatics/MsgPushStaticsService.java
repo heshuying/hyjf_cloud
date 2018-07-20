@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.service.msgpushstatics;
 
-import com.hyjf.cs.message.bean.MessagePushTemplateStatics;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 
 /**
  * @author fuqiang

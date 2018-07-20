@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.subcommission;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.SubCommissionService;
@@ -25,13 +26,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
  * @version: SubCommissionController, v0.1 2018/7/10 9:28
  */
-@Api(value = "资金中心-平台账户分佣")
+@Api(value = "资金中心-平台账户分佣",description = "资金中心-平台账户分佣")
 @RestController
 @RequestMapping(value = "/hyjf-admin/subcommission")
 public class SubCommissionController extends BaseController {
@@ -47,14 +50,14 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣列表查询",notes = "平台账户分佣列表查询")
     @PostMapping(value = "/subcommissionlist")
-    public JSONObject subCommissionList(@RequestBody SubCommissionRequest request){
-        JSONObject result = new JSONObject();
+    public AdminResult subCommissionList(@RequestBody SubCommissionRequest request){
+        Map<String,Object> result = new HashMap<>();
         Integer count = subCommissionService.getSubCommissionCount(request);
         count = (count == null)?0:count;
         result.put("count",count);
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
         result.put("subCommissionVOList",subCommissionVOList);
-        return result;
+        return new AdminResult(result);
     }
 
     /**
@@ -154,8 +157,9 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣所需的detail信息",notes = "发起账户分佣所需的detail信息")
     @PostMapping(value = "/searchdetails")
-    public JSONObject searchDetails(@RequestHeader(value = "userId")Integer userId){
-        return subCommissionService.searchDetails(userId);
+    public AdminResult searchDetails(@RequestHeader(value = "userId")Integer userId){
+        JSONObject result = subCommissionService.searchDetails(userId);
+        return new AdminResult(result);
     }
 
     /**
@@ -166,8 +170,8 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣")
     @PostMapping(value = "/subcommission")
-    public JSONObject subCommission(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody SubCommissionRequest request){
+    public AdminResult subCommission(@RequestHeader(value = "userId")Integer loginUserId,@RequestBody SubCommissionRequest request){
         JSONObject jsonObject = subCommissionService.subCommission(loginUserId,request);
-        return jsonObject;
+        return new AdminResult(jsonObject);
     }
 }

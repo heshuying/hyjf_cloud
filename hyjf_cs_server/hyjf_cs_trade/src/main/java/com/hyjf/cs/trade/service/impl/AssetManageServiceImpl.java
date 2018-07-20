@@ -11,9 +11,7 @@ import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
-import com.hyjf.cs.trade.client.AssetManageClient;
 import com.hyjf.cs.trade.client.BindCardClient;
-import com.hyjf.cs.trade.controller.web.assetmanage.WebAssetManageController;
 import com.hyjf.cs.trade.service.AssetManageService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +36,6 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
     @Autowired
     BindCardClient bindCardClient;
 
-    @Autowired
-    AssetManageClient assetManageClient;
 
     @Override
     public AccountVO getAccount(Integer userId) {
@@ -68,13 +64,13 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             request.setLimitEnd( page.getOffset());
             request.setLimitEnd( page.getLimit());
             // 获取用户当前持有债权列表
-            List<CurrentHoldObligatoryRightListCustomizeVO> recordList = assetManageClient.selectCurrentHoldObligatoryRightList(request);
+            List<CurrentHoldObligatoryRightListCustomizeVO> recordList = amTradeClient.selectCurrentHoldObligatoryRightList(request);
             //法大大协议信息
             if(recordList!=null && recordList.size()>0){
                 for (CurrentHoldObligatoryRightListCustomizeVO currentHoldObligatoryRightListCustomize : recordList) {
                     String nid = currentHoldObligatoryRightListCustomize.getNid();
                     //法大大居间服务协议（type=2时候，为债转协议）
-                    List<TenderAgreementVO> tenderAgreementsNid= assetManageClient.selectTenderAgreementByNid(nid);//居间协议
+                    List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
                     if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
                         TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
                         Integer fddStatus = tenderAgreement.getStatus();
@@ -124,7 +120,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             request.setLimitEnd( page.getOffset());
             request.setLimitEnd( page.getLimit());
             // 获取用户已回款债权列表
-            List<RepayMentListCustomizeVO> recordList = assetManageClient.selectRepaymentList(request);
+            List<RepayMentListCustomizeVO> recordList = amTradeClient.selectRepaymentList(request);
             result.setRepayMentList(recordList);
             result.setRepayMentCount(recordTotal);
         } else {
@@ -150,7 +146,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         if (recordTotal > 0) {
-            List<TenderCreditDetailCustomizeVO> recordList = assetManageClient.selectCreditRecordList(request);
+            List<TenderCreditDetailCustomizeVO> recordList = amTradeClient.selectCreditRecordList(request);
             result.setCreditRecordList(recordList);
             result.setTenderCreditDetailCount(recordTotal);
         } else {
@@ -172,21 +168,21 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         request.setOrderByFlag(form.getOrderByFlag());
         request.setSortBy(form.getSortBy());
         // 获取用户当前持有计划记录总数
-        int recordTotal = this.assetManageClient.countCurrentHoldPlanTotal(request);
+        int recordTotal = this.amTradeClient.countCurrentHoldPlanTotal(request);
         Page page = Page.initPage(form.getCurrPage(), form.getPageSize());
         page.setTotal(recordTotal);
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         if (recordTotal > 0) {
             // 获取用户当前持有计划记录列表
-            List<CurrentHoldPlanListCustomizeVO> recordList = assetManageClient.selectCurrentHoldPlanList(request);
+            List<CurrentHoldPlanListCustomizeVO> recordList = amTradeClient.selectCurrentHoldPlanList(request);
             result.setCurrentHoldPlanList(recordList);
             result.setCurrentHoldPlanCount(recordTotal);
         } else {
             result.setCurrentHoldPlanList(new ArrayList<CurrentHoldPlanListCustomizeVO>());
             result.setCurrentHoldPlanCount(0);
         }
-        result.setRepayMentPlanCount(this.assetManageClient.countRepayMentPlanTotal(request));
+        result.setRepayMentPlanCount(this.amTradeClient.countRepayMentPlanTotal(request));
         result.setPage(page);
         return result;
     }
@@ -203,7 +199,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         request.setOrderByFlag(form.getOrderByFlag());
         request.setSortBy(form.getSortBy());
         // 获取用户当前持有计划记录总数
-        int recordTotal = this.assetManageClient.countRepayMentPlanTotal(request);
+        int recordTotal = this.amTradeClient.countRepayMentPlanTotal(request);
         Page page = Page.initPage(form.getCurrPage(), form.getPageSize());
         page.setTotal(recordTotal);
         request.setLimitStart(page.getOffset());
@@ -211,7 +207,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
 
         if (recordTotal > 0) {
             // 获取用户当前持有计划记录列表
-            List<RepayMentPlanListCustomizeVO> recordList = assetManageClient.selectRepayMentPlanList(request);
+            List<RepayMentPlanListCustomizeVO> recordList = amTradeClient.selectRepayMentPlanList(request);
             if(recordList!=null && recordList.size()>0) {
                 //计算实际收益
                 for (int i = 0; i < recordList.size(); i++) {
@@ -235,20 +231,20 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             result.setRepayMentPlanList(new ArrayList<RepayMentPlanListCustomizeVO>());
             result.setCurrentHoldPlanCount(0);
         }
-        result.setCurrentHoldPlanCount(this.assetManageClient.countCurrentHoldPlanTotal(request));
+        result.setCurrentHoldPlanCount(this.amTradeClient.countCurrentHoldPlanTotal(request));
         result.setPage(page);
         return result;
     }
 
     private void searchListCount(ObligatoryRightAjaxBean result,AssetManageBeanRequest request) {
         // 获取用户当前持有债权总数
-        int currentHoldObligatoryRightCount = assetManageClient.selectCurrentHoldObligatoryRightListTotal(request);
+        int currentHoldObligatoryRightCount = amTradeClient.selectCurrentHoldObligatoryRightListTotal(request);
         result.setCurrentHoldObligatoryRightCount(currentHoldObligatoryRightCount);
         // 获取用户已回款债权列表总数
-        int repaymentCount = assetManageClient.selectRepaymentListTotal(request);
+        int repaymentCount = amTradeClient.selectRepaymentListTotal(request);
         result.setRepayMentCount(repaymentCount);
         // 获取用户转让记录总数
-        int tenderCreditDetailCount = assetManageClient.countCreditRecordTotal(request);
+        int tenderCreditDetailCount = amTradeClient.countCreditRecordTotal(request);
         result.setTenderCreditDetailCount(tenderCreditDetailCount);
     }
 }

@@ -1,14 +1,14 @@
 package com.hyjf.cs.market.client;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiasq
@@ -116,4 +116,41 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	BigDecimal getRepayTotal(Date lastDay);
+
+	/**
+	 * 累计借款人（定义：系统累计到现在进行过发表的底层借款人数量）
+	 * @return
+	 */
+	Integer countBorrowUser();
+
+	/**
+	 * 当前借款人（定义：当前有尚未结清债权的底层借款人数量）
+	 * @return
+	 */
+	Integer countCurrentBorrowUser();
+
+	/**
+	 * 当前投资人（定义：当前代还金额不为0的用户数量）
+	 * @return
+	 */
+	Integer countCurrentTenderUser();
+
+	/**
+	 * 代还总金额
+	 * @param lastDay
+	 * @return
+	 */
+	BigDecimal sumBorrowUserMoney(Date lastDay);
+
+	/**
+	 * 前十大借款人待还金额
+	 * @return
+	 */
+	BigDecimal sumBorrowUserMoneyTopTen();
+
+	/**
+	 * 最大单一借款人待还金额
+	 * @return
+	 */
+	BigDecimal sumBorrowUserMoneyTopOne();
 }

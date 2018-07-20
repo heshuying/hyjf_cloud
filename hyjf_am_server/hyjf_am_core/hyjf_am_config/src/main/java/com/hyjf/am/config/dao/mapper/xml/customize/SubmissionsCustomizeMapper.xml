@@ -3,9 +3,8 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.customize.SubmissionsCustomizeMapper">
 
 	<sql id="Where_Clause">
-		<where>
-			<if test="userName != null and userName != ''">
-				AND	u.username like concat('%',#{userName},'%') 
+			<if test="userId != null ">
+				AND	s.user_id = #{userId}
 			</if>
 			
 			<if test="sysType != null and sysType != ''">
@@ -24,18 +23,18 @@
 				AND s.content like concat('%',#{content},'%') 
 			</if>
 		    <if test="addTimeStart != null and addTimeStart != ''">
-				AND s.addtime <![CDATA[>=]]> unix_timestamp(#{addTimeStart,jdbcType=VARCHAR})
+				AND s.create_time <![CDATA[>=]]> unix_timestamp(#{addTimeStart,jdbcType=VARCHAR})
 			</if>
 			<if test="addTimeEnd != null and addTimeEnd != ''">
-				AND s.addtime <![CDATA[<=]]> unix_timestamp(#{addTimeEnd,jdbcType=VARCHAR})
+				AND s.create_time <![CDATA[<=]]> unix_timestamp(#{addTimeEnd,jdbcType=VARCHAR})
 			</if>
-		</where>
 	</sql>
 	<resultMap id="SubmissionsMapResult"
 		type="com.hyjf.am.vo.config.SubmissionsCustomizeVO">
+		<result column="userId" property="userId" jdbcType="INTEGER" /> <!-- 用户id -->
 		<result column="id" property="submissionsId" jdbcType="INTEGER" /> <!-- 用户名 -->
-		<result column="username" property="userName" jdbcType="VARCHAR" /> <!-- 用户名 -->
 		<result column="sys_type" property="sysType" jdbcType="INTEGER" /> <!-- 系统类别  -->
+		<result column="sys_version" property="sysVersion" jdbcType="VARCHAR" /> <!-- 平台版本号  -->
 		<result column="platform_version" property="platformVersion" jdbcType="VARCHAR" /> <!-- 平台版本号  -->
 		<result column="phone_type" property="phoneType" jdbcType="VARCHAR" /> <!-- 手机型号  -->
 		<result column="content" property="content" jdbcType="VARCHAR" /> <!-- 反馈内容  -->
@@ -46,39 +45,19 @@
 	<select id="queryRecordList" resultMap="SubmissionsMapResult"
 		parameterType="java.util.Map">
 		SELECT
+			s.user_id userId,
 			s.id,
-			CASE
-		WHEN ISNULL(u.username)
-		OR u.username = '' THEN
-			'游客'
-		ELSE
-			u.username
-		END username,
-		 CASE
-		WHEN (
-			pa.name_cd = '2'
-			OR pa.name_cd = '3'
-		)
-		AND ! ISNULL(s.sys_version) THEN
-			CONCAT(
-				pa.`name`,
-				'-',
-				s.sys_version
-			)
-		ELSE
-			pa.`name`
-		END sys_type,
-		 s.platform_version,
-		 s.phone_type,
-		 s.content,
-		 FROM_UNIXTIME( s.addtime, '%Y-%m-%d %H:%i:%s' ) addtime
+			s.sys_type,
+			s.sys_version,
+			s.platform_version,
+			s.phone_type,
+			s.content,
+			s.create_time addtime
 		FROM
 			ht_submissions s
-		LEFT JOIN huiyingdai_users u ON s.user_id = u.user_id
-		LEFT JOIN ht_param_name pa ON pa.name_class = 'CLIENT'
-		AND pa.name_cd = s.sys_type
+		where s.sys_type in(0,1,2,3,4)
 		<include refid="Where_Clause" />
-		ORDER BY s.addtime DESC
+		ORDER BY s.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>
@@ -90,8 +69,55 @@
 			count(s.id)
 		FROM
 			ht_submissions s
-		where s.user_id = #{}
+		where s.sys_type in(0,1,2,3,4)
 		<include refid="Where_Clause" />
 	</select>
+
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs" >
+		update ht_submissions
+		<set >
+			<if test="title != null" >
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="problem != null" >
+				problem = #{problem,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null" >
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="sysType != null" >
+				sys_type = #{sysType,jdbcType=INTEGER},
+			</if>
+			<if test="sysVersion != null" >
+				sys_version = #{sysVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null" >
+				`state` = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="platformVersion != null" >
+				platform_version = #{platformVersion,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneType != null" >
+				phone_type = #{phoneType,jdbcType=VARCHAR},
+			</if>
+			<if test="replytime != null" >
+				replytime = #{replytime,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null" >
+				create_time = #{addtime,jdbcType=INTEGER},
+			</if>
+			<if test="content != null" >
+				content = #{content,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="img != null" >
+				img = #{img,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="reply != null" >
+				reply = #{reply,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>
 

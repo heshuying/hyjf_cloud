@@ -1,6 +1,9 @@
 package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -65,5 +68,58 @@ public interface BankWithdrawService extends BaseTradeService {
      * 定时任务提现
      * add by jijun 20180621
      */
-    boolean batchWithdraw();
+    Boolean batchWithdraw();
+
+    /**
+     * 根据手机号查询用户信息
+     * @param mobile
+     * @return
+     */
+    UserVO findUserByMobile(String mobile);
+
+    /**
+     *查询用户绑卡信息
+     * @param userId
+     * @param cardNo
+     * @return
+     */
+    BankCardVO getBankInfo(Integer userId, String cardNo);
+
+    /**
+     * 获取用户的银行卡费率
+     *
+     * @param userId
+     * @return 用户的银行卡费率
+     */
+    public String getWithdrawFee(Integer userId, String bankId);
+
+    /**
+     * 根据userId获取用户详情信息
+     * @param userId
+     * @return
+     */
+    UserInfoVO getUserInfoByUserId(Integer userId);
+
+    /**
+     * 融东风提现前置处理
+     * @param bean
+     * @param params
+     * @return
+     */
+    int updateBeforeCash(BankCallBean bean, Map<String, String> params);
+
+    /**
+     * 根据订单号查询提现信息
+     * @param logOrderId
+     * @return
+     */
+    AccountWithdrawVO getAccountWithdrawByOrdId(String logOrderId);
+
+    /**
+     * 融东风提现回调数据组合
+     * @param userId
+     * @param logOrderId
+     * @param param
+     */
+    void getWithdrawResult(int userId, String logOrderId, Map<String,String> param);
 }
