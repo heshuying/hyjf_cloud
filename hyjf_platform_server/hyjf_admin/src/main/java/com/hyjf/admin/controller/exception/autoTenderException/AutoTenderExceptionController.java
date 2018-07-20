@@ -54,9 +54,9 @@ import java.util.Map;
  * @author nixiaoling
  * @version AutoTenderExceptionController, v0.1 2018/7/12 10:27
  */
+@Api(value = "异常中心-汇计划投资异常",description = "异常中心-汇计划投资异常")
 @RestController
 @RequestMapping("/hyjf-admin/autotenderexception")
-@Api(value = "异常中心-汇计划投资异常")
 public class AutoTenderExceptionController extends BaseController {
 
     @Autowired
@@ -72,7 +72,7 @@ public class AutoTenderExceptionController extends BaseController {
     private static final String PERMISSIONS = "accedelist";
 
 
-    @ApiOperation(value = "汇计划投资异常", notes = "列表显示")
+    @ApiOperation(value = "汇计划投资异常列表显示", notes = "汇计划投资异常列表显示")
     @PostMapping(value = "/selectAccedeRecordList")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -96,7 +96,7 @@ public class AutoTenderExceptionController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "汇计划投资异常", notes = "投资明细列表显示")
+    @ApiOperation(value = "投资明细列表显示", notes = "投资明细列表显示")
     @PostMapping(value = "/tenderInfoAction")
     @ResponseBody
     public AdminResult<ListResult<BorrowInvestCustomizeVO>> tenderInfoAction(HttpServletRequest request, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
@@ -113,7 +113,7 @@ public class AutoTenderExceptionController extends BaseController {
      * 汇计划加入明细异常处理
      * @return
      */
-    @ApiOperation(value = "汇计划投资异常", notes = "异常处理")
+    @ApiOperation(value = "异常处理", notes = "异常处理")
     @PostMapping(value = "/tenderExceptionAction",produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String tenderExceptionAction(HttpServletRequest request, @RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
