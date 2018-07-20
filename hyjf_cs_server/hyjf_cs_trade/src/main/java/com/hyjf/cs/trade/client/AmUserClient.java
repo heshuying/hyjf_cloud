@@ -270,10 +270,16 @@ public interface AmUserClient {
      */
     List<SpreadsUserVO> selectByUserId(Integer userId);
 	/**
-	 * 获取银行卡信息
-	 * @param userId
-	 * @param status
+	 * 根据手机号查询User
+	 * @param mobile
 	 * @return
 	 */
-	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
+	UserVO findUserByMobile(String mobile);
+    /**
+     * 获取银行卡信息
+     * @param userId
+     * @param status
+     * @return
+     */
+    List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
 }

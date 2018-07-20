@@ -359,7 +359,7 @@ public interface AmTradeClient {
      * 插入提现记录
      * @param record
      */
-    void insertAccountWithdrawLog(AccountWithdrawVO record);
+    int insertAccountWithdrawLog(AccountWithdrawVO record);
 
     /**
      * 根据订单号查询用户提现记录信息
