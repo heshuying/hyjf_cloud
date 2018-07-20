@@ -51,7 +51,7 @@ public class AppBankOpenController extends BaseUserController {
      * @Author: sunss
      */
     @ApiOperation(value = "app端获取开户信息", notes = "获取开户信息")
-    @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/userInfo")
     public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
         AppResult<String> result = new AppResult<String>();

@@ -58,7 +58,7 @@ public class AppRegistController extends BaseUserController {
      * @throws UnsupportedEncodingException
      */
     @ApiOperation(value = "用户注册", notes = "app端-用户注册")
-    @PostMapping(value = "/registAction", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/registAction")
     public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/registAction");
@@ -136,7 +136,12 @@ public class AppRegistController extends BaseUserController {
             adsRequest.setLimitEnd(1);
             adsRequest.setHost(systemConfig.getDomainAppUrl());
             adsRequest.setCode("registpop");
-            AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
+            AppAdsCustomizeVO record = new AppAdsCustomizeVO();
+            try {
+                 record = registService.searchBanner(adsRequest);
+            }catch (Exception e){
+                logger.info("获取活动信息失败...");
+            }
             // 注册成功发券提示
             String operationUrl = jumpCommand + "://jumpCouponsList/?";
             BaseMapBean baseMapBean = new BaseMapBean();
