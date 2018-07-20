@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -251,12 +252,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         String projectType = request.getProjectType();
         // 项目子类型
         String borrowClass = request.getBorrowClass();
-        // 分页起始
-        Integer limitStart = request.getLimitStart();
-        // 分页结束
-        Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("creditStatus",request.getCreditStatus());
         return webProjectListCustomizeMapper.countAppCredit(params);
     }
 
@@ -275,6 +273,7 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("borrowClass", borrowClass);
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
+        params.put("creditStatus",request.getCreditStatus());
         return webProjectListCustomizeMapper.searchAppCreditList(params);
     }
 
@@ -296,7 +295,7 @@ public class ProjectListServiceImpl implements ProjectListService {
     }
 
     @Override
-    public List<WebProjectListCustomize> searchAppPlanList(@Valid ProjectListRequest request) {
+    public List<HjhPlanVO> searchAppPlanList(@Valid ProjectListRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
         // 项目类型
         String projectType = request.getProjectType();
