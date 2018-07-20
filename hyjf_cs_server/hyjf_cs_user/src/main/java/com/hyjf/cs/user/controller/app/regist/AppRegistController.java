@@ -37,7 +37,7 @@ import java.net.URLEncoder;
  * @author zhangqingqing
  * @version RegistController, v0.1 2018/6/11 14:42
  */
-@Api(value = "app端用户注册接口",description = "app端用户注册接口")
+@Api(value = "app端用户注册接口",description = "app端-用户注册接口")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppRegistController extends BaseUserController {
@@ -57,7 +57,7 @@ public class AppRegistController extends BaseUserController {
      * @return
      * @throws UnsupportedEncodingException
      */
-    @ApiOperation(value = "用户注册", notes = "用户注册")
+    @ApiOperation(value = "用户注册", notes = "app端-用户注册")
     @PostMapping(value = "/registAction", produces = "application/json; charset=utf-8")
     public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
         JSONObject ret = new JSONObject();
@@ -105,7 +105,13 @@ public class AppRegistController extends BaseUserController {
         registService.checkParam(register);
         registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
-        if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
+        boolean active = false;
+        try {
+             active = registService.checkActivityIfAvailable(systemConfig.getActivity888Id());
+        }catch (Exception e){
+            logger.info("获取活动信息失败...");
+        }
+        if (active) {
             BaseMapBean baseMapBean=new BaseMapBean();
             baseMapBean.set("imageUrl", "");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);

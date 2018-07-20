@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "web端密码相关服务",description = "web端密码相关服务")
+@Api(value = "web端-密码相关服务",description = "web端-密码相关服务")
 @RestController
 @RequestMapping("/hyjf-web/user/password")
 public class WebPassWordController {
@@ -91,6 +91,7 @@ public class WebPassWordController {
      * 设置交易密码异步回调
      * @return
      */
+    @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn", produces = "application/json; charset=utf-8")
     public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<Object> result = new WebResult<Object>();
@@ -138,6 +139,7 @@ public class WebPassWordController {
      *
      * @return
      */
+    @ApiOperation(value = " 重置交易密码异步回调",notes = " 重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn", produces = "application/json; charset=utf-8")
     public WebResult<String> resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<String> result = new WebResult<String>();
@@ -150,7 +152,7 @@ public class WebPassWordController {
     @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/setPasswordSendCode", produces = "application/json; charset=utf-8")
     public WebResult<Object> setPasswordSendCode(@RequestHeader(value = "token") String token,@RequestBody Map<String,String> param) {
-        logger.info("Web端交易密码发送短信验证码, param :{}", param);
+        logger.info("web端-交易密码发送短信验证码, param :{}", param);
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = passWordService.getUsers(token);
         CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "app端验证码",description = "app端验证码")
+@Api(value = "app端验证码",description = "app端-验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
@@ -173,6 +173,7 @@ public class AppSmsCodeController extends BaseUserController {
                 ret.put("statusDesc", "请输入您的真实手机号码");
                 return ret;
             }
+            smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, token, GetCilentIP.getIpAddr(request));
             smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
         }catch (Exception e){
             ret.put("status", "1");

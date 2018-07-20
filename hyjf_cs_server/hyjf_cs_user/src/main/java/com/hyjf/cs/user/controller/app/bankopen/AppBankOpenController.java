@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * @author sunss
  */
-@Api(value = "app端用户开户",description = "app端用户开户")
+@Api(value = "app端用户开户",description = "app端-用户开户")
 @Controller
 @RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {
@@ -71,7 +71,7 @@ public class AppBankOpenController extends BaseUserController {
         return result;
     }
 
-    @ApiOperation(value = "app端用户开户", notes = "app端用户开户")
+    @ApiOperation(value = "app端用户开户", notes = "app端-用户开户")
     @PostMapping(value = "/openBankAccount")
     public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));

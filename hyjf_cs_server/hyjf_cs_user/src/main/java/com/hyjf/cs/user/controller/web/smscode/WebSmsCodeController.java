@@ -26,7 +26,7 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "验证码",description = "验证码")
+@Api(value = "验证码",description = "web端-验证码")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user/sms")
@@ -44,6 +44,7 @@ public class WebSmsCodeController extends BaseUserController {
 	 * @return
 	 * @throws MQException
 	 */
+	@ApiOperation(value = "发送验证码",notes = "发送验证码")
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public WebResult sendSmsCode(@RequestBody Map<String,String> param,
@@ -55,6 +56,7 @@ public class WebSmsCodeController extends BaseUserController {
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		WebResult resultBean = new WebResult();
+		sendSmsCode.appSendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}

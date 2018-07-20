@@ -25,7 +25,7 @@ import java.util.Map;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "weChat验证码",description = "weChat验证码")
+@Api(value = "weChat验证码",description = "weChat端-验证码")
 @RestController
 @RequestMapping("/hyjf-wechat/smsCode")
 public class WeChatSmsCodeController extends BaseUserController {
@@ -42,6 +42,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 * @return
 	 * @throws MQException
 	 */
+	@ApiOperation(value = " 发送短信验证码",notes = " 发送短信验证码")
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public WeChatResult sendSmsCode(@RequestBody Map<String,String> param,
@@ -53,6 +54,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		WeChatResult resultBean = new WeChatResult();
+		sendSmsCode.appSendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}

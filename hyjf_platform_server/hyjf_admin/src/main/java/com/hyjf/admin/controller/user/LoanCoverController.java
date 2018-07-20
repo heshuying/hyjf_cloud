@@ -241,7 +241,7 @@ public class LoanCoverController extends BaseController {
 
     //认证
     @ApiOperation(value = "借款盖章用户认证", notes = "借款盖章用户认证")
-    @PostMapping(value = "/updateLoancover")
+    @PostMapping(value = "/shareUser")
     @ResponseBody
     public AdminResult shareUser(HttpServletRequest request, HttpServletResponse response, @RequestBody String loanId) {
         JSONObject result = new JSONObject();

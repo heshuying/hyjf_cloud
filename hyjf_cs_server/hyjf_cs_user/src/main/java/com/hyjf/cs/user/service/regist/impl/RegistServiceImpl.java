@@ -249,10 +249,15 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
         // 3. 注册送188元新手红包
         // 活动有效期校验
-        Integer activityId = systemConfig.getActivity888Id();
-        if (!checkActivityIfAvailable(activityId)) {
-            sendCoupon(userVO);
+        try {
+            Integer activityId = systemConfig.getActivity888Id();
+            if (!checkActivityIfAvailable(activityId)) {
+                sendCoupon(userVO);
+            }
+        }catch (Exception e){
+            logger.error("注册发放888红包失败...", e);
         }
+
         return webViewUserVO;
     }
 
