@@ -45,7 +45,7 @@ public class WebHomeServiceImpl implements WebHomeService {
     // banner 列表
     private static final  String BANNER_LIST_URL = "http://AM-MARKET/am-market/ads/getBannerList";
     // 运营数据
-    private static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistics/search/getTotalInvestAndInterestEntity";
+    private static final  String INVEST_INVEREST_AMOUNT_URL = "http://CS-MESSAGE/cs-message/search/getTotalInvestAndInterestEntity";
 
     /**
      * 平台上线时间
