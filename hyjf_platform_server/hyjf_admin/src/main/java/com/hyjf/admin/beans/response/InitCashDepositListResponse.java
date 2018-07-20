@@ -7,8 +7,7 @@ import java.util.List;
 
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
 import com.hyjf.admin.beans.vo.HjhInstConfigAPIVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+
 import io.swagger.annotations.ApiModelProperty;
 
 /**
