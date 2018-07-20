@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Api(value = "消息中心短信发送记录")
 @RestController
-@RequestMapping("/cs-message/message/smsLog")
+@RequestMapping("/cs-message/sms_log")
 public class SmsLogController extends BaseController {
 
 	@Autowired
@@ -34,7 +34,7 @@ public class SmsLogController extends BaseController {
 	private SmsLogDao smsLogDao;
 
 	@ApiOperation(value = "消息中心短信发送记录", notes = "查询消息中心短信发送记录")
-	@RequestMapping("/smsLogList")
+	@RequestMapping("/list")
 	public JSONObject smsLogList() {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsLog> list = smsLogDao.findAll();
@@ -43,7 +43,7 @@ public class SmsLogController extends BaseController {
 	}
 
 	@ApiOperation(value = "消息中心短信发送记录", notes = "根据条件查询消息中心短信发送记录")
-	@RequestMapping("/findSmsLog")
+	@RequestMapping("/find")
 	public JSONObject findSmsLog(@RequestBody SmsLogRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsLog> list = smsLogService.findSmsLog(request);
