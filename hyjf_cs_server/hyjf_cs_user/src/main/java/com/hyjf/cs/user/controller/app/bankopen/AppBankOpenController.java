@@ -71,7 +71,7 @@ public class AppBankOpenController extends BaseUserController {
         return result;
     }
 
-    @ApiOperation(value = "app端用户开户", notes = "app端用户开户")
+    @ApiOperation(value = "app端用户开户", notes = "用户开户")
     @PostMapping(value = "/openBankAccount")
     public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
@@ -105,10 +105,10 @@ public class AppBankOpenController extends BaseUserController {
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {
-            logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
+            logger.error("App端保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
-        logger.info("开户end");
+        logger.info("app端开户end");
         return result;
     }
 }

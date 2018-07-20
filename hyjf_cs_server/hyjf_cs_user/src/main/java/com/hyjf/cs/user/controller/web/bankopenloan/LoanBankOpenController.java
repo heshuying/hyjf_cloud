@@ -36,7 +36,7 @@ import java.util.Map;
  * @author sunss
  *
  */
-@Api(value = "web端借款人开户")
+@Api(value = "web端借款人开户",description = "web端借款人开户")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user/secure/loanbankopen")
@@ -49,6 +49,7 @@ public class LoanBankOpenController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
 
+    @ApiOperation(value = "web端借款人开户", notes = "获取开户信息")
 	@GetMapping(value = "/init")
     @ResponseBody
 	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
@@ -119,7 +120,7 @@ public class LoanBankOpenController extends BaseUserController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "web端页面开户异步处理", notes = "web端页面开户异步处理")
+    @ApiOperation(value = "web端借款人开户异步处理", notes = "web端页面开户异步处理")
     @RequestMapping("/bgReturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
@@ -133,7 +134,7 @@ public class LoanBankOpenController extends BaseUserController {
      * @Description 查询开户失败原因
      * @Author sunss
      */
-    @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
+    @ApiOperation(value = "web端借款人开户查询开户失败原因", notes = "查询开户失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
