@@ -58,7 +58,7 @@ public class AppRegistController extends BaseUserController {
      * @throws UnsupportedEncodingException
      */
     @ApiOperation(value = "用户注册", notes = "app端-用户注册")
-    @PostMapping(value = "/registAction", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/registAction")
     public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/registAction");

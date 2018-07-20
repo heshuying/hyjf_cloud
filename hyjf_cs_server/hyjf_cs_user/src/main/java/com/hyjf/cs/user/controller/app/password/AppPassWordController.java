@@ -125,7 +125,7 @@ public class AppPassWordController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/setTeaderPassword", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/setTeaderPassword")
     public ModelAndView setPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");

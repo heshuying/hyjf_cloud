@@ -58,7 +58,7 @@ public class AppSmsCodeController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "app验证验证码",notes = "验证验证码")
-    @PostMapping(value = "/validateVerificationCodeAction", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/validateVerificationCodeAction")
     public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/validateVerificationCodeAction");
