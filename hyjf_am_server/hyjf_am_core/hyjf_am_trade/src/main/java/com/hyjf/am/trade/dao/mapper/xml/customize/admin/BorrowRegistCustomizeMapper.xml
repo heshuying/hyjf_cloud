@@ -79,7 +79,7 @@
 			b.borrow_style,
 			bs.`name` AS borrow_style_name,
 			bpt.borrow_name AS project_type_name,
-			b.create_time,
+			DATE_FORMAT(b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 			b.regist_status,
 			bi.project_type
 		FROM

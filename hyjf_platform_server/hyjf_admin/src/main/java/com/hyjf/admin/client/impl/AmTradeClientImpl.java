@@ -20,7 +20,10 @@ import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -2002,54 +2005,22 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     /**
-     * 查询信托信息
-     *
-     * @param instCode
-     * @param entrustedAccountId
-     * @return
+     * 标的备案
+     * @param borrowNid
+     * @param currUserId
+     * @param currUserName
      */
     @Override
-    public STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist/select_stzf_white_list/" + instCode + "/" + entrustedAccountId;
-        STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
+    public AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName){
+        String url = "http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist/" + borrowNid + "/" + currUserId + "/" + currUserName;
+        Response response = restTemplate.getForEntity(url, Response.class).getBody();
+        if(response == null){
+            return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
         }
-        return null;
-    }
-
-    /**
-     * 备案-更新标的信息
-     *
-     * @param borrowRegistRequest
-     * @return
-     */
-    @Override
-    public int updateBorrowRegist(BorrowRegistRequest borrowRegistRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist";
-        BorrowRegistCustomizeResponse response =
-                restTemplate.postForEntity(url, borrowRegistRequest, BorrowRegistCustomizeResponse.class).getBody();
-        if(response != null){
-            return response.getTotal();
+        if(!Response.isSuccess(response)){
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
         }
-        return 0;
-    }
-
-    /**
-     * 更新标的信息(受托支付备案)
-     *
-     * @param borrowRegistRequest
-     * @return
-     */
-    @Override
-    public int updateEntrustedBorrowRegist(BorrowRegistRequest borrowRegistRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_regist/update_entrusted_borrow_regist";
-        BorrowRegistCustomizeResponse response =
-                restTemplate.postForEntity(url, borrowRegistRequest, BorrowRegistCustomizeResponse.class).getBody();
-        if(response != null){
-            return response.getTotal();
-        }
-        return 0;
+        return new AdminResult(BaseResult.SUCCESS, "备案成功！");
     }
 
     /**

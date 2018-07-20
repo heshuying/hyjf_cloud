@@ -4,6 +4,8 @@
 package com.hyjf.admin.controller.productcenter;
 
 import com.hyjf.admin.beans.request.BorrowFirstRequestBean;
+import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
+import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -62,7 +64,7 @@ public class BorrowFirstController extends BaseController {
     @PostMapping("/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult getBorrowFirstList(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
+    public AdminResult<BorrowFirstResponseBean> getBorrowFirstList(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
         BeanUtils.copyProperties(borrowFirstRequestBean, borrowFirstRequest);
         BorrowFirstResponseBean responseBean = borrowFirstService.getBorrowFirstList(borrowFirstRequest);
@@ -73,7 +75,7 @@ public class BorrowFirstController extends BaseController {
     @GetMapping("/get_bail_info/{borrowNid}")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
-    public AdminResult getBailInfo(@PathVariable String borrowNid) {
+    public AdminResult<BorrowBailInfoResponseBean> getBailInfo(@PathVariable String borrowNid) {
         return borrowFirstService.getBailInfo(borrowNid);
     }
 
@@ -91,7 +93,7 @@ public class BorrowFirstController extends BaseController {
     @GetMapping("/get_borrow_fire_info/{borrowNid}")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
-    public AdminResult getBorrowFireInfo(@PathVariable String borrowNid) {
+    public AdminResult<BorrowFireInfoResponseBean> getBorrowFireInfo(@PathVariable String borrowNid) {
         return borrowFirstService.getFireInfo(borrowNid);
     }
 

@@ -18,16 +18,19 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
+import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -398,6 +401,29 @@ public class AppPassWordController {
         result.setMessage("交易密码修改成功");
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
+    }
+
+
+    /**
+     * 跳转到找回密码第二步
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "跳转到找回密码第二步",notes = "跳转到找回密码第二步")
+    @ApiImplicitParam(name = "param",value = "{telnum:String,code:String}",dataType = "Map")
+    @RequestMapping(value = "/senCodePage", method = RequestMethod.POST)
+    public WebResult sencodPage(@RequestBody Map<String,String> param){
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        String telnum = param.get("telnum");
+        String code = param.get("code");
+        ret.put("telnum", telnum);
+        ret.put("code", code);
+        ret.put("pubexponent", "10001");
+        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        result.setData(ret);
+        return result;
     }
 
     /**
