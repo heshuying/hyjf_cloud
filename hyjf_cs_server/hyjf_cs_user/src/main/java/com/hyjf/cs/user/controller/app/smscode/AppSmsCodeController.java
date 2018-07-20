@@ -1,6 +1,8 @@
 package com.hyjf.cs.user.controller.app.smscode;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
@@ -8,9 +10,14 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +42,12 @@ public class AppSmsCodeController extends BaseUserController {
     @Autowired
     private SmsCodeService smsCodeService;
 
+    @Autowired
+    AmConfigClient amConfigClient;
+
+    @Autowired
+    AmUserClient amUserClient;
+
 
     /**
      * 验证验证码
@@ -45,7 +58,7 @@ public class AppSmsCodeController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "app验证验证码",notes = "验证验证码")
-    @PostMapping(value = "/validateVerificationCodeAction", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/validateVerificationCodeAction")
     public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/validateVerificationCodeAction");
@@ -103,6 +116,38 @@ public class AppSmsCodeController extends BaseUserController {
     }
 
     /**
+     *
+     * 校验app是否要提示更新
+     * @author hsy
+     * @param version
+     * @param desc
+     * @param requestUri
+     * @param info
+     * @return
+     */
+    public static boolean checkForAppUpdate(String version, String desc, String requestUri, JSONObject info){
+        if(StringUtils.isEmpty(version)){
+            info.put("status", "1");
+            info.put("statusDesc", desc);
+            info.put(CustomConstants.APP_REQUEST, requestUri);
+            return true;
+        }
+
+        if(version.length()>=5){
+            version = version.substring(0, 5);
+        }
+
+        if(version.compareTo("1.4.0")<=0){
+            info.put("status", "1");
+            info.put("statusDesc", desc);
+            info.put(CustomConstants.APP_REQUEST, requestUri);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * 发送验证码
      *
      * @param request
@@ -110,11 +155,10 @@ public class AppSmsCodeController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "发送验证码",notes = "发送验证码")
-    @PostMapping(value = "/sendVerificationCodeAction")
+    @ApiOperation(value = "发送短信",notes = "发送短信")
+    @RequestMapping(value = "/sendVerificationCodeAction")
     public JSONObject sendVerificationCodeAction(@RequestHeader(value = "token", required = false) String token,HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
-        //业务授权码
         ret.put("bankCode", "");
         ret.put("request", "/hyjf-app/appUser/sendVerificationCodeAction");
 
@@ -174,43 +218,61 @@ public class AppSmsCodeController extends BaseUserController {
                 return ret;
             }
             smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, token, GetCilentIP.getIpAddr(request));
-            smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
-        }catch (Exception e){
+
+            if(!verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
+                //判断用户是否登录
+                UserVO userVO = smsCodeService.getUsers(token);
+                // 发送短信
+                smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
+                    ret.put("status", "0");
+                    ret.put("statusDesc", "发送验证码成功");
+            }else{
+                //判断用户是否登录
+                Integer userId = SecretUtil.getUserId(sign);
+                // 判断是否开户  假如未开户  发送平台的验证码  假如已开户  发送江西银行的验证码
+                BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
+                if (bankAccount == null) {
+                    // 未开户  发送平台验证码
+                    // 发送短信
+                    smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
+                    ret.put("bankCode",  "");
+                        ret.put("status", "0");
+                        ret.put("statusDesc", "发送验证码成功");
+                    return ret;
+                }
+
+                // 请求发送短信验证码
+                BankCallBean bean = smsCodeService.callSendCode(userId,mobile, BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, BankCallConstant.CHANNEL_APP,null);
+                if(bean == null){
+                    ret.put("status", "1");
+                    ret.put("statusDesc","发送短信验证码异常");
+                    return ret;
+                }
+                //返回失败
+                if(!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())){
+                    if(!Validator.isNull(bean.getSrvAuthCode())){
+                        ret.put("status", "0");
+                        ret.put("statusDesc", "发送验证码成功");
+                        ret.put("bankCode", bean.getSrvAuthCode());
+                        return ret;
+                    }
+                    ret.put("status", "1");
+                    ret.put("statusDesc","发送短信验证码失败，失败原因：" + bean.getRetMsg());
+                    return ret;
+                }
+                //成功返回业务授权码
+                ret.put("status", "0");
+                ret.put("statusDesc", "发送验证码成功");
+                ret.put("bankCode", bean.getSrvAuthCode());
+            }
+
+        } catch (Exception e) {
             ret.put("status", "1");
-            ret.put("statusDesc", "发送验证码失败");
+            ret.put("statusDesc", e.getMessage());
         }
         return ret;
 
     }
-    /**
-     *
-     * 校验app是否要提示更新
-     * @author hsy
-     * @param version
-     * @param desc
-     * @param requestUri
-     * @param info
-     * @return
-     */
-    public static boolean checkForAppUpdate(String version, String desc, String requestUri, JSONObject info){
-        if(StringUtils.isEmpty(version)){
-            info.put("status", "1");
-            info.put("statusDesc", desc);
-            info.put(CustomConstants.APP_REQUEST, requestUri);
-            return true;
-        }
 
-        if(version.length()>=5){
-            version = version.substring(0, 5);
-        }
 
-        if(version.compareTo("1.4.0")<=0){
-            info.put("status", "1");
-            info.put("statusDesc", desc);
-            info.put(CustomConstants.APP_REQUEST, requestUri);
-            return true;
-        }
-
-        return false;
-    }
 }

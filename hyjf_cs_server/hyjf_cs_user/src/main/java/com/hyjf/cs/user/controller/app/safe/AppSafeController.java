@@ -32,8 +32,6 @@ import java.util.Map;
 @RequestMapping("/hyjf-app/appUser")
 public class AppSafeController extends BaseUserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AppSafeController.class);
-
     @Autowired
     private SafeService safeService;
 

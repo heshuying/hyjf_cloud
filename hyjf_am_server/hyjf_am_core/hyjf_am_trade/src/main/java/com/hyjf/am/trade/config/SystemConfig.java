@@ -53,6 +53,10 @@ public class SystemConfig {
     @Value("${hyjf.bank.bankcode}")
     private String bankBankcode;
 
+     /** 风车理财回调服务器url */
+     @Value("${wrb.callback.notify.url}")
+     private String WRB_CALLBACK_NOTIFY_URL;
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -149,5 +153,11 @@ public class SystemConfig {
 		this.repayResultUrl = repayResultUrl;
 	}
 
-    
+    public String getWRB_CALLBACK_NOTIFY_URL() {
+        return WRB_CALLBACK_NOTIFY_URL;
+    }
+
+    public void setWRB_CALLBACK_NOTIFY_URL(String WRB_CALLBACK_NOTIFY_URL) {
+        this.WRB_CALLBACK_NOTIFY_URL = WRB_CALLBACK_NOTIFY_URL;
+    }
 }

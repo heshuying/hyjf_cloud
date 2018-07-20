@@ -56,7 +56,7 @@ public class WebSmsCodeController extends BaseUserController {
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		WebResult resultBean = new WebResult();
-		sendSmsCode.appSendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
+		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
 		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, token, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}
