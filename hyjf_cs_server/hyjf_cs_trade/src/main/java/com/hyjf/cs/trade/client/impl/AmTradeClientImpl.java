@@ -31,6 +31,7 @@ import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -2892,6 +2893,58 @@ public class AmTradeClientImpl implements AmTradeClient {
         CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/user_coupon_count/" + userId + "/" + usedFlag, CouponUserResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCount();
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前有效的冻结记录
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public BankRepayFreezeLogVO getFreezeLogValid(Integer userId, String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid/"+userId + "/" + borrowNid;
+        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url,BankRepayFreezeLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据orderId删除
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Integer deleteFreezeLogByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/deleteby_orderid/" + orderId;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
+    /**
+     * 添加
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer addFreezeLog(BankRepayFreezeLogRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/add";
+        return restTemplate.postForEntity(url, requestBean, Integer.class).getBody();
+    }
+
+    /**
+     * 根据code获取borrowConfig
+     * @auther: hesy
+     * @date: 2018/7/20
+     */
+    @Override
+    public BorrowConfigVO getConfigByCode(String code) {
+        String url = "http://AM-TRADE/am-trade/borrowconfig/get_by_code/" + code;
+        BorrowConfigResponse response = restTemplate.getForEntity(url,BorrowConfigResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
+            return response.getResult();
         }
         return null;
     }

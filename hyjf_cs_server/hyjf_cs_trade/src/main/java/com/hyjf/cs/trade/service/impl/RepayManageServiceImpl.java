@@ -24,7 +24,6 @@ import com.hyjf.common.util.MD5;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.bean.repay.*;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
@@ -63,8 +62,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Autowired
     AmBorrowRepayClient borrowRepayClient;
     @Autowired
-    BorrowConfigClient borrowConfigClient;
-    @Autowired
     CreditClient creditClient;
     @Autowired
     AmBorrowRepayPlanClient borrowRepayPlanClient;
@@ -74,8 +71,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     HjhDebtCreditRepayClient hjhDebtCreditRepayClient;
     @Autowired
     HjhDebtCreditClient hjhDebtCreditClient;
-    @Autowired
-    BankRepayFreezeLogClient bankRepayFreezeLogClient;
 
     /**
      * 请求参数校验
@@ -623,7 +618,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             }
         } else {// 用户正常或者提前还款
             // 获取提前还款的阀值
-            BorrowConfigVO borrowConfigVO = borrowConfigClient.getConfigByCode("REPAY_ADVANCE_TIME");
+            BorrowConfigVO borrowConfigVO = amTradeClient.getConfigByCode("REPAY_ADVANCE_TIME");
             String repayAdvanceDay = borrowConfigVO.getConfigValue();
             int advanceDays = distanceDays;
             // 用户提前还款
@@ -1984,7 +1979,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             }
         } else {// 用户正常或者提前还款
             // 获取提前还款的阀值
-            String repayAdvanceDay = borrowConfigClient.getConfigByCode("REPAY_ADVANCE_TIME").getConfigValue();
+            String repayAdvanceDay = amTradeClient.getConfigByCode("REPAY_ADVANCE_TIME").getConfigValue();
             int advanceDays = distanceDays;
             //如果是融通宝项目,不判断提前还款的阙值 add by cwyang 2017-6-14
             int projectType = borrow.getProjectType();
@@ -3359,7 +3354,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public boolean checkRepayInfo(Integer userId, String borrowNid) {
-        BankRepayFreezeLogVO log = bankRepayFreezeLogClient.getFreezeLogValid(userId, borrowNid);
+        BankRepayFreezeLogVO log = amTradeClient.getFreezeLogValid(userId, borrowNid);
         if(log == null){
             return true;
         }
@@ -3381,7 +3376,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setOrderId(orderId);
         requestBean.setUserId(userId);
         requestBean.setUserName(userName);
-        return bankRepayFreezeLogClient.addFreezeLog(requestBean);
+        return amTradeClient.addFreezeLog(requestBean);
     }
 
     /**
@@ -3394,7 +3389,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if(StringUtils.isBlank(orderId)){
             return 0;
         }
-        return bankRepayFreezeLogClient.deleteFreezeLogByOrderId(orderId);
+        return amTradeClient.deleteFreezeLogByOrderId(orderId);
     }
 
     /**
