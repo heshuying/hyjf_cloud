@@ -2,6 +2,7 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -17,10 +18,18 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
      */
     private static final long serialVersionUID = 3803722754627032581L;
 
+    @ApiModelProperty(value = "广告名称")
+    private String name;
+    @ApiModelProperty(value = "广告类型")
+    private Integer typeid;
+    @ApiModelProperty(value = "创建时间")
+    private Integer createTime;
+    @ApiModelProperty(value = "广告状态")
+    private Integer status;
+    @ApiModelProperty(value = "调用代码")
+    private String code;
 
-    /**
-     * 前台时间接收
-     */
+
     private String startCreate;
 
     private String endCreate;
@@ -34,13 +43,10 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
 
     private Short id;
 
-    private String name; //广告名称
-
-    private Integer typeid; // 广告类型
 
     private String url;
 
-    private String code;
+
 
     private String image;
 
@@ -48,15 +54,12 @@ public class AppBannerRequestBean  extends BaseRequest implements Serializable {
 
     private Integer hits;
 
-    private Integer status;//广告状态
-
     private String shareUrl;
 
     private String shareImage;
 
     private Short isIndex;
 
-    private Integer createTime;
 
     private Integer updateTime;
 

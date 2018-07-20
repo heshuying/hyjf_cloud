@@ -30,7 +30,6 @@ public class AppVersionController {
 
     /**
      * 查询列表
-     *
      * @return
      */
     @PostMapping("/getRecordList")

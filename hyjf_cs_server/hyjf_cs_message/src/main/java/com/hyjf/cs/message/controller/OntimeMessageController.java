@@ -19,7 +19,7 @@ import com.hyjf.cs.message.service.message.MessageService;
  * @version OntimeMessageController, v0.1 2018/6/22 10:32
  */
 @RestController
-@RequestMapping("/cs-message/message")
+@RequestMapping("/cs-message/sms_ontime")
 public class OntimeMessageController extends BaseController {
 
 	/** 任务状态:未执行 */
@@ -31,7 +31,7 @@ public class OntimeMessageController extends BaseController {
 	/**
 	 * 定时发短信
 	 */
-	@RequestMapping("/ontimeMessage")
+	@RequestMapping("/send")
 	public void ontimeMessage() {
 		List<SmsOntime> listApicron = messageService.getOntimeList(STATUS_WAIT);
 		if (!CollectionUtils.isEmpty(listApicron)) {
