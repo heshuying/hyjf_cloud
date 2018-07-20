@@ -20,6 +20,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -60,6 +61,7 @@ public class SubmissionsController extends BaseController {
      * 查询列表
      * @return
      */
+    @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
     public SubmissionsResponse findAppBannerData(SubmissionsRequest form) {
         SubmissionsResponse response = new SubmissionsResponse();
@@ -90,6 +92,7 @@ public class SubmissionsController extends BaseController {
      * @return
      * @throws ParseException
      */
+    @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
     public SubmissionsResponse updateSubmissions(SubmissionsRequest form) {
         SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
@@ -104,6 +107,7 @@ public class SubmissionsController extends BaseController {
      * @param response
      * @throws Exception
      */
+    @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
     @RequestMapping("/exportListAction")
     public void exportListAction(SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {

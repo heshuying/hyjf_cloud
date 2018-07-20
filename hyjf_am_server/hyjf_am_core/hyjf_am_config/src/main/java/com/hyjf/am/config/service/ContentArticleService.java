@@ -4,7 +4,8 @@ import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.response.admin.ContentArticleResponse;
-import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.resquest.config.ContentArticleRequest;
+
 
 
 import java.util.List;
@@ -61,7 +62,6 @@ public interface ContentArticleService {
      * @date 2018/7/16 11:39
      */
     List<ContentArticle> getNoticeList(ContentArticleRequest request);
-
 
     /**
      * 取首页公告(风险教育..)数量

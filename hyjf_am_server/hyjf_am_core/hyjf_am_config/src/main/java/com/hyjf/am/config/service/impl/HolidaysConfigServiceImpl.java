@@ -109,6 +109,11 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 		return true;
 	}
 
+	@Override
+	public List<HolidaysConfig> selectHolidaysConfig(String orderByClause) {
+		return null;
+	}
+
 	/**
 	 * 初始化本年度配置
 	 *
