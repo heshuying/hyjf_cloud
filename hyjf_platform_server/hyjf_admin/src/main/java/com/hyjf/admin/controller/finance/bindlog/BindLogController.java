@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.bindlog;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BindLogService;
@@ -24,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -46,14 +49,14 @@ public class BindLogController extends BaseController {
      */
     @ApiOperation(value = "查询绑定日志列表",notes = "查询绑定日志列表")
     @PostMapping(value = "/getbindloglist")
-    public JSONObject getBindLogList(@RequestBody BindLogListRequest request){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult getBindLogList(@RequestBody BindLogListRequest request){
+        Map<String,Object> map = new HashMap<>();
         Integer count = bindLogService.getBindLogCount(request);
         count = (count == null)?0:count;
-        jsonObject.put("count",count);
+        map.put("count",count);
         List<BindLogVO> bindLogVOList = bindLogService.searchBindLogList(request);
-        jsonObject.put("bindLogVOList",bindLogVOList);
-        return jsonObject;
+        map.put("bindLogVOList",bindLogVOList);
+        return new AdminResult(map);
     }
 
     /**

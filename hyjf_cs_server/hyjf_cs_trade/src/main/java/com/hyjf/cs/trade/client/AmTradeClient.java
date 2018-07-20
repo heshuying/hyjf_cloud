@@ -359,7 +359,7 @@ public interface AmTradeClient {
      * 插入提现记录
      * @param record
      */
-    void insertAccountWithdrawLog(AccountWithdrawVO record);
+    int insertAccountWithdrawLog(AccountWithdrawVO record);
 
     /**
      * 根据订单号查询用户提现记录信息
@@ -1314,5 +1314,12 @@ public interface AmTradeClient {
      * @return
      */
     int getAccountlistCntByOrdId(String orderId, String cashSuccess);
+
+    /**
+     * 查询用户有效的优惠券数目
+     * @author zhangyk
+     * @date 2018/7/4 15:31
+     */
+    Integer getUserCouponCount(Integer userId, String usedFlag);
 
 }

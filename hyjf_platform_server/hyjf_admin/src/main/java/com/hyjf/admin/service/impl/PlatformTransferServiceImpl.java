@@ -133,9 +133,11 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
             if (bankOpenAccountVO != null && !Validator.isNull(bankOpenAccountVO.getAccount())) {
                 result.put("status","0");
             } else {
+                result.put("status","99");
                 result.put("info", "用户未开户，无法转账!");
             }
         } else {
+            result.put("status","99");
             result.put("info", "未查询到正确的用户信息!");
         }
         return result;
@@ -240,8 +242,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
 
             // 返现成功
             if (cnt > 0) {
-                result.put("status", "success");
-                result.put("success", "success");
+                result.put("status", "0");
                 result.put("result", "平台转账操作成功!");
             } else {
                 result.put("status", "error");

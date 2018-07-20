@@ -926,8 +926,15 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param record
      */
     @Override
-    public void insertAccountWithdrawLog(AccountWithdrawVO record) {
-        restTemplate.put(urlBase +"accountWithdraw/insertAccountWithdrawLog",record);
+    public int insertAccountWithdrawLog(AccountWithdrawVO record) {
+        restTemplate.put(urlBase +"",record);
+        Integer response = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return 0;
+
     }
     /**
      * 根据订单号查询用户提现记录信息
@@ -2009,7 +2016,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public PlanDetailCustomizeVO getPlanDetailByPlanNid(String planId) {
-        HjhPlanDetailResponse response = restTemplate.getForEntity("",HjhPlanDetailResponse.class).getBody();
+        HjhPlanDetailResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/projectlist/web/searchPlanDetail/" + planId,HjhPlanDetailResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
@@ -2024,7 +2031,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhPlanCustomizeVO> getAppHomePlanList(HjhPlanRequest request) {
-        com.hyjf.am.response.trade.HjhPlanResponse response = restTemplate.postForEntity("http://AM-TRADE//am-trade/hjhPlan/selectAppHjhPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
+        com.hyjf.am.response.trade.HjhPlanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhPlan/selectAppHjhPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }
@@ -2876,6 +2883,15 @@ public class AmTradeClientImpl implements AmTradeClient {
         CreditTenderResponse response = restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getUserCouponCount(Integer userId, String usedFlag) {
+        CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/user_coupon_count/" + userId + "/" + usedFlag, CouponUserResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
         }
         return null;
     }

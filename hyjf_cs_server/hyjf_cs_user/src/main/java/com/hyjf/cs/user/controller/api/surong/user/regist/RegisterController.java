@@ -134,7 +134,7 @@ public class RegisterController extends BaseUserController {
             register.setMobile(mobile);
             register.setPassword(password);
             // 注册
-            UserVO user = registService.insertUserAction(register,CustomUtil.getIpAddr(request), request.getParameter("platform"));
+            UserVO user = registService.surongRegister(register,CustomUtil.getIpAddr(request), request.getParameter("platform"));
 
             if (user != null) {
                 String statusDesc = "注册成功";

@@ -1,20 +1,33 @@
 package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
+import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
+import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.config.ContentArticleCustomizeResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
+import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +46,9 @@ public class ContentArticleController {
 
     @Autowired
     private ContentArticleService contentArticleService;
+    @Value("${hyjf.web.host}")
+    public String webHost;
+
 
     /**
      * 查询公司动态列表
@@ -71,7 +87,7 @@ public class ContentArticleController {
 
     /**
      * 获取公司简介
-     *
+     *@author lisheng
      * @return
      */
     @GetMapping("/getaboutus")
@@ -88,7 +104,7 @@ public class ContentArticleController {
 
     /**
      * 联系我们
-     *
+     *@author lisheng
      * @return
      */
     @GetMapping("/getContentArticle")
@@ -152,5 +168,66 @@ public class ContentArticleController {
         }
         return null;
     }
+
+    /**
+     * 网贷知识,风险教育
+     * @author lisheng
+     * @return
+     */
+    @PostMapping("/getKnowsList")
+    public ContentArticleResponse getKnowReportList(ContentArticleRequest request) {
+        ContentArticleResponse response = new ContentArticleResponse();
+
+        request.setNoticeType("3");
+        int totalPage = contentArticleService.countHomeNoticeList(request.getNoticeType());
+        if (totalPage>0) {
+            List<ContentArticle> recordList = contentArticleService.searchHomeNoticeList(request.getNoticeType(), request.getLimitStart(), request.getLimitEnd());
+            if (recordList != null && recordList.size() != 0) {
+                for (int i = 0; i < recordList.size(); i++) {
+                    recordList.get(i).setContent((recordList.get(i).getContent().replaceAll("src=\"//", "src=\"" + webHost + "//")));
+                }
+            }
+            List<ContentArticleVO> contentArticleVOS = CommonUtils.convertBeanList(recordList, ContentArticleVO.class);
+            response.setResultList(contentArticleVOS);
+        }
+        return response;
+    }
+
+    /**
+     * 帮助中心索引页面
+     *@author lisheng
+     * @param request
+     * @return
+     */
+    @PostMapping("/index")
+    private ContentArticleResponse help_index(ContentArticleRequest request) {
+        ContentArticleResponse response = new ContentArticleResponse();
+        // 查出帮助中心分类
+        List<HelpCategoryCustomize> list = contentArticleService.selectCategory("help");
+        List<Map<String, Object>> AllList = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < list.size(); i++) {
+            Map<String, Object> tmpmap = new HashMap<String, Object>();
+            tmpmap.put("HelpCategoryCustomize", list.get(i));
+            // 查出帮助中心子分类
+            List<HelpCategoryCustomize> listsun = contentArticleService.selectSunCategory(list.get(i).getId() + "");
+            if (listsun != null) {
+                for (int j = 0; j < listsun.size(); j++) {
+                    List<HelpContentCustomize> listsunContent = contentArticleService.selectSunContentCategory(
+                            String.valueOf(listsun.get(j).getId()), String.valueOf(list.get(i).getPid()));
+                    listsun.get(j).setListsunContent(listsunContent);
+                    // tmpmap.put("listsunContent", listsunContent);
+                }
+                tmpmap.put("listsun", listsun);
+            }
+            AllList.add(tmpmap);
+        }
+
+        return response;
+    }
+
+
+
+
+
 
 }

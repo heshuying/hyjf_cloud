@@ -3,9 +3,18 @@
  */
 package com.hyjf.cs.market.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
+import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.cs.common.bean.result.WebResult;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -66,21 +75,43 @@ public interface AboutUsService extends BaseMarketService {
 
 	/**
 	 * 获取招贤纳士列表
-	 * 
+	 *
 	 * @return
 	 */
 	List<JobsVo> getJobsList();
 
 	/**
 	 * 获取联系我们
-	 * 
+	 *
 	 * @return
 	 */
 	ContentArticleVO getContactUs();
 
+    /**
+     * 获取网贷知识
+     * @return
+     */
+    List<ContentArticleVO> getHomeNoticeList(ContentArticleRequest request);
+
+
+    /**
+     * 帮助中心索引页面
+     * @param request
+     * @return
+     */
+    public List<ContentArticleVO> getIndex(ContentArticleRequest request);
+
+
+    /**
+     * 查詢运营统计数据
+     */
+    TotalInvestAndInterestVO searchData();
+
+
+    JSONObject getBanksList();
 	/**
 	 * 获取网贷知识
-	 * 
+	 *
 	 * @return
 	 */
 	List<ContentArticleVO> getHomeNoticeList();

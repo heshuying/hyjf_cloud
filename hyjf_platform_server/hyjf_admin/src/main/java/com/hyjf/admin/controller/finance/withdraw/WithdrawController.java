@@ -37,12 +37,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @package com.hyjf.admin.finance.Withdraw
- * @author GOGTZ-T
- * @date 2015/11/29 17:00
- * @version V1.0  
+ * @author jijun
+ * @date 20180719
  */
-@Api(value = "提现管理")
+@Api(value = "提现管理",description = "提现管理")
 @RestController
 @RequestMapping("/finance/withdraw")
 public class WithdrawController extends BaseController {

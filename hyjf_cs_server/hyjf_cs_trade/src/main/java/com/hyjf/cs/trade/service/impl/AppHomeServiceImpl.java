@@ -1,9 +1,11 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -12,6 +14,7 @@ import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.AppHomePageCustomize;
 import com.hyjf.cs.trade.bean.AppModuleBean;
 import com.hyjf.cs.trade.client.*;
@@ -20,7 +23,6 @@ import com.hyjf.cs.trade.service.AppHomeService;
 import com.hyjf.cs.trade.util.AppHomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.ant.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -29,9 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * APP首页service
@@ -52,22 +52,13 @@ public class AppHomeServiceImpl implements AppHomeService {
     private AmAdsClient amAdsClient;
 
     @Autowired
-    private AmBorrowClient amBorrowClient;
-
-    @Autowired
-    private AccountClient accountClient;
-
-    @Autowired
-    private CouponUserClient couponUserClient;
-
-    @Autowired
-    private WebProjectListClient webProjectListClient;
-
-    @Autowired
-    private AmHjhPlanClient amHjhPlanClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private SystemConfig systemConfig;
+
+    @Autowired
+    private BaseClient baseClient;
 
     /**
      * 获取app首页各项数据
@@ -90,7 +81,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         }
         String HOST = "";
         //新旧版本HOST获取
-        if ("3.0.5".compareTo(version) <= 0) {
+        if (version != null && "3.0.5".compareTo(version) <= 0) {
             HOST = systemConfig.webHost;
         } else {
             HOST = systemConfig.httpWebHost;
@@ -147,7 +138,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("userType", "2");
 
                 //获取用户累计投资条数
-                Integer count = amBorrowClient.getTotalInverestCount(userId);
+                Integer count = amTradeClient.getTotalInverestCount(userId);
                 if (count <= 0 || count == null) {
                     //获取新手标
                     getNewProjectFlag = Boolean.TRUE;
@@ -156,14 +147,14 @@ public class AppHomeServiceImpl implements AppHomeService {
                 //获取首页项目列表
                 this.createHjhExtensionProjectListPage(info, list, HOST);
                 //获取用户资产总额
-                AccountVO accountVO = accountClient.getAccountByUserId(Integer.valueOf(userId));
+                AccountVO accountVO = amTradeClient.getAccountByUserId(Integer.valueOf(userId));
                 info.put("totalAssets", accountVO != null ? DF_FOR_VIEW.format(accountVO.getBankTotal()) : "0.00");
                 //获取可用余额
                 info.put("availableBalance", accountVO != null ? DF_FOR_VIEW.format(accountVO.getBankBalance()) : "0.00");
                 //获取累计收益
                 info.put("accumulatedEarnings", accountVO != null ? DF_FOR_VIEW.format(accountVO.getBankInterestSum()) : "0.00");
                 //获取(未使用的)优惠券数量
-                int couponCount = couponUserClient.getUserCouponCount(Integer.valueOf(userId), "0");
+                int couponCount = amTradeClient.getUserCouponCount(Integer.valueOf(userId), "0");
                 info.put("coupons", couponCount);
                 info.put("adPicUrl", "");
                 info.put("adClickPicUrl", "");
@@ -174,8 +165,9 @@ public class AppHomeServiceImpl implements AppHomeService {
             this.createProjectNewPage(info, list, HOST);
         }
         //获取累计投资金额
-        //info.put("totalInvestmentAmount", DF_FOR_VIEW.format(homePageService.selectTotalInvest())); // TODO: 2018/7/5 调用mongo
-        info.put("totalInvestmentAmount","0.00");
+        TotalInvestAndInterestResponse res = baseClient.getExe(AppHomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
+        info.put("totalInvestmentAmount", DF_FOR_VIEW.format(totalInvestAndInterestVO.getTotalInvestAmount()));
         info.put("moduleTotal", "4");
         List<AppModuleBean> moduleList = new ArrayList<>();
 
@@ -243,7 +235,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         HjhPlanRequest request = new HjhPlanRequest();
         request.setLimitStart(0);
         request.setLimitEnd(3);
-        List<HjhPlanCustomizeVO> planList = amHjhPlanClient.getAppHomePlanList(request);
+        List<HjhPlanCustomizeVO> planList = amTradeClient.getAppHomePlanList(request);
         boolean hasInvestment = false;
         //判断是否有可投资计划
         for (HjhPlanCustomizeVO hjhPlanCustomize:planList){
@@ -256,7 +248,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         //无可投计划
         if(!hasInvestment){
             request.setLockFlag("1");
-            planList =  amHjhPlanClient.getAppHomePlanList(request);
+            planList =  amTradeClient.getAppHomePlanList(request);
         }
         List<AppProjectListCustomizeVO> projectListCustomizes = convertToAppProjectList(planList,HOST);
         return projectListCustomizes;
@@ -326,7 +318,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowTheSecond(listCustomize.getBorrowPeriod());
             homePageCustomize.setBorrowTheSecondDesc("锁定期限");
 
-            PlanDetailCustomizeVO planDetailCustomizeVO = amHjhPlanClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
+            PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
             String statusNameDesc = planDetailCustomizeVO != null ? planDetailCustomizeVO.getAvailableInvestAccount() : "0.00";
             if(StringUtils.isNotBlank(statusNameDesc)){
                 BigDecimal openAmount = new BigDecimal(statusNameDesc);
@@ -391,7 +383,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setStatusName("立即投资");
             }
 
-            PlanDetailCustomizeVO planDetailCustomizeVO = amHjhPlanClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
+            PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
             String statusNameDesc = planDetailCustomizeVO != null ? planDetailCustomizeVO.getAvailableInvestAccount() : "0.00";
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
             homePageCustomize.setBorrowUrl(HOST + AppHomePageDefine.BORROW + listCustomize.getBorrowNid());
@@ -422,13 +414,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         boolean isNeedUpdate = false;
         if(StringUtils.isEmpty(version)){
             isNeedUpdate = true;
-        }
-
-        if(version.length()>=5){
+        }else if(version.length()>=5){
             version = version.substring(0, 5);
         }
 
-        if(version.compareTo("3.0.6")<0){
+        if( version != null && version.compareTo("3.0.6")<0){
             isNeedUpdate = true;
         }
 
@@ -638,7 +628,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setType("4");
         request.setHost(host);
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewInvest = webProjectListClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectList(request);
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
@@ -651,7 +641,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         String statusNewOnTime = "14";
         request.setStatus(statusNewOnTime);
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewOnTime = webProjectListClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> listNewOnTime = amTradeClient.searchAppProjectList(request);
         if (listNewOnTime != null && listNewOnTime.size() > 0) {
             for (int i = 0; i < listNewOnTime.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
@@ -663,7 +653,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         //复审
         String status = "16";
         request.setStatus(status);
-        List<AppProjectListCustomizeVO> reviewList = webProjectListClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> reviewList = amTradeClient.searchAppProjectList(request);
         if (reviewList != null && reviewList.size() > 0) {
             for (int i = 0; i < reviewList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = reviewList.get(i);
@@ -674,7 +664,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         //还款
         status = "17";
         request.setStatus(status);
-        List<AppProjectListCustomizeVO> repaymentList = webProjectListClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> repaymentList = amTradeClient.searchAppProjectList(request);
         if (repaymentList != null && repaymentList.size() > 0) {
             for (int i = 0; i < repaymentList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = repaymentList.get(i);

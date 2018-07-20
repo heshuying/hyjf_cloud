@@ -4,6 +4,8 @@
 package com.hyjf.admin.controller.exception.userauthexception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserAuthExceptionService;
 import com.hyjf.am.response.AdminResponse;
@@ -41,21 +43,16 @@ public class UserAuthExceptionController extends BaseController {
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
-    public JSONObject userAuthException(@RequestBody AdminUserAuthListRequest request){
+    public AdminResult userAuthException(@RequestBody AdminUserAuthListRequest request){
         JSONObject jsonObject = new JSONObject();
         AdminUserAuthListResponse response = userAuthExceptionService.selectUserAuthList(request);
         if(AdminResponse.isSuccess(response)){
             Integer recordTotal = response.getRecordTotal();
             List<AdminUserAuthListVO> resultList = response.getResultList();
-            jsonObject.put(STATUS, SUCCESS);
-            jsonObject.put(MSG, "成功");
-            jsonObject.put(TRCORD, recordTotal);
-            jsonObject.put(LIST, resultList);
+            return new AdminResult<ListResult<AdminUserAuthListVO>>(ListResult.build(resultList,recordTotal));
         }else{
-            jsonObject.put(MSG, "查询失败");
-            jsonObject.put(STATUS, FAIL);
+            return new AdminResult(FAIL,FAIL_DESC);
         }
-        return jsonObject;
     }
     /**
      * 同步用户授权状态
@@ -66,14 +63,14 @@ public class UserAuthExceptionController extends BaseController {
      */
     @ApiOperation(value = "同步用户授权状态", notes = "同步用户授权状态")
     @PostMapping(value = "/syn_user_auth")
-    public JSONObject synUserAuth(@RequestParam Integer userId , @RequestParam Integer type){
+    public AdminResult synUserAuth(@RequestParam Integer userId , @RequestParam Integer type){
         logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
         AdminUserAuthListResponse response = userAuthExceptionService.synUserAuth(userId, type);
 
         if(AdminResponse.isSuccess(response)){
-            return success();
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
         }else{
-            return fail("查询失败");
+            return new AdminResult(FAIL,FAIL_DESC);
         }
     }
 

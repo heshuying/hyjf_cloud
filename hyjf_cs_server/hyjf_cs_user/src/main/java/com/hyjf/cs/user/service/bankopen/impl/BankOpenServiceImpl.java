@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -190,10 +191,10 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
         openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
+
         // 同步地址  是否跳转到前端页面
-        //String retUrl = systemConfig.getFrontHost() + openBean.getClientHeader() + "/open/faild?phone=" + openBean.getMobile()+"&logOrdId="+openAccoutBean.getLogOrderId();
-        String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/user/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) +"/user/openSuccess";
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
