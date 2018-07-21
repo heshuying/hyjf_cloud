@@ -49,6 +49,7 @@ public class AssureBankOpenController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
 
+    @ApiOperation(value = "web端担保账户开户", notes = "担保账户开户")
 	@GetMapping(value = "/init")
     @ResponseBody
 	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
@@ -133,7 +134,7 @@ public class AssureBankOpenController extends BaseUserController {
      * @Description 查询开户失败原因
      * @Author sunss
      */
-    @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
+    @ApiOperation(value = "web端担保账户开户查询开户失败原因", notes = "查询开户失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
