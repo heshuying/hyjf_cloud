@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import com.hyjf.am.response.Response;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.admin.beans.request.PlanListViewRequest;
+import com.hyjf.admin.beans.vo.AdminHjhPlanVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -33,6 +35,8 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.CommonUtils;
+
 import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,9 +68,11 @@ public class PlanListController extends BaseController{
     @PostMapping(value = "/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)  
-    public AdminResult<ListResult<HjhPlanVO>> search(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
+    public AdminResult<ListResult<AdminHjhPlanVO>> search(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
     	// 初始化原子层请求实体
     	PlanListRequest form = new PlanListRequest();
+		// 初始化返回LIST
+		List<AdminHjhPlanVO> volist = null;
     	// 将画面请求request赋值给原子层 request
     	BeanUtils.copyProperties(viewRequest, form);
     	// 画面检索条件无需初始化 还款方式 endday 和  end
@@ -78,7 +84,13 @@ public class PlanListController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-    	return new AdminResult<ListResult<HjhPlanVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminHjhPlanVO.class);
+			return new AdminResult<ListResult<AdminHjhPlanVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminHjhPlanVO>>(ListResult.build(volist, 0));
+		}
     }
     
 	/**
@@ -98,9 +110,15 @@ public class PlanListController extends BaseController{
     	// 将画面请求request赋值给原子层 request
     	BeanUtils.copyProperties(viewRequest, form);
 		HjhPlanSumVO sumVO = this.planListService.getCalcSumByParam(form);
-		jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
-		jsonObject.put("sumOpenAccount", sumVO.getSumOpenAccount());
-		jsonObject.put("sumJoinTotal", sumVO.getSumJoinTotal());
+		if(sumVO != null){
+			jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
+			jsonObject.put("sumOpenAccount", sumVO.getSumOpenAccount());
+			jsonObject.put("sumJoinTotal", sumVO.getSumJoinTotal());
+			jsonObject.put("status", SUCCESS);
+		} else {
+			jsonObject.put("msg", "查询为空");
+			jsonObject.put("status", FAIL);
+		}
 		return jsonObject;
 	}
 	
@@ -111,7 +129,7 @@ public class PlanListController extends BaseController{
 	 * @param request
 	 * @return 
 	 */
-	@ApiOperation(value = "计划列表", notes = "计划列表初始化添加计划画面")
+	@ApiOperation(value = "计划列表", notes = "计划列表初始添加计划画面")
 	@PostMapping(value = "/addplan")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD) 
@@ -136,15 +154,17 @@ public class PlanListController extends BaseController{
 				// 说明通过计划编号在DB查到一条记录，那个可以将这条记录返回
 				// 根据前台传入的计划编号查询出一个计划，然后把计划的内容拼装在form bean 中返回给前台展示
 				this.getPlanInfo(form);
-				jsonObject.put("content", form);
+				jsonObject.put("content", viewRequest);
+				jsonObject.put("status", SUCCESS);
 			} else {
 				// 如果没有查到记录，说明需要修改的这个 计划编号 在DB没有查到记录
-				jsonObject.put("error1", "计划编号"+ planNid +"不存在");
+				jsonObject.put("error", "计划编号"+ planNid +"不存在");
+				jsonObject.put("status", FAIL);
 			}
 		}
 		if (StringUtils.isNotBlank(planNid) && planNid.length() < 3
 				&& !"HJH".equals(planNid.substring(0, 3))) {
-			jsonObject.put("error2", "计划编号必须以HJH开头");
+			jsonObject.put("error", "计划编号必须以HJH开头");
 		}
 		return jsonObject;
 	}
