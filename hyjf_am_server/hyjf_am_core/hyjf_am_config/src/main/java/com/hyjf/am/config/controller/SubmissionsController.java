@@ -1,10 +1,16 @@
 package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,18 +33,6 @@ public class SubmissionsController {
 
 
     /**
-     * 查询字典表数据
-     *
-     * @return
-     */
-    @PostMapping("/getParamList")
-    public SubmissionsResponse findParamList() {
-        SubmissionsResponse response = new SubmissionsResponse();
-        List<ParamName> client = submissionsService.getParamNameList("CLIENT");
-        return response;
-    }
-
-    /**
      * 查询列表数据
      *
      * @return
@@ -46,27 +40,53 @@ public class SubmissionsController {
     @PostMapping("/getRecordList")
     public SubmissionsResponse findSubmissionsList(@RequestBody SubmissionsRequest form) {
         SubmissionsResponse response = new SubmissionsResponse();
-        List<ParamName> client = submissionsService.getParamNameList("CLIENT");
+        int count = submissionsService.queryTotal(form);
+        if(count>0){
+            Paginator paginator = new Paginator(form.getPaginatorPage(), count);
+            List<SubmissionsCustomizeVO> recordList = submissionsService.queryRecordList(form,paginator.getOffset(), paginator.getLimit());
+            List<SubmissionsCustomizeVO> list = CommonUtils.convertBeanList(recordList, SubmissionsCustomizeVO.class);
+            response.setResultList(list);
+            response.setRecordTotal(count);
+        }
         return response;
     }
 
     /**
-     * 根据查询条件 取得数据
-     * @param msb
-     * @param limitStart
-     * @param limitEnd
+     * 查询导出数据
+     *
      * @return
-     * @author Administrator
      */
-    @PostMapping("/getExcleList")
-    public List<SubmissionsCustomizeVO> queryRecordList(Map<String, Object> msb, int limitStart, int limitEnd) {
-        if (limitStart == 0 || limitStart > 0) {
-            msb.put("limitStart", limitStart);
+    @PostMapping("/getExportRecordList")
+    public SubmissionsResponse exportSubmissionsList(@RequestBody SubmissionsRequest form) {
+        SubmissionsResponse response = new SubmissionsResponse();
+        List<SubmissionsCustomizeVO> recordList = submissionsService.queryRecordList(form,-1, -1);
+        List<SubmissionsCustomizeVO> list = CommonUtils.convertBeanList(recordList, SubmissionsCustomizeVO.class);
+        response.setResultList(list);
+        return response;
+    }
+    /**
+     * 修改状态
+     * @return
+     */
+    @PostMapping("/updateSubmissionsStatus")
+    public SubmissionsResponse updateSubmissionsStatus(@RequestBody SubmissionsRequest form) {
+        SubmissionsResponse response = new SubmissionsResponse();
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        String status = form.getStatus();
+        String submissionsId = form.getSubmissionsId();
+        if(StringUtils.isEmpty(submissionsId)||StringUtils.isEmpty(status)){
+            return response;
         }
-        if (limitEnd > 0) {
-            msb.put("limitEnd", limitEnd);
+        SubmissionsWithBLOBs submissions = new SubmissionsWithBLOBs();
+        submissions.setId(Integer.valueOf(submissionsId));
+        submissions.setState(Integer.valueOf(status));
+        if(submissionsService.updateSubmissions(submissions)){
+            response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
+
         }
-        return submissionsService.queryRecordList(msb);
+        return response;
     }
 
 }

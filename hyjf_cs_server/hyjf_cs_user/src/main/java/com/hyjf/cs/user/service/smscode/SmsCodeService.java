@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.smscode;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.SmsRequest;
@@ -30,6 +31,10 @@ public interface SmsCodeService extends BaseUserService {
      */
     void appCheckParam(SmsRequest request, String verificationType, String verificationCode, String mobile,String key);
 
+
+    void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip);
+
+    JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip);
 
     void checkParam(String verificationType, String code, String mobile);
 }

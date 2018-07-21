@@ -230,6 +230,7 @@ public interface AmUserClient {
 
     void clearMobileCode(Integer userId, String sign);
 
+	UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform);
 
 	UserVO surongRegister(RegisterUserRequest registerUserRequest);
 
@@ -239,6 +240,8 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId);
+
+    Boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean);
 
 	/**
 	 * 获取银行卡信息

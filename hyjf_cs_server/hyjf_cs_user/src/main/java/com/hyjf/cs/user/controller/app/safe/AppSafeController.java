@@ -13,6 +13,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.safe.SafeService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,10 @@ import java.util.Map;
  * @version AppUserController, v0.1 2018/6/11 14:51
  */
 
-@Api(value = "app端用户账户设置",description = "app端用户账户设置")
+@Api(value = "app端用户账户设置",description = "app端-用户账户设置")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSafeController extends BaseUserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(AppSafeController.class);
 
     @Autowired
     private SafeService safeService;
@@ -42,6 +41,7 @@ public class AppSafeController extends BaseUserController {
      * @date: 2018/7/18
      */
     @ResponseBody
+    @ApiOperation(value = "获取联系人类型",notes = "获取联系人类型")
     @PostMapping ("/getRelationTypes")
     public JSONObject getRelationTypes(HttpServletRequest request) {
         JSONObject ret = new JSONObject();
@@ -106,6 +106,7 @@ public class AppSafeController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping("/updateUrgentAction")
+    @ApiOperation(value = "修改紧急联系人",notes = "修改紧急联系人")
     public JSONObject updateUrgentAction(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/updateUrgentAction");

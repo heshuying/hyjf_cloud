@@ -62,7 +62,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 		if(null!=response){
 			return   response.getResult();
 		}
-		return null;
+		return new AppAdsCustomizeVO();
 	}
 
 

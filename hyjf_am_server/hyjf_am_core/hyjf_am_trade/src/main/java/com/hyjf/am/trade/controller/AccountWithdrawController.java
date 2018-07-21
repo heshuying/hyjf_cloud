@@ -40,9 +40,13 @@ public class AccountWithdrawController extends BaseController {
      * @Date
      */
     @RequestMapping("/insertAccountWithdrawLog")
-    public void insertAccountWithdrawLog(@RequestBody AccountWithdraw accountWithdraw){
+    public int insertAccountWithdrawLog(@RequestBody AccountWithdraw accountWithdraw){
         logger.info("insertAccountWithdrawLog:" + JSONObject.toJSONString(accountWithdraw));
-        accountWithdrawService.insertAccountWithdrawLog(accountWithdraw);
+        try {
+            return  accountWithdrawService.insertAccountWithdrawLog(accountWithdraw);
+        } catch (Exception e){
+            return 0;
+        }
     }
     /**
      * @Description 根据订单号查询用户提现记录
@@ -89,7 +93,7 @@ public class AccountWithdrawController extends BaseController {
 
 
     /**
-     * @Description 插入用户提现记录
+     * @Description 修改用户提现记录
      * @Author pangchengchao
      * @Version v0.1
      * @Date
@@ -187,8 +191,12 @@ public class AccountWithdrawController extends BaseController {
     public WithdrawCustomizeResponse getWithdrawRecordList(@RequestBody WithdrawBeanRequest request){
         WithdrawCustomizeResponse response = new WithdrawCustomizeResponse();
         List<WithdrawCustomize> withdrawCustomizes =accountWithdrawService.getWithdrawRecordList(request);
+        int count=accountWithdrawService.getWithdrawRecordCount(request);
+        String returnCode = "0";
         if (CollectionUtils.isNotEmpty(withdrawCustomizes)){
             response.setResultList(CommonUtils.convertBeanList(withdrawCustomizes,WithdrawCustomizeVO.class));
+            response.setCount(count);
+            response.setRtn(returnCode);
         }
         return response;
     }

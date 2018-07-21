@@ -14,7 +14,7 @@ import java.util.List;
  * @version AccountWithdrawService, v0.1 2018/6/11 13:47
  */
 public interface AccountWithdrawService {
-    void insertAccountWithdrawLog(AccountWithdraw accountWithdraw);
+    int insertAccountWithdrawLog(AccountWithdraw accountWithdraw);
 
     List<AccountWithdraw> findByOrdId(String ordId);
 

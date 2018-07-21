@@ -11,10 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +20,7 @@ import java.util.List;
  * @author hesy
  * @version ManualReverseExceptionController, v0.1 2018/7/13 14:20
  */
-@Api(value = "异常中心-手动冲正")
+@Api(value = "异常中心-手动冲正", description = "异常中心-手动冲正")
 @RestController
 @RequestMapping("/hyjf-admin/exception/manualreverse")
 public class ManualReverseExceptionController extends BaseController {
@@ -36,7 +33,7 @@ public class ManualReverseExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "手动冲正列表", notes = "手动冲正列表")
-    @RequestMapping("/list")
+    @PostMapping("/list")
     public JSONObject getList(@RequestBody ManualReverseCustomizeRequest requestBean){
         Integer count = manualReverseExceptionService.getManualReverseCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
@@ -56,7 +53,7 @@ public class ManualReverseExceptionController extends BaseController {
      * @date: 2018/7/14
      */
     @ApiOperation(value = "手动冲正更新", notes = "手动冲正更新")
-    @RequestMapping("/update_manualreverse")
+    @PostMapping("/update_manualreverse")
     public JSONObject manualReverse(@RequestBody ManualReverseAddRequest requestBean){
 
         // 请求参数校验
@@ -78,7 +75,7 @@ public class ManualReverseExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据用户名获取accountId", notes = "根据用户名获取accountId")
-    @RequestMapping("/get_accountid_byusername/{userName}")
+    @GetMapping("/get_accountid_byusername/{userName}")
     public JSONObject getAccountIdAction(@PathVariable String userName){
         logger.info("根据用户名获取accountId，{}", userName);
         if(StringUtils.isBlank(userName)){

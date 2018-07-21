@@ -27,6 +27,8 @@ public interface BindCardService extends BaseUserService {
 	BankCallBean callBankUnBindCard(BindCardVO bindCardVO, Integer userId);
 
 	void checkParamSendcode(Integer userId, String mobile, String cardNo);
+
+    boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo, Integer cardId);
 }
 
 	

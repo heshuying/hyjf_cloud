@@ -17,7 +17,7 @@ import javax.validation.Valid;
  */
 @Api(value = "Web端首页",description = "Web端首页")
 @RestController
-@RequestMapping("/web/home")
+@RequestMapping("/hyjf-web/home")
 public class WebHomeController {
 
 

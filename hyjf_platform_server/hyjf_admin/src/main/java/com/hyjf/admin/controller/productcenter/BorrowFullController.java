@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.productcenter;
 
 import com.hyjf.admin.beans.request.BorrowFullRequestBean;
+import com.hyjf.admin.beans.response.BorrowFullInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFullResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -38,7 +39,7 @@ public class BorrowFullController extends BaseController {
     @PostMapping("/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult getBorrowFullList(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
+    public AdminResult<BorrowFullResponseBean> getBorrowFullList(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         BeanUtils.copyProperties(borrowFullRequestBean, borrowFullRequest);
         BorrowFullResponseBean responseBean = borrowFullService.getBorrowFullList(borrowFullRequest);
@@ -49,7 +50,7 @@ public class BorrowFullController extends BaseController {
     @PostMapping("/get_full_info")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
-    public AdminResult getFullInfo(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
+    public AdminResult<BorrowFullInfoResponseBean> getFullInfo(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         BeanUtils.copyProperties(borrowFullRequestBean, borrowFullRequest);
         return borrowFullService.getFullInfo(borrowFullRequest);

@@ -24,7 +24,6 @@ public class DataCenterCouponServiceImpl implements DataCenterCouponService {
 
     @Override
     public DataCenterCouponResponse searchAction(DadaCenterCouponRequestBean requestBean, String type) {
-        DataCenterCouponResponse response = amTradeClient.getDataCenterCouponList(requestBean, type);
-        return null;// todo fuqiang
+        return amTradeClient.getDataCenterCouponList(requestBean, type);
     }
 }

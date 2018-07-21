@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
@@ -14,6 +15,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -27,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,12 +45,13 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     @Autowired
     private AmTradeClient amTradeClient;
 
+
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
     @Override
-    public JSONObject initUserManaget(){
-        JSONObject jsonObject = new JSONObject();
-       /* // 用户角色
+    public UserManagerInitResponseBean initUserManaget(){
+        UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
+        // 用户角色
         Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
         // 用户属性
         Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
@@ -63,16 +65,16 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         Map<String, String> userTypes = CacheUtil.getParamNameMap("USER_TYPE");
         // 借款人类型
         Map<String, String> borrowTypes = CacheUtil.getParamNameMap("BORROWER_TYPE");
-        List<HjhInstConfigVO> listHjhInstConfig =  userCenterClient.selectInstConfigAll();
-         jsonObject.put("userRoles", userRoles);
-        jsonObject.put("userPropertys", userPropertys);
-        jsonObject.put("accountStatus", accountStatus);
-        jsonObject.put("userStatus", userStatus);
-        jsonObject.put("registPlat", registPlat);
-        jsonObject.put("userTypes", userTypes);
-        jsonObject.put("borrowTypes", borrowTypes);
-        jsonObject.put("hjhInstConfigList", listHjhInstConfig);*/
-        return jsonObject;
+        List<HjhInstConfigVO> listHjhInstConfig =  amTradeClient.selectInstConfigAll();
+        userManagerInitResponseBean.setUserRoles(userRoles);
+        userManagerInitResponseBean.setUserPropertys(userPropertys);
+        userManagerInitResponseBean.setAccountStatus(accountStatus);
+        userManagerInitResponseBean.setUserStatus(userStatus);
+        userManagerInitResponseBean.setRegistPlat(registPlat);
+        userManagerInitResponseBean.setUserTypes(userTypes);
+        userManagerInitResponseBean.setBorrowTypes(borrowTypes);
+        userManagerInitResponseBean.setListHjhInstConfig(listHjhInstConfig);
+        return userManagerInitResponseBean;
     }
     /**
      * 查找用户信息

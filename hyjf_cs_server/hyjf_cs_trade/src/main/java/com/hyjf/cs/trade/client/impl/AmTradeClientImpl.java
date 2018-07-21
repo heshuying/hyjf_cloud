@@ -31,6 +31,7 @@ import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -926,8 +927,15 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param record
      */
     @Override
-    public void insertAccountWithdrawLog(AccountWithdrawVO record) {
-        restTemplate.put(urlBase +"accountWithdraw/insertAccountWithdrawLog",record);
+    public int insertAccountWithdrawLog(AccountWithdrawVO record) {
+        restTemplate.put(urlBase +"",record);
+        Integer response = restTemplate
+                .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, Integer.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return 0;
+
     }
     /**
      * 根据订单号查询用户提现记录信息
@@ -1121,7 +1129,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:23
      */
     @Override
-    public Integer countAppProjectList(AppProjectListRequest request) {
+    public Integer countAppProjectList(ProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppProjectList --> response = {}",response);
         if (Response.isSuccess(response)){
@@ -1153,7 +1161,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public ProjectListResponse countAppCreditList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppCreditList",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countCreditList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
         return response;
     }
@@ -1165,7 +1173,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public ProjectListResponse searchAppCreditList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchCreditList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
         return response;
     }
@@ -1177,7 +1185,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public Integer countAppPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countPlanList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> countAppPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getCount();
@@ -1192,8 +1200,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/22 9:59
      */
     @Override
-    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request) {
-        ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countAppProjectList",request,ProjectListResponse.class).getBody();
+    public List<HjhPlanCustomizeVO> searchAppPlanList(ProjectListRequest request) {
+        com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppPlanList --> response = {}",response);
         if (Response.isSuccess(response)){
             return response.getResultList();
@@ -2009,7 +2017,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public PlanDetailCustomizeVO getPlanDetailByPlanNid(String planId) {
-        HjhPlanDetailResponse response = restTemplate.getForEntity("",HjhPlanDetailResponse.class).getBody();
+        HjhPlanDetailResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/projectlist/web/searchPlanDetail/" + planId,HjhPlanDetailResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
@@ -2024,7 +2032,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<HjhPlanCustomizeVO> getAppHomePlanList(HjhPlanRequest request) {
-        com.hyjf.am.response.trade.HjhPlanResponse response = restTemplate.postForEntity("http://AM-TRADE//am-trade/hjhPlan/selectAppHjhPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
+        com.hyjf.am.response.trade.HjhPlanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhPlan/selectAppHjhPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }
@@ -2875,6 +2883,67 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/creditTender/getCreditTenderByUserIdOrdId/" + logOrdId + "/" + userId;
         CreditTenderResponse response = restTemplate.getForEntity(url, CreditTenderResponse.class).getBody();
         if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getUserCouponCount(Integer userId, String usedFlag) {
+        CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/user_coupon_count/" + userId + "/" + usedFlag, CouponUserResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前有效的冻结记录
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public BankRepayFreezeLogVO getFreezeLogValid(Integer userId, String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/get_logvalid/"+userId + "/" + borrowNid;
+        BankRepayFreezeLogResponse response = restTemplate.getForEntity(url,BankRepayFreezeLogResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据orderId删除
+     * @param orderId
+     * @return
+     */
+    @Override
+    public Integer deleteFreezeLogByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/deleteby_orderid/" + orderId;
+        return restTemplate.getForEntity(url, Integer.class).getBody();
+    }
+
+    /**
+     * 添加
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer addFreezeLog(BankRepayFreezeLogRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repayfreezelog/add";
+        return restTemplate.postForEntity(url, requestBean, Integer.class).getBody();
+    }
+
+    /**
+     * 根据code获取borrowConfig
+     * @auther: hesy
+     * @date: 2018/7/20
+     */
+    @Override
+    public BorrowConfigVO getConfigByCode(String code) {
+        String url = "http://AM-TRADE/am-trade/borrowconfig/get_by_code/" + code;
+        BorrowConfigResponse response = restTemplate.getForEntity(url,BorrowConfigResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
             return response.getResult();
         }
         return null;

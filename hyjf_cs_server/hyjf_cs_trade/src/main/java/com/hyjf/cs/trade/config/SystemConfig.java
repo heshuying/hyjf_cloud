@@ -75,6 +75,8 @@ public class SystemConfig {
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
 
+    @Value("${aop.interface.accesskey}")
+    public String aopAccesskey;
 
     @Value("${crm.investmentdetails.url}")
     private String crmTenderUrl;
@@ -305,7 +307,13 @@ public class SystemConfig {
     public void setHyjfReqPasswordPath(String hyjfReqPasswordPath) {
         this.hyjfReqPasswordPath = hyjfReqPasswordPath;
     }
+    public String getAopAccesskey() {
+        return aopAccesskey;
+    }
 
+    public void setAopAccesskey(String aopAccesskey) {
+        this.aopAccesskey = aopAccesskey;
+    }
     public boolean isHyjfEnvTest() {
         return hyjfEnvTest;
     }
