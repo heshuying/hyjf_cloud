@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.productcenter.plancenter;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
-import com.hyjf.admin.utils.PdfGenerator;
+/*import com.hyjf.admin.utils.PdfGenerator;*/
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
@@ -100,8 +101,8 @@ public class AccedeListController extends BaseController{
 	private MailProducer mailProducer;
 	@Autowired
 	private SystemConfig systemConfig;
-	@Autowired
-	private PdfGenerator pdfGenerator;
+/*	@Autowired
+	private PdfGenerator pdfGenerator;*/
 	
     /** 权限 */
 	public static final String PERMISSIONS = "accedelist";
@@ -121,7 +122,7 @@ public class AccedeListController extends BaseController{
      * @return 汇计划加入明细列表         已测试
      */
     @ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表初始化")
-    @PostMapping(value = "/searchAction")
+    @PostMapping(value = "/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AdminAccedeListCustomizeVO>> search(HttpServletRequest request, @RequestBody @Valid AccedeListViewRequest viewRequest) {
@@ -187,12 +188,13 @@ public class AccedeListController extends BaseController{
 	 * @param form
 	 */
     @ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表导出")
-    @PostMapping(value = "/exportExcel")
+    @PostMapping(value = "/export")
     @ResponseBody
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "加入明细";
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		@SuppressWarnings("deprecation")
+		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -439,7 +441,7 @@ public class AccedeListController extends BaseController{
 	 * @return
 	 */
     @ApiOperation(value = "汇计划加入明细列表", notes = "跳转到协议发送入力页面")
-    @PostMapping(value = "/toExportAgreementAction")
+    @PostMapping(value = "/toexportagreement")
     @ResponseBody
     public JSONObject toExportAgreementAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
@@ -506,7 +508,7 @@ public class AccedeListController extends BaseController{
 	 * @return
 	 */
     @ApiOperation(value = "汇计划加入明细列表", notes = "点击发送协议 email入力后请求")
-    @PostMapping(value = "/exportAgreementAction")
+    @PostMapping(value = "/exportagreement")
     @ResponseBody
     public JSONObject exportAgreementAction(HttpServletRequest request ,@RequestBody @Valid AccedeListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
@@ -696,7 +698,8 @@ public class AccedeListController extends BaseController{
 					UserHjhInvistDetailVO userHjhInvistDetailCustomize = this.accedeListService.selectUserHjhInvistDetail(request);
 					contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
 					// 依据模板生成内容------旧的协议下载的组建还未做好
-					String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
+					/*String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);*/
+					String pdfUrl = "";
 					if (StringUtils.isNotEmpty(pdfUrl)) {
 						File path = new File(filePath);
 						if (!path.exists()) {
@@ -740,7 +743,7 @@ public class AccedeListController extends BaseController{
 	 */
 	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "汇计划加入明细列表", notes = "跳转投资明细列表初始化以及查询")
-	@PostMapping(value = "/tenderInfoAction")
+	@PostMapping(value = "/tenderinfo")
 	@ResponseBody
 	public AdminResult tenderInfoAction(HttpServletRequest request, @RequestBody @Valid AccedeListViewRequest viewRequest) {
 		// 初始化查询beam
@@ -774,7 +777,7 @@ public class AccedeListController extends BaseController{
 	 * @return
 	 */
     @ApiOperation(value = "汇计划加入明细列表", notes = "PDF脱敏图片预览")
-    @PostMapping(value = "/pdfPreviewAction")
+    @PostMapping(value = "/pdfpreview")
     @ResponseBody
     public JSONObject pdfPreviewAction(HttpServletRequest request,@RequestBody @Valid AccedeListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
@@ -811,7 +814,7 @@ public class AccedeListController extends BaseController{
 	 * @throws MQException 
 	 */
 	@ApiOperation(value = "汇计划加入明细列表", notes = "PDF文件签署")
-    @PostMapping(value = "/pdfSignAction")
+    @PostMapping(value = "/pdfsign")
     @ResponseBody
     public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws MQException {
     	JSONObject ret = new JSONObject();
@@ -827,7 +830,7 @@ public class AccedeListController extends BaseController{
 		// 参数判断
 		if(StringUtils.isBlank(userid) || StringUtils.isBlank(planOrderId)){
 			ret.put("result", "请求参数为空");
-			ret.put("status", "error");
+			ret.put("status", FAIL);
 			return ret;
 		}
 		form.setAccedeOrderIdSrch(planOrderId);
@@ -837,19 +840,19 @@ public class AccedeListController extends BaseController{
 				accede = resultList.get(0);
 			} else {
 				ret.put("result", "用户加入记录不存在");
-				ret.put("status", "error");
+				ret.put("status", FAIL);
 				return ret;
 			}
 		} else {
 			ret.put("result", "用户加入记录不存在");
-			ret.put("status", "error");
+			ret.put("status", FAIL);
 			return ret;
 		}
 		
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 		if(users == null ){
 			ret.put("result", "用户不存在");
-			ret.put("status", "error");
+			ret.put("status", FAIL);
 			return ret;
 		}
 		
@@ -874,7 +877,7 @@ public class AccedeListController extends BaseController{
             fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 		}
 		ret.put("result", "操作成功,签署MQ已发送");
-		ret.put("status", "success");
+		ret.put("status", SUCCESS);
 		return ret;
     }
 }
