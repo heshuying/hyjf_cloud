@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.BankCardLogRequestBean;
 import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
+import com.hyjf.admin.beans.vo.BankcardManagerCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -22,6 +23,7 @@ import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.excel.AbstractExcelExportHandler;
 import com.hyjf.common.excel.ExcelField;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -74,7 +76,7 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "汇付银行开户銀行卡記錄查询", notes = "汇付银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
+    public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
@@ -85,13 +87,18 @@ public class BankCardManagerController extends BaseController {
         if (!Response.isSuccess(bankCardManagerResponse)) {
             return new AdminResult<>(FAIL, bankCardManagerResponse.getMessage());
         }
-        return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
+        List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+        List<BankcardManagerCustomizeVO> bankcardManagerCustomizeVOList = new ArrayList<BankcardManagerCustomizeVO>();
+        if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
+            bankcardManagerCustomizeVOList = CommonUtils.convertBeanList(bankcardManagerVOList, BankcardManagerCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<BankcardManagerCustomizeVO>>(ListResult.build(bankcardManagerCustomizeVOList, bankCardManagerResponse.getCount()));
     }
 
     @ApiOperation(value = "江西银行开户銀行卡記錄查询", notes = "江西银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordBankAccount(@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
+    public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordBankAccount(@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
@@ -102,7 +109,12 @@ public class BankCardManagerController extends BaseController {
         if (!Response.isSuccess(bankCardManagerResponse)) {
             return new AdminResult<>(FAIL, bankCardManagerResponse.getMessage());
         }
-        return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
+        List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+        List<BankcardManagerCustomizeVO> bankcardManagerCustomizeVOList = new ArrayList<BankcardManagerCustomizeVO>();
+        if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
+            bankcardManagerCustomizeVOList = CommonUtils.convertBeanList(bankcardManagerVOList, BankcardManagerCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<BankcardManagerCustomizeVO>>(ListResult.build(bankcardManagerCustomizeVOList, bankCardManagerResponse.getCount()));
     }
 
 
