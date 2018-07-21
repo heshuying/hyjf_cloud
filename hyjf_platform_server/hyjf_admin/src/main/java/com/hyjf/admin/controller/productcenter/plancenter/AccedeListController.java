@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,12 +32,16 @@ import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AccedeListViewRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
+import com.hyjf.admin.beans.vo.AdminAccedeListCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.MailProducer;
 import com.hyjf.admin.mq.base.MessageContent;
@@ -44,6 +49,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
+import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
@@ -62,6 +68,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FileUtil;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -83,7 +90,7 @@ public class AccedeListController extends BaseController{
 	private AccedeListService accedeListService;
 	@Autowired 
 	private PlanListService planListService;
-    @Autowired
+    @Autowired  
     BorrowInvestService borrowInvestService;
     @Autowired
     AdminCommonService adminCommonService;
@@ -93,6 +100,8 @@ public class AccedeListController extends BaseController{
 	private MailProducer mailProducer;
 	@Autowired
 	private SystemConfig systemConfig;
+	@Autowired
+	private PdfGenerator pdfGenerator;
 	
     /** 权限 */
 	public static final String PERMISSIONS = "accedelist";
@@ -114,8 +123,14 @@ public class AccedeListController extends BaseController{
     @ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表初始化")
     @PostMapping(value = "/searchAction")
     @ResponseBody
-    /*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW) */ 
-    public AdminResult<ListResult<AccedeListCustomizeVO>> search(HttpServletRequest request, @RequestBody @Valid AccedeListRequest form) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<AdminAccedeListCustomizeVO>> search(HttpServletRequest request, @RequestBody @Valid AccedeListViewRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	AccedeListRequest form = new AccedeListRequest();
+		// 初始化返回LIST
+		List<AdminAccedeListCustomizeVO> volist = null;
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	// 画面检索条件无需初始化  订单状态 与 操作平台都在JSP option 写好
     	// 根据删选条件获取加入计划列表
     	AccedeListResponse response = this.accedeListService.getAccedeListByParam(form);
@@ -125,7 +140,12 @@ public class AccedeListController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<AccedeListCustomizeVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAccedeListCustomizeVO.class);
+			return new AdminResult<ListResult<AdminAccedeListCustomizeVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminAccedeListCustomizeVO>>(ListResult.build(volist, 0));
+		}
     }
 
 	/**
@@ -137,15 +157,25 @@ public class AccedeListController extends BaseController{
 	@ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表列总计")
 	@PostMapping(value = "/sum")
 	@ResponseBody
-	/*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW) */   
-	public JSONObject getSumTotal(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListRequest form) {
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)  
+	public JSONObject getSumTotal(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
+		// 初始化原子层请求实体
+		AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		HjhAccedeSumVO sumVO = this.accedeListService.getCalcSumByParam(form);
-		jsonObject.put("sumAccedeAccount", sumVO.getSumAccedeAccount());
-		jsonObject.put("sumAlreadyInvest", sumVO.getSumAlreadyInvest());
-		jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
-		jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());
-		jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());
+		if(sumVO != null){
+			jsonObject.put("sumAccedeAccount", sumVO.getSumAccedeAccount());
+			jsonObject.put("sumAlreadyInvest", sumVO.getSumAlreadyInvest());
+			jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
+			jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());
+			jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());
+			jsonObject.put("status", SUCCESS);
+		} else {
+			jsonObject.put("msg", "查询为空");
+			jsonObject.put("status", FAIL);
+		}
 		return jsonObject;
 	}
     
@@ -159,7 +189,7 @@ public class AccedeListController extends BaseController{
     @ApiOperation(value = "汇计划加入明细列表", notes = "汇计划加入明细列表导出")
     @PostMapping(value = "/exportExcel")
     @ResponseBody
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListRequest form) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "加入明细";
 		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
@@ -168,7 +198,10 @@ public class AccedeListController extends BaseController{
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
 		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-		
+		// 初始化原子层请求实体
+		AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		// 不带分页的查询
 		List<AccedeListCustomizeVO> resultList = this.accedeListService.getAccedeListByParamWithoutPage(form);
 		if (resultList != null && resultList.size() > 0) {
@@ -408,8 +441,13 @@ public class AccedeListController extends BaseController{
     @ApiOperation(value = "汇计划加入明细列表", notes = "跳转到协议发送入力页面")
     @PostMapping(value = "/toExportAgreementAction")
     @ResponseBody
-    public JSONObject toExportAgreementAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListRequest form) {
+    public JSONObject toExportAgreementAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
+    	// 初始化查询bean
+    	AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+    	
     	PlanListRequest planListRequest = new PlanListRequest();
     	//从form中取值然后出道画面作为隐藏域
 /*		String userid = request.getParameter("userid");
@@ -470,8 +508,12 @@ public class AccedeListController extends BaseController{
     @ApiOperation(value = "汇计划加入明细列表", notes = "点击发送协议 email入力后请求")
     @PostMapping(value = "/exportAgreementAction")
     @ResponseBody
-    public JSONObject exportAgreementAction(HttpServletRequest request ,@RequestBody @Valid AccedeListRequest form) {
+    public JSONObject exportAgreementAction(HttpServletRequest request ,@RequestBody @Valid AccedeListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
+    	// 初始化查询bean
+    	AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	// 由前台请求传入
 /*		String userid = request.getParameter("userid");
 		String planOrderId = request.getParameter("planOrderId");
@@ -654,16 +696,7 @@ public class AccedeListController extends BaseController{
 					UserHjhInvistDetailVO userHjhInvistDetailCustomize = this.accedeListService.selectUserHjhInvistDetail(request);
 					contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
 					// 依据模板生成内容------旧的协议下载的组建还未做好
-					
-					
-					
-					
-					/*String pdfUrl = PdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);*/
-					String pdfUrl = "1234";
-
-					
-					
-					
+					String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
 					if (StringUtils.isNotEmpty(pdfUrl)) {
 						File path = new File(filePath);
 						if (!path.exists()) {
@@ -705,10 +738,15 @@ public class AccedeListController extends BaseController{
 	 * @param form
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "汇计划加入明细列表", notes = "跳转投资明细列表初始化以及查询")
 	@PostMapping(value = "/tenderInfoAction")
 	@ResponseBody
-	public AdminResult tenderInfoAction(HttpServletRequest request, @RequestBody @Valid AccedeListRequest form) {
+	public AdminResult tenderInfoAction(HttpServletRequest request, @RequestBody @Valid AccedeListViewRequest viewRequest) {
+		// 初始化查询beam
+		AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         if(StringUtils.isNotEmpty(form.getAccedeOrderIdSrch())  && StringUtils.isNotEmpty(form.getDebtPlanNidSrch())){
@@ -738,11 +776,13 @@ public class AccedeListController extends BaseController{
     @ApiOperation(value = "汇计划加入明细列表", notes = "PDF脱敏图片预览")
     @PostMapping(value = "/pdfPreviewAction")
     @ResponseBody
-    public JSONObject pdfPreviewAction(HttpServletRequest request,@RequestBody @Valid AccedeListRequest form) {
+    public JSONObject pdfPreviewAction(HttpServletRequest request,@RequestBody @Valid AccedeListViewRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
     	TenderAgreementVO tenderAgreementVO;
     	String nid = null ;
-
+    	AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	if(StringUtils.isNotEmpty(form.getAccedeOrderIdSrch())){
     		nid = form.getAccedeOrderIdSrch();
     	} else {
@@ -770,14 +810,16 @@ public class AccedeListController extends BaseController{
 	 * @return
 	 * @throws MQException 
 	 */
-    @SuppressWarnings("null")
 	@ApiOperation(value = "汇计划加入明细列表", notes = "PDF文件签署")
     @PostMapping(value = "/pdfSignAction")
     @ResponseBody
-    public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListRequest form) throws MQException {
+    public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws MQException {
     	JSONObject ret = new JSONObject();
     	TenderAgreementVO tenderAgreement;
     	AccedeListCustomizeVO accede = null;
+    	AccedeListRequest form = new AccedeListRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		// 用户ID
 		String userid = request.getParameter("userId");
 		// 计入加入订单号
