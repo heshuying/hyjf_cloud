@@ -1,73 +1,72 @@
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.vo;
 
-import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+
 /**
  * @author nxl
  * @version UserPortraitResponse, v0.1 2018/6/28 14:27
  */
-public class UserPortraitRequest extends BasePage {
+public class UserPortraitCustomizeVO implements Serializable {
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
-
+    @ApiModelProperty(value = "用户名")
     private String userName;
-
+    @ApiModelProperty(value = "年龄")
     private Integer age;
-
+    @ApiModelProperty(value = "性别")
     private String sex;
-
+    @ApiModelProperty(value = "学历")
     private String education;
-
+    @ApiModelProperty(value = "职业")
     private String occupation;
-
+    @ApiModelProperty(value = "城市")
     private String city;
-
+    @ApiModelProperty(value = "爱好")
     private String interest;
-
+    @ApiModelProperty(value = "累计收益")
     private BigDecimal interestSum;
-
+    @ApiModelProperty(value = "累计年化投资金额")
     private BigDecimal investSum;
-
+    @ApiModelProperty(value = "累计充值金额")
     private BigDecimal rechargeSum;
-
+    @ApiModelProperty(value = "累计提取金额")
     private BigDecimal withdrawSum;
-
+    @ApiModelProperty(value = "登陆活跃")
     private String loginActive;
-
+    @ApiModelProperty(value = "客户来源")
     private String customerSource;
-
+    @ApiModelProperty(value = "最后一次登陆时间")
     private Integer lastLoginTime;
-
+    @ApiModelProperty(value = "最后一次充值时间")
     private Integer lastRechargeTime;
-
+    @ApiModelProperty(value = "最后一次提现时间")
     private Integer lastWithdrawTime;
-
+    @ApiModelProperty(value = "同时投资平台数")
     private Integer investPlatform;
-
+    @ApiModelProperty(value = "投龄")
     private Integer investAge;
-
+    @ApiModelProperty(value = "交易笔数")
     private Integer tradeNumber;
-
+    @ApiModelProperty(value = "当前拥有人")
     private String currentOwner;
-
+    @ApiModelProperty(value = "是否加微信")
     private String addWechat;
-
+    @ApiModelProperty(value = "投资进程")
     private String investProcess;
-
+    @ApiModelProperty(value = "客户投诉")
     private String customerComplaint;
-
+    @ApiModelProperty(value = "邀约客户数")
     private Integer inviteCustomer;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "手机号")
     private String mobile;
 
     private static final long serialVersionUID = 1L;
-    //默认为true ,获取全部数据，为false时，获取部分数据
-    public boolean limitFlg = true;
-    //查询用
-    public String yesterdayEndTime;
-    public String yesterdayBeginTime;
 
     public Integer getUserId() {
         return userId;
@@ -283,30 +282,5 @@ public class UserPortraitRequest extends BasePage {
 
     public void setMobile(String mobile) {
         this.mobile = mobile == null ? null : mobile.trim();
-    }
-
-
-    public String getYesterdayEndTime() {
-        return yesterdayEndTime;
-    }
-
-    public void setYesterdayEndTime(String yesterdayEndTime) {
-        this.yesterdayEndTime = yesterdayEndTime;
-    }
-
-    public String getYesterdayBeginTime() {
-        return yesterdayBeginTime;
-    }
-
-    public void setYesterdayBeginTime(String yesterdayBeginTime) {
-        this.yesterdayBeginTime = yesterdayBeginTime;
-    }
-
-    public boolean isLimitFlg() {
-        return limitFlg;
-    }
-
-    public void setLimitFlg(boolean limitFlg) {
-        this.limitFlg = limitFlg;
     }
 }

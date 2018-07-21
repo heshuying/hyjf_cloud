@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
@@ -108,7 +109,7 @@ public interface UserCenterService {
     /**
      * @Description 根据accountid调用接口查找企业信息
      */
-    CompanyInfoVO queryCompanyInfoByAccoutnId(Integer userId, String accountId);
+    CompanyInfoSearchResponseBean queryCompanyInfoByAccoutnId(Integer userId, String accountId);
     /**
      * 根据用户id查找用户表
      * @param userId

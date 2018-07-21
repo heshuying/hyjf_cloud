@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -519,6 +521,7 @@ public class UserManagerController extends BaseController{
      */
     @RequestMapping("/selectUserChageLog")
     public UserChangeLogResponse selectUserChageLog(@RequestBody @Valid UserChangeLogRequest request){
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UserChangeLogResponse response = new UserChangeLogResponse();
         Map<String,Object> mapParam = new HashMap<>();
         String returnCode = Response.FAIL;
@@ -527,9 +530,16 @@ public class UserManagerController extends BaseController{
             mapParam.put("changeType",request.getChangeType());
         }
         List<UserChangeLog>userChangeLogsList= userManagerService.queryChangeLogList(mapParam);
+        List<UserChangeLogVO> listChangeLog = new ArrayList<UserChangeLogVO>();
         if (!CollectionUtils.isEmpty(userChangeLogsList)) {
-            List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
-            response.setResultList(userChangeLogVOList);
+//            List<UserChangeLogVO> userChangeLogVOList = CommonUtils.convertBeanList(userChangeLogsList, UserChangeLogVO.class);
+            for(UserChangeLog changeLog:userChangeLogsList){
+                UserChangeLogVO userChangeLogVO = new UserChangeLogVO();
+                BeanUtils.copyProperties(changeLog,userChangeLogVO);
+                userChangeLogVO.setUpdateTime(smp.format(changeLog.getUpdateTime()));
+                listChangeLog.add(userChangeLogVO);
+            }
+            response.setResultList(listChangeLog);
             response.setCount(userChangeLogsList.size());
             returnCode = Response.SUCCESS;
         }
