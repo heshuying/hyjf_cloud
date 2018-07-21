@@ -21,5 +21,5 @@ public @interface RequestLimit {
 	/**
 	 * 多长时间不允许重复，默认三秒
 	 */
-	int seconds() default 20;
+	int seconds() default 3;
 }

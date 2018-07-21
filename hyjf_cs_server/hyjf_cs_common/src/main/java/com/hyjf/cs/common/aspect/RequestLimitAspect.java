@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.annotation.RequestLimit;
@@ -43,19 +44,17 @@ public class RequestLimitAspect {
         
         String userId = request.getHeader("userId");
         
-        userId ="test";
-        
         if(StringUtils.isBlank(userId) || StringUtils.isBlank(uri)) {
         	 throw new CheckException("请求重复验证异常");
         }
         
-        String key = "ReqLimit:".concat(userId).concat(":").concat(uri);
+        String key = RedisConstants.PRE_REQUEST_LIMIT.concat(userId).concat(":").concat(uri);
         
         boolean setResult = RedisUtils.tranactionSet(key, ip, limit.seconds());
         // 成功则是第一次，否则的话就是重复
         if (!setResult) {
         	logger.info("用户[" + userId + "]访问地址[" + uri + "]请求重复[" + limit.seconds() + "]");
-            throw new CheckException("请求重复");
+            throw new CheckException(userId+" 请求重复,访问"+uri);
         }
         
     }
