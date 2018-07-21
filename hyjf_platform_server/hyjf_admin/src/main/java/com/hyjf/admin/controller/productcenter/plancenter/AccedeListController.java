@@ -82,7 +82,7 @@ import org.slf4j.LoggerFactory;
  * @author libin
  * @version AccedeListController.java, v0.1 2018年7月7日 下午3:00:56
  */
-@Api(value = "汇计划加入明细列表")
+@Api(value = "汇计划加入明细列表",description = "汇计划加入明细列表")
 @RestController
 @RequestMapping("/hyjf-admin/joinplan")
 public class AccedeListController extends BaseController{
