@@ -32,7 +32,7 @@ import java.util.Map;
  */
 @Api(value = "api端网贷之家标的列表接口")
 @Controller
-@RequestMapping("/api/wdzj/borrowdata")
+@RequestMapping("/hyjf-api/wdzj/borrowdata")
 public class BorrowDataController extends BaseController {
     @Autowired
     BorrowDataService borrowDataService;
