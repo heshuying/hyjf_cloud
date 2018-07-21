@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Api(value = "融东风注册接口")
 @Controller
-@RequestMapping("/surong/register")
+@RequestMapping("/hyjf-api/surong/register")
 public class RegisterController extends BaseUserController {
 
     @Autowired
