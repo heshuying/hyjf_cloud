@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.user;
 
 import com.hyjf.admin.beans.request.RegistRcordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
+import com.hyjf.admin.beans.vo.RegistRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -14,10 +15,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 import com.hyjf.am.vo.user.RegistRecordVO;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -32,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -59,7 +56,7 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "注册记录列表查询", notes = "注册记录列表查询")
     @PostMapping(value = "/registRecordList")
     @ResponseBody
-    public AdminResult<ListResult<RegistRecordVO>> selectRegistRecordList(@RequestBody RegistRcordRequestBean registRcordRequestBean) {
+    public AdminResult<ListResult<RegistRecordCustomizeVO>> selectRegistRecordList(@RequestBody RegistRcordRequestBean registRcordRequestBean) {
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
         RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordList(registerRcordeRequest);
@@ -69,7 +66,11 @@ public class RegistRecordController extends BaseController {
         if (!Response.isSuccess(registRecordResponse)) {
             return new AdminResult<>(FAIL, registRecordResponse.getMessage());
         }
-        return new AdminResult<ListResult<RegistRecordVO>>(ListResult.build(registRecordResponse.getResultList(), registRecordResponse.getCount())) ;
+        List<RegistRecordCustomizeVO> registRecordCustomizeVO = new ArrayList<RegistRecordCustomizeVO>();
+        if(null!=registRecordResponse.getResultList()&&registRecordResponse.getResultList().size()>0){
+            registRecordCustomizeVO = CommonUtils.convertBeanList(registRecordResponse.getResultList(),RegistRecordCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<RegistRecordCustomizeVO>>(ListResult.build(registRecordCustomizeVO, registRecordResponse.getCount())) ;
     }
 
     /**
