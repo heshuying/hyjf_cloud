@@ -12,19 +12,19 @@ package com.hyjf.am.trade.dao.model.customize.trade;
 public class WebUserWithdrawListCustomize {
 
 	// 主键
-	public String id;
+	private String id;
 	// 取现时间
-	public String time;
+	private String time;
 	// 取现金额
-	public String money;
+	private String money;
 	// 取现费用
-	public String fee;
+	private String fee;
 	// 到账金额
-	public String balance;
+	private String balance;
 	// 取现状态
-	public String status;
+	private String status;
 	// 银行存管提现标志位 1为银行存管   0汇付天下
-	public String bankFlag;
+	private String bankFlag;
 
 	/**
 	 * 构造方法

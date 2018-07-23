@@ -25,14 +25,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentJobsController, v0.1 2018/7/12 11:35
  */
-@Api(value = "公司管理-招贤纳士")
+@Api(value = "公司管理-招贤纳士", description = "公司管理-招贤纳士")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentjob")
 public class ContentJobsController extends BaseController {
 	@Autowired
 	private ContentJobService contentPartnerService;
 
-	@ApiOperation(value = "公司管理-招贤纳士", notes = "公司管理-招贤纳士列表查询")
+	@ApiOperation(value = "公司管理-招贤纳士列表查询", notes = "公司管理-招贤纳士列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<JobsVo>> searchAction(@RequestBody ContentJobRequestBean requestBean) {
 		JobResponse response = contentPartnerService.searchAction(requestBean);
@@ -45,7 +45,7 @@ public class ContentJobsController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "公司管理-招贤纳士", notes = "添加公司管理-招贤纳士")
+	@ApiOperation(value = "添加公司管理-招贤纳士", notes = "添加公司管理-招贤纳士")
 	@RequestMapping("/insert")
 	public AdminResult add(@RequestBody ContentJobRequestBean requestBean) {
 		JobResponse response = contentPartnerService.insertAction(requestBean);
@@ -58,7 +58,7 @@ public class ContentJobsController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
+	@ApiOperation(value = "修改公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody ContentJobRequestBean requestBean) {
 		JobResponse response = contentPartnerService.updateAction(requestBean);
@@ -71,7 +71,7 @@ public class ContentJobsController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
+	@ApiOperation(value = "修改公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentJobRequestBean requestBean) {
 		JobResponse response = contentPartnerService.updateStatus(requestBean);
@@ -84,7 +84,7 @@ public class ContentJobsController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-招贤纳士", notes = "删除公司管理-招贤纳士")
+	@ApiOperation(value = "删除公司管理-招贤纳士", notes = "删除公司管理-招贤纳士")
 	@RequestMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		JobResponse response = contentPartnerService.deleteById(id);

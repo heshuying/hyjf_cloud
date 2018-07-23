@@ -7,8 +7,10 @@ import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
 import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -263,5 +265,6 @@ public class BankConfigServiceImpl implements BankConfigService {
 //		record.setStatus(1);
 		bankConfigMapper.updateByPrimaryKeySelective(record);
 	}
+
 
 }

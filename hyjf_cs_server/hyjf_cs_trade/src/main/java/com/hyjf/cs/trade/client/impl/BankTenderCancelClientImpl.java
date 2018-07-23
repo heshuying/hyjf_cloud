@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.BorrowTenderTmpResponse;
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.BankTenderCancelClient;
@@ -34,15 +34,19 @@ public class BankTenderCancelClientImpl implements BankTenderCancelClient {
     }
 
     @Override
-    public void updateBidCancelRecord(JSONObject obj) {
+    public boolean updateBidCancelRecord(TenderCancelRequest request) {
         String url = "http://AM-TRADE/am-trade/bankException/updateBidCancelRecord";
-        restTemplate.postForEntity(url,obj,Boolean.class).getBody();
+        return restTemplate.postForEntity(url,request,Boolean.class).getBody();
 
     }
 
+    /**
+     * 处理撤销出现异常的数据
+     * @param info
+     */
     @Override
-    public void updateTenderCancelExceptionData(BorrowTenderTmpVO info) {
+    public boolean updateTenderCancelExceptionData(BorrowTenderTmpVO info) {
         String url = "http://AM-TRADE/am-trade/bankException/updateTenderCancelExceptionData";
-        restTemplate.postForEntity(url,info,Integer.class).getBody();
+        return restTemplate.postForEntity(url,info,Boolean.class).getBody();
     }
 }

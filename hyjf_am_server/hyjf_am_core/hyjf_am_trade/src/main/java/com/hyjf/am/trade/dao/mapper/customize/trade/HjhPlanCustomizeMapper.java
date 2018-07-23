@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 
 /**
@@ -84,4 +85,16 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     void updatePlanAccount(HjhPlan hjhPlan);
+
+    /**
+     *  查询计划标的组成count
+     * @date 2018/7/23 10:43
+     */
+    int getPlanBorrowListCount(Map<String,Object> params);
+
+    /**
+     *  查询计划标的组成list
+     * @date 2018/7/23 10:43
+     */
+    List<BorrowVO> getPlanBorrowList(Map<String,Object> params);
 }

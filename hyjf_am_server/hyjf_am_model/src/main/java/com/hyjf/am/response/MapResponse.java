@@ -12,6 +12,9 @@ import java.util.Map;
 public class MapResponse extends Response{
     Map<String, Object> resultMap;
 
+    public MapResponse() {
+    }
+
     public Map<String, Object> getResultMap() {
         return resultMap;
     }

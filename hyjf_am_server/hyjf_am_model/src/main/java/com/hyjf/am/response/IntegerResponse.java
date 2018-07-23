@@ -10,6 +10,9 @@ package com.hyjf.am.response;
 public class IntegerResponse extends Response{
     Integer resultInt;
 
+    public IntegerResponse() {
+    }
+
     public IntegerResponse(Integer resultInt) {
         this.resultInt = resultInt;
     }

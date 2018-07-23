@@ -21,6 +21,9 @@ public class SaveCreditTenderLogRequest extends Request {
     BigDecimal yujiAmoust;
     boolean isLast;
 
+    public SaveCreditTenderLogRequest() {
+    }
+
     public SaveCreditTenderLogRequest(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
         this.credit = credit;
         this.hjhAccede = hjhAccede;

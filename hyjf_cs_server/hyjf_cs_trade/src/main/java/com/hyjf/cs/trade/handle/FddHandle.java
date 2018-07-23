@@ -2083,7 +2083,6 @@ public class FddHandle {
 		}
 		String password = systemConfig.getHyjfFtpPassword();
 		String username = systemConfig.getHyjfFtpUsername();
-		FileInputStream in = null;
 		try {
 			logger.info("----------待上传目录：" + upParentDir);
 			File parentDir = new File(upParentDir);
@@ -2095,20 +2094,26 @@ public class FddHandle {
 				for (File file : files) {
 					String fileName = file.getName();
 					logger.info("--------循环目录，开始上传文件：" + fileName);
-					in = new FileInputStream(file);
-					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
-							basePathImage, saveDir, fileName, in);
-					if (!flag){
+					try(FileInputStream ins = new FileInputStream(file)){
+						boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+								basePathImage, saveDir, fileName, ins);
+						if (!flag){
+							throw new RuntimeException("上传失败!fileName:" + fileName);
+						}
+					}catch (Exception e){
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}
 			}else{
 				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
-				in = new FileInputStream(parentDir);
-				boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
-						basePathImage, saveDir, fileName, in);
-				if (!flag){
+				try(FileInputStream ins = new FileInputStream(parentDir)){
+					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+							basePathImage, saveDir, fileName, ins);
+					if (!flag){
+						throw new RuntimeException("上传失败!fileName:" + fileName);
+					}
+				}catch (Exception e){
 					throw new RuntimeException("上传失败!fileName:" + fileName);
 				}
 			}
@@ -2121,14 +2126,6 @@ public class FddHandle {
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			ret = false;
-		}finally {
-			try {
-			    if (Validator.isNotNull(in)){
-                    in.close();
-                }
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		return ret;
 

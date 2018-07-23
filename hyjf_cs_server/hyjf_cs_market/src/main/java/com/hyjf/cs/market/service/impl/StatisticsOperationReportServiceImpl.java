@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -42,7 +41,6 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 	private StatisticsOperationReportProducer statisticsProducer;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void insertOperationGroupData(Calendar cal) {
 		OperationMongoGroupEntityVO oegroup = new OperationMongoGroupEntityVO();
 		// 插入统计日期
@@ -95,7 +93,6 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void insertOperationData(Calendar cal) {
 		// 插入统计日期
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

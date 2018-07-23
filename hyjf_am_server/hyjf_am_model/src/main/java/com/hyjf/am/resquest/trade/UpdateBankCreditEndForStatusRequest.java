@@ -14,6 +14,9 @@ public class UpdateBankCreditEndForStatusRequest extends BaseVO {
     BankCreditEndVO bankCreditEndVO;
     int status;
 
+    public UpdateBankCreditEndForStatusRequest() {
+    }
+
     public UpdateBankCreditEndForStatusRequest(BankCreditEndVO bankCreditEndVO, int status) {
         this.bankCreditEndVO = bankCreditEndVO;
         this.status = status;

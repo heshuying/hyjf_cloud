@@ -20,4 +20,32 @@ public class DataCenterCouponRequest extends BasePage {
     public void setType(String type) {
         this.type = type;
     }
+
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+
+    public int getLimitStart() {
+        return (getCurrPage() - 1) * (getPageSize());
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return (getCurrPage()) * (getPageSize());
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
+
+
 }

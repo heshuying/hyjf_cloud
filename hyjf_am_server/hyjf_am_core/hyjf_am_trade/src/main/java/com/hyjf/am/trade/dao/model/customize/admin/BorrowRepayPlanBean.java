@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class BorrowRepayPlanBean extends BorrowRepayPlan implements Serializable {
     /** 用户还款详情 */
-    private List<BorrowRecoverPlan> recoverPlanList = new ArrayList<BorrowRecoverPlan>();
+    private List<BorrowRecoverPlan> recoverPlanList;
 
     private String repayTimeStr;
 

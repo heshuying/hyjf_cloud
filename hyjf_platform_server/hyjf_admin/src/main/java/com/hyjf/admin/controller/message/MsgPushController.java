@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.MsgPushTemplateService;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.List;
  * @author fuqiang
  * @version MsgPushController, v0.1 2018/6/26 9:31
  */
+@Api(value = "消息推送", description = "消息推送")
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/template")
 public class MsgPushController {
@@ -34,6 +37,7 @@ public class MsgPushController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value = "查询所有消息推送模板", notes = "查询所有消息推送模板")
 	@RequestMapping("/findAll")
 	public JSONObject findAll() {
 		JSONObject jsonObject = new JSONObject();
@@ -47,6 +51,7 @@ public class MsgPushController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value = "根据条件查询消息推送模板", notes = "根据条件查询消息推送模板")
 	@RequestMapping("/findMsgPushTemplate")
 	public JSONObject findMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
@@ -61,6 +66,7 @@ public class MsgPushController {
 	 * @param request
 	 * @return
 	 */
+	@ApiOperation(value = "新增消息推送模板", notes = "新增消息推送模板")
 	@RequestMapping("/insertMsgPushTemplate")
 	public JSONObject insertMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
