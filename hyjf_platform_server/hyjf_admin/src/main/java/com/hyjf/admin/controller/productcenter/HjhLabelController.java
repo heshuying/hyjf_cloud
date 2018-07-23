@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version HjhLabelController.java, v0.1 2018年6月30日 上午9:14:22
  */
-@Api(value = "标签配置列表")
+@Api(value = "标签配置列表",description = "标签配置列表")
 @RestController
 @RequestMapping("/hyjf-admin/label")
 public class HjhLabelController extends BaseController{
@@ -68,7 +68,7 @@ public class HjhLabelController extends BaseController{
 	 * 画面初始化
 	 *
 	 * @param request
-	 * @return 标签配置列表
+	 * @return 标签配置列表  已测试
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表初始化")
 	@PostMapping(value = "/init")
@@ -104,7 +104,7 @@ public class HjhLabelController extends BaseController{
 	 * 下拉联动
 	 *
 	 * @param request
-	 * @return 进入资产列表页面
+	 * @return 进入资产列表页面  已测试
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表下拉联动")
 	@PostMapping(value = "/link")
@@ -139,7 +139,7 @@ public class HjhLabelController extends BaseController{
 	 * 标签配置列表查询
 	 *
 	 * @param request
-	 * @return 进入标签配置列表页面
+	 * @return 进入标签配置列表页面    已测试
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表查询")
 	@PostMapping(value = "/search")
@@ -169,7 +169,7 @@ public class HjhLabelController extends BaseController{
 	}
 	
 	/**
-	 * 标签列表 添加/修改 初始化画面
+	 * 标签列表 添加/修改 初始化画面   已测试
 	 *
 	 * @param request
 	 * @return 
@@ -181,7 +181,7 @@ public class HjhLabelController extends BaseController{
 	public JSONObject getAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
-		AdminHjhLabelCustomizeVO adminHjhLabelCustomizeVO = null;
+		/*AdminHjhLabelCustomizeVO adminHjhLabelCustomizeVO = null;*/
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		/*(1)添加时只返回下拉菜单*/
 		// 1.资产来源
@@ -198,7 +198,7 @@ public class HjhLabelController extends BaseController{
 		jsonObject.put("还款方式下拉列表", "borrowStyleList");
 		jsonObject.put("borrowStyleList", borrowStyleList);
 		/*(2)修改时返回此条记录的详情*/
-		// 这里注意 先定义一个参数，前端需要传入 LabelId 参数
+		// 这里注意 先定义一个参数，前端需要传入 LabelId(标签编号) 参数
 		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
 			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(viewRequest.getLabelId()));
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListById(hjhLabelRequest);
@@ -220,8 +220,7 @@ public class HjhLabelController extends BaseController{
 	            	resultVO.setPushTimeEndString(DateUtils.getNowDateByHH(resultVO.getPushTimeEnd()));
 	            }
 	            if(resultVO != null){
-	            	BeanUtils.copyProperties(resultVO, adminHjhLabelCustomizeVO);
-	            	jsonObject.put("adminHjhLabelCustomizeVO", adminHjhLabelCustomizeVO);
+	            	jsonObject.put("resultVO", resultVO);
 	            	jsonObject.put("status", SUCCESS);
 	            }
 	            /*组装3  产品类型(联动)*/
@@ -241,7 +240,6 @@ public class HjhLabelController extends BaseController{
 				jsonObject.put("message", "根据labelId查询为空！");
 			}
 		} else {
-			jsonObject.put("status", FAIL);
 			jsonObject.put("message", "未传入labelId");
 		}
 		return jsonObject;
@@ -471,7 +469,7 @@ public class HjhLabelController extends BaseController{
 	 * 修改画面确认后修改标签
 	 * 
 	 * @param 
-	 * @param map
+	 * @param viewRequest
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "修改画面确认后修改标签")
 	@PostMapping(value = "/update")
@@ -522,7 +520,9 @@ public class HjhLabelController extends BaseController{
 						// 传入标签id 和 标签名称 进  infoRequest
 						int allocation = this.labelService.updateAllocationRecord(infoRequest);
 						if(allocation > 0){
-							success();
+							jsonObject.put("status", SUCCESS);
+						} else {
+							jsonObject.put("status", FAIL);
 						}
 					}
 				}
@@ -532,7 +532,7 @@ public class HjhLabelController extends BaseController{
 	}
 	
 	/**
-	 * 启用/禁用
+	 * 启用/禁用   已测试
 	 * 
 	 * @param 
 	 * @param map
@@ -555,14 +555,19 @@ public class HjhLabelController extends BaseController{
 					infoRequest.setLabelState(0);
 					// LabelName 用来检索
 					infoRequest.setLabelName(resultVO.getLabelName());
+					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
+					
 				} else {
 					infoRequest.setLabelState(1);
 					// LabelName 用来检索
 					infoRequest.setLabelName(resultVO.getLabelName());
+					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
 				}
 				int flg = this.labelService.updateHjhLabelRecord(infoRequest);
 				if(flg > 0){
-					success();
+					jsonObject.put("status", SUCCESS);
+				} else {
+					jsonObject.put("status", FAIL);
 				}
 			}
 		}

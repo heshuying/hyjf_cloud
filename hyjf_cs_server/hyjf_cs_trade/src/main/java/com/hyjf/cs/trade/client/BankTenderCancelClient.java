@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.client;
 
 import java.util.List;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 
 /**
@@ -14,7 +14,7 @@ public interface BankTenderCancelClient {
 
     List<BorrowTenderTmpVO> getBorrowTenderTmpsForTenderCancel();
 
-    void updateBidCancelRecord(JSONObject para);
+    boolean updateBidCancelRecord(TenderCancelRequest para);
 
-    void updateTenderCancelExceptionData(BorrowTenderTmpVO info);
+    boolean updateTenderCancelExceptionData(BorrowTenderTmpVO info);
 }

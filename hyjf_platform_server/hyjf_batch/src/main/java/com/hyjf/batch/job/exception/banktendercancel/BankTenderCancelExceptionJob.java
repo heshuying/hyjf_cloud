@@ -19,7 +19,7 @@ public class BankTenderCancelExceptionJob extends BaseJob implements Job{
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BankTenderCancelExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/bankTenderCancelExceptionHandle", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/bankTenderCancelExceptionHandle", String.class).getBody();
         logger.info("BankTenderCancelExceptionJob execute end...");
     }
 }
