@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.coupon.DataCenterCouponCustomizeMapper">
+	
+	<resultMap id="selectDataCenterCouponMap" type="com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize">
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="grant_num" property="grantNum" jdbcType="VARCHAR" />
+		<result column="used_num" property="usedNum" jdbcType="VARCHAR" />
+		<result column="expire_num" property="expireNum" jdbcType="VARCHAR" />
+		<result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
+		<result column="recived_money" property="recivedMoney" jdbcType="VARCHAR" />
+		<result column="norecived_money" property="norecivedMoney" jdbcType="VARCHAR" />
+		<result column="wait_recive_money" property="waitReciveMoney" jdbcType="VARCHAR" />
+		<result column="expire_recive_money" property="expireReciveMoney" jdbcType="VARCHAR" />
+		<result column="real_tender_money" property="realTenderMoney" jdbcType="VARCHAR" />
+	</resultMap>
+<select id="getDataCenterCouponList" resultMap="selectDataCenterCouponMap" parameterType="map">
+				SELECT
+					IFNULL(
+						list.title,
+						CASE u.coupon_source
+					WHEN 1 THEN
+						'手动发放'
+					WHEN 3 THEN
+						'会员礼包'
+					ELSE
+						''
+					END
+					) title,
+					sum(
+						CASE
+						WHEN u.used_flag = 1 THEN
+							1
+						ELSE
+							0
+						END
+					) AS used_num,
+					sum(
+						CASE
+						WHEN u.used_flag = 4 THEN
+							1
+						ELSE
+							0
+						END
+					) AS expire_num,
+					COUNT(u.id) grant_num,
+					FORMAT(
+						SUM(
+							IFNULL(cr.recover_account, 0)
+						),
+						2
+					) recover_interest,
+					FORMAT(
+						sum(
+							IFNULL(cr.recover_account_yes, 0)
+						),
+						2
+					) AS recived_money,
+					FORMAT(
+						sum(
+							IFNULL(cr.recover_account, 0)
+						) - sum(
+							IFNULL(cr.recover_account_yes, 0)
+						),
+						2
+					) AS norecived_money,
+					FORMAT(
+						sum(IFNULL(bts.account, 0)),
+						3
+					) real_tender_money
+				FROM
+					hyjf_coupon_user u
+				LEFT JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+				LEFT JOIN ht_activity_list list ON u.activity_id = list.id
+				LEFT JOIN ht_tender ct ON u.id = ct.coupon_grant_id
+				LEFT JOIN ht_coupon_recover cr ON ct.order_id = cr.tender_id AND cr.recover_period=1
+				LEFT JOIN ht_coupon_real_tender rts ON ct.order_id = rts.coupon_tender_id
+				LEFT JOIN ht_borrow_tender bts ON rts.real_tender_id = bts.nid
+			WHERE
+			    c.coupon_type = #{type}
+			AND u.del_flag = 0
+			GROUP BY
+			   u.coupon_source,u.activity_id
+			<if test="limitStart !=null and limitStart >= 0" >
+		      LIMIT #{limitStart} , #{limitEnd}
+		    </if>
+		</select>
+</mapper>
+

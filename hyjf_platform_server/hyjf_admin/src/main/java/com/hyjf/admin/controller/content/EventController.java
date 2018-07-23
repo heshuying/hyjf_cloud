@@ -27,14 +27,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version EventController, v0.1 2018/7/11 17:20
  */
-@Api(value = "公司管理-公司记事")
+@Api(value = "公司管理-公司记事", description = "公司管理-公司记事")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentevent")
 public class EventController extends BaseController {
 	@Autowired
 	private EventService eventService;
 
-	@ApiOperation(value = "公司管理-公司记事", notes = "公司管理-公司记事条件列表查询")
+	@ApiOperation(value = "公司管理-公司记事条件列表查询", notes = "公司管理-公司记事条件列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<EventVO>> searchAction(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.searchAction(requestBean);
@@ -47,7 +47,7 @@ public class EventController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "公司管理-公司记事", notes = "添加公司管理-公司记事")
+	@ApiOperation(value = "添加公司管理-公司记事", notes = "添加公司管理-公司记事")
 	@RequestMapping("/insert")
 	public AdminResult add(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.insertAction(requestBean);
@@ -60,7 +60,7 @@ public class EventController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-公司记事", notes = "修改公司管理-公司记事")
+	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.updateAction(requestBean);
@@ -73,7 +73,7 @@ public class EventController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-公司记事", notes = "修改公司管理-公司记事")
+	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.updateStatus(requestBean);
@@ -86,7 +86,7 @@ public class EventController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-公司记事", notes = "删除公司管理-公司记事")
+	@ApiOperation(value = "删除公司管理-公司记事", notes = "删除公司管理-公司记事")
 	@RequestMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		EventResponse response = eventService.deleteById(id);

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yinhui
  * Created by yinhui on 2018/7/19.
  */
-@Api(value = "内容中心-广告管理")
+@Api(value = "内容中心-广告管理", description = "内容中心-广告管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentads")
 public class ContentAdsController extends BaseController {
@@ -28,7 +28,7 @@ public class ContentAdsController extends BaseController {
     @Autowired
     private ContentAdsService contentAdsService;
 
-    @ApiOperation(value = "内容中心-广告管理", notes = "广告管理-条件列表查询")
+    @ApiOperation(value = "广告管理-条件列表查询", notes = "广告管理-条件列表查询")
     @RequestMapping("/searchaction")
     public AdminResult<ListResult<ContentAdsBeanVO>> searchAction(ContentAdsRequest request){
         logger.info("查询内容中心-广告管理-条件列表查询开始......");
@@ -42,7 +42,7 @@ public class ContentAdsController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "内容中心-广告管理", notes = "广告管理-添加")
+    @ApiOperation(value = "广告管理-添加", notes = "广告管理-添加")
     @RequestMapping("/insert")
     public AdminResult insert(ContentAdsRequest request){
         logger.info("添加内容中心-广告管理开始......");
@@ -56,7 +56,7 @@ public class ContentAdsController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "内容中心-广告管理", notes = "广告管理-修改")
+    @ApiOperation(value = "广告管理-修改", notes = "广告管理-修改")
     @RequestMapping("/update")
     public AdminResult update(ContentAdsRequest request){
         logger.info("修改内容中心-广告管理开始......");
@@ -70,7 +70,7 @@ public class ContentAdsController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "内容中心-广告管理", notes = "广告管理-修改")
+    @ApiOperation(value = "广告管理-修改", notes = "广告管理-修改")
     @RequestMapping("/delete/{id}")
     public AdminResult delete(@PathVariable Integer id){
         logger.info("修改内容中心-广告管理开始......");
