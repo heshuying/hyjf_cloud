@@ -3,9 +3,10 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.user.*;
+import com.hyjf.admin.beans.vo.CompanyInfoCompanyInfoVO;
+import com.hyjf.admin.beans.vo.UserBankOpenAccountCustomizeVO;
+import com.hyjf.admin.beans.vo.UserCustomizeShowVO;
 
-import java.util.List;
 
 /**
  * @author nxl
@@ -13,33 +14,33 @@ import java.util.List;
  */
 public class InitCompanyInfoResponseBean {
     //开户信息
-    private UserBankOpenAccountVO bankOpenAccount;
+    private UserBankOpenAccountCustomizeVO bankOpenAccount;
     //公司信息
-    private CompanyInfoVO companyInfo;
+    private CompanyInfoCompanyInfoVO companyInfo;
     //用户信息
-    private UserVO userVO;
+    private UserCustomizeShowVO userVO;
 
-    public UserBankOpenAccountVO getBankOpenAccount() {
+    public UserBankOpenAccountCustomizeVO getBankOpenAccount() {
         return bankOpenAccount;
     }
 
-    public void setBankOpenAccount(UserBankOpenAccountVO bankOpenAccount) {
+    public void setBankOpenAccount(UserBankOpenAccountCustomizeVO bankOpenAccount) {
         this.bankOpenAccount = bankOpenAccount;
     }
 
-    public CompanyInfoVO getCompanyInfo() {
+    public CompanyInfoCompanyInfoVO getCompanyInfo() {
         return companyInfo;
     }
 
-    public void setCompanyInfo(CompanyInfoVO companyInfo) {
+    public void setCompanyInfo(CompanyInfoCompanyInfoVO companyInfo) {
         this.companyInfo = companyInfo;
     }
 
-    public UserVO getUserVO() {
+    public UserCustomizeShowVO getUserVO() {
         return userVO;
     }
 
-    public void setUserVO(UserVO userVO) {
+    public void setUserVO(UserCustomizeShowVO userVO) {
         this.userVO = userVO;
     }
 }

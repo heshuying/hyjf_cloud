@@ -170,7 +170,6 @@ public class VersionConfigClientImpl implements VersionConfigClient {
                         VersionConfigBeanResponse.class)
                 .getBody();
         return response;
-
     }
 
 

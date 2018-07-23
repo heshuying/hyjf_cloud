@@ -43,7 +43,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据筛选条件查询银行投资撤销异常的数据count", notes = "根据筛选条件查询银行投资撤销异常的数据count")
     @PostMapping(value = "/gettendercancelexceptioncount")
-    public Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request){
+    public Integer getTenderCancelExceptionCount(@RequestBody TenderCancelExceptionRequest request){
         return tenderCancelExceptionService.getTenderCancelExceptionCount(request);
     }
 
@@ -55,7 +55,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据筛选条件查询银行投资撤销异常list", notes = "根据筛选条件查询银行投资撤销异常list")
     @PostMapping(value = "/searchtendercancelexceptionlist")
-    public BorrowTenderTmpResponse searchTenderCancelExceptionList(TenderCancelExceptionRequest request){
+    public BorrowTenderTmpResponse searchTenderCancelExceptionList(@RequestBody TenderCancelExceptionRequest request){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
         Integer count = tenderCancelExceptionService.getTenderCancelExceptionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页

@@ -23,7 +23,7 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "推荐人web.app.weChat.api")
     private String reffer;
 
-    @ApiModelProperty(value = "机构编号api")
+    @ApiModelProperty(value = "机构编号web.api")
     private String instCode;
     @ApiModelProperty(value = "注册渠道web.api")
     private String utmId;

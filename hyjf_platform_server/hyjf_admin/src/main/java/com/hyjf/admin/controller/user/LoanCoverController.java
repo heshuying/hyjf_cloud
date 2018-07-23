@@ -1,6 +1,8 @@
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
+import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -10,11 +12,16 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
+import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
+import com.hyjf.pay.lib.fadada.util.DzqzConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -33,13 +40,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "会员中心-借款盖章用户接口",description = "会员中心-借款盖章用户接口")
+@Api(value = "会员中心-借款盖章用户接口", description = "会员中心-借款盖章用户接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersLoancover")
 public class LoanCoverController extends BaseController {
@@ -50,49 +56,57 @@ public class LoanCoverController extends BaseController {
 
 
     /**
-     * 列表维护画面初始化
+     * 获取借款盖章用户列表
      *
      * @return
      */
-    @ApiOperation(value = "借款盖章用户", notes = "获取借款盖章用户列表")
+    @ApiOperation(value = "获取借款盖章用户列表", notes = "获取借款盖章用户列表")
     @PostMapping(value = "/selectLoancoverList")
     @ResponseBody
-    public AdminResult<ListResult<LoanCoverUserVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
-        LoanCoverUserRequest loanCoverUserRequest  = new LoanCoverUserRequest();
+    public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+        LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
         LoanCoverUserResponse loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
-        if(loanCoverUserVOList==null) {
+        if (loanCoverUserVOList == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(loanCoverUserVOList)) {
             return new AdminResult<>(FAIL, loanCoverUserVOList.getMessage());
         }
-        return new AdminResult<ListResult<LoanCoverUserVO>>(ListResult.build(loanCoverUserVOList.getResultList(), loanCoverUserVOList.getCount())) ;
+        List<LoanCoverUserCustomizeVO> loanCoverUserCustomizeVOList= new ArrayList<LoanCoverUserCustomizeVO>();
+        if(null!=loanCoverUserVOList.getResultList()&&loanCoverUserVOList.getResultList().size()>0){
+            loanCoverUserCustomizeVOList = CommonUtils.convertBeanList(loanCoverUserVOList.getResultList(),LoanCoverUserCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<LoanCoverUserCustomizeVO>>(ListResult.build(loanCoverUserCustomizeVOList, loanCoverUserVOList.getCount()));
     }
+
     /**
      * 添加借款盖章用户
      *
      * @return
      */
-    @ApiOperation(value = "借款盖章用户", notes = "初始化修改借款盖章用户")
+    @ApiOperation(value = "初始化修改借款盖章用户", notes = "初始化修改借款盖章用户")
     @PostMapping(value = "/updateLoancoverInit")
     @ResponseBody
-    public AdminResult<LoanCoverUserVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
+    public AdminResult<LoanCoverUserCustomizeVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
         LoanCoverUserVO loanCoverUserResponse = loanCoverService.selectRecordByIdNo(id);
+        LoanCoverUserCustomizeVO loanCoverUserCustomizeVO = new LoanCoverUserCustomizeVO();
         if (null != loanCoverUserResponse) {
-            return new AdminResult<LoanCoverUserVO>(loanCoverUserResponse);
+            BeanUtils.copyProperties(loanCoverUserResponse,loanCoverUserCustomizeVO);
+            return new AdminResult<LoanCoverUserCustomizeVO>(loanCoverUserCustomizeVO);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }
+
     /**
      * 添加借款盖章用户
      *
      * @return
      */
-    @ApiOperation(value = "借款盖章用户", notes = "添加借款盖章用户")
+    @ApiOperation(value = "添加借款盖章用户", notes = "添加借款盖章用户")
     @PostMapping(value = "/insertLoancover")
     @ResponseBody
-    public AdminResult insertLoancover(HttpServletRequest request, HttpServletResponse response,@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+    public AdminResult insertLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
         //获取登录用户Id
@@ -111,7 +125,7 @@ public class LoanCoverController extends BaseController {
         loanCoverUserRequest.setCreateTime(new Date());
         int intFlg = loanCoverService.insertLoanCoverUser(loanCoverUserRequest);
 
-        if(intFlg<=0){
+        if (intFlg <= 0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();
@@ -132,11 +146,11 @@ public class LoanCoverController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "借款盖章用户", notes = "修改借款盖章用户")
+    @ApiOperation(value = "修改借款盖章用户", notes = "修改借款盖章用户")
     @PostMapping(value = "/updateLoancover")
     @ResponseBody
-    public AdminResult updateLoancover(HttpServletRequest request, HttpServletResponse response,@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
-        return  loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean);
+    public AdminResult updateLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+        return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean);
     }
 
     /*  *
@@ -145,7 +159,7 @@ public class LoanCoverController extends BaseController {
        * @param request
        * @param modelAndView
        * @param form*/
-    @ApiOperation(value = "借款盖章用户", notes = "导出借款盖章用户")
+    @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
     @PostMapping(value = "/exportLoancover")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
@@ -153,8 +167,8 @@ public class LoanCoverController extends BaseController {
         loanCoverUserRequest.setLimitFlg(true);
         LoanCoverUserResponse loanCoverUserResponse = loanCoverService.selectUserMemberList(loanCoverUserRequest);
         List<LoanCoverUserVO> loanCoverUserVOList = new ArrayList<LoanCoverUserVO>();
-        if(null!=loanCoverUserRequest){
-            loanCoverUserVOList= loanCoverUserResponse.getResultList();
+        if (null != loanCoverUserRequest) {
+            loanCoverUserVOList = loanCoverUserResponse.getResultList();
         }
         // 表格sheet名称
         String sheetName = "借款盖章用户查询";
@@ -230,5 +244,69 @@ public class LoanCoverController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         logger.info("=============导出借款盖章用户完成=============");
+    }
+
+    //认证
+    @ApiOperation(value = "借款盖章用户认证", notes = "借款盖章用户认证")
+    @PostMapping(value = "/shareUser")
+    @ResponseBody
+    public AdminResult shareUser(HttpServletRequest request, HttpServletResponse response, @RequestBody String loanId) {
+        JSONObject result = new JSONObject();
+        LoanCoverUserResponse loanCoverUserResponse = loanCoverService.getLoanCoverUserById(loanId);
+        if (null != loanCoverUserResponse) {
+            LoanCoverUserVO ma = loanCoverUserResponse.getResult();
+            CertificateAuthorityVO certificateAuthorityVO = loanCoverService.selectCertificateAuthorityByIdNoName(ma.getIdNo(), ma.getName());
+            LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
+            if (null != certificateAuthorityVO) {
+                ma.setCode("1000");
+                ma.setCustomerId(certificateAuthorityVO.getCustomerId());
+                ma.setStatus("success");
+                ma.setUpdateTime(new Date());
+                BeanUtils.copyProperties(ma, loanCoverUserRequest);
+                loanCoverService.updateLoanCoverUserRecord(loanCoverUserRequest);
+                return new AdminResult<>();
+            }
+            // 法大大开始
+            DzqzCallBean bean = new DzqzCallBean();
+            bean.setUserId(0);
+            bean.setLogordid("0");
+            bean.setApp_id(DzqzConstant.HYJF_FDD_APP_ID);
+            bean.setV(DzqzConstant.HYJF_FDD_VERSION);
+            bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
+            bean.setCustomer_name(ma.getName());// 客户姓名
+            bean.setEmail(ma.getEmail());// 电子邮箱
+            bean.setIdCard(ma.getIdNo());// 组织机构代码
+            bean.setMobile(ma.getMobile());// 手机号
+
+            if (ma.getIdType() == 0) {
+                bean.setIdent_type("0");// 证件类型
+                bean.setTxCode("syncPerson_auto");
+            } else {
+                bean.setTxCode("syncCompany_auto");
+            }
+            // 调用接口
+            DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
+            logger.info("法大大返回报文" + resultt.toString());
+            if (resultt != null) {
+                logger.info("CA认证成功:用户ID:[" + ma.getName() + "].");
+                if ("success".equals(resultt.getResult())) {
+                    ma.setCode(resultt.getCode());
+                    ma.setCustomerId(resultt.getCustomer_id());
+                    ma.setStatus("success");
+                    ma.setUpdateTime(new Date());
+                    BeanUtils.copyProperties(ma, loanCoverUserRequest);
+                    loanCoverService.updateLoanCoverUserRecord(loanCoverUserRequest);
+                    return new AdminResult<>();
+                } else {
+                    ma.setCode(resultt.getCode());
+                    ma.setStatus("error");
+                    ma.setUpdateTime(new Date());
+                    loanCoverService.updateLoanCoverUserRecord(loanCoverUserRequest);
+                    return new AdminResult<>(FAIL, resultt.getMsg());
+                }
+
+            }
+        }
+        return new AdminResult<>(FAIL, "请求法大大失败");
     }
 }

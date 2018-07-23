@@ -23,14 +23,12 @@ public class SmsLogServiceClientImpl implements SmsLogClient {
 
 	@Override
 	public JSONObject smsLogList() {
-		return restTemplate.getForEntity("http://CS-MESSAGE/cs-message/message/smsLog/smsLogList", JSONObject.class)
-				.getBody();
+		return restTemplate.getForEntity("http://CS-MESSAGE/cs-message/sms_log/list", JSONObject.class).getBody();
 	}
 
 	@Override
 	public JSONObject findSmsLog(SmsLogRequest request) {
-		return restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/message/smsLog/smsLogList", request, JSONObject.class)
+		return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/sms_log/find", request, JSONObject.class)
 				.getBody();
 	}
 }

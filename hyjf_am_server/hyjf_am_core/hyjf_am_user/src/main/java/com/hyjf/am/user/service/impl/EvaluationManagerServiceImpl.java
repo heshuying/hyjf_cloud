@@ -53,15 +53,14 @@ public class EvaluationManagerServiceImpl implements EvaluationManagerService {
         List<EvalationResultCustomize> listUser = evaluationManagerCustomizeMapper.selectUserEvalationResultList(mapParam);
         if (CollectionUtils.isNotEmpty(listUser)) {
             //
-           /* Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
+            Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
             Map<String, String> accountStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
             if(null!=listUser&&listUser.size()>0){
                 for (EvalationResultCustomize  evalationResultCustomize : listUser) {
                     evalationResultCustomize.setAccountStatus(accountStatus.getOrDefault(evalationResultCustomize.getAccountStatus(), null));
                     evalationResultCustomize.setUserProperty(userProperty.getOrDefault(evalationResultCustomize.getUserProperty(), null));
                 }
-            }*/
-
+            }
         }
         return listUser;
     }

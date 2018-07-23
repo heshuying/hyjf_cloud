@@ -979,9 +979,16 @@ public class GetDate extends PropertyEditorSupport {
 		return (int) (getMillis() / 1000);
 	}
 
-	public static Date getNowTime(){
+	/**
+	 * 原来的getNowTime,感觉太繁琐了,似乎没什么用
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Deprecated
+	public static Date getNowTime2(){
 		Date date=new Date();
-		SimpleDateFormat temp=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat temp=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date1=temp.format(date);
 		Date date2= null;
 		try {
@@ -991,7 +998,15 @@ public class GetDate extends PropertyEditorSupport {
 		}
 		return date2;
 	}
-
+	/**
+	 * 获取系统当前时间
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	public static Date getNowTime(){
+		return new Date();
+	}
 	/**
 	 * 转换10时间
 	 *

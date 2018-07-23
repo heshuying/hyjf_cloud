@@ -11,6 +11,7 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,9 @@ public class AppBorrowImageController {
     @Autowired
     AppBorrowImageService appBorrowImageService;
 
+    @Value("${file.domain.url}")
+    private String DOMAIN_URL;
+
     /**
      * 查询列表
      *
@@ -39,7 +43,7 @@ public class AppBorrowImageController {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
         List<AppBorrowImage> recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), -1, -1);
         if (recordList != null) {
-            String filePhysicalPath = UploadFileUtils.getDoPath("");//TODO  PropUtils.getSystem("file.domain.url")
+            String filePhysicalPath = DOMAIN_URL;//TODO  PropUtils.getSystem("file.domain.url")
             Paginator paginator = new Paginator(form.getPaginatorPage(), recordList.size(), 12);
             recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), paginator.getOffset(), paginator.getLimit());
             form.setPaginator(paginator);
@@ -68,11 +72,10 @@ public class AppBorrowImageController {
         record.setId(form.getId());
         if (Validator.isNotNull(record.getId())) {
             // 根据主键检索数据
-            String filePhysicalPath = UploadFileUtils.getDoPath("");//TODO PropUtils.getSystem("file.domain.url")
+            String filePhysicalPath = DOMAIN_URL;//TODO PropUtils.getSystem("file.domain.url")
             record = appBorrowImageService.getRecord(form.getId());
             if (record != null) {
                 record.setBorrowImageUrl(filePhysicalPath + record.getBorrowImageUrl());
-                //TODO modelAndView.addObject("isEdit", "Y");
             }
         }
         AppBorrowImageVO appBorrowImageVO = CommonUtils.convertBean(record, AppBorrowImageVO.class);

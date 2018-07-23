@@ -3,9 +3,12 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -64,7 +67,7 @@ public interface AmConfigClient {
      * 获取网贷知识
      * @return
      */
-    public List<ContentArticleVO> getknowsList();
+    public List<ContentArticleVO> getknowsList(ContentArticleRequest request);
 
     /**
      * 获取合作伙伴列表
@@ -73,4 +76,33 @@ public interface AmConfigClient {
      * @return
      */
     List<LinkVO> getPartnersList(Integer partnerType);
+
+    /**
+     * 获取
+     * @param request
+     * @return
+     */
+    public List<ContentArticleVO> getIndexList(ContentArticleRequest request);
+
+
+    TotalInvestAndInterestResponse searchData();
+
+    /**
+     * 查询文章条数
+     * @return
+     */
+    Integer countContentArticleByType();
+
+    /**
+     * 查询文章列表
+     * @return
+     */
+    List<ContentArticleCustomizeVO> getContentArticleListByType(Map<String, Object> params);
+
+    /**
+     * 根据文章id查找文章
+     * @param contentArticleId
+     * @return
+     */
+    ContentArticleVO getContentArticleById(Integer contentArticleId);
 }

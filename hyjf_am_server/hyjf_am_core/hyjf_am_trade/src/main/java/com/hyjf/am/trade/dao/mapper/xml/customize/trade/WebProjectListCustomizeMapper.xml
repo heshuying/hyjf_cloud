@@ -75,7 +75,6 @@
         <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="on_time" property="onTime" jdbcType="VARCHAR" />
         <result column="time" property="time" jdbcType="VARCHAR" />
-        <result column="couponEnable" property="couponEnable" jdbcType="VARCHAR" />
         <result column="booking_status" property="bookingStatus" jdbcType="INTEGER" />
         <result column="booking_begin_time" property="bookingBeginTime" jdbcType="INTEGER" />
         <result column="booking_end_time" property="bookingEndTime" jdbcType="INTEGER" />
@@ -83,6 +82,10 @@
         <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="DECIMAL" />
         <result column="borrow_asset_number" property="borrowAssetNumber" jdbcType="VARCHAR" />
         <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
+        <result column="credit_capital" property="creditCapital" jdbcType="DECIMAL" />
+        <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
+        <result column="credit_capital_assigned" property="creditCapitalAssigned" jdbcType="VARCHAR" />
+        <result column="borrow_desc" property="borrowDesc" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="HjhPlanMap" type="com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize">
@@ -96,6 +99,8 @@
         <result column="plan_invest_status_name" property="statusName" jdbcType="VARCHAR" />
         <result column="coupon_config" property="couponEnable" jdbcType="VARCHAR" />
     </resultMap>
+
+
 
     <!--标的详情-->
     <resultMap id="ProjectDetailMap" type="com.hyjf.am.vo.trade.ProjectCustomeDetailVO">
@@ -496,10 +501,10 @@
 
     <!--债权转让查询count-->
     <select id="countCreditList" resultType="int" parameterType="Map">
-        select count(*)
+        select count(ht_borrow_credit.credit_nid)
         from   ht_borrow_credit
-        INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
-        INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
+        INNER JOIN ht_borrow hydb ON ht_borrow_credit.bid_nid = hydb.borrow_nid
+        INNER JOIN ht_borrow_style hbs ON hydb.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
 
@@ -508,7 +513,7 @@
     <!--债权转让(web，app)查询公用where-->
     <sql id="Credit_Common_Where_Column">
         <where>
-            ht_borrow.is_show <![CDATA[<>]]> 1
+            hydb.is_show <![CDATA[<>]]> 1
             <if test="creditStatus != null and creditStatus != ''">
                 AND credit_status = #{creditStatus}
             </if>
@@ -519,7 +524,7 @@
                 </if>
             </if>
             AND ((
-                ht_borrow.borrow_style !='endday'
+                hydb.borrow_style !='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
                     AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin}
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
@@ -527,7 +532,7 @@
                     </if>
                 </if>
             ) OR (
-                ht_borrow.borrow_style ='endday'
+                hydb.borrow_style ='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
                     AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin} * 30
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
@@ -837,7 +842,7 @@
         WHEN hydb.`status` = 4 THEN '13'
         ELSE
         ''
-        END AS tstatus,
+        END AS status,
         CONCAT(#{host},'?borrowNid=',hydb.borrow_nid) AS borrow_url,
         CASE
         WHEN hydb.`status` = 1 AND hydb.verify_status =3
@@ -1015,9 +1020,9 @@
     <!--app 债转count-->
     <select id="countAppCredit" resultType="int" parameterType="Map">
         SELECT
-        COUNT(credit_nid)
+        COUNT(ht_borrow_credit.credit_nid)
         from ht_borrow_credit
-        INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid INNER JOIN ht_borrow_style hbs
+        INNER JOIN ht_borrow hydb ON ht_borrow_credit.bid_nid = hydb.borrow_nid INNER JOIN ht_borrow_style hbs
         ON hydb.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
@@ -1030,6 +1035,9 @@
         CONCAT('HZR',hydc.credit_nid ) AS borrow_name,
         '汇转让' AS borrow_desc,
         'HZR' AS borrow_type,
+        hydc.credit_capital AS credit_capital,
+        hydc.credit_discount AS credit_discount,
+        hydc.credit_capital_assigned AS credit_capital_assigned,
         hydc.bid_apr AS borrow_apr,
         hydc.credit_capital-hydc.credit_capital_assigned AS credit_inProgress,
         CASE
@@ -1074,7 +1082,7 @@
         )
         END AS borrow_total,
         hydc.credit_term AS borrow_period,
-        '11' AS tstatus,
+        '11' AS status,
         '' AS on_time,
         truncate(hydc.credit_capital_assigned/hydc.credit_capital,2)*100 AS borrow_schedule,
         CONCAT(#{host},'?creditNid=',hydc.credit_nid) AS borrow_url,

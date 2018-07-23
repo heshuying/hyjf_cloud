@@ -16,29 +16,55 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
     @Autowired
     AppBorrowImageClient appBorrowImageClient;
 
+    /**
+     * 获取广告管理列表数据
+     * @param request
+     * @return
+     */
     @Override
     public AppBorrowImageResponse getRecordList(AppBorrowImageRequest request) {
         return appBorrowImageClient.searchList(request);
-
-
     }
 
+    /**
+     * 获取详情
+     * @param request
+     * @return
+     */
     @Override
     public AppBorrowImageResponse getRecord(AppBorrowImageRequest request) {
         return appBorrowImageClient.searchInfo(request);
     }
 
+    /**
+     * 插入记录
+     * @param record
+     * @return
+     * @throws Exception
+     */
     @Override
     public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record) throws Exception {
         return appBorrowImageClient.insertInfo(record);
     }
 
+    /**
+     * 修改记录
+     * @param record
+     * @return
+     * @throws Exception
+     */
     @Override
     public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record) throws Exception {
         return appBorrowImageClient.updateInfo(record);
 
     }
 
+    /**
+     * 删除记录
+     * @param record
+     * @return
+     * @throws Exception
+     */
     @Override
     public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record) throws Exception {
         return appBorrowImageClient.deleteInfo(record);

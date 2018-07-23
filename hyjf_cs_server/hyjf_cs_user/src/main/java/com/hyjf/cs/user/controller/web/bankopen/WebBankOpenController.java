@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  * @author sunss
  *
  */
-@Api(value = "web端用户开户接口")
+@Api(value = "web端-用户开户接口",description = "web端-用户开户接口")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user/secure/open")
@@ -52,6 +52,7 @@ public class WebBankOpenController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
 
+    @ApiOperation(value = "web端获取开户信息", notes = "web端-获取开户信息")
 	@GetMapping(value = "/init")
     @ResponseBody
 	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
@@ -76,7 +77,7 @@ public class WebBankOpenController extends BaseUserController {
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "web端用户开户", notes = "用户开户")
+    @ApiOperation(value = "web端用户开户", notes = "web端-用户开户")
 	@PostMapping(value = "/openBankAccount")
     @ResponseBody
 	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
@@ -136,7 +137,7 @@ public class WebBankOpenController extends BaseUserController {
      * @Description 查询开户失败原因
      * @Author sunss
      */
-    @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
+    @ApiOperation(value = "we端开户查询开户失败原因", notes = "web端-查询开户失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {

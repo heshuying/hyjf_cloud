@@ -2,6 +2,10 @@ package com.hyjf.admin.controller.exception.transferexception;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AdminTransferExceptionLogAPIRequest;
+import com.hyjf.admin.beans.vo.AdminTransferExceptionLogAPIVO;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -9,6 +13,7 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminTransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
@@ -21,6 +26,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
@@ -39,6 +45,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -81,19 +88,17 @@ public class TransferExceptionLogController extends BaseController {
 	 */
     @ApiOperation(value = "银行转账异常页面载入", notes = "银行转账异常页面载入")
 	@PostMapping("/init")
+    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public JSONObject init(AdminTransferExceptionLogRequest request) {
-        JSONObject jsonObject = new JSONObject();
-        Integer count = transferLogService.countRecord(request);
-        jsonObject.put("count",count);
-        List<AdminTransferExceptionLogCustomizeVO> recordList = null;
-        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(request);
-        if (Validator.isNotNull(response)){
-            recordList=response.getResultList();
+	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(AdminTransferExceptionLogAPIRequest request) {
+        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(CommonUtils.convertBean(request,AdminTransferExceptionLogRequest.class));
+        if (response == null){
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }else if(!Response.isSuccess(response)){
+            return new AdminResult<>(FAIL, response.getMessage());
         }
-
-        jsonObject.put("recordList",recordList);
-		return jsonObject;
+        List<AdminTransferExceptionLogAPIVO> apiList = CommonUtils.convertBeanList(response.getResultList(), AdminTransferExceptionLogAPIVO.class);
+		return new AdminResult<ListResult<AdminTransferExceptionLogAPIVO>>(ListResult.build(apiList, response.getCount()));
 	}
 
 

@@ -81,7 +81,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_LOGIN("EUS000002", "登录失败,账号或密码错误"),
 	ERR_USER_NOT_EXISTS("EUS000003", "不存在用户"),
 	ERR_USER_INVALID("EUS000004", "抱歉，您的账户已被禁用，如有疑问请联系客服！"),
-	ERR_USER_REGISTER("EUS000005","注册失败"),
+	ERR_USER_REGISTER("1","注册失败"),
 	ERR_USER_LOGIN_RETRY("EUS000006", "登录失败,请重新登陆"),
 	ERR_USER_UNUSUAL("EUS000007", "你的账户信息存在异常，请联系客服人员处理"),
 	ERR_USER_INFO_GET("EUS000008","查询用户失败"),

@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class HjhInstConfigAPIVO extends BaseVO implements Serializable {
+public class AdminHjhInstConfigAPIVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

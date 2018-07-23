@@ -2,7 +2,6 @@ package com.hyjf.admin.controller.assetcenter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AssetListViewRequest;
-import com.hyjf.admin.beans.vo.AdminAssetDetailCustomizeVO;
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -24,6 +23,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -35,12 +36,13 @@ import org.springframework.beans.BeanUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.*;
 /**
  * @author libin
  * @version AssetListController, v0.1 2018/6/27 15:16
  */
-@Api(value = "资产列表")
+@Api(value = "资产列表",description = "资产列表")
 @RestController
 @RequestMapping("/hyjf-admin/assetcenter")
 public class AssetListController extends BaseController {
@@ -71,23 +73,28 @@ public class AssetListController extends BaseController {
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
 		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
-		jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
-		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型(请求下拉联动接口-可复用)
 		// List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());
 		// jsonObject.put("assetTypeList", assetTypeList);
 		// 3.开户状态
 		Map<String, String> accountStatusMap = this.assetListService.getParamNameMap(ACCOUNT_STATUS);
-		jsonObject.put("开户状态下拉列表", "accountStatusMap");
-		jsonObject.put("accountStatusMap", accountStatusMap);
 		// 4.审核状态
 		Map<String, String> assetApplyStatusMap = this.assetListService.getParamNameMap(ASSET_APPLY_STATUS);
-		jsonObject.put("审核状态下拉列表", "assetApplyStatusMap");
-		jsonObject.put("assetApplyStatusMap", assetApplyStatusMap);
 		// 5.项目状态
 		Map<String, String> assetStatusMap = this.assetListService.getParamNameMap(ASSET_STATUS);
-		jsonObject.put("项目状态下拉列表", "assetStatusMap");
-		jsonObject.put("assetStatusMap", assetStatusMap);
+		if(CollectionUtils.isEmpty(hjhInstConfigList) &&  accountStatusMap.isEmpty() && assetApplyStatusMap.isEmpty() && assetStatusMap.isEmpty()){
+			jsonObject.put("status", FAIL);
+		} else {
+			jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
+			jsonObject.put("hjhInstConfigList", hjhInstConfigList);
+			jsonObject.put("开户状态下拉列表", "accountStatusMap");
+			jsonObject.put("accountStatusMap", accountStatusMap);
+			jsonObject.put("审核状态下拉列表", "assetApplyStatusMap");
+			jsonObject.put("assetApplyStatusMap", assetApplyStatusMap);
+			jsonObject.put("项目状态下拉列表", "assetStatusMap");
+			jsonObject.put("assetStatusMap", assetStatusMap);
+			jsonObject.put("status", SUCCESS);
+		}
 		return jsonObject;
 	}
 
@@ -114,12 +121,14 @@ public class AssetListController extends BaseController {
 					mapTemp.put("text", hjhAssetTypeVO.getAssetTypeName());
 					resultList.add(mapTemp);
 				}
+				jsonObject.put("产品类型下拉列表", "assetTypeList");
+				jsonObject.put("assetTypeList", assetTypeList);
+				jsonObject.put("status", SUCCESS);
 			}
-			jsonObject.put("产品类型下拉列表", "assetTypeList");
-			jsonObject.put("assetTypeList", assetTypeList);
 			return jsonObject;
 		} else {
 			jsonObject.put("未传入机构编号", "未传入机构编号");
+			jsonObject.put("status", FAIL);
 			return jsonObject;
 		}
 	}
@@ -149,9 +158,13 @@ public class AssetListController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
-		volist = CommonUtils.convertBeanList(response.getResultList(), AdminAssetListCustomizeVO.class);
-		return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, response.getCount()));
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAssetListCustomizeVO.class);
+			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminAssetListCustomizeVO>>(ListResult.build(volist, 0));
+		}
 	}
 	
 	/**
@@ -166,19 +179,23 @@ public class AssetListController extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public JSONObject sum(HttpServletRequest request, HttpServletResponse response, @RequestBody AssetListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
+		String status = Response.FAIL;
 		// 初始化原子层请求实体
 		AssetListRequest form = new AssetListRequest();
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		BigDecimal sumAccount = this.assetListService.sumAccount(form);
-		String status = Response.FAIL;
-		// 总计数大于0
-		if(sumAccount.compareTo(BigDecimal.ZERO)==1){
-			jsonObject.put("借款金额(元)列总计", "sumAccount");
-			jsonObject.put("sumAccount", sumAccount);
-			status = Response.SUCCESS;
+		if(sumAccount != null){
+			// 总计数大于0
+			if(sumAccount.compareTo(BigDecimal.ZERO)==1){
+				jsonObject.put("借款金额(元)列总计", "sumAccount");
+				jsonObject.put("sumAccount", sumAccount);
+				status = Response.SUCCESS;
+			}
+		} else {
+			jsonObject.put("msg", "查询为空");
+			jsonObject.put("status", status);
 		}
-		jsonObject.put("status", status);
 		return jsonObject;
 	}
 
@@ -206,12 +223,13 @@ public class AssetListController extends BaseController {
 			/*BeanUtils.copyProperties(assetDetailCustomizeVO,vo);*/
 			jsonObject.put("返回实体类", "assetDetailCustomizeVO");
 			jsonObject.put("assetDetailCustomizeVO", assetDetailCustomizeVO);
+			jsonObject.put("status", SUCCESS);
 		} else {
+			jsonObject.put("status", FAIL);
 			jsonObject.put("message", "未传入assetId和instCode");
 		}
 		return jsonObject;
 	}
-
 
 	/**
 	 * 带条件导出
@@ -231,7 +249,7 @@ public class AssetListController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "资产列表";
 		// 文件名称
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 封装查询条件
 		AssetListRequest form = new AssetListRequest();
 		// 初始化查询列表

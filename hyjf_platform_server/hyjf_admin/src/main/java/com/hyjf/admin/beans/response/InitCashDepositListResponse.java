@@ -6,9 +6,8 @@ package com.hyjf.admin.beans.response;
 import java.util.List;
 
 import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
-import com.hyjf.admin.beans.vo.HjhInstConfigAPIVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.admin.beans.vo.AdminHjhInstConfigAPIVO;
+
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -22,7 +21,7 @@ public class InitCashDepositListResponse {
 	List<AdminAssetListCustomizeVO> assetList;
 
 	@ApiModelProperty(value = "汇计划机构配置列表")
-	List<HjhInstConfigAPIVO>  HjhInstConfigList;
+	List<AdminHjhInstConfigAPIVO>  HjhInstConfigList;
 
 	public List<AdminAssetListCustomizeVO> getAssetList() {
 		return assetList;
@@ -33,11 +32,11 @@ public class InitCashDepositListResponse {
 		this.assetList = assetList;
 	}
 
-	public List<HjhInstConfigAPIVO> getHjhInstConfigList() {
+	public List<AdminHjhInstConfigAPIVO> getHjhInstConfigList() {
 		return HjhInstConfigList;
 	}
 
-	public void setHjhInstConfigList(List<HjhInstConfigAPIVO> hjhInstConfigList) {
+	public void setHjhInstConfigList(List<AdminHjhInstConfigAPIVO> hjhInstConfigList) {
 		HjhInstConfigList = hjhInstConfigList;
 	}
 }

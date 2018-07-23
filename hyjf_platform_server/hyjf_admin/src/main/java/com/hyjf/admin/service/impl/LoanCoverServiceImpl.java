@@ -7,8 +7,10 @@ import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.LoanCoverService;
+import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
@@ -19,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
@@ -37,15 +40,15 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      */
     @Override
     public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request){
-        LoanCoverUserResponse loanCoverUserVOList = loanCoverClient.selectUserMemberList(request);
-        /*SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        if(null!=loanCoverUserVOList&&loanCoverUserVOList.size()>0){
-            for(LoanCoverUserVO loanCoverUserVO :loanCoverUserVOList){
+        LoanCoverUserResponse loanCoverUserResponse = loanCoverClient.selectUserMemberList(request);
+        SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(null!=loanCoverUserResponse){
+            for(LoanCoverUserVO loanCoverUserVO :loanCoverUserResponse.getResultList()){
                 loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
                 loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
             }
-        }*/
-        return loanCoverUserVOList;
+        }
+        return loanCoverUserResponse;
     }
     /**
      * 保存记录
@@ -67,7 +70,7 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         return true;
     }
     /**
-     * 根据id查找记录
+     * 根据证件号码查找记录
      */
     @Override
     public LoanCoverUserVO selectRecordByIdNo(String strIdNo){
@@ -76,6 +79,31 @@ public class LoanCoverServiceImpl implements LoanCoverService {
             return loanCoverUserVO;
         }
         return null;
+    }
+
+    /**
+     * 根据id查找借款主体CA认证记录表
+     * @param id
+     * @return
+     */
+    @Override
+    public LoanCoverUserResponse getLoanCoverUserById(String id){
+        LoanCoverUserResponse response = loanCoverClient.selectIsExistsRecordById(id);
+        return response;
+    }
+
+    /**
+     * 更新借款主体CA认证记录表
+     * @param loanCoverUserRequest
+     * @return
+     */
+    @Override
+    public boolean updateLoanCoverUserRecord(LoanCoverUserRequest loanCoverUserRequest){
+        int intUpd = loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+        if(intUpd>0){
+            return true;
+        }
+        return false;
     }
     /**
      * 更新记录
@@ -95,9 +123,10 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                         bean.setV(DzqzConstant.HYJF_FDD_VERSION);
                         bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
                         bean.setCustomer_id(loanCoverUserVO.getCustomerId());// 客户编号
-
-                        if(!loanCoverUserVO.getEmail().equals(loanCoverUserRequestBean.getEmail())){
-                            bean.setEmail(loanCoverUserRequestBean.getEmail());// 电子邮箱
+                        if(null!=loanCoverUserRequestBean.getEmail()&&null!=loanCoverUserVO.getEmail()){
+                            if(!loanCoverUserVO.getEmail().equals(loanCoverUserRequestBean.getEmail())){
+                                bean.setEmail(loanCoverUserRequestBean.getEmail());// 电子邮箱
+                            }
                         }
                         bean.setMobile(loanCoverUserRequestBean.getMobile());// 手机号
                         DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
@@ -107,7 +136,6 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                             BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
                             loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
                             return new AdminResult<>();
-
                         } else {
                             return new AdminResult<>("99", "更新失败");
                         }
@@ -158,4 +186,18 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         return request;
     }
 
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    @Override
+    public CertificateAuthorityVO selectCertificateAuthorityByIdNoName(String strIdNo, String tureName){
+        CertificateAuthorityResponse response = loanCoverClient.selectCertificateAuthorityByIdNoName(strIdNo,tureName);
+        if(null!=response){
+            return  response.getResult();
+        }
+        return null;
+    }
 }

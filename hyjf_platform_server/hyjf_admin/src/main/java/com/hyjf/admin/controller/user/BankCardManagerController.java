@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,14 +47,14 @@ import java.util.Map;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-銀行卡管理")
+@Api(value = "会员中心-銀行卡管理",description = "会员中心-銀行卡管理")
 @RestController
 @RequestMapping("/hyjf-admin/bankcardManager")
 public class BankCardManagerController extends BaseController {
     @Autowired
     private BankCardManagerService bankCardManagerService;
 
-    @ApiOperation(value = "銀行卡管理", notes = "銀行卡管理页面初始化")
+    @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
     @ResponseBody
     public JSONObject userManagerInit() {
@@ -70,7 +71,7 @@ public class BankCardManagerController extends BaseController {
 
     }
     //汇付银行开户銀行卡記錄查询
-    @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄查询")
+    @ApiOperation(value = "汇付银行开户銀行卡記錄查询", notes = "汇付银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
     public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
@@ -87,7 +88,7 @@ public class BankCardManagerController extends BaseController {
         return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
     }
 
-    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄查询")
+    @ApiOperation(value = "江西银行开户銀行卡記錄查询", notes = "江西银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
     public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordBankAccount(@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
@@ -112,7 +113,7 @@ public class BankCardManagerController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄导出")
+    @ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "汇付银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportbankcard")
     public void exportExcel(HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         // 封装查询条件
@@ -235,14 +236,14 @@ public class BankCardManagerController extends BaseController {
      * @param bankCardManagerRequestBean
      * @throws Exception
      */
-    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄导出")
+    @ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportnewbankcard")
     public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "银行卡管理";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 封装查询条件
         BankCardManagerRequest requestBank = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
@@ -371,7 +372,7 @@ public class BankCardManagerController extends BaseController {
 //    }
 
     //汇付银行操作记录記錄查询
-    @ApiOperation(value = "銀行卡管理", notes = "汇付银行操作记录")
+    @ApiOperation(value = "汇付银行操作记录", notes = "汇付银行操作记录")
     @PostMapping(value = "/selectbankcardlogbyexample")
     @ResponseBody
     public AdminResult<ListResult<BankCardLogVO>> selectBankCardLogByExample(HttpServletRequest request, @RequestBody BankCardLogRequestBean bankCardLogRequestBean){
@@ -386,7 +387,7 @@ public class BankCardManagerController extends BaseController {
         }
         return new AdminResult<ListResult<BankCardLogVO>>(ListResult.build(bankCardLogResponse.getResultList(), bankCardLogResponse.getCount()));
     }
-    @ApiOperation(value = "銀行卡管理", notes = "用户银行卡操作记录导出")
+    @ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
     @PostMapping(value = "/exportbankcardlog")
     public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
 

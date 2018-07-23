@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -9,30 +10,40 @@ import java.io.Serializable;
  * @version BorrowRepaymentInfoListRequestBean, v0.1 2018/7/10 9:34
  */
 public class BorrowRepaymentInfoListRequestBean extends BaseRequest implements Serializable {
-
-    private String isMonth;//是否分期
-    private String nid;// 投资nid,还款订单号
-    private String borrowNid;// 借款编号
-    private String accedeOrderId;//加入订单号
-    private String recoverPeriod;// 还款期次
-    private String recoverUserName;// 投资人用户名
-    private String status;// 还款状态
+    @ApiModelProperty(value = "是否分期")
+    private String isMonth;
+    @ApiModelProperty(value = "投资nid,还款订单号")
+    private String nid;
+    @ApiModelProperty(value = "借款编号")
+    private String borrowNid;
+    @ApiModelProperty(value = "加入订单号")
+    private String accedeOrderId;
+    @ApiModelProperty(value = "还款期次")
+    private String recoverPeriod;
+    @ApiModelProperty(value = "投资人用户名")
+    private String recoverUserName;
+    @ApiModelProperty(value = "还款状态")
+    private String status;
     /**
      * 来自哪个Controller,0,1等
      */
+    @ApiModelProperty(value = " ")
     private String actfrom;
     /**
      * 应还日期 检索条件
      */
+    @ApiModelProperty(value = "借款编号（导出用）")
     private String recoverTimeStartSrch;
 
     /**
      * 机构名称代号 检索条件
      */
+    @ApiModelProperty(value = "借款编号（导出用）")
     private String instCodeSrch;
     /**
      * 应还日期 检索条件
      */
+    @ApiModelProperty(value = "借款编号（导出用）")
     private String recoverTimeEndSrch;
 
     public String getIsMonth() {
