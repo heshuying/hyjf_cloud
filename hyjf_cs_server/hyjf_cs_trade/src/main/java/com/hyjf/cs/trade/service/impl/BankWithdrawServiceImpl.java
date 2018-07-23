@@ -32,10 +32,7 @@ import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -424,7 +421,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     private boolean updateWithdraw(AccountWithdrawVO accountwithdraw) {
         //调用银行接口
-        BankCallBeanVO bean = this.amConfigClient.bankCallFundTransQuery(accountwithdraw);
+        BankCallBean bean = this.bankCallFundTransQuery(accountwithdraw);
         boolean result = false;
         if (bean != null) {
             int userId = accountwithdraw.getUserId();
@@ -432,7 +429,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
             String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
             //调用后平台操作
-            result=this.amTradeClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
+            result=this.amTradeClient.handlerAfterCash(CommonUtils.convertBean(bean,BankCallBeanVO.class), accountwithdraw,bankCard,withdrawFee);
             if (result){
                 logger.info("银行提现掉单修复成功!");
 
@@ -441,6 +438,38 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             }
         }
         return result;
+    }
+
+    /**
+     * 调用银行接口
+     * @param accountwithdraw
+     * @return
+     */
+    private BankCallBean bankCallFundTransQuery(AccountWithdrawVO accountwithdraw) {
+        // 银行接口用BEAN
+        BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,
+                BankCallConstant.TXCODE_FUND_TRANS_QUERY,
+                accountwithdraw.getUserId());
+        //设置特有参数
+        bean.setAccountId(accountwithdraw.getAccountId());// 借款人电子账号
+        bean.setOrgTxDate(String.valueOf(accountwithdraw.getTxDate()));//原交易日期
+        //时间补满6位
+        bean.setOrgTxTime(String.format("%06d", accountwithdraw.getTxTime()));//原交易时间
+        bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+        bean.setLogRemark("单笔资金类业务交易查询（提现Batch）");
+        try {
+            BankCallBean result = BankCallUtils.callApiBg(bean);
+            if (result != null) {
+                if (StringUtils.isBlank(result.getRetMsg())) {
+                    //根据响应代码取得响应描述
+                    result.setRetMsg(this.getBankRetMsg(result.getRetCode()));
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error(this.getClass().getName(), "bankCallFundTransQuery", e);
+        }
+        return null;
     }
 
 
