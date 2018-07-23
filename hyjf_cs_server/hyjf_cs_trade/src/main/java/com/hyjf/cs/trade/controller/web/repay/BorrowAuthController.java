@@ -26,9 +26,9 @@ import java.util.Map;
  * @author hesy
  * @version BorrowAuthController, v0.1 2018/7/6 14:15
  */
-@Api(value = "借款人受托支付相关", description ="借款人受托支付相关")
+@Api(value = "web端-借款人受托支付相关", description ="web端-借款人受托支付相关")
 @RestController
-@RequestMapping("/web/borrowauth")
+@RequestMapping("/hyjf-web/borrowauth")
 public class BorrowAuthController extends BaseTradeController {
     @Autowired
     BorrowAuthService borrowAuthService;
@@ -105,7 +105,7 @@ public class BorrowAuthController extends BaseTradeController {
      * @date: 2018/7/7
      */
     @ApiOperation(value = "受托支付授权", notes = "受托支付授权")
-    @RequestMapping(value = "/trusteepay/{borrowNid}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/trusteepay/{borrowNid}", produces = "application/json; charset=utf-8")
     public WebResult<Object> trusteePay(@RequestHeader(value = "token", required = true) String token, @PathVariable String borrowNid, HttpServletRequest request){
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO userVO = borrowAuthService.getUsersByToken(token);
@@ -132,7 +132,8 @@ public class BorrowAuthController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/7
      */
-    @RequestMapping(value = "/auth_bgrturn", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "受托支付授权异步回调", notes = "受托支付授权异步回调")
+    @PostMapping(value = "/auth_bgrturn", produces = "application/json; charset=utf-8")
     public BankCallResult authBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody BankCallBean bean, HttpServletRequest request) {
         WebViewUserVO user = borrowAuthService.getUsersByToken(token);
 

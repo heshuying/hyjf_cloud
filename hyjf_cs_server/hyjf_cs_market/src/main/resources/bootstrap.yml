@@ -13,12 +13,6 @@ spring:
   sleuth:
     sampler:
       percentage: 1.0
-  rabbitmq:
-    host: 47.95.176.244
-    port: 5672
-    username: admin
-    password: admin1234
-    vhost: /
 #    kafka:
 #      bootstrap-servers: 123.56.216.212:9092
 
@@ -27,3 +21,5 @@ server:
 
 logging:
   file: cs-market.log
+
+hyjf.api.web.url: http://test.hyjf.com:8080/hyjf-api-web/

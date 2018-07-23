@@ -27,11 +27,27 @@ import java.util.Map;
 public class ProjectConstant {
 
 
-     public static final  String REQUEST_HOME = "/hyjf-app";
+     public static final String REQUEST_HOME = "/hyjf-app";
 
-     public static final  String REQUEST_MAPPING = "/project";
+     public static final String REQUEST_MAPPING = "/project";
 
-     public static final  String PROJECT_DETAIL_ACTION = "/getProjectDetail";
+     public static final String PROJECT_DETAIL_ACTION = "/getProjectDetail";
+
+     public static final String APP_PAGE = "page";
+
+     public static final String APP_PROJECT_TOTAL = "projectTotal";
+
+     public static final String APP_PROJECT_LIST = "projectList";
+
+     public static final String CREDIT_DETAIL = "/transfer";
+
+     public static final String APP_REQUEST_MAPPING = "/hyjf-app/projectlist";
+
+     public static final String APP_CREDIT_LIST_METHOD = "/creditList";
+
+     public static final String APP_PLAN_LIST_METHOD = "/planList";
+
+     public static final String APP_BORROW_PROJECT_METHOD = "/borrowProjectList";
 
     /**
      * 加入条件

@@ -879,6 +879,16 @@ public class AmUserClientImpl implements AmUserClient {
 	public void clearMobileCode(Integer userId, String sign) {
 		restTemplate.getForEntity(userService+"/user/insertUserEvalationBehavior/"+userId+"/"+sign, Integer.class);
 	}
+
+	@Override
+	public UserVO insertSurongUser(String mobile, String password, String ipAddr, String platform) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/insertSurongUser/" + mobile, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 	@Override
 	public UserVO surongRegister(RegisterUserRequest request) {
 		UserResponse response = restTemplate
@@ -887,6 +897,21 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 * @auther: hesy
+	 * @date: 2018/7/19
+	 */
+	@Override
+	public Boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean){
+		Response<Boolean> response = restTemplate
+				.postForEntity(userService+"/card/update_after_deletecard", requestBean, Response.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return false;
 	}
 
 }

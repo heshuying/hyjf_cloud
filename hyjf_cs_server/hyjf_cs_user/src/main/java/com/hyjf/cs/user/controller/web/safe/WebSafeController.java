@@ -38,7 +38,7 @@ import java.util.Map;
  * @version SafeController, v0.1 2018/6/11 14:13
  */
 
-@Api(value = "web端用户账户设置", description = "web端用户账户设置")
+@Api(value = "web端-用户账户设置", description = "web端-用户账户设置")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")
@@ -59,7 +59,7 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "账户设置查询", notes = "账户设置查询")
     @PostMapping(value = "/accountSet")
     public WebResult<Object> accountSet(@RequestHeader(value = "userId", required = false) Integer userId) {
-        logger.info("Web端账户设置查询, param is :{}",userId);
+        logger.info("web端-账户设置查询, param is :{}",userId);
         WebResult<Object> response = new WebResult<>();
         UserVO user = safeService.getUsersById(userId);
         Map<String, Object> result = safeService.safeInit(user);

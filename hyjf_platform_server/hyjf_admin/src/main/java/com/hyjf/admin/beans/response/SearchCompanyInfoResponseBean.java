@@ -3,9 +3,8 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.user.CompanyInfoVO;
-import com.hyjf.am.vo.user.UserBankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.admin.beans.vo.CompanyInfoCompanyInfoVO;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author nxl
@@ -14,14 +13,17 @@ import com.hyjf.am.vo.user.UserVO;
 public class SearchCompanyInfoResponseBean {
 
     //公司信息
-    private CompanyInfoVO company;
+    @ApiModelProperty(value = "公司信息")
+    private CompanyInfoCompanyInfoVO company;
+
+    @ApiModelProperty(value = "是否开户,0未开户,1已开户")
     private int isOpenAccount;
 
-    public CompanyInfoVO getCompany() {
+    public CompanyInfoCompanyInfoVO getCompany() {
         return company;
     }
 
-    public void setCompany(CompanyInfoVO company) {
+    public void setCompany(CompanyInfoCompanyInfoVO company) {
         this.company = company;
     }
 

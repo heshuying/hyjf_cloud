@@ -2,12 +2,14 @@ package com.hyjf.cs.user.controller.web.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -31,11 +33,11 @@ import java.util.Map;
  * @author hesy
  * @version WebBindCardPageController, v0.1 2018/6/21 14:26
  */
-@Api(value = "web端用户解绑卡接口",description = "web端用户解绑卡接口")
+@Api(value = "web端-用户绑卡及解绑卡接口",description = "web端-用户绑卡及解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/card")
-public class WebBindCardPageController {
+public class WebBindCardPageController extends BaseUserController{
     private static final Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
 
     @Autowired
@@ -53,7 +55,7 @@ public class WebBindCardPageController {
     public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+        WebViewUserVO user = bindCardService.getUsersByToken(token);
         String userIp = GetCilentIP.getIpAddr(request);
         String urlstatus = param.get("urlstatus"); // 请求来源
         // 条件校验
@@ -80,7 +82,7 @@ public class WebBindCardPageController {
      * @return
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
-    @RequestMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
         WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 
@@ -109,11 +111,6 @@ public class WebBindCardPageController {
 
     /**
      * 解绑卡接口
-     * @param token
-     * @param bindCardVO
-     * @param request
-     * @param response
-     * @return
      */
     @ApiOperation(value = "用户解绑卡", notes = "用户解绑卡")
     @PostMapping(value = "/unBindCard", produces = "application/json; charset=utf-8")
@@ -144,7 +141,13 @@ public class WebBindCardPageController {
 
         // 绑卡请求后业务处理
         try {
-            bindCardService.updateAfterUnBindCard(bankBean);
+            LogAcqResBean logAcqResBean = bankBean.getLogAcqResBean();
+            boolean updateResult = bindCardService.updateAfterDeleteCard(user.getUserId(),user.getUsername(),logAcqResBean.getCardNo(),logAcqResBean.getCardId());
+            if(!updateResult){
+                result.setStatus(ApiResult.FAIL);
+                result.setStatusDesc("更新银行卡失败");
+                logger.error("更新银行卡失败");
+            }
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_CARD_SAVE.getMsg());

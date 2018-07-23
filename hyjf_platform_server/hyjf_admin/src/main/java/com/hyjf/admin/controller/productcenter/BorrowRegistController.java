@@ -69,7 +69,7 @@ public class BorrowRegistController extends BaseController {
     @PostMapping("/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult getRegistList(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
+    public AdminResult<BorrowRegistResponseBean> getRegistList(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
         BeanUtils.copyProperties(borrowRegistRequestBean, borrowRegistListRequest);
         BorrowRegistResponseBean responseBean = borrowRegistService.getRegistList(borrowRegistListRequest);

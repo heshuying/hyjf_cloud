@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.finance.platformtransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.PlatformTransferService;
@@ -26,7 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -48,14 +51,14 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
     @PostMapping(value = "/transferlist")
-    public JSONObject transferList(@RequestBody PlatformTransferListRequest request){
-        JSONObject result = new JSONObject();
+    public AdminResult transferList(@RequestBody PlatformTransferListRequest request){
+        Map<String,Object> result = new HashMap<>();
         Integer count = platformTransferService.getPlatformTransferCount(request);
         count = (count == null)?0:count;
         result.put("count",count);
         List<AccountRechargeVO> accountRechargeVOList = platformTransferService.searchPlatformTransferList(request);
         result.put("accountRechargeVOList",accountRechargeVOList);
-        return result;
+        return new AdminResult(result);
     }
 
     /**
@@ -66,7 +69,7 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账-根据username查询用户信息",notes = "平台转账-根据username查询用户信息")
     @PostMapping(value = "/getuserinfobyusername")
-    public JSONObject getUserInfoByUserName(@RequestBody String userName){
+    public AdminResult getUserInfoByUserName(@RequestBody String userName){
         logger.info("userName=[{}]",userName);
         JSONObject result = new JSONObject();
         if(StringUtils.isNotEmpty(userName)){
@@ -74,7 +77,11 @@ public class PlatformTransferController extends BaseController {
         }else{
             result.put("info","用户账号不能为空");
         }
-        return result;
+        if("0".equals(result.get("status"))){
+            return new AdminResult(SUCCESS,SUCCESS_DESC);
+        }else{
+            return new AdminResult(FAIL,result.get("info").toString());
+        }
     }
 
     /**
@@ -85,9 +92,13 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账",notes = "平台转账")
     @PostMapping(value = "/handrecharge")
-    public JSONObject handRecharge(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
+    public AdminResult handRecharge(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody PlatformTransferRequest platformTransferRequest){
         JSONObject result = platformTransferService.handRecharge(userId,request,platformTransferRequest);
-        return result;
+        if("0".equals(result.get("status"))){
+            return new AdminResult(SUCCESS,result.getString("result"));
+        }else{
+            return new AdminResult(FAIL,result.getString("result"));
+        }
     }
 
     @ApiOperation(value = "平台转账-导出excel",notes = "平台转账-导出excel")

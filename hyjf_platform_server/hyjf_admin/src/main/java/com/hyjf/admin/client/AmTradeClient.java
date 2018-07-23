@@ -13,27 +13,18 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
+import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -936,29 +927,12 @@ public interface AmTradeClient {
     String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
 
     /**
-     * 查询信托信息
-     *
-     * @param instCode
-     * @param entrustedAccountId
-     * @return
+     * 标的备案
+     * @param borrowNid
+     * @param currUserId
+     * @param currUserName
      */
-    STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId);
-
-    /**
-     * 备案-更新标的信息
-     *
-     * @param borrowRegistRequest
-     * @return
-     */
-    int updateBorrowRegist(BorrowRegistRequest borrowRegistRequest);
-
-    /**
-     * 更新标的信息(受托支付备案)
-     *
-     * @param borrowRegistRequest
-     * @return
-     */
-    int updateEntrustedBorrowRegist(BorrowRegistRequest borrowRegistRequest);
+    AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
 
     /**
      * 资产来源

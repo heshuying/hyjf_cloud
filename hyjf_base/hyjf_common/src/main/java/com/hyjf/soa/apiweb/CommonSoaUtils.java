@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.hyjf.common.util.PropertiesConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,9 @@ public class CommonSoaUtils {
 	
 	// 优惠券投资接口
 	private static final String COUPON_INVEST = "/invest/couponTender.json";
-	
+
+
+
 	private static ExecutorService exec = Executors.newFixedThreadPool(50);
     
 	
@@ -142,8 +145,8 @@ public class CommonSoaUtils {
         return status;
         
     }
-	
-	
+
+
 }
 
 class Task implements Callable<String> {
@@ -159,6 +162,8 @@ class Task implements Callable<String> {
 	public String call() throws Exception {
 		return HttpClientUtils.post(loginUrl, params);
 	}
+
+
 
 }
 

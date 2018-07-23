@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Api(value = "融东风用户账户接口")
 @Controller
-@RequestMapping("/surong/account")
+@RequestMapping("hyjf-api/surong/account")
 public class AccountController extends BaseUserController{
      
 	@Autowired

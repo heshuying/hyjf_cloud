@@ -2,6 +2,8 @@ package com.hyjf.am.user.controller;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -145,5 +147,29 @@ public class BindCardController extends BaseController{
 		String srvAuthCode = request.getSrvAuthCode();
 
 		return bindCardService.selectBankSmsLog(userId, srvTxCode, srvAuthCode);
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 * @auther: hesy
+	 * @date: 2018/7/19
+	 */
+	@RequestMapping(value = "/update_after_deletecard", method = RequestMethod.POST)
+	public Response<Boolean> updateAfterDeleteCard(@RequestBody BankCardUpdateRequest requestBean) {
+		if(null == requestBean) {
+			return new Response<>(Response.FAIL, "请求参数错误", false);
+		}
+
+		try {
+			boolean result = bindCardService.updateAfterDeleteCard(requestBean);
+			if(!result){
+				return new Response<>(Response.FAIL, "银行卡更新失败", false);
+			}
+		} catch (Exception e) {
+			logger.error("银行卡更新异常", e);
+			return new Response<>(Response.ERROR, "银行卡更新异常", false);
+		}
+
+		return new Response<>(Response.SUCCESS, Response.SUCCESS_MSG, true);
 	}
 }

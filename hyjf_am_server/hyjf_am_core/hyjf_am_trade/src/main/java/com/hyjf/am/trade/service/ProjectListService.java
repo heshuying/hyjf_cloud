@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 
 /**
@@ -131,6 +132,6 @@ public interface ProjectListService {
      * @author zhangyk
      * @date 2018/6/22 10:27
      */
-    List<WebProjectListCustomize>  searchAppPlanList(@Valid ProjectListRequest request);
+    List<HjhPlanVO>  searchAppPlanList(@Valid ProjectListRequest request);
     // --------------------------app end --------------------------------------------------
 }

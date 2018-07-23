@@ -6,9 +6,11 @@ package com.hyjf.cs.user.client.impl;
 import com.hyjf.am.response.trade.AccountResponse;
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
+import com.hyjf.am.response.trade.ProductSearchForPageResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
+import com.hyjf.am.vo.trade.ProductSearchForPageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -110,6 +112,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         AccountResponse response=restTemplate.postForEntity(url,ids,AccountResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public ProductSearchForPageVO selectUserPrincipal(ProductSearchForPageVO productSearchForPage) {
+        String url = tradeService+"/htlCommonController/selectUserPrincipal";
+        ProductSearchForPageResponse response = restTemplate.postForEntity(url,productSearchForPage,ProductSearchForPageResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
         }
         return null;
     }

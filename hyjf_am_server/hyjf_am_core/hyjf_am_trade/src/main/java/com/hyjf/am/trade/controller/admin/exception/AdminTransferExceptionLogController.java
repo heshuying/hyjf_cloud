@@ -41,8 +41,12 @@ public class AdminTransferExceptionLogController extends BaseController {
     public AdminTransferExceptionLogResponse getRecordList(@RequestBody AdminTransferExceptionLogRequest request){
         AdminTransferExceptionLogResponse response = new AdminTransferExceptionLogResponse();
         List<AdminTransferExceptionLogCustomize> results=adminTransferExceptionLogService.getRecordList(request);
+        int count = adminTransferExceptionLogService.getCountRecord(request);
+        String returnCode = "0";
         if (CollectionUtils.isNotEmpty(results)){
             response.setResultList(CommonUtils.convertBeanList(results,AdminTransferExceptionLogCustomizeVO.class));
+            response.setCount(count);
+            response.setRtn(returnCode);
         }
         return response;
     }

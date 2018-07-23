@@ -59,7 +59,7 @@ public class BorrowInvestController extends BaseController {
     @PostMapping("/init")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult init(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
+    public AdminResult<BorrowInvestResponseBean> init(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
@@ -82,7 +82,7 @@ public class BorrowInvestController extends BaseController {
     @PostMapping("/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
+    public AdminResult<BorrowInvestResponseBean> getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
@@ -342,7 +342,7 @@ public class BorrowInvestController extends BaseController {
     @GetMapping("/pdf_preview/{nid}")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
-    public AdminResult pdfPreview(@PathVariable String nid) {
+    public AdminResult<BorrowInvestResponseBean> pdfPreview(@PathVariable String nid) {
         return borrowInvestService.pdfPreview(nid);
     }
 

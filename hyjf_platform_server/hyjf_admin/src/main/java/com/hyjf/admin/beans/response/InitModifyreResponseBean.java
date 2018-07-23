@@ -3,9 +3,8 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.user.UserChangeLogVO;
-import com.hyjf.am.vo.user.UserManagerUpdateVO;
-import com.hyjf.am.vo.user.UserRecommendCustomizeVO;
+import com.hyjf.admin.beans.vo.UserChangeLogCustomizeVO;
+import com.hyjf.admin.beans.vo.UserRecommendCustomizeShowVO;
 
 import java.util.List;
 
@@ -15,23 +14,23 @@ import java.util.List;
  */
 public class InitModifyreResponseBean {
     //用户信息
-    private UserRecommendCustomizeVO modifyReForm;
+    private UserRecommendCustomizeShowVO modifyReForm;
     //更改记录
-    private List<UserChangeLogVO> usersChangeLogForm;
+    private List<UserChangeLogCustomizeVO> usersChangeLogForm;
 
-    public UserRecommendCustomizeVO getModifyReForm() {
+    public UserRecommendCustomizeShowVO getModifyReForm() {
         return modifyReForm;
     }
 
-    public void setModifyReForm(UserRecommendCustomizeVO modifyReForm) {
+    public void setModifyReForm(UserRecommendCustomizeShowVO modifyReForm) {
         this.modifyReForm = modifyReForm;
     }
 
-    public List<UserChangeLogVO> getUsersChangeLogForm() {
+    public List<UserChangeLogCustomizeVO> getUsersChangeLogForm() {
         return usersChangeLogForm;
     }
 
-    public void setUsersChangeLogForm(List<UserChangeLogVO> usersChangeLogForm) {
+    public void setUsersChangeLogForm(List<UserChangeLogCustomizeVO> usersChangeLogForm) {
         this.usersChangeLogForm = usersChangeLogForm;
     }
 }

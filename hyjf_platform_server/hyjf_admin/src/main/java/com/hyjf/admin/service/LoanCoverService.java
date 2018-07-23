@@ -3,11 +3,11 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 
 import java.util.List;
@@ -30,15 +30,36 @@ public interface LoanCoverService {
      */
     int insertLoanCoverUser(LoanCoverUserRequest request);
     /**
-     * 保存记录
+     * 根据id查找记录是否存在
      */
     boolean selectIsExistsRecordByIdNo(String strIdNo);
     /**
-     * 根据id查找记录
+     * 根据证件号码查找记录
      */
     LoanCoverUserVO selectRecordByIdNo(String strIdNo);
     /**
      * 更新记录
      */
     AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean);
+
+    /**
+     * 根据id查找借款主体CA认证记录表
+     * @param id
+     * @return
+     */
+    LoanCoverUserResponse getLoanCoverUserById(String id);
+
+    /**
+     * 更新借款主体CA认证记录表
+     * @param loanCoverUserRequest
+     * @return
+     */
+    boolean updateLoanCoverUserRecord(LoanCoverUserRequest loanCoverUserRequest);
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    CertificateAuthorityVO selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
 }

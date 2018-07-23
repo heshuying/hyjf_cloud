@@ -7,6 +7,7 @@ import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yinhui
@@ -21,4 +22,18 @@ public interface ContentArticleCustomizeMapper {
     List<ContentArticle> selectContentArticle(ContentArticleRequest contentArticleCustomize);
 
     Integer countContentArticle(ContentArticleRequest contentArticleCustomize);
+
+    /**
+     * 查询文章条数
+     * @param params
+     * @return
+     */
+    Integer countContentArticleByType(Map<String,Object> params);
+
+    /**
+     * 查询文章列表
+     * @param params
+     * @return
+     */
+    List<ContentArticle> getContentArticleListByType(Map<String,Object> params);
 }
