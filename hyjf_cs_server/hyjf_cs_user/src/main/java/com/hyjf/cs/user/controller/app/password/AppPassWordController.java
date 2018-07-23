@@ -405,28 +405,6 @@ public class AppPassWordController {
 
 
     /**
-     * 跳转到找回密码第二步
-     *
-     * @return
-     * @throws Exception
-     */
-    @ApiOperation(value = "跳转到找回密码第二步",notes = "跳转到找回密码第二步")
-    @ApiImplicitParam(name = "param",value = "{telnum:String,code:String}",dataType = "Map")
-    @RequestMapping(value = "/senCodePage", method = RequestMethod.POST)
-    public WebResult sencodPage(@RequestBody Map<String,String> param){
-        WebResult result = new WebResult();
-        JSONObject ret = new JSONObject();
-        String telnum = param.get("telnum");
-        String code = param.get("code");
-        ret.put("telnum", telnum);
-        ret.put("code", code);
-        ret.put("pubexponent", "10001");
-        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
-        result.setData(ret);
-        return result;
-    }
-
-    /**
      * 找回密码(重置密码)
      *
      * @param request

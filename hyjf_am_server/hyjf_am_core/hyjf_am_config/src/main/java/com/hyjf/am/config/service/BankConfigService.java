@@ -5,7 +5,9 @@ import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 import java.util.List;
 
@@ -58,4 +60,6 @@ public interface BankConfigService {
      * 删除银行配置
      */
     void deleteBankConfigById(Integer id);
+
+
 }

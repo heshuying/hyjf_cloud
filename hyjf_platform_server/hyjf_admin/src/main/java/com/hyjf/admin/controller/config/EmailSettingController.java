@@ -23,14 +23,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version EmailSettingController, v0.1 2018/7/10 11:40
  */
-@Api(value = "邮件设置")
+@Api(value = "邮件设置", description = "邮件设置")
 @RestController
 @RequestMapping("/hyjf-admin/emailsetting")
 public class EmailSettingController extends BaseController {
 	@Autowired
 	private SiteSettingService siteSettingService;
 
-	@ApiOperation(value = "邮件设置", notes = "邮件设置初始化")
+	@ApiOperation(value = "邮件设置初始化", notes = "邮件设置初始化")
 	@RequestMapping("/init")
 	public AdminResult<SiteSettingsVO> init() {
 		SiteSettingsResponse response = siteSettingService.selectSiteSetting();
@@ -43,7 +43,7 @@ public class EmailSettingController extends BaseController {
 		return new AdminResult<>(response.getResult());
 	}
 
-	@ApiOperation(value = "邮件设置", notes = "修改邮件设置")
+	@ApiOperation(value = "修改邮件设置", notes = "修改邮件设置")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody SiteSettingRequestBean requestBean) {
 		SiteSettingsResponse response = siteSettingService.updateAction(requestBean);

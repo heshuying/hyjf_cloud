@@ -16,6 +16,9 @@ public class UpdateBorrowForAutoTenderRequest {
     private HjhAccedeVO hjhAccedeVO;
     private BankCallBeanVO bankCallBeanVO;
 
+    public UpdateBorrowForAutoTenderRequest() {
+    }
+
     public UpdateBorrowForAutoTenderRequest(BorrowVO borrowVO, HjhAccedeVO hjhAccedeVO, BankCallBeanVO bankCallBeanVO) {
         this.borrowVO = borrowVO;
         this.hjhAccedeVO = hjhAccedeVO;

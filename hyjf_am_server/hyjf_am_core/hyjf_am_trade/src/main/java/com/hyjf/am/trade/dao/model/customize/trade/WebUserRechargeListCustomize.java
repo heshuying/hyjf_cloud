@@ -11,20 +11,20 @@ package com.hyjf.am.trade.dao.model.customize.trade;
 public class WebUserRechargeListCustomize {
 
 	// 主键
-	public String id;
+	private String id;
 	// 交易日期
-	public String time;
+	private String time;
 	// 费用
-	public String fee;
+	private String fee;
 	// 交易金额
-	public String money;
+	private String money;
 	// 到账金额
-	public String balance;
+	private String balance;
 	// 状态 
-	public String status;
+	private String status;
 	
 	//汇付天下 或者 江西银行
-	public String isBank;
+	private String isBank;
 
 	/**
 	 * 构造方法

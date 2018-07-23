@@ -25,14 +25,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentTeamController, v0.1 2018/7/11 16:25
  */
-@Api(value = "公司管理-团队介绍")
+@Api(value = "公司管理-团队介绍", description = "公司管理-团队介绍")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentteam")
 public class TeamController extends BaseController {
 	@Autowired
 	private TeamService teamService;
 
-	@ApiOperation(value = "公司管理-团队介绍", notes = "公司管理-团队介绍条件列表查询")
+	@ApiOperation(value = "公司管理-团队介绍条件列表查询", notes = "公司管理-团队介绍条件列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<TeamVO>> searchAction(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.searchAction(requestBean);
@@ -45,7 +45,7 @@ public class TeamController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "公司管理-团队介绍", notes = "添加公司管理-团队介绍")
+	@ApiOperation(value = "添加公司管理-团队介绍", notes = "添加公司管理-团队介绍")
 	@RequestMapping("/insert")
 	public AdminResult add(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.insertAction(requestBean);
@@ -58,7 +58,7 @@ public class TeamController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-团队介绍", notes = "修改公司管理-团队介绍")
+	@ApiOperation(value = "修改公司管理-团队介绍", notes = "修改公司管理-团队介绍")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.updateAction(requestBean);
@@ -71,7 +71,7 @@ public class TeamController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-资质荣誉", notes = "修改公司管理-资质荣誉状态")
+	@ApiOperation(value = "修改公司管理-资质荣誉状态", notes = "修改公司管理-资质荣誉状态")
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.updateStatus(requestBean);
@@ -84,7 +84,7 @@ public class TeamController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-团队介绍", notes = "删除公司管理-团队介绍")
+	@ApiOperation(value = "删除公司管理-团队介绍", notes = "删除公司管理-团队介绍")
 	@RequestMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		TeamResponse response = teamService.deleteById(id);
