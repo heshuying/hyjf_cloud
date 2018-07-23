@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.web.password;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
@@ -305,6 +306,28 @@ public class WebPassWordController {
         else {
             return false;
         }
+    }
+
+    /**
+     * 跳转到找回密码第二步
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "跳转到找回密码第二步",notes = "跳转到找回密码第二步")
+    @ApiImplicitParam(name = "param",value = "{telnum:String,code:String}",dataType = "Map")
+    @RequestMapping(value = "/senCodePage", method = RequestMethod.POST)
+    public WebResult sencodPage(@RequestBody Map<String,String> param){
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        String telnum = param.get("telnum");
+        String code = param.get("code");
+        ret.put("telnum", telnum);
+        ret.put("code", code);
+        ret.put("pubexponent", "10001");
+        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        result.setData(ret);
+        return result;
     }
 
 }
