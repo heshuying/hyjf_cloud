@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
@@ -374,7 +375,6 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		UserInfoVO  userInfo = amUserClient.findUserInfoById(userId);
 		UserVO user = amUserClient.findUserById(userId);
 		
-		BankCallBean retBean = null;
 		BankCallBean bean = new BankCallBean();
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
 		bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
@@ -396,14 +396,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		logAcqResBean.setCardNo(bindCardVO.getCardNo());// 银行卡号
 		bean.setLogAcqResBean(logAcqResBean);
 		
-		try {
-			retBean = BankCallUtils.callApiBg(bean);
-		} catch (Exception e) {
-			logger.info("解绑卡请求银行接口失败", e);
-            return null;
-		}
-        
-        return retBean;
+		return BankCallUtils.callApiBg(bean);
 	}
 	
 	/**
@@ -500,6 +493,24 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			}
 		}
 		
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 */
+	@Override
+	public boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo, Integer cardId){
+		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
+		if(bankCard == null){
+			return false;
+		}
+
+		BankCardUpdateRequest requestBean = new BankCardUpdateRequest();
+		requestBean.setUserId(userId);
+		requestBean.setCardNo(cardNo);
+		requestBean.setUserName(userName);
+		requestBean.setCardId(cardId);
+		return amUserClient.updateAfterDeleteCard(requestBean);
 	}
 }
 

@@ -6,75 +6,63 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
 import com.hyjf.admin.beans.request.BankAccountRecordRequestBean;
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
+import com.hyjf.admin.beans.vo.BankOpenAccountRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankOpenRecordService;
+import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-开户记录")
+@Api(value = "会员中心-开户记录",description = "会员中心-开户记录")
 @RestController
 @RequestMapping("/hyjf-admin/bankOpenRecord")
 public class BankOpenRecordController extends BaseController {
     @Autowired
     private BankOpenRecordService bankOpenRecordService;
 
-
-    @ApiOperation(value = "开户记录", notes = "开户记录页面初始化")
+    @ApiOperation(value = "开户记录页面初始化", notes = "开户记录页面初始化")
     @PostMapping(value = "/bankOpenRecordInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = new JSONObject();
-        // 用户属性
-        Map<String, String> userPropertys = CacheUtil.getParamNameMap("USER_PROPERTY");
-        // 注册平台
-        Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
-        jsonObject.put("userPropertys", userPropertys);
-        jsonObject.put("registPlat", registPlat);
-        return jsonObject;
-
+    public AdminResult<UserManagerInitResponseBean>  userManagerInit() {
+        UserManagerInitResponseBean userManagerInitResponseBean =bankOpenRecordService.initUserManaget();
+        return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
     }
 
     //会员管理列表查询
-    @ApiOperation(value = "开户记录", notes = "汇付银行开户记录查询")
+    @ApiOperation(value = "汇付银行开户记录查询", notes = "汇付银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankOpenAccountRecordVO>> bankOpenRecordAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
+    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
         AccountRecordRequest accountRecordRequest =  new AccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
         BankAccountRecordResponse bankOpenRecordServiceAccountRecordList =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
@@ -84,12 +72,17 @@ public class BankOpenRecordController extends BaseController {
         if (!Response.isSuccess(bankOpenRecordServiceAccountRecordList)) {
             return new AdminResult<>(FAIL, bankOpenRecordServiceAccountRecordList.getMessage());
         }
-        return new AdminResult<ListResult<BankOpenAccountRecordVO>>(ListResult.build(bankOpenRecordServiceAccountRecordList.getResultList(), bankOpenRecordServiceAccountRecordList.getCount())) ;
+        List<BankOpenAccountRecordCustomizeVO> bankOpenAccountRecordCustomizeVOList = new ArrayList<BankOpenAccountRecordCustomizeVO>();
+        List<BankOpenAccountRecordVO> bankOpenAccountRecordVOList = bankOpenRecordServiceAccountRecordList.getResultList();
+        if(null!=bankOpenAccountRecordVOList&&bankOpenAccountRecordVOList.size()>0){
+            bankOpenAccountRecordCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountRecordVOList,BankOpenAccountRecordCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>>(ListResult.build(bankOpenAccountRecordCustomizeVOList, bankOpenRecordServiceAccountRecordList.getCount())) ;
     }
-    @ApiOperation(value = "开户记录", notes = "江西银行开户记录查询")
+    @ApiOperation(value = "江西银行开户记录查询", notes = "江西银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankOpenAccountRecordVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRecordRequestBean accountRecordRequestBean){
+    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordBankAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
         JSONObject jsonObject = new JSONObject();
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,registerRcordeRequest);
@@ -100,7 +93,12 @@ public class BankOpenRecordController extends BaseController {
         if (!Response.isSuccess(bankOpenRecordServiceAccountRecordList)) {
             return new AdminResult<>(FAIL, bankOpenRecordServiceAccountRecordList.getMessage());
         }
-        return new AdminResult<ListResult<BankOpenAccountRecordVO>>(ListResult.build(bankOpenRecordServiceAccountRecordList.getResultList(), bankOpenRecordServiceAccountRecordList.getCount())) ;
+        List<BankOpenAccountRecordCustomizeVO> bankOpenAccountRecordCustomizeVOList = new ArrayList<BankOpenAccountRecordCustomizeVO>();
+        List<BankOpenAccountRecordVO> bankOpenAccountRecordVOList = bankOpenRecordServiceAccountRecordList.getResultList();
+        if(null!=bankOpenAccountRecordVOList&&bankOpenAccountRecordVOList.size()>0){
+            bankOpenAccountRecordCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountRecordVOList,BankOpenAccountRecordCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>>(ListResult.build(bankOpenAccountRecordCustomizeVOList, bankOpenRecordServiceAccountRecordList.getCount())) ;
     }
 
     /**
@@ -112,13 +110,13 @@ public class BankOpenRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "开户记录", notes = "汇付银行开户记录导出")
+    @ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
     @PostMapping(value = "/exportaccount")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "开户记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
         accountRecordRequest.setLimitFlg(true);
@@ -198,7 +196,7 @@ public class BankOpenRecordController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "开户记录", notes = "江西银行开户记录导出")
+    @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
     @PostMapping(value = "/exportbankaccount")
     public void exportBankExcel( HttpServletResponse response, @RequestBody BankAccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
 
@@ -208,7 +206,7 @@ public class BankOpenRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "江西银行开户记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=new ArrayList<BankOpenAccountRecordVO>();
         BankAccountRecordResponse bankAccountRecordResponse=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);

@@ -29,7 +29,7 @@ public class BankInterfaceServiceImpl implements BankInterfaceService {
         bankInterfaceExample.setLimitEnd(1);
         bankInterfaceExample.setOrderByClause("`update_time` DESC");
         List<BankInterface> bankInterfaces = bankInterfaceMapper.selectByExample(bankInterfaceExample);
-        if(bankInterfaces.size() > 0){
+        if(bankInterfaces.isEmpty()&&bankInterfaces.size() > 0){
             //返回接口类型
             return bankInterfaces.get(0).getInterfaceStatus();
         }else {

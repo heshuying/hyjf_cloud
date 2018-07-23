@@ -4,7 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author NXL
@@ -13,32 +13,46 @@ import com.hyjf.am.vo.BaseVO;
  */
 public class UserManagerRequestBean extends BasePage {
     //注册开始时间
+    @ApiModelProperty(value = "注册开始时间")
     public String regTimeStart;
     // 注册结束时间
+    @ApiModelProperty(value = "注册结束时间")
     public String regTimeEnd;
     // 用户名
+    @ApiModelProperty(value = "用户名")
     public String userName;
     // 真是姓名
+    @ApiModelProperty(value = "真是姓名")
     public String realName;
     // 手机号
+    @ApiModelProperty(value = "手机号")
     public String mobile;
     // 推荐人
+    @ApiModelProperty(value = "推荐人")
     public String recommendName;
     // 用户角色
+    @ApiModelProperty(value = "用户角色")
     public String userRole;
     // 用户类型
+    @ApiModelProperty(value = "用户类型")
     public String userType;
     // 用户属性
+    @ApiModelProperty(value = "用户属性")
     public String userProperty;
     // 银行开户状态
+    @ApiModelProperty(value = "银行开户状态")
     public String accountStatus;
     // 用户状态
+    @ApiModelProperty(value = "用户状态")
     public String userStatus;
     // 部门
+    @ApiModelProperty(value = "部门")
     public String combotreeListSrch;
     // 客户编号
+    @ApiModelProperty(value = "客户编号")
     public String customerId;
     // 用户来源
+    @ApiModelProperty(value = "用户来源")
     public String instCodeSrch;
 
     //

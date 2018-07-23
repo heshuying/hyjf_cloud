@@ -3,12 +3,12 @@
  */
 package com.hyjf.am.trade.service.admin;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
-import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @author wangjun
  * @version BorrowRegistService, v0.1 2018/6/29 16:54
  */
-public interface BorrowRegistService {
+public interface BorrowRegistService extends BaseService {
     /**
      * 获取项目类型
      * @return
@@ -51,24 +51,11 @@ public interface BorrowRegistService {
     String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
 
     /**
-     * 获取受托支付电子账户列表
-     * @param instCode
-     * @param entrustedAccountId
+     * 标的备案
+     * @param borrowNid
+     * @param currUserId
+     * @param currUserName
      * @return
      */
-    StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId);
-
-    /**
-     * 更新相应的标的信息
-     * @param request
-     * @return
-     */
-    int updateBorrowRegistFromList(BorrowRegistRequest request);
-
-    /**
-     * 更新标的信息(受托支付备案)
-     * @param request
-     * @return
-     */
-    int updateEntrustedBorrowRegist(BorrowRegistRequest request);
+    Response debtRegist(String borrowNid, String currUserId, String currUserName);
 }

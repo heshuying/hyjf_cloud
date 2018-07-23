@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.dao.model.customize.trade;
 
+import java.math.BigDecimal;
+
 /**
  * Web端项目列表
  * @author liuyang
@@ -15,6 +17,8 @@ public class WebProjectListCustomize {
     private static final long serialVersionUID = 5748630051215873837L;
     // 项目id
     private String borrowNid;
+
+    private String borrowDesc;
     // 项目标题
     private String borrowName;
     // 项目标题（网站改版）
@@ -47,6 +51,12 @@ public class WebProjectListCustomize {
     private String borrowClass;
     //20170520改版后为新标 1 其他为老标0
     private String isNew;
+
+    private BigDecimal creditCapital;
+
+    private String creditDiscount;
+
+    private BigDecimal creditCapitalAssigned;
     /**
      * 构造方法
      */
@@ -188,5 +198,37 @@ public class WebProjectListCustomize {
 
     public void setIsNew(String isNew) {
         this.isNew = isNew;
+    }
+
+    public BigDecimal getCreditCapital() {
+        return creditCapital;
+    }
+
+    public void setCreditCapital(BigDecimal creditCapital) {
+        this.creditCapital = creditCapital;
+    }
+
+    public String getCreditDiscount() {
+        return creditDiscount;
+    }
+
+    public void setCreditDiscount(String creditDiscount) {
+        this.creditDiscount = creditDiscount;
+    }
+
+    public BigDecimal getCreditCapitalAssigned() {
+        return creditCapitalAssigned;
+    }
+
+    public void setCreditCapitalAssigned(BigDecimal creditCapitalAssigned) {
+        this.creditCapitalAssigned = creditCapitalAssigned;
+    }
+
+    public String getBorrowDesc() {
+        return borrowDesc;
+    }
+
+    public void setBorrowDesc(String borrowDesc) {
+        this.borrowDesc = borrowDesc;
     }
 }

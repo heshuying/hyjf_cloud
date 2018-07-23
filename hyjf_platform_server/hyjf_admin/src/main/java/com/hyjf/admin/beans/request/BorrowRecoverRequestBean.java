@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -13,58 +14,72 @@ public class BorrowRecoverRequestBean extends BaseRequest implements Serializabl
     /**
      * 借款编号 检索条件
      */
+    @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
     /**
      * 借款名称 检索条件
      */
+    @ApiModelProperty(value = "借款名称")
     private String borrowNameSrch;
- /**
+    /**
      * 资产来源 检索条件
      */
+    @ApiModelProperty(value = "资产来源")
     private String instCodeSrch;
     /**
      * 检索条件 计划编号
      */
+    @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
     /**
      * 投资人 检索条件
      */
+    @ApiModelProperty(value = "投资人")
     private String usernameSrch;
     /**
      * 投资订单号 检索条件
      */
+    @ApiModelProperty(value = "投资订单号")
     private String orderNumSrch;
     /**
      * 放款订单号 检索条件
      */
+    @ApiModelProperty(value = "放款订单号")
     private String loanOrdid;
     /**
      * 放款状态 检索条件
      */
+    @ApiModelProperty(value = "放款状态")
     private String isRecoverSrch;
     /**
      * 投资时间 检索条件
      */
+    @ApiModelProperty(value = "投资时间开始")
     private String timeRecoverStartSrch;
     /**
      * 投资时间 检索条件
      */
+    @ApiModelProperty(value = "投资时间结束")
     private String timeRecoverEndSrch;
     /**
      * 放款时间 检索条件
      */
+    @ApiModelProperty(value = "放款时间开始")
     private String timeStartSrch;
     /**
      * 放款时间 检索条件
      */
+    @ApiModelProperty(value = "放款时间结束")
     private String timeEndSrch;
     /**
      * 合作机构编号  检索条件
      */
+    @ApiModelProperty(value = "合作机构编号")
     private String instCodeOrgSrch;
     /**
      * 放款批次号
      */
+    @ApiModelProperty(value = "放款批次号")
     private String loanBatchNo;
 
 

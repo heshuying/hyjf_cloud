@@ -1,27 +1,26 @@
 package com.hyjf.am.trade.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
+import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.response.trade.AccountWithdrawResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
+import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;
+import com.hyjf.am.trade.service.AccountWithdrawService;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.AccountRechargeResponse;
-import com.hyjf.am.response.trade.AccountWithdrawResponse;
-import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
-import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
-import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
-import com.hyjf.am.trade.service.AccountWithdrawService;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -191,8 +190,12 @@ public class AccountWithdrawController extends BaseController {
     public WithdrawCustomizeResponse getWithdrawRecordList(@RequestBody WithdrawBeanRequest request){
         WithdrawCustomizeResponse response = new WithdrawCustomizeResponse();
         List<WithdrawCustomize> withdrawCustomizes =accountWithdrawService.getWithdrawRecordList(request);
+        int count=accountWithdrawService.getWithdrawRecordCount(request);
+        String returnCode = "0";
         if (CollectionUtils.isNotEmpty(withdrawCustomizes)){
             response.setResultList(CommonUtils.convertBeanList(withdrawCustomizes,WithdrawCustomizeVO.class));
+            response.setCount(count);
+            response.setRtn(returnCode);
         }
         return response;
     }

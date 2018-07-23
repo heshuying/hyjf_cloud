@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * @author sunss
  */
-@Api(value = "app端用户开户",description = "app端用户开户")
+@Api(value = "app端用户开户",description = "app端-用户开户")
 @Controller
 @RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {
@@ -51,7 +51,7 @@ public class AppBankOpenController extends BaseUserController {
      * @Author: sunss
      */
     @ApiOperation(value = "app端获取开户信息", notes = "获取开户信息")
-    @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/userInfo")
     public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
         AppResult<String> result = new AppResult<String>();
@@ -71,7 +71,7 @@ public class AppBankOpenController extends BaseUserController {
         return result;
     }
 
-    @ApiOperation(value = "app端用户开户", notes = "app端用户开户")
+    @ApiOperation(value = "app端用户开户", notes = "app端-用户开户")
     @PostMapping(value = "/openBankAccount")
     public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
@@ -105,10 +105,10 @@ public class AppBankOpenController extends BaseUserController {
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(), bankOpenVO.getPlatform(), openBean.getTrueName(), openBean.getIdNo(), "");
         if (uflag == 0) {
-            logger.info("保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
+            logger.error("App端保存开户日志失败,手机号:[" + openBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             throw new ReturnMessageException(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
-        logger.info("开户end");
+        logger.info("app端开户end");
         return result;
     }
 }

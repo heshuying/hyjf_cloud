@@ -1,20 +1,22 @@
 package com.hyjf.admin.controller.finance.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.WithdrawBeanAPIRequest;
+import com.hyjf.admin.beans.vo.AdminWithdrawAPIVO;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.finance.withdraw.WithdrawService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +29,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,18 +61,19 @@ public class WithdrawController extends BaseController {
 	 */
 	@ApiOperation(value = "提现管理页面载入", notes = "提现管理页面载入")
 	@PostMapping("/init")
+	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public JSONObject init(WithdrawBeanRequest request) {
-		JSONObject jsonObject = new JSONObject();
-		Integer count = withdrawService.getWithdrawRecordCount(request);
-		jsonObject.put("count",count);
-		List<WithdrawCustomizeVO> recordList = null;
-		WithdrawCustomizeResponse response =withdrawService.getWithdrawRecordList(request);
-		if (Validator.isNotNull(response)){
-			recordList=response.getResultList();
+	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(WithdrawBeanAPIRequest request) {
+
+		WithdrawCustomizeResponse response =withdrawService.getWithdrawRecordList(CommonUtils.convertBean(request, WithdrawBeanRequest.class));
+		if (response==null){
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}else if(!Response.isSuccess(response)){
+			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		jsonObject.put("recordList",recordList);
-		return jsonObject;
+
+		List<AdminWithdrawAPIVO> apiList=CommonUtils.convertBeanList(response.getResultList(), AdminWithdrawAPIVO.class);
+		return new AdminResult<ListResult<AdminWithdrawAPIVO>>(ListResult.build(apiList, response.getCount()));
 	}
 
 	/**

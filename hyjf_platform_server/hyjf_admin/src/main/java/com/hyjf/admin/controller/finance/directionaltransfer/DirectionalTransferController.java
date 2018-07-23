@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.finance.directionaltransfer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.DirectionalTransferService;
@@ -21,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Api(value = "资金中心-定向转账-定向转账",description = "资金中心-定向转账-定向转账")
 @RestController
@@ -38,14 +41,14 @@ public class DirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping(value = "/getdirectionaltransferlist")
-    public JSONObject getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
+        Map<String,Object> map = new HashMap<>();
         Integer count = directionaltransferService.getDirectionalTransferCount(request);
         count = (count == null)?0:count;
-        jsonObject.put("count",count);
+        map.put("count",count);
         List<AccountDirectionalTransferVO> accountDirectionalTransferVOList = directionaltransferService.searchDirectionalTransferList(request);
-        jsonObject.put("accountDirectionalTransferList",accountDirectionalTransferVOList);
-        return jsonObject;
+        map.put("accountDirectionalTransferList",accountDirectionalTransferVOList);
+        return new AdminResult(map);
     }
 
 

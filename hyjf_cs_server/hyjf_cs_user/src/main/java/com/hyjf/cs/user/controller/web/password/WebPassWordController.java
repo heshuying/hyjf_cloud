@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.web.password;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
@@ -39,7 +40,7 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "web端密码相关服务",description = "web端密码相关服务")
+@Api(value = "web端-密码相关服务",description = "web端-密码相关服务")
 @RestController
 @RequestMapping("/hyjf-web/user/password")
 public class WebPassWordController {
@@ -91,6 +92,7 @@ public class WebPassWordController {
      * 设置交易密码异步回调
      * @return
      */
+    @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordBgreturn", produces = "application/json; charset=utf-8")
     public WebResult<Object> passwordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<Object> result = new WebResult<Object>();
@@ -138,6 +140,7 @@ public class WebPassWordController {
      *
      * @return
      */
+    @ApiOperation(value = " 重置交易密码异步回调",notes = " 重置交易密码异步回调")
     @PostMapping(value = "/resetPasswordBgreturn", produces = "application/json; charset=utf-8")
     public WebResult<String> resetPasswordBgreturn(@RequestBody BankCallBean bean) {
         WebResult<String> result = new WebResult<String>();
@@ -150,7 +153,7 @@ public class WebPassWordController {
     @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/setPasswordSendCode", produces = "application/json; charset=utf-8")
     public WebResult<Object> setPasswordSendCode(@RequestHeader(value = "token") String token,@RequestBody Map<String,String> param) {
-        logger.info("Web端交易密码发送短信验证码, param :{}", param);
+        logger.info("web端-交易密码发送短信验证码, param :{}", param);
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = passWordService.getUsers(token);
         CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
@@ -303,6 +306,28 @@ public class WebPassWordController {
         else {
             return false;
         }
+    }
+
+    /**
+     * 跳转到找回密码第二步
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "跳转到找回密码第二步",notes = "跳转到找回密码第二步")
+    @ApiImplicitParam(name = "param",value = "{telnum:String,code:String}",dataType = "Map")
+    @RequestMapping(value = "/senCodePage", method = RequestMethod.POST)
+    public WebResult sencodPage(@RequestBody Map<String,String> param){
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        String telnum = param.get("telnum");
+        String code = param.get("code");
+        ret.put("telnum", telnum);
+        ret.put("code", code);
+        ret.put("pubexponent", "10001");
+        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        result.setData(ret);
+        return result;
     }
 
 }

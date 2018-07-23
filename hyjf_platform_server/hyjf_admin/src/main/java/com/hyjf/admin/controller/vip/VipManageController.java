@@ -32,7 +32,7 @@ import java.util.Map;
  * @author yaoyong
  * @version VIPManageController, v0.1 2018/7/2 14:49
  */
-@Api(value = "vip管理接口")
+@Api(value = "vip管理接口", description = "vip管理")
 @RestController
 @RequestMapping("/hyjf-admin/vipManage")
 public class VipManageController extends BaseController {
@@ -49,7 +49,7 @@ public class VipManageController extends BaseController {
 
     @ApiOperation(value = "vip管理", notes = "vip管理列表查询")
     @PostMapping("/vipManageList")
-    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
+    public AdminResult<ListResult<VipManageVO>> searchUser(HttpServletRequest request, VipManageRequest vipManageRequest) {
         VipManageResponse vmr = vipManageService.searchList(vipManageRequest);
         if (vmr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -58,7 +58,7 @@ public class VipManageController extends BaseController {
             return new AdminResult<>(FAIL, vmr.getMessage());
 
         }
-        return new AdminResult<ListResult<VipManageVO>>(ListResult.build(vmr.getResultList(), vmr.getCount())) ;
+        return new AdminResult<ListResult<VipManageVO>>(ListResult.build(vmr.getResultList(), vmr.getCount()));
     }
 
     @ApiOperation(value = "vip管理", notes = "vip详情页面")
@@ -77,14 +77,14 @@ public class VipManageController extends BaseController {
         return new AdminResult<ListResult<VipDetailListVO>>(ListResult.build(vdl.getResultList(), vdl.getCount()));
     }
 
-    @ApiOperation(value = "vip管理",notes = "vip升级详情页面")
+    @ApiOperation(value = "vip管理", notes = "vip升级详情页面")
     @PostMapping("/vipupgradeInit")
     public AdminResult<ListResult<VipUpdateGradeListVO>> vipUpdateGradeInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
         if (vgr == null) {
-            return new AdminResult<>(FAIL,FAIL_DESC);
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(vgr)) {
             return new AdminResult<>(FAIL, vgr.getMessage());

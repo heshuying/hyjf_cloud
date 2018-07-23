@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.exception.transferexception;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AdminTransferExceptionLogAPIRequest;
 import com.hyjf.admin.beans.vo.AdminTransferExceptionLogAPIVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -44,6 +45,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
@@ -86,13 +88,10 @@ public class TransferExceptionLogController extends BaseController {
 	 */
     @ApiOperation(value = "银行转账异常页面载入", notes = "银行转账异常页面载入")
 	@PostMapping("/init")
+    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(AdminTransferExceptionLogRequest request) {
-        JSONObject jsonObject = new JSONObject();
-        Integer count = transferLogService.countRecord(request);
-        jsonObject.put("count",count);
-        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(request);
-
+	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(AdminTransferExceptionLogAPIRequest request) {
+        AdminTransferExceptionLogResponse response = transferLogService.getRecordList(CommonUtils.convertBean(request,AdminTransferExceptionLogRequest.class));
         if (response == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }else if(!Response.isSuccess(response)){

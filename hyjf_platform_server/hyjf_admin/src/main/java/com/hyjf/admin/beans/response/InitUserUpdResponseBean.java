@@ -3,8 +3,8 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.admin.beans.vo.UserChangeLogCustomizeVO;
+import com.hyjf.admin.beans.vo.UserManagerUpdateCustomizeVO;
 
 import java.util.List;
 
@@ -14,23 +14,23 @@ import java.util.List;
  */
 public class InitUserUpdResponseBean {
     //用户信息
-    private UserManagerUpdateVO usersUpdateForm;
+    private UserManagerUpdateCustomizeVO usersUpdateForm;
     //更改记录
-    private List<UserChangeLogVO> usersChangeLogForm;
+    private List<UserChangeLogCustomizeVO> usersChangeLogForm;
 
-    public UserManagerUpdateVO getUsersUpdateForm() {
+    public UserManagerUpdateCustomizeVO getUsersUpdateForm() {
         return usersUpdateForm;
     }
 
-    public void setUsersUpdateForm(UserManagerUpdateVO usersUpdateForm) {
+    public void setUsersUpdateForm(UserManagerUpdateCustomizeVO usersUpdateForm) {
         this.usersUpdateForm = usersUpdateForm;
     }
 
-    public List<UserChangeLogVO> getUsersChangeLogForm() {
+    public List<UserChangeLogCustomizeVO> getUsersChangeLogForm() {
         return usersChangeLogForm;
     }
 
-    public void setUsersChangeLogForm(List<UserChangeLogVO> usersChangeLogForm) {
+    public void setUsersChangeLogForm(List<UserChangeLogCustomizeVO> usersChangeLogForm) {
         this.usersChangeLogForm = usersChangeLogForm;
     }
 }

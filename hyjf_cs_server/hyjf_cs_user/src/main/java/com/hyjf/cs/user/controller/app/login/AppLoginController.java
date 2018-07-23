@@ -17,6 +17,7 @@ import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ import java.io.File;
  * @version LoginController, v0.1 2018/6/11 14:43
  */
 
-@Api(value = "app端用户登录接口",description = "app端用户登录接口")
+@Api(value = "app端用户登录接口",description = "app端-用户登录接口")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppLoginController extends BaseUserController {
@@ -179,8 +180,9 @@ public class AppLoginController extends BaseUserController {
      * @param response
      * @return
      */
-/*    @ResponseBody
+    @ResponseBody
     @PostMapping(value = "/getUserinfoAction")
+    @ApiOperation(value = "获取用户相关数据",notes = "获取用户相关数据")
     public JSONObject getUserinfoAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/getUserinfoAction");
@@ -219,7 +221,7 @@ public class AppLoginController extends BaseUserController {
             // 取得用户ID
             Integer userId = SecretUtil.getUserId(sign);
             if (userId != null) {
-                UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
+                UserParameters userParameters = null; //loginService.getUserParameters(userId,platform, request);
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
                     userParameters.setIdcard("000000000000000000");
                 }
@@ -236,7 +238,7 @@ public class AppLoginController extends BaseUserController {
             ret.put("statusDesc", "获取用户相关数据发生错误");
         }
         return ret;
-    }*/
+    }
 
     /**
      * 上传头像
@@ -248,6 +250,7 @@ public class AppLoginController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping(value = "/uploadAvatarAction")
+    @ApiOperation(value = "上传头像",notes = "上传头像")
     public JSONObject uploadAvatarAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/uploadAvatarAction");

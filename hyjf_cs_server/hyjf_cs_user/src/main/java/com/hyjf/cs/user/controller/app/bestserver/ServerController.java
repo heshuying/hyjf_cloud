@@ -2,6 +2,8 @@ package com.hyjf.cs.user.controller.app.bestserver;
 
 import java.util.Date;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import com.hyjf.cs.user.result.ServerResultBean;
  * @version ServerController, v0.1 2018/4/25 19:21
  */
 @RestController
+@Api(description = "app端-最优服务器")
 @RequestMapping("/hyjf-app/server")
 public class ServerController extends BaseUserController {
 	private Logger logger = LoggerFactory.getLogger(ServerController.class);
@@ -57,6 +60,7 @@ public class ServerController extends BaseUserController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value = "获取最优服务器",notes = "获取最优服务器")
 	@RequestMapping("/getBestServerAction")
 	public AppResult getBestServer(@RequestHeader String platform, @RequestHeader String randomString,
 								   @RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
@@ -133,6 +137,7 @@ public class ServerController extends BaseUserController {
 	 * @return
 	 */
 	@ResponseBody
+	@ApiOperation(value = "获取算法密钥",notes = "获取算法密钥")
 	@RequestMapping("/getKeyAction")
 	public AppResult getKey(@RequestHeader String sign, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();

@@ -12,10 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ import java.util.List;
  * @author hesy
  * @version HjhCreditEndExceptionController, v0.1 2018/7/12 16:55
  */
-@Api(value = "异常中心-汇计划结束债权异常处理")
+@Api(value = "异常中心-汇计划结束债权异常处理", description = "异常中心-汇计划结束债权异常处理")
 @RestController
 @RequestMapping("/hyjf-admin/exception/hjhcreditend")
 public class HjhCreditEndExceptionController extends BaseController {
@@ -39,7 +36,7 @@ public class HjhCreditEndExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "汇计划结束债权列表", notes = "汇计划结束债权列表")
-    @RequestMapping("/getlist")
+    @PostMapping("/getlist")
     public JSONObject getList(@RequestBody HjhDebtCreditListRequest requestBean){
         JSONObject jsonObject = null;
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhCreditEndExceptionService.queryHjhDebtCreditList(requestBean);
@@ -66,7 +63,7 @@ public class HjhCreditEndExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "汇计划结束债权", notes = "汇计划结束债权")
-    @RequestMapping("/request_debtend/{creditNid}")
+    @GetMapping("/request_debtend/{creditNid}")
     public JSONObject updateDebtEndAction(@PathVariable String creditNid){
         //请求参数校验
         if(StringUtils.isBlank(creditNid)){

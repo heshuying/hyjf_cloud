@@ -43,12 +43,12 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "融东风密码设置接口")
 @Controller
-@RequestMapping("/surong/user/transpassword")
+@RequestMapping("hyjf-api/surong/user/transpassword")
 public class TransPasswordController extends BaseUserController{
 	
 	private static final Logger logger = LoggerFactory.getLogger(TransPasswordController.class);
 	
-	public static final String REQUEST_MAPPING = "/surong/user/transpassword";
+	public static final String REQUEST_MAPPING = "hyjf-api/surong/user/transpassword";
 	
 	/** 设置交易密码同步回调 */
     public static final String RETURL_SYN_PASSWORD_ACTION = "/passwordReturn";

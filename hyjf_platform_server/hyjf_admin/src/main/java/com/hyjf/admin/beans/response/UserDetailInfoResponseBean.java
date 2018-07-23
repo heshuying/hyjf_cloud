@@ -3,41 +3,55 @@
  */
 package com.hyjf.admin.beans.response;
 
+import com.hyjf.admin.beans.vo.*;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.BindUserVo;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
+import com.hyjf.am.vo.user.UserBankOpenAccountVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author nxl
  * @version UserDetailInfoResponseBean, v0.1 2018/7/16 13:51
  */
 public class UserDetailInfoResponseBean {
-    private UserManagerDetailVO userManagerDetailVO;
+
+    @ApiModelProperty(value = "用户详情模块")
+    private UserManagerDetailCustomizeVO userManagerDetailVO;
     //测评信息
-    private UserEvalationResultVO userEvalationResultInfo;
+    @ApiModelProperty(value = "测评信息模块")
+    private UserEvalationResultShowVO userEvalationResultInfo;
     //已过期需要重新评测
+    @ApiModelProperty(value = "已过期需要重新评测 2已过期、1有效")
     private String isEvalation;
     //用户开户信息
-    private UserBankOpenAccountVO userBankOpenAccountVO;
+    @ApiModelProperty(value = "用户开户信息")
+    private UserBankOpenAccountCustomizeVO userBankOpenAccountVO;
     //第三方平台绑定信息
-    private BindUserVo bindUserVo;
+    @ApiModelProperty(value = "第三方平台绑定信息")
+    private BindUserCustomizeVO bindUserVo;
     //电子签章
-    private CertificateAuthorityVO certificateAuthorityVO;
+    @ApiModelProperty(value = "电子签章")
+    private CertificateAuthorityCustomizeVO certificateAuthorityVO;
 
     //公司信息
-    private CorpOpenAccountRecordVO enterpriseInformation;
-    public UserManagerDetailVO getUserManagerDetailVO() {
+    @ApiModelProperty(value = "公司信息")
+    private CorpOpenAccountRecordCustomizeVO enterpriseInformation;
+
+    public UserManagerDetailCustomizeVO getUserManagerDetailVO() {
         return userManagerDetailVO;
     }
 
-    public void setUserManagerDetailVO(UserManagerDetailVO userManagerDetailVO) {
+    public void setUserManagerDetailVO(UserManagerDetailCustomizeVO userManagerDetailVO) {
         this.userManagerDetailVO = userManagerDetailVO;
     }
 
-    public UserEvalationResultVO getUserEvalationResultInfo() {
+    public UserEvalationResultShowVO getUserEvalationResultInfo() {
         return userEvalationResultInfo;
     }
 
-    public void setUserEvalationResultInfo(UserEvalationResultVO userEvalationResultInfo) {
+    public void setUserEvalationResultInfo(UserEvalationResultShowVO userEvalationResultInfo) {
         this.userEvalationResultInfo = userEvalationResultInfo;
     }
 
@@ -49,35 +63,35 @@ public class UserDetailInfoResponseBean {
         this.isEvalation = isEvalation;
     }
 
-    public UserBankOpenAccountVO getUserBankOpenAccountVO() {
+    public UserBankOpenAccountCustomizeVO getUserBankOpenAccountVO() {
         return userBankOpenAccountVO;
     }
 
-    public void setUserBankOpenAccountVO(UserBankOpenAccountVO userBankOpenAccountVO) {
+    public void setUserBankOpenAccountVO(UserBankOpenAccountCustomizeVO userBankOpenAccountVO) {
         this.userBankOpenAccountVO = userBankOpenAccountVO;
     }
 
-    public CorpOpenAccountRecordVO getEnterpriseInformation() {
+    public CorpOpenAccountRecordCustomizeVO getEnterpriseInformation() {
         return enterpriseInformation;
     }
 
-    public void setEnterpriseInformation(CorpOpenAccountRecordVO enterpriseInformation) {
+    public void setEnterpriseInformation(CorpOpenAccountRecordCustomizeVO enterpriseInformation) {
         this.enterpriseInformation = enterpriseInformation;
     }
 
-    public BindUserVo getBindUserVo() {
+    public BindUserCustomizeVO getBindUserVo() {
         return bindUserVo;
     }
 
-    public void setBindUserVo(BindUserVo bindUserVo) {
+    public void setBindUserVo(BindUserCustomizeVO bindUserVo) {
         this.bindUserVo = bindUserVo;
     }
 
-    public CertificateAuthorityVO getCertificateAuthorityVO() {
+    public CertificateAuthorityCustomizeVO getCertificateAuthorityVO() {
         return certificateAuthorityVO;
     }
 
-    public void setCertificateAuthorityVO(CertificateAuthorityVO certificateAuthorityVO) {
+    public void setCertificateAuthorityVO(CertificateAuthorityCustomizeVO certificateAuthorityVO) {
         this.certificateAuthorityVO = certificateAuthorityVO;
     }
 }

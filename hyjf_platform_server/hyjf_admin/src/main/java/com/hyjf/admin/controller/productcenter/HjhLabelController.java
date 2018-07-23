@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhLabelViewRequest;
+import com.hyjf.admin.beans.vo.AdminHjhLabelCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -42,6 +43,7 @@ import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;
@@ -77,19 +79,24 @@ public class HjhLabelController extends BaseController{
 		// 初始化下拉菜单
 		// 1.资产来源(可复用)
 		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
-		jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
-		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型(可复用)
 		/*List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(map.get("instCodeSrch").toString());*/
 		/*jsonObject.put("assetTypeList", assetTypeList);*/
 		// 3.项目类型(可复用)
 		List<BorrowProjectTypeVO> borrowProjectTypeList = this.labelService.getBorrowProjectTypeList();
-		jsonObject.put("项目类型下拉列表", "borrowProjectTypeList");
-		jsonObject.put("borrowProjectTypeList", borrowProjectTypeList);
 		// 4.还款方式(可复用)
 		List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
-		jsonObject.put("还款方式下拉列表", "borrowStyleList");
-		jsonObject.put("borrowStyleList", borrowStyleList);
+		if(CollectionUtils.isEmpty(hjhInstConfigList) && CollectionUtils.isEmpty(borrowProjectTypeList) && CollectionUtils.isEmpty(borrowStyleList)){
+			jsonObject.put("status", FAIL);
+		} else {
+			jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
+			jsonObject.put("hjhInstConfigList", hjhInstConfigList);
+			jsonObject.put("项目类型下拉列表", "borrowProjectTypeList");
+			jsonObject.put("borrowProjectTypeList", borrowProjectTypeList);
+			jsonObject.put("还款方式下拉列表", "borrowStyleList");
+			jsonObject.put("borrowStyleList", borrowStyleList);
+			jsonObject.put("status", SUCCESS);
+		}
 		return jsonObject;
 	}
 	
@@ -116,12 +123,14 @@ public class HjhLabelController extends BaseController{
 					mapTemp.put("text", hjhAssetTypeVO.getAssetTypeName());
 					resultList.add(mapTemp);
 				}
+				jsonObject.put("产品类型下拉列表", "assetTypeList");
+				jsonObject.put("assetTypeList", assetTypeList);	
+				jsonObject.put("status", SUCCESS);
 			}
-			jsonObject.put("产品类型下拉列表", "assetTypeList");
-			jsonObject.put("assetTypeList", assetTypeList);
 			return jsonObject;
 		} else {
 			jsonObject.put("未传入机构编号", "未传入机构编号");
+			jsonObject.put("status", FAIL);
 			return jsonObject;
 		}
 	}
@@ -136,9 +145,11 @@ public class HjhLabelController extends BaseController{
 	@PostMapping(value = "/search")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-	public AdminResult<ListResult<HjhLabelCustomizeVO>> selectLabelConfigList(HttpServletRequest request, @RequestBody HjhLabelViewRequest viewRequest) {
+	public AdminResult<ListResult<AdminHjhLabelCustomizeVO>> selectLabelConfigList(HttpServletRequest request, @RequestBody HjhLabelViewRequest viewRequest) {
 		// 初始化原子层请求实体
 		HjhLabelRequest form = new HjhLabelRequest();
+		// 初始化返回LIST
+		List<AdminHjhLabelCustomizeVO> volist = null;
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		HjhLabelCustomizeResponse response = this.labelService.getHjhLabelList(form);
@@ -148,7 +159,13 @@ public class HjhLabelController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<HjhLabelCustomizeVO>>(ListResult.build(response.getResultList(), response.getCount()));
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminHjhLabelCustomizeVO.class);
+			return new AdminResult<ListResult<AdminHjhLabelCustomizeVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminHjhLabelCustomizeVO>>(ListResult.build(volist, 0));
+		}
 	}
 	
 	/**
@@ -164,20 +181,24 @@ public class HjhLabelController extends BaseController{
 	public JSONObject getAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
+		AdminHjhLabelCustomizeVO adminHjhLabelCustomizeVO = null;
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		/*(1)添加时只返回下拉菜单*/
 		// 1.资产来源
 		List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+		jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
 		jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 		// 2.产品类型调用联动方法
 		// 3.项目类型(可复用)
 		List<BorrowProjectTypeVO> borrowProjectTypeList = this.labelService.getBorrowProjectTypeList();
+		jsonObject.put("项目类型下拉列表", "borrowProjectTypeList");
 		jsonObject.put("borrowProjectTypeList", borrowProjectTypeList);
 		// 4.还款方式(可复用)
 		List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
+		jsonObject.put("还款方式下拉列表", "borrowStyleList");
 		jsonObject.put("borrowStyleList", borrowStyleList);
 		/*(2)修改时返回此条记录的详情*/
-		// 这里注意 先定义一个参数，聊天让前端一致 labelId
+		// 这里注意 先定义一个参数，前端需要传入 LabelId 参数
 		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
 			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(viewRequest.getLabelId()));
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListById(hjhLabelRequest);
@@ -198,7 +219,11 @@ public class HjhLabelController extends BaseController{
 	            if(resultVO.getPushTimeEnd()!=null){
 	            	resultVO.setPushTimeEndString(DateUtils.getNowDateByHH(resultVO.getPushTimeEnd()));
 	            }
-	            jsonObject.put("hjhLabelCustomizeVO", resultVO);
+	            if(resultVO != null){
+	            	BeanUtils.copyProperties(resultVO, adminHjhLabelCustomizeVO);
+	            	jsonObject.put("adminHjhLabelCustomizeVO", adminHjhLabelCustomizeVO);
+	            	jsonObject.put("status", SUCCESS);
+	            }
 	            /*组装3  产品类型(联动)*/
 				List<HjhAssetTypeVO> assetTypeList = this.assetListService.hjhAssetTypeList(resultVO.getInstCode());
 				if (assetTypeList != null && assetTypeList.size() > 0) {
@@ -208,9 +233,16 @@ public class HjhLabelController extends BaseController{
 						mapTemp.put("text", hjhAssetTypeVO.getAssetTypeName());
 						resultList.add(mapTemp);
 					}
+					jsonObject.put("assetTypeList", assetTypeList); 
+					jsonObject.put("status", SUCCESS);
 				}
-				jsonObject.put("assetTypeList", assetTypeList); 
+			} else {
+				jsonObject.put("status", FAIL);
+				jsonObject.put("message", "根据labelId查询为空！");
 			}
+		} else {
+			jsonObject.put("status", FAIL);
+			jsonObject.put("message", "未传入labelId");
 		}
 		return jsonObject;
 	}
@@ -230,12 +262,8 @@ public class HjhLabelController extends BaseController{
 		HjhLabelInfoRequest hjhLabelInfoRequest = new HjhLabelInfoRequest();
 		// 画面验证
 		this.validatorFieldCheck(jsonObject, viewRequest);
-		// 如果校验报错则从新把下拉菜单返回给info画面以供拉取
-		// 暂时未做成共通
-		if(jsonObject.containsKey("validatorMsg1") || jsonObject.containsKey("validatorMsg2") || jsonObject.containsKey("validatorMsg3")
-				|| jsonObject.containsKey("validatorMsg4") || jsonObject.containsKey("validatorMsg5") || jsonObject.containsKey("validatorMsg6")
-				|| jsonObject.containsKey("validatorMsg7")
-				){
+		// 如果校验报错则把错误消息 + 下拉菜单返回给info画面
+		if(jsonObject.containsKey("validatorMsg")){
 			// 1.资产来源
 			List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
 			jsonObject.put("hjhInstConfigList", hjhInstConfigList);
@@ -247,8 +275,9 @@ public class HjhLabelController extends BaseController{
 			// 4.还款方式(可复用)
 			List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
 			jsonObject.put("borrowStyleList", borrowStyleList);
+			return jsonObject;
 		} 
-		// 准备插表--拼装info画面参数
+		// 如果无错误消息，准备插表--将viewRequest 的 参数 拼装 到 HjhLabelInfoRequest 插表
 		hjhLabelInfoRequest = setInfoParam(jsonObject,viewRequest);
 		this.labelService.insertHjhLabelRecord(hjhLabelInfoRequest);
 		success();
@@ -455,20 +484,19 @@ public class HjhLabelController extends BaseController{
 		int userId = Integer.valueOf(this.getUser(request).getId());
 		// 画面验证
 		this.validatorFieldCheck(jsonObject, viewRequest);
-		if(jsonObject.containsKey("validatorMsg1") || jsonObject.containsKey("validatorMsg2") || jsonObject.containsKey("validatorMsg3")
-				|| jsonObject.containsKey("validatorMsg4") || jsonObject.containsKey("validatorMsg5") || jsonObject.containsKey("validatorMsg6")
-				|| jsonObject.containsKey("validatorMsg7")
-				){
+		if(jsonObject.containsKey("validatorMsg")){
 			// 1.资产来源
 			List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
+			jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
 			jsonObject.put("hjhInstConfigList", hjhInstConfigList);
 			// 2.产品类型调用联动方法
-
 			// 3.项目类型(可复用)
 			List<BorrowProjectTypeVO> borrowProjectTypeList = this.labelService.getBorrowProjectTypeList();
+			jsonObject.put("项目类型下拉列表", "borrowProjectTypeList");
 			jsonObject.put("borrowProjectTypeList", borrowProjectTypeList);
 			// 4.还款方式(可复用)
 			List<BorrowStyleVO> borrowStyleList = this.labelService.getBorrowStyleList();
+			jsonObject.put("还款方式下拉列表", "borrowStyleList");
 			jsonObject.put("borrowStyleList", borrowStyleList);
 		}
 		// 准备插表--拼装info画面参数
@@ -483,7 +511,7 @@ public class HjhLabelController extends BaseController{
 				// 前面的入力校验已经校验了 labelName 的 非空
 				// 此处校验：如果info里面将要修改的标签名称与DB既存的标签名称一致，则不需要再修改，报消息
 				if(resultVO.getLabelName().trim().equals(viewRequest.getLabelName())){
-					jsonObject.put("validatorMsg7", "标签名称已存在!");
+					jsonObject.put("validatorMsg", "标签名称已存在!");
 				} else {
 					// 用info的修改后信息去修改标签表
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
@@ -512,14 +540,14 @@ public class HjhLabelController extends BaseController{
 	@ApiOperation(value = "标签配置列表", notes = "启用/禁用")
 	@PostMapping(value = "/status")
 	@ResponseBody
-	public JSONObject updateStatus(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
+	public JSONObject updateStatus(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest infoRequest = new HjhLabelInfoRequest();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
 		// 前端必须传入标签编号
-		if (map.containsKey("labelId")) {
+		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
 			// 修改状态
-			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(map.get("labelId").toString().trim()));
+			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(viewRequest.getLabelId()));
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListById(hjhLabelRequest);
 			if (list != null && list.size() > 0) {
 				HjhLabelCustomizeVO resultVO = list.get(0);

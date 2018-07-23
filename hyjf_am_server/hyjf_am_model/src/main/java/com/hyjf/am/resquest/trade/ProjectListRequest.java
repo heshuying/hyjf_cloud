@@ -26,6 +26,28 @@ public class ProjectListRequest extends BasePage {
      */
     private String isHome;
 
+    /**
+     * app债转列表用
+     */
+    private String creditStatus;
+
+    /**
+     * 翻页机能用的隐藏变量（app原来的参数）
+     */
+    private int page = 1;
+
+    public int getPage() {
+        if (page == 0) {
+            page = 1;
+        }
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+
     public String getProjectType() {
         return projectType;
     }
@@ -64,5 +86,13 @@ public class ProjectListRequest extends BasePage {
 
     public void setIsHome(String isHome) {
         this.isHome = isHome;
+    }
+
+    public String getCreditStatus() {
+        return creditStatus;
+    }
+
+    public void setCreditStatus(String creditStatus) {
+        this.creditStatus = creditStatus;
     }
 }

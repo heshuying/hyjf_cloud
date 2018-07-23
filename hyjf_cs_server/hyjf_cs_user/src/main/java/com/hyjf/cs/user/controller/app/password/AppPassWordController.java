@@ -18,16 +18,19 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
+import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +48,7 @@ import java.util.regex.Pattern;
 /**
  * @author wangc
  */
-@Api(value = "app端密码相关服务",description = "app端密码相关服务")
+@Api(value = "app端密码相关服务",description = "app端-密码相关服务")
 @Controller
 @RestController
 @RequestMapping("/hyjf-app")
@@ -125,7 +128,7 @@ public class AppPassWordController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/setTeaderPassword", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/setTeaderPassword")
     public ModelAndView setPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -399,6 +402,7 @@ public class AppPassWordController {
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
     }
+
 
     /**
      * 找回密码(重置密码)

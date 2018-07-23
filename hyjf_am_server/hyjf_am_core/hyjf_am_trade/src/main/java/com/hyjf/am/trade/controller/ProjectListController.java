@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
@@ -13,6 +14,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -177,9 +179,10 @@ public class ProjectListController extends BaseController{
      * @return
      */
     @RequestMapping("/app/searchAppProjectList")
-    public AppProjectListResponse searchAppProjectList(@RequestBody @Valid ProjectListRequest request){
+    public AppProjectListResponse searchAppProjectList(@RequestBody @Valid AppProjectListRequest request){
         AppProjectListResponse projectListResponse = new AppProjectListResponse();
-        List<AppProjectListCustomize> list = projectListService.searchAppProjectList(request);
+        ProjectListRequest req = CommonUtils.convertBean(request,ProjectListRequest.class);
+        List<AppProjectListCustomize> list = projectListService.searchAppProjectList(req);
         if(!CollectionUtils.isEmpty(list)){
             List<AppProjectListCustomizeVO> appProjectListCustomizeVOList = CommonUtils.convertBeanList(list,AppProjectListCustomizeVO.class);
             projectListResponse.setResultList(appProjectListCustomizeVOList);
@@ -230,7 +233,7 @@ public class ProjectListController extends BaseController{
     }
 
     /**
-     * app端获取计划投资count
+     * app端获取计划count
      * @author zhangyk
      * @date 2018/6/22 10:22
      */
@@ -243,19 +246,19 @@ public class ProjectListController extends BaseController{
     }
 
     /**
-     * app端获取计划投资count
+     * app端获取计划list
      * @author zhangyk
      * @date 2018/6/22 10:22
      */
     @RequestMapping("/app/searchPlanList")
-    public ProjectListResponse searchAppPlanList(@RequestBody @Valid ProjectListRequest request){
-        ProjectListResponse projectListResponse = new ProjectListResponse();
-        List<WebProjectListCustomize> list = projectListService.searchAppPlanList(request);
+    public HjhPlanResponse searchAppPlanList(@RequestBody @Valid ProjectListRequest request){
+        HjhPlanResponse response = new HjhPlanResponse();
+        List<HjhPlanVO> list = projectListService.searchAppPlanList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<WebProjectListCustomizeVO> webProjectListCustomizeVO = CommonUtils.convertBeanList(list,WebProjectListCustomizeVO.class);
-            projectListResponse.setResultList(webProjectListCustomizeVO);
+            List<HjhPlanCustomizeVO> hjhPlanCustomizeVOList = CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class);
+            response.setResultList(hjhPlanCustomizeVOList);
         }
-        return projectListResponse;
+        return response;
     }
 
 

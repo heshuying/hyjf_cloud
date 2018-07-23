@@ -11,15 +11,10 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BorrowCreditTenderService;
-import com.hyjf.cs.trade.service.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +31,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/web/tender/credit")
 public class BorrowCreditTenderController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(BorrowCreditTenderController.class);
 
     @Autowired
     private BorrowCreditTenderService borrowTenderService;

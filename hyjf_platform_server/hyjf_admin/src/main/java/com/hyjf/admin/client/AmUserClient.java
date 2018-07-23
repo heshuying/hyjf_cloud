@@ -532,4 +532,12 @@ public interface AmUserClient {
      * @return
      */
     BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request);
+
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
 }
