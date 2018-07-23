@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,14 +40,14 @@ public class AdminBatchBorrowRecoverController extends BaseController {
      */
     @ApiOperation(value = "放款列表查询总件数")
     @PostMapping("/getListTotal")
-    public Integer getListTotal(BatchBorrowRecoverRequest request) {
+    public Integer getListTotal(@RequestBody BatchBorrowRecoverRequest request) {
         Integer count = batchBorrowRecoverService.getListTotal(request);
         return count;
     }
 
     @ApiOperation(value = "放款列表查询")
     @PostMapping("/getList")
-    public BatchBorrowRecoverReponse getList(BatchBorrowRecoverRequest request){
+    public BatchBorrowRecoverReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
         Integer total = getListTotal(request);
@@ -70,7 +71,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
     @ApiOperation(value = "获取列表求和用于显示")
     @PostMapping("/getListSum")
-    public BatchBorrowRecoverReponse getListSum(BatchBorrowRecoverRequest request){
+    public BatchBorrowRecoverReponse getListSum(@RequestBody BatchBorrowRecoverRequest request){
 
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
 
@@ -81,7 +82,7 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
     @ApiOperation(value = "根据id获取放款任务")
     @PostMapping("/getRecoverApicronByID")
-    public BorrowApicronResponse getRecoverApicronByID(String id){
+    public BorrowApicronResponse getRecoverApicronByID(@RequestBody String id){
 
         BorrowApicronResponse reponse = new BorrowApicronResponse();
         BorrowApicron apicron = batchBorrowRecoverService.getRecoverApicronByID(id);

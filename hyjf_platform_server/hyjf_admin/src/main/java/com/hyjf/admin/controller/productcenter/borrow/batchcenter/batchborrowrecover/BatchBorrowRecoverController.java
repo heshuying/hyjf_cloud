@@ -7,6 +7,8 @@ import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -38,14 +40,15 @@ public class BatchBorrowRecoverController extends BaseController{
     @Autowired
     private BatchBorrowRecoverService batchBorrowRecoverService;
 
-    public static final String NAME_CLASS = "REPAY_STATUS";
+    public static final String NAME_CLASS = "REVERIFY_STATUS";
 
 
     @ApiOperation(value = "批次中心-批次放款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRecoverInit")
     @ResponseBody
     public JSONObject batchBorrowRecoverInit() {
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
+
         return jsonObject;
     }
 

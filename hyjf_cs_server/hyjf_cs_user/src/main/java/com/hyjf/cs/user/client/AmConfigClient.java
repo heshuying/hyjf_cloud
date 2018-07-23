@@ -3,6 +3,7 @@ package com.hyjf.cs.user.client;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
@@ -99,4 +100,12 @@ public interface AmConfigClient {
      * @return
      */
     VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr);
+
+    /**
+     * 根据银行code查询银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    BankConfigVO getBankConfigByCode(String code);
 }

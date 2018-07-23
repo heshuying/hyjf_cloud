@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +41,7 @@ public class AdminHjhDebtCreditController extends BaseController{
      */
     @ApiOperation(value = "转让列表查询总件数")
     @PostMapping("/getListTotal")
-    public Integer getListTotal(HjhDebtCreditListRequest request) {
+    public Integer getListTotal(@RequestBody HjhDebtCreditListRequest request) {
         Map map = ConvertUtils.convertObjectToMap(request);
         Integer count = adminHjhDebtCreditService.getListTotal(map);
         return count;
@@ -48,7 +49,7 @@ public class AdminHjhDebtCreditController extends BaseController{
 
     @ApiOperation(value = "转让列表查询")
     @PostMapping("/getList")
-    public HjhDebtCreditReponse getList(HjhDebtCreditListRequest request){
+    public HjhDebtCreditReponse getList(@RequestBody HjhDebtCreditListRequest request){
 
         HjhDebtCreditReponse reponse = new HjhDebtCreditReponse();
         Integer total = getListTotal(request);

@@ -269,4 +269,12 @@ public interface AmUserClient {
 	 * @param mobileCode
 	 */
 	void insertMobileCode(UserAliasVO mobileCode);
+
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	List<AccountBankVO> getBankCardByUserId(Integer userId);
 }
