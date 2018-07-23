@@ -26,7 +26,7 @@ public class BankCardManagerClientImpl implements BankCardManagerClient{
     private RestTemplate restTemplate;
     /**
      * 获取银行列表
-     *
+     * @author nixiaoling
      * @return
      */
     @Override
@@ -59,6 +59,7 @@ public class BankCardManagerClientImpl implements BankCardManagerClient{
 
     /**
      * 根据筛选条件查找江西银行卡信息列表
+     * @author nixiaoling
      * @return
      */
     @Override
@@ -75,6 +76,7 @@ public class BankCardManagerClientImpl implements BankCardManagerClient{
     /**
      * 查找用户银行卡操作记录表
      * @param request
+     * @author nixiaoling
      * @return
      */
     @Override

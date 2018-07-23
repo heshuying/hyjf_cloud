@@ -3,9 +3,12 @@
  */
 package com.hyjf.cs.user.service.trans;
 
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.text.ParseException;
 
 /**
  * @author zhangqingqing
@@ -19,4 +22,6 @@ public interface MobileModifyService extends BaseUserService {
 	boolean checkForMobileModifyOpened(String newMobile, String smsCode, String srvAuthCode);
 
 	BankCallBean callMobileModify(Integer userId, String newMobile, String smsCode, String srvAuthCode);
+
+    void updateUserCAMQ(int userId) throws ParseException, MQException;
 }

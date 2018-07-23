@@ -2,20 +2,13 @@ package com.hyjf.am.trade.controller.admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowRepaymentInfoListResponse;
-import com.hyjf.am.response.admin.AdminBorrowRepaymentInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoListRequset;
-import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentInfoCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentInfoListCustomize;
 import com.hyjf.am.trade.service.admin.AdminBorrowRepaymentInfoListService;
-import com.hyjf.am.trade.service.admin.AdminBorrowRepaymentInfoService;
-import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +33,7 @@ public class AdminBorrowRepaymentInfoListController extends BaseController {
 
     @RequestMapping(value = "/countBorrowRepaymentInfoList")
     public AdminBorrowRepaymentInfoListResponse countBorrowRepaymentInfoList(@RequestBody @Valid BorrowRepaymentInfoListRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoListResponse response = new AdminBorrowRepaymentInfoListResponse();
         int count = this.adminBorrowRepaymentInfoListService.countBorrowRepaymentInfoList(request);
         response.setTotal(count);
@@ -49,7 +42,7 @@ public class AdminBorrowRepaymentInfoListController extends BaseController {
 
     @RequestMapping(value = "/selectBorrowRepaymentInfoListList")
     public AdminBorrowRepaymentInfoListResponse selectBorrowRepaymentInfoListList(@RequestBody @Valid BorrowRepaymentInfoListRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoListResponse response = new AdminBorrowRepaymentInfoListResponse();
         List<AdminBorrowRepaymentInfoListCustomize> list = adminBorrowRepaymentInfoListService.selectBorrowRepaymentInfoListList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -61,7 +54,7 @@ public class AdminBorrowRepaymentInfoListController extends BaseController {
 
     @RequestMapping(value = "/sumBorrowRepaymentInfoList")
     public AdminBorrowRepaymentInfoListResponse sumBorrowRepaymentInfoList(@RequestBody @Valid BorrowRepaymentInfoListRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoListResponse response = new AdminBorrowRepaymentInfoListResponse();
         AdminBorrowRepaymentInfoListCustomize customize = adminBorrowRepaymentInfoListService.sumBorrowRepaymentInfoList(request);
         if(customize!=null){

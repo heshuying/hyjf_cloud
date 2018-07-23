@@ -1,24 +1,8 @@
 package com.hyjf.cs.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.hyjf.am.bean.result.CheckResult;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
@@ -30,31 +14,17 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.BankCardUtil;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.BankCardBean;
-import com.hyjf.cs.trade.client.AccountListClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankOpenClient;
-import com.hyjf.cs.trade.client.BankWithdrawClient;
-import com.hyjf.cs.trade.client.BindCardClient;
+import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
@@ -62,10 +32,18 @@ import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
-import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @author pangchengchao
@@ -79,7 +57,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Autowired
     AmUserClient amUserClient;
-
+    @Autowired
+    AmConfigClient amConfigClient;
+    
     @Autowired
     BankOpenClient bankOpenClient;
 
@@ -98,9 +78,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Autowired
     SmsProducer smsProducer;
-
-    @Autowired
-    private BankWithdrawClient bankWithdrawClient;//银行提现掉单
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
@@ -411,18 +388,30 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * 定时任务提现
      */
     @Override
-    public boolean batchWithdraw() {
-        boolean ret = true;
-        List<AccountWithdrawVO> withdrawList = this.bankWithdrawClient.selectBankWithdrawList();
+    public Boolean batchWithdraw() {
+        Boolean ret = true;
+        List<AccountWithdrawVO> withdrawList = this.amTradeClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
                 if (!updateWithdraw(accountWithdraw)){
                     ret = false;
                 }
             }
+        }else{
+            ret = false;
         }
 
         return ret;
+    }
+
+    @Override
+    public UserVO findUserByMobile(String mobile) {
+        return amUserClient.findUserByMobile(mobile);
+    }
+
+    @Override
+    public BankCardVO getBankInfo(Integer userId, String cardNo) {
+        return amUserClient.getBankCardByCardNo(userId,cardNo);
     }
 
     /**
@@ -432,15 +421,15 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     private boolean updateWithdraw(AccountWithdrawVO accountwithdraw) {
         //调用银行接口
-        BankCallBeanVO bean = this.bankWithdrawClient.bankCallFundTransQuery(accountwithdraw);
+        BankCallBean bean = this.bankCallFundTransQuery(accountwithdraw);
         boolean result = false;
         if (bean != null) {
             int userId = accountwithdraw.getUserId();
-            BankCardVO bankCard = this.bankWithdrawClient.selectBankCardByUserId(userId);
+            BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
             BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
             String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
             //调用后平台操作
-            result=this.bankWithdrawClient.handlerAfterCash(bean, accountwithdraw,bankCard,withdrawFee);
+            result=this.amTradeClient.handlerAfterCash(CommonUtils.convertBean(bean,BankCallBeanVO.class), accountwithdraw,bankCard,withdrawFee);
             if (result){
                 logger.info("银行提现掉单修复成功!");
 
@@ -449,6 +438,38 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             }
         }
         return result;
+    }
+
+    /**
+     * 调用银行接口
+     * @param accountwithdraw
+     * @return
+     */
+    private BankCallBean bankCallFundTransQuery(AccountWithdrawVO accountwithdraw) {
+        // 银行接口用BEAN
+        BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,
+                BankCallConstant.TXCODE_FUND_TRANS_QUERY,
+                accountwithdraw.getUserId());
+        //设置特有参数
+        bean.setAccountId(accountwithdraw.getAccountId());// 借款人电子账号
+        bean.setOrgTxDate(String.valueOf(accountwithdraw.getTxDate()));//原交易日期
+        //时间补满6位
+        bean.setOrgTxTime(String.format("%06d", accountwithdraw.getTxTime()));//原交易时间
+        bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+        bean.setLogRemark("单笔资金类业务交易查询（提现Batch）");
+        try {
+            BankCallBean result = BankCallUtils.callApiBg(bean);
+            if (result != null) {
+                if (StringUtils.isBlank(result.getRetMsg())) {
+                    //根据响应代码取得响应描述
+                    result.setRetMsg(this.getBankRetMsg(result.getRetCode()));
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error(this.getClass().getName(), "bankCallFundTransQuery", e);
+        }
+        return null;
     }
 
 
@@ -473,7 +494,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             resultMsg = msg;
         }
         // 查询是否已经处理过
-        int accountlistCnt = this.bankWithdrawClient.getAccountlistCntByOrdId(ordId,"cash_success");
+        int accountlistCnt = this.amTradeClient.getAccountlistCntByOrdId(ordId,"cash_success");
         // 如果信息已被处理
         if (accountlistCnt != 0) {
             resultBool = false;
@@ -488,14 +509,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     private String getWithdrawFee(Integer userId, String bankId, BigDecimal amount) {
-        BankCardVO bankCard = this.bankWithdrawClient.getBankInfo(userId, bankId);
+        BankCardVO bankCard = this.amUserClient.getBankCardByCardNo(userId, bankId);
         if (FEETMP == null) {
             FEETMP = "1";
         }
         if (bankCard != null) {
             String bankCode = bankCard.getBank();
             // 取得费率
-            List<FeeConfigVO> listFeeConfig = this.bankWithdrawClient.getFeeConfig(bankCode);
+            List<FeeConfigVO> listFeeConfig = this.amConfigClient.getFeeConfig(bankCode);
 
             if (listFeeConfig != null && listFeeConfig.size() > 0) {
                 FeeConfigVO feeConfig = listFeeConfig.get(0);
@@ -798,7 +819,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
         return bean;
     }
-    private String getWithdrawFee(Integer userId, String cardNo) {
+    @Override
+    public String getWithdrawFee(Integer userId, String cardNo) {
         String feetmp = ClientConstants.BANK_FEE;
         if (feetmp == null) {
             feetmp = "1";
@@ -825,6 +847,89 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             }
         } else {
             return feetmp;
+        }
+    }
+
+    @Override
+    public UserInfoVO getUserInfoByUserId(Integer userId) {
+        return amUserClient.findUsersInfoById(userId);
+    }
+
+    @Override
+    public int updateBeforeCash(BankCallBean bean, Map<String, String> params) {
+        int ret = 0;
+        String ordId = bean.getLogOrderId() == null ? bean.get("OrdId") : bean.getLogOrderId(); // 订单号
+        List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
+        if (listAccountWithdraw != null && listAccountWithdraw.size() > 0) {
+            return ret;
+        }
+        int nowTime = GetDate.getNowTime10(); // 当前时间
+        BigDecimal money = new BigDecimal(bean.getTxAmount()); // 提现金额
+        BigDecimal fee = BigDecimal.ZERO; // 取得费率
+        if (Validator.isNotNull(params.get("fee"))) {
+            fee = new BigDecimal(params.get("fee")); // 取得费率
+        }
+        BigDecimal total = money.add(fee); // 实际出账金额
+        Integer userId = GetterUtil.getInteger(params.get("userId")); // 用户ID
+        String cardNo = params.get("cardNo"); // 银行卡号
+        String bank = null;
+        // 取得银行信息
+        BankCardVO bankCard = getBankInfo(userId, cardNo);
+        if (bankCard != null) {
+            bank = bankCard.getBank();
+        }
+        AccountWithdrawVO record = new AccountWithdrawVO();
+        record.setUserId(userId);
+        record.setNid(bean.getLogOrderId()); // 订单号
+        //record.setStatus(WITHDRAW_STATUS_WAIT); // 状态: 0:处理中
+        // mod by nxl 将体现初始状态设置为初始值
+        record.setStatus(WITHDRAW_STATUS_DEFAULT); // 状态: 0:初始值
+        record.setAccount(cardNo);// 提现银行卡号
+        record.setBank(bank); // 提现银行
+        record.setBankId(bankCard.getId());
+        record.setBranch(null);
+        record.setProvince(0);
+        record.setCity(0);
+        record.setTotal(total);
+        record.setCredited(money);
+        record.setBankFlag(1);
+        record.setFee(CustomUtil.formatAmount(fee.toString()));
+        record.setAddtime(String.valueOf(nowTime));
+        record.setAddip(params.get("ip"));
+        record.setAccountId(bean.getAccountId());
+        record.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
+        record.setTxDate(Integer.parseInt(bean.getTxDate()));
+        record.setTxTime(Integer.parseInt(bean.getTxTime()));
+        record.setSeqNo(Integer.parseInt(bean.getSeqNo()));
+        record.setRemark("网站提现");
+        record.setClient(GetterUtil.getInteger(params.get("client"))); // 0pc
+        record.setWithdrawType(0); // 提现类型 0主动提现  1代提现
+        // 插入用户提现记录表
+        ret +=  amTradeClient.insertAccountWithdrawLog(record);
+        return ret;
+    }
+
+    @Override
+    public AccountWithdrawVO getAccountWithdrawByOrdId(String logOrderId) {
+        return amTradeClient.getAccountWithdrawByOrdId(logOrderId);
+    }
+
+    @Override
+    public void getWithdrawResult(int userId, String logOrderId, Map<String, String> result) {
+        // 根据用户ID查询用户银行卡信息
+        BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
+        List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(logOrderId);
+        if(!listAccountWithdraw.isEmpty()){
+            // 提现信息
+            AccountWithdrawVO accountWithdraw = listAccountWithdraw.get(0);
+            result.put("cardNo", bankCard.getCardNo());
+            result.put("total", accountWithdraw.getTotal()==null?"0":accountWithdraw.getTotal().toString());
+            result.put("balance", accountWithdraw.getCredited()==null?"0":accountWithdraw.getCredited().toString());
+            result.put("fee", accountWithdraw.getFee());
+            result.put("orderId", logOrderId);
+            if(accountWithdraw.getStatus().equals("2")){
+                result.put("status", "0");
+            }
         }
     }
 }

@@ -6,16 +6,21 @@ import com.hyjf.admin.service.mobileclient.SubmissionsService;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -28,9 +33,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +48,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
+@Api(value = "admin移动客户端",description = "admin移动客户端")
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionsController extends BaseController {
@@ -51,71 +59,83 @@ public class SubmissionsController extends BaseController {
 
     /**
      * 查询列表
-     *
      * @return
      */
+    @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
     public SubmissionsResponse findAppBannerData(@RequestBody SubmissionsRequest form) {
         SubmissionsResponse response = new SubmissionsResponse();
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
+        if(StringUtils.isNotBlank(form.getUserName())){
+            UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
+            if(user!=null&&user.getResult()!=null){
+                Integer userId = user.getResult().getUserId();
+                form.setUserId(userId);
+            }
+        }
+        SubmissionsResponse submissionList = submissionsService.getSubmissionList(form);
+        List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
+        for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
+            String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+            submissionsCustomizeVO.setSysType(type);
+            Integer userId = submissionsCustomizeVO.getUserId();
+            UserResponse users = submissionsService.getUserIdByUserId(userId);
+            String userName = users.getResult() != null ? users.getResult().getUsername() : "";
+            submissionsCustomizeVO.setUserName(userName);
+        }
+        return submissionList;
+    }
 
-
-
+    /**
+     * 意见反馈更新保存
+     *
+     * @return
+     * @throws ParseException
+     */
+    @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
+    @PostMapping("/updateSubmissionsAction")
+    public SubmissionsResponse updateSubmissions(@RequestBody SubmissionsRequest form) {
+        SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
         return response;
+
     }
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
-     *
-     * @param request
      * @param response
      * @throws Exception
      */
+    @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
     @RequestMapping("/exportListAction")
-    public void exportListAction(HttpServletRequest request, SubmissionsRequest form,
+    public void exportListAction(@RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
-
+        Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
         // 表格sheet名称
         String sheetName = "意见反馈列表";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
-        ;
-        // 需要输出的结果列表
-        // 封装查询条件
-        Map<String, Object> searchCon = new HashMap<String, Object>();
-        // 用户名
-        String userName = StringUtils.isNotEmpty(form.getUserName()) ? form.getUserName() : null;
-        searchCon.put("userName", userName);
-        form.setUserName(userName);
-        // 系统类别
-        String sysType = form.getSysType();
-        searchCon.put("sysType", sysType);
-        // 操作系统版本号
-        String sysVersion = form.getSysVersion();
-        searchCon.put("sysVersion",sysVersion);
-        // 平台版本号
-        String platformVersion = form.getPlatformVersion();
-        searchCon.put("platformVersion", platformVersion);
-        // 手机型号
-        String phoneType = form.getPhoneType();
-        searchCon.put("phoneType", phoneType);
-        // 反馈内容
-        String content = form.getContent();
-        searchCon.put("content", content);
-        // 添加时间-开始
-        String addTimeStart = form.getAddTimeStart();
-        if(StringUtils.isNotEmpty(addTimeStart)){
-            searchCon.put("addTimeStart", addTimeStart);
+        if(StringUtils.isNotBlank(form.getUserName())){
+            UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());
+            if(user!=null&&user.getResult()!=null){
+                Integer userId = user.getResult().getUserId();
+                form.setUserId(userId);
+            }
         }
-        // 添加时间-结束
-        String addTimeEnd = form.getAddTimeEnd();
-        if(StringUtils.isNotEmpty(addTimeEnd)){
-            searchCon.put("addTimeEnd", addTimeEnd);
+        SubmissionsResponse submissionList = submissionsService.getExportSubmissionList(form);
+        List<SubmissionsCustomizeVO> submissionsList = submissionList.getResultList();
+        for (SubmissionsCustomizeVO submissionsCustomizeVO : submissionsList) {
+            String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+            submissionsCustomizeVO.setSysType(type);
+            Integer userId = submissionsCustomizeVO.getUserId();
+            UserResponse users = submissionsService.getUserIdByUserId(userId);
+            String userName = users.getResult() != null ? users.getResult().getUsername() : "";
+            submissionsCustomizeVO.setUserName(userName);
         }
-        //TODO List<SubmissionsCustomizeVO> submissionsList = this.submissionsService.queryRecordList(searchCon, -1, -1);
-        List<SubmissionsCustomizeVO> submissionsList=null;
+      //  List<SubmissionsCustomizeVO> submissionsList = this.submissionsService.queryRecordList(searchCon, -1, -1);
+
         String[] titles = new String[] { "序号", "用户名", "操作系统", "版本号", "手机型号", "反馈内容", "时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -164,5 +184,7 @@ public class SubmissionsController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+
+
 
 }

@@ -3,12 +3,12 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
 import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
 import com.hyjf.admin.beans.request.UserManagerRequestBean;
 import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
 import com.hyjf.admin.beans.response.*;
+import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -21,6 +21,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.AsteriskProcessUtil;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
@@ -37,17 +38,18 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
 
-@Api(value = "会员中心-会员管理接口")
+@Api(value = "会员中心-会员管理接口",description = "会员中心-会员管理接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersManager")
 public class UserCenterController extends BaseController {
@@ -57,44 +59,54 @@ public class UserCenterController extends BaseController {
     @Autowired
     private UserCenterService userCenterService;
 
-    @ApiOperation(value = "会员管理", notes = "会员管理页面初始化")
+    @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject =userCenterService.initUserManaget();
-        return jsonObject;
+    public  AdminResult<UserManagerInitResponseBean>  userManagerInit() {
+        UserManagerInitResponseBean userManagerInitResponseBean =userCenterService.initUserManaget();
+        return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
 
     }
 
     //会员管理列表查询
-    @ApiOperation(value = "会员管理", notes = "会员管理列表查询")
+    @ApiOperation(value = "会员管理列表查询", notes = "会员管理列表查询")
     @PostMapping(value = "/userslist")
     @ResponseBody
-    public AdminResult<ListResult<UserManagerVO>> getUserslist(HttpServletRequest request, HttpServletResponse response, @RequestBody UserManagerRequestBean userManagerRequestBean) {
+    public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean) {
         UserManagerRequest managerRequest = new UserManagerRequest();
         BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
         UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
         if(userManagerResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        List<UserManagerVO> listUserManagetVO = userManagerResponse.getResultList();
+        List<UserManagerCustomizeVO> userManagerCustomizeList = new ArrayList<UserManagerCustomizeVO>();
+        if(null!=listUserManagetVO&&listUserManagetVO.size()>0){
+            userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
+        }
         if (!Response.isSuccess(userManagerResponse)) {
             return new AdminResult<>(FAIL, userManagerResponse.getMessage());
         }
-        return new AdminResult<ListResult<UserManagerVO>>(ListResult.build(userManagerResponse.getResultList(), userManagerResponse.getCount())) ;
+        return new AdminResult<ListResult<UserManagerCustomizeVO>>(ListResult.build(userManagerCustomizeList,userManagerResponse.getCount())) ;
     }
 
     //会员详情
-    @ApiOperation(value = "会员管理", notes = "会员详情")
+    @ApiOperation(value = "会员详情", notes = "会员详情")
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
     public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
-        userDetailInfoResponseBean.setUserManagerDetailVO(userManagerDetailVO);
-        //vip
+        UserManagerDetailCustomizeVO userManagerDetailCustomizeVO = new UserManagerDetailCustomizeVO();
+        if(null!=userManagerDetailVO){
+            BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
+        }
+        userDetailInfoResponseBean.setUserManagerDetailVO(userManagerDetailCustomizeVO);
+        //todo vip user 表里没有vip字段
 
         // 获取测评信息
         UserEvalationResultVO userEvalationResultInfo = userCenterService.getUserEvalationResult(userId);
+        UserEvalationResultShowVO userEvalationResultShowVO = new UserEvalationResultShowVO();
         if (null != userEvalationResultInfo && null != userEvalationResultInfo.getCreateTime()) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResultInfo.getCreateTime(), 1, 1).getTime();
@@ -106,48 +118,56 @@ public class UserCenterController extends BaseController {
             } else {
                 userDetailInfoResponseBean.setIsEvalation("1");
             }
+            BeanUtils.copyProperties(userEvalationResultInfo, userEvalationResultShowVO);
         }
-        userDetailInfoResponseBean.setUserEvalationResultInfo(userEvalationResultInfo);
+        userDetailInfoResponseBean.setUserEvalationResultInfo(userEvalationResultShowVO);
         //用户开户信息
         UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(userId);
-        userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountVO);
+        UserBankOpenAccountCustomizeVO userBankOpenAccountCustomizeVO = new UserBankOpenAccountCustomizeVO();
+        if(null!=userBankOpenAccountVO){
+            BeanUtils.copyProperties(userBankOpenAccountVO, userBankOpenAccountCustomizeVO);
+        }
+        userDetailInfoResponseBean.setUserBankOpenAccountVO(userBankOpenAccountCustomizeVO);
         //公司信息
         CorpOpenAccountRecordVO corpOpenAccountRecordVO = userCenterService.selectCorpOpenAccountRecordByUserId(userId);
-        userDetailInfoResponseBean.setEnterpriseInformation(corpOpenAccountRecordVO);
+        CorpOpenAccountRecordCustomizeVO corpOpenAccountRecordCustomizeVO = new CorpOpenAccountRecordCustomizeVO();
+        if(null!=corpOpenAccountRecordVO){
+            BeanUtils.copyProperties(corpOpenAccountRecordVO, corpOpenAccountRecordCustomizeVO);
+        }
+        userDetailInfoResponseBean.setEnterpriseInformation(corpOpenAccountRecordCustomizeVO);
         //第三方平台绑定信息
         BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(userId);
-        userDetailInfoResponseBean.setBindUserVo(bindUserVo);
+        BindUserCustomizeVO bindUserCustomizeVO = new BindUserCustomizeVO();
+        if(null!=bindUserVo){
+            BeanUtils.copyProperties(bindUserVo,bindUserCustomizeVO);
+        }
+        userDetailInfoResponseBean.setBindUserVo(bindUserCustomizeVO);
         //电子签章
         CertificateAuthorityVO certificateAuthorityVO = userCenterService.selectCertificateAuthorityByUserId(userId);
-        userDetailInfoResponseBean.setCertificateAuthorityVO(certificateAuthorityVO);
-        //文件服务器
+        CertificateAuthorityCustomizeVO certificateAuthorityCustomizeVO = new CertificateAuthorityCustomizeVO();
+        if(null!=certificateAuthorityVO){
+            BeanUtils.copyProperties(certificateAuthorityVO, certificateAuthorityCustomizeVO);
+        }
+        userDetailInfoResponseBean.setCertificateAuthorityVO(certificateAuthorityCustomizeVO);
+        // todo 文件服务器
 
         return new AdminResult<UserDetailInfoResponseBean>(userDetailInfoResponseBean);
     }
 
 
-    @ApiOperation(value = "会员管理", notes = "获取用户编辑初始信息")
+    @ApiOperation(value = "获取用户编辑初始信息", notes = "获取用户编辑初始信息")
     @PostMapping(value = "/initUserUpdate")
     @ResponseBody
     public AdminResult<InitUserUpdResponseBean> initUserUpdate(@RequestBody String userId) {
 
         InitUserUpdResponseBean initUserUpdResponseBean = new InitUserUpdResponseBean();
-        // 用户角色
-        /*Map<String, String> userRoles = CacheUtil.getParamNameMap("USER_ROLE");
-        // 用户状态
-        Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
-        //借款人类型
-        Map<String, String> borrowerType = CacheUtil.getParamNameMap("BORROWER_TYPE");
-        jsonObject.put("userRoles", userRoles);
-        jsonObject.put("userStatus", userStatus);
-        jsonObject.put("borrowerType", borrowerType);*/
-
         // 根据用户id查询用户详情信息
         UserManagerUpdateVO userManagerUpdateVo = userCenterService.selectUserUpdateInfoByUserId(userId);
-
+        UserManagerUpdateCustomizeVO userManagerUpdateCustomizeVO = new UserManagerUpdateCustomizeVO();
         if(null!=userManagerUpdateVo){
-            initUserUpdResponseBean.setUsersUpdateForm(userManagerUpdateVo);
+            BeanUtils.copyProperties(userManagerUpdateVo, userManagerUpdateCustomizeVO);
         }
+        initUserUpdResponseBean.setUsersUpdateForm(userManagerUpdateCustomizeVO);
         // 加载修改日志 userChageLog
         UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
         if(StringUtils.isNotEmpty(userId)){
@@ -155,12 +175,16 @@ public class UserCenterController extends BaseController {
             userChangeLogRequest.setUserId(intUserId);
             userChangeLogRequest.setChangeType(2);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
-            initUserUpdResponseBean.setUsersChangeLogForm(userChangeLogVOList);
+            List<UserChangeLogCustomizeVO> userChangeLogCustomizeVOList = new ArrayList<UserChangeLogCustomizeVO>();
+            if(null!=userChangeLogVOList&&userChangeLogVOList.size()>0){
+                userChangeLogCustomizeVOList = CommonUtils.convertBeanList(userChangeLogVOList, UserChangeLogCustomizeVO.class);
+            }
+            initUserUpdResponseBean.setUsersChangeLogForm(userChangeLogCustomizeVOList);
         }
         return new AdminResult<InitUserUpdResponseBean>(initUserUpdResponseBean);
     }
 
-    @ApiOperation(value = "修改更新用户信息", notes = "会员管理")
+    @ApiOperation(value = "修改更新用户信息", notes = "修改更新用户信息")
     @PostMapping(value = "/updateUser")
     @ResponseBody
     public AdminResult updataUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserManagerUpdateRequestBean requestBean) {
@@ -179,14 +203,18 @@ public class UserCenterController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "会员管理", notes = "获取推荐人信息")
+    @ApiOperation(value = "获取推荐人信息", notes = "获取推荐人信息")
     @PostMapping(value = "/initModifyre")
     @ResponseBody
     public AdminResult<InitModifyreResponseBean> initModifyre(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
         InitModifyreResponseBean initModifyreResponseBean = new InitModifyreResponseBean();
         //推荐人信息
         UserRecommendCustomizeVO userRecommendVO = userCenterService.selectUserRecommendByUserId(userId);
-        initModifyreResponseBean.setModifyReForm(userRecommendVO);
+        UserRecommendCustomizeShowVO userRecommendCustomizeShowVO = new UserRecommendCustomizeShowVO();
+        if(null!=userRecommendVO){
+            BeanUtils.copyProperties(userRecommendVO,userRecommendCustomizeShowVO);
+        }
+        initModifyreResponseBean.setModifyReForm(userRecommendCustomizeShowVO);
         //加载修改日志 userChageLog
         UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
         if(StringUtils.isNotEmpty(userId)){
@@ -195,12 +223,16 @@ public class UserCenterController extends BaseController {
             //修改类型 2用户信息修改  1推荐人修改
             userChangeLogRequest.setChangeType(1);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
-            initModifyreResponseBean.setUsersChangeLogForm(userChangeLogVOList);
+            List<UserChangeLogCustomizeVO> userChangeLogCustomizeVOList = new ArrayList<UserChangeLogCustomizeVO>();
+            if(null!=userChangeLogVOList&&userChangeLogVOList.size()>0){
+                userChangeLogCustomizeVOList = CommonUtils.convertBeanList(userChangeLogVOList, UserChangeLogCustomizeVO.class);
+            }
+            initModifyreResponseBean.setUsersChangeLogForm(userChangeLogCustomizeVOList);
         }
         return new AdminResult<InitModifyreResponseBean>(initModifyreResponseBean);
     }
 
-    @ApiOperation(value = "会员管理", notes = "修改用户推荐人")
+    @ApiOperation(value = "修改用户推荐人", notes = "修改用户推荐人")
     @PostMapping(value = "/updateModifyre")
     @ResponseBody
     public AdminResult updateRe(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminUserRecommendRequestBean requestBean) {
@@ -225,14 +257,18 @@ public class UserCenterController extends BaseController {
      * @param request
      * @return 进入用户详情页面
      */
-    @ApiOperation(value = "会员管理", notes = "获取用户身份证信息")
+    @ApiOperation(value = "获取用户身份证信息", notes = "获取用户身份证信息")
     @PostMapping(value = "/searchIdCard")
     @ResponseBody
     public  AdminResult<InitModifyreResponseBean> searchIdCard(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
         InitModifyreResponseBean initModifyreResponseBean = new InitModifyreResponseBean();
         //根据用户id查询用户详情信息
+        UserRecommendCustomizeShowVO userRecommendCustomizeShowVO = new UserRecommendCustomizeShowVO();
         UserRecommendCustomizeVO userRecommendVO = userCenterService.selectUserRecommendByUserId(userId);
-        initModifyreResponseBean.setModifyReForm(userRecommendVO);
+        if(null!=userRecommendVO){
+            BeanUtils.copyProperties(userRecommendVO,userRecommendCustomizeShowVO);
+        }
+        initModifyreResponseBean.setModifyReForm(userRecommendCustomizeShowVO);
         //加载修改日志 userChageLog
         UserChangeLogRequest userChangeLogRequest = new UserChangeLogRequest();
         if(StringUtils.isNotEmpty(userId)){
@@ -241,7 +277,11 @@ public class UserCenterController extends BaseController {
             //根据源代码 设置为3
             userChangeLogRequest.setChangeType(3);
             List<UserChangeLogVO> userChangeLogVOList = userCenterService.selectUserChageLog(userChangeLogRequest);
-            initModifyreResponseBean.setUsersChangeLogForm(userChangeLogVOList);
+            List<UserChangeLogCustomizeVO> userChangeLogCustomizeVOList = new ArrayList<UserChangeLogCustomizeVO>();
+            if(null!=userChangeLogVOList&&userChangeLogVOList.size()>0){
+                userChangeLogCustomizeVOList = CommonUtils.convertBeanList(userChangeLogVOList, UserChangeLogCustomizeVO.class);
+            }
+            initModifyreResponseBean.setUsersChangeLogForm(userChangeLogCustomizeVOList);
         }
         return new AdminResult<InitModifyreResponseBean>(initModifyreResponseBean);
     }
@@ -252,7 +292,7 @@ public class UserCenterController extends BaseController {
      * @param request
      * @return 进入用户详情页面
      */
-    @ApiOperation(value = "会员管理", notes = "修改用户身份证")
+    @ApiOperation(value = "修改用户身份证", notes = "修改用户身份证")
     @PostMapping(value = "/modifyIdCard")
     @ResponseBody
     public AdminResult modifyIdCard(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminUserRecommendRequestBean requestBean) {
@@ -281,7 +321,7 @@ public class UserCenterController extends BaseController {
      */
     @PostMapping(value = "/checkReAction")
     @ResponseBody
-    @ApiOperation(value = "会员管理", notes = "校验推荐人")
+    @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
     public AdminResult checkReAction(@RequestBody String userId,@RequestBody String userName) {
         //校验推荐人
         if (Validator.isNotNull(userId)) {
@@ -309,7 +349,7 @@ public class UserCenterController extends BaseController {
      */
     @PostMapping(value = "/checkAction")
     @ResponseBody
-    @ApiOperation(value = "会员管理", notes = "校验手机号")
+    @ApiOperation(value = "校验手机号", notes = "校验手机号")
     public AdminResult checkAction(@RequestBody String userId,@RequestBody String mobile) {
         // 检查手机号码唯一性
         int cnt = userCenterService.countUserByMobile(Integer.parseInt(userId), mobile);
@@ -328,13 +368,14 @@ public class UserCenterController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "会员管理", notes = "导出会员管理列表")
+    @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
     @PostMapping(value = "/exportusers")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "会员列表";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+
         String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户来源", "用户名", "姓名", "性别", "年龄", "生日","身份证号", "户籍所在地", "手机号码", "会员类型", "用户角色", "用户属性", "推荐人", "51老用户", "用户状态","银行开户状态","银行开户时间","汇付开户状态", "注册平台", "注册时间", "注册所在地" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -391,6 +432,7 @@ public class UserCenterController extends BaseController {
                         } else if (celLength == 10) {// 身份证号
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdcard(),7));
                         } else if (celLength == 11) {// 户籍所在地
+                            // todo 户籍所在地表 hyjf_idcard_area 不存在
 //                            cell.setCellValue(usersService.getAreaByIdCard(user.getIdcard()));
                         } else if (celLength == 12) {// 手机号码
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getMobile(),3));
@@ -445,18 +487,28 @@ public class UserCenterController extends BaseController {
      */
     @PostMapping(value = "/initCompanyInfo")
     @ResponseBody
-    @ApiOperation(value = "会员管理", notes = "初始化企业用户信息")
+    @ApiOperation(value = "初始化企业用户信息", notes = "初始化企业用户信息")
     public  AdminResult<InitCompanyInfoResponseBean> initCompanyInfo(@RequestBody String userId) {
         InitCompanyInfoResponseBean initCompanyInfoResponseBean = new InitCompanyInfoResponseBean();
         if (StringUtils.isNotBlank(userId)) {
             UserVO user = userCenterService.selectUserByUserId(userId);
             UserBankOpenAccountVO userBankOpenAccountVO = userCenterService.selectBankOpenAccountByUserId(userId);
             CompanyInfoVO companyInfo = userCenterService.selectCompanyInfoByUserId(userId);
-            initCompanyInfoResponseBean.setBankOpenAccount(userBankOpenAccountVO);
-            if (companyInfo != null) {
-                initCompanyInfoResponseBean.setCompanyInfo(companyInfo);
+            CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
+            UserBankOpenAccountCustomizeVO userBankOpenAccountCustomizeVO = new UserBankOpenAccountCustomizeVO();
+            UserCustomizeShowVO userCustomizeShowVO = new UserCustomizeShowVO();
+            if(null!=companyInfo){
+                BeanUtils.copyProperties(companyInfo,companyInfoCompanyInfoVO);
             }
-            initCompanyInfoResponseBean.setUserVO(user);
+            if(null!=userBankOpenAccountVO){
+                BeanUtils.copyProperties(userBankOpenAccountVO, userBankOpenAccountCustomizeVO);
+            }
+            if(null!=user){
+                BeanUtils.copyProperties(user, userCustomizeShowVO);
+            }
+            initCompanyInfoResponseBean.setBankOpenAccount(userBankOpenAccountCustomizeVO);
+            initCompanyInfoResponseBean.setCompanyInfo(companyInfoCompanyInfoVO);
+            initCompanyInfoResponseBean.setUserVO(userCustomizeShowVO);
         }
         return new AdminResult<InitCompanyInfoResponseBean>(initCompanyInfoResponseBean);
     }
@@ -468,7 +520,7 @@ public class UserCenterController extends BaseController {
      */
     @ResponseBody
     @PostMapping(value = "/serchCompanyInfo")
-    @ApiOperation(value = "会员管理", notes = "查询企业开户信息")
+    @ApiOperation(value = "查询企业开户信息", notes = "查询企业开户信息")
     public AdminResult<SearchCompanyInfoResponseBean> serchCompanyInfo(@RequestBody String accountId,@RequestBody String userId) {
         SearchCompanyInfoResponseBean  searchCompanyInfoResponseBean = new  SearchCompanyInfoResponseBean();
         if (StringUtils.isBlank(userId)) {
@@ -480,16 +532,26 @@ public class UserCenterController extends BaseController {
         //根据accountid调用接口查找企业信息
         if (StringUtils.isNotEmpty(userId)) {
             int intUserId = Integer.parseInt(userId);
-            CompanyInfoVO infoVO = userCenterService.queryCompanyInfoByAccoutnId(intUserId, accountId);
-            if (null != infoVO) {
-                return new AdminResult<>(FAIL, "请输入正确的电子账号!");
+            CompanyInfoSearchResponseBean companyInfoSearchResponseBean = userCenterService.queryCompanyInfoByAccoutnId(intUserId, accountId);
+            CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
+            if(null!=companyInfoSearchResponseBean&&companyInfoSearchResponseBean.getReturnCode().equals("00")){
+                //代表成功
+                CompanyInfoVO infoVO = companyInfoSearchResponseBean.getCompanyInfoVO();
+                if(null==infoVO){
+                    return new AdminResult<>(FAIL, "请输入正确的电子账号!");
+                }
+                BeanUtils.copyProperties(infoVO,companyInfoCompanyInfoVO);
+                searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
+                UserVO userVO = userCenterService.selectUserByUserId(userId);
+                Integer bankFlag = userVO.getBankOpenAccount();
+                searchCompanyInfoResponseBean.setIsOpenAccount(bankFlag);
+                return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
             }
-            searchCompanyInfoResponseBean.setCompany(infoVO);
-            UserVO userVO = userCenterService.selectUserByUserId(userId);
-            Integer bankFlag = userVO.getBankOpenAccount();
-            searchCompanyInfoResponseBean.setIsOpenAccount(bankFlag);
+            if(null!=companyInfoSearchResponseBean&&companyInfoSearchResponseBean.getReturnCode().equals("99")){
+                return new AdminResult<>(FAIL, companyInfoSearchResponseBean.getReturnMsg());
+            }
         }
-        return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
+        return new AdminResult<>(FAIL, "请输入正确的电子账号!");
     }
 
     /**
@@ -499,7 +561,7 @@ public class UserCenterController extends BaseController {
      */
     @ResponseBody
     @PostMapping(value = "/saveCompanyInfo")
-    @ApiOperation(value = "会员管理", notes = "保存企业开户信息")
+    @ApiOperation(value = "保存企业开户信息", notes = "保存企业开户信息")
     public AdminResult<Response> saveCompanyInfo(@RequestBody CompanyInfoInstRequesetBean companyInfoInstRequesetBean) {
         UpdCompanyRequest updCompanyRequest = new UpdCompanyRequest();
         BeanUtils.copyProperties(companyInfoInstRequesetBean,updCompanyRequest);

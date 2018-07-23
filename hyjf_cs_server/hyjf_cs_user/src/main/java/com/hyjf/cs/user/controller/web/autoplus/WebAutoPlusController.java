@@ -31,10 +31,10 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:09
  */
-@Api(value = "web端用户自动投标自动债转授权")
+@Api(description = "web端-用户自动投标自动债转授权")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebAutoPlusController.class);

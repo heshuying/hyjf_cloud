@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -13,9 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.AdminHjhCreditTenderRequest;
+import com.hyjf.admin.beans.vo.AdminHjhCreditTenderCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
@@ -49,6 +56,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -61,7 +69,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version HjhCreditTenderController.java, v0.1 2018年7月11日 下午2:18:37
  */
-@Api(value = "汇计划承接记录列表")
+@Api(value = "汇计划承接记录列表",description = "汇计划承接记录列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcredittender")
 public class HjhCreditTenderController extends BaseController{
@@ -92,15 +100,23 @@ public class HjhCreditTenderController extends BaseController{
 	@ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表初始化")
 	@PostMapping(value = "/init")
 	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public JSONObject init(HttpServletRequest request, @RequestBody @Valid HjhCreditTenderRequest form) {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化下拉菜单
         // 还款方式
         List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
-        jsonObject.put("borrowStyleList", borrowStyleList);
         // 承接方式
         Map<String, String> clientList = adminCommonService.getParamNameMap(PARAM_NAME + "PLAN_ASSIGN_TYPE");
-        jsonObject.put("clientList", clientList);
+        if(CollectionUtils.isEmpty(borrowStyleList) &&  clientList.isEmpty()){
+        	jsonObject.put("status", FAIL);
+        } else {
+        	jsonObject.put("borrowStyleList", borrowStyleList);
+        	jsonObject.put("还款方式下拉菜单", "borrowStyleList");
+        	jsonObject.put("clientList", clientList);
+        	jsonObject.put("承接方式下拉菜单", "clientList");
+        	jsonObject.put("status", SUCCESS);
+        }
 		return jsonObject;
 	}
 	
@@ -111,10 +127,16 @@ public class HjhCreditTenderController extends BaseController{
      * @return 汇计划承接记录列表查询       
      */
     @ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表查询")
-    @PostMapping(value = "/searchAction")
+    @PostMapping(value = "/search")
     @ResponseBody
-    /*@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW) */  
-    public AdminResult<ListResult<HjhCreditTenderCustomizeVO>> search(HttpServletRequest request, @RequestBody @Valid HjhCreditTenderRequest form) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>> search(HttpServletRequest request, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+		// 初始化返回LIST
+		List<AdminHjhCreditTenderCustomizeVO> volist = null;
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	//是否从加入明细列表跳转 1:是 0:否
 		if(form.getIsAccedelist()!=1){
 		    form.setIsAccedelist(0);
@@ -127,7 +149,13 @@ public class HjhCreditTenderController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<HjhCreditTenderCustomizeVO>>(ListResult.build(response.getResultList(), response.getCount())) ;
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminHjhCreditTenderCustomizeVO.class);
+			return new AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>>(ListResult.build(volist, 0));
+		}
     }
     
     /**
@@ -137,17 +165,23 @@ public class HjhCreditTenderController extends BaseController{
      * @return 汇计划承接记录列表查询        已测试
      */
     @ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表导出")
-    @PostMapping(value = "/exportAction")
+    @PostMapping(value = "/export")
     @ResponseBody
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid HjhCreditTenderRequest form) throws Exception {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "汇添金计划承接记录";
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		@SuppressWarnings("deprecation")
+		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","承接人","承接计划编号","承接计划订单号","出让人","债转编号","原项目编号","还款方式","承接本金","垫付利息","实际支付金额"," 承接时间","承接方式","项目总期数","承接时所在期数"};
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
 		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+		
+		HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
 		List<HjhCreditTenderCustomizeVO> resultList = this.hjhCreditTenderService.getHjhCreditTenderListByParamWithOutPage(form);
 		if (resultList != null && resultList.size() > 0) {
 			int sheetCount = 1;
@@ -241,17 +275,21 @@ public class HjhCreditTenderController extends BaseController{
 	 * @return
 	 */
     @ApiOperation(value = "汇计划承接记录列表", notes = "PDF脱敏图片预览")
-    @PostMapping(value = "/pdfPreviewAction")
+    @PostMapping(value = "/pdfpreview")
     @ResponseBody
-    public JSONObject pdfPreviewAction(HttpServletRequest request,@RequestBody @Valid HjhCreditTenderRequest form) {
+    public JSONObject pdfPreviewAction(HttpServletRequest request,@RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) {
     	JSONObject jsonObject = new JSONObject();
     	TenderAgreementVO tenderAgreementVO;
     	String nid = null ;
+		HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
     	// 此字段的使用在bean中有详细的解释
     	if(StringUtils.isNotEmpty(form.getAssignOrderId())){
     		nid = form.getAssignOrderId();
     	} else {
     		jsonObject.put("error","未传入加入订单号");
+    		jsonObject.put("status", FAIL);
     	}
     	List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(nid);
     	if(tenderAgreementList != null && tenderAgreementList.size()>0){
@@ -264,6 +302,7 @@ public class HjhCreditTenderController extends BaseController{
     			// 文件服务器
     			String fileDomainUrl = systemConfig.getFtpurl() + systemConfig.getFtpbasepathimg();
     			jsonObject.put("fileDomainUrl",fileDomainUrl);
+    			jsonObject.put("status", SUCCESS);
     		}
     	}
     	return jsonObject;
@@ -275,11 +314,14 @@ public class HjhCreditTenderController extends BaseController{
 	 * @return
 	 */
 	@ApiOperation(value = "汇计划承接记录列表", notes = "PDF文件签署")
-    @PostMapping(value = "/pdfSignAction")
+    @PostMapping(value = "/pdfsign")
     @ResponseBody
-    public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid HjhCreditTenderRequest form) throws MQException {
+    public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) throws MQException {
     	JSONObject ret = new JSONObject();
     	TenderAgreementVO tenderAgreement;
+		HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+		// 将画面请求request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
         // 用户ID
         String userId = form.getUserIdHidden();
         // 标的编号
@@ -290,27 +332,27 @@ public class HjhCreditTenderController extends BaseController{
         String creditNid = form.getCreditNidHidden();
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(borrowNid) || StringUtils.isBlank(assignNid) || StringUtils.isBlank(creditNid)) {
 			ret.put("result", "请求参数为空");
-			ret.put("status", "error");
+			ret.put("status", FAIL);
 			return ret;
         }
         // 查询标的详情
         BorrowVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
         if (borrow == null) {
             ret.put("result", "标的不存在");
-            ret.put("status", "error");
+            ret.put("status", FAIL);
             return ret;
         }
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userId));
 		if(users == null ){
 			ret.put("result", "获取用户信息异常");
-			ret.put("status", "error");
+			ret.put("status", FAIL);
 			return ret;
 		}
 		// 获取承接记录
 		HjhDebtCreditTenderVO ct = this.hjhCreditTenderService.selectHjhCreditTenderRecord(form);
 		if (ct == null) {
             ret.put("result", "获取承接记录失败");
-            ret.put("status", "error");
+            ret.put("status", FAIL);
             return ret;
         }
 		// 获取投资协议记录
@@ -330,7 +372,7 @@ public class HjhCreditTenderController extends BaseController{
             fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
         }
         ret.put("result", "操作成功,签署MQ已发送");
-        ret.put("status", "success");
+        ret.put("status", SUCCESS);
     	return ret;
     	
 	}

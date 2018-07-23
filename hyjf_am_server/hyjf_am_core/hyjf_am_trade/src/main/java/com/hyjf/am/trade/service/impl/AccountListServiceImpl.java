@@ -35,7 +35,7 @@ public class AccountListServiceImpl extends BaseServiceImpl implements AccountLi
 		AccountListExample accountListExample = new AccountListExample();
 		accountListExample.createCriteria().andNidEqualTo(ordId).andTradeEqualTo("cash_success");
 		List<AccountList> accountlist = this.accountListMapper.selectByExample(accountListExample);
-		if(accountlist!=null&&accountlist.size()>0){
+		if(accountlist!=null&&!accountlist.isEmpty()){
 			return accountlist.get(0);
 		}
 		return null;
@@ -76,6 +76,13 @@ public class AccountListServiceImpl extends BaseServiceImpl implements AccountLi
 		}
 		return 0;
 	}
+
+    @Override
+    public Integer countByNidAndTrade(String nid, String trade) {
+		AccountListExample accountListExample = new AccountListExample();
+		accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("increase_interest_profit");
+		return this.accountListMapper.countByExample(accountListExample);
+    }
 
 
 }

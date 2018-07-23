@@ -4,10 +4,14 @@
 package com.hyjf.am.user.service.impl;
 
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.LoanCoverUserManagerService;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import io.swagger.models.auth.In;
 import com.thoughtworks.xstream.mapper.Mapper;
 import io.swagger.models.auth.In;
@@ -33,6 +37,8 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
 
     @Autowired
     private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
+    @Autowired
+    private CertificateAuthorityMapper certificateAuthorityMapper;
 
     private static Logger logger = LoggerFactory.getLogger(LoanCoverUserManagerServiceImpl.class);
 
@@ -176,7 +182,7 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             return null;
         }
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
-        example.or().andIdNoEqualTo(record);
+        example.createCriteria().andIdEqualTo(Integer.parseInt(record));
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
         if(null!=lll&&lll.size()>0) {
             loanSubjectCertificateAuthority = lll.get(0);
@@ -223,4 +229,23 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
         return intInsertFlg;
     }
 
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param idno
+     * @param tureName
+     * @return
+     */
+    @Override
+    public CertificateAuthority selectCertificateAuthorityByIdNoName(String idno, String tureName) {
+        CertificateAuthorityExample example=new CertificateAuthorityExample();
+        CertificateAuthorityExample.Criteria criteria = example.createCriteria();
+        criteria.andTrueNameEqualTo(tureName);
+        criteria.andIdNoEqualTo(idno);
+        List<CertificateAuthority> cam = certificateAuthorityMapper.selectByExample(example);
+        if(!cam.isEmpty()&&cam.get(0).getTrueName().equals(tureName)&&cam.get(0).getIdNo().equals(idno)&&!cam.get(0).getCustomerId().isEmpty()) {
+            return cam.get(0);
+        }else {
+            return null;
+        }
+    }
 }

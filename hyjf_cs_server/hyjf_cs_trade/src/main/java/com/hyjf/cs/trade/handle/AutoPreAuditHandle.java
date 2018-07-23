@@ -72,7 +72,7 @@ public class AutoPreAuditHandle {
             // 成功后到关联计划队列
             MQBorrow mqBorrow = new MQBorrow();
             mqBorrow.setBorrowNid(hjhPlanAssetVO.getBorrowNid());
-            this.autoPreAuditService.sendToMQ(mqBorrow,  MQConstant.HYJF_BORROW_ISSUE_GROUP);
+            this.autoPreAuditService.sendToMQ(mqBorrow,  MQConstant.ROCKETMQ_BORROW_ISSUE_GROUP);
         }
 
         _log.info(hjhPlanAssetVO.getAssetId()+" 结束自动初审");

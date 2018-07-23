@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -21,10 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.ActivityListService;
@@ -41,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  * @author yaoy
  * @version ActivityListController, v0.1 2018/6/26 16:13
  */
-@Api(value = "活动列表接口")
+@Api(value = "活动列表接口", description = "活动列表")
 @RestController
 @RequestMapping("/hyjf-admin/activity")
 public class ActivityListController extends BaseController {
@@ -67,15 +65,14 @@ public class ActivityListController extends BaseController {
     public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.getRecordList(activityListRequest);
         List<ActivityListVO> forBack = forBack(response);
-        if(response == null) {
+        if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount())) ;
+        return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount()));
     }
-
 
 
     /**
@@ -125,70 +122,75 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "添加活动配置")
     @PostMapping("/insertAction")
-    public JSONObject insertAction(HttpServletResponse response, @RequestBody ActivityListRequest request) {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult insertAction(@RequestBody ActivityListRequest request) {
         //1代表插入成功， 0为失败
-        int insertFlag = activityListService.insertRecord(request);
-        if (insertFlag == 1) {
-            jsonObject.put("insertFlag", "success");
-        } else {
-            jsonObject.put("insertFlag", "fail");
+        ActivityListResponse response = activityListService.insertRecord(request);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return jsonObject;
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>();
     }
 
     @ApiOperation(value = "活动列表", notes = "获取活动修改初始信息")
-    @PostMapping("/initUpdateActivity")
-    public JSONObject initUpdateActivity(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
-        JSONObject jsonObject = new JSONObject();
-        int id = Integer.parseInt(map.get("id").toString());
+    @RequestMapping("/initUpdateActivity/{id}")
+    public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {
+        ActivityListRequest activityListRequest = new ActivityListRequest();
+        activityListRequest.setId(id);
         //根据活动id查询活动信息
-        ActivityListVO activityListVO = activityListService.selectActivityById(id);
-        jsonObject.put("updateActivityForm",activityListVO);
-        return jsonObject;
-    }
-
-    @ApiOperation(value = "活动列表",notes = "修改活动信息")
-    @PostMapping("/updateAction")
-    public JSONObject updateActivity(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
-        JSONObject jsonObject = new JSONObject();
-        //1代表插入成功， 0为失败
-        int updateFlag = activityListService.updateActivity(map);
-        if (updateFlag == 1) {
-            jsonObject.put("updateFlag", "success");
-        } else {
-            jsonObject.put("updateFlag", "fail");
+        ActivityListResponse response = activityListService.selectActivityById(activityListRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return jsonObject;
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<ActivityListVO>(response.getResult());
     }
 
-    @ApiOperation(value = "活动列表",notes = "资料上传")
+    @ApiOperation(value = "活动列表", notes = "修改活动信息")
+    @PostMapping("/updateAction")
+    public AdminResult updateActivity(@RequestBody ActivityListRequest activityListRequest) {
+        ActivityListResponse response = activityListService.updateActivity(activityListRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>();
+    }
+
+    @ApiOperation(value = "活动列表", notes = "资料上传")
     @PostMapping("/uploadFile")
     public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = new JSONObject();
         String file = null;
         try {
-            file = activityListService.uploadFile(request,response);
+            file = activityListService.uploadFile(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("资料上传失败");
         }
-        jsonObject.put("file",file);
+        jsonObject.put("file", file);
         return jsonObject;
     }
 
-    @ApiOperation(value = "活动列表",notes = "删除配置信息")
-    @PostMapping("/deleteAction")
-    public JSONObject deleteRecordAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
-        JSONObject jsonObject = new JSONObject();
-        int id = Integer.parseInt(map.get("id").toString());
-        int deleteFlag = activityListService.deleteActivity(id);
-        if (deleteFlag == 1) {
-            jsonObject.put("deleteFlag", "success");
-        } else {
-            jsonObject.put("deleteFlag", "fail");
+    @ApiOperation(value = "活动列表", notes = "删除配置信息")
+    @RequestMapping("/deleteAction")
+    public AdminResult deleteRecordAction(@RequestParam int id) {
+        ActivityListRequest request = new ActivityListRequest();
+        request.setId(id);
+        ActivityListResponse response = activityListService.deleteActivity(request);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        return jsonObject;
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>();
     }
 
 }

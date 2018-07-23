@@ -250,7 +250,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             try {
                 JSONObject params = new JSONObject();
                 params.put("borrowNid", borrow.getBorrowNid());
-                borrowFirstProducer.messageSend(new MessageContent(MQConstant.HYJF_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                borrowFirstProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
                 return true;
             } catch (MQException e) {
                 logger.error(borrow.getBorrowNid() + "----发送【关联计划】MQ失败...");

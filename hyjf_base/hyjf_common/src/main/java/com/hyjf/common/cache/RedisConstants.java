@@ -158,4 +158,9 @@ public class RedisConstants {
      * 自动关联计划redis防重复
      */
     public static final String AUTO_ISSUE_REPEAT = "borrowissue";
+
+    /**
+     * 单用户防止重复提交redis 前缀
+     */
+    public static final String PRE_REQUEST_LIMIT = "ReqLimit:";
 }

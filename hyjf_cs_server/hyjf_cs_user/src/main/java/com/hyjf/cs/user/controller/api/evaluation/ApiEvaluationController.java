@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @version EvaluationController, v0.1 2018/7/3 17:26
  */
 
-@Api(value = "api端风险测评接口",description = "api端风险测评接口")
+@Api(value = "api端风险测评接口",description = "api端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/hyjf-api/user")
 public class ApiEvaluationController {
 
     @Autowired

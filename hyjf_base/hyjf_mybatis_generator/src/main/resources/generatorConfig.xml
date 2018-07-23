@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_market.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1781,15 +1781,9 @@
             <columnOverride column="associated_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
 
-        <table tableName="ht_account_web_list" domainObjectName="AccountWebList">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
-            <columnOverride column="flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
-        </table>
-        
          <table tableName="ht_content_environment" domainObjectName="ContentEnvironment">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>-->
+        </table>
 
         <table tableName="ht_account_exception" domainObjectName="AccountException">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />

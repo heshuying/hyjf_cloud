@@ -28,7 +28,7 @@ public class LoanCoverClientImpl implements LoanCoverClient {
 
     /**
      * 查找借款盖章用户信息
-     *
+     * @author nxl
      * @param request
      * @return
      */
@@ -43,7 +43,9 @@ public class LoanCoverClientImpl implements LoanCoverClient {
         return null;
     }
     /**
-     * 保存记录
+     * 保存借款盖章用户信息
+     * @author nxl
+     * @author nxl
      */
     @Override
     public int insertLoanCoverUser(LoanCoverUserRequest request){
@@ -52,9 +54,11 @@ public class LoanCoverClientImpl implements LoanCoverClient {
                 getBody();
         return updFlg;
     }
-
     /**
-     * 查找记录
+     * 根据证件号码查找借款主体CA认证记录表
+     * @param strIdNo
+     * @author nxl
+     * @return
      */
     @Override
     public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo){
@@ -68,7 +72,10 @@ public class LoanCoverClientImpl implements LoanCoverClient {
         return null;
     }
     /**
-     * 根据id查找记录
+     * 根据id查找借款主体CA认证记录表
+     * @param strId
+     * @author nxl
+     * @return
      */
     @Override
     public  LoanCoverUserResponse selectIsExistsRecordById(String strId){
@@ -82,6 +89,9 @@ public class LoanCoverClientImpl implements LoanCoverClient {
     }
     /**
      * 更新记录
+     * @param request
+     * @author nxl
+     * @return
      */
     @Override
     public int updateLoanCoverUserRecord(LoanCoverUserRequest request){

@@ -12,7 +12,7 @@ import java.util.List;
  * @author fuqiang
  * @version UserAliasService, v0.1 2018/5/8 10:55
  */
-public interface UserAliasService {
+public interface UserAliasService extends BaseService{
     /**
      * 根据手机号查询推送别名
      *
@@ -37,4 +37,23 @@ public interface UserAliasService {
     Integer countAliasByClient(String clientAndroid);
 
     void clearMobileCode(Integer userId, String sign);
+
+    /**
+     * 根据userd获取设备唯一标识
+     * @param userId
+     * @return
+     */
+    UserAlias findAliasesByUserId(Integer userId);
+
+    /**
+     * 更新唯一标识
+     * @param userAliasVO
+     */
+    int updateAliases(UserAlias userAliasVO);
+
+    /**
+     * 插入唯一标识
+     * @param userAlias
+     */
+    int insertMobileCode(UserAlias userAlias);
 }

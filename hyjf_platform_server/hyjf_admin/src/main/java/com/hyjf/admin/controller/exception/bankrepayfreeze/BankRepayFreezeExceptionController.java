@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +19,7 @@ import java.util.List;
  * @author hesy
  * @version BankRepayFreezeController, v0.1 2018/7/11 11:32
  */
-@Api(value = "异常中心-还款冻结异常撤销")
+@Api(value = "异常中心-还款冻结异常撤销", description = "异常中心-还款冻结异常撤销")
 @RestController
 @RequestMapping("/hyjf-admin/exception/repayfreeze_cancel")
 public class BankRepayFreezeExceptionController extends BaseController {
@@ -35,7 +32,7 @@ public class BankRepayFreezeExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "冻结异常列表", notes = "冻结异常列表")
-    @RequestMapping("/list")
+    @PostMapping("/list")
     public JSONObject getList(@RequestBody BankRepayFreezeRequest requestBean){
         Integer count = bankRepayFreezeService.getFreezeLogCount();
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
@@ -53,7 +50,7 @@ public class BankRepayFreezeExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "冻结撤销", notes = "冻结撤销")
-    @RequestMapping("/cancel/{orderId}")
+    @GetMapping("/cancel/{orderId}")
     public JSONObject repayFreezeCancel(@PathVariable String orderId){
         if(StringUtils.isBlank(orderId)){
             return this.fail("请求参数错误");

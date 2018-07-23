@@ -19,7 +19,7 @@ public interface BankCardManagerClient {
 
     /**
      * 获取银行列表
-     *
+     * @author nixiaoling
      * @return
      */
     List<BanksConfigVO> selectBankConfigList();
@@ -41,5 +41,5 @@ public interface BankCardManagerClient {
      * @param request
      * @return
      */
-   BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request);
+    BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request);
 }

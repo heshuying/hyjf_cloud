@@ -24,9 +24,9 @@ import java.util.Map;
  * @author hesy
  * @version MyCouponListController, v0.1 2018/6/23 14:09
  */
-@Api(value = "Web端我的优惠券列表")
+@Api(value = "web端-我的优惠券列表", description = "web端-我的优惠券列表")
 @RestController
-@RequestMapping("/web/coupon")
+@RequestMapping("/hyjf-web/coupon")
 public class MyCouponListController {
     private static final Logger logger = LoggerFactory.getLogger(MyCouponListController.class);
 

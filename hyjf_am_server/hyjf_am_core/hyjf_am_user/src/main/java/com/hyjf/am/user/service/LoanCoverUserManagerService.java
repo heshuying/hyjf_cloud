@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service;
 
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 
 import java.util.Date;
@@ -55,8 +56,19 @@ public interface LoanCoverUserManagerService {
      * @return
      */
    int updateLoanCoverUserRecord(LoanCoverUserRequest request);
+
     /**
-     * 根据证件号码查找借款主体CA认证记录表
+     * 根据id查找借款主体CA认证记录表
+     * @param id
+     * @return
      */
     LoanSubjectCertificateAuthority selectIsExistsRecordById(String id);
+
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param idno
+     * @param tureName
+     * @return
+     */
+    CertificateAuthority selectCertificateAuthorityByIdNoName(String idno, String tureName);
 }

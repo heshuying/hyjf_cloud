@@ -37,7 +37,7 @@ import java.util.Map;
 @Api(value = "app端用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/app/recharge")
+@RequestMapping(value = "/hyjf-app/recharge")
 public class AppRechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(AppRechargeController.class);

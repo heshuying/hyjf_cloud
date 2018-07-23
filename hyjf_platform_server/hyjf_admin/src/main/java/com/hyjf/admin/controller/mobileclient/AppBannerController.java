@@ -11,6 +11,7 @@ import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 import com.hyjf.am.vo.market.AppBannerVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,12 +29,11 @@ import javax.servlet.http.HttpServletResponse;
  * @author lisheng
  * @version AppBannerController, v0.1 2018/7/11 11:27
  */
+@Api(value = "admin移动客户端",description = "admin移动客户端")
 @RestController
 @RequestMapping("/app/maintenance/banner")
 public class AppBannerController extends BaseController {
     Logger logger = LoggerFactory.getLogger(getClass());
-    //权限名称
-    private static final String PERMISSIONS = "preregist"; //TODO  权限名称copy的 需要之后查看
     @Autowired
     AppBannerService appBannerService;
     @Autowired
@@ -41,7 +41,7 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
     @ResponseBody
-    public AdminResult<ListResult<AppBannerVO>> init(@RequestBody AppBannerRequestBean appBannerRequestBean) {
+    public AdminResult<ListResult<AppBannerVO>> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
         AppBannerRequest aprlr = new AppBannerRequest();
         BeanUtils.copyProperties(appBannerRequestBean, aprlr);
         AppBannerResponse prs = appBannerService.getRecordList(aprlr);
@@ -54,12 +54,13 @@ public class AppBannerController extends BaseController {
         return new AdminResult<ListResult<AppBannerVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
     }
 
-
     @ApiOperation(value = "广告管理添加", notes = "广告管理添加")
     @PostMapping(value = "/add")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> add(@RequestBody AdsWithBLOBsVO ads) {
-        AppBannerResponse appBannerResponse = appBannerService.insertRecord(ads);
+    public AdminResult<AdsWithBLOBsVO> add(@RequestBody AppBannerRequestBean form) {
+        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+        BeanUtils.copyProperties(form,adsWithBLOBsVO);
+        AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsWithBLOBsVO);
         if (Response.isSuccess(appBannerResponse)) {
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);
         } else {
@@ -67,12 +68,13 @@ public class AppBannerController extends BaseController {
         }
     }
 
-
     @ApiOperation(value = "广告管理修改", notes = "广告管理修改")
     @PostMapping(value = "/update")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> update(@RequestBody AdsWithBLOBsVO ads) {
-        AppBannerResponse appBannerResponse = appBannerService.updateRecord(ads);
+    public AdminResult<AdsWithBLOBsVO> update(@RequestBody AppBannerRequestBean form) {
+        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+            BeanUtils.copyProperties(form,adsWithBLOBsVO);
+        AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsWithBLOBsVO);
         if (Response.isSuccess(appBannerResponse)) {
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);
         } else {
@@ -83,8 +85,10 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @PostMapping(value = "/updateStatus")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AdsWithBLOBsVO ads) {
-        AppBannerResponse appBannerResponse = appBannerService.updateStatus(ads);
+    public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AppBannerRequestBean form) {
+        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+        BeanUtils.copyProperties(form,adsWithBLOBsVO);
+        AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsWithBLOBsVO);
         if (Response.isSuccess(appBannerResponse)) {
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);
         } else {
@@ -96,8 +100,10 @@ public class AppBannerController extends BaseController {
     @ApiOperation(value = "删除", notes = "删除")
     @PostMapping(value = "/delete")
     @ResponseBody
-    public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AdsWithBLOBsVO ads) {
-        AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(ads);
+    public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AppBannerRequestBean form) {
+        AdsWithBLOBsVO adsWithBLOBsVO = new AdsWithBLOBsVO();
+        BeanUtils.copyProperties(form,adsWithBLOBsVO);
+        AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsWithBLOBsVO);
         if (Response.isSuccess(appBannerResponse)) {
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);
         } else {

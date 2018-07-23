@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.productcenter;
 import com.hyjf.admin.beans.request.BorrowRegistRequestBean;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
@@ -29,7 +31,7 @@ import java.util.Map;
  * @version BorrowRegistController, v0.1 2018/6/29 11:18
  */
 
-@Api(value = "汇直投-标的备案接口")
+@Api(value = "汇直投-标的备案接口", description = "汇直投-标的备案接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_regist")
 public class BorrowRegistController extends BaseController {
@@ -39,12 +41,14 @@ public class BorrowRegistController extends BaseController {
     @Autowired
     AdminCommonService adminCommonService;
 
-    private static final String PARAM_NAME = "hyjf_param_name:";
+    /** 权限 */
+    public static final String PERMISSIONS = "borrowregist";
 
     @ApiOperation(value = "标的备案初始化", notes = "标的备案初始化")
     @PostMapping("/init")
     @ResponseBody
-    public AdminResult init(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<BorrowRegistResponseBean> init(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
         BeanUtils.copyProperties(borrowRegistRequestBean, borrowRegistListRequest);
         BorrowRegistResponseBean responseBean = borrowRegistService.getRegistList(borrowRegistListRequest);
@@ -55,16 +59,17 @@ public class BorrowRegistController extends BaseController {
         List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
         //备案状态
-        Map<String, String> borrowRegistStatusList = adminCommonService.getParamNameMap(PARAM_NAME + CustomConstants.REGIST_STATUS);
+        Map<String, String> borrowRegistStatusList = adminCommonService.getParamNameMap(CustomConstants.REGIST_STATUS);
         responseBean.setBorrowRegistStatusList(borrowRegistStatusList);
 
         return new AdminResult(responseBean);
     }
 
     @ApiOperation(value = "获取标的备案列表", notes = "获取标的备案列表")
-    @PostMapping("/get_regist_list")
+    @PostMapping("/search")
     @ResponseBody
-    public AdminResult getRegistList(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    public AdminResult<BorrowRegistResponseBean> getRegistList(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
         BeanUtils.copyProperties(borrowRegistRequestBean, borrowRegistListRequest);
         BorrowRegistResponseBean responseBean = borrowRegistService.getRegistList(borrowRegistListRequest);
@@ -74,6 +79,7 @@ public class BorrowRegistController extends BaseController {
     @ApiOperation(value = "标的备案", notes = "标的备案")
     @GetMapping("/debt_regist/{borrowNid}")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult init(HttpServletRequest request, @PathVariable String borrowNid) {
         //todo wangjun 取得当前用户信息 备用 后期修改
         AdminSystemVO currUser = getUser(request);

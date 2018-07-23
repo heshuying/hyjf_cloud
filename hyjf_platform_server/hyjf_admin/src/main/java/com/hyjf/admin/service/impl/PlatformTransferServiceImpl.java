@@ -5,10 +5,13 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmDataCollectClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.PlatformTransferService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.resquest.admin.PlatformTransferRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
@@ -55,6 +58,8 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     private AmUserClient amUserClient;
     @Autowired
     private AmConfigClient amConfigClient;
+    @Autowired
+    private AmDataCollectClient amDataCollectClient;
 
     @Value("${hyjf.handrecharge.password}")
     private String HYJF_HANDRECHARGE_PASSWORD;
@@ -128,9 +133,11 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
             if (bankOpenAccountVO != null && !Validator.isNull(bankOpenAccountVO.getAccount())) {
                 result.put("status","0");
             } else {
+                result.put("status","99");
                 result.put("info", "用户未开户，无法转账!");
             }
         } else {
+            result.put("status","99");
             result.put("info", "未查询到正确的用户信息!");
         }
         return result;
@@ -235,8 +242,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
 
             // 返现成功
             if (cnt > 0) {
-                result.put("status", "success");
-                result.put("success", "success");
+                result.put("status", "0");
                 result.put("result", "平台转账操作成功!");
             } else {
                 result.put("status", "error");
@@ -437,7 +443,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         accountWebListVO.setCreateTime(time);
         accountWebListVO.setOperator(loginUserName);
         accountWebListVO.setFlag(1);
-        ret += amTradeClient.insertAccountWebList(accountWebListVO);
+        ret += amDataCollectClient.insertAccountWebList(accountWebListVO);
 
         // 添加红包账户明细
         BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(Integer.valueOf(bankBean.getAccountId()));

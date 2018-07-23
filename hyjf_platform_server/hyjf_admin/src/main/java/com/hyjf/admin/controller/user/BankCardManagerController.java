@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.BankCardLogRequestBean;
 import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
+import com.hyjf.admin.beans.vo.BankcardManagerCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -22,6 +23,7 @@ import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.excel.AbstractExcelExportHandler;
 import com.hyjf.common.excel.ExcelField;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -37,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,14 +49,14 @@ import java.util.Map;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-銀行卡管理")
+@Api(value = "会员中心-銀行卡管理",description = "会员中心-銀行卡管理")
 @RestController
 @RequestMapping("/hyjf-admin/bankcardManager")
 public class BankCardManagerController extends BaseController {
     @Autowired
     private BankCardManagerService bankCardManagerService;
 
-    @ApiOperation(value = "銀行卡管理", notes = "銀行卡管理页面初始化")
+    @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
     @ResponseBody
     public JSONObject userManagerInit() {
@@ -70,10 +73,10 @@ public class BankCardManagerController extends BaseController {
 
     }
     //汇付银行开户銀行卡記錄查询
-    @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄查询")
+    @ApiOperation(value = "汇付银行开户銀行卡記錄查询", notes = "汇付银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
+    public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordAccount(HttpServletRequest request, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
@@ -84,13 +87,18 @@ public class BankCardManagerController extends BaseController {
         if (!Response.isSuccess(bankCardManagerResponse)) {
             return new AdminResult<>(FAIL, bankCardManagerResponse.getMessage());
         }
-        return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
+        List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+        List<BankcardManagerCustomizeVO> bankcardManagerCustomizeVOList = new ArrayList<BankcardManagerCustomizeVO>();
+        if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
+            bankcardManagerCustomizeVOList = CommonUtils.convertBeanList(bankcardManagerVOList, BankcardManagerCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<BankcardManagerCustomizeVO>>(ListResult.build(bankcardManagerCustomizeVOList, bankCardManagerResponse.getCount()));
     }
 
-    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄查询")
+    @ApiOperation(value = "江西银行开户銀行卡記錄查询", notes = "江西银行开户銀行卡記錄查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankcardManagerVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
+    public AdminResult<ListResult<BankcardManagerCustomizeVO>> bankOpenRecordBankAccount(@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         JSONObject jsonObject = new JSONObject();
         BankCardManagerRequest bankCardManagerRequest = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, bankCardManagerRequest);
@@ -101,48 +109,14 @@ public class BankCardManagerController extends BaseController {
         if (!Response.isSuccess(bankCardManagerResponse)) {
             return new AdminResult<>(FAIL, bankCardManagerResponse.getMessage());
         }
-        return new AdminResult<ListResult<BankcardManagerVO>>(ListResult.build(bankCardManagerResponse.getResultList(), bankCardManagerResponse.getCount()));
+        List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+        List<BankcardManagerCustomizeVO> bankcardManagerCustomizeVOList = new ArrayList<BankcardManagerCustomizeVO>();
+        if(null!=bankcardManagerVOList&&bankcardManagerVOList.size()>0){
+            bankcardManagerCustomizeVOList = CommonUtils.convertBeanList(bankcardManagerVOList, BankcardManagerCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<BankcardManagerCustomizeVO>>(ListResult.build(bankcardManagerCustomizeVOList, bankCardManagerResponse.getCount()));
     }
 
-    private BankCardManagerRequest setRequese(Map<String, Object> mapParam) {
-        BankCardManagerRequest requestBank = new BankCardManagerRequest();
-        if (null != mapParam && mapParam.size() > 0) {
-            if (mapParam.containsKey("userName")) {
-                requestBank.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("userName")) {
-                requestBank.setUserName(mapParam.get("userName").toString());
-            }
-            if (mapParam.containsKey("bank")) {
-                requestBank.setBank(mapParam.get("bank").toString());
-            }
-            if (mapParam.containsKey("account")) {
-                requestBank.setAccount(mapParam.get("account").toString());
-            }
-            if (mapParam.containsKey("realName")) {
-                requestBank.setRealName(mapParam.get("realName").toString());
-            }
-            if (mapParam.containsKey("cardProperty")) {
-                requestBank.setCardProperty(mapParam.get("cardProperty").toString());
-            }
-            if (mapParam.containsKey("cardType")) {
-                requestBank.setCardType(mapParam.get("cardType").toString());
-            }
-            if (mapParam.containsKey("addTimeStart")) {
-                requestBank.setAddTimeStart(mapParam.get("addTimeStart").toString());
-            }
-            if (mapParam.containsKey("addTimeEnd")) {
-                requestBank.setAddTimeEnd(mapParam.get("addTimeEnd").toString());
-            }
-            if (mapParam.containsKey("mobile")) {
-                requestBank.setMobile(mapParam.get("mobile").toString());
-            }
-           /* if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                requestBank.setLimitFlg(Integer.parseInt(mapParam.get("limit").toString()));
-            }*/
-        }
-        return requestBank;
-    }
 
 
     /**
@@ -151,11 +125,13 @@ public class BankCardManagerController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "銀行卡管理", notes = "汇付银行开户銀行卡記錄导出")
+    @ApiOperation(value = "汇付银行开户銀行卡記錄导出", notes = "汇付银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportbankcard")
-    public void exportExcel(HttpServletResponse response, @RequestBody Map<String, Object> map) {
+    public void exportExcel(HttpServletResponse response,@RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) {
         // 封装查询条件
-        final BankCardManagerRequest requestBank = setRequese(map);
+        final BankCardManagerRequest requestBank = new BankCardManagerRequest();
+        BeanUtils.copyProperties(bankCardManagerRequestBean,requestBank);
+        requestBank.setLimitFlg(true);
         // 表格sheet名称
         String sheetName = "银行卡管理";
 
@@ -272,19 +248,19 @@ public class BankCardManagerController extends BaseController {
      * @param bankCardManagerRequestBean
      * @throws Exception
      */
-    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄导出")
+    @ApiOperation(value = "江西银行开户銀行卡記錄导出", notes = "江西银行开户銀行卡記錄导出")
     @PostMapping(value = "/exportnewbankcard")
     public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
 
         // 表格sheet名称
         String sheetName = "银行卡管理";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 封装查询条件
         BankCardManagerRequest requestBank = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
         //查找全部
-        requestBank.setLimitFlg(0);
+        requestBank.setLimitFlg(true);
         // 需要输出的结果列表
         BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
 //        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
@@ -335,9 +311,80 @@ public class BankCardManagerController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+//
+//    /**
+//     * 导出方法
+//     * @param request
+//     * @param response
+//     * @param bankCardManagerRequestBean
+//     * @throws Exception
+//     */
+//    @ApiOperation(value = "銀行卡管理", notes = "江西银行开户銀行卡記錄导出")
+//    @PostMapping(value = "/exportnewbankcard")
+//    public void exportExcelNew(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCardManagerRequestBean bankCardManagerRequestBean) throws Exception {
+//
+//        // 表格sheet名称
+//        String sheetName = "银行卡管理";
+//        // 文件名称
+//        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+//        // 封装查询条件
+//        BankCardManagerRequest requestBank = new BankCardManagerRequest();
+//        BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
+//        //查找全部
+//        requestBank.setLimitFlg(0);
+//        // 需要输出的结果列表
+//        BankCardManagerResponse bankCardManagerResponse = bankCardManagerService.selectBankCardList(requestBank);
+////        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);
+//        //序号、用户名、当前手机号、姓名、身份证号、银行卡号、绑卡时间
+//        String[] titles = new String[]{"序号", "用户名", "当前手机号", "姓名", "身份证号", "银行卡号", "绑卡时间"};
+//        // 声明一个工作薄
+//        HSSFWorkbook workbook = new HSSFWorkbook();
+//        // 生成一个表格
+//        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+//        if (null != bankCardManagerResponse) {
+//            List<BankcardManagerVO> bankcardManagerVOList = bankCardManagerResponse.getResultList();
+//            if (bankcardManagerVOList != null && bankcardManagerVOList.size() > 0) {
+//                int sheetCount = 1;
+//                int rowNum = 0;
+//                for (int i = 0; i < bankcardManagerVOList.size(); i++) {
+//                    rowNum++;
+//                    if (i != 0 && i % 60000 == 0) {
+//                        sheetCount++;
+//                        sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+//                        rowNum = 1;
+//                    }
+//                    // 新建一行
+//                    Row row = sheet.createRow(rowNum);
+//                    // 循环数据
+//                    for (int celLength = 0; celLength < titles.length; celLength++) {
+//                        BankcardManagerVO user = bankcardManagerVOList.get(i);
+//                        // 创建相应的单元格
+//                        Cell cell = row.createCell(celLength);
+//                        if (celLength == 0) {// 序号
+//                            cell.setCellValue(i + 1);
+//                        } else if (celLength == 1) {// 用户名
+//                            cell.setCellValue(user.getUserName());
+//                        } else if (celLength == 2) {// 当前手机号
+//                            cell.setCellValue(user.getMobile());
+//                        } else if (celLength == 3) {// 姓名
+//                            cell.setCellValue(user.getRealName());
+//                        } else if (celLength == 4) {// 身份证号
+//                            cell.setCellValue(user.getIdcard());
+//                        } else if (celLength == 5) {// 银行卡号
+//                            cell.setCellValue(user.getAccount());
+//                        } else if (celLength == 6) {// 绑卡时间
+//                            cell.setCellValue(user.getAddTime());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        // 导出
+//        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+//    }
 
     //汇付银行操作记录記錄查询
-    @ApiOperation(value = "銀行卡管理", notes = "汇付银行操作记录")
+    @ApiOperation(value = "汇付银行操作记录", notes = "汇付银行操作记录")
     @PostMapping(value = "/selectbankcardlogbyexample")
     @ResponseBody
     public AdminResult<ListResult<BankCardLogVO>> selectBankCardLogByExample(HttpServletRequest request, @RequestBody BankCardLogRequestBean bankCardLogRequestBean){
@@ -352,7 +399,7 @@ public class BankCardManagerController extends BaseController {
         }
         return new AdminResult<ListResult<BankCardLogVO>>(ListResult.build(bankCardLogResponse.getResultList(), bankCardLogResponse.getCount()));
     }
-    @ApiOperation(value = "銀行卡管理", notes = "用户银行卡操作记录导出")
+    @ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
     @PostMapping(value = "/exportbankcardlog")
     public void exportBankCardLog(HttpServletRequest request,HttpServletResponse response, @RequestBody BankCardLogRequestBean bankCardLogRequestBean) throws Exception {
 

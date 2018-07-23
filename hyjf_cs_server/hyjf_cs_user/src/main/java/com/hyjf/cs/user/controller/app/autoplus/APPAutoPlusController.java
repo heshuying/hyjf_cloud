@@ -37,9 +37,9 @@ import javax.validation.Valid;
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:20
  */
-@Api(value = "app端用户授权自动投资自动债转接口",description = "app端用户授权自动投资自动债转接口")
+@Api(value = "app端-用户授权自动投资自动债转接口",description = "app端-用户授权自动投资自动债转接口")
 @RestController
-@RequestMapping("/app/user/bank/autoplus")
+@RequestMapping("/hyjf-app/user/bank/autoplus")
 public class APPAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(APPAutoPlusController.class);
@@ -47,7 +47,7 @@ public class APPAutoPlusController extends BaseUserController {
     AutoPlusService autoPlusService;
 
     @ApiOperation(value = "授权发送短信验证码", notes = "授权发送短信验证码")
-    @RequestMapping(value = "/sendcode", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/sendcode")
     public AutoPlusResultBean autoPlusSendCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType,
                                                @RequestParam(value = "mobile", required = false) String mobile) {
         logger.info("app端授权发送短信验证码, mobile :{}", mobile);
@@ -385,7 +385,7 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
-    @PostMapping(value = "/userAuthInvesBgreturn", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/userAuthInvesBgreturn")
     public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);

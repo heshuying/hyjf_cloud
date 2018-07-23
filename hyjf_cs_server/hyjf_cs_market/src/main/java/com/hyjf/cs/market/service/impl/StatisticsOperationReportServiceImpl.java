@@ -11,15 +11,17 @@ import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.market.client.AmDataCollect;
+import com.hyjf.cs.market.client.AmDataCollectClient;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.StatisticsOperationReportProducer;
+import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.StatisticsOperationReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -30,16 +32,17 @@ import java.util.*;
  * @version StatisticsOperationReportServiceImpl, v0.1 2018/7/18 10:18
  */
 @Service
-public class StatisticsOperationReportServiceImpl implements StatisticsOperationReportService {
+public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl implements StatisticsOperationReportService {
     Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private AmTradeClient amTradeClient;
 	@Autowired
-	private AmDataCollect amDataCollect;
+	private AmDataCollectClient amDataCollect;
 	@Autowired
 	private StatisticsOperationReportProducer statisticsProducer;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void insertOperationGroupData(Calendar cal) {
 		OperationMongoGroupEntityVO oegroup = new OperationMongoGroupEntityVO();
 		// 插入统计日期
@@ -92,6 +95,7 @@ public class StatisticsOperationReportServiceImpl implements StatisticsOperation
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void insertOperationData(Calendar cal) {
 		// 插入统计日期
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

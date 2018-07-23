@@ -1,20 +1,24 @@
 package com.hyjf.admin.controller.user;
 
-import java.net.URLEncoder;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.hyjf.admin.beans.request.UserPortraitRequestBean;
+import com.hyjf.admin.beans.vo.UserPortraitCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.am.response.user.AdminPreRegistListResponse;
-import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
+import com.hyjf.admin.service.UserPortraitService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
+import com.hyjf.am.vo.user.UserPortraitVO;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -26,24 +30,19 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.UserPortraitService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "会员中心-用户画像接口")
+@Api(value = "会员中心-用户画像接口", description = "会员中心-用户画像接口")
 @RestController
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
@@ -61,22 +60,26 @@ public class UserPortraitController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "用户画像", notes = "获取用户画像列表")
+    @ApiOperation(value = "获取用户画像列表", notes = "获取用户画像列表")
     @PostMapping(value = "/selectUserPortraitList")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<UserPortraitVO>> selectUserPortraitList(HttpServletRequest request,@RequestBody UserPortraitRequestBean userPortraitRequestBean) {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<UserPortraitCustomizeVO>> selectUserPortraitList(HttpServletRequest request, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
         BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
         UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
-        if(responseUserPortrait==null) {
+        if (responseUserPortrait == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(responseUserPortrait)) {
             return new AdminResult<>(FAIL, responseUserPortrait.getMessage());
         }
-        return new AdminResult<ListResult<UserPortraitVO>>(ListResult.build(responseUserPortrait.getResultList(), responseUserPortrait.getCount())) ;
+        List<UserPortraitCustomizeVO> userPortraitCustomizeVOList = new ArrayList<UserPortraitCustomizeVO>();
+        List<UserPortraitVO> userPortraitVOList = responseUserPortrait.getResultList();
+        if (null != userPortraitVOList && userPortraitVOList.size() > 0) {
+            userPortraitCustomizeVOList = CommonUtils.convertBeanList(userPortraitVOList, UserPortraitCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<UserPortraitCustomizeVO>>(ListResult.build(userPortraitCustomizeVOList, responseUserPortrait.getCount()));
 
     }
 
@@ -86,15 +89,17 @@ public class UserPortraitController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "用户画像", notes = "初始化用户画像修改页面")
+    @ApiOperation(value = "初始化用户画像修改页面", notes = "初始化用户画像修改页面")
     @PostMapping(value = "/initUserPortraitEdit")
     @ResponseBody
-    public AdminResult<UserPortraitVO>  initUserPortraitEdit(HttpServletRequest request, @RequestBody int userId) {
-            UserPortraitVO userPortraitVO = userPortraitService.selectUsersPortraitByUserId(userId);
-            if (null != userPortraitVO) {
-                return new AdminResult<UserPortraitVO>(userPortraitVO);
-            }
-            return new AdminResult<>(FAIL, FAIL_DESC);
+    public AdminResult<UserPortraitCustomizeVO> initUserPortraitEdit(HttpServletRequest request, @RequestBody int userId) {
+        UserPortraitVO userPortraitVO = userPortraitService.selectUsersPortraitByUserId(userId);
+        UserPortraitCustomizeVO userPortraitCustomizeVO = new UserPortraitCustomizeVO();
+        if (null != userPortraitVO) {
+            BeanUtils.copyProperties(userPortraitVO, userPortraitCustomizeVO);
+            return new AdminResult<UserPortraitCustomizeVO>(userPortraitCustomizeVO);
+        }
+        return new AdminResult<>(FAIL, FAIL_DESC);
     }
 
     /**
@@ -102,7 +107,7 @@ public class UserPortraitController extends BaseController {
      *
      * @return
      */
-    @ApiOperation(value = "用户画像", notes = "修改用户画像")
+    @ApiOperation(value = "修改用户画像", notes = "修改用户画像")
     @PostMapping(value = "/updateUserPortrait")
     @ResponseBody
     public AdminResult updateUserPortrait(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
@@ -112,24 +117,24 @@ public class UserPortraitController extends BaseController {
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
         BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
         int updFlg = userPortraitService.updateUserPortrait(userPortraitRequest);
-        if(updFlg<=0){
+        if (updFlg <= 0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();
     }
 
     /**
-       * 导出功能
-       *
-       * @param request
-     * */
-    @ApiOperation(value = "借款盖章用户", notes = "导出借款盖章用户")
+     * 导出功能
+     *
+     * @param request
+     */
+    @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
     @PostMapping(value = "/exportLoancover")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody String userName) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "用户画像";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         //解决IE浏览器导出列表中文乱码问题
         String userAgent = request.getHeader("user-agent").toLowerCase();
@@ -146,13 +151,14 @@ public class UserPortraitController extends BaseController {
         String yesterdayBegin = yesterday + " 00:00:00";
         String yesterdayEnd = yesterday + " 23:59:59";
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
-        userPortraitRequest.setUserName(userName);
+        BeanUtils.copyProperties(userPortraitRequestBean,userPortraitRequest);
+//        userPortraitRequest.setUserName(userName);
         userPortraitRequest.setYesterdayBeginTime(yesterdayBegin);
         userPortraitRequest.setYesterdayEndTime(yesterdayEnd);
-        userPortraitRequest.setLimitFlg(0);
-        List<UserPortraitVO> loanCoverUserVOList =new ArrayList<UserPortraitVO>();
+        userPortraitRequest.setLimitFlg(true);//导出时查找全部数据
+        List<UserPortraitVO> loanCoverUserVOList = new ArrayList<UserPortraitVO>();
         UserPortraitResponse responseUserPortrait = userPortraitService.selectRecordList(userPortraitRequest);
-        if(null!=responseUserPortrait){
+        if (null != responseUserPortrait) {
             loanCoverUserVOList = responseUserPortrait.getResultList();
         }
 

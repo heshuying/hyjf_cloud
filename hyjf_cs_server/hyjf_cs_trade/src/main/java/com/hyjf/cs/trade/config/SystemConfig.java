@@ -72,6 +72,26 @@ public class SystemConfig {
     @Value("${hyjf.bank.bankcode}")
     private String bankBankcode;
 
+    @Value("${hyjf.bank.merrp.account}")
+    private String BANK_MERRP_ACCOUNT;
+
+    @Value("${aop.interface.accesskey}")
+    public String aopAccesskey;
+
+    @Value("${crm.investmentdetails.url}")
+    private String crmTenderUrl;
+
+    //私钥请求地址
+    @Value("${hyjf.req.pri.key}")
+    private String hyjfReqPrimaryKeyPath;
+
+    // 请求密码请求地址
+    @Value("${hyjf.req.password}")
+    private String hyjfReqPasswordPath;
+
+    @Value("${hyjf.env.test}")
+    private boolean hyjfEnvTest;
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -254,5 +274,51 @@ public class SystemConfig {
 
     public void setPasswordWDZJ(String passwordWDZJ) {
         this.passwordWDZJ = passwordWDZJ;
+    }
+
+    public String getBANK_MERRP_ACCOUNT() {
+        return BANK_MERRP_ACCOUNT;
+    }
+
+    public void setBANK_MERRP_ACCOUNT(String BANK_MERRP_ACCOUNT) {
+        this.BANK_MERRP_ACCOUNT = BANK_MERRP_ACCOUNT;
+    }
+
+    public String getCrmTenderUrl() {
+        return crmTenderUrl;
+    }
+
+    public void setCrmTenderUrl(String crmTenderUrl) {
+        this.crmTenderUrl = crmTenderUrl;
+    }
+
+    public String getHyjfReqPrimaryKeyPath() {
+        return hyjfReqPrimaryKeyPath;
+    }
+
+    public void setHyjfReqPrimaryKeyPath(String hyjfReqPrimaryKeyPath) {
+        this.hyjfReqPrimaryKeyPath = hyjfReqPrimaryKeyPath;
+    }
+
+    public String getHyjfReqPasswordPath() {
+        return hyjfReqPasswordPath;
+    }
+
+    public void setHyjfReqPasswordPath(String hyjfReqPasswordPath) {
+        this.hyjfReqPasswordPath = hyjfReqPasswordPath;
+    }
+    public String getAopAccesskey() {
+        return aopAccesskey;
+    }
+
+    public void setAopAccesskey(String aopAccesskey) {
+        this.aopAccesskey = aopAccesskey;
+    }
+    public boolean isHyjfEnvTest() {
+        return hyjfEnvTest;
+    }
+
+    public void setHyjfEnvTest(boolean hyjfEnvTest) {
+        this.hyjfEnvTest = hyjfEnvTest;
     }
 }

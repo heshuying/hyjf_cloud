@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/cs-user/batch")
-@Api(value = "用户画像定时任务",description = "用户画像定时任务")
+@Api(value = "用户画像定时任务",description = "batch-用户画像定时任务")
 public class UserPortraitBatchController{
 
     @Autowired

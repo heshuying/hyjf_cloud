@@ -1,6 +1,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,63 +13,77 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
     /**
      * 借款编号 检索条件
      */
+    @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
     /**
      * 借款编号 检索条件
      */
+    @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
     /**
      * 借款标题 检索条件
      */
+    @ApiModelProperty(value = "借款标题")
     private String borrowNameSrch;
     /**
      * 用户名 检索条件
      */
+    @ApiModelProperty(value = "用户名")
     private String usernameSrch;
     /**
      * 推荐人 检索条件
      */
+    @ApiModelProperty(value = "推荐人")
     private String referrerNameSrch;
     /**
      * 还款方式 检索条件
      */
+    @ApiModelProperty(value = "还款方式 ")
     private String borrowStyleSrch;
     /**
      * 操作平台 检索条件
      */
+    @ApiModelProperty(value = "操作平台 ")
     private String clientSrch;
     /**
      * 渠道 检索条件
      */
+    @ApiModelProperty(value = "渠道")
     private String utmIdSrch;
 
     /**
      * 还款批次号 检索条件
      */
+    @ApiModelProperty(value = "还款批次号")
     private String repayBatchNo;
     /**
      * 投资时间 检索条件
      */
+    @ApiModelProperty(value = "投资时间开始")
     private String timeStartSrch;
     /**
      * 投资时间 检索条件
      */
+    @ApiModelProperty(value = "投资时间结束")
     private String timeEndSrch;
 
     /**
      * 还款日期 检索条件
      */
+    @ApiModelProperty(value = "还款日期开始")
     private String yesTimeStartSrch;
     /**
      * 还款日期 检索条件
      */
+    @ApiModelProperty(value = "还款日期结束")
     private String yesTimeEndSrch;
-
+    @ApiModelProperty(value = "借款编号（导出用）")
     private String borrowNid;
 
     /**
      * 列表来源标识 0：还款明细 1：批次还款-查看按钮
      */
+    @ApiModelProperty(value = "列表来源标识 0：还款明细 1：批次还款-查看按钮")
     private  int serchFlag = 0;
 
     public String getBorrowNidSrch() {

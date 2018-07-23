@@ -9,7 +9,7 @@ import java.util.Calendar;
  * @author fuqiang
  * @version StatisticsOperationReportService, v0.1 2018/7/18 10:18
  */
-public interface StatisticsOperationReportService {
+public interface StatisticsOperationReportService extends BaseMarketService {
     /**
      * 插入性别，性别 ，区域的统计信息
      * @param cal

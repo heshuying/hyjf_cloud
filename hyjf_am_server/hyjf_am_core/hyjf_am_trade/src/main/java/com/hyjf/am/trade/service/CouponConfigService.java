@@ -3,8 +3,14 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomize;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -71,4 +77,108 @@ public interface CouponConfigService {
      * @return
      */
     int checkCouponSendExcess(String couponCode);
+
+    CouponConfigVO getCouponConfigByOrderId(String ordId);
+
+    /**
+     * @Author walter.limeng
+     * @Description   根据tenderNid查询放款优惠券总数
+     * @Date 14:00 2018/7/17
+     * @Param tenderNid
+     * @return
+     */
+    Integer countByTenderId(String tenderNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新还款期
+     * @Date 14:15 2018/7/17
+     * @Param tenderNid 投资订单编号
+     * @Param currentRecoverFlg 0:非还款期，1;还款期
+     * @Param period 期数
+     * @return
+     */
+    Integer crRecoverPeriod(String tenderNid, Integer currentRecoverFlg, Integer period);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据nid 取得体验金收益期限
+     * @Date 14:33 2018/7/17
+     * @Param tenderNid
+     * @return
+     */
+    Integer getCouponProfitTime(String tenderNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  保存CouponRecover
+     * @Date 14:45 2018/7/17
+     * @Param CouponRecoverVO
+     * @return
+     */
+    Integer insertCouponRecover(CouponRecoverVO cr);
+
+    /**
+     * @Author walter.limeng
+     * @Description  保存CouponRecover
+     * @Date 14:49 2018/7/17
+     * @Param account
+     * @return
+     */
+    Integer updateOfLoansTenderHjh(AccountVO account);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据orderId查询所有待还款优惠券
+     * @Date 17:02 2018/7/17
+     * @Param orderId
+     * @return
+     */
+    List<CouponTenderCustomizeVO> getCouponTenderListHjh(String orderId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新couponRecover对象
+     * @Date 9:36 2018/7/18
+     * @Param CouponRecoverVO
+     * @return
+     */
+    void updateCouponRecover(CouponRecoverVO cr);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据recoverId查询交易记录
+     * @Date 9:45 2018/7/18
+     * @Param recoverId
+     * @return
+     */
+    List<TransferExceptionLogVO> selectByRecoverId(Integer recoverId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  新增交易日志数据
+     * @Date 9:56 2018/7/18
+     * @Param transferExceptionLog
+     * @return
+     */
+    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据borrowNid查询所有优惠券散标还款
+     * @Date 16:48 2018/7/18
+     * @Param borrowNid
+     * @return
+     */
+    List<CouponTenderCustomizeVO> getCouponTenderList(String borrowNid);
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新还款期
+     * @Date 17:11 2018/7/18
+     * @Param tenderNid
+     * @Param period
+     * @return
+     */
+    Integer updateRecoverPeriod(String tenderNid, Integer period);
 }

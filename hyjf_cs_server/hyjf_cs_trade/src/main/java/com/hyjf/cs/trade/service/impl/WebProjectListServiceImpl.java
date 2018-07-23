@@ -37,6 +37,7 @@ import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
 import com.hyjf.cs.trade.bean.PlanDetailBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.service.WebProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
@@ -66,8 +67,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
 
-
-
     @Autowired
     private AmTradeClient amTradeClient;
 
@@ -75,11 +74,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private AmUserClient amUserClient;
 
     @Autowired
-    private CouponConfigClient couponConfigClient;
-
-    @Autowired
-    private RepayPlanServiceImpl repayPlanService;
-
+    private RepayPlanService repayPlanService;
+    
     @Autowired
     private BaseClient baseClient;
 
@@ -218,7 +214,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setBorrowNid(borrowNid);
             request.setUserId(String.valueOf(userId));
             request.setPlatform(CustomConstants.CLIENT_PC);
-            couponConfig = couponConfigClient.selectBestCoupon(request);
+            couponConfig = amUserClient.selectBestCoupon(request);
             if (couponConfig != null) {
                 other.put("isThereCoupon", 1);
                 if (couponConfig.getCouponType() == 1) {
@@ -239,7 +235,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             other.put("couponConfig", couponConfig);
             /** 可用优惠券张数开始 pccvip */
             request.setMoney("0");
-            Integer couponAvailableCount = couponConfigClient.countAvaliableCoupon(request);
+            Integer couponAvailableCount = amUserClient.countAvaliableCoupon(request);
             other.put("couponAvailableCount", String.valueOf(couponAvailableCount));
             other.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
             /** 可用优惠券张数结束 pccvip */

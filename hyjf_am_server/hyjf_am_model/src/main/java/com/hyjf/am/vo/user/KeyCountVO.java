@@ -43,15 +43,7 @@ public class KeyCountVO extends BaseVO implements Serializable {
      */
     private String keyWord;
 
-    /**
-     * 检索条件 渠道
-     */
-    private String sourceIdSrch;
 
-    /**
-     * 检索条件 关键词
-     */
-    private String keyWordSrch;
 
     /**
      * sourceName
@@ -167,42 +159,6 @@ public class KeyCountVO extends BaseVO implements Serializable {
         this.keyWord = keyWord;
     }
 
-    /**
-     * sourceIdSrch
-     *
-     * @return the sourceIdSrch
-     */
 
-    public String getSourceIdSrch() {
-        return sourceIdSrch;
-    }
-
-    /**
-     * @param sourceIdSrch
-     *            the sourceIdSrch to set
-     */
-
-    public void setSourceIdSrch(String sourceIdSrch) {
-        this.sourceIdSrch = sourceIdSrch;
-    }
-
-    /**
-     * keyWordSrch
-     *
-     * @return the keyWordSrch
-     */
-
-    public String getKeyWordSrch() {
-        return keyWordSrch;
-    }
-
-    /**
-     * @param keyWordSrch
-     *            the keyWordSrch to set
-     */
-
-    public void setKeyWordSrch(String keyWordSrch) {
-        this.keyWordSrch = keyWordSrch;
-    }
 
 }

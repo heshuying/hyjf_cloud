@@ -2,6 +2,7 @@ package com.hyjf.cs.user.service;
 
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
@@ -10,11 +11,13 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.ApiSignUtil;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
@@ -40,6 +43,9 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Autowired
 	public SystemConfig systemConfig;
+
+	@Autowired
+	public AmConfigClient amConfigClient;
 
 	@Override
 	public boolean existUser(String mobile) {
@@ -620,5 +626,35 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		return  amUserClient.getBankOpenAccountById(userVO);
 	}
 
+	@Override
+	public String getBankReturnErrorMsg(String retCode){
+		BankReturnCodeConfigVO returnCodeConfigVO = amConfigClient.getBankReturnCodeConfig(retCode);
+		if(returnCodeConfigVO != null){
+			return returnCodeConfigVO.getErrorMsg();
+		}
+		return "请联系客服";
+	}
+
+
+	/**
+	 * 获取前端的地址
+	 * @param sysConfig
+	 * @param platform
+	 * @return
+	 */
+	public String getFrontHost(SystemConfig sysConfig, String platform) {
+
+		Integer client = Integer.parseInt(platform);
+		if (ClientConstants.WEB_CLIENT == client) {
+			return sysConfig.getFrontHost();
+		}
+		if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+			return sysConfig.getAppFrontHost();
+		}
+		if (ClientConstants.WECHAT_CLIENT == client) {
+			return sysConfig.getWeiFrontHost();
+		}
+		return null;
+	}
 
 }

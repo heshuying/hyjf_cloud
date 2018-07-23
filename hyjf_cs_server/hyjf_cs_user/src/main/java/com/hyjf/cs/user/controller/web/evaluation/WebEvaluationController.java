@@ -27,10 +27,10 @@ import java.util.Map;
  * @author zhangqingqing
  * @version EvaluationController, v0.1 2018/6/15 19:09
  */
-@Api(value = "web端风险测评接口",description = "web端风险测评接口")
+@Api(value = "web端风险测评接口",description = "web端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/user")
+@RequestMapping("/hyjf-web/user")
 public class WebEvaluationController extends BaseUserController {
 
     @Autowired

@@ -14,12 +14,6 @@ spring:
   sleuth:
     sampler:
       percentage: 1.0
-  rabbitmq:
-    host: 47.95.176.244
-    port: 5672
-    username: admin
-    password: admin1234
-    vhost: /
 #    kafka:
 #      bootstrap-servers: 123.56.216.212:9092
 

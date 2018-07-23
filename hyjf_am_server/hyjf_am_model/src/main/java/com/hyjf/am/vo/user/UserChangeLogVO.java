@@ -27,17 +27,17 @@ public class UserChangeLogVO extends BaseVO implements Serializable {
 
     private Integer status;
 
-    private Integer changeType;
-
-    private Integer changeUserId;
-
-    private String changeUser;
-
-    private Integer changeTime;
-
     private String remark;
 
     private Integer borrowerType;
+
+    private Integer updateType;
+
+    private Integer updateUserId;
+
+    private String updateUser;
+
+    private String updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -129,37 +129,6 @@ public class UserChangeLogVO extends BaseVO implements Serializable {
         this.status = status;
     }
 
-    public Integer getChangeType() {
-        return changeType;
-    }
-
-    public void setChangeType(Integer changeType) {
-        this.changeType = changeType;
-    }
-
-    public Integer getChangeUserId() {
-        return changeUserId;
-    }
-
-    public void setChangeUserId(Integer changeUserId) {
-        this.changeUserId = changeUserId;
-    }
-
-    public String getChangeUser() {
-        return changeUser;
-    }
-
-    public void setChangeUser(String changeUser) {
-        this.changeUser = changeUser == null ? null : changeUser.trim();
-    }
-
-    public Integer getChangeTime() {
-        return changeTime;
-    }
-
-    public void setChangeTime(Integer changeTime) {
-        this.changeTime = changeTime;
-    }
 
     public String getRemark() {
         return remark;
@@ -175,5 +144,37 @@ public class UserChangeLogVO extends BaseVO implements Serializable {
 
     public void setBorrowerType(Integer borrowerType) {
         this.borrowerType = borrowerType;
+    }
+
+    public Integer getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(Integer updateType) {
+        this.updateType = updateType;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

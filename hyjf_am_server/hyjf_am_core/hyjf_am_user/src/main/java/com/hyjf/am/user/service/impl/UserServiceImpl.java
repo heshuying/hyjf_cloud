@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
 import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
+import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -12,6 +13,7 @@ import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.AccountProducer;
 import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -19,10 +21,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,9 +45,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
-	@Resource
-	private AccountProducer accountProducer;
 	@Resource
 	private CertificateAuthorityMapper certificateAuthorityMapper;
 	@Resource
@@ -57,6 +53,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
 	@Resource
 	private UserMapper userMapper;
+	@Resource
+	private SpreadsUserMapper spreadsUserMapper;
 
 
 
@@ -105,8 +103,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		// 2. 写入用户详情表
 		this.insertUserInfo(userId, loginIp, attribute);
 
-		// 3. 写入用户账户表
-		this.insertAccount(userId);
+		// 3. 写入用户账户表 迁移到组合层发送mq消息 避免连接mq超时引起长事务
+		// this.insertAccount(userId);
 
 		// 4. 有推荐人，保存推荐人信息
 		if (refferUser != null) {
@@ -401,58 +399,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		userInfo.setAttribute(attribute);
 		logger.info("注册插入userInfo：{}", JSON.toJSONString(userInfo));
 		userInfoMapper.insertSelective(userInfo);
-	}
-
-	/**
-	 * 注册保存账户表
-	 * 
-	 * @param userId
-	 * @throws MQException
-	 */
-	private void insertAccount(int userId) throws MQException {
-		AccountVO account = new AccountVO();
-		account.setUserId(userId);
-		// 银行存管相关
-		account.setBankBalance(BigDecimal.ZERO);
-		account.setBankBalanceCash(BigDecimal.ZERO);
-		account.setBankFrost(BigDecimal.ZERO);
-		account.setBankFrostCash(BigDecimal.ZERO);
-		account.setBankInterestSum(BigDecimal.ZERO);
-		account.setBankInvestSum(BigDecimal.ZERO);
-		account.setBankWaitCapital(BigDecimal.ZERO);
-		account.setBankWaitInterest(BigDecimal.ZERO);
-		account.setBankWaitRepay(BigDecimal.ZERO);
-		account.setBankTotal(BigDecimal.ZERO);
-		account.setBankAwaitCapital(BigDecimal.ZERO);
-		account.setBankAwaitInterest(BigDecimal.ZERO);
-		account.setBankAwait(BigDecimal.ZERO);
-		account.setBankWaitRepayOrg(BigDecimal.ZERO);
-		account.setBankAwaitOrg(BigDecimal.ZERO);
-		// 汇付相关
-		account.setTotal(BigDecimal.ZERO);
-		account.setIncome(BigDecimal.ZERO);
-		account.setExpend(BigDecimal.ZERO);
-		account.setBalance(BigDecimal.ZERO);
-		account.setBalanceCash(BigDecimal.ZERO);
-		account.setBalanceFrost(BigDecimal.ZERO);
-		account.setFrost(BigDecimal.ZERO);
-		account.setAwait(BigDecimal.ZERO);
-		account.setRepay(BigDecimal.ZERO);
-		account.setFrostCash(BigDecimal.ZERO);
-		account.setRecMoney(BigDecimal.ZERO);
-		account.setFee(BigDecimal.ZERO);
-		account.setInMoney(BigDecimal.ZERO);
-		account.setInMoneyFlag(0);
-		account.setPlanAccedeTotal(BigDecimal.ZERO);
-		account.setPlanBalance(BigDecimal.ZERO);
-		account.setPlanFrost(BigDecimal.ZERO);
-		account.setPlanAccountWait(BigDecimal.ZERO);
-		account.setPlanCapitalWait(BigDecimal.ZERO);
-		account.setPlanInterestWait(BigDecimal.ZERO);
-		account.setPlanRepayInterest(BigDecimal.ZERO);
-		account.setVersion(BigDecimal.ZERO);
-		logger.info("注册插入account：{}", JSON.toJSONString(account));
-		accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
 	}
 
 	/**
@@ -1215,7 +1161,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
 	@Override
-	public User surongRegister(RegisterUserRequest userRequest) throws MQException{
+	public User surongRegister(RegisterUserRequest userRequest){
 
 		String mobile=userRequest.getMobile();
 		String password=userRequest.getPassword();
@@ -1229,12 +1175,21 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		// 2. 写入用户详情表
 		this.insertUserInfo(userId, loginIp, 2);
 
-		// 3. 写入用户账户表
-		this.insertAccount(userId);
-
 		// 4. 保存用户注册日志
 		this.insertRegLog(userId, loginIp);
 		return user;
+	}
+
+	@Override
+	public List<SpreadsUserVO> selectByUserId(String userId) {
+		if(StringUtils.isNotEmpty(userId)){
+			SpreadsUserExample spreadsUsersExample = new SpreadsUserExample();
+			SpreadsUserExample.Criteria spreadsUsersExampleCriteria = spreadsUsersExample.createCriteria();
+			spreadsUsersExampleCriteria.andUserIdEqualTo(Integer.parseInt(userId));
+			List<SpreadsUser> sList = spreadsUserMapper.selectByExample(spreadsUsersExample);
+			return CommonUtils.convertBeanList(sList,SpreadsUserVO.class);
+		}
+		return null;
 	}
 
 }

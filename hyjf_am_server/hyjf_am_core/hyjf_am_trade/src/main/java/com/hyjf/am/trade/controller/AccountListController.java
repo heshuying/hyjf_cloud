@@ -9,8 +9,6 @@ import com.hyjf.am.trade.service.AccountListService;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +80,23 @@ public class AccountListController extends BaseController {
             BeanUtils.copyProperties(accountList,accountListVO);
             response.setResult(accountListVO);
         }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据nid和trade查询收支明细
+     * @Date 10:11 2018/7/18
+     * @Param nid
+     * @Param trade
+     * @return
+     */
+    @RequestMapping("/countbynidandtrade/{nid}/{trade}")
+    public AccountListResponse countByNidAndTrade(@PathVariable String nid, @PathVariable String trade){
+        logger.info("countbynidandtrade:" + nid+",type"+trade);
+        AccountListResponse response = new AccountListResponse();
+        Integer total = accountListService.countByNidAndTrade(nid,trade);
+        response.setTotalRecord(total);
         return response;
     }
 

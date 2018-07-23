@@ -36,10 +36,10 @@ import java.util.Map;
  * @author sunss
  *
  */
-@Api(value = "web端借款人开户")
+@Api(value = "web端-借款人开户",description = "web端-借款人开户")
 @CrossOrigin(origins = "*")
 @Controller
-@RequestMapping("/web/user/secure/loanbankopen")
+@RequestMapping("/hyjf-web/user/secure/loanbankopen")
 public class LoanBankOpenController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(LoanBankOpenController.class);
 
@@ -49,6 +49,7 @@ public class LoanBankOpenController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
 
+    @ApiOperation(value = "web端获取开户信息", notes = "web端-获取开户信息")
 	@GetMapping(value = "/init")
     @ResponseBody
 	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
@@ -73,7 +74,7 @@ public class LoanBankOpenController extends BaseUserController {
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "web端借款人开户", notes = "用户开户")
+    @ApiOperation(value = "web端-借款人开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
     @ResponseBody
 	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
@@ -119,7 +120,7 @@ public class LoanBankOpenController extends BaseUserController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "web端页面开户异步处理", notes = "web端页面开户异步处理")
+    @ApiOperation(value = "web端-页面开户异步处理", notes = "web端-页面开户异步处理")
     @RequestMapping("/bgReturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
@@ -133,7 +134,7 @@ public class LoanBankOpenController extends BaseUserController {
      * @Description 查询开户失败原因
      * @Author sunss
      */
-    @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
+    @ApiOperation(value = "web端借款人开户查询开户失败原因", notes = "查询开户失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {

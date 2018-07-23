@@ -5,6 +5,7 @@ package com.hyjf.admin.beans.response;
 
 
 import com.hyjf.am.vo.admin.BorrowFullCustomizeVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,16 @@ import java.util.Map;
  * @version BorrowFullInfoResponseBean, v0.1 2018/7/3 18:50
  */
 public class BorrowFullInfoResponseBean {
+    @ApiModelProperty(value = "复审详细信息")
     private BorrowFullCustomizeVO borrowFullInfo;
 
+    @ApiModelProperty(value = "复审详细列表")
     private List<BorrowFullCustomizeVO> recordList;
 
+    @ApiModelProperty(value = "复审详细列表统计")
     private Map<String,String> sumAmount;
 
+    @ApiModelProperty(value = "复审详细列表总条数")
     private Integer total;
 
     public BorrowFullCustomizeVO getBorrowFullInfo() {

@@ -6,12 +6,11 @@ package com.hyjf.am.user.controller;
 import com.hyjf.am.response.user.UserAliasResponse;
 import com.hyjf.am.user.dao.model.auto.UserAlias;
 import com.hyjf.am.user.service.UserAliasService;
+import com.hyjf.am.user.service.UserService;
 import com.hyjf.am.vo.user.UserAliasVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-user/userAlias")
-public class UserAliasController extends BaseController{
+public class UserAliasController extends BaseController {
 
 	@Autowired
 	private UserAliasService userAliasService;
@@ -41,6 +40,7 @@ public class UserAliasController extends BaseController{
 		UserAlias userAlias = userAliasService.findAliasByMobile(mobile);
 		if (userAlias != null) {
 			userAliasVO = new UserAliasVO();
+			userAliasVO.setMobile(mobile);
 			BeanUtils.copyProperties(userAlias, userAliasVO);
 		}
 		logger.info("userAliasVO is :{}", userAliasVO);
@@ -67,6 +67,31 @@ public class UserAliasController extends BaseController{
 		return list;
 	}
 
+	@GetMapping("/findAliasesByUserId/{userId}")
+	public UserAliasResponse findAliasesByUserId(@PathVariable Integer userId) {
+		UserAliasResponse response = new UserAliasResponse();
+		UserAlias userAlias = userAliasService.findAliasesByUserId(userId);
+		if (null != userAlias) {
+			UserAliasVO userAliasVO = new UserAliasVO();
+			userAliasVO.setMobile(userAliasService.findUserByUserId(userId).getMobile());
+			BeanUtils.copyProperties(userAlias, userAliasVO);
+			response.setResult(userAliasVO);
+		}
+		return response;
+	}
+
+	@PostMapping("/updateMobileCode")
+	public int updateAliases(@RequestBody UserAlias userAlias) {
+		int cnt = userAliasService.updateAliases(userAlias);
+		return cnt;
+	}
+
+	@PostMapping("/insertMobileCode")
+	public int insertMobileCode(@RequestBody UserAlias userAlias) {
+		int cnt = userAliasService.insertMobileCode(userAlias);
+		return cnt;
+	}
+
 	/**
 	 * 根据设备类型统计用户人数
 	 *
@@ -83,7 +108,7 @@ public class UserAliasController extends BaseController{
 	}
 
 	@RequestMapping("/clearMobileCode/{userId}/{sign}")
-	public void clearMobileCode(@PathVariable Integer userId,@PathVariable String sign){
-		userAliasService.clearMobileCode(userId,sign);
+	public void clearMobileCode(@PathVariable Integer userId, @PathVariable String sign) {
+		userAliasService.clearMobileCode(userId, sign);
 	}
 }

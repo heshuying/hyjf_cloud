@@ -363,6 +363,88 @@
 		WHERE
 			cc.coupon_code = #{couponCode}
 	</select>
-	
-	
+
+	<resultMap id="couponConfigData" type="com.hyjf.am.vo.trade.coupon.CouponConfigVO">
+		<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
+		<result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
+		<result column="coupon_type" property="couponType" jdbcType="INTEGER" />
+		<result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getCouponConfig" resultMap="couponConfigData" parameterType="java.lang.String">
+		SELECT
+		    cc.coupon_code,
+		    cc.coupon_quota,
+		    cc.coupon_type,
+		    cc.repay_time_config
+		FROM
+			ht_coupon_tender ct
+		INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+			ct.order_id = #{ordId}
+		AND ct.del_flag = 0
+		AND cu.del_flag = 0
+		AND cc.del_flag = 0
+	</select>
+
+	<update id="crRecoverPeriod" parameterType="java.util.Map">
+		UPDATE ht_coupon_recover r
+		SET r.current_recover_flg = #{currentRecoverFlg}
+		WHERE
+		r.tender_id = #{tenderNid}
+		<if test="period != null and period != 0">
+			AND r.recover_period = #{period}
+		</if>
+	</update>
+
+	<select id="getCouponProfitTime" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			c.coupon_profit_time
+		FROM
+			ht_coupon_tender t
+		INNER JOIN ht_coupon_user u ON t.coupon_grant_id = u.id
+		INNER JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+		WHERE t.order_id=#{nid}
+	</select>
+
+	<update id="updateOfLoansTenderHjh" parameterType="com.hyjf.am.vo.trade.account.AccountVO">
+		update ht_account
+		set
+		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
+		plan_interest_wait = IFNULL(plan_interest_wait,0) + #{planInterestWait,jdbcType=DECIMAL},
+		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+	</update>
+
+	<resultMap id="couponRecoverAll" type="com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO">
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="coupon_grant_id" property="couponGrantId" jdbcType="INTEGER" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" />
+	</resultMap>
+
+	<select id="getCouponTenderListHjh" resultMap="couponRecoverAll" parameterType="java.util.Map">
+		SELECT
+		ct.order_id,
+		bt.user_id,
+		ct.coupon_grant_id,
+		cu.coupon_user_code,
+		bt.borrow_nid
+		FROM
+		ht_borrow_tender_cpn bt
+		INNER JOIN ht_coupon_real_tender crt ON crt.coupon_tender_id = bt.nid
+		INNER JOIN ht_coupon_tender ct ON bt.nid = ct.order_id
+		INNER JOIN ht_coupon_user cu ON ct.coupon_grant_id = cu.id
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		WHERE
+		crt.real_tender_id = #{orderId}
+		<if test="repayTimeConfig != null">
+			AND cc.repay_time_config = #{repayTimeConfig}
+		</if>
+		AND ct.del_flag = 0
+	</select>
+
 </mapper>

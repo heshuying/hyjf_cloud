@@ -35,9 +35,9 @@ import java.io.File;
  * @version LoginController, v0.1 2018/6/11 14:43
  */
 
-@Api(value = "app端用户登录接口",description = "app端用户登录接口")
+@Api(value = "app端用户登录接口",description = "app端-用户登录接口")
 @RestController
-@RequestMapping("/app/appUser")
+@RequestMapping("/hyjf-app/appUser")
 public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
@@ -182,6 +182,7 @@ public class AppLoginController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping(value = "/getUserinfoAction")
+    @ApiOperation(value = "获取用户相关数据",notes = "获取用户相关数据")
     public JSONObject getUserinfoAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/getUserinfoAction");
@@ -220,7 +221,7 @@ public class AppLoginController extends BaseUserController {
             // 取得用户ID
             Integer userId = SecretUtil.getUserId(sign);
             if (userId != null) {
-                UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
+                UserParameters userParameters = null; //loginService.getUserParameters(userId,platform, request);
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
                     userParameters.setIdcard("000000000000000000");
                 }
@@ -249,6 +250,7 @@ public class AppLoginController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping(value = "/uploadAvatarAction")
+    @ApiOperation(value = "上传头像",notes = "上传头像")
     public JSONObject uploadAvatarAction(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/uploadAvatarAction");
@@ -341,7 +343,6 @@ public class AppLoginController extends BaseUserController {
                     ret.put("statusDesc", returnMessage);
                     return ret;
                 }
-
                 // 保存到数据库的路径=上传文件的CDNURL+图片的文件名
                 String iconUrl = fileRealName;
                 // 保存到数据库

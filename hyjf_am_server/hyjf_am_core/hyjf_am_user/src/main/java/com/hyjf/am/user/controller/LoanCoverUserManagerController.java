@@ -5,10 +5,13 @@ package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.CertificateAuthorityResponse;
 import com.hyjf.am.response.user.LoanCoverUserResponse;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.service.LoanCoverUserManagerService;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -51,8 +54,8 @@ public class LoanCoverUserManagerController extends BaseController{
     public LoanCoverUserResponse findLoanCoverUserRecord(@RequestBody @Valid LoanCoverUserRequest request) {
         logger.info("---findLoanCoverUserRecord by param---  " + JSONObject.toJSON(request));
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date dateStart = new Date();
-        Date dateEnd = new Date();
+        Date dateStart = null;
+        Date dateEnd = null;
         if (StringUtils.isNotBlank(request.getStartCreate()) || StringUtils.isNotBlank(request.getStartCreate())) {
             try {
                 dateStart = smp.parse(request.getStartCreate());
@@ -61,7 +64,6 @@ public class LoanCoverUserManagerController extends BaseController{
                 e.printStackTrace();
             }
         }
-
         LoanCoverUserResponse response = new LoanCoverUserResponse();
         Integer registCount = loanCoverUserManagerService.countLoanSubjectCertificateAuthority(request,dateStart,dateEnd);
         Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
@@ -70,7 +72,7 @@ public class LoanCoverUserManagerController extends BaseController{
         }
         int limitStart = paginator.getOffset();
         int limitEnd =  paginator.getLimit();
-        if(request.getLimitFlg()==1){
+        if(request.isLimitFlg()){
             limitEnd = 0;
             limitStart = 0;
         }
@@ -139,5 +141,28 @@ public class LoanCoverUserManagerController extends BaseController{
     public int updateLoanCoverUserRecord(@RequestBody @Valid LoanCoverUserRequest request){
         int updFlg = loanCoverUserManagerService.updateLoanCoverUserRecord(request);
         return updFlg;
+    }
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    @RequestMapping("/selectCertificateAuthorityByIdNoName/{strIdNo}/{tureName}")
+    public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(@PathVariable String strIdNo,@PathVariable String tureName){
+        CertificateAuthority certificateAuthority = loanCoverUserManagerService.selectCertificateAuthorityByIdNoName(strIdNo,tureName);
+        CertificateAuthorityResponse response = new CertificateAuthorityResponse();
+        String status = Response.FAIL;
+        String returnMsg = Response.FAIL_MSG;
+        CertificateAuthorityVO certificateAuthorityVO = new CertificateAuthorityVO();
+        if(null!=certificateAuthority){
+            BeanUtils.copyProperties(certificateAuthority,certificateAuthorityVO);
+            status = Response.SUCCESS;
+            returnMsg = Response.SUCCESS_MSG;
+            response.setResult(certificateAuthorityVO);
+        }
+        response.setMessage(returnMsg);
+        response.setRtn(status);
+        return response;
     }
  }

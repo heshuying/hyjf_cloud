@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -28,12 +29,14 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tools.ant.Project;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -42,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -63,70 +67,39 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
 
-
-    @Autowired
-    private WebProjectListClient webProjectListClient;
-
     @Autowired
     private AmUserClient amUserClient;
 
     @Autowired
-    private BorrowUserClient borrowUserClient;
-
-    @Autowired
-    private BorrowManinfoClient borrowManinfoClient;
-
-    @Autowired
-    private AmBorrowRepayClient amBorrowRepayClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private RepayPlanService repayPlanService;
 
     @Autowired
-    private BorrowTenderClient borrowTenderClient;
+    private SystemConfig systemConfig;
 
-    @Autowired
-    private HjhDebtCreditClient hjhDebtCreditClient;
-
-    @Autowired
-    private BorrowClient borrowClient;
-
-    @Autowired
-    private AmHjhPlanClient amHjhPlanClient;
-
-    @Autowired
-    private HjhAccedeClient hjhAccedeClient;
-
-    @Autowired
-    private UserAuthClient userAuthClient;
-
-    @Autowired
-    private BorrowHousesClient borrowHousesClient;
-
-    @Autowired
-    private BorrowCarinfoClient borrowCarinfoClient;
-
-    @Autowired
-    private AmBorrowClient amBorrowClient;
 
     /**
      * APP端投资散标项目列表
      *
      * @param request
      * @return
-     * @author liuyang
+     * @author
      */
     @Override
-    public AppResult searchAppProjectList(AppProjectListRequest request) {
+    public JSONObject searchAppProjectList(ProjectListRequest request) {
         // TODO: 2018/6/20   参数验证
         CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-        request.setLimitStart(page.getOffset());
-        request.setLimitEnd(page.getLimit());
-        request.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
+        Page page = Page.initPage(request.getPage(), request.getPageSize());
+        JSONObject info = new JSONObject();
+        AppProjectListRequest req = new AppProjectListRequest();
+        req.setLimitStart(page.getOffset());
+        req.setLimitEnd(page.getLimit());
+        req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
         // ①查询count
-        Integer count = webProjectListClient.countAppProjectList(request);
+        Integer count = amTradeClient.countAppProjectList(request);
         // 对调用返回的结果进行转换和拼装
         AppResult appResult = new AppResult();
         // 先抛错方式，避免代码看起来头重脚轻。
@@ -134,21 +107,24 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             logger.error("app端查询散标投资列表原子层count异常");
             throw new RuntimeException("app端查询散标投资列表原子层count异常");
         }
-        page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
-        appResult.setData(new ArrayList<>());
+        info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
+        info.put(ProjectConstant.APP_PROJECT_TOTAL, 0);
         if (count > 0) {
+            info.put(ProjectConstant.APP_PROJECT_TOTAL,count);
             List<AppProjectListCsVO> result = new ArrayList<>();
-            List<AppProjectListCustomizeVO> list = webProjectListClient.searchAppProjectList(request);
+            List<AppProjectListCustomizeVO> list = amTradeClient.searchAppProjectList(req);
             if (CollectionUtils.isEmpty(list)) {
                 logger.error("app端查询散标投资列表原子层List异常");
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
+            }else {
+                result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
-            result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
-            appResult.setData(result);
         }
-        appResult.setPage(page);
-        return appResult;
+        info.put(ProjectConstant.APP_PAGE,request.getPage());
+        info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_BORROW_PROJECT_METHOD);
+        return info;
 
 
     }
@@ -225,10 +201,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
         map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-        ProjectCustomeDetailVO borrow = webProjectListClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO borrow = amTradeClient.searchProjectDetail(map);
         // 还款信息
         BorrowRepayVO borrowRepay = null;
-        List<BorrowRepayVO> list = amBorrowRepayClient.selectBorrowRepayList(borrowNid, null);
+        List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
         if (!CollectionUtils.isEmpty(list)) {
             borrowRepay = list.get(0);
         }
@@ -278,9 +254,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             jsonObject.put(ProjectConstant.RES_PROJECT_INFO, borrowProjectInfoBean);
 
             //借款人企业信息
-            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = borrowManinfoClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
 
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
@@ -384,16 +360,16 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
              * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
              */
-            int count = borrowTenderClient.countUserInvest(userId, borrowNid);
+            int count = amTradeClient.countUserInvest(userId, borrowNid);
             Boolean viewableFlag = false;
             String statusDescribe = "";
             DebtCreditRequest request = new DebtCreditRequest();
             request.setBorrowNid(borrowNid);
-            List<HjhDebtCreditVO> listHjhDebtCredit = hjhDebtCreditClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+            List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
             if (null != listHjhDebtCredit && listHjhDebtCredit.size() > 0) {
                 // 部分承接
                 request.setCreditStatus(Arrays.asList(0, 1));
-                List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = hjhDebtCreditClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+                List<HjhDebtCreditVO> listHjhDebtCreditOnePlace = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
                 if (null != listHjhDebtCreditOnePlace && listHjhDebtCreditOnePlace.size() > 0) {
                     // 部分债转
                     viewableFlag = true;
@@ -405,7 +381,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                             Map<String, Object> mapParam = new HashMap<String, Object>();
                             mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
                             mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-                            int intCount = hjhDebtCreditClient.countCreditTenderByBorrowNidAndUserId(mapParam);
+                            int intCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
                             if (intCount > 0 || count > 0) {
                                 viewableFlag = true;
                             }
@@ -467,8 +443,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             return appResult;
         }
     }
-
-
 
 
     /**
@@ -1026,7 +1000,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private boolean isTenderBorrow(Integer userId, String borrowNid,
                                    String borrowType) {
         //根据borrowNid查询borrow表
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         if (borrow.getPlanNid() != null && borrow.getPlanNid().length() > 1) {
             return true;
         }
@@ -1034,9 +1008,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         try {
             Map<String, Object> param = new HashMap<>();
             if (borrowType != null && borrowType.contains("1")) {
-                count = hjhDebtCreditClient.countCreditTenderByBorrowNidAndUserId(param);
+                count = amTradeClient.countCreditTenderByBorrowNidAndUserId(param);
             } else {
-                count = borrowTenderClient.countUserInvest(userId, borrowNid);
+                count = amTradeClient.countUserInvest(userId, borrowNid);
             }
         } catch (Exception e) {
             logger.error("查询承接信息出错...", e);
@@ -1055,34 +1029,82 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/20 9:11
      */
     @Override
-    public AppResult searchAppCreditList(ProjectListRequest request) {
+    public JSONObject searchAppCreditList(ProjectListRequest request) {
         // 初始化分页参数，并组合到请求参数
+        JSONObject info = new JSONObject();
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
-        ProjectListResponse res = webProjectListClient.countAppCreditList(request);
-        AppResult appResult = new AppResult();
+        request.setCreditStatus("0");
+        ProjectListResponse res = amTradeClient.countAppCreditList(request);
         if (!Response.isSuccess(res)) {
             logger.error("查询债权转让原子层count异常");
             throw new RuntimeException("查询债权转让原子层count异常");
         }
         int count = res.getCount();
-        page.setTotal(count);
-        appResult.setData(new ArrayList<>());
+        info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         if (count > 0) {
-            List<TenderCreditDetailCustomizeCsVO> result = new ArrayList<>();
-            ProjectListResponse dataResponse = webProjectListClient.searchAppCreditList(request);
+            info.put(ProjectConstant.APP_PROJECT_TOTAL, count);
+            ProjectListResponse dataResponse = amTradeClient.searchAppCreditList(request);
             if (!Response.isSuccess(dataResponse)) {
                 logger.error("查询债权转让原子层list数据异常");
                 throw new RuntimeException("查询债权转让原子层list数据异常");
             }
-            result = CommonUtils.convertBeanList(dataResponse.getResultList(), TenderCreditDetailCustomizeCsVO.class);
-            appResult.setData(result);
+            if (!CollectionUtils.isEmpty(dataResponse.getResultList())) {
+                List<AppProjectListCsVO> result = convertToAppProjectHZRType(dataResponse.getResultList());
+                info.put(ProjectConstant.APP_PROJECT_LIST, result);
+            }
+        } else {
+            info.put(ProjectConstant.APP_PROJECT_TOTAL, 0);
+            info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         }
-        appResult.setPage(page);
-        return appResult;
+        info.put(ProjectConstant.APP_PAGE, request.getPage());
+        info.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
+        info.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_CREDIT_LIST_METHOD);
+        return info;
     }
 
+
+    private List<AppProjectListCsVO> convertToAppProjectHZRType(List<WebProjectListCustomizeVO> resultList) {
+        List<AppProjectListCsVO> appProjectTypes = new ArrayList<>();
+        for (WebProjectListCustomizeVO listCustomize : resultList) {
+            AppProjectListCsVO appProjectType = new AppProjectListCsVO();
+            appProjectType.setBorrowNid(listCustomize.getBorrowNid());
+            appProjectType.setBorrowName(listCustomize.getBorrowNid());
+            appProjectType.setBorrowDesc(listCustomize.getBorrowDesc());
+            appProjectType.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            appProjectType.setBorrowTheFirstDesc("历史年回报率");
+            String borrowNid = listCustomize.getBorrowNid();
+            String creditNid = borrowNid.substring(3);
+            appProjectType.setBorrowTheSecond(String.valueOf(listCustomize.getCreditDiscount()) + "%");
+            appProjectType.setBorrowTheSecondDesc("折让率");
+            appProjectType.setBorrowTheThird(listCustomize.getBorrowPeriod() + "天");
+            appProjectType.setBorrowTheThirdDesc("项目期限");
+            String status = listCustomize.getStatus();
+            if ("11".equals(status)) {
+                appProjectType.setStatusName("立即投资");
+                //可投金额
+                String borrowAccountWait = String.valueOf(listCustomize.getCreditCapital().subtract(listCustomize.getCreditCapitalAssigned()));
+                borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
+                appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait) ? "" : "剩余" + borrowAccountWait);
+            }
+
+            appProjectType.setBorrowUrl(systemConfig.getWebHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
+            appProjectType.setStatus(listCustomize.getStatus());
+            appProjectType.setOnTime(listCustomize.getOnTime());
+
+            if ("ZXH".equals(listCustomize.getBorrowType())) {
+                appProjectType.setMark("尊享");
+            } else if ("RTB".equals(listCustomize.getBorrowType())) {
+                appProjectType.setMark("优选");
+            }
+            appProjectType.setBorrowType(listCustomize.getBorrowType());
+            CommonUtils.convertNullToEmptyString(appProjectType);
+            appProjectTypes.add(appProjectType);
+        }
+        return appProjectTypes;
+    }
 
     /**
      * 获取移动端债转详情
@@ -1100,7 +1122,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         resultMap.put("userValidation", this.createUserValidation(token));
 
-        AppCreditDetailCustomizeVO appCreditDetailCustomizeVO = hjhDebtCreditClient.selectHjhCreditByCreditNid(creditNid);
+        AppCreditDetailCustomizeVO appCreditDetailCustomizeVO = amTradeClient.selectHjhCreditByCreditNid(creditNid);
 
 
         if (appCreditDetailCustomizeVO != null) {
@@ -1109,21 +1131,21 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             resultMap.put(ProjectConstant.RES_PROJECT_INFO, createTenderCreditDetail(appCreditDetailCustomizeVO));
             String borrowNid = appCreditDetailCustomizeVO.getBidNid();
 
-            List<BorrowRepayVO> borrowRepayVOList = amBorrowRepayClient.getBorrowRepayList(borrowNid);
+            List<BorrowRepayVO> borrowRepayVOList = amTradeClient.getBorrowRepayList(borrowNid);
             BorrowRepayVO borrowRepay = null;
-            if (!CollectionUtils.isEmpty(borrowRepayVOList)){
+            if (!CollectionUtils.isEmpty(borrowRepayVOList)) {
                 borrowRepay = borrowRepayVOList.get(0);
             }
             // 2.根据项目标号获取相应的项目信息
-            BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+            BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
             //借款人企业消息
-            BorrowUserVO borrowUsers = borrowUserClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfoVO = borrowManinfoClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
             //房产抵押信息
-            List<BorrowHousesVO> borrowHousesList = borrowHousesClient.getBorrowHousesByNid(borrowNid);
+            List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
-            List<BorrowCarinfoVO> borrowCarinfoList = borrowCarinfoClient.getBorrowCarinfoByNid(borrowNid);
+            List<BorrowCarinfoVO> borrowCarinfoList = amTradeClient.getBorrowCarinfoByNid(borrowNid);
             //基础信息
             List<BorrowMsgBean> baseTableData = new ArrayList<>();
             //资产信息
@@ -1137,19 +1159,19 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             //其他信息
             List<BorrowMsgBean> otherTableData = new ArrayList<>();
             //借款类型
-            BorrowInfoVO borrowInfoVO = amBorrowClient.getBorrowInfoByNid(borrowNid);
+            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrowNid);
             int borrowType = borrowInfoVO.getCompanyOrPersonal();
-            if(borrowType == 1 && borrowUsers != null){
+            if (borrowType == 1 && borrowUsers != null) {
                 //基础信息
                 baseTableData = packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel());
                 //信用状况
                 credTableData = packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel());
                 //审核信息
-                reviewTableData =  packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
+                reviewTableData = packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
                 //其他信息
-                otherTableData =  packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
-            }else{
-                if(borrowManinfoVO != null){
+                otherTableData = packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
+            } else {
+                if (borrowManinfoVO != null) {
                     //基础信息
                     baseTableData = packDetail(borrowManinfoVO, 1, borrowType, borrow.getBorrowLevel());
                     //信用状况
@@ -1157,17 +1179,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     //审核信息
                     reviewTableData = packDetail(borrowManinfoVO, 5, borrowType, borrow.getBorrowLevel());
                     //其他信息
-                    otherTableData =  packDetail(borrowManinfoVO, 6, borrowType, borrow.getBorrowLevel());
+                    otherTableData = packDetail(borrowManinfoVO, 6, borrowType, borrow.getBorrowLevel());
                 }
             }
 
             //资产信息
-            if(!CollectionUtils.isEmpty(borrowHousesList)){
-                for (BorrowHousesVO  borrowHouses: borrowHousesList) {
+            if (!CollectionUtils.isEmpty(borrowHousesList)) {
+                for (BorrowHousesVO borrowHouses : borrowHousesList) {
                     assetsTableData.addAll(packDetail(borrowHouses, 2, borrowType, borrow.getBorrowLevel()));
                 }
             }
-            if(!CollectionUtils.isEmpty(borrowCarinfoList)){
+            if (!CollectionUtils.isEmpty(borrowCarinfoList)) {
                 for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
                     assetsTableData.addAll(packDetail(borrowCarinfo, 2, borrowType, borrow.getBorrowLevel()));
                 }
@@ -1191,7 +1213,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             reviewTableDataJson.put("title", "审核信息");
             reviewTableDataJson.put("msg", reviewTableData);
             // 信批需求新增(放款后才显示)
-            if(borrow.getStatus() >=4 && borrowRepay != null){
+            if (borrow.getStatus() >= 4 && borrowRepay != null) {
                 //其他信息
                 String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
                 otherTableDataJson.put("title", "其他信息（更新于" + updateTime + "）");
@@ -1203,7 +1225,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             projectDetail.add(credTableDataJson);
             projectDetail.add(reviewTableDataJson);
             projectDetail.add(otherTableDataJson);
-            resultMap.put(ProjectConstant.RES_PROJECT_DETAIL,projectDetail);
+            resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
             // 查询相应的还款计划
             List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
@@ -1215,17 +1237,15 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
             result.setRiskControl(riskControl);*/
 
-        }else{
-            resultMap.put(ProjectConstant.RES_PROJECT_INFO,new AppTransferDetailBean());
-            resultMap.put(ProjectConstant.RES_PROJECT_DETAIL,new ArrayList<Object>());
-            resultMap.put("repayPlan",new ArrayList<BorrowRepayPlanCsVO>());
+        } else {
+            resultMap.put(ProjectConstant.RES_PROJECT_INFO, new AppTransferDetailBean());
+            resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, new ArrayList<Object>());
+            resultMap.put("repayPlan", new ArrayList<BorrowRepayPlanCsVO>());
         }
         appResult.setData(resultMap);
-        return  appResult;
+        return appResult;
 
     }
-
-
 
 
     /**
@@ -1340,7 +1360,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
 
             //
-            HjhUserAuthVO userAuthVO = userAuthClient.getUserAuthByUserId(userId);   // TODO: 2018/6/30   业务判断是否有问题  ？？？  zyk
+            HjhUserAuthVO userAuthVO = amTradeClient.getUserAuthByUserId(userId);   // TODO: 2018/6/30   业务判断是否有问题  ？？？  zyk
             if (Validator.isNotNull(userAuthVO) && (userAuthVO.getAutoInvesStatus() == 0 || userAuthVO.getAutoCreditStatus() == 0)) {
                 userValidation.put("isAutoInves", false);
             } else {
@@ -1358,11 +1378,12 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/21 19:12
      */
     @Override
-    public AppResult searchAppPlanList(ProjectListRequest request) {
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+    public JSONObject searchAppPlanList(ProjectListRequest request) {
+        JSONObject info = new JSONObject();
+        Page page = Page.initPage(request.getPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
-        Integer count = webProjectListClient.countAppPlanList(request);
+        Integer count = amTradeClient.countAppPlanList(request);
         AppResult appResult = new AppResult();
         appResult.setData(new ArrayList<>());
         if (count == null) {
@@ -1370,14 +1391,24 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             throw new RuntimeException("app查询计划原子层count异常");
         }
         page.setTotal(count);
-        List<WebProjectListCustomizeVO> list = webProjectListClient.searchAppPlanList(request);
-        if (CollectionUtils.isEmpty(list)) {
-            logger.error("app查询计划原子层list异常");
-            throw new RuntimeException("app查询计划原子层list异常");
+        if (count > 0) {
+            List<HjhPlanCustomizeVO> list = amTradeClient.searchAppPlanList(request);
+            if (CollectionUtils.isEmpty(list)) {
+                logger.error("app查询计划原子层list异常");
+                throw new RuntimeException("app查询计划原子层list异常");
+            }
+            //appResult.setData(list);
+            info.put("projectTotal", count);
+            info.put("projectList", list);
+        } else {
+            info.put("projectTotal", 0);
+            info.put("projectList", new ArrayList<>());
         }
-        appResult.setData(list);
-        appResult.setPage(page);
-        return appResult;
+        info.put(ProjectConstant.APP_PAGE, request.getPage());
+        info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+        info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
+        info.put(CustomConstants.APP_REQUEST, ProjectConstant.REQUEST_HOME + ProjectConstant.APP_PROJECT_LIST + "/planList");
+        return info;
 
     }
 
@@ -1395,7 +1426,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
 
 
-        PlanDetailCustomizeVO customize = amHjhPlanClient.getPlanDetailByPlanNid(planId);
+        PlanDetailCustomizeVO customize = amTradeClient.getPlanDetailByPlanNid(planId);
         if (customize == null) {
             logger.error("传入计划id无对应计划,planNid is {}...", planId);
             throw new RuntimeException("传入计划id无对应计划信息");
@@ -1463,21 +1494,21 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
             try {
 
-                if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
-                //测评到期日
-                Long lCreate = userVO.getEvaluationExpiredTime().getTime();
-                //当前日期
-                Long lNow = System.currentTimeMillis();
-                if (lCreate <= lNow) {
-                    //已过期需要重新评测
-                    userLoginInfo.setRiskTested("2");
+                if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
+                    //测评到期日
+                    Long lCreate = userVO.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        userLoginInfo.setRiskTested("2");
+                    } else {
+                        //未到一年有效期
+                        userLoginInfo.setRiskTested("1");
+                    }
                 } else {
-                    //未到一年有效期
-                    userLoginInfo.setRiskTested("1");
+                    userLoginInfo.setRiskTested("0");
                 }
-            }else{
-                userLoginInfo.setRiskTested("0");
-            }
 
 
             } catch (Exception e) {
@@ -1487,7 +1518,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
             try {
                 // 6. 用户是否完成自动授权标识: 0: 未授权 1:已授权
-                HjhUserAuthVO userAuthVO = userAuthClient.getUserAuthByUserId(userId);
+                HjhUserAuthVO userAuthVO = amTradeClient.getUserAuthByUserId(userId);
                 if (userAuthVO != null && userAuthVO.getAutoInvesStatus() == 1) {
                     userLoginInfo.setAutoInves(Boolean.TRUE);
                 } else {
@@ -1544,7 +1575,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 计划的加入人次
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(customize.getPlanNid());
-        int count = hjhAccedeClient.countPlanAccedeRecordTotal(request);
+        int count = amTradeClient.countPlanAccedeRecordTotal(request);
         projectInfo.setPlanPersonTime(String.valueOf(count));
 
         // 项目进度 本期预留，填写固定值

@@ -46,15 +46,14 @@ public class BorrowRepayToHjhQuitController {
             for (int i = 0; i < accedeList.size(); i++) {
                 HjhAccedeVO accede = accedeList.get(i);
                 if(isRepeat(accede.getAccedeOrderId())){
-                    // 发送短信提示
-                    String key = "hyjf-routingkey-Repay-hjhQuit";
+                    // 发送计划锁定/退出MQ
                     JSONObject params = new JSONObject();
                     params.put("mqMsgId", GetCode.getRandomCode(10));
                     params.put("accedeOrderId", accede.getAccedeOrderId());
                     params.put("orderStatus", accede.getOrderStatus());
                     params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
                     try {
-                        hjhQuitProducer.messageSend(new MessageContent(MQConstant.ASSET_PUST_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                        hjhQuitProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
                     } catch (MQException e) {
                         logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
                     }

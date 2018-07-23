@@ -22,7 +22,7 @@ import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author pangchengchao
- * @version AccountTradeController, v0.1 2018/6/27 11:06
+ * @version TradeDetailController , v0.1 2018/6/27 11:06
  */
 @RestController
 @RequestMapping("am-trade/tradedetail")
@@ -38,7 +38,7 @@ public class TradeDetailController extends BaseController{
      */
     @RequestMapping("/searchUserTradeList")
     public TenderDetailResponse searchUserTradeList(@RequestBody TradeDetailBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         List<WebUserTradeListCustomize> list = tradeDetailService.searchUserTradeList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -56,7 +56,7 @@ public class TradeDetailController extends BaseController{
      */
     @RequestMapping("/countUserTradeRecordTotal")
     public TenderDetailResponse countUserTradeRecordTotal(@RequestBody TradeDetailBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         int count = this.tradeDetailService.countUserTradeRecordTotal(request);
 
@@ -73,7 +73,7 @@ public class TradeDetailController extends BaseController{
      */
     @RequestMapping("/searchUserRechargeList")
     public TenderDetailResponse searchUserRechargeList(@RequestBody TradeDetailBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         List<WebUserRechargeListCustomize> list = tradeDetailService.searchUserRechargeList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -90,7 +90,7 @@ public class TradeDetailController extends BaseController{
      */
     @RequestMapping("/countUserRechargeRecordTotal")
     public TenderDetailResponse countUserRechargeRecordTotal(@RequestBody TradeDetailBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         int count = this.tradeDetailService.countUserRechargeRecordTotal(request);
 
@@ -107,7 +107,7 @@ public class TradeDetailController extends BaseController{
      */
     @RequestMapping("/searchUserWithdrawList")
     public TenderDetailResponse searchUserWithdrawList(@RequestBody TradeDetailBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         List<WebUserWithdrawListCustomize> list = tradeDetailService.searchUserWithdrawList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -124,7 +124,7 @@ public class TradeDetailController extends BaseController{
      */
     @RequestMapping("/countUserWithdrawRecordTotal")
     public TenderDetailResponse countUserWithdrawRecordTotal(@RequestBody TradeDetailBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         int count = this.tradeDetailService.countUserWithdrawRecordTotal(request);
 

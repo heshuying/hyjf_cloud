@@ -47,7 +47,7 @@ import java.util.Map;
  * @version BorrowLogController, v0.1 2018/7/11 9:50
  */
 
-@Api(value = "借款操作日志")
+@Api(value = "借款操作日志",description="借款操作日志")
 @RestController
 @RequestMapping("/borrow/borrowlog")
 public class BorrowLogController extends BaseController {

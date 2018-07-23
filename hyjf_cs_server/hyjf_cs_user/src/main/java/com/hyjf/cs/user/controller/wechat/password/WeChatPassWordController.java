@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author wangc
  */
-@Api(value = "密码相关服务",description = "密码相关服务")
+@Api(value = "密码相关服务",description = "weChat端-密码相关服务")
 @RestController
-@RequestMapping("/weChat/user/password")
+@RequestMapping("/hyjf-wechat/user/password")
 public class WeChatPassWordController {
 
     @Autowired
@@ -70,6 +70,7 @@ public class WeChatPassWordController {
      * @param
      * @return
      */
+    @ApiOperation(value = " 重置登录密码",notes = " 重置登录密码")
     @PostMapping(value = "/resetLoginPassword", produces = "application/json; charset=utf-8")
     public WeChatResult<String> displayPhone(@RequestHeader(value = "userId") Integer userId) {
             WeChatResult<String> result = new WeChatResult<>();

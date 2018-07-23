@@ -447,7 +447,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    List<RegistRecordVO> findRegistRecordList(RegistRcordRequest request);
+    RegistRecordResponse findRegistRecordList(RegistRcordRequest request);
     /**
      * 查找借款盖章用户信息
      * @author nxl
@@ -501,7 +501,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    List<BankOpenAccountRecordVO> findAccountRecordList(AccountRecordRequest request);
+    BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request);
 
     /**
      * 查找江西银行开户记录列表
@@ -509,7 +509,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    List<BankOpenAccountRecordVO> findBankAccountRecordList(BankAccountRecordRequest request);
+    BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request);
     /**
      *  根据筛选条件查找汇付银行卡信息列表
      * @author nixiaoling
@@ -532,4 +532,12 @@ public interface AmUserClient {
      * @return
      */
     BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request);
+
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
 }

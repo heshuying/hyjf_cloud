@@ -38,7 +38,7 @@ import java.util.Map;
 @Api(value = "api端密码相关服务",description = "api端密码相关服务")
 @Controller
 @RestController
-@RequestMapping("/api/user/password")
+@RequestMapping("/hyjf-api/user/password")
 public class ApiPassWordController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ApiPassWordController.class);
 
@@ -72,6 +72,7 @@ public class ApiPassWordController extends BaseController {
      * @param
      * @return
      */
+    @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
     @PostMapping(value = "/passwordReturn", produces = "application/json; charset=utf-8")
     public BankCallResult passwordBgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         logger.info("api 交易密码异步回调start");

@@ -76,15 +76,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public UserVO surongRegister(RegisterUserRequest request) {
-		UserResponse response = restTemplate
-				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
-		}
-		return null;
-	}
+
 
 	@Override
 	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId) {
@@ -94,6 +86,45 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+	@Override
+	public List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId, Integer status) {
+		BankCardResponse response = restTemplate
+				.getForEntity(userService+"/bankopen/selectBankCardByUserIdAndStatus/" + userId+"/"+status, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UserAliasVO findAliasesByUserId(Integer userId) {
+		UserAliasResponse response = restTemplate
+				.getForEntity(userService+"/userAlias/findAliasesByUserId/" + userId, UserAliasResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public void updateAliases(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/updateMobileCode", mobileCode, Integer.class).getBody();
+
+	}
+
+	@Override
+	public void insertMobileCode(UserAliasVO mobileCode) {
+		Integer cnt = restTemplate
+				.postForEntity(userService+"/userAlias/insertMobileCode", mobileCode, Integer.class).getBody();
 	}
 
 
@@ -857,6 +888,30 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+	@Override
+	public UserVO surongRegister(RegisterUserRequest request) {
+		UserResponse response = restTemplate
+				.postForEntity(userService+"/user/surongRegister", request, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 用户删除银行卡后调用方法
+	 * @auther: hesy
+	 * @date: 2018/7/19
+	 */
+	@Override
+	public Boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean){
+		Response<Boolean> response = restTemplate
+				.postForEntity(userService+"/card/update_after_deletecard", requestBean, Response.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return false;
 	}
 
 }

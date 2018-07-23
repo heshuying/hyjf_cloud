@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper" >
     <!-- 变更计划还款账户数据 -->
     <update id="updateOfPlanRepayAccount" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
-		update huiyingdai_account
+		update ht_account
 		set
 			bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
 			bank_balance = IFNULL(bank_balance,0) + #{bankBalance,jdbcType=DECIMAL},
@@ -30,7 +30,7 @@
 
     <!-- 进入锁定期后 修改账户总资产 待收收益-->
     <update id="updateBankTotalForLockPlan" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
-		update huiyingdai_account
+		update ht_account
 		set
 		bank_total = IFNULL(bank_total,0) + #{bankTotal,jdbcType=DECIMAL},
 		plan_account_wait = IFNULL(plan_account_wait,0) + #{planAccountWait,jdbcType=DECIMAL},

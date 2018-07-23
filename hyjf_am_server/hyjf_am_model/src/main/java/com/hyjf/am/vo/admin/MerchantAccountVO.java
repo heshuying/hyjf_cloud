@@ -1,11 +1,14 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.admin.coupon.ParamName;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class MerchantAccountVO extends BaseVO implements Serializable {
+    private String ids;
     private Integer id;
 
     private String subAccountName;
@@ -39,8 +42,17 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
     private Integer createTime;
 
     private Integer updateTime;
-
+//子账号类型
+    private List<ParamName> paramNameList;
     private static final long serialVersionUID = 1L;
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
 
     public Integer getId() {
         return id;
@@ -176,5 +188,13 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public List<ParamName> getParamNameList() {
+        return paramNameList;
+    }
+
+    public void setParamNameList(List<ParamName> paramNameList) {
+        this.paramNameList = paramNameList;
     }
 }

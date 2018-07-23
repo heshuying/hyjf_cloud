@@ -3,14 +3,15 @@
  */
 package com.hyjf.cs.user.client;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
+import com.hyjf.am.vo.trade.ProductSearchForPageVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -32,4 +33,17 @@ public interface AmTradeClient {
 
     List<CouponUserListCustomizeVO> selectCouponUserList(Map<String,Object> mapParameter);
 
+    /**
+     * 获取账户信息通过userId范围
+     * @param ids
+     * @return
+     */
+    List<AccountVO> getAccountByUserIds(List<Integer> ids);
+
+    /**
+     * 获取投资人本金信息
+     * @param productSearchForPage
+     * @return
+     */
+    ProductSearchForPageVO selectUserPrincipal(ProductSearchForPageVO productSearchForPage);
 }

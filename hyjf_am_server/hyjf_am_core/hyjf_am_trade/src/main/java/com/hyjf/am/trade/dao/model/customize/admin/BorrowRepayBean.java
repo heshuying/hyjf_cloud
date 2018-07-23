@@ -3,7 +3,6 @@ package com.hyjf.am.trade.dao.model.customize.admin;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  */
 public class BorrowRepayBean extends BorrowRepay {
     /** 用户还款详情 */
-    private List<BorrowRecover> recoverList = new ArrayList<BorrowRecover>();
+    private List<BorrowRecover> recoverList;
 
     private String repayTimeStr;
 

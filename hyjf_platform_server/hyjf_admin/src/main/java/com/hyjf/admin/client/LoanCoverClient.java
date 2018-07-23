@@ -17,17 +17,22 @@ public interface LoanCoverClient {
 
     /**
      * 查找借款盖章用户信息
-     *
+     * @author nxl
      * @param request
      * @return
      */
     LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request);
     /**
-     * 保存记录
+     * 保存借款盖章用户信息
+     * @author nxl
+     * @author nxl
      */
     int insertLoanCoverUser(LoanCoverUserRequest request);
     /**
-     * 保存记录
+     * 根据证件号码查找借款主体CA认证记录表
+     * @param strIdNo
+     * @author nxl
+     * @return
      */
      LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo);
     /**
@@ -35,7 +40,10 @@ public interface LoanCoverClient {
      */
     int updateLoanCoverUserRecord(LoanCoverUserRequest request);
     /**
-     * 保存企业信息
+     * 根据id查找借款主体CA认证记录表
+     * @param strId
+     * @author nxl
+     * @return
      */
     LoanCoverUserResponse selectIsExistsRecordById(String strId);
 

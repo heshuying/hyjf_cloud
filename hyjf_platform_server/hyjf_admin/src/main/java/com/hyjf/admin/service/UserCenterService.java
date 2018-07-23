@@ -3,7 +3,8 @@
  */
 package com.hyjf.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -11,7 +12,6 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public interface UserCenterService {
 
-    JSONObject initUserManaget();
+    UserManagerInitResponseBean initUserManaget();
     /**
      *查找用户信息
      * @param request
@@ -109,7 +109,7 @@ public interface UserCenterService {
     /**
      * @Description 根据accountid调用接口查找企业信息
      */
-    CompanyInfoVO queryCompanyInfoByAccoutnId(Integer userId, String accountId);
+    CompanyInfoSearchResponseBean queryCompanyInfoByAccoutnId(Integer userId, String accountId);
     /**
      * 根据用户id查找用户表
      * @param userId

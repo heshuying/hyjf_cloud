@@ -2,11 +2,13 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
@@ -17,6 +19,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Description 优惠券相关
@@ -89,6 +93,49 @@ public class CouponController extends BaseController{
         if (Validator.isNotNull(borrowTenderCpn)){
             response.setResult(CommonUtils.convertBean(borrowTenderCpn,BorrowTenderCpnVO.class));
         }
+        return response;
+    }
+
+    @ApiOperation(value = "获取汇计划投资列表（优惠券）")
+    @GetMapping("/getborrowtendercpnhjhlist/{orderId}")
+    public CouponResponse getBorrowTenderCpnHjhList(@PathVariable String orderId){
+        CouponResponse response=new CouponResponse();
+        List<BorrowTenderCpn> list = couponService.getBorrowTenderCpnHjhList(orderId);
+        response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
+        return response;
+    }
+
+    @ApiOperation(value = "优惠券单独投资时用")
+    @GetMapping("/getborrowtendercpnhjhcoupononlylist/{couponOrderId}")
+    public CouponResponse getBorrowTenderCpnHjhCouponOnlyList(@PathVariable String couponOrderId){
+        CouponResponse response=new CouponResponse();
+        List<BorrowTenderCpn> list = couponService.getBorrowTenderCpnHjhCouponOnlyList(couponOrderId);
+        response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
+        return response;
+    }
+
+    @ApiOperation(value = "更新放款状态(优惠券)")
+    @GetMapping("/updateborrowtendercpn")
+    public CouponResponse updateBorrowTenderCpn(@RequestBody BorrowTenderCpn borrowTenderCpn){
+        CouponResponse response=new CouponResponse();
+        Integer recode = couponService.updateBorrowTenderCpn(borrowTenderCpn);
+        response.setTotalRecord(recode);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据borrowNid获取优惠券放款数据
+     * @Date 18:18 2018/7/18
+     * @Param
+     * @return
+     */
+    @ApiOperation(value = "根据borrowNid获取优惠券放款数据")
+    @GetMapping("/getborrowtendercpnlist/{borrowNid}")
+    public BorrowTenderCpnResponse getBorrowTenderCpnList(@PathVariable String borrowNid){
+        BorrowTenderCpnResponse response=new BorrowTenderCpnResponse();
+        List<BorrowTenderCpn> list = couponService.getBorrowTenderCpnList(borrowNid);
+        response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
         return response;
     }
 

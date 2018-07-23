@@ -1,19 +1,25 @@
 package com.hyjf.am.config.service.impl;
 
-import java.util.List;
-
+import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
+import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
+import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
 import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.service.BankConfigService;
+import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
-import com.hyjf.am.config.dao.model.auto.*;
-import com.hyjf.am.config.service.BankConfigService;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class BankConfigServiceImpl implements BankConfigService {
@@ -146,6 +152,29 @@ public class BankConfigServiceImpl implements BankConfigService {
 		return banks;
 	}
 
+	/**
+	 * 获取status=1的银行列表
+	 */
+	@Override
+	public List<BankConfig> getBankConfigListByStatus(BankConfigVO bankConfigVO){
+		BankConfigExample example = new BankConfigExample();
+		BankConfigExample.Criteria criteria = example.createCriteria();
+		// 条件查询
+		criteria.andStatusEqualTo(1);
+		return bankConfigMapper.selectByExample(example);
+	}
+	/**
+	 * 获取银行列表(快捷支付卡)
+	 */
+	@Override
+	public List<BankConfig> getBankRecordListByQuickPayment(BankConfigVO bankConfigVO){
+		BankConfigExample example = new BankConfigExample();
+		BankConfigExample.Criteria cra = example.createCriteria();
+		cra.andQuickPaymentEqualTo(1);//支持快捷支付
+		example.setOrderByClause(" id");
+		return bankConfigMapper.selectByExample(example);
+	}
+
 	@Override
 	public List<ParamName> getParamNameList(String nameClass) {
 		ParamNameExample example = new ParamNameExample();
@@ -155,4 +184,87 @@ public class BankConfigServiceImpl implements BankConfigService {
 		example.setOrderByClause(" sort ASC ");
 		return this.paramNameMapper.selectByExample(example);
 	}
+
+	/**
+	 * 分页查询银行配置
+	 */
+	@Override
+	public List<BankConfig> selectBankConfigListByPage(BankConfigVO banksConfigVO, int limitStart, int limitEnd){
+		BankConfigExample example = new BankConfigExample();
+		BankConfigExample.Criteria criteria =example.createCriteria();
+		if (banksConfigVO.getName()!= null ) {
+			criteria.andNameEqualTo(banksConfigVO.getName());
+		}
+		if(banksConfigVO.getCode() != null){
+			criteria.andCodeEqualTo(banksConfigVO.getCode());
+		}
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
+		}
+		List<BankConfig> BankConfigList = bankConfigMapper.selectByExample(example);
+		return BankConfigList;
+	}
+
+	/**
+	 * 根据bankName查询银行配置
+	 */
+	@Override
+	public List<BankConfig> selectBankConfigByBankName(BankConfigVO banksConfigVO,int limitStart, int limitEnd){
+		BankConfigExample example = new BankConfigExample();
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
+		}
+//		example.setOrderByClause("sort_id ASC");
+		BankConfigExample.Criteria criteria = example.createCriteria();
+//		criteria.andStatusEqualTo(0);
+
+		// 条件查询
+		if (StringUtils.isNotBlank(banksConfigVO.getName())) {
+			criteria.andNameEqualTo(banksConfigVO.getName());
+		}
+		if (StringUtils.isNotBlank(banksConfigVO.getCode())) {
+			criteria.andCodeEqualTo(banksConfigVO.getCode());
+		}
+		return bankConfigMapper.selectByExample(example);
+
+	}
+
+	/**
+	 * 添加银行配置
+	 */
+	@Override
+	public int insertBankConfig(AdminBankConfigRequest adminBankConfigRequest){
+		BankConfig record =new BankConfig();
+		BeanUtils.copyProperties(adminBankConfigRequest,record);
+		record.setCreateTime(new Date());
+		record.setUpdateTime(new Date());
+//        record.setLogo("1");
+		return bankConfigMapper.insertSelective(record);
+	}
+	/**
+	 * 修改银行配置
+	 */
+	@Override
+	public int updadteBankConfig(AdminBankConfigRequest adminBankConfigRequest){
+		BankConfig record =new BankConfig();
+		BeanUtils.copyProperties(adminBankConfigRequest,record);
+		record.setUpdateTime(new Date());
+		return bankConfigMapper.insertSelective(record);
+
+	}
+
+	/**
+	 * 删除银行配置
+	 */
+	@Override
+	public void deleteBankConfigById(Integer id){
+		BankConfig record = new BankConfig();
+		record.setId(id);
+//		record.setStatus(1);
+		bankConfigMapper.updateByPrimaryKeySelective(record);
+	}
+
+
 }

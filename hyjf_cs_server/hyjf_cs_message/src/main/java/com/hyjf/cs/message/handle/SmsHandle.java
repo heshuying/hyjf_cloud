@@ -6,10 +6,10 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.cs.message.bean.SmsLog;
+import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.SmsLogDao;
+import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.am.vo.config.SmsNoticeConfigVO;
 import com.hyjf.am.vo.config.SmsTemplateVO;
 import com.hyjf.am.vo.user.UserVO;
