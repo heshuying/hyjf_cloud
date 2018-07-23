@@ -266,5 +266,17 @@ public class BankConfigServiceImpl implements BankConfigService {
 		bankConfigMapper.updateByPrimaryKeySelective(record);
 	}
 
-
+	/**
+	 * 根据银行code获取银行配置
+	 * @auth sunpeikai
+	 * @param code 银行code,例如：招商银行,code是CMB
+	 * @return
+	 */
+	@Override
+	public List<BankConfig> getBankConfigByCode(String code) {
+		BankConfigExample bankConfigExample = new BankConfigExample();
+		BankConfigExample.Criteria criteria = bankConfigExample.createCriteria();
+		criteria.andCodeEqualTo(code);
+		return bankConfigMapper.selectByExample(bankConfigExample);
+	}
 }
