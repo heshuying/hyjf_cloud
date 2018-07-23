@@ -1050,6 +1050,22 @@ public class GetDate extends PropertyEditorSupport {
 		}
 		return monthday;
 	}
+	/**
+	 * 获得当前的时间月份 例：201512
+	 *
+	 * @return
+	 */
+	public static String getMonth() {
+		String month = "";
+		Calendar cal = Calendar.getInstance();
+		int monthnow = cal.get(Calendar.MONTH) + 1;
+		if (monthnow < 10) {
+			month =  "0" + String.valueOf(monthnow);
+		} else {
+			month =  String.valueOf(monthnow);
+		}
+		return month;
+	}
 
 	/**
 	 * 获得时间开始 例：传入 2015-12-03 返回 2015-12-03 00:00:00
