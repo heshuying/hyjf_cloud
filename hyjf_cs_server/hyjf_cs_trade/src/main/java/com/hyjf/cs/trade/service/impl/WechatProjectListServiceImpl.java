@@ -3,12 +3,21 @@ package com.hyjf.cs.trade.service.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.util.StringUtil;
+import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.util.HomePageDefine;
+import org.apache.catalina.Host;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,14 +46,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.trade.bean.AppBorrowProjectInfoBeanVO;
-import com.hyjf.cs.trade.bean.BorrowDetailBean;
-import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
-import com.hyjf.cs.trade.bean.BorrowRepayPlanBean;
-import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
-import com.hyjf.cs.trade.bean.ProjectInfo;
-import com.hyjf.cs.trade.bean.UserLoginInfo;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.service.WechatProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -67,7 +68,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     @Autowired
     private RepayPlanService repayPlanService;
 
+    @Autowired
+    private BaseClient baseClient;
 
+    @Autowired
+    private AmAdsClient amAdsClient;
+
+    @Autowired
+    private SystemConfig systemConfig;
 
 
     /**
@@ -189,7 +197,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if (borrow == null) {
             borrowDetailResultBean.put("status", "100");
             borrowDetailResultBean.put("statusDesc", "标的信息不存在");
-            weChatResult =new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+            weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
             return weChatResult;
         } else {
             borrowDetailResultBean.put("status", WeChatResult.SUCCESS);
@@ -368,6 +376,212 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     }
 
     /**
+     * 获取微信首页统计数据
+     *
+     * @author zhangyk
+     * @date 2018/7/23 16:29
+     */
+    @Override
+    public WechatHomePageResult getHomeIndexData(String userId) {
+        WechatHomePageResult result = new WechatHomePageResult();
+        result.setWarning("市场有风险 投资需谨慎");
+        if (StringUtils.isBlank(userId)) { // 未登录
+            result.setTotalAssets("0.00");
+            result.setAvailableBalance("0.00");
+            result.setAccumulatedEarnings("0.00");
+            // 创建首页广告
+            String type = "0"; // 未注册
+            // 首页顶端轮播图
+            createAdPic(result, type);
+            result.setAdDesc("立即注册");
+        } else {
+            // 检查是否开户
+            UserVO userVO = amUserClient.findUserById(Integer.valueOf(userId));
+            if (userVO != null) {
+                result.setIsOpenAccount(userVO.getBankOpenAccount());
+                result.setIsSetPassword(userVO.getIsSetPassword());
+                if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
+                    // 测评到期日
+                    long lCreate = userVO.getEvaluationExpiredTime().getTime();
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        result.setIsEvaluationFlag(2);
+                    } else {
+                        //未到一年有效期
+                        result.setIsEvaluationFlag(1);
+                    }
+
+                } else {
+                    result.setIsEvaluationFlag(0);
+                }
+                result.setPaymentAuthStatus(userVO.getPaymentAuthStatus());//是否缴费授权
+                result.setUserStatus(userVO.getStatus());
+
+                HjhUserAuthVO hjhUserAuthVO = amTradeClient.getUserAuthByUserId(Integer.valueOf(userId));
+                if (hjhUserAuthVO != null) {
+                    //自动投标授权状态
+                    result.setAutoInvesStatus(hjhUserAuthVO.getAutoInvesStatus());
+                    //自动债转授权状态
+                    result.setAutoCreditStatus(hjhUserAuthVO.getAutoCreditStatus());
+                } else {
+                    //自动投标授权状态
+                    result.setAutoInvesStatus(0);
+                    //自动债转授权状态
+                    result.setAutoCreditStatus(0);
+                }
+
+                Integer openFlag = userVO.getBankOpenAccount();
+                // 未开户
+                if (openFlag == 0) {
+                    result.setTotalAssets("0.00");
+                    result.setAvailableBalance("0.00");
+                    result.setAccumulatedEarnings("0.00");
+                    String type = "1";// 未开户
+                    createAdPic(result, type);
+                    result.setAdDesc("立即开户");
+                } else if (openFlag == 1) {
+                    AccountVO accountVO = amTradeClient.getAccount(Integer.valueOf(userId));
+                    BigDecimal totalAssets = accountVO.getBankTotal();
+                    result.setTotalAssets(totalAssets == null ? "0.00" : DF_FOR_VIEW.format(totalAssets));
+
+                    BigDecimal bankBalance = accountVO.getBankBalance();
+                    result.setAvailableBalance(bankBalance == null ? "0.00" :  DF_FOR_VIEW.format(bankBalance));
+
+                    BigDecimal bankInterestSum = accountVO.getBankInterestSum();
+                    result.setAccumulatedEarnings(bankInterestSum == null ? "0.00" :  DF_FOR_VIEW.format(bankInterestSum));
+                }
+
+            }
+        }
+
+        // 获取累计投资金额
+        TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
+        BigDecimal totalInvestAmount = null;
+        if (totalInvestAndInterestVO != null && totalInvestAndInterestVO.getTotalInvestAmount() != null ){
+            totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
+        }else {
+            totalInvestAmount = new BigDecimal("0.00");
+        }
+        result.setTotalInvestmentAmount(DF_FOR_VIEW.format(totalInvestAmount));
+        result.setModuleTotal("4");
+
+        List<AppModuleBean> moduleList = new ArrayList<>();
+
+        // 添加首页大栏目
+        // 微信安全保障
+        this.createModule(moduleList, "wechat_module1");
+        // 微信信息披露
+        this.createModule(moduleList, "wechat_module4");
+        // 微信运营数据
+        this.createModule(moduleList, "wechat_module2");
+        // 微信关于我们
+        this.createModule(moduleList, "wechat_module3");
+
+
+        result.setModuleList(moduleList);
+
+        result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
+        result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
+        result.setRequest(
+                HomePageDefine.WECHAT_REQUEST_MAPPING + HomePageDefine.WECHAT_HOME_INDEX_DATA_METHOD);
+
+        // 添加顶部活动图片总数和顶部活动图片数组
+        this.createBannerPage(result);
+
+        return result;
+    }
+
+
+    /**
+     * 创建首页广告
+     */
+    private void createAdPic(WechatHomePageResult vo, String type) {
+        AdsRequest request = new AdsRequest();
+        request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
+        request.setHost(systemConfig.getWebHost());
+
+        String code = "";
+
+        if (type.equals("0")) {// 未注册
+            code = "wechat_regist_888";
+        } else if (type.equals("1")) {
+            code = "wechat_open_888";
+        }
+        request.setCode(code);
+        List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(request);
+        if (picList != null && picList.size() > 0) {
+            vo.setAdPicUrl(picList.get(0).getImage());
+            vo.setAdClickPicUrl(picList.get(0).getUrl());
+        } else {
+            vo.setAdPicUrl("");
+            vo.setAdClickPicUrl("");
+        }
+    }
+
+    /**
+     * 查询首页banner图
+     *
+     * @param
+     */
+    private void createBannerPage(WechatHomePageResult vo) {
+        AdsRequest request = new AdsRequest();
+        request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
+        //去掉host前缀
+        request.setHost("");
+        String code = "wechat_banner";
+        request.setCode(code);
+
+        List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(request);
+        if (picList != null && picList.size() > 0) {
+            for (AppAdsCustomizeVO appAdsCustomize : picList) {
+                appAdsCustomize.setPicUrl(appAdsCustomize.getImage());
+                appAdsCustomize.setPicH5Url(appAdsCustomize.getUrl());
+            }
+            vo.setPicList(picList);
+            vo.setPicTotal(String.valueOf(picList.size()));
+        } else {
+            vo.setPicList(new ArrayList<AppAdsCustomizeVO>());
+            vo.setPicTotal("0");
+        }
+    }
+
+
+
+    /**
+     * 创建首页module
+     *
+     * @param
+     */
+    private void createModule(List<AppModuleBean> moduleList, String module) {
+        AdsRequest request = new AdsRequest();
+        request.setLimitStart( HomePageDefine.BANNER_SIZE_LIMIT_START);
+        request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
+        request.setHost(systemConfig.getWebHost());
+        request.setCode(module);
+
+        List<AppAdsCustomizeVO> picList =amAdsClient.getBannerList(request);
+        if (picList != null && picList.size() > 0) {
+            AppModuleBean appModule = new AppModuleBean();
+            appModule.setModuleUrl(picList.get(0).getImage()==null?"":picList.get(0).getImage());
+            appModule.setModuleH5Url(picList.get(0).getUrl()==null?"":picList.get(0).getUrl());
+            appModule.setModuleTitle(picList.get(0).getBannerName()==null?"":picList.get(0).getBannerName());
+            moduleList.add(appModule);
+        } else {
+            AppModuleBean appModule = new AppModuleBean();
+            appModule.setModuleUrl("");
+            appModule.setModuleH5Url("");
+            appModule.setModuleTitle("");
+            moduleList.add(appModule);
+        }
+
+    }
+
+
+    /**
      * 检查当前访问用户是否登录、是否开户、是否设置交易密码、是否允许使用、是否完成风险测评、是否授权
      *
      * @param token
@@ -404,7 +618,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
 
             // 5. 用户是否完成风险测评标识：0未测评 1已测评
-            if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
+            if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
                 //测评到期日
                 Long lCreate = userVO.getEvaluationExpiredTime().getTime();
                 //当前日期
@@ -416,7 +630,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     //已测评并未过有效期
                     userLoginInfo.setRiskTested("1");
                 }
-            }else{
+            } else {
                 //未测评
                 userLoginInfo.setRiskTested("0");
             }
@@ -510,7 +724,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     }
 
 
-
     /**
      * 处理对象数据
      *
@@ -547,7 +760,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     }
 
 
-
     /**
      * 是否投资flag
      *
@@ -579,4 +791,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         }
         return false;
     }
+
+
 }
