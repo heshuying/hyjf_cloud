@@ -23,6 +23,9 @@ public class UpdateCreditForAutoTenderRequest {
     private String sellerUsrcustid;
     private Map<String, Object> resultMap;
 
+    public UpdateCreditForAutoTenderRequest() {
+    }
+
     public UpdateCreditForAutoTenderRequest(HjhDebtCreditVO hjhDebtCreditVO, HjhAccedeVO hjhAccedeVO, HjhPlanVO hjhPlanVO, BankCallBeanVO bankCallBeanVO, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
         this.hjhDebtCreditVO = hjhDebtCreditVO;
         this.hjhAccedeVO = hjhAccedeVO;
