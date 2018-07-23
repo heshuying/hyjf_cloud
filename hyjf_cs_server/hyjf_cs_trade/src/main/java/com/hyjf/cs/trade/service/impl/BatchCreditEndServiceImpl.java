@@ -97,7 +97,7 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
             // 生成订单
             String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(bankCreditEnd.getBatchNo()));
             // 银行接口用bean
-            BankCallBean bean = new BankCallBean(orderId, Integer.getInteger(bankCreditEnd.getBatchNo()), BankCallConstant.TXCODE_BATCH_CREDIT_END, "批次结束债权(BatchNo)", 0);
+            BankCallBean bean = new BankCallBean(orderId, Integer.parseInt(bankCreditEnd.getBatchNo()), BankCallConstant.TXCODE_BATCH_CREDIT_END, "批次结束债权(BatchNo)", 0);
             // 调用放款接口
             bean.setBatchNo(bankCreditEnd.getBatchNo());
             bean.setTxCounts(String.valueOf(bankCreditEnd.getTxCounts()));
@@ -113,7 +113,7 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
 
             String received = StringUtils.isNotBlank(result.getReceived()) ? result.getReceived() : "";
             if (!BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
-                throw new RuntimeException("银行接受批次结束债权请求失败。数据回滚[批次号：" + bankCreditEnd.getBatchNo() + "],"
+                throw new RuntimeException("银行接受批次结束债权请求失败("+result.getReceived()+")。数据回滚[批次号：" + bankCreditEnd.getBatchNo() + "],"
                         + "[日期：" + bankCreditEnd.getTxDate() + "]");
             }
             // 更新状态 请求成功
