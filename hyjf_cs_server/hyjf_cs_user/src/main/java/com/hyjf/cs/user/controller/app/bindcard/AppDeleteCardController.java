@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "app端-解绑银行卡",description = "app端-解绑银行卡")
 @RestController
-@RequestMapping("/app/deleteCard")
+@RequestMapping("/hyjf-app/user/card")
 public class AppDeleteCardController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
