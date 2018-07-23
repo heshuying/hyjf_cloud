@@ -3,16 +3,13 @@ package com.hyjf.cs.trade.service.impl;
 import java.util.List;
 
 import com.hyjf.am.resquest.trade.TenderCancelRequest;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -21,7 +18,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankTenderCancelClient;
 import com.hyjf.cs.trade.service.BankTenderCancelExceptionService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -37,7 +33,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implements BankTenderCancelExceptionService {
 
     @Autowired
-    private BankTenderCancelClient bankTenderCancelClient;
+    private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
 
@@ -57,7 +53,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
      * 执行投资撤销
      */
     private int executeTenderCancel() {
-        List<BorrowTenderTmpVO> tmpList = bankTenderCancelClient.getBorrowTenderTmpsForTenderCancel();
+        List<BorrowTenderTmpVO> tmpList = amTradeClient.getBorrowTenderTmpsForTenderCancel();
         int result = 0;
         if (CollectionUtils.isNotEmpty(tmpList)){
             result = tmpList.size();
@@ -84,7 +80,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
                         //投资正常撤销或投资订单不存在则删除冗余数据
                         if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1)
                                 || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_RIGHT)){
-                            boolean ret = bankTenderCancelClient.updateBidCancelRecord(request);
+                            boolean ret = amTradeClient.updateBidCancelRecord(request);
                             if (!ret){
                                 logger.info("投资撤销历史数据处理失败!");
                             }
@@ -97,12 +93,12 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
 
                 }catch (Exception e){
                     if (delFlag) {
-                        boolean ret=bankTenderCancelClient.updateBidCancelRecord(request);
+                        boolean ret=amTradeClient.updateBidCancelRecord(request);
                         if (!ret){
                             logger.info("投资撤销历史数据处理失败!");
                         }
                     }else{
-                       boolean ret= bankTenderCancelClient.updateTenderCancelExceptionData(info);
+                       boolean ret= amTradeClient.updateTenderCancelExceptionData(info);
                         if (!ret){
                             logger.info("处理撤销异常数据失败!");
                         }
