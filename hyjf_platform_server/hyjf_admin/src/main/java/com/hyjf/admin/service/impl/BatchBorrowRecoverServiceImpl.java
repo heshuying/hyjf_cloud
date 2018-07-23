@@ -15,6 +15,7 @@ import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -230,6 +231,45 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
             }
         }
         return null;
+    }
+
+    /**
+     * 获取资金来源
+     * @return
+     */
+    @Override
+    public List<HjhInstConfigVO> findHjhInstConfigList() {
+
+        List<HjhInstConfigVO> hjhInstConfigList = amTradeClient.findHjhInstConfigList();
+        if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
+            return  hjhInstConfigList;
+        }
+        return null;
+    }
+
+    @Override
+    public JSONObject initPage(String nameClass) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status",SUCCESS);
+        //批次状态
+        List<ParamNameVO> recoverStatusList = this.getParamNameList(nameClass);
+        if(recoverStatusList != null && recoverStatusList.size() > 0){
+            jsonObject.put("批次状态列表","recoverStatusList");
+            jsonObject.put("recoverStatusList",recoverStatusList);
+        }else {
+            jsonObject.put("status",FAIL);
+            jsonObject.put("msg","获取转让状态列表失败！");
+        }
+        //资金来源
+        List<HjhInstConfigVO> hjhInstConfigList = this.findHjhInstConfigList();
+        if(hjhInstConfigList != null && hjhInstConfigList.size() > 0){
+            jsonObject.put("资金来源列表","hjhInstConfigList");
+            jsonObject.put("hjhInstConfigList",hjhInstConfigList);
+        }else {
+            jsonObject.put("status",FAIL);
+            jsonObject.put("msg","获取资金来源列表失败！");
+        }
+        return jsonObject;
     }
 
     /**
