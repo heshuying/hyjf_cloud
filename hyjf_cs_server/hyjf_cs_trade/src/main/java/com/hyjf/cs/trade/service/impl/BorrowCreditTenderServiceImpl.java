@@ -60,7 +60,6 @@ import java.util.*;
  */
 @Service
 public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implements BorrowCreditTenderService {
-    private static final Logger logger = LoggerFactory.getLogger(BorrowCreditTenderServiceImpl.class);
 
     @Autowired
     private AmUserClient amUserClient;

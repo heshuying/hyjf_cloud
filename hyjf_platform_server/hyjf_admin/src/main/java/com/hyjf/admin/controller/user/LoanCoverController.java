@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
+import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -13,6 +14,7 @@ import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.LoanCoverUserVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -38,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nxl
@@ -62,7 +63,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "获取借款盖章用户列表", notes = "获取借款盖章用户列表")
     @PostMapping(value = "/selectLoancoverList")
     @ResponseBody
-    public AdminResult<ListResult<LoanCoverUserVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
+    public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
         LoanCoverUserResponse loanCoverUserVOList = loanCoverService.selectUserMemberList(loanCoverUserRequest);
@@ -72,7 +73,11 @@ public class LoanCoverController extends BaseController {
         if (!Response.isSuccess(loanCoverUserVOList)) {
             return new AdminResult<>(FAIL, loanCoverUserVOList.getMessage());
         }
-        return new AdminResult<ListResult<LoanCoverUserVO>>(ListResult.build(loanCoverUserVOList.getResultList(), loanCoverUserVOList.getCount()));
+        List<LoanCoverUserCustomizeVO> loanCoverUserCustomizeVOList= new ArrayList<LoanCoverUserCustomizeVO>();
+        if(null!=loanCoverUserVOList.getResultList()&&loanCoverUserVOList.getResultList().size()>0){
+            loanCoverUserCustomizeVOList = CommonUtils.convertBeanList(loanCoverUserVOList.getResultList(),LoanCoverUserCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<LoanCoverUserCustomizeVO>>(ListResult.build(loanCoverUserCustomizeVOList, loanCoverUserVOList.getCount()));
     }
 
     /**
@@ -83,10 +88,12 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "初始化修改借款盖章用户", notes = "初始化修改借款盖章用户")
     @PostMapping(value = "/updateLoancoverInit")
     @ResponseBody
-    public AdminResult<LoanCoverUserVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
+    public AdminResult<LoanCoverUserCustomizeVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
         LoanCoverUserVO loanCoverUserResponse = loanCoverService.selectRecordByIdNo(id);
+        LoanCoverUserCustomizeVO loanCoverUserCustomizeVO = new LoanCoverUserCustomizeVO();
         if (null != loanCoverUserResponse) {
-            return new AdminResult<LoanCoverUserVO>(loanCoverUserResponse);
+            BeanUtils.copyProperties(loanCoverUserResponse,loanCoverUserCustomizeVO);
+            return new AdminResult<LoanCoverUserCustomizeVO>(loanCoverUserCustomizeVO);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }

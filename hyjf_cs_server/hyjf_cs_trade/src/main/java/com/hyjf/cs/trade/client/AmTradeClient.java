@@ -20,6 +20,7 @@ import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -478,7 +479,7 @@ public interface AmTradeClient {
      * @author zhangyk
      * @date 2018/6/20 17:23
      */
-    public Integer countAppProjectList(AppProjectListRequest request);
+    public Integer countAppProjectList(ProjectListRequest request);
 
     /**
      * app端获取散标投资项目列表
@@ -513,7 +514,7 @@ public interface AmTradeClient {
      * @author zhangyk
      * @date 2018/6/21 19:17
      */
-    public List<WebProjectListCustomizeVO> searchAppPlanList(ProjectListRequest request);
+    public List<HjhPlanCustomizeVO> searchAppPlanList(ProjectListRequest request);
     /* ************************  app end  **************************************/
 
     public BorrowUserVO getBorrowUser(String borrowNid);
@@ -1309,8 +1310,6 @@ public interface AmTradeClient {
 
     /**
      * 查询是否已经处理过
-     * @param ordId
-     * @param string
      * @return
      */
     int getAccountlistCntByOrdId(String orderId, String cashSuccess);
@@ -1321,5 +1320,13 @@ public interface AmTradeClient {
      * @date 2018/7/4 15:31
      */
     Integer getUserCouponCount(Integer userId, String usedFlag);
+
+    BankRepayFreezeLogVO getFreezeLogValid(Integer userId, String borrowNid);
+
+    Integer deleteFreezeLogByOrderId(String orderId);
+
+    Integer addFreezeLog(BankRepayFreezeLogRequest requestBean);
+
+    BorrowConfigVO getConfigByCode(String code);
 
 }

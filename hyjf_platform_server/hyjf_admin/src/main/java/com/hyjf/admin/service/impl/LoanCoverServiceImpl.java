@@ -123,9 +123,10 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                         bean.setV(DzqzConstant.HYJF_FDD_VERSION);
                         bean.setTimestamp(GetDate.getDate("yyyyMMddHHmmss"));
                         bean.setCustomer_id(loanCoverUserVO.getCustomerId());// 客户编号
-
-                        if(!loanCoverUserVO.getEmail().equals(loanCoverUserRequestBean.getEmail())){
-                            bean.setEmail(loanCoverUserRequestBean.getEmail());// 电子邮箱
+                        if(null!=loanCoverUserRequestBean.getEmail()&&null!=loanCoverUserVO.getEmail()){
+                            if(!loanCoverUserVO.getEmail().equals(loanCoverUserRequestBean.getEmail())){
+                                bean.setEmail(loanCoverUserRequestBean.getEmail());// 电子邮箱
+                            }
                         }
                         bean.setMobile(loanCoverUserRequestBean.getMobile());// 手机号
                         DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
@@ -135,7 +136,6 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                             BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
                             loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
                             return new AdminResult<>();
-
                         } else {
                             return new AdminResult<>("99", "更新失败");
                         }

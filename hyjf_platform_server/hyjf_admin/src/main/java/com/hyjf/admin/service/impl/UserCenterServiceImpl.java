@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -44,7 +45,17 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     private AmUserClient userCenterClient;
     @Autowired
     private AmTradeClient amTradeClient;
+    /**卡号不存在*/
+    public static final String RESPCODE_CORPRATION_QUERY_EXIST = "CA000054";
 
+    /**平台交易验证未通过*/
+    public static final String RESPCODE_CORPRATION_QUERY_CHECEK_ERROR = "CA101207";
+
+    /**不是企业用户*/
+    public static final String RESPCODE_CORPRATION_QUERY_NOT_CORPRATION = "CA110136";
+
+    /**访问频率超限*/
+    public static final String RESPCODE_CORPRATION_QUERY_CORPRATION_MORE = "JX900032";
 
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
@@ -270,9 +281,8 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      * @Description 根据accountid调用接口查找企业信息
      */
     @Override
-    public CompanyInfoVO queryCompanyInfoByAccoutnId(Integer userId, String accountId) {
-        JSONObject ret = new JSONObject();
-        CompanyInfoVO companyInfoVO = null;
+    public CompanyInfoSearchResponseBean queryCompanyInfoByAccoutnId(Integer userId, String accountId) {
+        CompanyInfoSearchResponseBean companyInfoSearchVO = new CompanyInfoSearchResponseBean();
         BankCallBean bean = new BankCallBean();
         bean.setVersion(BankCallConstant.VERSION_10);// 版本号
         bean.setTxCode(BankCallMethodConstant.TXCODE_CORPRATION_QUERY);// 交易代码
@@ -287,6 +297,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
             if (resultBean != null) {
                 if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                    CompanyInfoVO companyInfoVO  = new CompanyInfoVO();
                     companyInfoVO.setAccount(resultBean.getCaccount());
                     companyInfoVO.setBusId(resultBean.getBusId());
                     companyInfoVO.setIdType(resultBean.getIdType());
@@ -294,32 +305,41 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
                     companyInfoVO.setMobile(resultBean.getMobile());
                     companyInfoVO.setName(resultBean.getName());
                     companyInfoVO.setTaxId(resultBean.getTaxId());
-                    ret.put("status", "success");
-                    ret.put("result", "查询成功!");
+                    companyInfoSearchVO.setReturnCode("00");
+                    companyInfoSearchVO.setCompanyInfoVO(companyInfoVO);
                 } else {
-                    ret.put("status", "error");
-                    ret.put("result", "查询企业信息错误,请重新查询!");
-                    /*if (ManageUsersDefine.RESPCODE_CORPRATION_QUERY_EXIST.equals(callBackBean.getRetCode())) {
-                        ret.put("result", "卡号不存在!");
-                    }else if (ManageUsersDefine.RESPCODE_CORPRATION_QUERY_NOT_CORPRATION.equals(callBackBean.getRetCode())) {
-                        ret.put("result", "非企业账户!");
-                    }else if (ManageUsersDefine.RESPCODE_CORPRATION_QUERY_CHECEK_ERROR.equals(callBackBean.getRetCode())) {
-                        ret.put("result", "平台交易验证未通过!");
-                    }else if (ManageUsersDefine.RESPCODE_CORPRATION_QUERY_CORPRATION_MORE.equals(callBackBean.getRetCode())) {
-                        ret.put("result", "访问频率超限!");
-                    }*/
-                    ;
+                    if (RESPCODE_CORPRATION_QUERY_EXIST.equals(resultBean.getRetCode())) {
+                        companyInfoSearchVO.setReturnMsg("卡号不存在!");
+                        companyInfoSearchVO.setReturnCode("99");
+                        return companyInfoSearchVO;
+                    }else if (RESPCODE_CORPRATION_QUERY_NOT_CORPRATION.equals(resultBean.getRetCode())) {
+                        //ret.put("result", "非企业账户!");
+                        companyInfoSearchVO.setReturnMsg("非企业账户!");
+                        companyInfoSearchVO.setReturnCode("99");
+                        return companyInfoSearchVO;
+                    }else if (RESPCODE_CORPRATION_QUERY_CHECEK_ERROR.equals(resultBean.getRetCode())) {
+                       // ret.put("result", "平台交易验证未通过!");
+                        companyInfoSearchVO.setReturnMsg("平台交易验证未通过!");
+                        companyInfoSearchVO.setReturnCode("99");
+                        return companyInfoSearchVO;
+                    }else if (RESPCODE_CORPRATION_QUERY_CORPRATION_MORE.equals(resultBean.getRetCode())) {
+                        //ret.put("result", "访问频率超限!");
+                        companyInfoSearchVO.setReturnMsg("访问频率超限!");
+                        companyInfoSearchVO.setReturnCode("99");
+                        return companyInfoSearchVO;
+                    }
                 }
             } else {
-                ret.put("status", "error");
-                ret.put("result", "银行接口返回异常!");
+                companyInfoSearchVO.setReturnMsg("银行接口返回异常!");
+                companyInfoSearchVO.setReturnCode("99");
+                return companyInfoSearchVO;
             }
-
         } catch (Exception e) {
-            ret.put("status", "error");
-            ret.put("result", "银行接口查询异常!");
+            companyInfoSearchVO.setReturnMsg("银行接口返回异常!");
+            companyInfoSearchVO.setReturnCode("99");
+            return companyInfoSearchVO;
         }
-        return companyInfoVO;
+        return companyInfoSearchVO;
     }
 
     /**
@@ -348,22 +368,23 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
             if (bankCardList != null && bankCardList.size() > 0) {
                 cardNo = bankCardList.get(0).getCardNo();
             }
-            String idType = null;
-            Integer cardType = corpOpenAccountRecordVO.getCardType();
-
-            if (20 == cardType) {//组织机构代码
-                idType = "组织机构代码";
-            } else if (25 == cardType) {
-                idType = "社会信用号";
+            if(null!=corpOpenAccountRecordVO){
+                String idType = null;
+                Integer cardType = corpOpenAccountRecordVO.getCardType();
+                if (20 == cardType) {//组织机构代码
+                    idType = "组织机构代码";
+                } else if (25 == cardType) {
+                    idType = "社会信用号";
+                }
+                info.setCardType(cardType + "");
+                info.setIdType(idType);
+                info.setIdNo(corpOpenAccountRecordVO.getBusiCode());
+                info.setName(corpOpenAccountRecordVO.getBusiName());
+                info.setAccount(cardNo);
+                info.setBusId(corpOpenAccountRecordVO.getBuseNo());
+                info.setTaxId(corpOpenAccountRecordVO.getTaxRegistrationCode());
+                info.setRemark(corpOpenAccountRecordVO.getRemark());
             }
-            info.setCardType(cardType + "");
-            info.setIdType(idType);
-            info.setIdNo(corpOpenAccountRecordVO.getBusiCode());
-            info.setName(corpOpenAccountRecordVO.getBusiName());
-            info.setAccount(cardNo);
-            info.setBusId(corpOpenAccountRecordVO.getBuseNo());
-            info.setTaxId(corpOpenAccountRecordVO.getTaxRegistrationCode());
-            info.setRemark(corpOpenAccountRecordVO.getRemark());
             return info;
         }
         return null;

@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Api(value = "web端-借款人受托支付相关", description ="web端-借款人受托支付相关")
 @RestController
-@RequestMapping("/web/borrowauth")
+@RequestMapping("/hyjf-web/borrowauth")
 public class BorrowAuthController extends BaseTradeController {
     @Autowired
     BorrowAuthService borrowAuthService;

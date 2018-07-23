@@ -414,10 +414,10 @@
         <result column="recommend_user" property="recommendUser" jdbcType="VARCHAR" />
         <result column="is51" property="is51" jdbcType="INTEGER" />
         <result column="status" property="status" jdbcType="INTEGER" />
-        <result column="change_type" property="updateType" jdbcType="INTEGER" />
-        <result column="change_userid" property="updateUserId" jdbcType="INTEGER" />
-        <result column="change_user" property="updateUser" jdbcType="VARCHAR" />
-        <result column="change_time" property="updateTime" jdbcType="DATE" />
+        <result column="update_type" property="updateType" jdbcType="INTEGER" />
+        <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
         <result column="remark" property="remark" jdbcType="VARCHAR" />
         <result column="borrower_type" property="borrowerType" jdbcType="VARCHAR" />
         <result column="idcard" property="idcard" jdbcType="VARCHAR" />
@@ -438,7 +438,7 @@
         update_user_id,
         update_user,
         update_type,
-        update_time AS change_time,
+        update_time,
         remark,
         borrower_type
         FROM

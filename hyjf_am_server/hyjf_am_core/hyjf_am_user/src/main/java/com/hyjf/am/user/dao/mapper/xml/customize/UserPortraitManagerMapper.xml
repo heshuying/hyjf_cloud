@@ -33,7 +33,7 @@
 	<sql id="Where_Clause_UserPortrait">
 		<where>
 			<if test="userName != null and userName !='' ">
-				AND hup.user_name LIKE CONCAT('%', #{userName}, '%')
+				AND hup.user_name LIKE CONCAT( #{userName}, '%')
 			</if>
 			<if test="yesterdayBeginTime != null and yesterdayEndTime !=null ">
 				AND hup.LAST_LOGIN_TIME BETWEEN #{yesterdayBeginTime} AND #{yesterdayEndTime}

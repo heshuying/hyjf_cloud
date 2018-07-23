@@ -182,7 +182,7 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             return null;
         }
         LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
-        example.or().andIdNoEqualTo(record);
+        example.createCriteria().andIdEqualTo(Integer.parseInt(record));
         List<LoanSubjectCertificateAuthority> lll = loanSubjectCertificateAuthorityMapper.selectByExample(example);
         if(null!=lll&&lll.size()>0) {
             loanSubjectCertificateAuthority = lll.get(0);

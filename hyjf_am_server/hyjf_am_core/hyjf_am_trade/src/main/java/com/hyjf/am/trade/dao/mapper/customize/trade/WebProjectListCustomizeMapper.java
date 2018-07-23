@@ -6,6 +6,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 import java.util.List;
 import java.util.Map;
@@ -122,6 +123,6 @@ public interface WebProjectListCustomizeMapper {
      * @param params
      * @return
      */
-    List<WebProjectListCustomize> searchAppPlanList(Map<String, Object> params);
+    List<HjhPlanVO> searchAppPlanList(Map<String, Object> params);
     // -----------------------------------app end ----------------------------------------------
 }

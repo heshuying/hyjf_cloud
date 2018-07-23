@@ -3,12 +3,10 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.BankAccountRecordRequest;
-import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
-
-import java.util.List;
 
 /**
  * @author nxl
@@ -30,5 +28,8 @@ public interface BankOpenRecordService {
      * @return
      */
     BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request);
+
+    UserManagerInitResponseBean initUserManaget();
+
 
 }
