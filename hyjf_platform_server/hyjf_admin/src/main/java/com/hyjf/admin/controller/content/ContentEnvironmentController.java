@@ -27,14 +27,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentEnvironmentController, v0.1 2018/7/11 11:13
  */
-@Api(value = "内容管理-办公环境")
+@Api(value = "内容管理-办公环境", description = "内容管理-办公环境")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentenvironment")
 public class ContentEnvironmentController extends BaseController {
 	@Autowired
 	private ContentEnvironmentService contentEnvironmentService;
 
-	@ApiOperation(value = "内容管理-办公环境", notes = "内容管理-办公环境列表查询")
+	@ApiOperation(value = "内容管理-办公环境列表查询", notes = "内容管理-办公环境列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<ContentEnvironmentVO>> searchAction(
 			@RequestBody ContentEnvironmentRequestBean requestBean) {
@@ -61,7 +61,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "内容管理-办公环境", notes = "修改内容管理-办公环境")
+	@ApiOperation(value = "修改内容管理-办公环境", notes = "修改内容管理-办公环境")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.updateAction(requestBean);
@@ -74,7 +74,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "内容管理-办公环境", notes = "修改内容管理-办公环境状态")
+	@ApiOperation(value = "修改内容管理-办公环境状态", notes = "修改内容管理-办公环境状态")
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.updateStatus(requestBean);
@@ -87,7 +87,7 @@ public class ContentEnvironmentController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "内容管理-办公环境", notes = "删除内容管理-办公环境")
+	@ApiOperation(value = "删除内容管理-办公环境", notes = "删除内容管理-办公环境")
 	@RequestMapping("/delete/{id}")
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		ContentEnvironmentResponse response = contentEnvironmentService.deleteById(id);

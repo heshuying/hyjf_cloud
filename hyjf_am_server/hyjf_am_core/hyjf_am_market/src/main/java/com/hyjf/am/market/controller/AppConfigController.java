@@ -78,12 +78,11 @@ public class AppConfigController {
     /**
      * 修改活动维护信息
      *
-     * @param request
      * @param form
      * @return
      */
     @PostMapping("/updateRecord")
-    public AppBannerResponse updateAction(HttpServletRequest request, AdsWithBLOBsVO form) {
+    public AppBannerResponse updateAction(@RequestBody AdsWithBLOBsVO form) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         // 更新
         Boolean result = appConfigService.updateRecord(form);
@@ -105,16 +104,16 @@ public class AppConfigController {
      * @return
      */
     @PostMapping("/updateStatus")
-    public AppBannerResponse updateStatus(AdsWithBLOBsVO form) {
+    public AppBannerResponse updateStatus(@RequestBody AdsWithBLOBsVO form) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         // 修改状态
         if (StringUtils.isNotEmpty(form.getIds())) {
             Integer id = Integer.valueOf(form.getIds());
             Ads record = appConfigService.getRecord(id);
             if (record.getStatus() == 1) {
-                record.setStatus(0);
+                form.setStatus(0);
             } else {
-                record.setStatus(1);
+                form.setStatus(1);
             }
             Boolean result = appConfigService.updateRecord(form);
             if(result){
@@ -131,15 +130,14 @@ public class AppConfigController {
 
     /**
      * 删除
-     * @param request
      * @return
      */
     @RequestMapping("deleteAppBanner")
-    public AppBannerResponse deleteRecordAction(HttpServletRequest request, AdsWithBLOBsVO form) {
+    public AppBannerResponse deleteRecordAction(@RequestBody AdsWithBLOBsVO form) {
         AppBannerResponse appBannerResponse = new AppBannerResponse();
         // 解析json字符串
-        List<Integer> recordList = JSONArray.parseArray(form.getIds(), Integer.class);
-        boolean result = appConfigService.deleteRecord(recordList);
+        Integer id = Integer.valueOf(form.getIds());
+        boolean result = appConfigService.deleteRecord(id);
         if(result){
             appBannerResponse.setRtn(Response.SUCCESS);
             appBannerResponse.setMessage(Response.SUCCESS_MSG);

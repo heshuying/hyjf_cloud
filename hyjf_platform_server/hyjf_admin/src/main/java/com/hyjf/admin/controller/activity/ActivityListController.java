@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  * @author yaoy
  * @version ActivityListController, v0.1 2018/6/26 16:13
  */
-@Api(value = "活动列表接口")
+@Api(value = "活动列表接口", description = "活动列表")
 @RestController
 @RequestMapping("/hyjf-admin/activity")
 public class ActivityListController extends BaseController {
@@ -65,15 +65,14 @@ public class ActivityListController extends BaseController {
     public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.getRecordList(activityListRequest);
         List<ActivityListVO> forBack = forBack(response);
-        if(response == null) {
+        if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount())) ;
+        return new AdminResult<ListResult<ActivityListVO>>(ListResult.build(forBack, response.getCount()));
     }
-
 
 
     /**
@@ -151,7 +150,7 @@ public class ActivityListController extends BaseController {
         return new AdminResult<ActivityListVO>(response.getResult());
     }
 
-    @ApiOperation(value = "活动列表",notes = "修改活动信息")
+    @ApiOperation(value = "活动列表", notes = "修改活动信息")
     @PostMapping("/updateAction")
     public AdminResult updateActivity(@RequestBody ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.updateActivity(activityListRequest);
@@ -164,22 +163,22 @@ public class ActivityListController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "活动列表",notes = "资料上传")
+    @ApiOperation(value = "活动列表", notes = "资料上传")
     @PostMapping("/uploadFile")
     public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = new JSONObject();
         String file = null;
         try {
-            file = activityListService.uploadFile(request,response);
+            file = activityListService.uploadFile(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("资料上传失败");
         }
-        jsonObject.put("file",file);
+        jsonObject.put("file", file);
         return jsonObject;
     }
 
-    @ApiOperation(value = "活动列表",notes = "删除配置信息")
+    @ApiOperation(value = "活动列表", notes = "删除配置信息")
     @RequestMapping("/deleteAction")
     public AdminResult deleteRecordAction(@RequestParam int id) {
         ActivityListRequest request = new ActivityListRequest();

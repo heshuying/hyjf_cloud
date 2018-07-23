@@ -37,7 +37,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectCurrentHoldObligatoryRightList")
     public AssetManageResponse selectCurrentHoldObligatoryRightList(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<CurrentHoldObligatoryRightListCustomize> list = assetManageService.selectCurrentHoldObligatoryRightList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -55,7 +55,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectCurrentHoldObligatoryRightListTotal")
     public AssetManageResponse selectCurrentHoldObligatoryRightListTotal(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int currentHoldObligatoryRightCount = this.assetManageService.selectCurrentHoldObligatoryRightListTotal(request);
 
@@ -71,7 +71,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectRepaymentList")
     public AssetManageResponse selectRepaymentList(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<RepayMentListCustomize> list = assetManageService.selectRepaymentList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -92,7 +92,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectRepaymentListTotal")
     public AssetManageResponse selectRepaymentListTotal(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int repayMentCount = this.assetManageService.selectRepaymentListTotal(request);
 
@@ -108,7 +108,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectCreditRecordList")
     public AssetManageResponse selectCreditRecordList(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<TenderCreditDetailCustomize> list = assetManageService.selectCreditRecordList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -127,7 +127,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/countCreditRecordTotal")
     public AssetManageResponse countCreditRecordTotal(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int tenderCreditDetailCount = this.assetManageService.countCreditRecordTotal(request);
         response.setTenderCreditDetailCount(tenderCreditDetailCount);
@@ -142,7 +142,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectCurrentHoldPlanList")
     public AssetManageResponse selectCurrentHoldPlanList(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<CurrentHoldPlanListCustomize> list = assetManageService.selectCurrentHoldPlanList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -161,7 +161,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/countCurrentHoldPlanTotal")
     public AssetManageResponse countCurrentHoldPlanTotal(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int  currentHoldPlanCount= this.assetManageService.countCurrentHoldPlanTotal(request);
 
@@ -177,7 +177,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/selectRepayMentPlanList")
     public AssetManageResponse selectRepayMentPlanList(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<RepayMentPlanListCustomize> list = assetManageService.selectRepayMentPlanList(request);
         if(!CollectionUtils.isEmpty(list)){
@@ -196,7 +196,7 @@ public class AssetManageController extends BaseController {
      */
     @RequestMapping("/countRepayMentPlanTotal")
     public AssetManageResponse countRepayMentPlanTotal(@RequestBody AssetManageBeanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int  repayMentPlanCount= this.assetManageService.countRepayMentPlanTotal(request);
 

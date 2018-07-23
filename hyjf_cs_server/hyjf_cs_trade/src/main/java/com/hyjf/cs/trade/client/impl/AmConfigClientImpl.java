@@ -39,20 +39,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-	/**
-	 * 调用银行接口
-	 */
-	@Override
-	public BankCallBeanVO bankCallFundTransQuery(AccountWithdrawVO accountWithdraw) {
-		BankCardBeanResponse response = restTemplate
-				.postForEntity("http://AM-CONFIG/am-config/config/bankCallFundTransQuery", accountWithdraw,
-						BankCardBeanResponse.class)
-				.getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
 
 	/**
 	 * 提现费率

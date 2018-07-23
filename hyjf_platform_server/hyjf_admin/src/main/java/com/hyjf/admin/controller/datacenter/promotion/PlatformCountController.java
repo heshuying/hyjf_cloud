@@ -36,14 +36,14 @@ import java.util.List;
  * @author fuqiang
  * @version PlatformCountController, v0.1 2018/7/18 17:46
  */
-@Api(description = "数据中心-平台统计")
+@Api(value = "数据中心-平台统计", description = "数据中心-平台统计")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/platformcount")
 public class PlatformCountController extends BaseController {
     @Autowired
     private PlatformCountService platformCountService;
 
-    @ApiOperation(value = "数据中心-平台统计", notes = "数据中心-平台统计列表查询")
+    @ApiOperation(value = "数据中心-平台统计列表查询", notes = "数据中心-平台统计列表查询")
     @RequestMapping("/searchaction")
     public AdminResult<ListResult<PlatformCountCustomizeVO>> searchAction(@RequestBody PlatformCountRequestBean requestBean) {
         PlatformCountCustomizeResponse response = platformCountService.searchAction(requestBean);
@@ -63,6 +63,7 @@ public class PlatformCountController extends BaseController {
      * @param form
      * @throws Exception
      */
+    @ApiOperation(value = "导出excel", notes = "导出excel")
     @RequestMapping("/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
         // 表格sheet名称

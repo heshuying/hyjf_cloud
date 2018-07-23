@@ -29,11 +29,13 @@ import javax.servlet.http.HttpServletResponse;
  * @author yaoyong
  * @version CouponCheckController, v0.1 2018/7/3 15:57
  */
-@Api(value = "优惠券列表接口")
+@Api(value = "优惠券列表接口", description = "优惠券列表")
 @RestController
 @RequestMapping("/coupon/checkList")
 public class CouponCheckController extends BaseController {
-    /**权限名称 */
+    /**
+     * 权限名称
+     */
     private static final String PERMISSIONS = "couponuser";
     @Autowired
     CouponCheckService couponCheckService;

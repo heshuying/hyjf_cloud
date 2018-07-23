@@ -34,7 +34,7 @@ public class DataCenterCouponController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/getdatacentercouponlist")
-	public DataCenterCouponResponse getDataCenterCouponList(DataCenterCouponRequest request) {
+	public DataCenterCouponResponse getDataCenterCouponJXList(DataCenterCouponRequest request) {
 		DataCenterCouponResponse response = new DataCenterCouponResponse();
 		List<DataCenterCouponCustomize> list = couponService.getDataCenterCouponList(request);
 		List<DataCenterCouponCustomizeVO> voList = new ArrayList<>();
@@ -45,4 +45,5 @@ public class DataCenterCouponController extends BaseController {
 		}
 		return null;
 	}
+
 }

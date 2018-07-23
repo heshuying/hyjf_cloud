@@ -23,14 +23,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version SiteSettingController, v0.1 2018/7/10 11:21
  */
-@Api(value = "网站设置")
+@Api(value = "网站设置", description = "网站设置")
 @RestController
 @RequestMapping("/hyjf-admin/sitesetting")
 public class SiteSettingController extends BaseController {
 	@Autowired
 	private SiteSettingService siteSettingService;
 
-	@ApiOperation(value = "网站设置", notes = "网站设置初始化")
+	@ApiOperation(value = "网站设置初始化", notes = "网站设置初始化")
 	@RequestMapping("/init")
 	public AdminResult<SiteSettingsVO> init() {
 		SiteSettingsResponse response = siteSettingService.selectSiteSetting();
@@ -43,7 +43,7 @@ public class SiteSettingController extends BaseController {
 		return new AdminResult<>(response.getResult());
 	}
 
-	@ApiOperation(value = "网站设置", notes = "修改网站设置")
+	@ApiOperation(value = "修改网站设置", notes = "修改网站设置")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody SiteSettingRequestBean requestBean) {
 		SiteSettingsResponse response = siteSettingService.updateAction(requestBean);
