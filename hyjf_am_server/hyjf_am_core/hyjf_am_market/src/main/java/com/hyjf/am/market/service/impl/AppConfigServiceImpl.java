@@ -130,10 +130,10 @@ public class AppConfigServiceImpl implements AppConfigService {
     public boolean updateRecord(AdsWithBLOBsVO record) {
         Ads ads = new Ads();
         BeanUtils.copyProperties(record, ads);
-        if(record.getIsIndex()==null){
-            record.setIsIndex(new Short("0"));
+        if(ads.getIsIndex()==null){
+            ads.setIsIndex(0);
         }
-        record.setUpdateTime(GetDate.getMyTimeInMillis());
+        ads.setUpdateTime(new Date());
         return adsMapper.updateByPrimaryKeySelective(ads)>0?true:false;
     }
 
@@ -147,12 +147,8 @@ public class AppConfigServiceImpl implements AppConfigService {
      * @param recordList
      */
     @Override
-    public boolean deleteRecord(List<Integer> recordList) {
-        int i=0;
-        for (Integer id : recordList) {
-            int s = adsMapper.deleteByPrimaryKey(id);
-            i+=s;
-        }
+    public boolean deleteRecord(Integer id) {
+        int i = adsMapper.deleteByPrimaryKey(id);
         return i>0?true:false;
     }
 

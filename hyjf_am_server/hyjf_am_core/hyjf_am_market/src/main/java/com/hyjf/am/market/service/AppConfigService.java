@@ -52,7 +52,7 @@ public interface AppConfigService {
     /**
      * 活动列表删除
      */
-    public boolean deleteRecord(List<Integer> recordList);
+    public boolean deleteRecord(Integer id);
 
 
 
