@@ -41,11 +41,11 @@ public abstract class UploadFileUtils {
 	 * 
 	 * @author hoojo
 	 * @createDate Oct 9, 2010 11:22:47 PM
-	 * @param uploadFileName
+	 * @param fileName
 	 *            文件名称
-	 * @param savePath
+	 * @param path
 	 *            保存路径
-	 * @param InputStream
+	 * @param is
 	 *            上传的文件的输入流
 	 * @return 是否上传成功
 	 * @throws Exception
@@ -54,13 +54,10 @@ public abstract class UploadFileUtils {
 			throws Exception {
 		init();
 		String state = "";
-		FileOutputStream fos = null;
 
-		try {
+		try (FileOutputStream fos = new FileOutputStream(path + fileName)){
 			path = getDoPath(path);
 			mkDir(path);
-			fos = new FileOutputStream(path + fileName);
-
 			byte[] buffer = new byte[bufferSize];
 			int len = 0;
 			while ((len = is.read(buffer)) > 0) {
@@ -77,10 +74,6 @@ public abstract class UploadFileUtils {
 			if (is != null) {
 				is.close();
 			}
-			if (fos != null) {
-				fos.flush();
-				fos.close();
-			}
 		}
 		return state;
 	}
@@ -90,11 +83,11 @@ public abstract class UploadFileUtils {
 	 * 
 	 * @author hoojo
 	 * @createDate Oct 9, 2010 11:33:27 PM
-	 * @param uploadFileName
+	 * @param fileName
 	 *            文件名称
-	 * @param savePath
+	 * @param path
 	 *            保存路径
-	 * @param uploadFile
+	 * @param file
 	 *            上传的文件
 	 * @return 是否上传成功
 	 * @throws Exception
@@ -165,7 +158,7 @@ public abstract class UploadFileUtils {
 	 *            文件名称
 	 * @param path
 	 *            文件路径
-	 * @param InputStream
+	 * @param fs
 	 *            文件输入流
 	 * @param allowTypes
 	 *            文件后缀、类型数组
@@ -213,7 +206,7 @@ public abstract class UploadFileUtils {
 	/**
 	 * 根据路径那个复制文件
 	 * 
-	 * @param tempPath
+	 * @param tempFilePath
 	 * @param realPath
 	 * @return
 	 * @throws Exception
@@ -226,7 +219,7 @@ public abstract class UploadFileUtils {
 	/**
 	 * 根据路径那个复制文件
 	 * 
-	 * @param tempPath
+	 * @param tempFile
 	 * @param realPath
 	 * @return
 	 * @throws Exception
