@@ -22,7 +22,7 @@ import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author pangchengchao
- * @version AccountTradeController, v0.1 2018/6/27 11:06
+ * @version TradeDetailController , v0.1 2018/6/27 11:06
  */
 @RestController
 @RequestMapping("am-trade/tradedetail")

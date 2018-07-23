@@ -94,7 +94,7 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/selectBorrowInfo/{borrowNid}")
     public AdminRepayDelayResponse selectBorrowInfo(@PathVariable String borrowNid){
-        logger.info("borrowNid:" +borrowNid);
+        logger.info("项目订单编号:" +borrowNid);
         AdminRepayDelayResponse response = new AdminRepayDelayResponse();
         try{
         AdminRepayDelayCustomize customize = adminBorrowRepaymentService.selectBorrowInfo(borrowNid);
@@ -111,9 +111,9 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/getBorrowRepayDelay/{borrowNid}/{borrowApr}/{borrowStyle}")
     public BorrowRepayResponse getBorrowRepayDelay(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
-        logger.info("borrowNid:" +borrowNid);
-        logger.info("borrowApr:" +borrowApr);
-        logger.info("borrowStyle:" +borrowStyle);
+        logger.info("项目订单编号:" +borrowNid);
+        logger.info("项目年化利率:" +borrowApr);
+        logger.info("项目类型:" +borrowStyle);
 
         BorrowRepayResponse response = new BorrowRepayResponse();
         try{
@@ -131,9 +131,9 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/getBorrowRepayPlanDelay/{borrowNid}/{borrowApr}/{borrowStyle}")
     public BorrowRepayPlanResponse getBorrowRepayPlanDelay(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
-        logger.info("borrowNid:" +borrowNid);
-        logger.info("borrowApr:" +borrowApr);
-        logger.info("borrowStyle:" +borrowStyle);
+        logger.info("项目订单编号:" +borrowNid);
+        logger.info("项目年化利率:" +borrowApr);
+        logger.info("项目类型:" +borrowStyle);
 
         BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
         try{

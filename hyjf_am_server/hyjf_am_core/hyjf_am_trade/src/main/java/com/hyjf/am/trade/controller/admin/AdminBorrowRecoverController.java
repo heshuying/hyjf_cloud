@@ -22,7 +22,7 @@ import java.util.List;
  * @author pangchengchao
  * @version AdminBorrowRecoverController, v0.1 2018/7/2 16:23
  */
-@Api(value = "产品中心-汇直投-放款明细查询",description = "产品中心-汇直投-放款明细查询")
+@Api(value = "产品中心-汇直投-放款明细查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRecover")
 public class AdminBorrowRecoverController extends BaseController {

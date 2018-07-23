@@ -63,7 +63,7 @@ public class AccountWithdrawController extends BaseController {
             accountWithdrawVoList=new ArrayList<>(accountWithdrawList.size());
             for (AccountWithdraw accountWithdraw:accountWithdrawList) {
                 AccountWithdrawVO vo=new AccountWithdrawVO();
-                BeanUtils.copyProperties(accountWithdraw,vo);;
+                BeanUtils.copyProperties(accountWithdraw,vo);
                 accountWithdrawVoList.add(vo);
             }
         }
@@ -163,7 +163,7 @@ public class AccountWithdrawController extends BaseController {
             accountRechargeVOS=new ArrayList<>(accountRechargeList.size());
             for (AccountRecharge accountRecharge:accountRechargeList) {
                 AccountRechargeVO vo=new AccountRechargeVO();
-                BeanUtils.copyProperties(accountRecharge,vo);;
+                BeanUtils.copyProperties(accountRecharge,vo);
                 accountRechargeVOS.add(vo);
             }
         }

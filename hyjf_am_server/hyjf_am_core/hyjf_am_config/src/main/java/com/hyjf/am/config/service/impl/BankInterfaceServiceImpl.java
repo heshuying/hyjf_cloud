@@ -1,7 +1,6 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.BankInterfaceMapper;
-import com.hyjf.am.config.dao.mapper.customize.CallcenterConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.BankInterface;
 import com.hyjf.am.config.dao.model.auto.BankInterfaceExample;
 import com.hyjf.am.config.service.BankInterfaceService;
@@ -29,7 +28,7 @@ public class BankInterfaceServiceImpl implements BankInterfaceService {
         bankInterfaceExample.setLimitEnd(1);
         bankInterfaceExample.setOrderByClause("`update_time` DESC");
         List<BankInterface> bankInterfaces = bankInterfaceMapper.selectByExample(bankInterfaceExample);
-        if(bankInterfaces.isEmpty()&&bankInterfaces.size() > 0){
+        if(!bankInterfaces.isEmpty()){
             //返回接口类型
             return bankInterfaces.get(0).getInterfaceStatus();
         }else {
