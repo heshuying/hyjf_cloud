@@ -82,7 +82,7 @@ public class BankOpenRecordController extends BaseController {
     @ApiOperation(value = "江西银行开户记录查询", notes = "江西银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordBankAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRecordRequestBean accountRecordRequestBean){
+    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordBankAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
         JSONObject jsonObject = new JSONObject();
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,registerRcordeRequest);
