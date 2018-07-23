@@ -1,88 +1,68 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.dao.model.customize.admin;
+package com.hyjf.admin.beans.vo;
+
+import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
 /**
  * @author wangjun
- * @version BorrowFirstCustomize, v0.1 2018/7/3 15:04
+ * @version AdminBorrowFirstCustomizeVO, v0.1 2018/7/23 11:11
  */
-public class BorrowFirstCustomize implements Serializable {
-    /**
-     * 借款编码
-     */
+public class AdminBorrowFirstCustomizeVO extends BaseVO implements Serializable {
+    @ApiModelProperty(value = "借款编号")
     private String borrowNid;
-    /**
-     * 借款标题
-     */
+
+    @ApiModelProperty(value = "借款标题")
     private String borrowName;
-    /**
-     * 借款用户
-     */
+
+    @ApiModelProperty(value = "借款用户")
     private String username;
-    /**
-     * 借款金额
-     */
+
+    @ApiModelProperty(value = "借款金额")
     private String account;
-    /**
-     * 年利率
-     */
+
+    @ApiModelProperty(value = "借款利率")
     private String borrowApr;
-    /**
-     * 借款期限
-     */
+
+    @ApiModelProperty(value = "借款期限")
     private String borrowPeriod;
-    /**
-     * 应还本息
-     */
+
+    @ApiModelProperty(value = "应还本息")
     private String repayAccount;
-    /**
-     * 借到时间
-     */
+
+    @ApiModelProperty(value = "创建时间")
     private String createTime;
-    /**
-     * 应还时间
-     */
+
+    @ApiModelProperty(value = "应还时间")
     private String repayTime;
-    /**
-     * 定时发标时间
-     */
+
+    @ApiModelProperty(value = "定时发标时间")
     private String ontime;
-    /**
-     * 预约开始时间
-     */
+
+    @ApiModelProperty(value = "预约开始时间")
     private String bookingBeginTime;
-    /**
-     * 预约截止时间
-     */
+
+    @ApiModelProperty(value = "预约截止时间")
     private String bookingEndTime;
 
-    /**
-     * 状态 未交保证金 OR 已交保证金
-     */
-    private String status;
-    /**
-     * 未交保证金 OR 已交保证金
-     */
-    private String isBail;
-    /**
-     * 初审状态
-     */
+    //没用到，暂时删除
+//    private String status;
+//    private String isBail;
+
+    @ApiModelProperty(value = "初审状态")
     private String verifyStatus;
 
-    /** 初审状态名称 */
+    @ApiModelProperty(value = "初审状态名称")
     private String verifyStatusName;
 
-    /**
-     * 项目类型
-     */
+    @ApiModelProperty(value = "项目类型")
     private String projectType;
 
-    /**
-     * 资产来源
-     */
+    @ApiModelProperty(value = "资产来源")
     private String instName;
 
     public String getBorrowNid() {
@@ -179,22 +159,6 @@ public class BorrowFirstCustomize implements Serializable {
 
     public void setBookingEndTime(String bookingEndTime) {
         this.bookingEndTime = bookingEndTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getIsBail() {
-        return isBail;
-    }
-
-    public void setIsBail(String isBail) {
-        this.isBail = isBail;
     }
 
     public String getVerifyStatus() {

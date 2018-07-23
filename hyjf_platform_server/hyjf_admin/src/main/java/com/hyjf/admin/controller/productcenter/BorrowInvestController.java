@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -102,7 +103,7 @@ public class BorrowInvestController extends BaseController {
 
         List<BorrowInvestCustomizeVO> resultList = this.borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[]{"序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型", "借款期限", "年化利率", "还款方式", "投资订单号", "冻结订单号", "投资人用户名", "投资人ID", "投资人用户属性（当前）", "投资人所属一级分部（当前）", "投资人所属二级分部（当前）", "投资人所属团队（当前）", "推荐人（当前）", "推荐人ID（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）",
                 "投资人用户属性（投资时）", "推荐人用户属性（投资时）", "推荐人（投资时）", "推荐人ID（投资时）", "一级分部（投资时）", "二级分部（投资时）", "团队（投资时）", "投资金额", "操作平台", "投资方式", "投资时间", "合同编号", "合同状态", "合同名称", "模版编号", "合同生成时间", "合同签署时间", "复投投资(是/否)"};
