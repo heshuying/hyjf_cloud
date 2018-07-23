@@ -5,10 +5,8 @@ import com.hyjf.am.response.admin.AdminBorrowRepaymentResponse;
 import com.hyjf.am.response.admin.AdminRepayDelayResponse;
 import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
 import com.hyjf.am.response.trade.BorrowRepayResponse;
-import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
-import com.hyjf.am.trade.controller.AssetManageController;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
@@ -23,8 +21,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +33,7 @@ import java.util.List;
  * @author pangchengchao
  * @version AdminBorrowRepaymentController, v0.1 2018/7/4 14:26
  */
-@Api(value = "产品中心-汇直投-还款信息查询")
+@Api(value = "产品中心-汇直投-还款信息查询",description = "产品中心-汇直投-还款信息查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRepayment")
 public class AdminBorrowRepaymentController extends BaseController {
@@ -47,7 +43,7 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/countBorrowRepayment")
     public AdminBorrowRepaymentResponse countBorrowRepayment(@RequestBody @Valid BorrowRecoverRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
         int count = this.adminBorrowRepaymentService.countBorrowRecover(request);
 
@@ -57,7 +53,7 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/selectBorrowRepaymentList")
     public AdminBorrowRepaymentResponse selectBorrowRepaymentList(@RequestBody @Valid BorrowRecoverRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
 
         List<AdminBorrowRepaymentCustomize> list = adminBorrowRepaymentService.selectBorrowRecoverList(request);
@@ -70,7 +66,7 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/sumBorrowRepaymentInfo")
     public AdminBorrowRepaymentResponse sumBorrowRepaymentInfo(@RequestBody @Valid BorrowRecoverRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
 
         AdminBorrowRepaymentCustomize customize = adminBorrowRepaymentService.sumBorrowRecoverList(request);
@@ -84,7 +80,7 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/exportRepayClkActBorrowRepaymentInfoList")
     public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(@RequestBody @Valid BorrowRepaymentPlanRequest request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
 
         List<AdminBorrowRepaymentPlanCustomize> list = adminBorrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(request);
