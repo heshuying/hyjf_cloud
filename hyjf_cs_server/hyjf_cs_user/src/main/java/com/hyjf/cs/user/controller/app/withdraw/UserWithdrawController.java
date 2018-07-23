@@ -13,6 +13,7 @@ import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class UserWithdrawController {
     private SystemConfig systemConfig;
 
     @ApiOperation(value = "app端-获取我的银行卡")
-    @RequestMapping(value = "/getBankCardAction")
+    @PostMapping(value = "/getBankCardAction")
     public JSONObject getBankCardAction(HttpServletRequest request){
         JSONObject ret = new JSONObject();
 
