@@ -19,10 +19,10 @@ public class InvestorRequest implements Serializable {
     private String endTime;
 
     @ApiModelProperty(value = "标的编号")
-    private String borrownid;
+    private String borrowNid;
 
     @ApiModelProperty(value = "用户ID")
-    private String userid;
+    private String userId;
 
     @ApiModelProperty(value = "nid")
     private String nid;
@@ -46,20 +46,20 @@ public class InvestorRequest implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getBorrownid() {
-        return borrownid;
+    public String getBorrowNid() {
+        return borrowNid;
     }
 
-    public void setBorrownid(String borrownid) {
-        this.borrownid = borrownid;
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getNid() {

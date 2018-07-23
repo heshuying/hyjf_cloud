@@ -14,6 +14,7 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowFirstService;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
@@ -64,7 +65,7 @@ public class BorrowFirstController extends BaseController {
     @PostMapping("/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult<BorrowFirstResponseBean> getBorrowFirstList(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
+    public AdminResult<BorrowFirstResponseBean> search(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
         BeanUtils.copyProperties(borrowFirstRequestBean, borrowFirstRequest);
         BorrowFirstResponseBean responseBean = borrowFirstService.getBorrowFirstList(borrowFirstRequest);
@@ -84,9 +85,8 @@ public class BorrowFirstController extends BaseController {
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult insertBorrowBail(HttpServletRequest request, @PathVariable String borrowNid) {
-        //todo wangjun 取得当前用户信息 备用 后期修改
-//        AdminSystemVO currUser = getUser(request);
-        return borrowFirstService.insertBorrowBail(borrowNid, "123");
+        AdminSystemVO currUser = getUser(request);
+        return borrowFirstService.insertBorrowBail(borrowNid, currUser.getId());
     }
 
     @ApiOperation(value = "获取发标信息", notes = "获取发标信息")
@@ -98,11 +98,10 @@ public class BorrowFirstController extends BaseController {
     }
 
     @ApiOperation(value = "发标", notes = "发标")
-    @GetMapping("/get_fire_info/{borrowNid}/{verifyStatus}/{ontime}")
+    @PostMapping("/update_borrow_fire_info")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
-    public AdminResult updateBorrowFireInfo(@PathVariable String borrowNid, @PathVariable String verifyStatus, @PathVariable String ontime) {
-        //todo wangjun ontime暂时必传 后面改用实体bean？
-        return borrowFirstService.updateBorrowFireInfo(borrowNid, verifyStatus, ontime);
+    public AdminResult updateBorrowFireInfo(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
+        return borrowFirstService.updateBorrowFireInfo(borrowFirstRequestBean.getBorrowNidSrch(), borrowFirstRequestBean.getVerifyStatusSrch(), borrowFirstRequestBean.getOntime());
     }
 }

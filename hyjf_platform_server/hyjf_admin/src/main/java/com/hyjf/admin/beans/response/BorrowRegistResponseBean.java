@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
+import com.hyjf.admin.beans.vo.AdminBorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,7 +26,7 @@ public class BorrowRegistResponseBean {
     private Map<String, String> borrowRegistStatusList;
 
     @ApiModelProperty(value = "标的备案列表")
-    private List<BorrowRegistCustomizeVO> recordList;
+    private List<AdminBorrowRegistCustomizeVO> recordList;
 
     @ApiModelProperty(value = "列表统计")
     private String sumAccount;
@@ -58,11 +58,11 @@ public class BorrowRegistResponseBean {
         this.borrowRegistStatusList = borrowRegistStatusList;
     }
 
-    public List<BorrowRegistCustomizeVO> getRecordList() {
+    public List<AdminBorrowRegistCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowRegistCustomizeVO> recordList) {
+    public void setRecordList(List<AdminBorrowRegistCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 
