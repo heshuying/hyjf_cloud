@@ -70,7 +70,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     public void handle() {
         logger.info("债转投资掉单异常处理开始...");
         //查询债转承接掉单的数据
-        List<CreditTenderLogVO> creditTenderLogs=amTradeClient.selectCreditTenderLogs();
+        List<CreditTenderLogVO> creditTenderLogs = amTradeClient.selectCreditTenderLogs();
         if (CollectionUtils.isNotEmpty(creditTenderLogs)){
             logger.info("待处理数据:size:[" + creditTenderLogs.size() + "].");
             for (CreditTenderLogVO creditTenderLog : creditTenderLogs) {

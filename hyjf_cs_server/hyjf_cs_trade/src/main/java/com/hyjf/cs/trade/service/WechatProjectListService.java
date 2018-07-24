@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.cs.common.bean.result.WeChatResult;
+import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
 
 import java.util.Map;
@@ -32,4 +33,11 @@ public interface WechatProjectListService {
      * @date 2018/7/23 16:29
      */
     public WechatHomePageResult getHomeIndexData(String token);
+
+    /**
+     * 获取首页项目列表信息
+     * @author zhangyk
+     * @date 2018/7/24 10:46
+     */
+    public BaseResultBean  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,String token);
 }

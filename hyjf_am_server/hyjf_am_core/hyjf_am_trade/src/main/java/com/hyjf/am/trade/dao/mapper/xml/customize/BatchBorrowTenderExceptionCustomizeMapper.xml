@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BatchBorrowTenderExceptionCustomizeMapper" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchBorrowTenderExceptionCustomizeMapper" >
 	<resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize" >
 	    <id column="id" property="id" jdbcType="INTEGER" />
 	    <result column="user_id" property="userId" jdbcType="INTEGER" />
@@ -75,7 +75,7 @@
 			WHERE
 				a.auth_code IS NULL
 				AND o.account_id is not null and ifnull(o.del_flag,0) !=1
-				AND a.addtime >= UNIX_TIMESTAMP(SUBDATE(CURDATE(),INTERVAL 3 DAY))
+				AND a.create_time >= UNIX_TIMESTAMP(SUBDATE(CURDATE(),INTERVAL 3 DAY))
 	  </select>
   
   </mapper>

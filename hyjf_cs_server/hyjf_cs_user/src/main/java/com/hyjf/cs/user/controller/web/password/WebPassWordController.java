@@ -52,7 +52,7 @@ public class WebPassWordController {
     @Autowired
     SystemConfig systemConfig;
 
-    @ApiOperation(value = "修改登陆密码", notecheckoriginapws = "修改登陆密码")
+    @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
     public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,PasswordRequest passwordRequest){
         UserVO userVO = passWordService.getUsersById(userId);

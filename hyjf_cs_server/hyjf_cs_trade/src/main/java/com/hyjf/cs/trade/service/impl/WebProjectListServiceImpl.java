@@ -36,6 +36,7 @@ import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.service.WebProjectListService;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -58,8 +59,6 @@ import java.util.*;
 public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements WebProjectListService {
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
-
-    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
 
     public static final  String HJH_DETAIL_BORROW_LIST_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowListCount";
 
@@ -782,7 +781,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchPlanData(ProjectListRequest request) {
-        TotalInvestAndInterestResponse response = baseClient.getExe(INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse response = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();
         Map<String, Object> map = new HashMap<>();
         if(totalInvestAndInterestVO != null){

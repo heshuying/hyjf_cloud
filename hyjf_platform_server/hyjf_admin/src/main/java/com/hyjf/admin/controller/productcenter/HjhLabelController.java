@@ -44,6 +44,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;
@@ -258,10 +259,15 @@ public class HjhLabelController extends BaseController{
 	public JSONObject addNewLabel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest hjhLabelInfoRequest = new HjhLabelInfoRequest();
+		// 获取当前登陆者id
+		if(StringUtils.isEmpty(this.getUser(request).getId())){
+			jsonObject.put("errorMsg", "请先登录！");
+			return jsonObject;
+		} 
 		// 画面验证
 		this.validatorFieldCheck(jsonObject, viewRequest);
 		// 如果校验报错则把错误消息 + 下拉菜单返回给info画面
-		if(jsonObject.containsKey("validatorMsg")){
+		if(jsonObject.containsKey("errorMsg")){
 			// 1.资产来源
 			List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
 			jsonObject.put("hjhInstConfigList", hjhInstConfigList);
@@ -276,6 +282,10 @@ public class HjhLabelController extends BaseController{
 			return jsonObject;
 		} 
 		// 如果无错误消息，准备插表--将viewRequest 的 参数 拼装 到 HjhLabelInfoRequest 插表
+		
+		hjhLabelInfoRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
+		/*Date nowTime = GetDate.getNowTime();*/
+		hjhLabelInfoRequest.setCreateTime(GetDate.getNowTime());
 		hjhLabelInfoRequest = setInfoParam(jsonObject,viewRequest);
 		this.labelService.insertHjhLabelRecord(hjhLabelInfoRequest);
 		success();
@@ -296,7 +306,7 @@ public class HjhLabelController extends BaseController{
 			Integer labelTermStart = Integer.valueOf(viewRequest.getLabelTermStart());
 			if(labelTermEnd < labelTermStart){
 				// 目前先单写后期做成枚举
-				jsonObject.put("validatorMsg", "标签的结束期限必须大于开始期限!");
+				jsonObject.put("errorMsg", "标签的结束期限必须大于开始期限!");
 			}
 		}
 		
@@ -305,7 +315,7 @@ public class HjhLabelController extends BaseController{
 			BigDecimal labelAprEnd = new BigDecimal(viewRequest.getLabelAprEnd());
 			BigDecimal labelAprStart = new BigDecimal(viewRequest.getLabelAprStart());	
 			if(labelAprEnd.compareTo(labelAprStart) < 0){
-				jsonObject.put("validatorMsg", "标签的最大实际利率必须大于实最小际利率!");
+				jsonObject.put("errorMsg", "标签的最大实际利率必须大于实最小际利率!");
 			}
 		}
 		
@@ -314,7 +324,7 @@ public class HjhLabelController extends BaseController{
 			BigDecimal labelPaymentAccountEnd = new BigDecimal(viewRequest.getLabelPaymentAccountEnd());
 			BigDecimal labelPaymentAccountStart = new BigDecimal(viewRequest.getLabelPaymentAccountStart());
 			if(labelPaymentAccountEnd.compareTo(labelPaymentAccountStart)< 0){
-				jsonObject.put("validatorMsg", "标签的最大实际支付金额必须大于最小实际支付金额!");
+				jsonObject.put("errorMsg", "标签的最大实际支付金额必须大于最小实际支付金额!");
 			}
 		}
 		
@@ -325,10 +335,10 @@ public class HjhLabelController extends BaseController{
 				Date pushTimeStart = sdf.parse(viewRequest.getPushTimeStartString());
 				Date pushTimeEnd =  sdf.parse(viewRequest.getPushTimeEndString());
 				 if (pushTimeEnd.compareTo(pushTimeStart) < 0) {
-					 jsonObject.put("validatorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
+					 jsonObject.put("errorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
 				 }
 			} catch (ParseException e) {
-				jsonObject.put("validatorMsg", "推送时间节点格式必须为：00:00:00");
+				jsonObject.put("errorMsg", "推送时间节点格式必须为：00:00:00");
             }
 		}
 		
@@ -337,7 +347,7 @@ public class HjhLabelController extends BaseController{
 			Integer remainingDaysEnd = Integer.valueOf(viewRequest.getRemainingDaysEnd());
 			Integer remainingDaysStart = Integer.valueOf(viewRequest.getRemainingDaysStart());
 			if (remainingDaysEnd < remainingDaysStart) {
-				jsonObject.put("validatorMsg", "标签的剩余天数结束范围必须大于剩余天数开始范围!");
+				jsonObject.put("errorMsg", "标签的剩余天数结束范围必须大于剩余天数开始范围!");
 			}
 		}
 		
@@ -347,7 +357,7 @@ public class HjhLabelController extends BaseController{
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
 			// 通过传入的 labelName 查询如果不为空说明此 labelName 已经存在
 			if(CollectionUtils.isNotEmpty(list)){
-				jsonObject.put("validatorMsg", "标签名称已存在!");
+				jsonObject.put("errorMsg", "标签名称已存在!");
 			}
 		}
 	}
@@ -447,7 +457,7 @@ public class HjhLabelController extends BaseController{
             		request.setPushTimeEnd(sdf.parse(viewRequest.getPushTimeEndString()));
             	}
             } catch (ParseException e) {
-                jsonObject.put("validatorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
+                jsonObject.put("errorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
             }
             // 剩余最小天数
            	if (StringUtils.isNotEmpty(viewRequest.getRemainingDaysStart())) {
@@ -466,7 +476,7 @@ public class HjhLabelController extends BaseController{
 	}
 	
 	/**
-	 * 修改画面确认后修改标签
+	 * 修改画面确认后修改标签   已测试
 	 * 
 	 * @param 
 	 * @param viewRequest
@@ -479,10 +489,13 @@ public class HjhLabelController extends BaseController{
 		HjhLabelInfoRequest infoRequest = new HjhLabelInfoRequest();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
 		// 获取当前登陆者id
-		int userId = Integer.valueOf(this.getUser(request).getId());
+		if(StringUtils.isEmpty(this.getUser(request).getId())){
+			jsonObject.put("errorMsg", "请先登录！");
+			return jsonObject;
+		} 
 		// 画面验证
 		this.validatorFieldCheck(jsonObject, viewRequest);
-		if(jsonObject.containsKey("validatorMsg")){
+		if(jsonObject.containsKey("errorMsg")){
 			// 1.资产来源
 			List<HjhInstConfigVO> hjhInstConfigList = this.assetListService.getHjhInstConfigList();
 			jsonObject.put("资产来源下拉列表", "hjhInstConfigList");
@@ -499,7 +512,7 @@ public class HjhLabelController extends BaseController{
 		}
 		// 准备插表--拼装info画面参数
 		infoRequest = setInfoParam(jsonObject,viewRequest);
-		infoRequest.setUserId(userId);
+		infoRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 		// 前端必须传入标签编号
 		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
 			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(viewRequest.getLabelId()));
@@ -509,7 +522,7 @@ public class HjhLabelController extends BaseController{
 				// 前面的入力校验已经校验了 labelName 的 非空
 				// 此处校验：如果info里面将要修改的标签名称与DB既存的标签名称一致，则不需要再修改，报消息
 				if(resultVO.getLabelName().trim().equals(viewRequest.getLabelName())){
-					jsonObject.put("validatorMsg", "标签名称已存在!");
+					jsonObject.put("errorMsg", "标签名称已存在!");
 				} else {
 					// 用info的修改后信息去修改标签表
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
