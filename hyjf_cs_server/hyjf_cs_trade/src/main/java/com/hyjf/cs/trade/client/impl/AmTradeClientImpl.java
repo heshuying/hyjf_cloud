@@ -3098,4 +3098,40 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .postForEntity( "http://AM-TRADE/am-trade/repay/update", requestBean, Boolean.class).getBody();
         return result;
     }
+
+    @Override
+    public BorrowRecoverPlanVO selectRecoverPlanById(Integer id) {
+        BorrowRecoverPlanResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/recoverplan/get/"+id,BorrowRecoverPlanResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowRecoverPlanVO> selectRecoverPlan(String borrowNid, Integer period) {
+        BorrowRecoverPlanResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/recoverplan/getby_borrownid_period/"+borrowNid + "/" + period,BorrowRecoverPlanResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询相应的汇计划债转还款记录
+     * @param borrowNid
+     * @param tenderOrderId
+     * @param periodNow
+     * @param status
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepay(String borrowNid, String tenderOrderId, int periodNow, int status) {
+        String url = "http://AM-TRADE/am-trade/get/" + borrowNid + "/" + tenderOrderId + "/" + periodNow + "/" + status;
+        HjhDebtCreditRepayResponse response = restTemplate.getForEntity(url, HjhDebtCreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

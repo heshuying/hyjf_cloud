@@ -1356,4 +1356,10 @@ public interface AmTradeClient {
     int orgRepayedCount(RepayListRequest requestBean);
 
     Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
+
+    BorrowRecoverPlanVO selectRecoverPlanById(Integer id);
+
+    List<BorrowRecoverPlanVO> selectRecoverPlan(String borrowNid, Integer period);
+
+    List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepay(String borrowNid, String tenderOrderId, int periodNow, int status);
 }
