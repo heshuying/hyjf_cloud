@@ -25,4 +25,5 @@ public interface BankAccountManageService extends BaseService {
      * @return
      */
     String updateAccountCheck(AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO);
+
 }

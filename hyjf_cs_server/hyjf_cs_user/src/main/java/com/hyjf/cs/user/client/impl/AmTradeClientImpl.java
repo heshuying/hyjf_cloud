@@ -3,14 +3,10 @@
  */
 package com.hyjf.cs.user.client.impl;
 
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
-import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
-import com.hyjf.am.response.trade.ProductSearchForPageResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
-import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
-import com.hyjf.am.vo.trade.ProductSearchForPageVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -22,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -122,6 +119,112 @@ public class AmTradeClientImpl implements AmTradeClient {
         ProductSearchForPageResponse response = restTemplate.postForEntity(url,productSearchForPage,ProductSearchForPageResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public WebPandectRecoverMoneyCustomizeVO queryRecoverMoney(Integer userId) {
+        String url = tradeService+"/webPandect/queryRecoverMoney/"+userId;
+        WebPandectRecoverMoneyCustomizeResponse response = restTemplate.getForEntity(url,WebPandectRecoverMoneyCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public WebPandectRecoverMoneyCustomizeVO queryRecoverMoneyForRtb(Integer userId) {
+        String url = tradeService+"/webPandect/queryRecoverMoneyForRtb/"+userId;
+        WebPandectRecoverMoneyCustomizeResponse response = restTemplate.getForEntity(url,WebPandectRecoverMoneyCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public WebPandectWaitMoneyCustomizeVO queryWaitMoney(Integer userId) {
+        String url = tradeService+"/webPandect/queryWaitMoney/"+userId;
+        WebPandectWaitMoneyCustomizeResponse response = restTemplate.getForEntity(url,WebPandectWaitMoneyCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public WebPandectWaitMoneyCustomizeVO queryWaitMoneyForRtb(Integer userId) {
+        String url = tradeService+"/webPandect/queryWaitMoneyForRtb/"+userId;
+        WebPandectWaitMoneyCustomizeResponse response = restTemplate.getForEntity(url,WebPandectWaitMoneyCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal queryHtlSumRestAmount(Integer userId) {
+        String url = tradeService+"/webPandect/queryHtlSumRestAmount/"+userId;
+        BigDecimal response = restTemplate.getForEntity(url,BigDecimal.class).getBody();
+        return response;
+    }
+
+    @Override
+    public WebPandectCreditTenderCustomizeVO queryCreditInfo(Integer userId) {
+        String url = tradeService+"/webPandect/queryCreditInfo/"+userId;
+        WebPandectCreditTenderCustomizeResponse response = restTemplate.getForEntity(url,WebPandectCreditTenderCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public WebPandectBorrowRecoverCustomizeVO queryRecoverInfo(Integer userId, int recoverStatus) {
+        String url = tradeService+"/webPandect/queryRecoverInfo/"+userId+"/"+recoverStatus;
+        WebPandectBorrowRecoverCustomizeResponse response = restTemplate.getForEntity(url,WebPandectBorrowRecoverCustomizeResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal queryHtlSumInterest(Integer userId) {
+        String url = tradeService+"/webPandect/queryHtlSumInterest/"+userId;
+        BigDecimal response = restTemplate.getForEntity(url,BigDecimal.class).getBody();
+        return response;
+    }
+
+    @Override
+    public String selectCouponInterestTotal(Integer userId) {
+        String url = tradeService+"/couponConfig/selectCouponInterestTotal/"+userId;
+        String response = restTemplate.getForEntity(url,String.class).getBody();
+        return response;
+    }
+
+    @Override
+    public String selectCouponReceivedInterestTotal(Integer userId) {
+        String url = tradeService+"/couponConfig/selectCouponReceivedInterestTotal/"+userId;
+        String response = restTemplate.getForEntity(url,String.class).getBody();
+        return response;
+    }
+
+
+    @Override
+    public int selectUserTenderCount(Integer userId) {
+        String url = tradeService+"/webPandect/selectUserTenderCount/"+userId;
+        Integer response = restTemplate.getForEntity(url,Integer.class).getBody();
+        return response;
+    }
+
+    @Override
+    public List<CouponUserCustomizeVO> selectLatestCouponValidUNReadList(Integer userId) {
+        CouponUserCustomizeResponse response = restTemplate
+                .getForEntity(tradeService+"/bankException/selectLatestCouponValidUNReadList/" + userId, CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
         }
         return null;
     }

@@ -41,4 +41,21 @@ public interface CouponRecoverCustomizeMapper {
      * @param paramMapAll
      */
     void crRecoverPeriod(Map<String,Object> paramMapAll);
+
+    /**
+     *
+     * 获取某用户优惠券待收收益总和
+     * @param userId
+     * @return
+     */
+    String selectCouponInterestTotal(Integer userId);
+
+    /**
+     *
+     * 获取某用户优惠券累计收益总和
+     * @author hsy
+     * @param userId
+     * @return
+     */
+    String selectCouponReceivedInterestTotal(Integer userId);
 }

@@ -18,6 +18,7 @@ import com.hyjf.common.util.MD5;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
 import com.hyjf.cs.user.vo.MyProfileVO;
@@ -49,13 +50,8 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Autowired
     private AmConfigClient amConfigClient;
 
-
-    @Value("${aop.interface.accesskey}")
-    private String AOP_INTERFACE_ACCESSKEY;
-
-    @Value("${hyjf.api.web.url}")
-    private String HYJF_API_WEB_URL;
-
+    @Autowired
+    private SystemConfig systemConfig;
 
     @Override
     public String getUserTrueName(Integer userId) {
@@ -316,7 +312,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 	@Override
 	public String getUserCouponsData(String couponStatus, Integer page,
 			Integer pageSize, Integer userId, String host) {
-		String SOA_INTERFACE_KEY = AOP_INTERFACE_ACCESSKEY;
+		String SOA_INTERFACE_KEY = systemConfig.getAopAccesskey();
         String GET_USERCOUPONS = "coupon/getUserCoupons.json";
 
         String timestamp = String.valueOf(GetDate.getNowTime10());
@@ -336,7 +332,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         params.put("host", host);
 
         // 请求路径
-        String requestUrl = HYJF_API_WEB_URL + GET_USERCOUPONS;
+        String requestUrl = systemConfig.getApiWebUrl() + GET_USERCOUPONS;
         // 0:成功，1：失败
         String date = HttpClientUtils.post(requestUrl, params);
         return date;

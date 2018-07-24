@@ -30,7 +30,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
-import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
@@ -242,7 +241,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 return ret;
             }
         }
-        return ret;
+        return null;
     }
 
 

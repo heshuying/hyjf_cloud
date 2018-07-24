@@ -1,22 +1,18 @@
 package com.hyjf.am.trade.controller.batch;
 
-import java.util.List;
-
-import com.hyjf.am.resquest.trade.TenderCancelRequest;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 import com.hyjf.am.trade.service.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -24,8 +20,12 @@ import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
@@ -246,6 +246,21 @@ public class BankExceptionController extends BaseController {
         return response;
     }
 
+    /**
+     * 查询有效未读的优惠券列表
+     * @param userId
+     * @return
+     */
+    @GetMapping("/selectLatestCouponValidUNReadList/{userId}")
+    public CouponUserCustomizeResponse selectLatestCouponValidUNReadList(@PathVariable Integer userId){
+        List<CouponUserCustomize> list = bankInvestAllExceptionService.selectLatestCouponValidUNReadList(userId);
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
+        if (null!=list){
+            List<CouponUserCustomizeVO> couponUserCustomizeVOS = CommonUtils.convertBeanList(list,CouponUserCustomizeVO.class);
+            response.setResultList(couponUserCustomizeVOS);
+        }
+        return response;
+    }
 
     /**
      * 开始进行掉单修复
