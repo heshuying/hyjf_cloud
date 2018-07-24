@@ -49,11 +49,11 @@ import java.util.List;
  */
 @Api(value = "api端同步余额信息接口",description = "api端同步余额信息接口")
 @Controller
-@RequestMapping("/api/synbalance")
+@RequestMapping("/hyjf-api/synbalance")
 public class SynBalanceController extends BaseTradeController {
     @Autowired
     private SynBalanceService synBalanceService;
-    @ApiOperation(value = "用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "第三方同步余额", notes = "同步余额")
     @PostMapping("/synbalance")
     public SynBalanceResultBean synBalance(@RequestBody SynBalanceRequestBean synBalanceRequestBean, HttpServletRequest request) {
         logger.info(synBalanceRequestBean.getAccountId()+"第三方同步余额开始-----------------------------");

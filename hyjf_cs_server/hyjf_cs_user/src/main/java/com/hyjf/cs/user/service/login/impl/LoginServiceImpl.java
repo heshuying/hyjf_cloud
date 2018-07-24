@@ -3,25 +3,40 @@
  */
 package com.hyjf.cs.user.service.login.impl;
 
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.constants.VipImageUrlEnum;
+import com.hyjf.cs.user.controller.app.login.UserParameters;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zhangqingqing
@@ -30,11 +45,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginServiceImpl extends BaseUserServiceImpl implements LoginService {
 
+    private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
     @Autowired
     private AmUserClient amUserClient;
 
     @Autowired
     private AmTradeClient amTradeClient;
+
+    @Autowired
+    private AmConfigClient amConfigClient;
+
+    @Autowired
+    private AmMarketClient amMarketClient;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -154,14 +176,21 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         return false;
     }
 
- /*   *//** 获取各种用户属性 *//*
+
+    /**
+     * 获取各种用户属性
+     * @param userId
+     * @param platform
+     * @param request
+     * @return
+     */
     @Override
     public UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request) {
         UserParameters result = new UserParameters();
         String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
-        String webhost = UploadFileUtils.getDoPath(systemConfig.getWebHost()) + BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
-        webhost = webhost.substring(0, webhost.length() - 1);
+        String apphost = UploadFileUtils.getDoPath(systemConfig.getAppHost()) + BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
+        apphost = apphost.substring(0, apphost.length() - 1);
         String iconUrl = "";
         {
            UserVO user = this.getUsersById(userId);
@@ -185,8 +214,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 // 开户了
                 if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
                     BigDecimal principal = new BigDecimal("0.00");
-                    result.setOpenAccount(CustomConstants.FLAG_OPENACCOUNT_YES);// 获取汇天利用户本金
-                    ProductSearchForPage productSearchForPage = new ProductSearchForPage();
+                    // 获取汇天利用户本金
+                    result.setOpenAccount(CustomConstants.FLAG_OPENACCOUNT_YES);
+                    ProductSearchForPageVO productSearchForPage = new ProductSearchForPageVO();
                     productSearchForPage.setUserId(userId);
                     productSearchForPage = selectUserPrincipal(productSearchForPage);
                     //获取用户电话号码
@@ -197,9 +227,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                         result.setBindMobile("未绑定");
                     }
 
-                    AdminBankAccountCheckCustomize customize = new AdminBankAccountCheckCustomize();
-                    customize.setUserId(userId);
-                    List<AdminBankAccountCheckCustomize> accountList = adminBankAccountCheckCustomizeMapper.queryAllBankOpenAccount(customize);
+                    List<AdminBankAccountCheckCustomizeVO> accountList = amUserClient.queryAllBankOpenAccount(userId);
                     String account = "";
                     if (accountList != null && accountList.size() > 0) {
                         for (int i = 0; i < accountList.size(); i++) {
@@ -244,7 +272,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     result.setToubiaoDesc("请先开户");
                     // 银行未开户，汇付未开户
                     result.setOpenAccount(CustomConstants.FLAG_OPENACCOUNT_NO);
-                    // 汇天利后边的描述文字
                     //银行未开户但有汇付天下账户认证，显示真实姓名和身份证号
                     if (user.getOpenAccount() != null && user.getOpenAccount() == 1){
                         UserInfoVO usersInfo = this.getUserInfo(userId);
@@ -265,10 +292,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     result.setHuifuOpenAccount(CustomConstants.FLAG_OPENACCOUNT_NO);
                 }
             // 未绑卡
-                int bingCardStatus = AppUserDefine.BANK_BINDCARD_STATUS_FAIL;
+                int bingCardStatus = ClientConstants.BANK_BINDCARD_STATUS_FAIL;
                 List<BankCardVO> bankCardList = amUserClient.getBankOpenAccountById(user);
                 if (bankCardList != null && bankCardList.size() > 0) {
-                    bingCardStatus = AppUserDefine.BANK_BINDCARD_STATUS_SUCCESS;// 已绑卡
+                    bingCardStatus = ClientConstants.BANK_BINDCARD_STATUS_SUCCESS;
                 }
                 result.setJiangxiBindBankStatus(bingCardStatus + "");
 
@@ -276,16 +303,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 result.setMobile(user.getMobile());
                 result.setReffer(user.getUserId() + "");
                 result.setSetupPassword(String.valueOf(user.getIsSetPassword()));
-                result.setUserType(String.valueOf(user.getUserType()));// 是否是企业用户
+                result.setUserType(String.valueOf(user.getUserType()));
                 if ("0".equals(result.getSetupPassword())) {
-                    result.setChangeTradePasswordUrl(webhost + TransPasswordDefine.REQUEST_MAPPING + TransPasswordDefine.SETPASSWORD_ACTION + packageStr(request));
+                    result.setChangeTradePasswordUrl(apphost + ClientConstants.SETPASSWORD_ACTION + packageStr(request));
                 } else {
-                    result.setChangeTradePasswordUrl(webhost + TransPasswordDefine.REQUEST_MAPPING + TransPasswordDefine.RESETPASSWORD_ACTION + packageStr(request));
+                    result.setChangeTradePasswordUrl(apphost + ClientConstants.RESETPASSWORD_ACTION + packageStr(request));
                 }
 
-                iconUrl = user.getIconurl();
+                iconUrl = user.getIconUrl();
 
-                if (user.getIfReceiveNotice() != null && user.getIfReceiveNotice() == 1) {
+                if (user.getIfReceiveNotice() != null && user.getIfReceiveNotice() == true) {
                     result.setStartOrStopPush(CustomConstants.FLAG_PUSH_YES);
                 } else {
                     result.setStartOrStopPush(CustomConstants.FLAG_PUSH_NO);
@@ -312,26 +339,25 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
                     result.setIconUrl(imghost + fileUploadTempPath + iconUrl);
                 } else {
-                    result.setIconUrl(webhost + "/img/" + "icon.png");
+                    result.setIconUrl(apphost + "/img/" + "icon.png");
                 }
                 if (userInfo.getVipId() != null && userInfo.getVipId() > 0) {
                     result.setIsVip("1");
-                    VipInfo vipInfo = vipInfoMapper.selectByPrimaryKey(userInfo.getVipId());
+                    VipInfoVO vipInfo = amUserClient.findVipInfoById(userInfo.getVipId());
                     // vip名称显示图片
-                    result.setVipPictureUrl(webhost + "/img/" + VipImageUrlEnum.getName(vipInfo.getVipLevel()));
+                    result.setVipPictureUrl(apphost + "/img/" + VipImageUrlEnum.getName(vipInfo.getVipLevel()));
                     // vip等级显示图片
                     result.setVipLevel(vipInfo.getVipName());
                     // 初始化跳转路径
-                    result.setVipJumpUrl(webhost + VipDefine.REQUEST_MAPPING + VipDefine.USER_VIP_DETAIL_ACTIVE_INIT + packageStr(request));
+                    result.setVipJumpUrl(apphost + ClientConstants.USER_VIP_DETAIL_ACTIVE_INIT + packageStr(request));
                 } else {
                     result.setIsVip("0");
                     result.setVipLevel("尊享特权");
                     // vip名称显示图片
-                    result.setVipPictureUrl(webhost + "/img/" + VipImageUrlEnum.getName(0));
+                    result.setVipPictureUrl(apphost + "/img/" + VipImageUrlEnum.getName(0));
                     // vip等级显示图片
-                    result.setVipJumpUrl(webhost + ApplyDefine.REQUEST_MAPPING + ApplyDefine.INIT + packageStr(request));
+                    result.setVipJumpUrl(apphost + ClientConstants.APPLY_INIT + packageStr(request));
                 }
-
                 // 用户角色：1投资人2借款人3担保机构
                 Integer roleId = userInfo.getRoleId();
                 result.setRoleId(roleId==null?"":String.valueOf(roleId));
@@ -341,7 +367,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         }
         {
             AccountVO account =  amTradeClient.getAccount(userId);
-
             BigDecimal balance = BigDecimal.ZERO;
             BigDecimal frost = BigDecimal.ZERO;
             BigDecimal planInterestWait = BigDecimal.ZERO;
@@ -409,8 +434,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             } else {
                 result.setBalance("0.00");
             }
-            WebPandectRecoverMoneyCustomize pr = webPandectCustomizeMapper.queryRecoverMoney(userId);
-            WebPandectRecoverMoneyCustomize prRtb = webPandectCustomizeMapper.queryRecoverMoneyForRtb(userId);
+            WebPandectRecoverMoneyCustomizeVO pr = amTradeClient.queryRecoverMoney(userId);
+            WebPandectRecoverMoneyCustomizeVO prRtb = amTradeClient.queryRecoverMoneyForRtb(userId);
             BigDecimal RecoverInterest = BigDecimal.ZERO;
             if (pr != null) {
                 if (prRtb != null && prRtb.getRecoverInterest() != null) {
@@ -421,11 +446,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     RecoverInterest = pr.getRecoverInterest() == null ? new BigDecimal(0) : pr.getRecoverInterest();
                 }
             }
-            WebPandectWaitMoneyCustomize pw = webPandectCustomizeMapper.queryWaitMoney(userId);
+            WebPandectWaitMoneyCustomizeVO pw = amTradeClient.queryWaitMoney(userId);
             BigDecimal WaitInterest = BigDecimal.ZERO;
             BigDecimal waitCapital = BigDecimal.ZERO;
             if (pw != null) {
-                WebPandectWaitMoneyCustomize pwRtb = webPandectCustomizeMapper.queryWaitMoneyForRtb(userId);
+                WebPandectWaitMoneyCustomizeVO pwRtb = amTradeClient.queryWaitMoneyForRtb(userId);
                 if (pwRtb != null && pwRtb.getRecoverInterest() != null) {
                     // 待收利息
                     WaitInterest = pw.getRecoverInterest() == null ? new BigDecimal(0) : pw.getRecoverInterest().add(pwRtb.getRecoverInterest());
@@ -436,21 +461,21 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 // 待收本金
                 waitCapital = pw.getWaitCapital() == null ? new BigDecimal(0) : pw.getWaitCapital();
             }
-            BigDecimal htlRestAmount = webPandectCustomizeMapper.queryHtlSumRestAmount(userId);
+            BigDecimal htlRestAmount = amTradeClient.queryHtlSumRestAmount(userId);
 
             // 待收利息 (待收收益)
             // 优惠券总收益 add by hesy 优惠券相关 start
             BigDecimal couponInterestTotalWaitDec = BigDecimal.ZERO;
-            String couponInterestTotalWait = couponRecoverCustomizeMapper.selectCouponInterestTotal(userId);
-            if (org.apache.commons.lang3.StringUtils.isNotEmpty(couponInterestTotalWait)) {
+            String couponInterestTotalWait = amTradeClient.selectCouponInterestTotal(userId);
+            if (StringUtils.isNotEmpty(couponInterestTotalWait)) {
                 couponInterestTotalWaitDec = new BigDecimal(couponInterestTotalWait);
             }
             // 债转统计
-            WebPandectCreditTenderCustomize creditTender = webPandectCustomizeMapper.queryCreditInfo(userId);
+            WebPandectCreditTenderCustomizeVO creditTender = amTradeClient.queryCreditInfo(userId);
             // 去掉待收已债转
-            WebPandectBorrowRecoverCustomize recoverWaitInfo = webPandectCustomizeMapper.queryRecoverInfo(userId, 0);
+            WebPandectBorrowRecoverCustomizeVO recoverWaitInfo = amTradeClient.queryRecoverInfo(userId, 0);
             // 去掉已债转
-            WebPandectBorrowRecoverCustomize recoverYesInfo = webPandectCustomizeMapper.queryRecoverInfo(userId, 1);
+            WebPandectBorrowRecoverCustomizeVO recoverYesInfo = amTradeClient.queryRecoverInfo(userId, 1);
             BigDecimal CreditInterestWait = BigDecimal.ZERO;
             BigDecimal CreditCapitalWait = BigDecimal.ZERO;
             if (creditTender != null) {
@@ -471,14 +496,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             BigDecimal waitInterest = WaitInterest.add(couponInterestTotalWaitDec).add(CreditInterestWait).subtract(CreditInterestAmount).add(planInterestWait);
 
             // 汇天利总收益
-            BigDecimal interestall = webPandectCustomizeMapper.queryHtlSumInterest(userId);
+            BigDecimal interestall = amTradeClient.queryHtlSumInterest(userId);
             if (interestall == null) {
                 interestall = new BigDecimal(0);
             }
             // 优惠券总收益 add by hesy 优惠券相关 start
             BigDecimal couponInterestTotalDec = BigDecimal.ZERO;
-            String couponInterestTotal = couponRecoverCustomizeMapper.selectCouponReceivedInterestTotal(userId);
-            if (org.apache.commons.lang3.StringUtils.isNotEmpty(couponInterestTotal)) {
+            String couponInterestTotal = amTradeClient.selectCouponReceivedInterestTotal(userId);
+            if (StringUtils.isNotEmpty(couponInterestTotal)) {
                 couponInterestTotalDec = new BigDecimal(couponInterestTotal);
             }
             BigDecimal CreditInterestYes = BigDecimal.ZERO;
@@ -491,17 +516,26 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             }
             // 已回收的利息 (累计收益)
             BigDecimal recoverInterest = RecoverInterest
-                    .add(interestall) // +汇天利
-                    .add(couponInterestTotalDec).add(CreditInterestYes) // +债转
-                    .subtract(CreditInterestAmountYes); // -已债转
-            if (request.getParameter("version").startsWith("1.1.0")) {
-                result.setWaitInterest(list.get(0).getBankAwaitInterest().add(list.get(0).getPlanInterestWait()) + "");
-                result.setInterestTotle(list.get(0).getBankInterestSum() + "");
-            } else {
-                result.setWaitInterest(DF_FOR_VIEW.format(list.get(0).getBankAwaitInterest().add(list.get(0).getPlanInterestWait())));
-                result.setInterestTotle(DF_FOR_VIEW.format(list.get(0).getBankInterestSum()));
+                    .add(interestall)
+                    // +汇天利
+                    .add(couponInterestTotalDec).add(CreditInterestYes)
+                    // +债转
+                    .subtract(CreditInterestAmountYes);
+                    // -已债转
+            if(null!=account){
+                if (request.getParameter("version").startsWith("1.1.0")) {
+                    result.setWaitInterest(account.getBankAwaitInterest().add(account.getPlanInterestWait()) + "");
+                    result.setInterestTotle(account.getBankInterestSum() + "");
+                } else {
+                    result.setWaitInterest(DF_FOR_VIEW.format(account.getBankAwaitInterest().add(account.getPlanInterestWait())));
+                    result.setInterestTotle(DF_FOR_VIEW.format(account.getBankInterestSum()));
+                }
+            }else {
+                result.setWaitInterest(DF_FOR_VIEW.format(0));
+                result.setInterestTotle(DF_FOR_VIEW.format(0));
             }
-            BigDecimal bankTotal = list.get(0).getBankTotal() == null? BigDecimal.ZERO : list.get(0).getBankTotal();
+
+            BigDecimal bankTotal = account.getBankTotal() == null? BigDecimal.ZERO :account.getBankTotal();
             result.setAccountTotle(DF_FOR_VIEW.format(bankTotal));
 
         }
@@ -510,12 +544,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 // 开户url
                 result.setHuifuOpenAccountUrl("");
                 // 江西银行开户url
-                result.setOpenAccountUrl(systemConfig.getWebHost() + OpenAccountDefine.REQUEST_MAPPING + OpenAccountDefine.BANKOPEN_OPEN_ACTION + packageStr(request) + "&mobile=" + result.getMobile());
+                result.setOpenAccountUrl(systemConfig.getAppHost() +ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request) + "&mobile=" + result.getMobile());
             } else {
                 // 开户url
                 result.setHuifuOpenAccountUrl("");
                 // 江西银行开户url
-                result.setOpenAccountUrl(systemConfig.getWebHost() + OpenAccountDefine.REQUEST_MAPPING + OpenAccountDefine.BANKOPEN_OPEN_ACTION + packageStr(request));
+                result.setOpenAccountUrl(systemConfig.getAppHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
             }
         }
         {
@@ -534,27 +568,23 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             }
         }
         {
-            AccountBankExample example = new AccountBankExample();
-            example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo(0);
-            List<AccountBank> list = accountBankMapper.selectByExample(example);
+            List<AccountBankVO> list = amUserClient.selectAccountBank(userId,0);
             result.setIsBindQuickPayment(CustomConstants.FLAG_BINDQUICKPAYMENT_NO);
             result.setBankCardAccount("");
             result.setBankCardAccountLogoUrl("");
             result.setBankCardCode("");
-            if (bankCardVO != null && list.size() > 0) {
+            if (list != null && list.size() > 0) {
                 result.setBankCardCount(list.size() + "");
-                for (AccountBank accountBank : list) {
-                    Boolean hasQuick = false;// 存在快捷卡
+                for (AccountBankVO accountBank : list) {
+                    Boolean hasQuick = false;
                     if (accountBank.getCardType().equals("2")) {
                         hasQuick = true;
                         result.setIsBindQuickPayment(CustomConstants.FLAG_BINDQUICKPAYMENT_YES);
                     }
-                    BankConfigExample bankConfigExample = new BankConfigExample();
-                    bankConfigExample.createCriteria().andCodeEqualTo(accountBank.getBank());
-                    List<BankConfig> bankConfigList = bankConfigMapper.selectByExample(bankConfigExample);
-                    if (bankConfigList != null && bankConfigList.size() > 0) {
-                        result.setBankCardAccount(bankConfigList.get(0).getName());
-                        result.setBankCardAccountLogoUrl(imghost + bankConfigList.get(0).getAppLogo());
+                    BankConfigVO bankConfig = amConfigClient.selectBankConfigByCode(accountBank.getBank());
+                    if (bankConfig != null) {
+                        result.setBankCardAccount(bankConfig.getName());
+                        result.setBankCardAccountLogoUrl(imghost + bankConfig.getAppLogo());
                     }
                     result.setBankCardCode(accountBank.getAccount());
                     if (hasQuick) {
@@ -567,54 +597,48 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             }
         }
         {
-            AccountChinapnrExample example = new AccountChinapnrExample();
-            example.createCriteria().andUserIdEqualTo(userId);
-            List<AccountChinapnr> list = accountChinapnrMapper.selectByExample(example);
-            // 江西银行绑卡接口修改 update by wj 2018-5-17 start
-            Integer urlType = this.getBandCardBindUrlType("BIND_CARD");
-            // 江西银行绑卡接口修改 update by wj 2018-5-17 end
-            if (list != null && list.size() > 0) {
-                result.setChinapnrUsrcustid(list.get(0).getChinapnrUsrid() + "");
+            AccountChinapnrVO accountChinapnrVO = amUserClient.getAccountChinapnr(userId);
+            // 江西银行绑卡接口修改
+            Integer urlType = amConfigClient.getBankInterfaceFlagByType("BIND_CARD");
+            // 江西银行绑卡接口修改
+            if (accountChinapnrVO != null ) {
+                result.setChinapnrUsrcustid(accountChinapnrVO.getChinapnrUsrid() + "");
                 //汇付天下账户描述
-                result.setHuifuDesc(list.get(0).getChinapnrUsrid().substring(0,3)+"**************"+list.get(0).getChinapnrUsrid().substring(list.get(0).getChinapnrUsrid().length()-3));
+                result.setHuifuDesc(accountChinapnrVO.getChinapnrUsrid().substring(0,3)+"**************"+accountChinapnrVO.getChinapnrUsrid().substring(accountChinapnrVO.getChinapnrUsrid().length()-3));
                 // 绑卡url
-                result.setHuifuBindBankCardUrl(webhost + UserBindCardDefine.REQUEST_MAPPING + UserBindCardDefine.REQUEST_MAPPING + packageStr(request));
-                // 江西银行绑卡url add by cwyang 2017-4-25
-                // 江西银行绑卡接口修改 update by wj 2018-5-17 start
+                result.setHuifuBindBankCardUrl(apphost + ClientConstants.USER_BIND_CARD + packageStr(request));
+                // 江西银行绑卡url
+                // 江西银行绑卡接口修改
                 if(urlType == 1){
                     //绑卡接口类型为新接口
-                    result.setBindBankCardUrl(webhost + BindCardPageDefine.REQUEST_MAPPING + BindCardPageDefine.REQUEST_BINDCARDPAGE + packageStr(request));
+                    result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
                 }else{
                     //绑卡接口类型为旧接口
-                    result.setBindBankCardUrl(PropUtils.getSystem("hyjf.web.host") + AppBindCardDefine.BINDCARD_ACTION + packageStr(request));
+                    result.setBindBankCardUrl(systemConfig.getAppHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
                 }
-                // 江西银行绑卡接口修改 update by wj 2018-5-17 end
+                // 江西银行绑卡接口修改
             } else {
-                // 江西银行绑卡url add by cwyang 2017-4-25
-                // 江西银行绑卡接口修改 update by wj 2018-5-17 start
+                // 江西银行绑卡url
+                // 江西银行绑卡接口修改
                 if(urlType == 1){
                     //绑卡接口类型为新接口
-                    result.setBindBankCardUrl(webhost + BindCardPageDefine.REQUEST_MAPPING + BindCardPageDefine.REQUEST_BINDCARDPAGE + packageStr(request));
+                    result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
                 }else{
                     //绑卡接口类型为旧接口
-                    result.setBindBankCardUrl(PropUtils.getSystem("hyjf.web.host") + AppBindCardDefine.BINDCARD_ACTION + packageStr(request));
+                    result.setBindBankCardUrl(systemConfig.getAppHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
                 }
-                // 江西银行绑卡接口修改 update by wj 2018-5-17 end
             }
         }
         {
             // 二维码
-            result.setQrCodeUrl(PropUtils.getSystem("hyjf.wechat.qrcode.url").replace("{userId}",String.valueOf(userId)));
+            result.setQrCodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}",String.valueOf(userId)));
         }
         {
             // 风险测评结果
-            UserEvalationResultExample example = new UserEvalationResultExample();
-            example.createCriteria().andUserIdEqualTo(userId);
-            result.setAnswerStatus("0");
-            List<UserEvalationResult> list = userEvalationResultMapper.selectByExample(example);
-            if (list != null && list.size() > 0) {
+            UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(userId);
+            if (userEvalationResult != null ) {
                 //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
-                Long lCreate = GetDate.countDate(list.get(0).getCreatetime(),1,1).getTime();
+                Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();
                 //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
                 Long lNow = GetDate.countDate(new Date(), 5,1).getTime();
                 if (lCreate <= lNow) {
@@ -625,32 +649,31 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 } else {
                     // 进行过风险测评
                     result.setAnswerStatus("1");
-                    result.setAnswerResult(list.get(0).getType());
+                    result.setAnswerResult(userEvalationResult.getEvalType());
                     //风险描述
-                    result.setFengxianDesc(list.get(0).getType());
-                    result.setEvalationSummary(list.get(0).getSummary());
-                    result.setEvalationScore(list.get(0).getScoreCount() + "");
+                    result.setFengxianDesc(userEvalationResult.getEvalType());
+                    result.setEvalationSummary(userEvalationResult.getSummary());
+                    result.setEvalationScore(userEvalationResult.getScoreCount() + "");
                 }
             } else {
                 result.setAnswerResult("点击测评");
                 result.setFengxianDesc("未测评");
                 // 活动有效期校验
-                String resultActivity = couponCheckService.checkActivityIfAvailable(CustomConstants.ACTIVITY_ID);
+                String resultActivity = checkActivityIfAvailable(systemConfig.getActivityId());
                 // 终端平台校验
-                String resultPlatform = couponCheckService.checkActivityPlatform(CustomConstants.ACTIVITY_ID, request.getParameter("platform"));
+                String resultPlatform = checkActivityPlatform(systemConfig.getActivityId(), request.getParameter("platform"));
                 if ((resultActivity == null || "".equals(resultActivity)) && (resultPlatform == null || "".equals(resultPlatform))) {
                     result.setAnswerResult("评测送券");
                 }
             }
-            result.setAnswerUrl(CommonUtils.concatReturnUrl(request, systemConfig.getWebHost()+ RiskAssesmentDefine.REQUEST_MAPPING + RiskAssesmentDefine.USER_RISKTEST ));
-
+            result.setAnswerUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppHost()+ ClientConstants.USER_RISKTEST ));
         }
 
         {
-            Integer couponValidCount = couponUserCustomizeMapper.countCouponValid(userId);
+            Integer couponValidCount = amTradeClient.countCouponValid(userId);
             if (couponValidCount != null && couponValidCount > 0) {
                 result.setCouponDescription(String.valueOf(couponValidCount));
-                List<CouponUserCustomize> coupons = couponUserCustomizeMapper.selectLatestCouponValidUNReadList(userId);
+                List<CouponUserCustomizeVO> coupons = amTradeClient.selectLatestCouponValidUNReadList(userId);
                 if (coupons != null && !coupons.isEmpty()) {
                     result.setReadFlag("1");
                 } else {
@@ -661,8 +684,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 result.setReadFlag("0");
             }
         }
-        // add by hesy 优惠券 end
-
         // 我的账户更新标识(0未更新，1已更新)
         if (result.getReadFlag().equals("0")) {
             result.setIsUpdate("0");
@@ -670,52 +691,51 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             result.setIsUpdate("1");
         }
         // 邮箱红点显示
-//		result.setRedFlag(isHaveReadNotice(userId, platform));
-        //本次改版，所有用户都没有未读消息，所以统一设置为1，不做数据库查询了
         result.setRedFlag("1");
-
         boolean isNewHand = checkNewUser(userId);
         result.setIsNewHand(isNewHand?"1":"0");
         result.setRewardDesc("邀请好友");
-        result.setRewardUrl(CommonUtils.concatReturnUrl(request,systemConfig.getWebHost()+AppUserDefine.REWARD_URL));
-        // add by liubin 汇计划 start
+        result.setRewardUrl(CommonUtils.concatReturnUrl(request,systemConfig.getAppHost()+ClientConstants.REWARD_URL));
         {
             //自动投标授权状态 0: 未授权    1:已授权
             HjhUserAuthVO hjhUserAuthVO = this.getHjhUserAuth(userId);
             if (hjhUserAuthVO != null  && hjhUserAuthVO.getAutoInvesStatus() == 1) {
-                result.setAutoInvesStatus("1");//1:已授权
-                result.setNewAutoInvesStatus("1"); //1:已授权
+                result.setAutoInvesStatus("1");
+                result.setNewAutoInvesStatus("1");
                 result.setToubiaoDesc("已授权");
             } else {
-                result.setAutoInvesStatus("0");//0:未授权
-                result.setNewAutoInvesStatus("0");//0:未授权
+                result.setAutoInvesStatus("0");
+                result.setNewAutoInvesStatus("0");
                 result.setToubiaoDesc("未授权");
             }
             //自动债转授权状态 0：未授权    1：已授权
-            if (hjhUserAuthList != null && hjhUserAuthList.size() > 0 && hjhUserAuthList.get(0).getAutoCreditStatus() == 1) {
-                result.setNewAutoCreditStatus("1");//1:已授权
+            if (hjhUserAuthVO != null && hjhUserAuthVO.getAutoCreditStatus() == 1) {
+                result.setNewAutoCreditStatus("1");
             } else {
-                result.setNewAutoCreditStatus("0");//0:未授权
+                result.setNewAutoCreditStatus("0");
             }
-
             // 缴费授权 0：未授权    1：已授权
-            if (hjhUserAuthList != null && hjhUserAuthList.size() > 0 && hjhUserAuthList.get(0).getAutoPaymentStatus() == 1) {
-                result.setPaymentAuthStatus("1");//1:已授权
+            if (hjhUserAuthVO != null && hjhUserAuthVO.getAutoPaymentStatus() == 1) {
+                result.setPaymentAuthStatus("1");
             } else {
-                result.setPaymentAuthStatus("0");//0:未授权
+                result.setPaymentAuthStatus("0");
             }
         }
         {
             //自动投标授权URL
-            result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request,PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BaseDefine.REQUEST_HOME+ AutoDefine.REQUEST_MAPPING
-                    + AutoDefine.USER_AUTH_INVES_ACTION + ".do?1=1"));//0:未授权
+            result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request,systemConfig.getAppHost() + BaseDefine.REQUEST_HOME+ ClientConstants.USER_AUTH_INVES_ACTION + ".do?1=1"));
             //缴费授权Url
-            result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request,PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + BaseDefine.REQUEST_HOME
-                    + AutoDefine.PAYMENT_AUTH_ACTION + ".do?1=1"));
+            result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request,systemConfig.getAppHost()+ BaseDefine.REQUEST_HOME
+                    + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
         }
         result.setInvitationCode(userId);
         return result;
-    }*/
+    }
+
+    private ProductSearchForPageVO selectUserPrincipal(ProductSearchForPageVO productSearchForPage) {
+        ProductSearchForPageVO result = amTradeClient.selectUserPrincipal(productSearchForPage);
+        return result;
+    }
 
     @Override
     public void updateUserIconImg(Integer userId, String iconUrl) {
@@ -726,4 +746,99 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
     }
 
+    // 组装url
+    private String packageStr(HttpServletRequest request) {
+        StringBuffer sbUrl = new StringBuffer();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        sbUrl.append("?").append("version").append("=").append(version);
+        sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+        sbUrl.append("&").append("platform").append("=").append(platform);
+        sbUrl.append("&").append("randomString").append("=").append(randomString);
+        sbUrl.append("&").append("sign").append("=").append(sign);
+        sbUrl.append("&").append("token").append("=").append(strEncode(token));
+        sbUrl.append("&").append("order").append("=").append(strEncode(order));
+        return sbUrl.toString();
+    }
+
+    /**
+     * 检查是否是新手(未登录或已登录未投资)
+     * @param userId
+     * @return
+     */
+    public boolean checkNewUser(Integer userId){
+        //未登录则认为是新用户
+        if(userId == null || userId <= 0){
+            return true;
+        }
+        int tenderCount = amTradeClient.selectUserTenderCount(userId);
+        return tenderCount <= 0;
+    }
+
+    /**
+     * 活动是否过期
+     */
+    public String checkActivityIfAvailable(String activityId) {
+        if(activityId==null){
+            return ClientConstants.ACTIVITYID_IS_NULL;
+        }
+        ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
+        if(activityList==null){
+            return ClientConstants.ACTIVITY_ISNULL;
+        }
+        if(activityList.getTimeStart()>GetDate.getNowTime10()){
+            return ClientConstants.ACTIVITY_TIME_NOT_START;
+        }
+        if(activityList.getTimeEnd()<GetDate.getNowTime10()){
+            return ClientConstants.ACTIVITY_TIME_END;
+        }
+        return "";
+    }
+
+    public String checkActivityPlatform(String activityId, String platform) {
+        if(activityId==null){
+            return ClientConstants.ACTIVITYID_IS_NULL;
+        }
+        ActivityListVO activityList=amMarketClient.selectActivityList(new Integer(activityId));
+        if(activityList==null){
+            return ClientConstants.ACTIVITY_ISNULL;
+        }
+        if(activityList.getPlatform().indexOf(platform)==-1){
+            // 操作平台
+            Map<String, String> clients = CacheUtil.getParamNameMap("CLIENT");
+            // 被选中操作平台
+            String clientSed[] = StringUtils.split(activityList.getPlatform(),",");
+            StringBuffer selectedClientDisplayBuffer=new StringBuffer();
+
+            for (String client : clientSed) {
+                // 被选中的平台编号
+                Set<String> keys = clients.keySet();
+                for (String key : keys){
+                    if (StringUtils.equals(key, client)) {
+                        // 被选中的平台名称 表示用
+                        selectedClientDisplayBuffer.append(clients.get(key));
+                        selectedClientDisplayBuffer.append("/");
+                    }
+                }
+            }
+            String str="";
+            if(selectedClientDisplayBuffer.toString().length()>0){
+                str=selectedClientDisplayBuffer.substring(0, selectedClientDisplayBuffer.length()-1);
+            }
+            return ClientConstants.PLATFORM_LIMIT.replace("***", str);
+        }
+        return "";
+    }
 }

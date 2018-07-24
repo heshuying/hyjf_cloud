@@ -45,9 +45,9 @@ public class CallCenterBankServiceImpl implements CallCenterBankService {
 
 	@Override
 	public List<BankCard> getTiedCardOfAccountBank(Integer userId){
-		BankCardExample example = new BankCardExample();
-		BankCardExample.Criteria cra = example.createCriteria();
-		cra.andUserIdEqualTo(userId);
+			BankCardExample example = new BankCardExample();
+			BankCardExample.Criteria cra = example.createCriteria();
+			cra.andUserIdEqualTo(userId);
 		List<BankCard> bankCardList = bankCardMapper.selectByExample(example);
 		if(bankCardList!= null && bankCardList.size()>0){
 			return bankCardList;

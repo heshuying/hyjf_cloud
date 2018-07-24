@@ -2,9 +2,7 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 import java.util.List;
 
@@ -16,6 +14,8 @@ public interface BankConfigService {
      * @return
      */
     BankConfig getBankConfigByBankId(Integer bankId);
+
+    BankConfig selectBankConfigByCode(String code);
 
     BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 

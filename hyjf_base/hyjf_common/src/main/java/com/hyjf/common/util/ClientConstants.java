@@ -82,8 +82,6 @@ public class ClientConstants implements Serializable {
 
 	/** 存管渠道柜面 */
 	public static final String CHANNEL_OTHER = "000004";
-	//该活动已结束
-	public static final String PLATFORM_LIMIT="本活动限***端参与";
 	/**
 	 * url header获取
 	 */
@@ -240,7 +238,7 @@ public class ClientConstants implements Serializable {
 	 */
 	public static final String TXCODE_CREDIT_AUTH_QUERY = "creditAuthQuery";
 
-	//----------------回调端地址前缀
+	/**回调端地址前缀*/
 	public static final String CLIENT_HEADER_PC = "web";
 	public static final String CLIENT_HEADER_APP = "app";
 	public static final String CLIENT_HEADER_API = "api";
@@ -251,4 +249,60 @@ public class ClientConstants implements Serializable {
 	 * 投资人投标申请查询
 	 */
 	public static final String TXCODE_BID_APPLY_QUERY = "bidApplyQuery";
+
+	// 江西银行绑卡状态
+	/** 已绑卡 */
+	public static final Integer BANK_BINDCARD_STATUS_SUCCESS = 1;
+	/** 未绑卡 */
+	public static final Integer BANK_BINDCARD_STATUS_FAIL = 0;
+
+	/**
+	 * 交易密码
+	 */
+	public static final String SETPASSWORD_ACTION = "/appUser/updatePasswordAction/setTeaderPassword";
+	public static final String RESETPASSWORD_ACTION = "/appUser/updatePasswordAction/resetPassword";
+
+	/**
+	 * vip 初始化跳转路径
+	 */
+	public static final String USER_VIP_DETAIL_ACTIVE_INIT = "/vip/userVipDetailInit";
+
+	/**
+	 * vip等级显示图片
+	 */
+	public static final String APPLY_INIT = "/vip/apply/init";
+
+	/**
+	 * 绑卡Url
+	 */
+	public static final String USER_BIND_CARD = "/bindCard/bindCard";
+
+	public static final String REQUEST_BINDCARDPAGE = "/bank/user/bindCardPage/bindCardPage";
+
+	public static final String BINDCARD_ACTION = "/user/bankCard/bind";
+
+	public static final String BANKOPEN_OPEN_ACTION = "/user/open";
+
+	public static final String USER_RISKTEST = "/user/riskTest";
+
+	public static final String USER_AUTH_INVES_ACTION = "/bank/user/auto/userAuthInves";
+
+	public static final String PAYMENT_AUTH_ACTION = "/bank/user/paymentAuth/authPage";
+
+	/** 我的奖励Url */
+	public static final String REWARD_URL = "/user/reward";
+
+	//-------------------------------活动---------------------------------
+	//活动编号不能为空
+	public final static String ACTIVITYID_IS_NULL="活动编号不能为空";
+	//该活动不存在
+	public final static String ACTIVITY_ISNULL="该活动不存在";
+	//该活动不存在
+	public final static String ACTIVITY_TIME_NOT_START="该活动还未开始";
+	//该活动已结束
+	public final static String ACTIVITY_TIME_END="您来晚了，活动已过期~~";
+	//该活动已结束
+	public final static String PLATFORM_LIMIT="本活动限***端参与";
+	//该活动用户已参与
+	public final static String ACTIVITY_LIMIT="该活动用户已参与";
 }

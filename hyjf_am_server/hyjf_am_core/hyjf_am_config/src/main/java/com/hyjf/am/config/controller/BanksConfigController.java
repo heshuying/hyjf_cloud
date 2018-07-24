@@ -1,32 +1,29 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.dao.model.auto.BankConfig;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
+import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
+import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.trade.BankCardBeanResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +51,34 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @GetMapping("/getBanksConfigByBankId/{bankId}")
-    public BankConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
-        BankConfigResponse response = new BankConfigResponse();
+    public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
+        BanksConfigResponse response = new BanksConfigResponse();
         BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
         if(null != bankConfig){
-            BankConfigVO banksConfigVO = new BankConfigVO();
+            BanksConfigVO banksConfigVO = new BanksConfigVO();
             BeanUtils.copyProperties(bankConfig,banksConfigVO);
             response.setResult(banksConfigVO);
         }
         return response;
     }
+
+    /**
+     * 获取银行卡配置信息
+     * @param code
+     * @return
+     */
+    @GetMapping("/selectBankConfigByCode/{code}")
+    public BanksConfigResponse selectBankConfigByCode(@PathVariable String  code){
+        BanksConfigResponse response = new BanksConfigResponse();
+        BankConfig bankConfig = bankConfigService.selectBankConfigByCode(code);
+        if(null != bankConfig){
+            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BeanUtils.copyProperties(bankConfig,banksConfigVO);
+            response.setResult(banksConfigVO);
+        }
+        return response;
+    }
+
 
     /**
      *
@@ -114,12 +129,12 @@ public class BanksConfigController extends BaseConfigController{
      * 获取银行列表
      */
     @RequestMapping("/selectBankConfigList")
-    public BankConfigResponse selectBankConfigList(){
-        BankConfigResponse response= new BankConfigResponse();
+    public BanksConfigResponse selectBankConfigList(){
+        BanksConfigResponse response=null;
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
         if(null!=listBankConfig&&listBankConfig.size()>0){
-            List<BankConfigVO> bankConfigVOList = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
-            response.setResultList(bankConfigVOList);
+            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            response.setResultList(listBanksConfig);
             //代表成功
             response.setRtn(Response.SUCCESS);
         }
@@ -316,25 +331,5 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
-    /**
-     * 根据bankId查找江西银行的银行卡配置表
-     * @param bankId
-     * @return
-     */
-    @RequestMapping("/getJXbankConfigByBankId")
-    public JxBankConfigResponse getJXbankConfigByBankId(@PathVariable int bankId) {
-        JxBankConfigResponse jxBankConfigResponse = new JxBankConfigResponse();
-        JxBankConfig jxBankConfig = bankConfigService.getJxBankConfigByBankId(bankId);
-        if(null!=jxBankConfig){
-            JxBankConfigVO jxBankConfigVO = new JxBankConfigVO();
-            BeanUtils.copyProperties(jxBankConfig,jxBankConfigVO);
-            jxBankConfigResponse.setResult(jxBankConfigVO);
-            jxBankConfigResponse.setRtn(Response.SUCCESS);
-            jxBankConfigResponse.setMessage(Response.SUCCESS_MSG);
-        }else{
-            jxBankConfigResponse.setRtn(Response.FAIL);
-            jxBankConfigResponse.setMessage(Response.ERROR_MSG);
-        }
-        return jxBankConfigResponse;
-    }
+
 }

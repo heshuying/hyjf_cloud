@@ -1,6 +1,3 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.am.vo.user;
 
 import com.hyjf.am.vo.BaseVO;
@@ -8,10 +5,6 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author: sunpeikai
- * @version: AccountBankVO, v0.1 2018/7/23 15:21
- */
 public class AccountBankVO extends BaseVO implements Serializable {
     private Integer userId;
 
@@ -66,7 +59,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setAccount(String account) {
-        this.account = account;
+        this.account = account == null ? null : account.trim();
     }
 
     public String getBank() {
@@ -74,7 +67,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setBank(String bank) {
-        this.bank = bank;
+        this.bank = bank == null ? null : bank.trim();
     }
 
     public String getBranch() {
@@ -82,7 +75,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setBranch(String branch) {
-        this.branch = branch;
+        this.branch = branch == null ? null : branch.trim();
     }
 
     public String getProvince() {
@@ -90,7 +83,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setProvince(String province) {
-        this.province = province;
+        this.province = province == null ? null : province.trim();
     }
 
     public String getCity() {
@@ -98,7 +91,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = city == null ? null : city.trim();
     }
 
     public Integer getArea() {
@@ -114,7 +107,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setCardType(String cardType) {
-        this.cardType = cardType;
+        this.cardType = cardType == null ? null : cardType.trim();
     }
 
     public String getRespcode() {
@@ -122,7 +115,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setRespcode(String respcode) {
-        this.respcode = respcode;
+        this.respcode = respcode == null ? null : respcode.trim();
     }
 
     public String getRespdesc() {
@@ -130,7 +123,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setRespdesc(String respdesc) {
-        this.respdesc = respdesc;
+        this.respdesc = respdesc == null ? null : respdesc.trim();
     }
 
     public String getCreateIp() {
@@ -138,7 +131,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setCreateIp(String createIp) {
-        this.createIp = createIp;
+        this.createIp = createIp == null ? null : createIp.trim();
     }
 
     public String getUpdateIp() {
@@ -146,7 +139,7 @@ public class AccountBankVO extends BaseVO implements Serializable {
     }
 
     public void setUpdateIp(String updateIp) {
-        this.updateIp = updateIp;
+        this.updateIp = updateIp == null ? null : updateIp.trim();
     }
 
     public Date getCreateTime() {

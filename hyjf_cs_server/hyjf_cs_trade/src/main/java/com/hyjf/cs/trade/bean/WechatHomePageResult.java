@@ -58,6 +58,9 @@ public class WechatHomePageResult extends BaseResultBean {
 	
 	private Integer userStatus;//用户是否锁定,0未锁定,1锁定
 
+	private Integer currentPage;//当前页
+	private Integer pageSize;//每页显示条数
+
 	private String request;
 
 
@@ -231,5 +234,21 @@ public class WechatHomePageResult extends BaseResultBean {
 
 	public void setPicList(List<AppAdsCustomizeVO> picList) {
 		this.picList = picList;
+	}
+
+	public Integer getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(Integer currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 }
