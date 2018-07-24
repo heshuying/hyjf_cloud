@@ -35,6 +35,7 @@ public class TransactionCheckScheduler {
 		} catch (MQClientException e) {
 			logger.error("rocketmq事务回查失败...", e);
 		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 			logger.error("rocketmq事务回查失败...", e);
 		} catch (RemotingException e) {
 			logger.error("rocketmq事务回查失败...", e);

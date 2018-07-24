@@ -21,12 +21,26 @@ public interface OperationReportService {
      * @return
      */
      OperationReportResponse getRecordList(OperationReportRequest request);
+
+    /**
+     * 获取已发布列表--web端和app
+     *
+     * @return
+     */
+    OperationReportResponse listByRelease(OperationReportRequest request);
     /**
      * 通过ID获取详情
      *
      * @return
      */
 	 OperationReportResponse selectOperationreportCommon(String id);
+    /**
+     * 获取报表明细--web端和app
+     *
+     * @return
+     */
+    OperationReportResponse reportInfo(String id);
+
     /**
      * 通过id更新
      *
@@ -88,10 +102,5 @@ public interface OperationReportService {
      */
     public OperationReportResponse halfPreview(OperationReportRequest request);
 
-    /**
-     * 附件上传
-     *
-     *
-     */
-    OperationReportResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
 }
