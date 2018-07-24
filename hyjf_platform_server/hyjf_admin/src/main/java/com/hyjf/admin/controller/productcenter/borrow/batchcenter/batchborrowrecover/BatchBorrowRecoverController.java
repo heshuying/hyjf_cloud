@@ -29,7 +29,7 @@ import java.util.List;
  * @Date:2018/7/7
  * @Description: 批次中心-批次放款
  */
-@Api(value = "Admin产品中心-批次中心-批次放款",description="Admin产品中心-批次中心-批次放款")
+@Api(value = "Admin端产品中心-批次中心-批次放款",description="Admin端产品中心-批次中心-批次放款")
 @RestController
 @RequestMapping("/hyjf-admin/batchBorrowRecover")
 public class BatchBorrowRecoverController extends BaseController{

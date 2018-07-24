@@ -31,7 +31,7 @@ import java.util.List;
  * @Date:2018/7/3
  * @Description: 汇计划-转让记录
  */
-@Api(value = "Admin产品中心-汇计划-转让记录",description="Admin产品中心-汇计划-转让记录")
+@Api(value = "Admin端产品中心-汇计划-转让记录",description="Admin端产品中心-汇计划-转让记录")
 @RestController
 @RequestMapping("/hyjf-admin/hjhDebtCredit")
 public class HjhDebtCreditController extends BaseController{
