@@ -3135,6 +3135,77 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     *  微信端查询用户当前持有项目列表
+     * @param request
+     * @return
+     */
+    @Override
+    public QueryMyProjectVO selectWechatCurrentHoldObligatoryRightList(WechatMyProjectRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectWechatCurrentHoldObligatoryRightList";
+        QueryMyProjectVOResponse response = restTemplate.postForEntity(url,request, QueryMyProjectVOResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     *  微信端查询用户已回款项目列表
+     * @param request
+     * @return
+     */
+    @Override
+    public QueryMyProjectVO selectWechatRepaymentList(WechatMyProjectRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectWechatRepaymentList";
+        QueryMyProjectVOResponse response = restTemplate.postForEntity(url,request, QueryMyProjectVOResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     *  微信端查询用户债转项目列表
+     * @param request
+     * @return
+     */
+    @Override
+    public QueryMyProjectVO selectWechatCreditRecordList(WechatMyProjectRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectWechatCreditRecordList";
+        QueryMyProjectVOResponse response = restTemplate.postForEntity(url,request, QueryMyProjectVOResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     *  微信端查询用户当前持有计划列表
+     * @param request
+     * @return
+     */
+    @Override
+    public QueryMyProjectVO selectWechatCurrentHoldPlanList(WechatMyProjectRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectWechatCurrentHoldPlanList";
+        QueryMyProjectVOResponse response = restTemplate.postForEntity(url,request, QueryMyProjectVOResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     *  微信端查询用户已回款计划列表
+     * @param request
+     * @return
+     */
+    @Override
+    public QueryMyProjectVO selectWechatRepayMentPlanList(WechatMyProjectRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectWechatRepayMentPlanList";
+        QueryMyProjectVOResponse response = restTemplate.postForEntity(url,request, QueryMyProjectVOResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 
     /**
      *  更新投资协议信息

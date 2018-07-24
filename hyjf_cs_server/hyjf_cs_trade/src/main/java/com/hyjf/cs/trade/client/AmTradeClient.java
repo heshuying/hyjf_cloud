@@ -1362,18 +1362,4 @@ public interface AmTradeClient {
     List<BorrowRecoverPlanVO> selectRecoverPlan(String borrowNid, Integer period);
 
     List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepay(String borrowNid, String tenderOrderId, int periodNow, int status);
-
-    /**
-     * 获取投资协议集合
-     * @param tenderNid
-     * @return
-     */
-    List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
-
-    /**
-     * 通过主键获取投资协议
-     * @param tenderAgreementID
-     * @return
-     */
-    TenderAgreementVO getTenderAgreementInfoByPrimaryKey(String tenderAgreementID);
 }

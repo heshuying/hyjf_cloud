@@ -359,8 +359,11 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String idNo = userInfo.getIdcard();
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWebHost() + "/return" + "?txAmount="+money;
-		String bgRetUrl = systemConfig.getWebHost() + "/bgreturn" + "?phone="+mobile;
+		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
+		String bgRetUrl = super.getFrontHost(systemConfig,"0") + "/bgreturn" + "?phone="+mobile;
+		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;//
+
+
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		directRechargeBean.setTxAmount(money);
 		directRechargeBean.setIdNo(idNo);
@@ -369,12 +372,13 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		directRechargeBean.setMobile(mobile);
 		directRechargeBean.setUserId(userId);
 		directRechargeBean.setIp(ipAddr);
-		directRechargeBean.setUserName("test");
+		directRechargeBean.setUserName(user.getUsername());
 		directRechargeBean.setRetUrl(retUrl);
 		directRechargeBean.setNotifyUrl(bgRetUrl);
 		directRechargeBean.setPlatform("0");
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
 		directRechargeBean.setAccountId(account.getAccount());
+		directRechargeBean.setSuccessfulUrl(successfulUrl);
 		String forgetPassworedUrl = "http://www.hyjf.com";
 		directRechargeBean.setForgotPwdUrl(forgetPassworedUrl);
 		BankCallBean bean = this.insertGetMV(directRechargeBean);

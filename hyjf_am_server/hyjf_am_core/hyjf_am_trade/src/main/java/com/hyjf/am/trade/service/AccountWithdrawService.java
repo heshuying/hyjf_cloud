@@ -35,4 +35,5 @@ public interface AccountWithdrawService {
     int getWithdrawRecordCount(WithdrawBeanRequest request);
 
     List<WithdrawCustomize> getWithdrawRecordList(WithdrawBeanRequest request);
+
 }
