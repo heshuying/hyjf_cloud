@@ -67,11 +67,11 @@ public class UserPortraitManagerController extends BaseController{
             limitEnd = paginator.getLimit();
         }
         List<UserPortrait> listUserPortrait = userPortraitManagerService.selectRecordList(mapParam,limitStart, limitEnd);
+        response.setCount(registCount);
         if(registCount>0){
             if (!CollectionUtils.isEmpty(listUserPortrait)) {
                 List<UserPortraitVO> userVoList = CommonUtils.convertBeanList(listUserPortrait, UserPortraitVO.class);
                 response.setResultList(userVoList);
-                response.setCount(registCount);
                 response.setRtn(Response.SUCCESS);
             }
         }

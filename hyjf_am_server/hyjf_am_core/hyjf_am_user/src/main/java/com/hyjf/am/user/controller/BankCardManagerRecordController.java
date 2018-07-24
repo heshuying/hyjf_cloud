@@ -66,11 +66,11 @@ public class BankCardManagerRecordController extends BaseController{
             limitEnd = paginator.getLimit();
         }
         List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectBankCardList(mapParam,limitStart, limitEnd);
+        response.setCount(usesrCount);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
                 response.setResultList(bankcardManager);
-                response.setCount(usesrCount);
                 response.setRtn(Response.SUCCESS);
             }
         }
@@ -117,11 +117,11 @@ public class BankCardManagerRecordController extends BaseController{
             limitEnd = paginator.getLimit();
         }
         List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectNewBankCardList(mapParam,limitStart, limitEnd);
+        response.setCount(usesrCount);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
                 response.setResultList(bankcardManager);
-                response.setCount(usesrCount);
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }
@@ -177,19 +177,19 @@ public class BankCardManagerRecordController extends BaseController{
         if(request.getPageSize() ==0){
             paginator = new Paginator(request.getCurrPage(), bankCount);
         }
-        int limitStart = 0;
-        int limitEnd = 0;
+        int limitStart = paginator.getOffset();
+        int limitEnd = paginator.getLimit();
         //查询导出数据
-        if(request.getLimitFlg()!=0){
-            limitStart = paginator.getOffset();
-            limitEnd = paginator.getLimit();
+        if(request.isLimitFlg()){
+            limitStart = 0;
+            limitEnd = 0;
         }
         List<BankCardLog> bankCardLogs = bankCardManagerServiceService.selectBankCardLogByExample(request,limitStart,limitEnd);
+        response.setCount(bankCount);
         if(bankCount>0){
             if (!CollectionUtils.isEmpty(bankCardLogs)) {
                 List<BankCardLogVO> bankcardManager = CommonUtils.convertBeanList(bankCardLogs, BankCardLogVO.class);
                 response.setResultList(bankcardManager);
-                response.setCount(bankCount);
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }

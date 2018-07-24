@@ -272,13 +272,7 @@ public interface AmUserClient {
      */
     int insertCorpOpenAccountRecord(CorpOpenAccountRecordRequest request);
 
-    /**
-     * 根据银行卡号获取bankId
-     * @auth nxl
-     * @param cardNo
-     * @return
-     */
-    String queryBankIdByCardNo(String cardNo);
+
 
     /**
      * 获取银行卡配置信息
@@ -286,7 +280,7 @@ public interface AmUserClient {
      * @param bankId
      * @return
      */
-    BanksConfigVO getBanksConfigByBankId(int bankId);
+//    BanksConfigVO getBanksConfigByBankId(int bankId);
 
     /**
      * 更新用户绑定的银行卡
