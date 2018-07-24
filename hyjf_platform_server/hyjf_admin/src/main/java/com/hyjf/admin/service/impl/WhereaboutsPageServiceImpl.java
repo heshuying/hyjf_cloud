@@ -112,6 +112,7 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			fileMeta = new WhereaboutsPagePictureVo();
 			int index = originalFilename.lastIndexOf(".");
 			if (index != -1) {
 				fileMeta.setImageName(originalFilename.substring(0, index));

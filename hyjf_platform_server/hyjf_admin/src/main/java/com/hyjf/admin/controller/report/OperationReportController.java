@@ -331,4 +331,18 @@ public class OperationReportController extends BaseController {
         selectList.add(bean4);
         return selectList;
     }
+
+    /**
+     * 资料上传
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
+    @RequestMapping("/uploadFile")
+    public OperationReportResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        OperationReportResponse files = operationReportService.uploadFile(request, response);
+        return files;
+    }
 }

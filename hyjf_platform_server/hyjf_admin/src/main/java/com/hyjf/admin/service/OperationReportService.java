@@ -1,5 +1,6 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
@@ -86,4 +87,11 @@ public interface OperationReportService {
      * @return
      */
     public OperationReportResponse halfPreview(OperationReportRequest request);
+
+    /**
+     * 附件上传
+     *
+     *
+     */
+    OperationReportResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }
