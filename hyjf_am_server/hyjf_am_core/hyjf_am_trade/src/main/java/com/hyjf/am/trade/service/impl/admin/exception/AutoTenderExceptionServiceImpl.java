@@ -75,7 +75,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     @Override
     public HjhAccede selectHjhAccede(Map<String,Object> mapParam) {
-        String accedeOrderId = mapParam.get("accedeOrderId").toString();
+        String accedeOrderId = mapParam.get("planOrderId").toString();
         String planNid = mapParam.get("debtPlanNid").toString();
         String  strUserId = mapParam.get("userId").toString();
         int userId = Integer.parseInt(strUserId);

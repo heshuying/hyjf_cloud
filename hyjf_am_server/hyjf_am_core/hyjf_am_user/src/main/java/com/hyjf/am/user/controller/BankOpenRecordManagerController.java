@@ -61,11 +61,11 @@ public class BankOpenRecordManagerController extends BaseController{
             limitStart = 0;
         }
         List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(mapParam,limitStart,limitEnd);
+        response.setCount(countBankRecordTotal);
         if (countBankRecordTotal > 0) {
             if (!CollectionUtils.isEmpty(bankOpenAccountRecordCustomizeList)) {
                 List<BankOpenAccountRecordVO> userBankRecord = CommonUtils.convertBeanList(bankOpenAccountRecordCustomizeList, BankOpenAccountRecordVO.class);
                 response.setResultList(userBankRecord);
-                response.setCount(countBankRecordTotal);
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }
@@ -86,11 +86,11 @@ public class BankOpenRecordManagerController extends BaseController{
         int countRecordTotal = bankOpenRecordService.countRecordTotal(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), countRecordTotal,request.getPageSize());
         List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
+        response.setCount(countRecordTotal);
         if (countRecordTotal > 0) {
             if (!CollectionUtils.isEmpty(accountList)) {
                 List<BankOpenAccountRecordVO> bankOpenAccountRecordList = CommonUtils.convertBeanList(accountList, BankOpenAccountRecordVO.class);
                 response.setResultList(bankOpenAccountRecordList);
-                response.setCount(countRecordTotal);
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }

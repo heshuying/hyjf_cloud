@@ -57,7 +57,7 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
     @Override
     public HjhAccedeVO getHjhAccedeVO(TenderExceptionSolveRequest tenderExceptionSolveRequest){
         HjhAccedeResponse hjhAccedeResponse =amTradeClient.selectHjhAccedeByParam(tenderExceptionSolveRequest);
-        HjhAccedeVO hjhAccedeVO = new HjhAccedeVO();
+        HjhAccedeVO hjhAccedeVO = null;
         if(null!=hjhAccedeResponse){
             hjhAccedeVO =  hjhAccedeResponse.getResult();
         }
@@ -72,7 +72,7 @@ public class AutoTenderExceptionServiceImpl implements AutoTenderExceptionServic
     @Override
     public HjhPlanBorrowTmpVO getHjhPlanBorrowTmpVO(TenderExceptionSolveRequest tenderExceptionSolveRequest){
         HjhPlanBorrowTmpResponse hjhAccedeResponse =amTradeClient.selectBorrowJoinList(tenderExceptionSolveRequest);
-        HjhPlanBorrowTmpVO  hjhAccedeVO = new HjhPlanBorrowTmpVO ();
+        HjhPlanBorrowTmpVO  hjhAccedeVO = null;
         if(null!=hjhAccedeResponse){
             hjhAccedeVO =  hjhAccedeResponse.getResult();
         }

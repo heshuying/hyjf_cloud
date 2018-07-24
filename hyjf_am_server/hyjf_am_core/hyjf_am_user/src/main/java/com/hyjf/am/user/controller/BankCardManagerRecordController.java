@@ -66,11 +66,11 @@ public class BankCardManagerRecordController extends BaseController{
             limitEnd = paginator.getLimit();
         }
         List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectBankCardList(mapParam,limitStart, limitEnd);
+        response.setCount(usesrCount);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
                 response.setResultList(bankcardManager);
-                response.setCount(usesrCount);
                 response.setRtn(Response.SUCCESS);
             }
         }
@@ -117,11 +117,11 @@ public class BankCardManagerRecordController extends BaseController{
             limitEnd = paginator.getLimit();
         }
         List<BankcardManagerCustomize> bankcardManagerCustomizeList = bankCardManagerServiceService.selectNewBankCardList(mapParam,limitStart, limitEnd);
+        response.setCount(usesrCount);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(bankcardManagerCustomizeList)) {
                 List<BankcardManagerVO> bankcardManager = CommonUtils.convertBeanList(bankcardManagerCustomizeList, BankcardManagerVO.class);
                 response.setResultList(bankcardManager);
-                response.setCount(usesrCount);
                 response.setRtn(Response.SUCCESS);//代表成功
             }
         }
