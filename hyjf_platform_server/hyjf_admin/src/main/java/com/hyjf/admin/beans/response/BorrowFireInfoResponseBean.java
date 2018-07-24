@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.beans.response;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 
 /**
@@ -10,22 +12,31 @@ import java.math.BigDecimal;
  * @version BorrowFireInfoResponseBean, v0.1 2018/7/3 18:50
  */
 public class BorrowFireInfoResponseBean {
+    @ApiModelProperty(value = "借款编号")
     private String borrowNid;
 
+    @ApiModelProperty(value = "借款标题")
     private String name;
 
+    @ApiModelProperty(value = "借贷总金额")
     private BigDecimal account;
 
+    @ApiModelProperty(value = "借款利率")
     private BigDecimal borrowApr;
 
+    @ApiModelProperty(value = "借款期限")
     private Integer borrowPeriod;
 
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyle;
 
+    @ApiModelProperty(value = "创建时间")
     private String createTime;
 
+    @ApiModelProperty(value = "发标状态")
     private Integer verifyStatus;
 
+    @ApiModelProperty(value = "定时发标时间")
     private String ontime;
 
     public String getBorrowNid() {

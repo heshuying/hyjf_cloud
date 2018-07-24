@@ -325,7 +325,7 @@ public class FileUtil {
      * @throws IOException
      */
     public static boolean getRemoteFile(String strUrl, String fileName) throws IOException {
-    	System.out.println("-------------getRemoteFile地址："+strUrl + "######" +fileName);
+		logger.info("-------------getRemoteFile地址："+strUrl + "######" +fileName);
 		URL url = new URL(strUrl);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		// 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
@@ -340,11 +340,11 @@ public class FileUtil {
 		// 设定请求的方法为"POST"，默认是GET
 		conn.setRequestMethod("POST");
 		DataInputStream input =null; 
-		DataOutputStream output = null;
 		byte[] buffer = new byte[1024];
 		int count = 0;
-		try {
-			output=new DataOutputStream(new FileOutputStream(fileName));
+		// 使用try-with-resources, 可以自动关闭实现了AutoCloseable或者Closeable接口的资源。比如下面的函数，在try语句结束后，
+		// 不论其包括的代码是正常执行完毕还是发生异常，都会自动调用BufferdReader的Close方法。
+		try (DataOutputStream output=new DataOutputStream(new FileOutputStream(fileName))){
 			input=new DataInputStream(conn.getInputStream());
 			while ((count = input.read(buffer)) != -1) {
 				output.write(buffer, 0, count);
@@ -352,9 +352,9 @@ public class FileUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			output.flush();
-			output.close();
-			input.close();
+			if (input != null) {
+				input.close();
+			}
 		}
 		return true;
 	}
@@ -429,21 +429,23 @@ public class FileUtil {
         conn.setRequestProperty("Accept-Charset", "UTF-8");
         // 设定请求的方法为"POST"，默认是GET
         conn.setRequestMethod("POST");
-        FileOutputStream fos = new FileOutputStream(file); 
-        //得到输入流  
-        InputStream inputStream = conn.getInputStream();
-        //获取自己数组  
-        byte[] getData = readInputStream(inputStream); 
-        //数据写入文件
-        fos.write(getData); 
-        if(fos!=null){  
-            fos.close();    
-        }  
-        if(inputStream!=null){  
-            inputStream.close();  
-        } 
-        return file;
-    }
+		InputStream inputStream = null;
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			//得到输入流
+			inputStream = conn.getInputStream();
+			//获取自己数组
+			byte[] getData = readInputStream(inputStream);
+			//数据写入文件
+			fos.write(getData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
+		}
+		return file;
+	}
 
 	public static void  downLoadFromUrl(String urlStr,String fileName,String savePath) throws IOException{
 		URL url = new URL(urlStr);
@@ -472,16 +474,19 @@ public class FileUtil {
 		}else{
 			logger.info("============="+saveDir+File.separator+fileName+",文件不存在！------------------------");
 		}
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.write(getData);
-		if(fos!=null){
-			fos.close();
-		}
-		if(inputStream!=null){
-			inputStream.close();
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			//得到输入流
+			inputStream = conn.getInputStream();
+			//数据写入文件
+			fos.write(getData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
 		}
 		logger.info("info:"+url+" download success");
-
 	}
 
     /** 

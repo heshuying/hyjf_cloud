@@ -16,8 +16,8 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankCreditTenderClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.FddProducer;
@@ -51,7 +51,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     private static final Logger logger = LoggerFactory.getLogger(BankCreditTenderServiceImpl.class);
 
     @Autowired
-    private BankCreditTenderClient bankCreditTenderClient;
+    private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
@@ -70,7 +70,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     public void handle() {
         logger.info("债转投资掉单异常处理开始...");
         //查询债转承接掉单的数据
-        List<CreditTenderLogVO> creditTenderLogs=bankCreditTenderClient.selectCreditTenderLogs();
+        List<CreditTenderLogVO> creditTenderLogs = amTradeClient.selectCreditTenderLogs();
         if (CollectionUtils.isNotEmpty(creditTenderLogs)){
             logger.info("待处理数据:size:[" + creditTenderLogs.size() + "].");
             for (CreditTenderLogVO creditTenderLog : creditTenderLogs) {
@@ -79,7 +79,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                 Integer userId = creditTenderLog.getUserId();
                 String logOrderId = creditTenderLog.getLogOrderId();
                 // 根据承接订单号查询债转投资表
-                List<CreditTenderVO> creditTenderList = this.bankCreditTenderClient.selectCreditTender(assignNid);
+                List<CreditTenderVO> creditTenderList = this.amTradeClient.selectCreditTender(assignNid);
                 if (CollectionUtils.isNotEmpty(creditTenderList)) {
                     continue;
                 }
@@ -97,7 +97,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                         if("CA110112".equals(retCode)) {
                             //投标记录不存在
                             creditTenderLog.setStatus(9);
-                            boolean tenderLogsFlag = this.bankCreditTenderClient.updateCreditTenderLog(creditTenderLog);
+                            boolean tenderLogsFlag = this.amTradeClient.updateCreditTenderLog(creditTenderLog);
                             if(tenderLogsFlag) {
                                 logger.info("债转投资记录日志表creditTenderLog表更新成功，承接订单号编号：" + assignNid+"，应答码："+retCode);
                             }
@@ -107,7 +107,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                     }
 
                     // 查询相应的债转承接记录
-                    CreditTenderLogVO creditenderLog = this.bankCreditTenderClient.selectCreditTenderLogByOrderId(logOrderId);
+                    CreditTenderLogVO creditenderLog = this.amTradeClient.selectCreditTenderLogByOrderId(logOrderId);
                     if (creditenderLog!=null){
                         try {
                             // 此次查询的授权码
@@ -115,11 +115,11 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                             if (StringUtils.isNotBlank(authCode)) {
                                 int sellerUserId = creditTenderLog.getCreditUserId();
                                 // 取得债权出让人的用户在汇付天下的客户号
-                                BankOpenAccountVO sellerBankAccount = this.bankCreditTenderClient.getBankOpenAccount(sellerUserId);
+                                BankOpenAccountVO sellerBankAccount = this.amTradeClient.getBankOpenAccount(sellerUserId);
                                 // 取得承接债转的用户在汇付天下的客户号
-                                BankOpenAccountVO assignBankAccount = this.bankCreditTenderClient.getBankOpenAccount(userId);
+                                BankOpenAccountVO assignBankAccount = this.amTradeClient.getBankOpenAccount(userId);
                                 //查询债转承接掉单的数据
-                                List<CreditTenderLogVO> creditTenderLogVOs=this.bankCreditTenderClient.getCreditTenderLogs(logOrderId, userId);
+                                List<CreditTenderLogVO> creditTenderLogVOs=this.amTradeClient.getCreditTenderLogs(logOrderId, userId);
 
                                 UserVO webUser = null;
                                 UserInfoVO userInfo = null;
@@ -131,7 +131,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                         			// 原始投资订单号
                         			String tenderOrderId = creditTenderLog.getCreditTenderNid();
                         			// 获取会转让标的列表
-                                    borrowCreditList = this.bankCreditTenderClient.getBorrowCreditList(creditNid,sellerUserId,tenderOrderId);
+                                    borrowCreditList = this.amTradeClient.getBorrowCreditList(creditNid,sellerUserId,tenderOrderId);
                         			if(CollectionUtils.isNotEmpty(borrowCreditList) && borrowCreditList.size()==1){
                                         BorrowCreditVO borrowCreditVO=borrowCreditList.get(0);
                                         webUser=this.amUserClient.findUserById(borrowCreditVO.getCreditUserId());
@@ -190,7 +190,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 request.setBorrowCreditList(borrowCreditList);
 
 
-                                boolean tenderFlag = this.bankCreditTenderClient.updateTenderCreditInfo(request);
+                                boolean tenderFlag = this.amTradeClient.updateTenderCreditInfo(request);
 
                                 if (tenderFlag){
 
@@ -237,7 +237,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                     }
 
                                     // 查询相应的承接记录，如果相应的承接记录存在，则承接成功
-                                    CreditTenderVO creditTender = this.bankCreditTenderClient.selectByAssignNidAndUserId(logOrderId, userId);
+                                    CreditTenderVO creditTender = this.amTradeClient.selectByAssignNidAndUserId(logOrderId, userId);
                                     // 发送法大大PDF处理MQ start
                                     this.sendFDDPdfToMQ(userId,creditTender.getBidNid(),creditTender.getAssignNid(),creditTender.getCreditNid(),creditTender.getCreditTenderNid());
                                     // 发送法大大PDF处理MQ end
@@ -321,7 +321,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
      */
         private BankCallBean creditInvestQuery(String assignOrderId, Integer userId) {
         // 承接人用户Id
-        BankOpenAccountVO tenderOpenAccount = this.bankCreditTenderClient.getBankOpenAccount(userId);
+        BankOpenAccountVO tenderOpenAccount = this.amTradeClient.getBankOpenAccount(userId);
         BankCallBean bean = new BankCallBean();
         bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setTxCode(BankCallMethodConstant.TXCODE_CREDIT_INVEST_QUERY);

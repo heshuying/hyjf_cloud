@@ -129,13 +129,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             fileN = couponCheck.getFileName();
         }
 
-        FileInputStream in = null;
         OutputStream out = null;
-        try {
+        try (FileInputStream in = new FileInputStream(fileP)){
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
 
-            in = new FileInputStream(fileP);
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区
@@ -155,10 +153,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 if (Validator.isNotNull(out)){
                     out.flush();
                     out.close();
-                }
-                //关闭输入流
-                if (Validator.isNotNull(in)) {
-                    in.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author tanyy
  * @version ContentLandingPageController, v0.1 2018/7/16 10:35
  */
-@Api(value = "着路页管理")
+@Api(value = "着路页管理", description = "着路页管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentlandingpage")
 public class ContentLandingPageController extends BaseController {
 	@Autowired
 	private ContentLandingPageService contentLandingPageService;
 
-	@ApiOperation(value = "着路页管理", notes = "着路页管理列表查询")
+	@ApiOperation(value = "着路页管理列表查询", notes = "着路页管理列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<LandingPageVo>> searchAction(@RequestBody ContentLandingPageRequestBean requestBean) {
 		LandingPageResponse response = contentLandingPageService.searchAction(requestBean);
@@ -43,7 +43,7 @@ public class ContentLandingPageController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "着路页管理", notes = "添加着路页管理")
+	@ApiOperation(value = "添加着路页管理", notes = "添加着路页管理")
 	@RequestMapping("/insert")
 	public AdminResult add(@RequestBody ContentLandingPageRequestBean requestBean) {
 		LandingPageResponse response = contentLandingPageService.insertAction(requestBean);
@@ -56,7 +56,7 @@ public class ContentLandingPageController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "着路页管理", notes = "修改着路页管理")
+	@ApiOperation(value = "修改着路页管理", notes = "修改着路页管理")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody ContentLandingPageRequestBean requestBean) {
 		LandingPageResponse response = contentLandingPageService.updateAction(requestBean);
@@ -69,7 +69,7 @@ public class ContentLandingPageController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "着路页管理", notes = "删除着路页管理")
+	@ApiOperation(value = "删除着路页管理", notes = "删除着路页管理")
 	@RequestMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		LandingPageResponse response = contentLandingPageService.deleteById(id);

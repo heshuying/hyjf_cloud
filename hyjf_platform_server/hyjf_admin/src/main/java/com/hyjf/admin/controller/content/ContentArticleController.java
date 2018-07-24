@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yinhui
  * @version ContentArticleController, v0.1 2018/7/17 17:04
  */
-@Api(value = "内容中心-文章管理")
+@Api(value = "内容中心-文章管理", description = "内容中心-文章管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentarticle")
 public class ContentArticleController extends BaseController {
@@ -32,7 +32,7 @@ public class ContentArticleController extends BaseController {
     @Autowired
     private ContentArticleService contentArticleService;
 
-    @ApiOperation(value = "内容中心-文章管理", notes = "文章管理-条件列表查询")
+    @ApiOperation(value = "文章管理-条件列表查询", notes = "文章管理-条件列表查询")
     @RequestMapping("/searchaction")
     public AdminResult<ListResult<ContentArticleVO>> searchAction(ContentArticleRequest requestBean) {
         logger.info("查询内容中心-文章管理-条件列表查询开始......");
@@ -46,7 +46,7 @@ public class ContentArticleController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "内容中心-文章管理", notes = "文章管理-添加")
+    @ApiOperation(value = "文章管理-添加", notes = "文章管理-添加")
     @RequestMapping("/insert")
     public AdminResult add(ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.inserAction(requestBean);
@@ -59,7 +59,7 @@ public class ContentArticleController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "内容中心-文章管理", notes = "文章管理-修改")
+    @ApiOperation(value = "文章管理-修改", notes = "文章管理-修改")
     @RequestMapping("/update")
     public AdminResult update(ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.updateAction(requestBean);
@@ -72,7 +72,7 @@ public class ContentArticleController extends BaseController {
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
-    @ApiOperation(value = "内容中心-文章管理", notes = "文章管理-删除")
+    @ApiOperation(value = "文章管理-删除", notes = "文章管理-删除")
     @RequestMapping("/delete/{id}")
     public AdminResult delete(@PathVariable Integer id) {
         ContentArticleResponse response = contentArticleService.deleteById(id);

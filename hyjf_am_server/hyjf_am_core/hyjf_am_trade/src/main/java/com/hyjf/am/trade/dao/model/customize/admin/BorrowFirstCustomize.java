@@ -68,10 +68,6 @@ public class BorrowFirstCustomize implements Serializable {
      */
     private String isBail;
     /**
-     * 添加时间
-     */
-    private String addtime;
-    /**
      * 初审状态
      */
     private String verifyStatus;
@@ -199,14 +195,6 @@ public class BorrowFirstCustomize implements Serializable {
 
     public void setIsBail(String isBail) {
         this.isBail = isBail;
-    }
-
-    public String getAddtime() {
-        return addtime;
-    }
-
-    public void setAddtime(String addtime) {
-        this.addtime = addtime;
     }
 
     public String getVerifyStatus() {

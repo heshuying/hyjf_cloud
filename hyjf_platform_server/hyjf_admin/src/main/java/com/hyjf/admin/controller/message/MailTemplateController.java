@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.MailTemplateService;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.List;
  * @author fuqiang
  * @version MailTemplateController, v0.1 2018/6/25 14:46
  */
+@Api(value = "邮件模板", description = "邮件模板")
 @RestController
 @RequestMapping("/hyjf-admin/mail/template")
 public class MailTemplateController {
@@ -34,6 +37,7 @@ public class MailTemplateController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value = "查询所有邮件配置模板", notes = "查询所有邮件配置模板")
 	@RequestMapping("/findAll")
 	public JSONObject findAll() {
 		JSONObject jsonObject = new JSONObject();
@@ -47,6 +51,7 @@ public class MailTemplateController {
 	 *
 	 * @return
 	 */
+	@ApiOperation(value = "根据条件查询邮件配置模板", notes = "根据条件查询邮件配置模板")
 	@RequestMapping("/findMailTemplate")
 	public JSONObject findMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
@@ -61,6 +66,7 @@ public class MailTemplateController {
 	 * @param request
 	 * @return
 	 */
+	@ApiOperation(value = "新增邮件模板", notes = "新增邮件模板")
 	@RequestMapping("/insertMailTemplate")
 	public JSONObject insertMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();

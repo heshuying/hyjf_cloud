@@ -303,6 +303,309 @@
 		plan_nid = #{planNid,jdbcType=VARCHAR}
 	</update>
 
+	<select id="getPlanBorrowListCount" resultType="int">
+
+			SELECT COUNT(1)
+		FROM
+		(
+				SELECT DISTINCT *
+		FROM(
+		(SELECT
+				hb.borrow_nid,
+				hb.borrow_user_name,
+				hb.borrow_apr,
+				hb.account,
+				hbi.company_or_personal,
+				IFNULL(
+					hbi.finance_purpose,
+					'无借款用途'
+				) financePurpose,
+				CASE
+			WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+			ELSE
+				CONCAT(hb.borrow_period, '个月')
+			END borrow_period,
+			IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+		JOIN ht_hjh_debt_credit ON credit_status IN (0, 1)
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+		ht_hjh_debt_credit.plan_nid_new = #{planNid}
+		AND hb.STATUS = 4
+	ORDER BY
+				hb.create_time ASC
+		)
+		UNION ALL
+			(
+				SELECT
+					hb.borrow_nid,
+					hb.borrow_user_name,
+					hb.borrow_apr,
+					hb.account,
+					hbi.company_or_personal,
+					IFNULL(
+						hbi.finance_purpose,
+						'无借款用途'
+					) financePurpose,
+					CASE
+				WHEN hb.borrow_style = 'endday' THEN
+					CONCAT(hb.borrow_period, '天')
+				ELSE
+					CONCAT(hb.borrow_period, '个月')
+				END borrow_period,
+				IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+			FROM
+				ht_borrow hb
+			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+			left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+			WHERE
+				hb.plan_nid = #{planNId}
+			AND hb.STATUS = 2
+			AND hb.borrow_full_status = 0
+			ORDER BY
+				hb.create_time ASC
+			)
+		UNION ALL
+			(
+				SELECT
+					hb.borrow_nid,
+					hb.borrow_user_name,
+					hb.borrow_apr,
+					hb.account,
+					hbi.company_or_personal,
+					IFNULL(
+						hbi.finance_purpose,
+						'无借款用途'
+					) financePurpose,
+					CASE
+				WHEN hb.borrow_style = 'endday' THEN
+					CONCAT(hb.borrow_period, '天')
+				ELSE
+					CONCAT(hb.borrow_period, '个月')
+				END borrow_period,
+				IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+		WHERE
+			hb.plan_nid = #{planNid}
+		AND hb.borrow_full_status = 1
+		<if test="startTime != null">
+			AND hb.borrow_full_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND hb.borrow_full_time &lt;= #{endTime}
+		</if>
+ORDER BY
+				hb.create_time ASC
+		)
+		UNION ALL
+			(
+			SELECT
+				hb.borrow_nid,
+				hb.borrow_user_name,
+				hb.borrow_apr,
+				hb.account,
+				hbi.company_or_personal,
+				IFNULL(
+					hbi.finance_purpose,
+					'无借款用途'
+				) financePurpose,
+				CASE
+			WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+			ELSE
+				CONCAT(hb.borrow_period, '个月')
+			END borrow_period,
+			IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		left join ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+		JOIN ht_hjh_debt_credit ON credit_capital_wait = 0
+
+		<if test="startTime != null">
+			AND end_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND end_time &lt;= #{endTime}
+		</if>
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+			ht_hjh_debt_credit.plan_nid_new = #{planNid}
+			ORDER BY
+				hb.create_time ASC
+		))t
+		) AS t
+	</select>
+    <resultMap id="planBorrowList" type="com.hyjf.am.vo.trade.borrow.BorrowVO">
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="DECIMAL" />
+		<result column="company_or_personal" property="companyOrPersonal" jdbcType="VARCHAR" />
+		<result column="financePurpose" property="financePurpose" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getPlanBorrowList" resultMap="planBorrowList">
+
+
+		SELECT DISTINCT *
+		FROM(
+			(SELECT
+				hb.borrow_nid,
+				hb.borrow_user_name,
+				hb.borrow_apr,
+				hb.account,
+				hbi.company_or_personal,
+				IFNULL(
+				hbi.finance_purpose,
+				'无借款用途'
+				) financePurpose,
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+				ELSE
+				CONCAT(hb.borrow_period, '个月')
+				END borrow_period,
+				IFNULL(hbs.NAME, '') NAME,
+				hb.create_time
+
+			FROM
+			ht_borrow hb
+			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+			JOIN ht_hjh_debt_credit ON credit_status IN (0, 1)
+			LEFT JOIN ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+			AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+			WHERE
+			ht_hjh_debt_credit.plan_nid_new = #{planNid}
+			AND hb.STATUS = 4
+			ORDER BY
+			hb.create_time ASC
+		)
+		UNION ALL
+			(
+			SELECT
+				hb.borrow_nid,
+				hb.borrow_user_name,
+				hb.borrow_apr,
+				hb.account,
+				hbi.company_or_personal,
+				IFNULL(
+				hbi.finance_purpose,
+				'无借款用途'
+				) financePurpose,
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+				ELSE
+				CONCAT(hb.borrow_period, '个月')
+				END borrow_period,
+				IFNULL(hbs.NAME, '') NAME,
+				hb.create_time
+			FROM
+				ht_borrow hb
+				LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+				LEFT JOIN ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+				WHERE
+				hb.plan_nid = #{planNid}
+				AND hb.STATUS = 2
+				AND hb.borrow_full_status = 0
+				ORDER BY
+				hb.create_time ASC
+		)
+		UNION ALL
+		(
+		  SELECT
+			hb.borrow_nid,
+			hb.borrow_user_name,
+			hb.borrow_apr,
+			hb.account,
+			hbi.company_or_personal,
+			IFNULL(
+			hbi.finance_purpose,
+			'无借款用途'
+			) financePurpose,
+			CASE
+			WHEN hb.borrow_style = 'endday' THEN
+			CONCAT(hb.borrow_period, '天')
+			ELSE
+			CONCAT(hb.borrow_period, '个月')
+			END borrow_period,
+			IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+		  FROM
+			ht_borrow hb
+			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+			LEFT JOIN ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+
+			WHERE
+			hb.plan_nid = #{planNid}
+			AND hb.borrow_full_status = 1
+			<if test="startTime != null">
+				AND hb.borrow_full_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				AND hb.borrow_full_time &lt;= #{endTime}
+			</if>
+			ORDER BY
+			hb.create_time ASC
+		)
+		UNION ALL
+		(
+		SELECT
+			hb.borrow_nid,
+			hb.borrow_user_name,
+			hb.borrow_apr,
+			hb.account,
+			hbi.company_or_personal,
+			IFNULL(
+			hbi.finance_purpose,
+			'无借款用途'
+			) financePurpose,
+			CASE
+			WHEN hb.borrow_style = 'endday' THEN
+			CONCAT(hb.borrow_period, '天')
+			ELSE
+			CONCAT(hb.borrow_period, '个月')
+			END borrow_period,
+			IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+		FROM
+		ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		LEFT JOIN ht_borrow_info hbi on hbi.borrow_nid = hb.borrow_nid
+		JOIN ht_hjh_debt_credit ON credit_capital_wait = 0
+		<if test="startTime != null">
+			AND end_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND end_time &lt;= #{endTime}
+		</if>
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+		ht_hjh_debt_credit.plan_nid_new = #{planNid}
+		ORDER BY
+		hb.create_time ASC
+		))t
+
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
 
 
 </mapper>

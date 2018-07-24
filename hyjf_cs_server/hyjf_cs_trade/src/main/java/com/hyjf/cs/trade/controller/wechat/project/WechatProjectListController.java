@@ -15,7 +15,7 @@ import java.util.Map;
  * @author zhangyk
  * @date 2018/7/2 11:15
  */
-@Api(value = "Web端项目列表")
+@Api(value = "Web端项目详情")
 @RestController
 @RequestMapping("/hyjf-wechat/projectlist")
 public class WechatProjectListController extends BaseTradeController {

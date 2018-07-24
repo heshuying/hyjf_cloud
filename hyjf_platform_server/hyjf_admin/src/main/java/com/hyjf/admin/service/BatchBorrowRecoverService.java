@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 import java.util.List;
 
@@ -50,4 +51,15 @@ public interface BatchBorrowRecoverService extends BaseService{
      */
     List<BatchBorrowRepayBankInfoVO> queryBatchBorrowRepayBankInfoList(String apicronID);
 
+    /**
+     * 获取资金来源
+     * @return
+     */
+    List<HjhInstConfigVO> findHjhInstConfigList();
+
+    /**
+     * 初始化页面获取下拉列表
+     * @return
+     */
+    JSONObject initPage(String nameClass);
 }

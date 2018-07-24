@@ -3,10 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.HjhAccedeResponse;
-import com.hyjf.am.response.trade.HjhLabelResponse;
-import com.hyjf.am.response.trade.HjhPlanResponse;
-import com.hyjf.am.response.trade.UserHjhInvistDetailCustomizeResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
@@ -18,6 +15,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
@@ -155,6 +153,35 @@ public class HjhPlanController extends BaseController{
         HjhAccedeResponse response = new HjhAccedeResponse();
         HjhAccedeVO hjhAccede = hjhPlanService.getHjhAccede(orderId);
         response.setResult(hjhAccede);
+        return response;
+    }
+
+
+
+    /**
+     * 查询汇计划标的组成List
+     * @author zhangyk
+     * @date 2018/7/23 10:41
+     */
+    @RequestMapping("/getPlanBorrowList")
+    public BorrowResponse getPlanBorrowList(@RequestBody Map<String,Object> params){
+        BorrowResponse response = new BorrowResponse();
+        List<BorrowVO> list =  hjhPlanService.getPlanBorrowList(params);
+        response.setResultList(list);
+        return response;
+    }
+
+
+    /**
+     * 查询汇计划标的组成count
+     * @author zhangyk
+     * @date 2018/7/23 10:41
+     */
+    @RequestMapping("/getPlanBorrowListCount")
+    public HjhAccedeResponse getPlanBorrowListCount(@RequestBody Map<String,Object> params){
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        Integer count =  hjhPlanService.getPlanBorrowListCount(params);
+        response.setAccedeCount(count);
         return response;
     }
 

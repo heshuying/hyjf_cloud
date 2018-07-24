@@ -344,22 +344,20 @@ public class FileUtil {
 		conn.setRequestProperty("Accept-Charset", "UTF-8");
 		// 设定请求的方法为"POST"，默认是GET
 		conn.setRequestMethod("POST");
-		DataInputStream input =null; 
-		DataOutputStream output = null;
+		DataInputStream input = null;
 		byte[] buffer = new byte[1024];
 		int count = 0;
-		try {
-			output=new DataOutputStream(new FileOutputStream(fileName));
-			input=new DataInputStream(conn.getInputStream());
+		try (DataOutputStream output = new DataOutputStream(new FileOutputStream(fileName))) {
+			input = new DataInputStream(conn.getInputStream());
 			while ((count = input.read(buffer)) != -1) {
 				output.write(buffer, 0, count);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			output.flush();
-			output.close();
-			input.close();
+			if (input != null) {
+				input.close();
+			}
 		}
 		return true;
 	}
@@ -434,21 +432,23 @@ public class FileUtil {
         conn.setRequestProperty("Accept-Charset", "UTF-8");
         // 设定请求的方法为"POST"，默认是GET
         conn.setRequestMethod("POST");
-        FileOutputStream fos = new FileOutputStream(file); 
-        //得到输入流  
-        InputStream inputStream = conn.getInputStream();
-        //获取自己数组  
-        byte[] getData = readInputStream(inputStream); 
-        //数据写入文件
-        fos.write(getData); 
-        if(fos!=null){  
-            fos.close();    
-        }  
-        if(inputStream!=null){  
-            inputStream.close();  
-        } 
-        return file;
-    }
+		InputStream inputStream = null;
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			//得到输入流
+			inputStream = conn.getInputStream();
+			//获取自己数组
+			byte[] getData = readInputStream(inputStream);
+			//数据写入文件
+			fos.write(getData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
+		}
+		return file;
+	}
 
 	public static void  downLoadFromUrl(String urlStr,String fileName,String savePath) throws IOException{
 		URL url = new URL(urlStr);
@@ -472,20 +472,22 @@ public class FileUtil {
 			logger.info("============"+savePath+"目录已存在！=======================");
 		}
 		File file = new File(saveDir+File.separator+fileName);
-		if(file.exists()){
-			logger.info("============="+file.getPath()+",文件存在！------------------------");
-		}else{
-			logger.info("============="+saveDir+File.separator+fileName+",文件不存在！------------------------");
+		if (file.exists()) {
+			logger.info("=============" + file.getPath() + ",文件存在！------------------------");
+		} else {
+			logger.info("=============" + saveDir + File.separator + fileName + ",文件不存在！------------------------");
 		}
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.write(getData);
-		if(fos!=null){
-			fos.close();
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			fos.write(getData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
 		}
-		if(inputStream!=null){
-			inputStream.close();
-		}
-		logger.info("info:"+url+" download success");
+
+		logger.info("info:" + url + " download success");
 
 	}
 

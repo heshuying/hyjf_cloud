@@ -75,7 +75,8 @@ public class RSAJSPUtil {
 		try {
 			KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA",
 					new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			final int KEY_SIZE = 1024;// 没什么好说的了，这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低
+			// 没什么好说的了，这个值关系到块加密的大小，可以更改，但是不要太大，否则效率会低
+			final int KEY_SIZE = 1024;
 			keyPairGen.initialize(KEY_SIZE, new SecureRandom());
 			KeyPair keyPair = keyPairGen.generateKeyPair();
 
@@ -89,19 +90,30 @@ public class RSAJSPUtil {
 
 	public static KeyPair getKeyPair() throws Exception {
 		FileInputStream fis = new FileInputStream(RSAKeyStore);
-		ObjectInputStream oos = new ObjectInputStream(fis);
-		KeyPair kp = (KeyPair) oos.readObject();
-		oos.close();
-		fis.close();
+		KeyPair kp = null;
+		try (ObjectInputStream oos = new ObjectInputStream(fis)) {
+			kp = (KeyPair) oos.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fis != null) {
+				fis.close();
+			}
+		}
 		return kp;
 	}
 
 	public static void saveKeyPair(KeyPair kp) throws Exception {
 		FileOutputStream fos = new FileOutputStream(RSAKeyStore);
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(kp);
-		oos.close();
-		fos.close();
+		try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+			oos.writeObject(kp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+		}
 	}
 
 	public static RSAPublicKey generateRSAPublicKey(byte[] modulus, byte[] publicExponent) throws Exception {
@@ -270,19 +282,16 @@ public class RSAJSPUtil {
 		File file = new File(filePath);
 		Long filelength = file.length();
 		byte[] filecontent = new byte[filelength.intValue()];
-		try {
-			FileInputStream in = new FileInputStream(file);
+
+
+		try (FileInputStream in = new FileInputStream(file)) {
 			in.read(filecontent);
-			in.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
 			return new String(filecontent, encoding);
 		} catch (UnsupportedEncodingException e) {
-			System.err.println("The OS does not support " + encoding);
 			e.printStackTrace();
 			return null;
 		}

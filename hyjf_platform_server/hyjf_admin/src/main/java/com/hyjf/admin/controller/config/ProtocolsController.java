@@ -37,14 +37,14 @@ import java.util.List;
  * @author fuqiang
  * @version ProtocolsController, v0.1 2018/7/10 16:03
  */
-@Api(value = "协议管理")
+@Api(value = "协议管理", description = "协议管理")
 @RestController
 @RequestMapping("/hyjf-admin/protocols")
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
 
-	@ApiOperation(value = "协议管理", notes = "展示协议管理列表")
+	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	public AdminResult<ListResult<FddTempletCustomizeVO>> selectFddTempletList(
 			@RequestBody ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = protocolsService.selectFddTempletList(request);
@@ -57,7 +57,7 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "协议管理", notes = "添加协议管理")
+	@ApiOperation(value = "添加协议管理", notes = "添加协议管理")
 	@RequestMapping("/insert")
 	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean) {
 		FddTempletCustomizeResponse response = protocolsService.insertAction(requestBean);
@@ -70,7 +70,7 @@ public class ProtocolsController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "协议管理", notes = "修改协议管理")
+	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean) {
 		FddTempletCustomizeResponse response = protocolsService.updateAction(requestBean);
@@ -92,6 +92,7 @@ public class ProtocolsController extends BaseController {
 	 * @param response
 	 * @throws Exception
 	 */
+	@ApiOperation(value = "导出excel", notes = "导出excel")
 	@RequestMapping("/exportaction")
 	public void exportExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 

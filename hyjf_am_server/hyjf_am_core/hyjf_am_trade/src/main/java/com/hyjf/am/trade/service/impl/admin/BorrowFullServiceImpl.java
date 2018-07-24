@@ -270,7 +270,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                         return new Response();
                     } else {
                         return new Response(Response.FAIL,
-                                "[编号：" + borrowNid + "]apicron跟新失败！");
+                                "[编号：" + borrowNid + "]apicron更新失败！");
                     }
                 } else {
                     return new Response(Response.FAIL, "[编号：" + borrowNid + "]标的更新失败！");

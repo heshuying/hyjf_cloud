@@ -47,6 +47,18 @@ public class ActivityController {
         return response;
     }
 
+    @RequestMapping("/selectActivity/{activityId}")
+    public ActivityListResponse selectActivityList(@PathVariable int activityId){
+        ActivityList activityList = activityService.selectActivityList(activityId);
+        ActivityListResponse response = new ActivityListResponse();
+        if(null != activityList){
+            ActivityListVO activityListVO = new ActivityListVO();
+            BeanUtils.copyProperties(activityList,activityListVO);
+            response.setResult(activityListVO);
+        }
+        return response;
+    }
+
     @PostMapping("/getRecordList")
     public ActivityListResponse getRecordList(@RequestBody @Valid ActivityListRequest request) {
         logger.info("---getRecordList by param---  " + JSONObject.toJSON(request));

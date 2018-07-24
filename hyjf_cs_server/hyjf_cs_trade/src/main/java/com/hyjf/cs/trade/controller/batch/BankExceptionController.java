@@ -14,12 +14,14 @@ import com.hyjf.cs.trade.service.BatchBankInvestAllService;
 import com.hyjf.cs.trade.service.BatchBankInvestService;
 
 import org.slf4j.Logger;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  * 提现,债转,投资等异常定时任务controller
  * @author jijun
  * @date 20180625
  */
-@Controller
+@RestController
 @RequestMapping(value = "/cs-trade/bankException")
 public class BankExceptionController {
 
@@ -69,11 +71,12 @@ public class BankExceptionController {
      * @return
      */
     @ApiOperation(value = "债转投资掉单异常处理", notes = "债转投资掉单异常处理")
-    @RequestMapping(value = "/creditTenderExceptionHandle")
-    public void creditTenderExceptionHandle() {
+    @GetMapping(value = "/creditTenderExceptionHandle")
+    public String creditTenderExceptionHandle() {
         logger.info("债转投资掉单异常处理start...");
         bankCreditTenderExceptionService.handle();
         logger.info("债转投资掉单异常处理end...");
+        return "SUCCESS";
     }
 
     
@@ -83,10 +86,11 @@ public class BankExceptionController {
 	 */
 	@ApiOperation(value = "投资异步掉单异常处理", notes = "投资异步掉单异常处理")
 	@RequestMapping(value = "/investExceptionHandle")
-	public void investExceptionHandle() {
+	public String investExceptionHandle() {
 		logger.info("投资异步掉单异常处理start...");
 		batchBankInvestService.handle();
 		logger.info("投资异步掉单异常处理end...");
+		return "SUCCESS";
 	}
 	
 	
