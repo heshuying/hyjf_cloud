@@ -1,15 +1,13 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankCardBeanResponse;
@@ -23,6 +21,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
@@ -55,11 +54,11 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @GetMapping("/getBanksConfigByBankId/{bankId}")
-    public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
-        BanksConfigResponse response = new BanksConfigResponse();
+    public BankConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
+        BankConfigResponse response = new BankConfigResponse();
         BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
         if(null != bankConfig){
-            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BankConfigVO banksConfigVO = new BankConfigVO();
             BeanUtils.copyProperties(bankConfig,banksConfigVO);
             response.setResult(banksConfigVO);
         }
@@ -115,12 +114,12 @@ public class BanksConfigController extends BaseConfigController{
      * 获取银行列表
      */
     @RequestMapping("/selectBankConfigList")
-    public BanksConfigResponse selectBankConfigList(){
-        BanksConfigResponse response=null;
+    public BankConfigResponse selectBankConfigList(){
+        BankConfigResponse response= new BankConfigResponse();
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
         if(null!=listBankConfig&&listBankConfig.size()>0){
-            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
-            response.setResultList(listBanksConfig);
+            List<BankConfigVO> bankConfigVOList = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
+            response.setResultList(bankConfigVOList);
             //代表成功
             response.setRtn(Response.SUCCESS);
         }
@@ -317,5 +316,25 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
-
+    /**
+     * 根据bankId查找江西银行的银行卡配置表
+     * @param bankId
+     * @return
+     */
+    @RequestMapping("/getJXbankConfigByBankId")
+    public JxBankConfigResponse getJXbankConfigByBankId(@PathVariable int bankId) {
+        JxBankConfigResponse jxBankConfigResponse = new JxBankConfigResponse();
+        JxBankConfig jxBankConfig = bankConfigService.getJxBankConfigByBankId(bankId);
+        if(null!=jxBankConfig){
+            JxBankConfigVO jxBankConfigVO = new JxBankConfigVO();
+            BeanUtils.copyProperties(jxBankConfig,jxBankConfigVO);
+            jxBankConfigResponse.setResult(jxBankConfigVO);
+            jxBankConfigResponse.setRtn(Response.SUCCESS);
+            jxBankConfigResponse.setMessage(Response.SUCCESS_MSG);
+        }else{
+            jxBankConfigResponse.setRtn(Response.FAIL);
+            jxBankConfigResponse.setMessage(Response.ERROR_MSG);
+        }
+        return jxBankConfigResponse;
+    }
 }

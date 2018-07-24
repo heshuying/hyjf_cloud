@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.BankCardLogRequestBean;
 import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
+import com.hyjf.admin.beans.vo.BankcardInitCustomizeVO;
 import com.hyjf.admin.beans.vo.BankcardManagerCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -17,7 +18,7 @@ import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardLogVO;
 import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -59,17 +60,18 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<BankcardInitCustomizeVO> userManagerInit() {
         // 银行卡属性
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         // 是否默认
         Map<String, String> bankcardType = CacheUtil.getParamNameMap("BANKCARD_TYPE");
-        List<BanksConfigVO> listBanksConfigVO = bankCardManagerService.selectBankConfigList();
-        jsonObject.put("bankcardType", bankcardType);
-        jsonObject.put("bankcardProperty", bankcardProperty);
-        jsonObject.put("banks", listBanksConfigVO);
-        return jsonObject;
+        List<BankConfigVO> listBanksConfigVO = bankCardManagerService.selectBankConfigList();
+        BankcardInitCustomizeVO bankcardInitCustomizeVO = new BankcardInitCustomizeVO();
+        bankcardInitCustomizeVO.setBankcardType(bankcardType);
+        bankcardInitCustomizeVO.setBankcardProperty(bankcardProperty);
+        bankcardInitCustomizeVO.setListBanksConfigVO(listBanksConfigVO);
+        return new AdminResult<BankcardInitCustomizeVO>(bankcardInitCustomizeVO);
+
 
     }
     //汇付银行开户銀行卡記錄查询

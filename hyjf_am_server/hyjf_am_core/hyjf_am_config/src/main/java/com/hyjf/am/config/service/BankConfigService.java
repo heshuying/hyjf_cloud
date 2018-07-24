@@ -1,9 +1,6 @@
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -68,5 +65,11 @@ public interface BankConfigService {
      * @return
      */
     List<BankConfig> getBankConfigByCode(String code);
+    /**
+     * 根据bankId查找江西银行的银行卡配置表
+     * @param bankId
+     * @return
+     */
+    JxBankConfig getJxBankConfigByBankId(int bankId);
 
 }

@@ -1,9 +1,6 @@
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
-import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.am.config.dao.mapper.auto.*;
 import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
@@ -35,6 +32,9 @@ public class BankConfigServiceImpl implements BankConfigService {
 
 	@Autowired
 	private ParamNameMapper paramNameMapper;
+
+	@Autowired
+	private JxBankConfigMapper jxBankConfigMapper;
 
 	/**
 	 * 获取银行卡配置信息
@@ -279,4 +279,20 @@ public class BankConfigServiceImpl implements BankConfigService {
 		criteria.andCodeEqualTo(code);
 		return bankConfigMapper.selectByExample(bankConfigExample);
 	}
+	/**
+	 * 根据bankId查找江西银行的银行卡配置表
+	 * @param bankId
+	 * @return
+	 */
+	@Override
+	public JxBankConfig getJxBankConfigByBankId(int bankId){
+		JxBankConfigExample example = new JxBankConfigExample();
+		example.createCriteria().andBankIdEqualTo(bankId);
+		List<JxBankConfig> jxBankConfigList = jxBankConfigMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(jxBankConfigList)) {
+			return jxBankConfigList.get(0);
+		}
+		return null;
+	}
+
 }

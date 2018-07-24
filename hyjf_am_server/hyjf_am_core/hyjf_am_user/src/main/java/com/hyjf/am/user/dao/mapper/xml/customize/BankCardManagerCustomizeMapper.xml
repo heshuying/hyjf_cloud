@@ -18,21 +18,20 @@
         hyduab.bank AS bank,
         CASE
         WHEN hyduab.card_type = 0
-        OR hyduab.card_type = 1 THEN '普通提现卡'
+        OR hyduab.card_type = 1 THEN
+        '普通提现卡'
         ELSE
         '快捷支付卡'
         END AS card_property,
         CASE
         WHEN hyduab.card_type = 1
-        OR hyduab.card_type = 2 THEN '是'
+        OR hyduab.card_type = 2 THEN
+        '是'
         ELSE
         '否'
         END AS card_type,
         hyduab.account AS account,
-        from_unixtime(
-        hyduab.addtime,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS add_time
+        hyduab.create_time AS add_time
         FROM
         ht_user hydu
         INNER JOIN ht_account_bank hyduab ON hydu.user_id = hyduab.user_id
