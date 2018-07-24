@@ -8,16 +8,14 @@ import java.util.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
-import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.util.HomePageDefine;
-import org.apache.catalina.Host;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -493,6 +491,21 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         return result;
     }
 
+    /**
+     * 获取首页项目列表信息
+     * @author zhangyk
+     * @date 2018/7/24 10:46
+     */
+    @Override
+    public BaseResultBean getHomeProejctList(int currPage, int pageSize, String showPlanFlag, String token) {
+        BaseResultBean result = new BaseResultBean();
+        Page page = Page.initPage(currPage,pageSize);
+        WechatHomePageResult vo = new WechatHomePageResult();
+        vo.setCurrentPage(currPage);
+        vo.setPageSize(pageSize);
+        return result;
+    }
+
 
     /**
      * 创建首页广告
@@ -790,6 +803,123 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * 分页获取首页数据
+     *
+     * @param
+     * @return
+     */
+    private  WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo,int currentPage, int pageSize, String showPlanFlag) {
+
+       /* List<WechatHomeProjectList> list=new ArrayList<WechatHomeProjectList>();
+        Map<String, Object> projectMap = new HashMap<String, Object>();
+        // 汇盈金服app首页定向标过滤
+        projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
+        int offSet = (currentPage - 1) * pageSize;
+        if (offSet == 0 || offSet > 0) {
+            projectMap.put("limitStart", offSet);
+        }
+        if (pageSize > 0) {
+            projectMap.put("limitEnd", pageSize + 1);
+        }
+        if(showPlanFlag!=null){
+            projectMap.put("showPlanFlag", showPlanFlag);
+        }
+        list=appProjectListCustomizeMapper.selectHomeProjectListAsyn(projectMap);
+
+        if(!CollectionUtils.isEmpty(list)) {
+            if(list.size()==(pageSize+1)){
+                list.remove(list.size() - 1);
+                // 不是最后一页 每次在每页显示条数的基础上多查一条，然后根据查询结果判断是不是最后一页
+                vo.setEndPage(0);
+            }else{
+                // 是最后一页
+                vo.setEndPage(1);
+            }
+        }else{
+            // 是最后一页
+            vo.setEndPage(1);
+        }
+
+
+        if(showPlanFlag==null){
+            if(currentPage==1){
+                if(list.size()==0){
+                    //补两条
+                    List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
+                    hjhList.addAll(list);
+                    list=hjhList;
+                }else if(list.size()>0&&!"HJH".equals(list.get(0).getBorrowType())){
+                    //补两条
+                    List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
+                    hjhList.addAll(list);
+                    list=hjhList;
+                }else if(list.size()>1&&!"HJH".equals(list.get(1).getBorrowType())){
+                    //补一条
+                    List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
+                    list.add(1, hjhList.get(0));
+                }
+            }
+        }
+        if(vo.getEndPage()==1){
+            if(list.size()>0&&"HJH".equals(list.get(list.size()-1).getBorrowType())){
+
+                List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeRepaymentsProjectList();
+                list.addAll(hjhList);
+                //补两条
+            }else if(list.size()>1&&"HJH".equals(list.get(list.size()-2).getBorrowType())){
+                List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeRepaymentsProjectList();
+                list.add(hjhList.get(0));
+                //补一条
+            }
+        }
+
+
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        for (WechatHomeProjectListCustomize wechatHomeProjectListCustomize : list) {
+            if("HJH".equals(wechatHomeProjectListCustomize.getBorrowType())){
+                if("1".equals(wechatHomeProjectListCustomize.getStatus())){
+                    wechatHomeProjectListCustomize.setStatus("20");
+                }else{
+                    wechatHomeProjectListCustomize.setStatus("21");
+                }
+            }else{
+
+                if("0".equals(wechatHomeProjectListCustomize.getOnTime())||"".equals(wechatHomeProjectListCustomize.getOnTime())){
+                    switch (wechatHomeProjectListCustomize.getStatus()) {
+                        case "10":
+                            wechatHomeProjectListCustomize.setOnTime(wechatHomeProjectListCustomize.getOnTime());
+                            break;
+                        case "11":
+                            wechatHomeProjectListCustomize.setOnTime("立即投资");
+                            break;
+                        case "12":
+                            wechatHomeProjectListCustomize.setOnTime("复审中");
+                            break;
+                        case "13":
+                            wechatHomeProjectListCustomize.setOnTime("还款中");
+                            break;
+                        case "14":
+                            wechatHomeProjectListCustomize.setOnTime("已退出");
+                            break;
+                    }
+
+                }else{
+                    wechatHomeProjectListCustomize.setOnTime(wechatHomeProjectListCustomize.getOnTime());
+                }
+
+
+            }
+            wechatHomeProjectListCustomize.setAccountWait(df.format(new com.ibm.icu.math.BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
+        }
+
+        // 字段为null时，转为""
+        CommonUtils.convertNullToEmptyString(list);
+        vo.setHomeProjectList(list);*/
+        return null;
     }
 
 

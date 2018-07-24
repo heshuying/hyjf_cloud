@@ -72,6 +72,8 @@ public class HomePageDefine {
 	public static final String WECHAT_REQUEST_MAPPING = "/hyjf-wechat/homepage";
 	/*首页统计数据方法*/
 	public static final String WECHAT_HOME_INDEX_DATA_METHOD = "/getIndexData";
+	/*首页项目列表*/
+	public static final String WECHAT_HOME_PROJECT_LIST_METHOD = "/getHomeProjectList";
 
 	public static final  String WECHAT_STATUS_SUCCESS = "000";
 
