@@ -33,6 +33,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -3000,5 +3001,101 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 用户待还款/已还款列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> repayList(RepayListRequest requestBean) {
+        RepayListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/repaylist",
+                RepayListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 垫付机构待还款列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean) {
+        RepayListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/orgrepaylist",
+                RepayListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 垫付机构已还款列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean) {
+        RepayListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/orgrepayedlist",
+                RepayListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 用户待还款/已还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int repayCount(RepayListRequest requestBean) {
+        int count = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/repaycount", requestBean, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 垫付机构待还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int orgRepayCount(RepayListRequest requestBean) {
+        int count = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepaycount", requestBean, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 垫付机构已还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int orgRepayedCount(RepayListRequest requestBean) {
+        int count = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepayedcount", requestBean, Integer.class).getBody();
+        return count;
+    }
+
+    /**
+     * 还款申请更新
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
+    @Override
+    public Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean){
+        Boolean result = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/update", requestBean, Boolean.class).getBody();
+        return result;
     }
 }

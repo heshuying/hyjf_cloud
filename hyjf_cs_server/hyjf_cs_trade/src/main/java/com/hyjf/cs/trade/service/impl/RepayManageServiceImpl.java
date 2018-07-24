@@ -50,8 +50,6 @@ import java.util.List;
 @Service
 public class RepayManageServiceImpl extends BaseTradeServiceImpl implements RepayManageService {
     @Autowired
-    RepayManageClient repayManageClient;
-    @Autowired
     AmBorrowClient amBorrowClient;
     @Autowired
     BorrowApicronClient borrowApicronClient;
@@ -94,7 +92,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean) {
-        return repayManageClient.repayList(requestBean);
+        return amTradeClient.repayList(requestBean);
     }
 
     /**
@@ -105,7 +103,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayList(requestBean);
+        return amTradeClient.orgRepayList(requestBean);
     }
 
     /**
@@ -116,7 +114,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayedList(requestBean);
+        return amTradeClient.orgRepayedList(requestBean);
     }
 
     /**
@@ -127,7 +125,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public Integer selectRepayCount(RepayListRequest requestBean) {
-        return repayManageClient.repayCount(requestBean);
+        return amTradeClient.repayCount(requestBean);
     }
 
     /**
@@ -138,7 +136,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public Integer selectOrgRepayCount(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayCount(requestBean);
+        return amTradeClient.orgRepayCount(requestBean);
     }
 
     /**
@@ -149,7 +147,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public Integer selectOrgRepayedCount(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayedCount(requestBean);
+        return amTradeClient.orgRepayedCount(requestBean);
     }
 
     private BorrowApicronVO getApiCron(List<BorrowApicronVO> borrowApicrons, Integer periodNow){
@@ -3273,7 +3271,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setRepayBeanData(JSON.toJSONString(requestBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
 
-        return repayManageClient.repayRequestUpdate(requestBean);
+        return amTradeClient.repayRequestUpdate(requestBean);
     }
 
     /**
