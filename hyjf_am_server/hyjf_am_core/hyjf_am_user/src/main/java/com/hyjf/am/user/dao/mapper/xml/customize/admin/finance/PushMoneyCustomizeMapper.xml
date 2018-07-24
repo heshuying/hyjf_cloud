@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.admin.finance.PushMoneyCustomizeMapper">
+    <resultMap id="PushMoneyMap" type="com.hyjf.am.user.dao.model.customize.admin.finance.PushMoneyCustomize">
+        <result column="id" property="id" />
+        <result column="borrow_nid" property="borrowNid" />
+        <result column="borrow_name" property="borrowName" />
+        <result column="borrow_period" property="borrowPeriod" />
+        <result column="borrow_style" property="borrowStyle" />
+        <result column="account" property="account" />
+        <result column="commission" property="commission" />
+        <result column="recover_last_time" property="recoverLastTime" />
+    </resultMap>
+    <!-- *****************************************查找直投提成列表***************************************** -->
+    <select id="queryPushMoneyCount" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.PushMoneyRequest">
+        SELECT
+        COUNT(1)
+        FROM
+        (SELECT * FROM huiyingdai_borrow_apicron a WHERE a.api_type = 0 ) api
+        JOIN huiyingdai_borrow b ON api.borrow_nid = b.borrow_nid AND (b.`status` = 4 OR b.`status` = 5) AND b.plan_nid IS NULL
+        <include refid="Where_Clause"/>
+    </select>
+    <select id="queryPushMoneyList" resultMap="PushMoneyMap"
+            parameterType="com.hyjf.am.resquest.admin.PushMoneyRequest">
+        SELECT
+        api.id,
+        b.borrow_nid,
+        b.`name` AS borrow_name,
+        b.borrow_period,
+        b.borrow_style,
+        b.account,
+        (
+        SELECT
+        IFNULL(sum(c.commission), 0.00) AS commission
+        FROM
+        huiyingdai_tender_commission c
+        WHERE
+        c.borrow_nid = api.borrow_nid
+        ) AS commission,
+        FROM_UNIXTIME(
+        b.recover_last_time,
+        '%Y-%m-%d %H:%i%:%s'
+        ) AS recover_last_time,
+        api.web_status,
+        CASE b.borrow_style
+        WHEN 'endday' THEN
+        CONCAT(b.borrow_period, '天')
+        ELSE
+        CONCAT(b.borrow_period, '个月')
+        END AS rzqx
+        FROM
+        (SELECT * FROM huiyingdai_borrow_apicron a WHERE a.api_type = 0 ORDER BY a.id DESC) api
+        JOIN huiyingdai_borrow b ON api.borrow_nid = b.borrow_nid AND (b.`status` = 4 OR b.`status` = 5) AND b.plan_nid IS NULL
+        <include refid="Where_Clause" />
+        ORDER BY
+        api.web_status,b.recover_last_time DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+    <sql id="Where_Clause">
+        <where>
+            hyduab.`status` = 0
+            <if test="borrowNid != null and borrowNid !='' ">
+                AND b.borrow_nid = #{borrowNid}
+            </if>
+            <if test="borrowName != null and borrowName !='' ">
+                AND b.`name` LIKE CONCAT('%', #{borrowName}, '%')
+            </if>
+            <if test="recoverLastTimeStart != null and recoverLastTimeStart !='' ">
+                AND FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{recoverLastTimeStart}
+            </if>
+            <if test="recoverLastTimeEnd != null and recoverLastTimeEnd !='' ">
+                AND FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{recoverLastTimeEnd}
+            </if>
+        </where>
+    </sql>
+</mapper>

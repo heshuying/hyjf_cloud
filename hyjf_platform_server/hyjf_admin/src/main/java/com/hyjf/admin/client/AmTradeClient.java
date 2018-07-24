@@ -16,10 +16,7 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -1624,4 +1621,18 @@ public interface AmTradeClient {
      * @return
      */
     DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
+
+    /**
+     * 根据筛选条件查询银行账务明细list
+     * @param
+     * @return
+     */
+    List<BankAleveVO> queryBankAleveList(BankAleveRequest request);
+
+    /**
+     * 根据筛选条件查询银行账务明细list
+     * @param
+     * @return
+     */
+    List<BankEveVO> queryBankEveList(BankEveRequest request);
 }

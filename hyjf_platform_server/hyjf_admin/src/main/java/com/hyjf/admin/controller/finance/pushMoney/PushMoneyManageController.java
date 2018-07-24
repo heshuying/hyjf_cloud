@@ -47,9 +47,8 @@ public class PushMoneyManageController {
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @ResponseBody
-    public JSONObject getPushMoneyList(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public JSONObject getPushMoneyList(PushMoneyRequest pushMoneyRequest){
         JSONObject jsonObject = new JSONObject();
-        PushMoneyRequest pushMoneyRequest =setRequese(map);
         List<PushMoneyVO> pushMoneyList =pushMoneyManageService.findPushMoneyList(pushMoneyRequest);
         String status="error";
         if(null!=pushMoneyList&&pushMoneyList.size()>0){
@@ -63,9 +62,8 @@ public class PushMoneyManageController {
     @ApiOperation(value = "计算提成", notes = "计算提成")
     @PostMapping(value = "/calculateushmoney")
     @ResponseBody
-    public JSONObject calculatePushMoneyAction(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map){
+    public JSONObject calculatePushMoneyAction(PushMoneyRequest pushMoneyRequest){
         JSONObject jsonObject = new JSONObject();
-        PushMoneyRequest pushMoneyRequest =setRequese(map);
         // 提成ID
         String borrowNid = pushMoneyRequest.getBorrowNid();
         // 取得借款API表
@@ -98,59 +96,23 @@ public class PushMoneyManageController {
         jsonObject.put("status",status);
         return jsonObject;
     }
-    private PushMoneyRequest setRequese(Map<String,Object> mapParam){
-        PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
-        if(null!=mapParam&&mapParam.size()>0){
-            if(mapParam.containsKey("borrowNid")){
-                pushMoneyRequest.setBorrowNid(mapParam.get("borrowNid").toString());
-            }
-            if(mapParam.containsKey("borrowName")){
-                pushMoneyRequest.setBorrowName(mapParam.get("borrowName").toString());
-            }
-            if(mapParam.containsKey("borrowStyle")){
-                if("endday".equals(mapParam.get("borrowStyle").toString())){
-                    if(mapParam.containsKey("borrowPeriod")){
-                        pushMoneyRequest.setBorrowPeriod(mapParam.get("borrowPeriod").toString()+"天");
-                    }
-                }else{
-                    if(mapParam.containsKey("borrowPeriod")){
-                        pushMoneyRequest.setBorrowPeriod(mapParam.get("borrowPeriod").toString()+"个月");
-                    }
-                }
-            }
-            if(mapParam.containsKey("account")){
-                pushMoneyRequest.setAccount(mapParam.get("account").toString());
-            }
-            if(mapParam.containsKey("commission")){
-                pushMoneyRequest.setCommission(mapParam.get("commission").toString());
-            }
-            if(mapParam.containsKey("recoverLastTime")){
-                pushMoneyRequest.setRecoverLastTime(mapParam.get("recoverLastTime").toString());
-            }
-            if (mapParam.containsKey("limit")&& StringUtils.isNotBlank(mapParam.get("limit").toString())) {
-                pushMoneyRequest.setLimit(Integer.parseInt(mapParam.get("limit").toString()));
-            }
-        }
-        return pushMoneyRequest;
-    }
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
      *
-     * @param request
+     * @param pushMoneyRequest
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理记录导出")
     @PostMapping(value = "/exportpushmoney")
-    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) throws Exception {
+    public void exportExcel(PushMoneyRequest pushMoneyRequest, HttpServletResponse response){
         // 表格sheet名称
         String sheetName = "直投提成管理";
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        PushMoneyRequest pushMoneyRequest =setRequese(map);
         // 需要输出的结果列表
         List<PushMoneyVO> pushMoneyVOList =pushMoneyManageService.findPushMoneyList(pushMoneyRequest);
         String[] titles = new String[] { "序号", "项目编号", "项目标题", "融资期限", "融资金额", "提成总额", "放款时间" };
