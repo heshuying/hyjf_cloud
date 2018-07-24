@@ -3,12 +3,15 @@
  */
 package com.hyjf.cs.user.controller.app.login;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.SignValue;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -100,6 +103,8 @@ public class AppLoginController extends BaseUserController {
             WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
             if (webViewUserVO != null) {
                 logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
+
+                this.appAfterLogin(sign, webViewUserVO, username);
                 ret.put("status", "0");
                 ret.put("statusDesc", "登录成功");
                 ret.put("token", webViewUserVO.getToken());
@@ -366,6 +371,31 @@ public class AppLoginController extends BaseUserController {
     private void clearMobileCode(Integer userId, String sign) {
         loginService.clearMobileCode(userId,sign);
 
+    }
+
+
+    /**
+     * app登录成功后重置sign
+     * @param sign
+     * @param webViewUserVO
+     * @param loginUsername
+     */
+    private void appAfterLogin(String sign, WebViewUserVO webViewUserVO, String loginUsername){
+        // 加密后的token
+        String encryptValue;
+        // 获取sign对应的加密key
+        String value = RedisUtils.get(sign);
+        SignValue signValue;
+        if (StringUtils.isNotBlank(value)) {
+            signValue = JSON.parseObject(value, SignValue.class);
+            AppUserToken token = new AppUserToken(webViewUserVO.getUserId(), loginUsername);
+            String encryptString = JSON.toJSONString(token);
+            encryptValue = DES.encryptDES_ECB(encryptString, signValue.getKey());
+            signValue.setToken(encryptValue);
+            RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+        } else {
+            throw new RuntimeException("参数异常");
+        }
     }
 
 }
