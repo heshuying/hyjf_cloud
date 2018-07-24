@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.AdminBankAccountCheckCustomizeMapper">
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserAdminBankAccountCheckCustomizeMapper">
     <resultMap id="AccountCheckMapResult"
                type="com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO">
         <result column="id" property="id" />
@@ -28,29 +28,12 @@
         u.username
         FROM
         ht_bank_open_account a
-        LEFT JOIN ht_users u ON u.user_id = a.user_id
+        LEFT JOIN ht_user u ON u.user_id = a.user_id
         WHERE u.bank_open_account = 1
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}
         </if>
     </select>
-
-    <select id="queryAccountDeatilByBankSeqNo" resultMap="AccountCheckMapResult"
-            parameterType="java.lang.String">
-		SELECT
-			a.id,
-			a.bank_seq_no,
-			a.amount,
-			t.type_id,
-			a.user_id
-		FROM
-			ht_account_list a
-		LEFT JOIN ht_account_trade t
-		ON t.`value` = a.trade
-		WHERE
-			1=1
-		AND a.bank_seq_no = #{value}
-	</select>
 
 </mapper>
 

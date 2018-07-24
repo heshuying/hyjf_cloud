@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 
 import java.util.List;
 
@@ -14,6 +15,13 @@ import java.util.List;
  * @since 20180623
  */
 public interface BankInvestAllService {
+
+    /**
+     * 查询有效未读的优惠券列表
+     * @param userId
+     * @return
+     */
+    List<CouponUserCustomize> selectLatestCouponValidUNReadList(Integer userId);
 
     List<BorrowTenderTmp> getBorrowTenderTmpList();
 

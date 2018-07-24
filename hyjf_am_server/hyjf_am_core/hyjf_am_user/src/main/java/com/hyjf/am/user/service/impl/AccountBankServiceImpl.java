@@ -6,6 +6,7 @@ package com.hyjf.am.user.service.impl;
 import com.hyjf.am.user.dao.model.auto.AccountBank;
 import com.hyjf.am.user.dao.model.auto.AccountBankExample;
 import com.hyjf.am.user.service.AccountBankService;
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +30,21 @@ public class AccountBankServiceImpl extends BaseServiceImpl implements AccountBa
         AccountBankExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
         return accountBankMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<AccountBank> selectAccountBank(Integer userId, Integer status) {
+        AccountBankExample example = new AccountBankExample();
+        example.createCriteria().andUserIdEqualTo(userId).andBankStatusEqualTo(0);
+        List<AccountBank> accountBanks = accountBankMapper.selectByExample(example);
+        return accountBanks;
+    }
+
+    @Override
+    public List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId) {
+        AdminBankAccountCheckCustomizeVO customize = new AdminBankAccountCheckCustomizeVO();
+        customize.setUserId(userId);
+        List<AdminBankAccountCheckCustomizeVO> bankOpenAccountList = userAdminBankAccountCheckCustomizeMapper.queryAllBankOpenAccount(customize);
+        return bankOpenAccountList;
     }
 }

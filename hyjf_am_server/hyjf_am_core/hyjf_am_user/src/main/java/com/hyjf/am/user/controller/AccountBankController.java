@@ -4,9 +4,11 @@
 package com.hyjf.am.user.controller;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.user.AccountBankResponse;
 import com.hyjf.am.user.dao.model.auto.AccountBank;
 import com.hyjf.am.user.service.AccountBankService;
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -37,6 +39,27 @@ public class AccountBankController extends BaseController{
             List<AccountBankVO> accountBankVOList = CommonUtils.convertBeanList(accountBankList,AccountBankVO.class);
             response.setResultList(accountBankVOList);
             response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    @GetMapping("/selectAccountBank/{userId}/{status}")
+    public AccountBankResponse selectAccountBank(@PathVariable Integer userId,@PathVariable Integer status) {
+        AccountBankResponse response = new AccountBankResponse();
+        List<AccountBank> accountBank = accountBankService.selectAccountBank(userId, status);
+        if (null!=accountBank&&accountBank.size()>0){
+            List<AccountBankVO> accountBankVOS = CommonUtils.convertBeanList(accountBank,AccountBankVO.class);
+            response.setResultList(accountBankVOS);
+        }
+        return response;
+    }
+
+    @GetMapping("/queryAllBankOpenAccount/{userId}")
+    public AdminBankAccountCheckCustomizeResponse queryAllBankOpenAccount(@PathVariable Integer userId){
+        AdminBankAccountCheckCustomizeResponse response = new AdminBankAccountCheckCustomizeResponse();
+        List<AdminBankAccountCheckCustomizeVO> list = accountBankService.queryAllBankOpenAccount(userId);
+        if (null!=list){
+            response.setResultList(list);
         }
         return response;
     }

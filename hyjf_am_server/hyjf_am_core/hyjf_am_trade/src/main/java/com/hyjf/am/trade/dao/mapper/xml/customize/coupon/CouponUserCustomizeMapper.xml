@@ -19,10 +19,10 @@
 	    <result column="used_flag" property="usedFlag" />
 	    <result column="used_flag_View" property="usedFlagView" />
 	    <result column="end_time" property="endTime" />
-	    <result column="add_time" property="addTime" />
-	    <result column="add_user" property="addUser" />
+	    <result column="create_time" property="addTime" />
+	    <result column="create_user_id" property="addUser" />
 	    <result column="update_time" property="updateTime" />
-	    <result column="update_user" property="updateUser" />
+	    <result column="update_user_id" property="updateUser" />
 	    <result column="del_flag" property="delFlag" />
 	    <result column="detail_url" property="detailUrl" />
 	    <result column="channel" property="channel" />
@@ -217,7 +217,7 @@
 	    SELECT
 			count(cu.id)
 		FROM
-			hyjf_coupon_user cu
+			ht_coupon_user cu
 		LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
 		JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
 		<include refid="Where_Clause" />
@@ -285,7 +285,7 @@
 			CONCAT(#{host},REPLACE('<![CDATA[&id=]]>',' ', ''),cu.id) AS detail_url,
 			#{usedFlag} AS coupon_status
 		FROM
-		    hyjf_coupon_user cu 
+		    ht_coupon_user cu
 		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
 		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
@@ -299,7 +299,7 @@
 	    SELECT
 			count(1)
 		FROM
-		    hyjf_coupon_user cu 
+		    ht_coupon_user cu
 		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
 		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
@@ -310,7 +310,7 @@
 	    SELECT
 			count(1)
 		FROM
-		    hyjf_coupon_user cu 
+		    ht_coupon_user cu
 		WHERE
 		    cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0
 	</select>
@@ -318,10 +318,10 @@
 	<select id="selectLatestCouponValidList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">
 	    SELECT
 			id, coupon_code, user_id, activity_id, used_flag, end_time, content, audit_content, 
-		    delete_content, audit_user, audit_time, add_time, add_user, update_time, update_user, 
+		    delete_content, audit_user, audit_time, create_time, create_user_id, update_time, update_user_id,
 		    del_flag
 		FROM
-		    hyjf_coupon_user cu 
+		    ht_coupon_user cu
 		WHERE
 		    cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0
 		ORDER BY cu.add_time desc
@@ -330,13 +330,13 @@
 	<select id="selectLatestCouponValidUNReadList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">
 	    SELECT
 			id, coupon_code, user_id, activity_id, used_flag, end_time, content, audit_content, 
-		    delete_content, audit_user, audit_time, add_time, add_user, update_time, update_user, 
+		    delete_content, audit_user, audit_time, create_time, create_user_id, update_time, update_user_id,
 		    del_flag
 		FROM
-		    hyjf_coupon_user cu 
+		    ht_coupon_user cu
 		WHERE
 		    cu.user_id = #{userId} AND cu.used_flag = 0 AND (cu.read_flag = 0 OR cu.read_flag IS NULL) AND cu.del_flag = 0
-		ORDER BY cu.add_time desc
+		ORDER BY cu.create_time desc
 	</select>
 	
 	
@@ -344,7 +344,7 @@
 	    SELECT
 			COUNT(1)
 		FROM
-			hyjf_coupon_config c LEFT JOIN hyjf_coupon_user u ON c.coupon_code = u.coupon_code
+			hyjf_coupon_config c LEFT JOIN ht_coupon_user u ON c.coupon_code = u.coupon_code
 		WHERE
 			c.id = #{couponId}
 			AND u.del_flag=0
@@ -397,7 +397,7 @@
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime
 		FROM
-			hyjf_coupon_user cu
+			ht_coupon_user cu
 		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		WHERE
 			cu.id = #{couponGrantId}
@@ -433,7 +433,7 @@
 		FROM
 			hyjf_borrow_tender_cpn cpn
 		INNER JOIN hyjf_coupon_tender hct ON cpn.nid = hct.order_id
-		INNER JOIN hyjf_coupon_user cu ON hct.coupon_grant_id = cu.id
+		INNER JOIN ht_coupon_user cu ON hct.coupon_grant_id = cu.id
 		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		WHERE
 			cpn.nid = #{nid}

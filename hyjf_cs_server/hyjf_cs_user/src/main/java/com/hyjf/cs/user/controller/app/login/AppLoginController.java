@@ -221,7 +221,7 @@ public class AppLoginController extends BaseUserController {
             // 取得用户ID
             Integer userId = SecretUtil.getUserId(sign);
             if (userId != null) {
-                UserParameters userParameters = null; //loginService.getUserParameters(userId,platform, request);
+                UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
                     userParameters.setIdcard("000000000000000000");
                 }

@@ -30,6 +30,8 @@ public interface LoginService extends BaseUserService {
 
     //UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request);
 
+    UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request);
+
     /**
      * 上传用户头像
      * @param userId

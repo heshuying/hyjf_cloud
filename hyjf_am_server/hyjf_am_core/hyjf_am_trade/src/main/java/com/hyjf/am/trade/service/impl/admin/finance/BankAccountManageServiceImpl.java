@@ -3,19 +3,6 @@
  */
 package com.hyjf.am.trade.service.impl.admin.finance;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.trade.bean.ResultBean;
 import com.hyjf.am.trade.bean.SynBalanceBean;
@@ -35,6 +22,18 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author PC-LIUSHOUYI
@@ -74,8 +73,8 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         AccountExample example = new AccountExample();
         example.createCriteria().andUserIdEqualTo(accountVO.getUserId());
         // 更新账户表
-        boolean result = this.accountMapper.updateByExampleSelective(account, example) >0 ? true:false;
-        return result?1:0;
+        boolean result = this.accountMapper.updateByExampleSelective(account, example) > 0 ? true : false;
+        return result ? 1 : 0;
     }
 
     @Override
@@ -92,16 +91,9 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
             customize.setUserId(adminBankAccountCheckCustomizeVO.getUserId());
             List<AdminBankAccountCheckCustomizeVO> bankOpenAccountList = this.adminBankAccountCheckCustomizeMapper.queryAllBankOpenAccount(customize);
             /** redis 锁 */
-//			if (StringUtils.isNotEmpty(RedisUtils.get("synBalance:" + userId))) {
-//				msg = "不能重复对账";
-//				return msg;
-//			} else {
-//				RedisUtils.set("synBalance:" + userId, String.valueOf(userId), 30);
-//			}
-
             boolean reslut = RedisUtils.tranactionSet("synBalance:" + adminBankAccountCheckCustomizeVO.getUserId(), 30);
             // 如果没有设置成功，说明有请求来设置过
-            if(!reslut){
+            if (!reslut) {
                 msg = "不能重复对账";
                 return msg;
             }
@@ -113,7 +105,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                 List<ResultBean> resultList = queryAllAccountDetails(userId, accountId, startTime, endTime);
                 if (resultList != null && resultList.size() > 0) {
                     // 遍历循环返回列表进行入账处理
-                    updateBankAccountCheck(resultList, userId, userName,accountId);
+                    updateBankAccountCheck(resultList, userId, userName, accountId);
                 } else {
                     msg = "该时间段没有需要对账的交易!";
                 }
@@ -127,6 +119,8 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         }
         return msg;
     }
+
+
 
     /**
      * 获得接口返回单个用户的所有线下充值明细
@@ -142,7 +136,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         int pageSize = 10;
 
         // TODO check 方法之前是共同的、是否需要创建共同方法、创建位置
-        Date checkEndDate =null;// BankAccountCheckUtil.getDateByString(endTime);
+        Date checkEndDate = null;// BankAccountCheckUtil.getDateByString(endTime);
         Date checkStartDate = null;// BankAccountCheckUtil.getDateByString(startTime);
 
         String startDate = null;// BankAccountCheckUtil.getDateString(checkStartDate, BankAccountCheckUtil.DATEFORMAT_TYPE2);
@@ -157,35 +151,35 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         String traceNo = "";
         do {
             BankCallBean bean = this.queryAccountDetails(userId, accountId, startDate, endDate, "1", "", String.valueOf(pageNum), String.valueOf(pageSize),
-                    inpDate,inpTime,relDate,traceNo);
-            if(bean==null){
+                    inpDate, inpTime, relDate, traceNo);
+            if (bean == null) {
                 logger.info(this.getClass().getName(), "同步余额失败");
                 return null;
             }
             //返回失败
-            if(!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())){
-                logger.info(this.getClass().getName(), "-------------------调用查询接口失败，失败编码：" + bean.getRetCode()+"--------------------");
+            if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+                logger.info(this.getClass().getName(), "-------------------调用查询接口失败，失败编码：" + bean.getRetCode() + "--------------------");
                 return null;
             }
             //解析返回数据(记录为空)
             String content = bean.getSubPacks();
-            if(StringUtils.isEmpty(content)){
+            if (StringUtils.isEmpty(content)) {
                 return recordList;
             }
             list = JSONArray.parseArray(bean.getSubPacks(), ResultBean.class);
             recordList.addAll(list);
             // 获得最后一条交易记录 并准备下一次查询用的参数
-            if(list!=null&&list.size()>0){
-                ResultBean lastResult = list.get(list.size()-1);
+            if (list != null && list.size() > 0) {
+                ResultBean lastResult = list.get(list.size() - 1);
                 inpDate = lastResult.getInpDate();
                 inpTime = lastResult.getInpTime();
                 relDate = lastResult.getRelDate();
                 traceNo = String.valueOf(lastResult.getTraceNo());
             }
             pageNum++;
-        } while (list.size()==pageSize);
-        logger.info(this.getClass().getName(),"-------------------"+recordList.size()+"同步余额总条数--------------------");
-        logger.info(this.getClass().getName(),"-------------------"+pageNum+"同步余额请求次数--------------------");
+        } while (list.size() == pageSize);
+        logger.info(this.getClass().getName(), "-------------------" + recordList.size() + "同步余额总条数--------------------");
+        logger.info(this.getClass().getName(), "-------------------" + pageNum + "同步余额请求次数--------------------");
         return recordList;
     }
 
@@ -203,7 +197,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @return
      */
     public BankCallBean queryAccountDetails(Integer userId, String accountId, String startDate, String endDate, String type, String transType,
-                                            String pageNum, String pageSize,String inpDate,String inpTime,String relDate,String traceNo) {
+                                            String pageNum, String pageSize, String inpDate, String inpTime, String relDate, String traceNo) {
         // 参数不正确
         if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(startDate) || StringUtils.isEmpty(endDate) || StringUtils.isEmpty(type)) {
             return null;
@@ -235,7 +229,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
             bean.setTranType(transType);
         }
         // 翻页标识  空：首次查询；1：翻页查询；
-        if (StringUtils.isNotEmpty(pageNum)&&!"1".equals(pageNum)) {
+        if (StringUtils.isNotEmpty(pageNum) && !"1".equals(pageNum)) {
             bean.setRtnInd("1");
         } else {
             bean.setRtnInd("");
@@ -256,7 +250,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      *
      * @param resultList
      */
-    public void updateBankAccountCheck(List<ResultBean> resultList, Integer userId, String userName,String accountId) {
+    public void updateBankAccountCheck(List<ResultBean> resultList, Integer userId, String userName, String accountId) {
         // 开始对单个用户进行入账处理
         logger.info("==============cwyang Start bankAccountCheck!=======");
         if (resultList.size() > 0) {
@@ -267,7 +261,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                 try {
                     ResultBean bean = resultList.get(i);
                     // 如果江西银行不返回电子账户号  就设置本地的电子帐户号
-                    if(bean.getAccountId()==null){
+                    if (bean.getAccountId() == null) {
                         bean.setAccountId(accountId);
                     }
                     String orFlage = bean.getOrFlag();
@@ -279,7 +273,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                     if (StringUtils.isNotBlank(bankSeqNo) && ("O".equals(orFlage) || "0".equals(orFlage))) {
                         //判断是否是线下充值
                         boolean isType = isRechargeTransType(bean.getTranType());
-                        if(isType){
+                        if (isType) {
                             customize = this.adminBankAccountCheckCustomizeMapper.queryAccountDeatilByBankSeqNo(bankSeqNo);
                             if (customize != null) {
                                 // 该线下交易已对账,不再进行处理
@@ -303,17 +297,19 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         }
         logger.info("==============cwyang End bankAccountCheck!=======");
     }
+
     /**
      * 是否属于线下充值类型
+     *
      * @param tranType
      * @return
      */
     private boolean isRechargeTransType(String tranType) {
-        if(BankCallConstant.TRANS_TYPE_7610.equals(tranType)|| BankCallConstant.TRANS_TYPE_7611.equals(tranType) || BankCallConstant.TRANS_TYPE_7612.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7613.equals(tranType)||BankCallConstant.TRANS_TYPE_7617.equals(tranType)||BankCallConstant.TRANS_TYPE_7820.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7821.equals(tranType)||BankCallConstant.TRANS_TYPE_7823.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7826.equals(tranType)||BankCallConstant.TRANS_TYPE_7938.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7939.equals(tranType)){
+        if (BankCallConstant.TRANS_TYPE_7610.equals(tranType) || BankCallConstant.TRANS_TYPE_7611.equals(tranType) || BankCallConstant.TRANS_TYPE_7612.equals(tranType)
+                || BankCallConstant.TRANS_TYPE_7613.equals(tranType) || BankCallConstant.TRANS_TYPE_7617.equals(tranType) || BankCallConstant.TRANS_TYPE_7820.equals(tranType)
+                || BankCallConstant.TRANS_TYPE_7821.equals(tranType) || BankCallConstant.TRANS_TYPE_7823.equals(tranType)
+                || BankCallConstant.TRANS_TYPE_7826.equals(tranType) || BankCallConstant.TRANS_TYPE_7938.equals(tranType)
+                || BankCallConstant.TRANS_TYPE_7939.equals(tranType)) {
             return true;
         }
         return false;
@@ -483,6 +479,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
 
     /**
      * 根据用户ID获取开户信息
+     *
      * @param userId
      * @return
      */
