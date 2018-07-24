@@ -255,4 +255,17 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		return 1;
 	}
 
+	@Override
+	public String selectCouponInterestTotal(Integer userId){
+		String couponInterestTotalWait = couponRecoverCustomizeMapper.selectCouponInterestTotal(userId);
+		return couponInterestTotalWait;
+	}
+
+	@Override
+	public String selectCouponReceivedInterestTotal(Integer userId) {
+		String couponInterestTotalWait = couponRecoverCustomizeMapper.selectCouponReceivedInterestTotal(userId);
+		return couponInterestTotalWait;
+	}
+
+
 }

@@ -108,4 +108,18 @@ public interface AmConfigClient {
      * @return
      */
     BankConfigVO getBankConfigByCode(String code);
+
+    /**
+     * 银行配置信息
+     * @param code
+     * @return
+     */
+    BankConfigVO selectBankConfigByCode(String code);
+
+    /**
+     * 判断江西银行绑卡使用新
+     * @param type
+     * @return
+     */
+    Integer getBankInterfaceFlagByType(String type);
 }

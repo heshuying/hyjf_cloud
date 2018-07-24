@@ -22,6 +22,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -1341,4 +1342,24 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhDebtCreditTenderVO> getHjhDebtCreditTenderList(HjhDebtCreditTenderRequest request);
+
+    List<RepayListCustomizeVO> repayList(RepayListRequest requestBean);
+
+    List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean);
+
+    List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean);
+
+    int repayCount(RepayListRequest requestBean);
+
+    int orgRepayCount(RepayListRequest requestBean);
+
+    int orgRepayedCount(RepayListRequest requestBean);
+
+    Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
+
+    BorrowRecoverPlanVO selectRecoverPlanById(Integer id);
+
+    List<BorrowRecoverPlanVO> selectRecoverPlan(String borrowNid, Integer period);
+
+    List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepay(String borrowNid, String tenderOrderId, int periodNow, int status);
 }

@@ -5,6 +5,7 @@ import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
@@ -167,7 +168,14 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr) {
         VersionConfigBeanResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/appversion/getUpdateversion/" + type+"/"+isupdate+"/"+versionStr, VersionConfigBeanResponse.class).getBody();
+                .getForEntity(configService+"/appversion/getUpdateversion/" + type+"/"+isupdate+"/"+versionStr, VersionConfigBeanResponse.class).getBody();
+        return response.getResult();
+    }
+
+    @Override
+    public BankConfigVO selectBankConfigByCode(String code) {
+        BankConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/selectBankConfigByCode/" + code, BankConfigResponse.class).getBody();
         return response.getResult();
     }
     /**
@@ -182,5 +190,15 @@ public class AmConfigClientImpl implements AmConfigClient {
         BankConfigResponse response = restTemplate
                 .getForEntity(url, BankConfigResponse.class).getBody();
         return response.getResult();
+    }
+
+    @Override
+    public Integer getBankInterfaceFlagByType(String type) {
+        BankInterfaceResponse response = restTemplate
+                .getForEntity(configService+"/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+        if (response != null) {
+            return response.getFlag();
+        }
+        return null;
     }
 }

@@ -50,23 +50,17 @@ import java.util.List;
 @Service
 public class RepayManageServiceImpl extends BaseTradeServiceImpl implements RepayManageService {
     @Autowired
-    RepayManageClient repayManageClient;
-    @Autowired
     AmBorrowClient amBorrowClient;
     @Autowired
     BorrowApicronClient borrowApicronClient;
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    BorrowRecoverPlanClient borrowRecoverPlanClient;
-    @Autowired
     AmBorrowRepayClient borrowRepayClient;
     @Autowired
     CreditClient creditClient;
     @Autowired
     AmBorrowRepayPlanClient borrowRepayPlanClient;
-    @Autowired
-    HjhDebtCreditRepayClient hjhDebtCreditRepayClient;
     @Autowired
     HjhDebtCreditClient hjhDebtCreditClient;
 
@@ -94,7 +88,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean) {
-        return repayManageClient.repayList(requestBean);
+        return amTradeClient.repayList(requestBean);
     }
 
     /**
@@ -105,7 +99,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayList(requestBean);
+        return amTradeClient.orgRepayList(requestBean);
     }
 
     /**
@@ -116,7 +110,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayedList(requestBean);
+        return amTradeClient.orgRepayedList(requestBean);
     }
 
     /**
@@ -127,7 +121,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public Integer selectRepayCount(RepayListRequest requestBean) {
-        return repayManageClient.repayCount(requestBean);
+        return amTradeClient.repayCount(requestBean);
     }
 
     /**
@@ -138,7 +132,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public Integer selectOrgRepayCount(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayCount(requestBean);
+        return amTradeClient.orgRepayCount(requestBean);
     }
 
     /**
@@ -149,7 +143,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public Integer selectOrgRepayedCount(RepayListRequest requestBean) {
-        return repayManageClient.orgRepayedCount(requestBean);
+        return amTradeClient.orgRepayedCount(requestBean);
     }
 
     private BorrowApicronVO getApiCron(List<BorrowApicronVO> borrowApicrons, Integer periodNow){
@@ -430,7 +424,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                     for (int j = 0; j < userRecoversDetails.size(); j++) {
                         RepayRecoverPlanBean userRecoverPlan = userRecoversDetails.get(j);
                         Integer id = userRecoverPlan.getId();
-                        BorrowRecoverPlanVO planInfo = borrowRecoverPlanClient.selectRecoverPlanById(id);
+                        BorrowRecoverPlanVO planInfo = amTradeClient.selectRecoverPlanById(id);
                         BigDecimal recoverAccount = planInfo.getRecoverAccount();
                         // 如果发生债转
                         int hjhFlag = 0;//是否计划债转
@@ -730,7 +724,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                         }
                     } else {
                         // 计划类还款
-                        List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
+                        List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
                         if (creditRepayList != null && creditRepayList.size() > 0) {
                             List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                             BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -998,7 +992,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                         boolean overFlag = false;
                         // 计划类还款
                         // 债转还款数据
-                        List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
+                        List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
                         if (creditRepayList != null && creditRepayList.size() > 0) {
                             List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                             BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -1240,7 +1234,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                         }
                     } else {
                         // 计划还款
-                        List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
+                        List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
                         if (creditRepayList != null && creditRepayList.size() > 0) {
                             List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                             BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -1477,7 +1471,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                         }
                     } else {
                         // 计划类债转还款
-                        List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
+                        List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
                         if (creditRepayList != null && creditRepayList.size() > 0) {
                             List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                             BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -1689,7 +1683,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         // 还款期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
         List<BorrowRecoverVO> borrowRecoverList = amTradeClient.selectBorrowRecoverByBorrowNid(borrow.getBorrowNid());
-        List<BorrowRecoverPlanVO> borrowRecoverPlans = borrowRecoverPlanClient.selectRecoverPlan(borrow.getBorrowNid(),borrowRepayPlan.getRepayPeriod());
+        List<BorrowRecoverPlanVO> borrowRecoverPlans = amTradeClient.selectRecoverPlan(borrow.getBorrowNid(),borrowRepayPlan.getRepayPeriod());
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
@@ -1815,7 +1809,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                     }
                                 }else{
                                     // 计划类项目债转还款
-                                    List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                                    List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                         BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -2010,7 +2004,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod(); // 项目总期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();// 还款期数
         List<BorrowRecoverVO> borrowRecoverList = amTradeClient.selectBorrowRecoverByBorrowNid(borrow.getBorrowNid());
-        List<BorrowRecoverPlanVO> borrowRecoverPlans = borrowRecoverPlanClient.selectRecoverPlan(borrow.getBorrowNid(), repayPeriod);
+        List<BorrowRecoverPlanVO> borrowRecoverPlans = amTradeClient.selectRecoverPlan(borrow.getBorrowNid(), repayPeriod);
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
@@ -2198,7 +2192,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                     }
                                 } else {
                                     // 计划类项目还款
-                                    List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                                    List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                         BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -2384,7 +2378,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         // 还款期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
         List<BorrowRecoverVO> borrowRecoverList = amTradeClient.selectBorrowRecoverByBorrowNid(borrow.getBorrowNid());
-        List<BorrowRecoverPlanVO> borrowRecoverPlans = borrowRecoverPlanClient.selectRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
+        List<BorrowRecoverPlanVO> borrowRecoverPlans = amTradeClient.selectRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
@@ -2500,7 +2494,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                     }
                                 } else {
                                     // 计划类债转还款
-                                    List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                                    List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                         HjhDebtCreditRepayVO creditRepay = null;
@@ -2650,7 +2644,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         // 还款期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
         List<BorrowRecoverVO> borrowRecoverList = amTradeClient.selectBorrowRecoverByBorrowNid(borrow.getBorrowNid());
-        List<BorrowRecoverPlanVO> borrowRecoverPlans = borrowRecoverPlanClient.selectRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
+        List<BorrowRecoverPlanVO> borrowRecoverPlans = amTradeClient.selectRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
@@ -2790,7 +2784,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                     }
                                 } else {
                                     // 计划类项目债转还款
-                                    List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                                    List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                         HjhDebtCreditRepayVO creditRepay = null;
@@ -2962,7 +2956,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         // 还款期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
         List<BorrowRecoverVO> borrowRecoverList = amTradeClient.selectBorrowRecoverByBorrowNid(borrow.getBorrowNid());
-        List<BorrowRecoverPlanVO> borrowRecoverPlans = borrowRecoverPlanClient.selectRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
+        List<BorrowRecoverPlanVO> borrowRecoverPlans = amTradeClient.selectRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
@@ -3062,7 +3056,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                     }
                                 }else{//计划还款
-                                    List<HjhDebtCreditRepayVO> creditRepayList = hjhDebtCreditRepayClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                                    List<HjhDebtCreditRepayVO> creditRepayList = amTradeClient.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                         BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -3273,7 +3267,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setRepayBeanData(JSON.toJSONString(requestBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
 
-        return repayManageClient.repayRequestUpdate(requestBean);
+        return amTradeClient.repayRequestUpdate(requestBean);
     }
 
     /**
