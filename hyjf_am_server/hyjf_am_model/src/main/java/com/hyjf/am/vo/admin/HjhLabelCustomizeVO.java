@@ -9,6 +9,8 @@ import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author libin
  * @version HjhLabelCustomizeVO.java, v0.1 2018年6月30日 下午2:20:50
@@ -19,57 +21,82 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	
+	@ApiModelProperty(value = "标签编号")
 	private Integer id;
-    
+	
+	@ApiModelProperty(value = "标签是否使用 0：在引擎中未使用，1：在引擎中使用")  
     private String labelisUsed;
-
+	
+	@ApiModelProperty(value = "标签名称")
     private String labelName;
-
+	
+	@ApiModelProperty(value = "标的期限最小")
     private Integer labelTermStart;
-
+	
+	@ApiModelProperty(value = "标的期限最大")
     private Integer labelTermEnd;
 
+	@ApiModelProperty(value = "日/月")
     private String labelTermType;
 
+	@ApiModelProperty(value = "标的实际利率最小")
     private BigDecimal labelAprStart;
 
+	@ApiModelProperty(value = "标的实际利率最大")
     private BigDecimal labelAprEnd;
 
+	@ApiModelProperty(value = "还款方式")
     private String borrowStyle;
 
+	@ApiModelProperty(value = "还款方式名称")
     private String borrowStyleName;
 
+	@ApiModelProperty(value = "标的实际支付金额最小")
     private BigDecimal labelPaymentAccountStart;
 
+	@ApiModelProperty(value = "标的实际支付金额最大")
     private BigDecimal labelPaymentAccountEnd;
 
+	@ApiModelProperty(value = "资产来源Code")
     private String instCode;
 
+	@ApiModelProperty(value = "资产来源名称")
     private String instName;
 
+	@ApiModelProperty(value = "产品类型Code")
     private Integer assetType;
 
+	@ApiModelProperty(value = "产品类型名称")
     private String assetTypeName;
 
+	@ApiModelProperty(value = "项目类型Code")
     private Integer projectType;
 
+	@ApiModelProperty(value = "项目类型名称")
     private String projectTypeName;
 
+	@ApiModelProperty(value = "标的是否发生债转")
     private Integer isCredit;
 
+	@ApiModelProperty(value = "标的是否逾期")
     private Integer isLate;
 
+	@ApiModelProperty(value = "债转最大次数")
     private Integer creditSumMax;
 
+	@ApiModelProperty(value = "推送时间开始")
     private Date pushTimeStart;
 
+	@ApiModelProperty(value = "推送时间结束")
     private Date pushTimeEnd;
 
+	@ApiModelProperty(value = "剩余最小天数")
     private Integer remainingDaysStart;
 
+	@ApiModelProperty(value = "剩余最大天数")
     private Integer remainingDaysEnd;
 
+	@ApiModelProperty(value = "标签状态")
     private Integer labelState;
 
     private Integer createUserId;
@@ -84,8 +111,10 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
     
     private Integer delFlag;
     
+    @ApiModelProperty(value = "推送开始时间")
     private String pushTimeStartString;
 
+    @ApiModelProperty(value = "推送结束时间")
     private String pushTimeEndString;
 
 	public Integer getId() {

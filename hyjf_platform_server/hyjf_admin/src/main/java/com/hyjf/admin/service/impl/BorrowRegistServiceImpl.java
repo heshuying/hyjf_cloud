@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
+import com.hyjf.admin.beans.vo.AdminBorrowRegistCustomizeVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -13,6 +14,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,8 +64,9 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         //查询列表 总计
         if (count > 0) {
             List<BorrowRegistCustomizeVO> list = amTradeClient.selectRegistList(borrowRegistListRequest);
+            List<AdminBorrowRegistCustomizeVO> adminList = CommonUtils.convertBeanList(list,AdminBorrowRegistCustomizeVO.class);
             String sumAccount = amTradeClient.sumBorrowRegistAccount(borrowRegistListRequest);
-            borrowRegistResponseBean.setRecordList(list);
+            borrowRegistResponseBean.setRecordList(adminList);
             borrowRegistResponseBean.setSumAccount(sumAccount);
         }
         return borrowRegistResponseBean;

@@ -2,9 +2,9 @@
 package com.hyjf.cs.trade.util;
 
 /**
- * app首页属性定义
+ * 首页属性定义
  */
-public class AppHomePageDefine {
+public class HomePageDefine {
 
 	/** 首页接口  @RequestMapping值 */
 	public static final String REQUEST_MAPPING = "/hyjf-app/homepage";
@@ -66,5 +66,16 @@ public class AppHomePageDefine {
     public static String MODULE_URL = "/data/upfiles/appmodule/";
 
     public static String  INVEST_INVEREST_AMOUNT_URL = "http://CS-MESSAGE/cs-message/search/getTotalInvestAndInterestEntity";
+
+    // WECHAT START
+
+	public static final String WECHAT_REQUEST_MAPPING = "/hyjf-wechat/homepage";
+	/*首页统计数据方法*/
+	public static final String WECHAT_HOME_INDEX_DATA_METHOD = "/getIndexData";
+
+	public static final  String WECHAT_STATUS_SUCCESS = "000";
+
+	public static final  String WECHAT_STATUC_DESC = "成功";
+
 
 }

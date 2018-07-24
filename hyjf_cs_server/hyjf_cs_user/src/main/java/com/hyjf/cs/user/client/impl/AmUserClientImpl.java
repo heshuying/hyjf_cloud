@@ -914,4 +914,20 @@ public class AmUserClientImpl implements AmUserClient {
 		return false;
 	}
 
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public List<AccountBankVO> getBankCardByUserId(Integer userId) {
+		String url = userService + "/accountbank/getBankCardByUserId/" + userId;
+		AccountBankResponse response = restTemplate
+				.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

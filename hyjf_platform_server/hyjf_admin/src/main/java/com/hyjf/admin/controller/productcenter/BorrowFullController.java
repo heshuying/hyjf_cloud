@@ -12,6 +12,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowFullService;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -61,12 +62,11 @@ public class BorrowFullController extends BaseController {
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
     public AdminResult updateBorrowFull(HttpServletRequest request, @RequestBody @Valid BorrowFullRequestBean borrowFullRequestBean) {
-        //todo wangjun 取得当前用户信息 备用 后期修改
-//        AdminSystemVO currUser = getUser(request);
+        AdminSystemVO currUser = getUser(request);
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         BeanUtils.copyProperties(borrowFullRequestBean, borrowFullRequest);
-        borrowFullRequest.setCurrUserId("123");
-        borrowFullRequest.setCurrUserName("admin");
+        borrowFullRequest.setCurrUserId(currUser.getId());
+        borrowFullRequest.setCurrUserName(currUser.getUsername());
         return borrowFullService.updateBorrowFull(borrowFullRequest);
     }
 
@@ -75,12 +75,11 @@ public class BorrowFullController extends BaseController {
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
     public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
-        //todo wangjun 取得当前用户信息 备用 后期修改
-//        AdminSystemVO currUser = getUser(request);
+        AdminSystemVO currUser = getUser(request);
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         borrowFullRequest.setBorrowNidSrch(borrowNid);
-        borrowFullRequest.setCurrUserId("123");
-        borrowFullRequest.setCurrUserName("admin");
+        borrowFullRequest.setCurrUserId(currUser.getId());
+        borrowFullRequest.setCurrUserName(currUser.getUsername());
         return borrowFullService.updateBorrowOver(borrowFullRequest);
     }
 }

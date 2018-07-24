@@ -85,19 +85,13 @@ public class FddHandle {
 	@Autowired
 	private BorrowTenderClient borrowTenderClient;
 	@Autowired
-	private BankCreditTenderClient bankCreditTenderClient;
-	@Autowired
 	private BorrowCreditClient borrowCreditClient;
 	@Autowired
 	private HjhDebtCreditClient hjhDebtCreditClient;
 	@Autowired
-	private HjhDebtCreditTenderClient hjhDebtCreditTenderClient;
-	@Autowired
 	private HjhAccedeClient hjhAccedeClient;
 	@Autowired
 	private TenderAgreementClient tenderAgreementClient;
-	@Autowired
-	private BorrowRecoverClient borrowRecoverClient;
 	@Autowired
 	private SystemConfig systemConfig;
 
@@ -747,14 +741,14 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
-        List<CreditTenderVO> creditTenderList = this.bankCreditTenderClient.getCreditTenderList(request);
+        List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 
             CreditTenderVO creditTender = creditTenderList.get(0);
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("creditNid", creditTender.getCreditNid());
             params.put("assignNid", creditTender.getAssignNid());
-			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = this.bankCreditTenderClient.selectWebCreditTenderDetailForContract(params);
+			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = this.amTradeClient.selectWebCreditTenderDetailForContract(params);
             if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
                 if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
                     tenderToCreditDetailList.get(0).setCreditRepayEndTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(tenderToCreditDetailList.get(0).getCreditRepayEndTime())));
@@ -1123,6 +1117,11 @@ public class FddHandle {
 		}
 	}
 
+	/**
+	 * 查询汇计划债转投资表
+	 * @param tenderCreditAssignedBean
+	 * @return
+	 */
 	private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 获取债转投资信息
@@ -1132,7 +1131,7 @@ public class FddHandle {
 		request.setCreditNid(tenderCreditAssignedBean.getCreditNid());
 		request.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
 		request.setAssignOrderId(tenderCreditAssignedBean.getAssignNid());
-		List<HjhDebtCreditTenderVO> creditTenderList =this.hjhDebtCreditTenderClient.getHjhDebtCreditTenderList(request);
+		List<HjhDebtCreditTenderVO> creditTenderList =this.amTradeClient.getHjhDebtCreditTenderList(request);
 		// 当前用户的id
 		Integer currentUserId = tenderCreditAssignedBean.getCurrentUserId();
 
@@ -1144,7 +1143,7 @@ public class FddHandle {
 			params.put("assignOrderId", creditTender.getAssignOrderId());//取得 hyjf_hjh_debt_credit_tender 表的债转编号
 
 			//查看债转详情
-			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList=this.bankCreditTenderClient.selectHJHWebCreditTenderDetail(params);
+			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList=this.amTradeClient.selectHJHWebCreditTenderDetail(params);
 
 			if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
 				if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
@@ -1335,7 +1334,7 @@ public class FddHandle {
 				instCode = hjhAccede.getPlanNid();
 			}
 		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType){//债转服务协议
-			List<CreditTenderVO> creditTenderList=this.bankCreditTenderClient.selectCreditTender(contract_id);
+			List<CreditTenderVO> creditTenderList=this.amTradeClient.selectCreditTender(contract_id);
 			if (creditTenderList != null && creditTenderList.size() > 0) {
 				CreditTenderVO creditTender = creditTenderList.get(0);
 				userId = creditTender.getUserId();// 承接人
@@ -1585,7 +1584,7 @@ public class FddHandle {
 
 					// 发送邮件
 					if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
-						BorrowRecoverVO recover = this.borrowRecoverClient.selectBorrowRecoverByTenderNid(tenderAgreementID);
+						BorrowRecoverVO recover = this.amTradeClient.selectBorrowRecoverByTenderNid(tenderAgreementID);
 						if (recover != null && StringUtils.isBlank(recover.getAccedeOrderId())){
 							this.sendMail(recover);
 						}
@@ -1747,7 +1746,7 @@ public class FddHandle {
 
 				// 更新BorrowRecover邮件发送状态
 				borrowRecover.setSendmail(1);
-				this.borrowRecoverClient.updateBorrowRecover(borrowRecover);
+				this.amTradeClient.updateBorrowRecover(borrowRecover);
 
 				logger.info("结束发送邮件。投资订单号:" + orderId);
 			}

@@ -69,7 +69,7 @@ public class BankExceptionController {
      * @return
      */
     @ApiOperation(value = "债转投资掉单异常处理", notes = "债转投资掉单异常处理")
-    @RequestMapping(value = "/creditTenderExceptionHandle")
+    @GetMapping(value = "/creditTenderExceptionHandle")
     public void creditTenderExceptionHandle() {
         logger.info("债转投资掉单异常处理start...");
         bankCreditTenderExceptionService.handle();

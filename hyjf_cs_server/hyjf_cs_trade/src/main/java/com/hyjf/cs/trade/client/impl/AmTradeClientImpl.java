@@ -2948,4 +2948,57 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 投资撤销历史数据处理
+     * @param request
+     * @return
+     */
+    @Override
+    public boolean updateBidCancelRecord(TenderCancelRequest request) {
+        String url = "http://AM-TRADE/am-trade/bankException/updateBidCancelRecord";
+        return restTemplate.postForEntity(url,request,Boolean.class).getBody();
+
+    }
+
+    /**
+     * 处理撤销出现异常的数据
+     * @param info
+     * @return
+     */
+    @Override
+    public boolean updateTenderCancelExceptionData(BorrowTenderTmpVO info) {
+        String url = "http://AM-TRADE/am-trade/bankException/updateTenderCancelExceptionData";
+        return restTemplate.postForEntity(url,info,Boolean.class).getBody();
+    }
+
+    /**
+     * 查询前一天的投资临时数据并进行处理
+     * @return
+     */
+    @Override
+    public List<BorrowTenderTmpVO> getBorrowTenderTmpsForTenderCancel() {
+        String url = "http://AM-TRADE/am-trade/bankException/getBorrowTenderTmpsForTenderCancel";
+        BorrowTenderTmpResponse response = restTemplate.getForEntity(url, BorrowTenderTmpResponse.class).getBody();
+        if (Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     *查询汇计划债转投资表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditTenderVO> getHjhDebtCreditTenderList(HjhDebtCreditTenderRequest request) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCreditTender/getHjhDebtCreditTenderList";
+        HjhDebtCreditTenderResponse response =
+                restTemplate.postForEntity(url,request,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }
