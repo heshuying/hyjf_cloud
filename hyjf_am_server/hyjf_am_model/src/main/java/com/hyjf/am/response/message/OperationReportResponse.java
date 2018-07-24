@@ -50,6 +50,8 @@ public class OperationReportResponse extends Response<OperationReportVO> {
     //体验优化
     private List<OperationReportActivityVO> goodExperiences;
 
+    //web需要用到的活动
+    private List<OperationReportActivityVO> operationReportActiveList;
     public Integer getCount() {
         return count;
     }
@@ -209,5 +211,13 @@ public class OperationReportResponse extends Response<OperationReportVO> {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public List<OperationReportActivityVO> getOperationReportActiveList() {
+        return operationReportActiveList;
+    }
+
+    public void setOperationReportActiveList(List<OperationReportActivityVO> operationReportActiveList) {
+        this.operationReportActiveList = operationReportActiveList;
     }
 }
