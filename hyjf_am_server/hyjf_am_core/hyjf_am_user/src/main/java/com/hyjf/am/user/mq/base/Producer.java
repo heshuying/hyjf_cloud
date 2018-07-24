@@ -58,8 +58,11 @@ public abstract class Producer {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
 					messageContent.body);
 			return send(message);
-		} catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
+		} catch (MQClientException | RemotingException | MQBrokerException e ) {
 			throw new MQException("mq send error", e);
+		} catch (InterruptedException e){
+			Thread.currentThread().interrupt();
+			throw new MQException("mq InterruptedException send error", e);
 		}
 	}
 }

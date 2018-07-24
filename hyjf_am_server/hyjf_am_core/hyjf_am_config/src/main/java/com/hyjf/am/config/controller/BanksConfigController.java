@@ -130,7 +130,7 @@ public class BanksConfigController extends BaseConfigController{
      */
     @RequestMapping("/selectBankConfigList")
     public BanksConfigResponse selectBankConfigList(){
-        BanksConfigResponse response=null;
+        BanksConfigResponse response = new BanksConfigResponse();
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
         if(null!=listBankConfig&&listBankConfig.size()>0){
             List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
