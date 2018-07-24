@@ -44,8 +44,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,13 +94,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private CreditClient creditClient;
 
     @Autowired
-    private BorrowRecoverClient borrowRecoverClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmBorrowRepayPlanClient amBorrowRepayPlanClient;
 
-    @Autowired
-    private BankCreditTenderClient bankCreditTenderClient;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
@@ -213,7 +209,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             if (BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)) {
                 // 承接成功
                 // 查询相应的债转承接记录
-                List<CreditTenderLogVO> creditTenderLog = this.bankCreditTenderClient.getCreditTenderLogs(logOrderId,userId);
+                List<CreditTenderLogVO> creditTenderLog = this.amTradeClient.getCreditTenderLogs(logOrderId,userId);
                 // 如果已经查询到相应的债转承接log表
                 if (Validator.isNotNull(creditTenderLog)) {
                     // 此次查询的授权码
@@ -350,12 +346,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             UserInfoCustomizeVO userInfoCustomizeRefCr;
             // 获取BorrowCredit信息
             // 获取汇转让标的列表
-            List<BorrowCreditVO> borrowCreditList = this.bankCreditTenderClient.getBorrowCreditList(creditNid, sellerUserId, tenderOrderId);
+            List<BorrowCreditVO> borrowCreditList = this.amTradeClient.getBorrowCreditList(creditNid, sellerUserId, tenderOrderId);
             // 2更新borrow_credit
             if (borrowCreditList != null && borrowCreditList.size() == 1) {
                 BorrowCreditVO borrowCredit = borrowCreditList.get(0);
                 // 获取BorrowRecover信息
-                BorrowRecoverVO borrowRecover = borrowRecoverClient.getBorrowRecoverByTenderNidBidNid(borrowCredit.getTenderNid(), borrowCredit.getBidNid());
+                BorrowRecoverVO borrowRecover = this.amTradeClient.getBorrowRecoverByTenderNidBidNid(borrowCredit.getTenderNid(), borrowCredit.getBidNid());
                 // 总收入,本金+垫付利息
                 borrowCredit.setCreditIncome(borrowCredit.getCreditIncome().add(creditTenderLog.getAssignPay()));
                 // 已认购本金
@@ -686,7 +682,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                                     BigDecimal perManage = BigDecimal.ZERO;
                                     int periodNow = borrow.getBorrowPeriod() - borrowRecover.getRecoverPeriod() + i;
                                     // 获取borrow_recover_plan更新每次还款时间
-                                    BorrowRecoverPlanVO borrowRecoverPlan = this.borrowRecoverClient.getPlanByBidTidPeriod(creditTender.getBidNid(), creditTender.getCreditTenderNid(), periodNow);
+                                    BorrowRecoverPlanVO borrowRecoverPlan = this.amTradeClient.getPlanByBidTidPeriod(creditTender.getBidNid(), creditTender.getCreditTenderNid(), periodNow);
                                     if (borrowRecoverPlan != null) {
                                         CreditRepayVO creditRepay = new CreditRepayVO();
                                         if (borrowCredit.getCreditStatus() == 2) {
@@ -844,7 +840,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     creditTenderBg.setBorrowRecover(borrowRecover);
                     creditTenderBg.setSellerBankAccount(sellerBankAccount);
                     // 保存债转主数据
-                    bankCreditTenderClient.saveCreditBgData(creditTenderBg);
+                    this.amTradeClient.saveCreditBgData(creditTenderBg);
 
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
 
@@ -1073,7 +1069,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private CreditTenderLogVO getCreditTenderLog(TenderRequest request, UserVO user, BorrowCreditVO borrowCredit) {
         String assignCapital = request.getAssignCapital();
         CreditTenderLogVO creditTenderLog = new CreditTenderLogVO();
-        BorrowRecoverVO borrowRecover = borrowRecoverClient.getBorrowRecoverByTenderNidBidNid(borrowCredit.getTenderNid(), borrowCredit.getBidNid());
+        BorrowRecoverVO borrowRecover = this.amTradeClient.getBorrowRecoverByTenderNidBidNid(borrowCredit.getTenderNid(), borrowCredit.getBidNid());
         if (borrowRecover == null) {
             // 未查询到用户的放款记录
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_MONEY);
