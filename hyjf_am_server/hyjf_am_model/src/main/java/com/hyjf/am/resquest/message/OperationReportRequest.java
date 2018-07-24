@@ -32,6 +32,7 @@ public class OperationReportRequest extends BasePage implements Serializable{
 
 	protected int limitEnd = -1;
 
+
 	public String getStartCreate() {
 		return startCreate;
 	}
