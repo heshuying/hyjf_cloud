@@ -688,7 +688,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
 	@Override
 	public List<BorrowTenderTmpVO> getBorrowTenderTmpList() {
-		String url = "http://AM-TRADE/am-trade/bankexception/getBorrowTenderTmpList";
+		String url = "http://AM-TRADE/am-trade/bankException/getBorrowTenderTmpList";
 		BorrowTenderTmpResponse response =restTemplate.getForEntity(url,BorrowTenderTmpResponse.class).getBody();
 		if (response!=null){
 			response.getResultList();

@@ -3,9 +3,12 @@
  */
 package com.hyjf.callcenter.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.callcenter.*;
+import com.hyjf.am.response.trade.RUserResponse;
 import com.hyjf.am.resquest.callcenter.*;
 import com.hyjf.am.vo.callcenter.*;
+import com.hyjf.am.vo.trade.RUserVO;
 import com.hyjf.callcenter.client.AmTradeClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,6 +172,21 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .getBody();
         if (callCenterWithdrawResponse != null) {
             return callCenterWithdrawResponse.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户ID查询推荐人信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public RUserVO getRefereerInfoByUserId(Integer userId){
+        String url = "http://AM-TRADE/am-trade/callcenter/getRefereerInfoByUserId/" + userId;
+        RUserResponse response = restTemplate.getForEntity(url, RUserResponse.class).getBody();
+        if(response != null && Response.isSuccess(response)){
+            return response.getResult();
         }
         return null;
     }
