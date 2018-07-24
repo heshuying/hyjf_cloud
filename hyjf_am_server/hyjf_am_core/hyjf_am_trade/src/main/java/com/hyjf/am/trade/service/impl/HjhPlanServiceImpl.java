@@ -13,6 +13,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
@@ -190,6 +191,17 @@ public class HjhPlanServiceImpl implements HjhPlanService {
     public List<BorrowVO> getPlanBorrowList(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.getPlanBorrowList(params);
     }
+
+    @Override
+    public Map<String, Object> getPlanAccecdeTotal(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanAccedeTotal(params);
+    }
+
+    @Override
+    public List<HjhAccedeCustomizeVO> getPlanAccecdeList(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanAccedeList(params);
+    }
+
 
     /**
      * 插入资金明细表

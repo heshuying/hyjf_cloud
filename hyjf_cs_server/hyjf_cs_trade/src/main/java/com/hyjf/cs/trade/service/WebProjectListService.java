@@ -78,5 +78,13 @@ public interface WebProjectListService extends BaseTradeService{
     public WebResult getPlanBorrowList(WebPlanRequestBean request);
 
 
+    /**
+     * 计划详情:加入记录
+     * @author zhangyk
+     * @date 2018/7/24 18:51
+     */
+    public WebResult getPlanAccedeList(WebPlanRequestBean requestBean,  String userId);
+
+
 
 }

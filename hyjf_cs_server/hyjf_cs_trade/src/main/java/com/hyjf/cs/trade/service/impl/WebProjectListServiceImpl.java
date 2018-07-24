@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.UserCouponConfigCustomizeVo;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -63,6 +64,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     public static final  String HJH_DETAIL_BORROW_LIST_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowListCount";
 
     public static final  String HJH_DETAIL_BORROW_LIST_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowList";
+
+    /*加入记录count*/
+    public static final  String HJH_DETAIL_ACCEDE_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeCount";
+
+    /*加入记录list*/
+    public static final  String HJH_DETAIL_ACCEDE_LIST_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeList";
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -1077,6 +1084,49 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         return result;
     }
 
+
+    /**
+     * 计划详情:加入记录
+     * @author zhangyk
+     * @date 2018/7/24 18:51
+     */
+    @Override
+    public WebResult getPlanAccedeList(WebPlanRequestBean requestBean, String userId) {
+        WebResult result = new WebResult();
+        JSONObject info  = new JSONObject();
+        CheckUtil.check(StringUtils.isNotBlank(requestBean.getPlanNid()), MsgEnum.ERR_OBJECT_REQUIRED,"计划编号");
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", requestBean.getPlanNid());
+        HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_ACCEDE_COUNT_URL,params,HjhAccedeResponse.class);
+        Map<String,Object> totalData = response.getTotalData();
+        int count;
+        double accedeTotal ;
+        if (totalData == null || totalData.get("count") == null){
+            count = 0;
+            accedeTotal = 0.00;
+        }else{
+             count = (Integer) totalData.get("count");
+             accedeTotal = (double) totalData.get("sum");
+        }
+        Page page = Page.initPage(requestBean.getCurrPage(),requestBean.getPageSize());
+        info.put("planAccedeList",new ArrayList<>());
+        if (count > 0 ){
+            params.put("limitStart",page.getOffset());
+            params.put("limitEnd",page.getLimit());
+            HjhAccedeListResponse res  = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL,params,HjhAccedeListResponse.class);
+            List<HjhAccedeCustomizeVO> list = res.getResultList();
+            info.put("planAccedeList",list);
+        }
+
+        info.put("accedeTimes",count);
+        info.put("accedeTotal",accedeTotal);
+        result.setData(info);
+        page.setTotal(count);
+        result.setPage(page);
+        return result;
+    }
+
     /**
      * 格式化用户姓名
      * @author zhangyk
@@ -1115,6 +1165,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }
         }
     }
+
+
+
+
+
 
 
 }
