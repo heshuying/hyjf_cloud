@@ -104,20 +104,19 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserContact" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_user_contact (relation, rl_name, rl_phone, 
-      create_time, update_time)
-    values (#{relation,jdbcType=INTEGER}, #{rlName,jdbcType=CHAR}, #{rlPhone,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_user_contact (user_id, relation, rl_name, 
+      rl_phone, create_time, update_time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{relation,jdbcType=INTEGER}, #{rlName,jdbcType=CHAR}, 
+      #{rlPhone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserContact" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_user_contact
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="relation != null" >
         relation,
       </if>
@@ -135,6 +134,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
       <if test="relation != null" >
         #{relation,jdbcType=INTEGER},
       </if>
