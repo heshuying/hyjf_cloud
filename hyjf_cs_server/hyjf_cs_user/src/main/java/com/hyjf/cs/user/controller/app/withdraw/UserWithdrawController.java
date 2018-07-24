@@ -85,10 +85,13 @@ public class UserWithdrawController {
                     UserWithdrawResultBean bankCardBean = new UserWithdrawResultBean();
                     bankCardBean.setBank(bank.getBank());
                     BankConfigVO bankConfig = userWithdrawService.getBankInfo(bank.getBank());
-                    bankCardBean.setLogo(systemConfig.webHost + bankConfig.getAppLogo());// 应前台要求，logo路径给绝对路径
-                    bankCardBean.setBank(bankConfig.getName());// 银行名称 汉字
+                    // 应前台要求，logo路径给绝对路径
+                    bankCardBean.setLogo(systemConfig.webHost + bankConfig.getAppLogo());
+                    // 银行名称 汉字
+                    bankCardBean.setBank(bankConfig.getName());
                     bankCardBean.setCardNo(bank.getAccount());
-                    bankCardBean.setIsDefault(bank.getCardType());// 卡类型
+                    // 卡类型
+                    bankCardBean.setIsDefault(bank.getCardType());
                     // 0普通提现卡1默认卡2快捷支付卡
                     bankcards.add(bankCardBean);
                 }
