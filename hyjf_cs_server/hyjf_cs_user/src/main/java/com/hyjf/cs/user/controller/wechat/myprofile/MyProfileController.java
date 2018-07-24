@@ -41,7 +41,7 @@ import java.util.List;
  */
 @Api(value = "wechat端账户总览",description = "wechat端账户总览")
 @Controller
-@RequestMapping("/wx/myprofile")
+@RequestMapping("/hyjf-wechat/myprofile")
 public class MyProfileController extends BaseUserController {
 
     @Autowired
@@ -53,7 +53,7 @@ public class MyProfileController extends BaseUserController {
 
 
     @SignValidate
-    @GetMapping("/profile")
+    @RequestMapping("/profile")
     @ResponseBody
     public BaseResultBean myProfile(HttpServletRequest request) {
 
