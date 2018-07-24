@@ -91,8 +91,6 @@ public class FddHandle {
 	@Autowired
 	private HjhAccedeClient hjhAccedeClient;
 	@Autowired
-	private TenderAgreementClient tenderAgreementClient;
-	@Autowired
 	private SystemConfig systemConfig;
 
 	@Autowired
@@ -541,7 +539,7 @@ public class FddHandle {
     private void updateSaveSignInfo(DzqzCallBean platerCallBean, String contract_id, String borrowNid, Integer transType, String instCode, boolean isTenderCompany, boolean isCreditCompany) {
         String download_url = platerCallBean.getDownload_url();
         String viewpdf_url = platerCallBean.getViewpdf_url();
-        List<TenderAgreementVO> agreements = this.tenderAgreementClient.getTenderAgreementListByTenderNidAndStatusNot2(contract_id);
+        List<TenderAgreementVO> agreements = this.amTradeClient.getTenderAgreementListByTenderNidAndStatusNot2(contract_id);
         if (agreements != null && agreements.size() > 0) {
         	TenderAgreementVO tenderAgreement = agreements.get(0);
         	int nowTime = GetDate.getNowTime10();
@@ -1520,7 +1518,7 @@ public class FddHandle {
 
 			//是否企业用户
 			boolean isCompanyUser = false;
-			TenderAgreementVO tenderAgrementInfo = this.tenderAgreementClient.getTenderAgreementInfo(tenderAgreementID);
+			TenderAgreementVO tenderAgrementInfo = this.amTradeClient.getTenderAgreementInfoByPrimaryKey(tenderAgreementID);
 			String borrowNid = tenderAgrementInfo.getBorrowNid();
 			if(StringUtils.isNotBlank(borrowNid)){
 				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
@@ -1654,7 +1652,7 @@ public class FddHandle {
 				//String filePath = PropUtils.getSystem(CustomConstants.HYJF_MAKEPDF_TEMPPATH) + "/" + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
 				String filePath = "/pdf_tem/pdf/" + hjhAccede.getPlanNid();
 				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
-				List<TenderAgreementVO> tenderAgreementsNid=this.tenderAgreementClient.selectTenderAgreementByNid(hjhAccede.getAccedeOrderId());
+				List<TenderAgreementVO> tenderAgreementsNid=this.amTradeClient.selectTenderAgreementByNid(hjhAccede.getAccedeOrderId());
 				/***************************下载法大大协议******************************************/
 				//下载法大大协议--投资服务协议
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
@@ -1725,7 +1723,7 @@ public class FddHandle {
 				//String filePath = PropUtils.getSystem(CustomConstants.HYJF_MAKEPDF_TEMPPATH) + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
 				String  filePath = "/pdf_tem/pdf/" + orderId;
 				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
-				List<TenderAgreementVO> tenderAgreementsNid=this.tenderAgreementClient.selectTenderAgreementByNid(orderId);
+				List<TenderAgreementVO> tenderAgreementsNid=this.amTradeClient.selectTenderAgreementByNid(orderId);
 				/***************************下载法大大协议******************************************/
 				//下载法大大协议--居间
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
@@ -1803,11 +1801,12 @@ public class FddHandle {
 	}
 
 	private void updateTenderAgreementImageURL(String tenderAgreementID, String iamgeurl, String tmpdfPath) {
-		TenderAgreementRequest request = new TenderAgreementRequest();
-		request.setTenderAgreementID(tenderAgreementID);
-		request.setImgUrl(iamgeurl);
-		request.setPdfUrl(tmpdfPath);
-		this.tenderAgreementClient.updateTenderAgreement(request);
+		TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+		tenderAgreement.setId(Integer.parseInt(tenderAgreementID));
+		tenderAgreement.setImgUrl(iamgeurl);
+		tenderAgreement.setPdfUrl(tmpdfPath);
+		tenderAgreement.setStatus(3);//下载成功
+		this.amTradeClient.updateTenderAgreement(tenderAgreement);
 	}
 
 
