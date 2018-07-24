@@ -37,7 +37,7 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "web端用户充值接口")
+@Api(value = "web端用户充值接口",description = "web端用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/web/recharge")
