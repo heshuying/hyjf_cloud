@@ -48,7 +48,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
-@Api(value = "admin移动客户端")
+@Api(value = "admin移动客户端",description = "admin移动客户端")
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionsController extends BaseController {
@@ -63,7 +63,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
-    public SubmissionsResponse findAppBannerData(SubmissionsRequest form) {
+    public SubmissionsResponse findAppBannerData(@RequestBody SubmissionsRequest form) {
         SubmissionsResponse response = new SubmissionsResponse();
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
         if(StringUtils.isNotBlank(form.getUserName())){
@@ -94,7 +94,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
-    public SubmissionsResponse updateSubmissions(SubmissionsRequest form) {
+    public SubmissionsResponse updateSubmissions(@RequestBody SubmissionsRequest form) {
         SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
         return response;
 
@@ -109,7 +109,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
     @RequestMapping("/exportListAction")
-    public void exportListAction(SubmissionsRequest form,
+    public void exportListAction(@RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
         // 表格sheet名称

@@ -18,6 +18,8 @@ public interface BankConfigService {
      */
     BankConfig getBankConfigByBankId(Integer bankId);
 
+    BankConfig selectBankConfigByCode(String code);
+
     BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 
 	String queryBankIdByCardNo(String cardNo);
@@ -58,4 +60,13 @@ public interface BankConfigService {
      * 删除银行配置
      */
     void deleteBankConfigById(Integer id);
+
+    /**
+     * 根据银行code获取银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    List<BankConfig> getBankConfigByCode(String code);
+
 }

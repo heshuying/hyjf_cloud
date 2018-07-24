@@ -27,8 +27,8 @@
         u.user_id,
         u.username
         FROM
-        hyjf_bank_open_account a
-        LEFT JOIN huiyingdai_users u ON u.user_id = a.user_id
+        ht_bank_open_account a
+        LEFT JOIN ht_users u ON u.user_id = a.user_id
         WHERE u.bank_open_account = 1
         <if test="userId != null and userId != 0">
             AND u.user_id = #{userId}
@@ -44,8 +44,8 @@
 			t.type_id,
 			a.user_id
 		FROM
-			huiyingdai_account_list a
-		LEFT JOIN huiyingdai_account_trade t
+			ht_account_list a
+		LEFT JOIN ht_account_trade t
 		ON t.`value` = a.trade
 		WHERE
 			1=1

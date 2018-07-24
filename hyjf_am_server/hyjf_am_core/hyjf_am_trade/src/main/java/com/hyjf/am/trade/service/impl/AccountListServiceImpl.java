@@ -35,7 +35,7 @@ public class AccountListServiceImpl extends BaseServiceImpl implements AccountLi
 		AccountListExample accountListExample = new AccountListExample();
 		accountListExample.createCriteria().andNidEqualTo(ordId).andTradeEqualTo("cash_success");
 		List<AccountList> accountlist = this.accountListMapper.selectByExample(accountListExample);
-		if(accountlist!=null&&accountlist.size()>0){
+		if(accountlist!=null&&!accountlist.isEmpty()){
 			return accountlist.get(0);
 		}
 		return null;

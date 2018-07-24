@@ -57,7 +57,7 @@ import java.util.Map;
 
 @Api(value = "融东风提现接口")
 @Controller
-@RequestMapping("/surong/withdraw")
+@RequestMapping("/hyjf-api/surong/withdraw")
 public class WithdrawController extends BaseController {
     @Autowired
     RdfWithdrawService rdfWithdrawService;

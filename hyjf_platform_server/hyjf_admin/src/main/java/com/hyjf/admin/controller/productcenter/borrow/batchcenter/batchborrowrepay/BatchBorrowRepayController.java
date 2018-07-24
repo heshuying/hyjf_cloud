@@ -46,7 +46,7 @@ public class BatchBorrowRepayController extends BaseController{
     @PostMapping(value = "/batchBorrowRepayInit")
     @ResponseBody
     public JSONObject batchBorrowRepayInit() {
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
         return jsonObject;
     }
 

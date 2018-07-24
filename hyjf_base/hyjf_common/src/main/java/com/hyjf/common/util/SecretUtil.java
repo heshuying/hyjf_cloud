@@ -381,6 +381,30 @@ public class SecretUtil {
         }
         return appUserToken.getUserId();
     }
-    
-    
+
+
+    public static AppUserToken getAppUserToken(String sign) {
+        // 获取sign缓存
+        String value = RedisUtils.get(sign);
+        if(StringUtils.isBlank(value)){
+            return null;
+        }
+        AppUserToken signValue = JSON.parseObject(value, AppUserToken.class);
+        if (null == signValue) {
+            throw new RuntimeException("用户未登陆");
+        }
+        return signValue;
+    }
+
+    public static void refreshSign(String sign) {
+        if(StringUtils.isEmpty(sign)){
+            return ;
+        }
+        // 获取sign缓存
+        String value = RedisUtils.get(sign);
+        if(StringUtils.isEmpty(value)){
+            return ;
+        }
+        RedisUtils.expire(sign,RedisUtils.signExpireTime);
+    }
 }

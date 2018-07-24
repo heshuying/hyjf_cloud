@@ -31,7 +31,7 @@ public class AdminBorrowRepaymentInfoController extends BaseController {
 
     @RequestMapping(value = "/countBorrowRepaymentInfo")
     public AdminBorrowRepaymentInfoResponse countBorrowRepaymentInfo(@RequestBody @Valid BorrowRepaymentInfoRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoResponse response = new AdminBorrowRepaymentInfoResponse();
         int count = this.adminBorrowRepaymentInfoService.countBorrowRecover(request);
 
@@ -41,7 +41,7 @@ public class AdminBorrowRepaymentInfoController extends BaseController {
 
     @RequestMapping(value = "/selectBorrowRepaymentInfoListForView")
     public AdminBorrowRepaymentInfoResponse selectBorrowRepaymentInfoListForView(@RequestBody @Valid BorrowRepaymentInfoRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoResponse response = new AdminBorrowRepaymentInfoResponse();
 
         List<AdminBorrowRepaymentInfoCustomize> list = adminBorrowRepaymentInfoService.selectBorrowRepaymentInfoListForView(request);
@@ -54,7 +54,7 @@ public class AdminBorrowRepaymentInfoController extends BaseController {
 
     @RequestMapping(value = "/sumBorrowRepaymentInfo")
     public AdminBorrowRepaymentInfoResponse sumBorrowRepaymentInfo(@RequestBody @Valid BorrowRepaymentInfoRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoResponse response = new AdminBorrowRepaymentInfoResponse();
 
         AdminBorrowRepaymentInfoCustomize customize = adminBorrowRepaymentInfoService.sumBorrowRecoverList(request);
@@ -67,7 +67,7 @@ public class AdminBorrowRepaymentInfoController extends BaseController {
 
     @RequestMapping(value = "/selectBorrowRepaymentInfoList")
     public AdminBorrowRepaymentInfoResponse selectBorrowRepaymentInfoList(@RequestBody @Valid BorrowRepaymentInfoRequset request){
-        logger.info("request:" +JSONObject.toJSON(request));
+        logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentInfoResponse response = new AdminBorrowRepaymentInfoResponse();
 
         List<AdminBorrowRepaymentInfoCustomize> list = adminBorrowRepaymentInfoService.selectBorrowRepaymentInfoList(request);

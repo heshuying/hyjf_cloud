@@ -16,6 +16,9 @@ public class InsertBankCreditEndForCreditEndRequest extends BaseVO {
     private String tenderAccountId;
     private String tenderAuthCode;
 
+    public InsertBankCreditEndForCreditEndRequest() {
+    }
+
     public InsertBankCreditEndForCreditEndRequest(HjhDebtCreditVO hjhDebtCreditVO, String tenderAccountId, String tenderAuthCode) {
         this.hjhDebtCreditVO = hjhDebtCreditVO;
         this.tenderAccountId = tenderAccountId;

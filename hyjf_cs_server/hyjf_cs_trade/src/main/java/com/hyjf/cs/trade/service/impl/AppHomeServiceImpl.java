@@ -20,7 +20,7 @@ import com.hyjf.cs.trade.bean.AppModuleBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.AppHomeService;
-import com.hyjf.cs.trade.util.AppHomePageDefine;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,7 +165,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             this.createProjectNewPage(info, list, HOST);
         }
         //获取累计投资金额
-        TotalInvestAndInterestResponse res = baseClient.getExe(AppHomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
         info.put("totalInvestmentAmount", DF_FOR_VIEW.format(totalInvestAndInterestVO.getTotalInvestAmount()));
         info.put("moduleTotal", "4");
@@ -194,7 +194,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(CustomConstants.APP_REQUEST,
-                ProjectConstant.REQUEST_HOME + AppHomePageDefine.REQUEST_MAPPING + AppHomePageDefine.PROJECT_LIST_ACTION);
+                ProjectConstant.REQUEST_HOME + HomePageDefine.REQUEST_MAPPING + HomePageDefine.PROJECT_LIST_ACTION);
         CommonUtils.convertNullToEmptyString(info);
         return info;
     }
@@ -285,8 +285,8 @@ public class AppHomeServiceImpl implements AppHomeService {
                 }
                 appProjectListCustomize.setCouponEnable(couponEnable);
                 // 项目详情url
-                url = HOST + ProjectConstant.REQUEST_HOME + AppHomePageDefine.PLAN
-                        + AppHomePageDefine.HJH_PLAN_DETAIL_ACTION + "?planNid='" + entity.getPlanNid() + "'";
+                url = HOST + ProjectConstant.REQUEST_HOME + HomePageDefine.PLAN
+                        + HomePageDefine.HJH_PLAN_DETAIL_ACTION + "?planNid='" + entity.getPlanNid() + "'";
                 appProjectListCustomize.setBorrowUrl(url);
                 appProjectListCustomize.setProjectType("HJH");
                 appProjectListCustomize.setBorrowType("HJH");
@@ -329,7 +329,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 }
             }
 
-            homePageCustomize.setBorrowUrl(HOST + AppHomePageDefine.PLAN + listCustomize.getBorrowNid());
+            homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             String status = listCustomize.getStatus();
@@ -386,7 +386,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
             String statusNameDesc = planDetailCustomizeVO != null ? planDetailCustomizeVO.getAvailableInvestAccount() : "0.00";
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
-            homePageCustomize.setBorrowUrl(HOST + AppHomePageDefine.BORROW + listCustomize.getBorrowNid());
+            homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             homePageCustomize.setStatus(listCustomize.getStatus());
@@ -442,8 +442,8 @@ public class AppHomeServiceImpl implements AppHomeService {
     private void createBannerPage(JSONObject info, String platform, HttpServletRequest request, String HOST) {
 
         AdsRequest adsRequest = new AdsRequest();
-        adsRequest.setLimitStart(AppHomePageDefine.BANNER_SIZE_LIMIT_START);
-        adsRequest.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
+        adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        adsRequest.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         adsRequest.setHost(HOST);
         String code = "";
         if ("2".equals(platform)) {
@@ -480,8 +480,8 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void createBannerlittlePage(JSONObject info,Boolean isNewFlag) {
         AdsRequest request = new AdsRequest();
-        request.setLimitStart(AppHomePageDefine.BANNER_SIZE_LIMIT_START);
-        request.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
+        request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         request.setHost(systemConfig.fileDomainUrl);
         request.setCode("bannerlittle");
         List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(request);
@@ -514,8 +514,8 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void createPopImgPage(JSONObject info, String uniqueIdentifier) {
         AdsRequest request = new AdsRequest();
-        request.setLimitStart(AppHomePageDefine.BANNER_SIZE_LIMIT_START);
-        request.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
+        request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         request.setHost(systemConfig.fileDomainUrl);
         request.setCode("popup");
 
@@ -558,8 +558,8 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void createModule(List<AppModuleBean> moduleList, String platform, String android, String ios, String HOST) {
         AdsRequest adsRequest = new AdsRequest();
-        adsRequest.setLimitStart(AppHomePageDefine.BANNER_SIZE_LIMIT_START);
-        adsRequest.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
+        adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        adsRequest.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         adsRequest.setHost(HOST);
         String code = "";
         if ("2".equals(platform)) {
@@ -684,8 +684,8 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void createAdPic(JSONObject info, String platform, String type, String HOST) {
         AdsRequest adsRequest = new AdsRequest();
-        adsRequest.setLimitStart(AppHomePageDefine.BANNER_SIZE_LIMIT_START);
-        adsRequest.setLimitEnd(AppHomePageDefine.BANNER_SIZE_LIMIT_END);
+        adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
+        adsRequest.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         adsRequest.setHost(HOST);
         String code = "";
         if ("2".equals(platform)) {

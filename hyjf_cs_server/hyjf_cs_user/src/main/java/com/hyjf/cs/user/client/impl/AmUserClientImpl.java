@@ -2,16 +2,19 @@ package com.hyjf.cs.user.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.AdminBankAccountCheckCustomizeResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.codec.binary.Base64;
@@ -125,6 +128,26 @@ public class AmUserClientImpl implements AmUserClient {
 	public void insertMobileCode(UserAliasVO mobileCode) {
 		Integer cnt = restTemplate
 				.postForEntity(userService+"/userAlias/insertMobileCode", mobileCode, Integer.class).getBody();
+	}
+
+	@Override
+	public VipInfoVO findVipInfoById(Integer vipId) {
+		VipInfoResponse response = restTemplate
+				.getForEntity(userService+"/vipInfo/findVipInfoById/" + vipId, VipInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public List<AccountBankVO> selectAccountBank(Integer userId, int status) {
+		AccountBankResponse response = restTemplate
+				.getForEntity(userService+"/accountbank/selectAccountBank/" + userId+"/"+status, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
 	}
 
 
@@ -914,4 +937,30 @@ public class AmUserClientImpl implements AmUserClient {
 		return false;
 	}
 
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public List<AccountBankVO> getBankCardByUserId(Integer userId) {
+		String url = userService + "/accountbank/getBankCardByUserId/" + userId;
+		AccountBankResponse response = restTemplate
+				.getForEntity(url, AccountBankResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId) {
+		String url = userService+"/accountbank/queryAllBankOpenAccount/"+userId;
+		AdminBankAccountCheckCustomizeResponse response = restTemplate.getForEntity(url,AdminBankAccountCheckCustomizeResponse.class).getBody();
+		if (Validator.isNotNull(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
 }

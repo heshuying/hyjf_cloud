@@ -114,7 +114,7 @@ public class GetOrderIdUtils {
 	 */
 	public static synchronized String getOrderDate() {
 		Date currentTime = new Date();
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMdd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String orderDate = formatter.format(currentTime);
 		return orderDate;
 	}
@@ -137,7 +137,7 @@ public class GetOrderIdUtils {
 	 * @return
 	 */
 	public static synchronized String getOrderDate(Date date) {
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMdd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String orderDate = formatter.format(date);
 		return orderDate;
 	}
@@ -148,7 +148,7 @@ public class GetOrderIdUtils {
 	 * @return
 	 */
 	public static synchronized String getOrderDate(Integer time) {
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMdd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 		String orderDate = formatter.format(Long.valueOf(time) * 1000);
 		return orderDate;
 	}

@@ -19,13 +19,6 @@ public interface AmConfigClient {
 	 */
     BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 	/**
-	 * 调用银行接口
-	 * @param accountwithdraw
-	 * @return
-	 */
-	BankCallBeanVO bankCallFundTransQuery(AccountWithdrawVO accountwithdraw);
-	
-	/**
 	 * 提现费率
 	 * @param bankCode
 	 * @return

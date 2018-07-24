@@ -13,11 +13,11 @@ public class AdsWithBLOBsVO implements Serializable {
     private String shareContent;
 
     private static final long serialVersionUID = 1L;
-    private Short id;
+    private Integer id;
 
     private String name;
 
-    private Integer typeid;
+    private Integer typeId;
 
     private String url;
 
@@ -29,7 +29,7 @@ public class AdsWithBLOBsVO implements Serializable {
 
     private Integer hits;
 
-    private Short status;
+    private Integer status;
 
     private String shareUrl;
 
@@ -67,11 +67,11 @@ public class AdsWithBLOBsVO implements Serializable {
         this.ids = ids;
     }
 
-    public Short getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -83,13 +83,6 @@ public class AdsWithBLOBsVO implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getTypeid() {
-        return typeid;
-    }
-
-    public void setTypeid(Integer typeid) {
-        this.typeid = typeid;
-    }
 
     public String getUrl() {
         return url;
@@ -131,11 +124,11 @@ public class AdsWithBLOBsVO implements Serializable {
         this.hits = hits;
     }
 
-    public Short getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Short status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -258,4 +251,11 @@ public class AdsWithBLOBsVO implements Serializable {
         this.shareContent = shareContent == null ? null : shareContent.trim();
     }
 
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
+    }
 }

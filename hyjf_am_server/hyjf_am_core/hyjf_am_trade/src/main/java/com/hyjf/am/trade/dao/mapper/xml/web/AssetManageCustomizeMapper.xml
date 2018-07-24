@@ -222,7 +222,7 @@
 		borrow.repay_last_time as orderby_invest_date,
 		(ten.account-(
 		SELECT IFNULL(SUM(ct.assign_capital),0)
-		FROM huiyingdai_credit_tender ct
+		FROM ht_credit_tender ct
 		WHERE rec.nid = ct.credit_tender_nid)) AS capital,
 		CASE
 		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
@@ -240,17 +240,17 @@
 		IFNULL(rec.recover_capital_wait,ten.account)+
 		IFNULL( rec.recover_interest_wait, 0 )-
 		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
-		FROM huiyingdai_credit_tender ct
+		FROM ht_credit_tender ct
 		WHERE rec.nid = ct.credit_tender_nid
 		)-
 		(SELECT IFNULL(SUM(ct.assign_capital - ct.assign_repay_capital),0)
-		FROM huiyingdai_credit_tender ct
+		FROM ht_credit_tender ct
 		WHERE rec.nid = ct.credit_tender_nid
 		)- (
 		SELECT
 		IFNULL(SUM(rp.charge_interest) ,0)
 		FROM
-		huiyingdai_credit_repay rp
+		ht_credit_repay rp
 		WHERE
 		rec.nid = rp.credit_tender_nid
 		and rp.status = 1
@@ -259,16 +259,16 @@
 		'' credit_nid,
 		'' credit_tender_nid
 		FROM
-		huiyingdai_borrow_tender ten
-		LEFT JOIN huiyingdai_borrow_recover rec
+		ht_borrow_tender ten
+		LEFT JOIN ht_borrow_recover rec
 		ON ten.nid = rec.nid
 		AND rec.recover_capital <![CDATA[>]]> rec.credit_amount
 		AND rec.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN (SELECT hbc.tender_nid,
 		SUM(hbc.credit_capital_assigned) credit_capital_assigned,
-		MIN(hbc.credit_status) credit_status FROM huiyingdai_borrow_credit hbc
+		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
@@ -312,7 +312,7 @@
 		SELECT
 		IFNULL(sum(hdcrp.assign_interest) , 0)
 		FROM
-		huiyingdai_credit_repay hdcrp
+		ht_credit_repay hdcrp
 		WHERE
 		hdcrp.assign_nid = ten.assign_nid
 		AND hdcrp.`status` = 1
@@ -321,9 +321,9 @@
 		ten.credit_nid credit_nid,
 		ten.credit_tender_nid credit_tender_nid
 		FROM
-		huiyingdai_credit_tender ten
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.bid_nid
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
+		ht_credit_tender ten
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		WHERE ten.user_id= #{userId}
 		AND borrow.`status` = 4
 		AND ten.assign_interest>0
@@ -380,12 +380,12 @@
 		'' credit_tender_nid
 		FROM
 		hyjf_borrow_tender_cpn hbtc
-		INNER JOIN huiyingdai_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
 		LEFT JOIN hyjf_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN hyjf_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN hyjf_coupon_user hcu ON hct.coupon_grant_id = hcu.id
 		INNER JOIN hyjf_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hb.project_type
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hb.project_type
 		WHERE hbtc.user_id= #{userId}
 		AND hb.plan_nid IS NULL
 		GROUP BY hbtc.nid
@@ -427,10 +427,10 @@
 		'' credit_tender_nid
 		FROM
 		hyjf_increase_interest_invest hiii
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
 		INNER JOIN hyjf_increase_interest_loan hiil ON hiil.invest_order_id=hiii.order_id
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
+		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
 		WHERE
 		(
 		borrow.`status` = 2
@@ -916,7 +916,7 @@
 		SELECT
 		IFNULL(SUM(hct.assign_pay - hct.credit_fee),0)
 		FROM
-		huiyingdai_credit_tender hct
+		ht_credit_tender hct
 		WHERE
 		hct.credit_tender_nid = hbc.tender_nid
 		AND hbc.credit_nid = hct.credit_nid
@@ -941,10 +941,10 @@
 		hbc.credit_nid,
 		hbc.credit_status,
 		hbc.credit_term
-		FROM huiyingdai_borrow_credit hbc
-		INNER JOIN huiyingdai_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hbs ON hb.borrow_style = hbs.nid
-		LEFT JOIN huiyingdai_borrow_tender hbt ON hbc.bid_nid = hbt.borrow_nid AND hbc.tender_nid = hbt.nid
+		FROM ht_borrow_credit hbc
+		INNER JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+		INNER JOIN ht_borrow_style hbs ON hb.borrow_style = hbs.nid
+		LEFT JOIN ht_borrow_tender hbt ON hbc.bid_nid = hbt.borrow_nid AND hbc.tender_nid = hbt.nid
 
 		<where>
 			<if test="userId != null and userId != '' and userId != 0">

@@ -35,7 +35,7 @@ public class BorrowInvestResponseBean {
     @ApiModelProperty(value = "投资方式")
     private Map<String,String> investTypeList;
 
-    @ApiModelProperty(value = "投资人债券明晰")
+    @ApiModelProperty(value = "投资人债券明细")
     List<InvestorDebtBean> detailList;
 
     @ApiModelProperty(value = "PDF脱敏图片")

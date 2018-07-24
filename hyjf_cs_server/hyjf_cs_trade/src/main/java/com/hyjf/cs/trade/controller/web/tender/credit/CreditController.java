@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(value = "Web端债转投资")
 @RestController
-@RequestMapping("/web/credit")
+@RequestMapping("/hyjf-web/credit")
 public class CreditController {
 
     @Autowired

@@ -27,14 +27,14 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentPartnerController, v0.1 2018/7/12 9:52
  */
-@Api(value = "公司管理-合作伙伴")
+@Api(value = "公司管理-合作伙伴", description = "公司管理-合作伙伴")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentpartner")
 public class ContentPartnerController extends BaseController {
 	@Autowired
 	private ContentPartnerService contentPartnerService;
 
-	@ApiOperation(value = "公司管理-合作伙伴", notes = "公司管理-合作伙伴列表查询")
+	@ApiOperation(value = "公司管理-合作伙伴列表查询", notes = "公司管理-合作伙伴列表查询")
 	@RequestMapping("/searchaction")
 	public AdminResult<ListResult<LinkVO>> searchAction(@RequestBody ContentPartnerRequestBean requestBean) {
 		LinkResponse response = contentPartnerService.searchAction(requestBean);
@@ -47,7 +47,7 @@ public class ContentPartnerController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "公司管理-合作伙伴", notes = "添加公司管理-合作伙伴")
+	@ApiOperation(value = "添加公司管理-合作伙伴", notes = "添加公司管理-合作伙伴")
 	@RequestMapping("/insert")
 	public AdminResult add(@RequestBody ContentPartnerRequestBean requestBean) {
 		LinkResponse response = contentPartnerService.insertAction(requestBean);
@@ -60,7 +60,7 @@ public class ContentPartnerController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
+	@ApiOperation(value = "修改公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
 	@RequestMapping("/update")
 	public AdminResult update(@RequestBody ContentPartnerRequestBean requestBean) {
 		LinkResponse response = contentPartnerService.updateAction(requestBean);
@@ -73,7 +73,7 @@ public class ContentPartnerController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
+	@ApiOperation(value = "修改公司管理-合作伙伴", notes = "修改公司管理-合作伙伴")
 	@RequestMapping("/updatestatus")
 	public AdminResult updatestatus(@RequestBody ContentPartnerRequestBean requestBean) {
 		LinkResponse response = contentPartnerService.updateStatus(requestBean);
@@ -86,7 +86,7 @@ public class ContentPartnerController extends BaseController {
 		return new AdminResult<>();
 	}
 
-	@ApiOperation(value = "公司管理-合作伙伴", notes = "删除公司管理-合作伙伴")
+	@ApiOperation(value = "删除公司管理-合作伙伴", notes = "删除公司管理-合作伙伴")
 	@RequestMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		LinkResponse response = contentPartnerService.deleteById(id);
