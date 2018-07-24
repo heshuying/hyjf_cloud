@@ -53,7 +53,7 @@ import java.util.*;
 /**
  * 转账异常
  */
-@Api(value = "银行转账异常")
+@Api(value = "银行转账异常",description = "银行转账异常")
 @RestController
 @RequestMapping("/exception/transferexception")
 public class TransferExceptionLogController extends BaseController {
@@ -88,7 +88,6 @@ public class TransferExceptionLogController extends BaseController {
 	 */
     @ApiOperation(value = "银行转账异常页面载入", notes = "银行转账异常页面载入")
 	@PostMapping("/init")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(AdminTransferExceptionLogAPIRequest request) {
         AdminTransferExceptionLogResponse response = transferLogService.getRecordList(CommonUtils.convertBean(request,AdminTransferExceptionLogRequest.class));
