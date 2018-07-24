@@ -220,6 +220,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("host",request.getHost());
+        params.put("type",request.getType());
+        params.put("platform",request.getPlatform());
         return webProjectListCustomizeMapper.countAppProject(params);
     }
 
@@ -243,6 +246,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("borrowClass", borrowClass);
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
+        params.put("host",request.getHost());
+        params.put("type",request.getType());
+        params.put("platform",request.getPlatform());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 
