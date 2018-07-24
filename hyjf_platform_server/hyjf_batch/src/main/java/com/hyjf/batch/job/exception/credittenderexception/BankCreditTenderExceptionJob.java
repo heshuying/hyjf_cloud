@@ -14,8 +14,6 @@ import com.hyjf.batch.job.BaseJob;
  */
 public class BankCreditTenderExceptionJob extends BaseJob implements Job{
 	
-	Logger logger = LoggerFactory.getLogger(getClass());
-
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BankCreditTenderExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
