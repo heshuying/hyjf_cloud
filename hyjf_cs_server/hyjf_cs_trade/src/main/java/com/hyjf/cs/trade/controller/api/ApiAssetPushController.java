@@ -31,7 +31,7 @@ import java.util.List;
  * @version ApiAssetPushController, v0.1 2018/6/11 17:52
  */
 @RestController
-@RequestMapping("/api/api")
+@RequestMapping("/hyjf-api/api")
 public class ApiAssetPushController extends BaseTradeController {
 
     Logger logger = LoggerFactory.getLogger(ApiAssetPushController.class);
