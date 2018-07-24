@@ -266,7 +266,7 @@ public class BankExceptionController extends BaseController {
     }
 
     /**
-     * //查询前一天的投资临时数据并进行处理
+     * 查询前一天的投资临时数据并进行处理
      * @return
      */
     @GetMapping("/getBorrowTenderTmpsForTenderCancel")

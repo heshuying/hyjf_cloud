@@ -1334,4 +1334,11 @@ public interface AmTradeClient {
     boolean updateTenderCancelExceptionData(BorrowTenderTmpVO info);
 
     List<BorrowTenderTmpVO> getBorrowTenderTmpsForTenderCancel();
+
+    /**
+     * 查询汇计划债转投资表
+     * @param request
+     * @return
+     */
+    List<HjhDebtCreditTenderVO> getHjhDebtCreditTenderList(HjhDebtCreditTenderRequest request);
 }
