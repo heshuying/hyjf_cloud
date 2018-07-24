@@ -1,15 +1,13 @@
-package com.hyjf.am.vo.trade.account;
+package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author pangchengchao
- * @version BankInterfaceVO, v0.1 2018/6/22 14:09
+ * @author by xiehuili on 2018/7/19.
  */
-public class BankInterfaceVO extends BaseVO implements Serializable {
+public class BankInterfaceRequest extends BasePage {
     private Integer id;
 
     private String interfaceType;
@@ -33,28 +31,6 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
     private Integer isUsable;
 
     private Integer isDelete;
-    //interfaceStatus =0 isusable 是'老接口'  interfaceStatus =1 isusable 是'新接口'
-    private String isusable;
-    //interfaceStatus=  0  interfacestatus '不可用'  interfacestatus1'可用'
-    private String interfacestatus;
-
-    public String getIsusable() {
-        return isusable;
-    }
-
-    public void setIsusable(String isusable) {
-        this.isusable = isusable;
-    }
-
-    public String getInterfacestatus() {
-        return interfacestatus;
-    }
-
-    public void setInterfacestatus(String interfacestatus) {
-        this.interfacestatus = interfacestatus;
-    }
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -69,7 +45,7 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
     }
 
     public void setInterfaceType(String interfaceType) {
-        this.interfaceType = interfaceType == null ? null : interfaceType.trim();
+        this.interfaceType = interfaceType;
     }
 
     public String getInterfaceName() {
@@ -77,7 +53,7 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
     }
 
     public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName == null ? null : interfaceName.trim();
+        this.interfaceName = interfaceName;
     }
 
     public Integer getInterfaceStatus() {
@@ -109,7 +85,7 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
     }
 
     public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
+        this.createUserName = createUserName;
     }
 
     public Date getUpdateTime() {
@@ -133,7 +109,7 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
     }
 
     public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+        this.updateUserName = updateUserName;
     }
 
     public Integer getIsUsable() {
@@ -150,5 +126,22 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
 
     public void setIsDelete(Integer isDelete) {
         this.isDelete = isDelete;
+    }
+
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+    /**
+     * 列表画面自定义标签上的用翻页对象：paginator
+     */
+    private com.hyjf.common.paginator.Paginator paginator;
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
     }
 }
