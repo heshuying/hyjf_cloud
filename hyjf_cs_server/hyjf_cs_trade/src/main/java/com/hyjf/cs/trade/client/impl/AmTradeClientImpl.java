@@ -24,10 +24,7 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -3209,7 +3206,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      *  更新投资协议信息
-     * @param contract_id
      * @return
      */
     @Override
