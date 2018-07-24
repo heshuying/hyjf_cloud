@@ -6,7 +6,9 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.OperationReportService;
+import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.MonthlyOperationReportVO;
@@ -49,6 +51,8 @@ public class OperationReportController extends BaseController {
     private OperationReportService operationReportService;
     @Autowired
     SystemConfig  systemConfig;
+    @Autowired
+    private WhereaboutsPageService whereaboutsPageService;
 
     @ApiOperation(value = "列表初始化", notes = "运营报告列表查询")
     @PostMapping("/list")
@@ -62,7 +66,31 @@ public class OperationReportController extends BaseController {
         }
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
     }
+    @ApiOperation(value = "获取已发布运营报告接口", notes = "获取已发布运营报告接口-app和web端使用")
+    @PostMapping("/listbyrelease")
+    public AdminResult<ListResult<OperationReportVO>> listByRelease(@RequestBody OperationReportRequest request) {
+        OperationReportResponse response = operationReportService.listByRelease(request);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+    }
 
+    @ApiOperation(value = "获取报表明细", notes = "获取报表明细-app和web端使用")
+    @PostMapping("/reportinfo/{id}")
+    public AdminResult<ListResult<OperationReportVO>> reportInfo(@PathVariable String id) {
+        OperationReportResponse response = operationReportService.reportInfo(id);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+    }
     @ApiOperation(value = "进入季度报告页面", notes = "进入季度报告页面")
     @PostMapping("/initQuarter/{operationReportType}/{year}")
     public AdminResult<OperationReportResponse> initQuarter(@PathVariable Integer operationReportType, @PathVariable String year){
@@ -339,10 +367,10 @@ public class OperationReportController extends BaseController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
+    @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping("/uploadFile")
-    public OperationReportResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        OperationReportResponse files = operationReportService.uploadFile(request, response);
+    public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        WhereaboutsPictureResponse files = whereaboutsPageService.uploadFile(request, response);
         return files;
     }
 }

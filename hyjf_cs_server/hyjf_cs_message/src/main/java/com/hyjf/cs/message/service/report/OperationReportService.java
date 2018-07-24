@@ -22,6 +22,13 @@ public interface OperationReportService {
      */
     public List<OperationReportVO> getRecordList(Map<String, Object> record);
 
+	/**
+	 * 获取发布的列表接口
+	 *
+	 * @return
+	 */
+	public OperationReportResponse getRecordListByReleaseJson(OperationReportRequest request);
+
     /**
      * 统计全部个数
      *
@@ -95,6 +102,11 @@ public interface OperationReportService {
 	 */
 	public OperationReportResponse selectOperationreportCommon(String id);
 
+	/**根据id查询获取报表明细
+	 * @param id
+	 * @return
+	 */
+	public OperationReportResponse reportInfo(String id);
 
 
 	/**季度运营报告插入

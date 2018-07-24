@@ -129,6 +129,19 @@ public class OperationReportController extends BaseController {
 		}
 		return response;
 	}
+	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表-app和web端使用")
+	@RequestMapping("/listbyrelease")
+	public OperationReportResponse listByRelease(@RequestBody OperationReportRequest request) {
+		OperationReportResponse response = operationReportService.getRecordListByReleaseJson(request);
+		return response;
+	}
+
+	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表-app和web端使用")
+	@RequestMapping("/reportinfo/{id}")
+	public OperationReportResponse reportInfo(@PathVariable String id) {
+		OperationReportResponse response = operationReportService.reportInfo(id);
+		return response;
+	}
 
 	/**
 	 *
