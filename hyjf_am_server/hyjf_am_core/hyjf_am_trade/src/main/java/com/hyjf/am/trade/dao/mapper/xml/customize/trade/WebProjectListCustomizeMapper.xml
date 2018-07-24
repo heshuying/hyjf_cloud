@@ -503,8 +503,8 @@
     <select id="countCreditList" resultType="int" parameterType="Map">
         select count(ht_borrow_credit.credit_nid)
         from   ht_borrow_credit
-        INNER JOIN ht_borrow hydb ON ht_borrow_credit.bid_nid = hydb.borrow_nid
-        INNER JOIN ht_borrow_style hbs ON hydb.borrow_style = hbs.nid
+        INNER JOIN ht_borrow  ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+        INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
 
@@ -513,7 +513,7 @@
     <!--债权转让(web，app)查询公用where-->
     <sql id="Credit_Common_Where_Column">
         <where>
-            hydb.is_show <![CDATA[<>]]> 1
+            ht_borrow.is_show <![CDATA[<>]]> 1
             <if test="creditStatus != null and creditStatus != ''">
                 AND credit_status = #{creditStatus}
             </if>
@@ -524,7 +524,7 @@
                 </if>
             </if>
             AND ((
-                hydb.borrow_style !='endday'
+                ht_borrow.borrow_style !='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
                     AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin}
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
@@ -532,7 +532,7 @@
                     </if>
                 </if>
             ) OR (
-                hydb.borrow_style ='endday'
+                ht_borrow.borrow_style ='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
                     AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin} * 30
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
@@ -1023,8 +1023,8 @@
         SELECT
         COUNT(ht_borrow_credit.credit_nid)
         from ht_borrow_credit
-        INNER JOIN ht_borrow hydb ON ht_borrow_credit.bid_nid = hydb.borrow_nid INNER JOIN ht_borrow_style hbs
-        ON hydb.borrow_style = hbs.nid
+        INNER JOIN ht_borrow  ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid INNER JOIN ht_borrow_style hbs
+        ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
 
@@ -1090,10 +1090,10 @@
         hydc.create_time AS add_time,
         '0' AS couponEnable
         from ht_borrow_credit hydc
-        INNER JOIN ht_borrow hydb
-        ON hydc.bid_nid = hydb.borrow_nid
+        INNER JOIN ht_borrow
+        ON hydc.bid_nid = ht_borrow.borrow_nid
         INNER JOIN ht_borrow_style hbs
-        ON hydb.borrow_style = hbs.nid
+        ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
         ORDER BY
         borrow_schedule DESC, borrow_period DESC
