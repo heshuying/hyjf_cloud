@@ -100,7 +100,7 @@ public class WechatmMyProjectController {
      * @return
      */
     @ApiOperation(value = "微信端:获取我的计划信息", notes = "微信端:获取我的计划信息")
-    @PostMapping(value = "/queryScatteredProject", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/queryPlanedProject", produces = "application/json; charset=utf-8")
     public WeChatResult queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
         WeChatResult weChatResult = new WeChatResult();
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
