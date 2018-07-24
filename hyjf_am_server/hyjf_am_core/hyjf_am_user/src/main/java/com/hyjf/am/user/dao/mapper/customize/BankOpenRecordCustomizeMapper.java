@@ -19,23 +19,23 @@ public interface BankOpenRecordCustomizeMapper {
      * @param mapParam
      * @return
      */
-    List<BankOpenAccountRecordCustomize> selectBankAccountList(Map<String,String> mapParam);
+    List<BankOpenAccountRecordCustomize> selectBankAccountList(Map<String,Object> mapParam);
 
     /**
      * 查找汇付银行开户记录
      */
-    List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,String> mapParam);
+    List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,Object> mapParam);
     /**
      * 查找江西银行开户记录数
      * @param mapParam
      * @return
      */
-    int countBankRecordTotal(Map<String,String> mapParam);
+    int countBankRecordTotal(Map<String,Object> mapParam);
 
     /**
      * 查找汇付银行的开户记录数
      * @param mapParam
      * @return
      */
-    int countRecordTotal(Map<String,String> mapParam);
+    int countRecordTotal(Map<String,Object> mapParam);
 }

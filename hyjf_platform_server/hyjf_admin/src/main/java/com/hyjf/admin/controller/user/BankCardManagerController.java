@@ -6,6 +6,8 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.BankCardLogRequestBean;
 import com.hyjf.admin.beans.request.BankCardManagerRequestBean;
+import com.hyjf.admin.beans.vo.BankCardLogCustomizedVO;
+import com.hyjf.admin.beans.vo.BankcardInitCustomizeVO;
 import com.hyjf.admin.beans.vo.BankcardManagerCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -17,7 +19,7 @@ import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardLogVO;
 import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -59,17 +61,18 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "銀行卡管理页面初始化", notes = "銀行卡管理页面初始化")
     @PostMapping(value = "/bankCardInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<BankcardInitCustomizeVO> userManagerInit() {
         // 银行卡属性
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         // 是否默认
         Map<String, String> bankcardType = CacheUtil.getParamNameMap("BANKCARD_TYPE");
-        List<BanksConfigVO> listBanksConfigVO = bankCardManagerService.selectBankConfigList();
-        jsonObject.put("bankcardType", bankcardType);
-        jsonObject.put("bankcardProperty", bankcardProperty);
-        jsonObject.put("banks", listBanksConfigVO);
-        return jsonObject;
+        List<BankConfigVO> listBanksConfigVO = bankCardManagerService.selectBankConfigList();
+        BankcardInitCustomizeVO bankcardInitCustomizeVO = new BankcardInitCustomizeVO();
+        bankcardInitCustomizeVO.setBankcardType(bankcardType);
+        bankcardInitCustomizeVO.setBankcardProperty(bankcardProperty);
+        bankcardInitCustomizeVO.setListBanksConfigVO(listBanksConfigVO);
+        return new AdminResult<BankcardInitCustomizeVO>(bankcardInitCustomizeVO);
+
 
     }
     //汇付银行开户銀行卡記錄查询
@@ -387,7 +390,7 @@ public class BankCardManagerController extends BaseController {
     @ApiOperation(value = "汇付银行操作记录", notes = "汇付银行操作记录")
     @PostMapping(value = "/selectbankcardlogbyexample")
     @ResponseBody
-    public AdminResult<ListResult<BankCardLogVO>> selectBankCardLogByExample(HttpServletRequest request, @RequestBody BankCardLogRequestBean bankCardLogRequestBean){
+    public AdminResult<ListResult<BankCardLogCustomizedVO>> selectBankCardLogByExample(HttpServletRequest request, @RequestBody BankCardLogRequestBean bankCardLogRequestBean){
         BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
         BeanUtils.copyProperties(bankCardLogRequestBean, bankCardLogRequest);
         BankCardLogResponse bankCardLogResponse = bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
@@ -397,7 +400,12 @@ public class BankCardManagerController extends BaseController {
         if (!Response.isSuccess(bankCardLogResponse)) {
             return new AdminResult<>(FAIL, bankCardLogResponse.getMessage());
         }
-        return new AdminResult<ListResult<BankCardLogVO>>(ListResult.build(bankCardLogResponse.getResultList(), bankCardLogResponse.getCount()));
+        List<BankCardLogCustomizedVO> bankCardLogCustomizedVO = new ArrayList<BankCardLogCustomizedVO>();
+        List<BankCardLogVO> list = bankCardLogResponse.getResultList();
+        if(null!=list&&list.size()>0){
+            bankCardLogCustomizedVO = CommonUtils.convertBeanList(list,BankCardLogCustomizedVO.class);
+        }
+        return new AdminResult<ListResult<BankCardLogCustomizedVO>>(ListResult.build(bankCardLogCustomizedVO, bankCardLogResponse.getCount()));
     }
     @ApiOperation(value = "用户银行卡操作记录导出", notes = "用户银行卡操作记录导出")
     @PostMapping(value = "/exportbankcardlog")
@@ -406,14 +414,14 @@ public class BankCardManagerController extends BaseController {
         // 表格sheet名称
         String sheetName = "用户银行卡操作记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 封装查询条件
         BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
         BeanUtils.copyProperties(bankCardLogRequestBean, bankCardLogRequest);
         // 银行卡属性
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         //查找全部
-        bankCardLogRequest.setLimitFlg(0);
+        bankCardLogRequest.setLimitFlg(true);
         // 需要输出的结果列表
         BankCardLogResponse bankCardLogResponse =  bankCardManagerService.selectBankCardLogByExample(bankCardLogRequest);
 //        List<BankcardManagerVO> bankcardManagerVOList =bankCardManagerService.selectNewBankCardList(requestBank);

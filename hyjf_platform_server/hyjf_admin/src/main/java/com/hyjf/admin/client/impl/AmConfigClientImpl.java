@@ -2,6 +2,8 @@ package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BankConfigResponse;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
@@ -12,6 +14,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.common.validator.Validator;
@@ -139,13 +142,39 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @return
      */
     @Override
-    public List<BanksConfigVO> selectBankConfigList() {
-        BanksConfigResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-config/config/selectBankConfigList", BanksConfigResponse.class)
+    public List<BankConfigVO> selectBankConfigList() {
+        BankConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigList", BankConfigResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
         return null;
     }
+    /**
+     * 根据银行卡号获取bankId
+     * @auther: nxl
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public String queryBankIdByCardNo(String cardNo) {
+        String result = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+        return result;
+    }
+
+    /**
+     * 根据bankId查找江西银行的银行卡配置表
+     * @auther: nxl
+     * @param bankId
+     * @return
+     */
+    @Override
+    public JxBankConfigResponse getJXbankConfigByBankId(int bankId) {
+        JxBankConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/getJXbankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
+        return response;
+    }
+
 }

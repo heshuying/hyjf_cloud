@@ -5,6 +5,7 @@ package com.hyjf.admin.controller.finance.AccountDetail;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
+import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -25,6 +26,7 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserPortraitVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.util.StringUtil;
@@ -59,11 +61,13 @@ public class AccountDetailController extends BaseController {
     @Autowired
     private UserCenterService userCenterService;
 
+
     @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
     public JSONObject userManagerInit() {
         JSONObject jsonObject = null;
+        List<AccountTradeVO> accountTradeVOList = accountDetailService.selectTradeTypes();
         // List<AccountDetailVO> listAccountDetail =  accountDetailService.findAccountDetailList();
 
         return jsonObject;
@@ -72,7 +76,7 @@ public class AccountDetailController extends BaseController {
     @ApiOperation(value = "资金明细", notes = "资金明细页面列表显示")
     @PostMapping(value = "/queryAccountDetail")
     @ResponseBody
-    public AdminResult<ListResult<AccountDetailVO>> queryAccountDetail(@RequestBody AccountDetailRequestBean accountDetailRequestBean) {
+    public AdminResult<ListResult<AccountDetailCustomizeVO>> queryAccountDetail(@RequestBody AccountDetailRequestBean accountDetailRequestBean) {
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
@@ -127,7 +131,11 @@ public class AccountDetailController extends BaseController {
                 }
             }
         }
-        return new AdminResult<ListResult<AccountDetailVO>>(ListResult.build(listAccountDtaileShow, accountDetailResponse.getRecordTotal())) ;
+        List<AccountDetailCustomizeVO> accountDetailCustomizeVOList = new ArrayList<AccountDetailCustomizeVO>();
+        if(null!=listAccountDtaileShow&&listAccountDtaileShow.size()>0){
+            accountDetailCustomizeVOList = CommonUtils.convertBeanList(listAccountDtaileShow, AccountDetailCustomizeVO.class);
+        }
+        return new AdminResult<ListResult<AccountDetailCustomizeVO>>(ListResult.build(accountDetailCustomizeVOList, accountDetailResponse.getRecordTotal())) ;
     }
 
 

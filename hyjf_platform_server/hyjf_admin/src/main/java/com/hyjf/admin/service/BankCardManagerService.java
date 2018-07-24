@@ -7,7 +7,7 @@ import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface BankCardManagerService {
      *
      * @return
      */
-    List<BanksConfigVO> selectBankConfigList();
+    List<BankConfigVO> selectBankConfigList();
 
 
     /**

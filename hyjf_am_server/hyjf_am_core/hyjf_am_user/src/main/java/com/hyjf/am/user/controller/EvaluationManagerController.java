@@ -53,7 +53,6 @@ public class EvaluationManagerController extends BaseController{
     public EvalationResponse selectUserEvalationResultList(@RequestBody @Valid EvalationRequest request) {
         logger.info("---selectUserEvalationResultList by param---  " + JSONObject.toJSON(request));
         EvalationResponse response = new EvalationResponse();
-        String returnCode = Response.FAIL;
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = evaluationManagerService.countEvalationResultRecord(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
@@ -61,16 +60,16 @@ public class EvaluationManagerController extends BaseController{
             paginator = new Paginator(request.getCurrPage(), usesrCount);
         }
         List<EvalationResultCustomize> userManagerCustomizeList = evaluationManagerService.selectUserEvalationResultList(mapParam,paginator.getOffset(), paginator.getLimit());
+        response.setCount(usesrCount);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<EvalationVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, EvalationVO.class);
                 response.setResultList(userVoList);
-                response.setCount(usesrCount);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
+                response.setMessage(Response.SUCCESS_MSG);
 
             }
         }
-        response.setRtn(returnCode);//代表成功
         return response;
     }
 

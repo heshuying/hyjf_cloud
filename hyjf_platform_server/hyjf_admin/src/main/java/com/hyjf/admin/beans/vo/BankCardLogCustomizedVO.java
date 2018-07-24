@@ -1,43 +1,49 @@
-package com.hyjf.am.resquest.user;
+package com.hyjf.admin.beans.vo;
 
+import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 import java.util.Date;
 
-import com.hyjf.am.vo.BasePage;
-
 /**
- * 用户绑卡日志request
+ * 用户绑卡日志VO
  * @author hesy
  */
-//public class BankCardLogRequest extends BaseVO{
-public class BankCardLogRequest extends BasePage{
+public class BankCardLogCustomizedVO extends BaseVO implements Serializable {
 
+    @ApiModelProperty(value = "主键")
     private Integer id;
 
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
 
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
+    @ApiModelProperty(value = "银行账号")
     private String cardNo;
 
+    @ApiModelProperty(value = "银行缩写")
     private String bankCode;
 
+    @ApiModelProperty(value = "银行名称")
     private String bankName;
 
+    @ApiModelProperty(value = "卡类型 0普通提现卡1默认卡2快捷支付卡")
     private Integer cardType;
 
+    @ApiModelProperty(value = "操作类型 0绑定 1删除")
     private Integer operationType;
 
+    @ApiModelProperty(value = "操作状态  0 成功 1失败")
     private Integer status;
 
-    private Integer createUserId;
-
-    private Integer updateUserId;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
-    // 分页区分
-    private boolean limitFlg =false;
 
     private static final long serialVersionUID = 1L;
 
@@ -113,22 +119,6 @@ public class BankCardLogRequest extends BasePage{
         this.status = status;
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Integer getUpdateUserId() {
-        return updateUserId;
-    }
-
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -145,11 +135,4 @@ public class BankCardLogRequest extends BasePage{
         this.updateTime = updateTime;
     }
 
-    public boolean isLimitFlg() {
-        return limitFlg;
-    }
-
-    public void setLimitFlg(boolean limitFlg) {
-        this.limitFlg = limitFlg;
-    }
 }

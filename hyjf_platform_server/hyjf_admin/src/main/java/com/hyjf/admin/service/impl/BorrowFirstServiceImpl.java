@@ -139,7 +139,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
     @Override
     public AdminResult getFireInfo(String borrowNid) {
         if (StringUtils.isNotBlank(borrowNid)) {
-            // 0 未使用引擎 ; 1使用引擎 todo wangjun 现在前台已经注释 是否需要判断？
+            // 0 未使用引擎 ; 1使用引擎 前台已经注释 暂时删除
 //            int engineFlag = this.borrowFirstClient.isEngineUsed(borrowNid);
 //            jsonObject.put("engineFlag", engineFlag);
 
@@ -149,8 +149,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 BorrowFireInfoResponseBean response = new BorrowFireInfoResponseBean();
                 BeanUtils.copyProperties(borrowVO, response);
                 response.setName(borrowInfoVO.getName());
-                //addtime已经改名 copy时VO获取不到数据
-                response.setCreateTime(borrowVO.getAddtime());
+                response.setCreateTime(GetDate.date2Str(borrowVO.getCreateTime(), GetDate.datetimeFormat));
 
                 if (borrowVO.getOntime() != null && borrowVO.getOntime() != 0) {
                     response.setOntime(GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(borrowVO.getOntime())));

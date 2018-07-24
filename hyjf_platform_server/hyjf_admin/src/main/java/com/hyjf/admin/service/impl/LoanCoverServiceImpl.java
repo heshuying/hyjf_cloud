@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,10 +44,14 @@ public class LoanCoverServiceImpl implements LoanCoverService {
         LoanCoverUserResponse loanCoverUserResponse = loanCoverClient.selectUserMemberList(request);
         SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(null!=loanCoverUserResponse){
-            for(LoanCoverUserVO loanCoverUserVO :loanCoverUserResponse.getResultList()){
-                loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
-                loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+            List<LoanCoverUserVO> loanCoverUserVOList = loanCoverUserResponse.getResultList();
+            if(null!=loanCoverUserVOList&&loanCoverUserVOList.size()>0){
+                for(LoanCoverUserVO loanCoverUserVO :loanCoverUserVOList){
+                    loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
+                    loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+                }
             }
+
         }
         return loanCoverUserResponse;
     }

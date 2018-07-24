@@ -3134,4 +3134,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    /**
+     *  更新投资协议信息
+     * @param contract_id
+     * @return
+     */
+    @Override
+    public List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid) {
+        String url = "http://AM-TRADE/am-trade/tenderagreement/getTenderAgreementListByTenderNidAndStatusNot2/"+tenderNid;
+        TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 通过主键获取投资协议信息
+     * @param tenderAgreementID
+     * @return
+     */
+    @Override
+    public TenderAgreementVO getTenderAgreementInfoByPrimaryKey(String tenderAgreementID) {
+        String url = "http://AM-TRADE/am-trade/tenderagreement/getTenderAgreementInfo/"+tenderAgreementID;
+        TenderAgreementResponse response = restTemplate.getForEntity(url,TenderAgreementResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 }

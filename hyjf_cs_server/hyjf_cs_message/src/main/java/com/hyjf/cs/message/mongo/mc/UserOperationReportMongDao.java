@@ -5,8 +5,6 @@ package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.cs.message.bean.mc.UserOperationReportEntity;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
-import com.hyjf.mongo.base.BaseMongoDao;
-import com.hyjf.mongo.operationreport.entity.UserOperationReportEntity;
 import org.springframework.stereotype.Service;
 
 /**
