@@ -108,7 +108,11 @@ public class AppRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
-        ret = registService.appCheckParam(register);
+        try{
+            ret = registService.appCheckParam(register);
+        }catch (Exception e){
+            return ret;
+        }
         if(ret!=null){
             return ret;
         }
