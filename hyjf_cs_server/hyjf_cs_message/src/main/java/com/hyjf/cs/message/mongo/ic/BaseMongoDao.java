@@ -69,4 +69,10 @@ public abstract class BaseMongoDao<T> {
 
 	protected abstract Class<T> getEntityClass();
 
+	public void deleteBatch(List list){
+		for(int i=0;i<list.size();i++){
+			this.mongoTemplate.remove(list.get(i));
+		}
+	}
+
 }

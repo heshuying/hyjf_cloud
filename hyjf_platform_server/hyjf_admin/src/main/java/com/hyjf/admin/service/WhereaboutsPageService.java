@@ -5,6 +5,10 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.config.WhereaboutsPictureResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author tanyy
@@ -48,4 +52,11 @@ public interface WhereaboutsPageService {
 	 * @return
 	 */
 	WhereaboutsPageResponse deleteById(Integer id);
+
+	/**
+	 * 附件上传
+	 *
+	 *
+	 */
+	WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

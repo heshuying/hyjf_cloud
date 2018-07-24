@@ -1,27 +1,13 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
-import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
-import com.hyjf.admin.client.ContentLandingPageClient;
-import com.hyjf.admin.client.WhereaboutsPageClient;
-import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.service.ContentLandingPageService;
-import com.hyjf.admin.service.WhereaboutsPageService;
-import com.hyjf.am.response.admin.CouponCheckResponse;
-import com.hyjf.am.response.config.LandingPageResponse;
-import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.admin.client.OperationReportClient;
+import com.hyjf.admin.service.OperationReportService;
 import com.hyjf.am.response.config.WhereaboutsPictureResponse;
-import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
+import com.hyjf.am.response.message.OperationReportResponse;
+import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.config.WhereaboutsPagePictureVo;
-import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,39 +25,70 @@ import java.util.LinkedList;
 
 /**
  * @author tanyy
- * @version WhereaboutsPageServiceImpl, v0.1 2018/7/16 14:14
+ * @version 2.0
  */
 @Service
-public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
-	@Autowired
-	private WhereaboutsPageClient whereaboutsPageClient;
+public class OperationReportServiceImpl implements OperationReportService {
 
 	@Autowired
-	SystemConfig systemConfig;
+	private OperationReportClient operationReportClient;
+
 	@Value("${file.upload.activity.img.path}")
 	private String FILEUPLOADTEMPPATH;
-	@Override
-	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.searchAction(requestBean);
-	}
 
 	@Override
-	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.insertAction(requestBean);
+	public OperationReportResponse getRecordList(OperationReportRequest request) {
+		return operationReportClient.getRecordList(request);
 	}
+	@Override
+	public OperationReportResponse selectOperationreportCommon(String id) {
+		return operationReportClient.selectOperationreportCommon(id);
+	}
+	@Override
+	public OperationReportResponse delete(String id){
+		return operationReportClient.delete(id);
+	}
+	@Override
+	public OperationReportResponse publish(OperationReportRequest request){
+		return operationReportClient.publish(request);
+	}
+	@Override
+	public OperationReportResponse insertOrUpdateMonthAction(OperationReportRequest request){
+		return operationReportClient.insertOrUpdateMonthAction(request);
+	}
+	@Override
+	public OperationReportResponse insertOrUpdateQuarterAction(OperationReportRequest request){
+		return operationReportClient.insertOrUpdateQuarterAction(request);
 
-	@Override
-	public WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.updateAction(requestBean);
 	}
 	@Override
-	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.updateStatus(requestBean);
-	}
+	public OperationReportResponse insertOrUpdateHalfYearAction(OperationReportRequest request){
+		return operationReportClient.insertOrUpdateHalfYearAction(request);
 
+	}
 	@Override
-	public WhereaboutsPageResponse deleteById(Integer id) {
-		return whereaboutsPageClient.deleteById(id);
+	public OperationReportResponse insertOrUpdateYearAction(OperationReportRequest request){
+		return operationReportClient.insertOrUpdateYearAction(request);
+
+	}
+	@Override
+	public OperationReportResponse monthPreview(OperationReportRequest request){
+		return operationReportClient.monthPreview(request);
+
+	}
+	@Override
+	public OperationReportResponse yearPreview(OperationReportRequest request){
+		return operationReportClient.yearPreview(request);
+
+	}
+	@Override
+	public OperationReportResponse quarterPreview(OperationReportRequest request){
+		return operationReportClient.quarterPreview(request);
+
+	}
+	@Override
+	public OperationReportResponse halfPreview(OperationReportRequest request){
+		return operationReportClient.halfPreview(request);
 	}
 
 	/**
@@ -82,8 +99,8 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 	 * @throws Exception
 	 */
 	@Override
-	public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		WhereaboutsPictureResponse checkResponse = new WhereaboutsPictureResponse();
+	public OperationReportResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		OperationReportResponse checkResponse = new OperationReportResponse();
 		String errorMessage = "";
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
@@ -99,20 +116,20 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 		}
 		Iterator<String> itr = multipartRequest.getFileNames();
 		MultipartFile multipartFile = null;
-		WhereaboutsPagePictureVo fileMeta = null;
-		LinkedList<WhereaboutsPagePictureVo> files = new LinkedList<WhereaboutsPagePictureVo>();
+		OperationReportVO fileMeta = null;
+		LinkedList<OperationReportVO> files = new LinkedList<OperationReportVO>();
 		while (itr.hasNext()) {
 			multipartFile = multipartRequest.getFile(itr.next());
 			String fileRealName = String.valueOf(System.currentTimeMillis() / 1000);
 			String originalFilename = multipartFile.getOriginalFilename();
 			String suffix = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 			fileRealName = fileRealName + suffix;
-				try {
-					errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			fileMeta = new WhereaboutsPagePictureVo();
+			try {
+				errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			fileMeta = new OperationReportVO();
 			int index = originalFilename.lastIndexOf(".");
 			if (index != -1) {
 				fileMeta.setImageName(originalFilename.substring(0, index));
