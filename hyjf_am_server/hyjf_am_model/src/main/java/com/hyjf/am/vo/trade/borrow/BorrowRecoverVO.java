@@ -7,6 +7,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author PC-LIUSHOUYI
@@ -143,6 +144,8 @@ public class BorrowRecoverVO extends BaseVO implements Serializable {
     private String loanBatchNo;
 
     private String repayBatchNo;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -654,5 +657,13 @@ public class BorrowRecoverVO extends BaseVO implements Serializable {
 
     public void setRepayBatchNo(String repayBatchNo) {
         this.repayBatchNo = repayBatchNo;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
