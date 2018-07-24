@@ -350,7 +350,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
         if (Validator.isNotNull(userId)) {
-            criteria.andUserIdNotEqualTo(userId);
+            criteria.andUserIdEqualTo(userId);
         }
         criteria.andMobileEqualTo(mobile);
         int cnt = userMapper.countByExample(example);

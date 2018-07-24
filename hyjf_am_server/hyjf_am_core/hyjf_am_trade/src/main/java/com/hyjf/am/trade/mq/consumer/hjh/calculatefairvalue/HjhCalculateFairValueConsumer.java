@@ -98,8 +98,6 @@ public class HjhCalculateFairValueConsumer extends Consumer {
             } catch (Exception e) {
                 e.printStackTrace();
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            } finally {
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         }
     }

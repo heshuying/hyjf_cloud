@@ -39,5 +39,5 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/24 10:46
      */
-    public BaseResultBean  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,String token);
+    public WechatHomePageResult  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,String token);
 }

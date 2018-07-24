@@ -57,8 +57,6 @@ public class UserManagerController extends BaseController{
     public UserManagerResponse findUserslist(@RequestBody @Valid UserManagerRequest request) {
         logger.info("---findUserslist by param---  " + JSONObject.toJSON(request));
         UserManagerResponse response = new UserManagerResponse();
-        String returnCode = Response.FAIL;
-        String returnMsg = Response.FAIL_MSG;
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = userManagerService.countUserRecord(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
@@ -73,18 +71,15 @@ public class UserManagerController extends BaseController{
             limitStart = 0;
         }
         List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,limitStart,limitEnd);
+        response.setCount(usesrCount);
         if(usesrCount>0){
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
                 response.setResultList(userVoList);
-                response.setCount(usesrCount);
-                returnCode = Response.SUCCESS;
-                returnMsg = Response.SUCCESS_MSG;
-
+                response.setRtn(Response.SUCCESS);
+                response.setMessage(Response.SUCCESS_MSG);
             }
         }
-        response.setRtn(returnCode);
-        response.setMessage(returnMsg);
         return response;
     }
 

@@ -3,6 +3,7 @@ package com.hyjf.cs.message.service.report.impl;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.*;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.*;
 import com.hyjf.cs.message.mongo.mc.*;
@@ -17,9 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -64,6 +63,130 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			listOperationReportVO.add(OperationReportVO);
 		}
 		return listOperationReportVO;
+	}
+
+	@Override
+	public OperationReportResponse getRecordListByReleaseJson(OperationReportRequest request) {
+		OperationReportResponse response = new OperationReportResponse();
+		if(request.getOperationReport()==null||request.getOperationReport().getIsRelease()==null){
+			response.setRtn("1");
+			response.setMessage("发布状态为空");
+		}
+		Map<String, Object> map = new HashMap<String ,Object>();
+		map.put("isRelease", request.getOperationReport().getIsRelease());
+		map.put("paginatorPage", request.getCurrPage());
+		Query query = new Query();
+		Criteria criteria = getCriteria(map, query);
+		query.addCriteria(criteria);
+
+		List<OperationReportColumnEntity> list = operationReportColumnMongDao.find(query);
+		Integer count = list.size();
+		response.setCount(count);
+		if (count != null && count > 0) {
+			//是否有分页参数
+			if (!"null".equals(String.valueOf(map.get("paginatorPage")))) {
+				Paginator paginator = new Paginator((Integer.valueOf(String.valueOf(map.get("paginatorPage")))), count);
+				map.put("limitStart", paginator.getOffset());
+				map.put("limitEnd", paginator.getLimit());
+				//json.put("paginator", paginator);
+			}
+
+			Query query2 = new Query();
+			Criteria criteria2 = getCriteria(map, query2);
+			query2.addCriteria(criteria2);
+			List<OperationReportVO> recordList = new ArrayList<>();
+			List<OperationReportColumnEntity> mongodbList = operationReportColumnMongDao.find(query2);
+
+			Query queryReport = null;
+			for (OperationReportColumnEntity dto : mongodbList) {
+				OperationReportVO operationReportCustomize = new OperationReportVO();
+				BeanUtils.copyProperties(dto, operationReportCustomize);
+
+				//转换
+				if (1 == operationReportCustomize.getOperationReportType().intValue()) {//月度
+					queryReport = new Query();
+					Criteria criteriaQuarter = Criteria.where("operationReportId").is(dto.getId());
+					queryReport.addCriteria(criteriaQuarter);
+					MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(queryReport);
+					if (monthlyOperationReportEntity != null) {
+						operationReportCustomize.setTypeRealName(monthlyOperationReportEntity.getMonth() + "月份");
+						operationReportCustomize.setSortMonth(monthlyOperationReportEntity.getMonth());
+					}
+
+				} else if (2 == operationReportCustomize.getOperationReportType().intValue()) {//季度
+					queryReport = new Query();
+					Criteria criteriaQuarter = Criteria.where("operationReportId").is(dto.getId());
+					queryReport.addCriteria(criteriaQuarter);
+					QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(queryReport);
+					if (quarterOperationReportEntity != null) {
+						//季度类型(1.一季度2.二季度3.三季度4.四季度)
+						operationReportCustomize.setSortMonth(quarterOperationReportEntity.getQuarterType());
+						if (1 == quarterOperationReportEntity.getQuarterType()) {
+							operationReportCustomize.setTypeRealName("一季度");
+						} else {
+							operationReportCustomize.setTypeRealName("三季度");
+						}
+					}
+
+				} else if (3 == operationReportCustomize.getOperationReportType().intValue()) {//半年
+					operationReportCustomize.setTypeRealName("上半年");
+				} else if (4 == operationReportCustomize.getOperationReportType().intValue()) {//全年
+					operationReportCustomize.setTypeRealName("年度");
+				}
+
+				recordList.add(operationReportCustomize);
+			}
+
+
+			//java中处理天数，然后在按照前端需求排序。
+			for (OperationReportVO operationReportCustomize : recordList) {
+				if (operationReportCustomize.getOperationReportType().intValue() == 1) {
+					operationReportCustomize.setSortDay(getDaysByYearMonth(Integer.valueOf(operationReportCustomize.getYear()),
+							operationReportCustomize.getSortMonth()));
+				} else if (operationReportCustomize.getOperationReportType().intValue() == 2) {
+					//季度第一季度和第三季度
+					if (operationReportCustomize.getSortMonth() == 1) {
+						operationReportCustomize.setSortMonth(3);
+					} else {
+						operationReportCustomize.setSortMonth(9);
+					}
+					operationReportCustomize.setSortDay(getDaysByYearMonth(Integer.valueOf(operationReportCustomize.getYear()),
+							operationReportCustomize.getSortMonth()));
+				} else if (operationReportCustomize.getOperationReportType().intValue() == 3) {
+					operationReportCustomize.setSortMonth(6);
+					operationReportCustomize.setSortDay(getDaysByYearMonth(Integer.valueOf(operationReportCustomize.getYear()),
+							operationReportCustomize.getSortMonth()));
+				} else if (operationReportCustomize.getOperationReportType().intValue() == 4) {
+					operationReportCustomize.setSortMonth(12);
+					operationReportCustomize.setSortDay(getDaysByYearMonth(Integer.valueOf(operationReportCustomize.getYear()),
+							operationReportCustomize.getSortMonth()));
+				}
+			}
+			Collections.sort(recordList, new Comparator<OperationReportVO>() {
+				@Override
+				public int compare(OperationReportVO o1, OperationReportVO o2) {
+					String arg1 = "";
+					String arg2 = "";
+					if (o1.getSortMonth() < 10) {
+						arg1 = o1.getYear() + 0 + o1.getSortMonth() + o1.getSortDay();
+					} else {
+						arg1 = o1.getYear() + o1.getSortMonth() + o1.getSortDay();
+					}
+					if (o2.getSortMonth() < 10) {
+						arg2 = o2.getYear() + 0 + o2.getSortMonth() + o2.getSortDay();
+					} else {
+						arg2 = o2.getYear() + o2.getSortMonth() + o2.getSortDay();
+					}
+					int o = arg2.compareTo(arg1);
+					return o;
+				}
+			});
+			response.setResultList(recordList);
+		} else {
+			response.setRtn("0");
+			response.setMessage("暂无任何数据");
+		}
+		return response;
 	}
 
 	@Override
@@ -432,7 +555,159 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	}
 		return response;
 	}
+	@Override
+	public OperationReportResponse reportInfo(String id){
+		OperationReportResponse response = new OperationReportResponse();
+		Map<String, Object> paraMap = new HashMap<String ,Object>();
+		paraMap.put("id", id);
+		//获取运营报告对象
+		Query query = new Query();
+		Criteria criteria = getCriteria(paraMap, query);
+		query.addCriteria(criteria);
+		OperationReportColumnEntity report = operationReportColumnMongDao.findOne(query);
+		OperationReportVO operationReport = new OperationReportVO();
+		Query query2 = new Query();
+		Criteria criteria2 = Criteria.where("operationReportId").is(id);
+		query2.addCriteria(criteria2);
+		if (report != null) {
+			Integer reportType = report.getOperationReportType();
+			BeanUtils.copyProperties(report, operationReport);
+			response.setOperationReport(operationReport);
+			if (reportType == 1) {
+				//查询月度报告明细
+				MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(query2);
+				MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
+				if (monthlyOperationReportEntity != null) {
+					BeanUtils.copyProperties(monthlyOperationReportEntity, monthlyOperationReport);
+					response.setMonthlyOperationReport(monthlyOperationReport);
+				}
 
+			} else if (reportType == 2) {
+				//查询季度报告明细
+				QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(query2);
+				QuarterOperationReportVO quarterOperationReport = new QuarterOperationReportVO();
+				if (quarterOperationReportEntity != null) {
+					BeanUtils.copyProperties(quarterOperationReportEntity, quarterOperationReport);
+					response.setQuarterOperationReport(quarterOperationReport);
+				}
+
+			} else if (reportType == 3) {
+				//查询半年报告明细
+				HalfYearOperationReportEntity halfYearOperationReportEntity = halfYearOperationReportMongDao.findOne(query2);
+				HalfYearOperationReportVO halfYearOperationReport = new HalfYearOperationReportVO();
+				if (halfYearOperationReportEntity != null) {
+					BeanUtils.copyProperties(halfYearOperationReportEntity, halfYearOperationReport);
+					response.setHalfYearOperationReport(halfYearOperationReport);
+				}
+			} else if (reportType == 4) {
+				//查询全年报告明细
+				YearOperationReportEntity yearOperationReportEntity = yearOperationReportMongDao.findOne(query2);
+				YearOperationReportVO yearOperationReport = new YearOperationReportVO();
+				if (yearOperationReportEntity != null) {
+					BeanUtils.copyProperties(yearOperationReportEntity, yearOperationReport);
+					response.setYearOperationReport(yearOperationReport);
+				}
+			}
+
+			List<UserOperationReportEntity> userOperationReportList = getUserOperationReport(id, query2);
+			if (userOperationReportList != null && userOperationReportList.size() > 0) {
+				UserOperationReportVO userOperationReport = new UserOperationReportVO();
+				BeanUtils.copyProperties(userOperationReportList.get(0), userOperationReport);
+				response.setUserOperationReport(userOperationReport);
+			}
+			query2.with(new Sort(Sort.Direction.ASC, "activtyTime"));
+			List<OperationReportActivityEntity> operationReportActiveList = getOperationReportActive(id, query2);
+			if(operationReportActiveList!=null){
+				List<OperationReportActivityVO> vos = new ArrayList<>();
+				for(OperationReportActivityEntity operationReportActivityEntity:operationReportActiveList){
+					OperationReportActivityVO operationReportActivity = new OperationReportActivityVO();
+					BeanUtils.copyProperties(operationReportActivityEntity,operationReportActivity);
+					vos.add(operationReportActivity);
+				}
+				response.setOperationReportActiveList(vos);
+			}
+			List<TenthOperationReportEntity> tenthOperationReportList = getTenthOperationReport(id, query2);
+			if (tenthOperationReportList != null && tenthOperationReportList.size() > 0) {
+				TenthOperationReportEntity tenthOperationReport = tenthOperationReportList.get(0);
+				TenthOperationReportVO tenthOperationReportVO = new TenthOperationReportVO();
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getFirstTenderUsername())) {
+					String userName1 = tenthOperationReport.getFirstTenderUsername().substring(0, 1);
+					tenthOperationReport.setFirstTenderUsername(userName1 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getSecondTenderUsername())) {
+					String userName2 = tenthOperationReport.getSecondTenderUsername().substring(0, 1);
+					tenthOperationReport.setSecondTenderUsername(userName2 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getThirdTenderUsername())) {
+					String userName3 = tenthOperationReport.getThirdTenderUsername().substring(0, 1);
+					tenthOperationReport.setThirdTenderUsername(userName3 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getFourthTenderUsername())) {
+					String userName4 = tenthOperationReport.getFourthTenderUsername().substring(0, 1);
+					tenthOperationReport.setFourthTenderUsername(userName4 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getFifthTenderUsername())) {
+					String userName5 = tenthOperationReport.getFifthTenderUsername().substring(0, 1);
+					tenthOperationReport.setFifthTenderUsername(userName5 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getSixthTenderUsername())) {
+					String userName6 = tenthOperationReport.getSixthTenderUsername().substring(0, 1);
+					tenthOperationReport.setSixthTenderUsername(userName6 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getSeventhTenderUsername())) {
+					String userName7 = tenthOperationReport.getSeventhTenderUsername().substring(0, 1);
+					tenthOperationReport.setSeventhTenderUsername(userName7 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getEighthTenderUsername())) {
+					String userName8 = tenthOperationReport.getEighthTenderUsername().substring(0, 1);
+					tenthOperationReport.setEighthTenderUsername(userName8 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getNinthTenderUsername())) {
+					String userName9 = tenthOperationReport.getNinthTenderUsername().substring(0, 1);
+					tenthOperationReport.setNinthTenderUsername(userName9 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getTenthTenderUsername())) {
+					String userName10 = tenthOperationReport.getTenthTenderUsername().substring(0, 1);
+					tenthOperationReport.setTenthTenderUsername(userName10 + "*");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getMostTenderUsername())) {
+					String mostTenderUsername = tenthOperationReport.getMostTenderUsername().substring(0, 1);
+					tenthOperationReport.setMostTenderUsername(mostTenderUsername + "**");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getBigMinnerUsername())) {
+					String bigMinnerUsername = tenthOperationReport.getBigMinnerUsername().substring(0, 1);
+					tenthOperationReport.setBigMinnerUsername(bigMinnerUsername + "**");
+				}
+				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getActiveTenderUsername())) {
+					String activeTenderUsername = tenthOperationReport.getActiveTenderUsername().substring(0, 1);
+					tenthOperationReport.setActiveTenderUsername(activeTenderUsername + "**");
+				}
+				BeanUtils.copyProperties(tenthOperationReport, tenthOperationReportVO);
+				response.setTenthOperationReport(tenthOperationReportVO);
+			}
+		} else {
+			response.setRtn("0");
+			response.setMessage("数据为空");
+		}
+		return  response;
+	}
+	//查询用户分析详情
+	public List<UserOperationReportEntity> getUserOperationReport(String id, Query query2) {
+		List<UserOperationReportEntity> userOperationReportEntity = userOperationReportMongDao.find(query2);
+		return userOperationReportEntity;
+	}
+
+	//查询运营报告活动
+	public List<OperationReportActivityEntity> getOperationReportActive(String id, Query query2) {
+		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query2);
+		return operationReportActivityEntity;
+	}
+
+	//查询十大投资详情
+	public List<TenthOperationReportEntity> getTenthOperationReport(String id, Query query2) {
+		List<TenthOperationReportEntity> tenthOperationReportEntity = tenthOperationReportMongDao.find(query2);
+		return tenthOperationReportEntity;
+	}
 
 	/*
 	 * 月度运营报告插入
@@ -1725,5 +2000,19 @@ public class OperationReportServiceImpl  implements OperationReportService {
             tenthOperationReportMongDao.save(entity);
 		}
 		return  tenId;
+	}
+
+	/**
+	 * 根据年 月 获取对应的月份 天数
+	 */
+	public int getDaysByYearMonth(int year, int month) {
+
+		Calendar a = Calendar.getInstance();
+		a.set(Calendar.YEAR, year);
+		a.set(Calendar.MONTH, month - 1);
+		a.set(Calendar.DATE, 1);
+		a.roll(Calendar.DATE, -1);
+		int maxDate = a.get(Calendar.DATE);
+		return maxDate;
 	}
 }

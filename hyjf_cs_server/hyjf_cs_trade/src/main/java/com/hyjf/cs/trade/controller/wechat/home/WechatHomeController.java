@@ -48,7 +48,7 @@ public class WechatHomeController {
                                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                              @RequestParam(value = "showPlanFlag") String showPlanFlag,
                                              @RequestHeader(value = "token", required = false) String token){
-        BaseResultBean result = wechatProjectListService.getHomeProejctList(currentPage,pageSize,showPlanFlag,token);
+        WechatHomePageResult result = wechatProjectListService.getHomeProejctList(currentPage,pageSize,showPlanFlag,token);
         return result;
     }
 

@@ -98,4 +98,11 @@ public interface AssetManageCustomizeMapper {
      * @Date
      */
     int countRepayMentPlanTotal(Map<String, Object> params);
+    /**
+     * @Description 微信端用户已回款列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<WechatRepayMentListCustomize> selectWechatRepaymentList(Map<String,Object> mapParameter);
 }

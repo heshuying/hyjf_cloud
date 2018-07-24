@@ -252,7 +252,6 @@ public class LoanCoverController extends BaseController {
     @PostMapping(value = "/shareUser")
     @ResponseBody
     public AdminResult shareUser(HttpServletRequest request, HttpServletResponse response, @RequestBody String loanId) {
-        JSONObject result = new JSONObject();
         LoanCoverUserResponse loanCoverUserResponse = loanCoverService.getLoanCoverUserById(loanId);
         if (null != loanCoverUserResponse) {
             LoanCoverUserVO ma = loanCoverUserResponse.getResult();
@@ -288,7 +287,7 @@ public class LoanCoverController extends BaseController {
             // 调用接口
             DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
             logger.info("法大大返回报文" + resultt.toString());
-            if (resultt != null) {
+            if (null!=resultt) {
                 logger.info("CA认证成功:用户ID:[" + ma.getName() + "].");
                 if ("success".equals(resultt.getResult())) {
                     ma.setCode(resultt.getCode());
@@ -305,7 +304,6 @@ public class LoanCoverController extends BaseController {
                     loanCoverService.updateLoanCoverUserRecord(loanCoverUserRequest);
                     return new AdminResult<>(FAIL, resultt.getMsg());
                 }
-
             }
         }
         return new AdminResult<>(FAIL, "请求法大大失败");

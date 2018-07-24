@@ -32,8 +32,18 @@ public class OperationReportClientImpl implements OperationReportClient {
         return response;
     }
     @Override
+    public OperationReportResponse listByRelease(OperationReportRequest request){
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/listbyrelease",request,OperationReportResponse.class).getBody();
+        return response;
+    }
+    @Override
     public OperationReportResponse selectOperationreportCommon(String id){
         OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/selectdetail/"+id,OperationReportResponse.class);
+        return response;
+    }
+    @Override
+    public OperationReportResponse reportInfo(String id){
+        OperationReportResponse response = restTemplate.getForObject("http://CS-MESSAGE/cs-message/operation_report/reportinfo/"+id,OperationReportResponse.class);
         return response;
     }
     @Override

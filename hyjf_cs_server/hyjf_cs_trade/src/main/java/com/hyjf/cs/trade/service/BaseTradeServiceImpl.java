@@ -8,11 +8,13 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AccountClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
@@ -157,6 +159,25 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     public AccountVO getAccountByUserId(Integer userId){
         return accountClient.getAccountByUserId(userId);
     }
+    /**
+     * 获取前端的地址
+     * @param sysConfig
+     * @param platform
+     * @return
+     */
+    public String getFrontHost(SystemConfig sysConfig, String platform) {
 
+        Integer client = Integer.parseInt(platform);
+        if (ClientConstants.WEB_CLIENT == client) {
+            return sysConfig.getFrontHost();
+        }
+        if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
+            return sysConfig.getAppFrontHost();
+        }
+        if (ClientConstants.WECHAT_CLIENT == client) {
+            return sysConfig.getWeiFrontHost();
+        }
+        return null;
+    }
 
 }

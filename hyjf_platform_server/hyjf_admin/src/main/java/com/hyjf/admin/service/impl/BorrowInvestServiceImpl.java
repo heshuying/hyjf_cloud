@@ -399,9 +399,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             bean.setOrdid(nid);
             bean.setTransType(1);
             bean.setBorrowNid(borrowNid);
-            //todo wangjun addtime已改成CreateTime 实体类未修改
-//            bean.setSignDate(GetDate.getDateMyTimeInMillis(br.getCreateTime()));
-            bean.setSignDate(GetDate.getDateMyTimeInMillis(GetDate.getNowTime10()));
+            bean.setSignDate(GetDate.date2Str(br.getCreateTime(), GetDate.date_sdf));
             bean.setTenderUserName(user.getUsername());
             bean.setTenderInterest(br.getRecoverInterest());
             bean.setTenderType(0);

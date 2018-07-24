@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
 
@@ -134,4 +135,27 @@ public interface ProjectListService {
      */
     List<HjhPlanVO>  searchAppPlanList(@Valid ProjectListRequest request);
     // --------------------------app end --------------------------------------------------
+
+    // -----------------------------wechat  start ------------------------------------------
+    /**
+     * 查询微信端首页产品列表
+     * @author zhangyk
+     * @date 2018/7/24 13:45
+     */
+    List<WechatHomeProjectListVO> searchWechatProjectList(Map<String,Object> params);
+
+    /**
+     * 微信端加载两条计划稍后开启
+     * @author zhangyk
+     * @date 2018/7/24 14:30
+     */
+    List<WechatHomeProjectListVO> selectHomeHjhOpenLaterList();
+
+    /**
+     * 首页无可投散标加载两条还款中和复审中记录
+     * @author zhangyk
+     * @date 2018/7/24 14:33
+     */
+    List<WechatHomeProjectListVO> selectHomeRepaymentsProjectList();
+    // -----------------------------wechat end  ---------------------------------------------
 }

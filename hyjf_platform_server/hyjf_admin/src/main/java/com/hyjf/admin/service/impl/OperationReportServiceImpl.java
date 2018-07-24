@@ -41,8 +41,16 @@ public class OperationReportServiceImpl implements OperationReportService {
 		return operationReportClient.getRecordList(request);
 	}
 	@Override
+	public OperationReportResponse listByRelease(OperationReportRequest request){
+		return operationReportClient.listByRelease(request);
+	}
+	@Override
 	public OperationReportResponse selectOperationreportCommon(String id) {
 		return operationReportClient.selectOperationreportCommon(id);
+	}
+	@Override
+	public OperationReportResponse reportInfo(String id) {
+		return operationReportClient.reportInfo(id);
 	}
 	@Override
 	public OperationReportResponse delete(String id){
@@ -91,63 +99,4 @@ public class OperationReportServiceImpl implements OperationReportService {
 		return operationReportClient.halfPreview(request);
 	}
 
-	/**
-	 * 资料上传
-	 *
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public OperationReportResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		OperationReportResponse checkResponse = new OperationReportResponse();
-		String errorMessage = "";
-		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-		String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
-		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		String today = format.format(date);
-
-		String logoRealPathDir = filePhysicalPath + today;
-		File logoSaveFile = new File(logoRealPathDir);
-		if (!logoSaveFile.exists()) {
-			logoSaveFile.mkdirs();
-		}
-		Iterator<String> itr = multipartRequest.getFileNames();
-		MultipartFile multipartFile = null;
-		OperationReportVO fileMeta = null;
-		LinkedList<OperationReportVO> files = new LinkedList<OperationReportVO>();
-		while (itr.hasNext()) {
-			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(System.currentTimeMillis() / 1000);
-			String originalFilename = multipartFile.getOriginalFilename();
-			String suffix = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-			fileRealName = fileRealName + suffix;
-			try {
-				errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			fileMeta = new OperationReportVO();
-			int index = originalFilename.lastIndexOf(".");
-			if (index != -1) {
-				fileMeta.setImageName(originalFilename.substring(0, index));
-			} else {
-				fileMeta.setImageName(originalFilename);
-			}
-			fileMeta.setImageRealName(fileRealName);
-			fileMeta.setImageSize(multipartFile.getSize() / 1024 + "");// KB
-			fileMeta.setImageType(multipartFile.getContentType());
-			fileMeta.setErrorMessage(errorMessage);
-			// 获取文件路径
-			//
-			fileMeta.setImagePath(logoRealPathDir + "/" + fileRealName);
-			//fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
-			files.add(fileMeta);
-
-		}
-		checkResponse.setResultList(files);
-		return checkResponse;
-	}
 }

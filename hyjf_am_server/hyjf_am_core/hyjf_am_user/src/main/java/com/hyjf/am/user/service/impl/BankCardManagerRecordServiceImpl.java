@@ -10,6 +10,7 @@ import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.dao.model.auto.BankCardLogExample;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
 import com.hyjf.am.user.service.BankCardManagerRecordService;
+import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,6 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
      */
     @Override
     public int countUserRecord(Map<String, Object> mapParam) {
-//        Map<String, Object> mapParam = paramSet(request);
         Integer integerCount = bankCardManagerCustomizeMapper.countRecordTotal(mapParam);
         int intUserCount = integerCount.intValue();
         return intUserCount;
@@ -115,6 +115,7 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
     public List<BankCardLog> selectBankCardLogByExample(BankCardLogRequest request, int limitStart, int limitEnd) {
         BankCardLogExample example = new BankCardLogExample();
         BankCardLogExample.Criteria criteria = example.createCriteria();
+        Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         // 条件查询
         if (StringUtils.isNotEmpty(request.getBankCode())) {
             criteria.andBankCodeEqualTo(request.getBankCode());

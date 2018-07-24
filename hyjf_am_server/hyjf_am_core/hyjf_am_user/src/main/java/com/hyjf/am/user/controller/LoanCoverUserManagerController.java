@@ -77,11 +77,11 @@ public class LoanCoverUserManagerController extends BaseController{
             limitStart = 0;
         }
         List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,limitStart,limitEnd,dateStart,dateEnd);
+        response.setCount(registCount);
         if(registCount>0){
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<LoanCoverUserVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, LoanCoverUserVO.class);
                 response.setResultList(userVoList);
-                response.setCount(registCount);
                 //代表成功
                 response.setRtn(Response.SUCCESS);
             }

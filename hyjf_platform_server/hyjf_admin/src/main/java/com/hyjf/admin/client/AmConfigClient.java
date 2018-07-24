@@ -1,11 +1,12 @@
 package com.hyjf.admin.client;
 
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 
 import java.util.List;
 
@@ -65,6 +66,20 @@ public interface AmConfigClient {
      * @author nixiaoling
      * @return
      */
-    List<BanksConfigVO> selectBankConfigList();
+    List<BankConfigVO> selectBankConfigList();
 
+    /**
+     * 根据银行卡号获取bankId
+     * @auth nxl
+     * @param cardNo
+     * @return
+     */
+    String queryBankIdByCardNo(String cardNo);
+    /**
+     * 根据bankId查找江西银行的银行卡配置表
+     * @auther: nxl
+     * @param bankId
+     * @return
+     */
+    JxBankConfigResponse getJXbankConfigByBankId(int bankId);
 }

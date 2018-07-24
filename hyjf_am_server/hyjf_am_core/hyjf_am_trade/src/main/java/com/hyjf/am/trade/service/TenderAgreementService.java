@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service;
 
-import com.hyjf.am.resquest.trade.TenderAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 
 import java.util.List;
@@ -14,8 +13,6 @@ public interface TenderAgreementService {
     List<TenderAgreement> selectTenderAgreementByNid(String nid);
 
     TenderAgreement getTenderAgreementInfo(String tenderAgreementID);
-
-    boolean updateTenderAgreement(TenderAgreementRequest request);
 
     List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 }

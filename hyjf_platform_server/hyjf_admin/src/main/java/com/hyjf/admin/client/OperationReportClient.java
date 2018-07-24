@@ -18,11 +18,15 @@ public interface OperationReportClient {
      * @return
      */
     public OperationReportResponse getRecordList(OperationReportRequest request);
+
+    public OperationReportResponse listByRelease(OperationReportRequest request);
     /**根据id查询运营报告
      * @param id
      * @return
      */
     public OperationReportResponse selectOperationreportCommon(String id);
+
+    public OperationReportResponse reportInfo(String id);
 
     /**逻辑删除
      * @param id

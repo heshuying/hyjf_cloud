@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -219,6 +220,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("host",request.getHost());
+        params.put("type",request.getType());
+        params.put("platform",request.getPlatform());
         return webProjectListCustomizeMapper.countAppProject(params);
     }
 
@@ -242,6 +246,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("borrowClass", borrowClass);
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
+        params.put("host",request.getHost());
+        params.put("type",request.getType());
+        params.put("platform",request.getPlatform());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 
@@ -314,5 +321,44 @@ public class ProjectListServiceImpl implements ProjectListService {
     }
 
 
+
+
     // ----------------------------------------app end ----------------------------------------------------
+
+
+    //  -----------------------------------------wechat start ----------------------------------------------
+
+
+    /**
+     * 查询微信端首页产品列表
+     * @author zhangyk
+     * @date 2018/7/24 13:45
+     */
+    @Override
+    public List<WechatHomeProjectListVO> searchWechatProjectList(Map<String, Object> params) {
+        return  webProjectListCustomizeMapper.searchWechatProjectList(params);
+    }
+
+    /**
+     * 微信端加载两条计划稍后开启
+     * @author zhangyk
+     * @date 2018/7/24 14:30
+     */
+    @Override
+    public List<WechatHomeProjectListVO> selectHomeHjhOpenLaterList() {
+        return webProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
+    }
+
+    /**
+     * 首页无可投散标加载两条还款中和复审中记录
+     * @author zhangyk
+     * @date 2018/7/24 14:33
+     */
+    @Override
+    public List<WechatHomeProjectListVO> selectHomeRepaymentsProjectList() {
+        return webProjectListCustomizeMapper.selectHomeRepaymentsProjectList();
+    }
+
+
+    //  -----------------------------------------wechat end   -----------------------------------------------
 }
