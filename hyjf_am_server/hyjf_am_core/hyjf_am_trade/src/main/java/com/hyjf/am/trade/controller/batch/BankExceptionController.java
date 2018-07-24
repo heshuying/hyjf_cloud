@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.batch;
 
 import java.util.List;
 
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -264,7 +265,10 @@ public class BankExceptionController extends BaseController {
         return ret;
     }
 
-
+    /**
+     * 查询前一天的投资临时数据并进行处理
+     * @return
+     */
     @GetMapping("/getBorrowTenderTmpsForTenderCancel")
     public BorrowTenderTmpResponse getBorrowTenderTmpsForTenderCancel(){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
@@ -275,16 +279,24 @@ public class BankExceptionController extends BaseController {
         return response;
     }
 
-
+    /**
+     * 投资撤销历史数据处理
+     * @param request
+     * @return
+     */
     @PostMapping("/updateBidCancelRecord")
-    public boolean updateBidCancelRecord(@RequestBody JSONObject para){
-        return this.bankTenderCancelService.updateBidCancelRecord(para);
+    public boolean updateBidCancelRecord(@RequestBody TenderCancelRequest request){
+        return this.bankTenderCancelService.updateBidCancelRecord(request);
     }
 
 
-
+    /**
+     * 处理撤销出现异常的数据
+     * @param info
+     * @return
+     */
     @PostMapping("/updateTenderCancelExceptionData")
-    public int updateTenderCancelExceptionData(@RequestBody BorrowTenderTmpVO info){
+    public boolean updateTenderCancelExceptionData(@RequestBody BorrowTenderTmpVO info){
         return this.bankTenderCancelService.updateTenderCancelExceptionData(CommonUtils.convertBean(info,BorrowTenderTmp.class));
     }
 

@@ -13,13 +13,11 @@ import org.slf4j.LoggerFactory;
  * @since 20180623
  */
 public class BatchBankInvestExceptionJob extends BaseJob implements Job{
-	
-	Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BatchBankInvestExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/investExceptionHandle", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/investExceptionHandle", String.class).getBody();
         logger.info("BatchBankInvestExceptionJob execute end...");
     }
 }

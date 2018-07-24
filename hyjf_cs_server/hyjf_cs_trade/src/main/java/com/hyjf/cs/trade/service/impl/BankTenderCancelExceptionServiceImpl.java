@@ -2,15 +2,14 @@ package com.hyjf.cs.trade.service.impl;
 
 import java.util.List;
 
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -19,7 +18,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BankTenderCancelClient;
 import com.hyjf.cs.trade.service.BankTenderCancelExceptionService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -34,18 +32,14 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 @Service
 public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implements BankTenderCancelExceptionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BankTenderCancelExceptionServiceImpl.class);
-
     @Autowired
-    private BankTenderCancelClient bankTenderCancelClient;
+    private AmTradeClient amTradeClient;
     @Autowired
     private AmUserClient amUserClient;
 
-    @Value("${hyjf.bank.instcode}")
-    private String BANK_INSTCODE;
 
-    @Value("${hyjf.bank.bankcode}")
-    private String BANK_BANKCODE;
+    @Autowired
+    private SystemConfig systemConfig;
 
     @Override
     public void handle() {
@@ -59,38 +53,56 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
      * 执行投资撤销
      */
     private int executeTenderCancel() {
-        List<BorrowTenderTmpVO> tmpList = bankTenderCancelClient.getBorrowTenderTmpsForTenderCancel();
+        List<BorrowTenderTmpVO> tmpList = amTradeClient.getBorrowTenderTmpsForTenderCancel();
         int result = 0;
         if (CollectionUtils.isNotEmpty(tmpList)){
             result = tmpList.size();
             for (int i = 0; i < tmpList.size(); i++) {
+                boolean delFlag = false;
                 BorrowTenderTmpVO info = tmpList.get(i);
-                BankOpenAccountVO bankAccount = this.getBankOpenAccount(info.getUserId());
                 UserVO user =this.amUserClient.findUserById(info.getUserId());
+                TenderCancelRequest request = new TenderCancelRequest();
+                request.setBorrowTenderTmpVO(info);
+                request.setUserName(user.getUsername());
 
-                JSONObject para = new JSONObject();
-                para.put("borrowTenderTmp",info);
-                para.put("username",user.getUsername());
+                try {
+                    BankOpenAccountVO bankAccount = this.getBankOpenAccount(info.getUserId());
+                    if (bankAccount==null){
+                        delFlag = true;
+                        throw new RuntimeException("该用户尚未在江西银行开户");
+                    }
 
-                if (Validator.isNotNull(bankAccount)){
                     BankCallBean callBean = this.bidCancel(info.getUserId(), bankAccount.getAccount(),
                             info.getBorrowNid(), info.getNid(), info.getAccount().toString(),user.getUsername());
-                    if (Validator.isNotNull(callBean)){
+
+                    if (Validator.isNotNull(callBean)) {
                         String retCode = StringUtils.isNotBlank(callBean.getRetCode()) ? callBean.getRetCode() : "";
+                        //投资正常撤销或投资订单不存在则删除冗余数据
                         if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1)
                                 || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_RIGHT)){
-                            //投资撤销历史数据处理
-                            this.bankTenderCancelClient.updateBidCancelRecord(para);
+                            boolean ret = amTradeClient.updateBidCancelRecord(request);
+                            if (!ret){
+                                logger.info("投资撤销历史数据处理失败!");
+                            }
                         }else{
-                            logger.info("投资撤销接口返回错误!原订单号:" + info.getNid() + ",返回码:" + retCode);
-                            this.bankTenderCancelClient.updateTenderCancelExceptionData(info);
+                            throw new RuntimeException("投资撤销接口返回错误!原订单号:" + info.getNid() + ",返回码:" + retCode);
                         }
                     }else{
-                        logger.info("投资撤销接口异常");
-                        this.bankTenderCancelClient.updateTenderCancelExceptionData(info);
+                        throw new RuntimeException("投资撤销接口异常!");
                     }
-                }else {
-                    this.bankTenderCancelClient.updateBidCancelRecord(para);
+
+                }catch (Exception e){
+                    if (delFlag) {
+                        boolean ret=amTradeClient.updateBidCancelRecord(request);
+                        if (!ret){
+                            logger.info("投资撤销历史数据处理失败!");
+                        }
+                    }else{
+                       boolean ret= amTradeClient.updateTenderCancelExceptionData(info);
+                        if (!ret){
+                            logger.info("处理撤销异常数据失败!");
+                        }
+                    }
 
                 }
             }
@@ -108,8 +120,8 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
         // 标的投资撤销
         BankCallBean bean = new BankCallBean();
         String orderId = GetOrderIdUtils.getOrderId2(userId);
-        String bankCode = BANK_BANKCODE;
-        String instCode = BANK_INSTCODE;
+        String bankCode = systemConfig.getBankBankcode();
+        String instCode = systemConfig.getBankInstcode();
         bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
         bean.setTxCode(BankCallMethodConstant.TXCODE_BID_CANCEL); // 交易代码
         bean.setInstCode(instCode);

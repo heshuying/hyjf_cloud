@@ -23,7 +23,7 @@ import com.hyjf.cs.trade.bean.HomeDataResultBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.WebHomeService;
-import com.hyjf.cs.trade.util.AppHomePageDefine;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +144,7 @@ public class WebHomeServiceImpl implements WebHomeService {
 
         // 标的信息 和 统计信息
 
-        TotalInvestAndInterestResponse res2 = baseClient.getExe(AppHomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
         BigDecimal interestSum = totalInvestAndInterestVO.getTotalInterestAmount() == null ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
         result.setInterestSum(interestSum.divide(new BigDecimal("100000000")).setScale(0,BigDecimal.ROUND_DOWN).toString());

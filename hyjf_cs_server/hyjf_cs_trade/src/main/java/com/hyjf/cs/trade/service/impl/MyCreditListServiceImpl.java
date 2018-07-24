@@ -3,21 +3,6 @@
  */
 package com.hyjf.cs.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.hyjf.cs.trade.config.SystemConfig;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -25,11 +10,7 @@ import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.CreditPageVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.ExpectCreditFeeVO;
-import com.hyjf.am.vo.trade.TenderCreditCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
@@ -55,17 +36,20 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
-import com.hyjf.cs.trade.client.AccountClient;
-import com.hyjf.cs.trade.client.AmBorrowRepayPlanClient;
-import com.hyjf.cs.trade.client.AmMongoClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.BorrowClient;
-import com.hyjf.cs.trade.client.BorrowRecoverClient;
-import com.hyjf.cs.trade.client.CreditClient;
+import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.MyCreditListService;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @Description 资产管理  我要债转相关
@@ -109,7 +93,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private AmBorrowRepayPlanClient amBorrowRepayPlanClient;
 
     @Autowired
-    private BorrowRecoverClient borrowRecoverClient;
+    private AmTradeClient amTradeClient;
 
     @Autowired
     private SmsProducer smsProducer;
@@ -334,7 +318,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
-        BorrowRecoverVO recover = this.borrowRecoverClient.getBorrowRecoverByTenderNid(request.getTenderNid());
+        BorrowRecoverVO recover = this.amTradeClient.getBorrowRecoverByTenderNid(request.getTenderNid());
         if (recover == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
@@ -454,7 +438,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
-        BorrowRecoverVO recover = this.borrowRecoverClient.getBorrowRecoverByTenderNid(request.getTenderNid());
+        BorrowRecoverVO recover = this.amTradeClient.getBorrowRecoverByTenderNid(request.getTenderNid());
         if (recover == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }

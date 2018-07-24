@@ -49,7 +49,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 
 	@Override
 	public ActivityListVO selectActivityList(int activityId){
-		ActivityListResponse response = restTemplate.getForEntity(marketService+"/activity/selectActivityList/"+activityId, com.hyjf.am.response.user.ActivityListResponse.class).getBody();
+		ActivityListResponse response = restTemplate.getForEntity(marketService+"/activity/selectActivity/"+activityId, ActivityListResponse.class).getBody();
 		if(null!=response){
 			return   response.getResult();
 		}

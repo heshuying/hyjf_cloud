@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 
 import java.util.Map;
 
@@ -63,11 +64,18 @@ public interface WebProjectListService extends BaseTradeService{
 
 
     /**
-     * 计划详情
+     * 计划详情：主体信息
      * @author zhangyk
      * @date 2018/6/27 18:59
      */
     public WebResult getPlanDetail(Map<String,String> map,String userId);
+
+    /**
+     * 计划详情:标的组成
+     * @author zhangyk
+     * @date 2018/7/23 10:08
+     */
+    public WebResult getPlanBorrowList(WebPlanRequestBean request);
 
 
 

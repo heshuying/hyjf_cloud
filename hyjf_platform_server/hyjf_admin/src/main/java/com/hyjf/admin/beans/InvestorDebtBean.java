@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.beans;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -11,79 +13,64 @@ import java.math.BigDecimal;
  * @version InvestorDebtBean, v0.1 2018/7/11 9:21
  */
 public class InvestorDebtBean implements Serializable {
-    /**
-     * 开始时间
-     */
+    @ApiModelProperty(value = "开始时间")
     private String startTime;
 
-    /**
-     * 结束时间
-     */
+    @ApiModelProperty(value = "结束时间")
     private String endTime;
 
-    /**
-     * 电子账号
-     */
-    private String accountid;
+    @ApiModelProperty(value = "电子账号")
+    private String accountId;
 
-    /**
-     * 标的编号
-     */
-    private String borrownid;
+    @ApiModelProperty(value = "标的编号")
+    private String borrowNid;
 
-    /**
-     * 用户ID
-     */
-    private String userid;
+    @ApiModelProperty(value = "用户ID")
+    private String userId;
 
-    /**
-     * nid
-     */
+    @ApiModelProperty(value = "投资订单号")
     private String nid;
-    /**
-     * 投标日期
-     */
+
+    @ApiModelProperty(value = "投标日期")
     private String buyDate;
-    /**
-     * 订单号
-     */
+
+    @ApiModelProperty(value = "订单号")
     private String orderId;
-    /**
-     * 交易金额
-     */
+
+    @ApiModelProperty(value = "交易金额")
     private BigDecimal txAmount;
-    /**
-     * 预期年化收益率
-     */
+
+    @ApiModelProperty(value = "预期年化收益率")
     private BigDecimal yield;
-    /**
-     * 预期收益
-     */
+
+    @ApiModelProperty(value = "预期收益")
     private BigDecimal forIncome;
-    /**
-     * 预期本息收益
-     */
+
+    @ApiModelProperty(value = "预期本息收益")
     private BigDecimal intTotal;
-    /**
-     * 实际收益
-     */
+
+    @ApiModelProperty(value = "实际收益")
     private BigDecimal income;
-    /**
-     * 实际收益符号
-     */
+
+    @ApiModelProperty(value = "实际收益符号")
     private String incFlag;
-    /**
-     * 到期日
-     */
+
+    @ApiModelProperty(value = "到期日")
     private String endDate;
-    /**
-     * 到期日
-     */
+
+    @ApiModelProperty(value = "状态")
     private String state;
 
+    @ApiModelProperty(value = "交易金额")
     private BigDecimal sumTxAmount;
+
+    @ApiModelProperty(value = "预期收益")
     private BigDecimal sumForIncome;
+
+    @ApiModelProperty(value = "预期本息收益")
     private BigDecimal sumIntTotal;
+
+    @ApiModelProperty(value = "实际收益")
     private BigDecimal sumIncome;
 
     public String getStartTime() {
@@ -102,28 +89,28 @@ public class InvestorDebtBean implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getAccountid() {
-        return accountid;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccountid(String accountid) {
-        this.accountid = accountid;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
-    public String getBorrownid() {
-        return borrownid;
+    public String getBorrowNid() {
+        return borrowNid;
     }
 
-    public void setBorrownid(String borrownid) {
-        this.borrownid = borrownid;
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getNid() {

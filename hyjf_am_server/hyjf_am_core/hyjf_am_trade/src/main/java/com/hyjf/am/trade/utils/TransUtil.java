@@ -123,60 +123,66 @@ public class TransUtil {
         }
 
         FileInputStream fis = new FileInputStream(fin);
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis, "GBK"));
 
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            // 结果文件数据
-            byte[] msgBytes = null;
-            msgBytes = line.getBytes("GBK");
-            if (msgBytes.length != TransConstants.EVELENGTH) {
-                AleveErrorLog record = new AleveErrorLog();
-                logger.info("文件长度不正确，抛出数据：" + line);
-                record.setCreateTime(GetDate.getNowTime());
-                record.setDelFlag(0);
-                record.setCreateUserId(0);
-                record.setFileline(TransConstants.EVELENGTH);
-                record.setSaveline(msgBytes.length);
-                record.setFilestats("eve");
-                record.setFilestring(line);
-                aleveErrorLogs.add(record);
-                continue;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(fis, "GBK"))) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                // 结果文件数据
+                byte[] msgBytes = null;
+                msgBytes = line.getBytes("GBK");
+                if (msgBytes.length != TransConstants.EVELENGTH) {
+                    AleveErrorLog record = new AleveErrorLog();
+                    logger.info("文件长度不正确，抛出数据：" + line);
+                    record.setCreateTime(GetDate.getNowTime());
+                    record.setDelFlag(0);
+                    record.setCreateUserId(0);
+                    record.setFileline(TransConstants.EVELENGTH);
+                    record.setSaveline(msgBytes.length);
+                    record.setFilestats("eve");
+                    record.setFilestring(line);
+                    aleveErrorLogs.add(record);
+                    continue;
+                }
+                String forcode = substring(line, 0, 11).trim();//发送方标识码
+                String seqno = substring(line, 11, 17).trim();//系统跟踪号
+                String cendt = substring(line, 17, 27).trim();//交易传输时间
+                String cardnbr = substring(line, 27, 46).trim();//主账号
+                String amount = substring(line, 46, 58).trim();//交易金额
+                String crflag = substring(line, 58, 59).trim();//交易金额符号--小于零等于C；大于零等于D；
+                String msgtype = substring(line, 59, 63).trim();//消息类型--提现冲正交易是0420
+                String proccode = substring(line, 63, 69).trim();//交易类型码
+                String orderno = substring(line, 69, 109).trim();//订单号
+                String tranno = substring(line, 109, 115).trim();//内部交易流水号
+                String reserved = substring(line, 115, 134).trim();//内部保留域
+                String revind = substring(line, 134, 135).trim();//冲正、撤销标志 --1-已撤销/冲正空或0-正常交易
+                String transtype = substring(line, 135, 139).trim();//交易类型
+                String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+                EveLog eve = new EveLog();
+                eve.setForcode(forcode);
+                eve.setSeqno(StringUtils.isNotEmpty(seqno) ? Integer.valueOf(seqno) : 0);
+                String cendtStr = StringUtils.isNotEmpty(cendt) ? cendt : "0";
+                int cendtint = DateUtils.getBeforeYearTime(cendtStr);
+                eve.setCendt(cendtint);
+                eve.setCardnbr(cardnbr);
+                eve.setAmount(StringUtils.isNotEmpty(amount) ? BigDecimal.valueOf(Double.valueOf(amount) / 100) : BigDecimal.valueOf(0.00));
+                eve.setCrflag(crflag);
+                eve.setMsgtype(StringUtils.isNotEmpty(msgtype) ? Integer.valueOf(msgtype) : 0);
+                eve.setProccode(StringUtils.isNotEmpty(proccode) ? Integer.valueOf(proccode) : 0);
+                eve.setOrderno(orderno);
+                eve.setTranno(tranno);
+                eve.setReserved(reserved);
+                eve.setRevind(StringUtils.isNotEmpty(revind) ? Integer.valueOf(revind) : 0);
+                eve.setTranstype(StringUtils.isNotEmpty(transtype) ? Integer.valueOf(transtype) : 0);
+                eve.setCreateDay(beforeDate);
+                eveLogs.add(eve);
             }
-            String forcode = substring(line, 0, 11).trim();//发送方标识码
-            String seqno = substring(line, 11, 17).trim();//系统跟踪号
-            String cendt = substring(line, 17, 27).trim();//交易传输时间
-            String cardnbr = substring(line, 27, 46).trim();//主账号
-            String amount = substring(line, 46, 58).trim();//交易金额
-            String crflag = substring(line, 58, 59).trim();//交易金额符号--小于零等于C；大于零等于D；
-            String msgtype = substring(line, 59, 63).trim();//消息类型--提现冲正交易是0420
-            String proccode = substring(line, 63, 69).trim();//交易类型码
-            String orderno = substring(line, 69, 109).trim();//订单号
-            String tranno = substring(line, 109, 115).trim();//内部交易流水号
-            String reserved = substring(line, 115, 134).trim();//内部保留域
-            String revind = substring(line, 134, 135).trim();//冲正、撤销标志 --1-已撤销/冲正空或0-正常交易
-            String transtype = substring(line, 135, 139).trim();//交易类型
-            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
-            EveLog eve = new EveLog();
-            eve.setForcode(forcode);
-            eve.setSeqno(StringUtils.isNotEmpty(seqno) ? Integer.valueOf(seqno) : 0);
-            String cendtStr = StringUtils.isNotEmpty(cendt) ? cendt : "0";
-            int cendtint = DateUtils.getBeforeYearTime(cendtStr);
-            eve.setCendt(cendtint);
-            eve.setCardnbr(cardnbr);
-            eve.setAmount(StringUtils.isNotEmpty(amount) ? BigDecimal.valueOf(Double.valueOf(amount) / 100) : BigDecimal.valueOf(0.00));
-            eve.setCrflag(crflag);
-            eve.setMsgtype(StringUtils.isNotEmpty(msgtype) ? Integer.valueOf(msgtype) : 0);
-            eve.setProccode(StringUtils.isNotEmpty(proccode) ? Integer.valueOf(proccode) : 0);
-            eve.setOrderno(orderno);
-            eve.setTranno(tranno);
-            eve.setReserved(reserved);
-            eve.setRevind(StringUtils.isNotEmpty(revind) ? Integer.valueOf(revind) : 0);
-            eve.setTranstype(StringUtils.isNotEmpty(transtype) ? Integer.valueOf(transtype) : 0);
-            eve.setCreateDay(beforeDate);
-            eveLogs.add(eve);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
         }
-        br.close();
     }
 
 
