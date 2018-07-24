@@ -48,7 +48,7 @@ public class BankOpenRecordManagerController extends BaseController{
     public BankAccountRecordResponse findBankAccountRecordList(@RequestBody @Valid BankAccountRecordRequest request) {
         logger.info("---findBankAccountRecordList by param---  " + JSONObject.toJSON(request));
         BankAccountRecordResponse response = new BankAccountRecordResponse();
-        Map<String,String> mapParam = setBankAccountRecordRequest(request);
+        Map<String,Object> mapParam = setBankAccountRecordRequest(request);
         int countBankRecordTotal = bankOpenRecordService.countBankRecordTotal(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), countBankRecordTotal,request.getPageSize());
         if(request.getPageSize()==0){
@@ -82,7 +82,7 @@ public class BankOpenRecordManagerController extends BaseController{
     public BankAccountRecordResponse findAccountRecordList(@RequestBody @Valid AccountRecordRequest request) {
         logger.info("---findAccountRecordList by param---  " + JSONObject.toJSON(request));
         BankAccountRecordResponse response = new BankAccountRecordResponse();
-        Map<String,String> mapParam = setAccountRecordRequest(request);
+        Map<String,Object> mapParam = setAccountRecordRequest(request);
         int countRecordTotal = bankOpenRecordService.countRecordTotal(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), countRecordTotal,request.getPageSize());
         List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
@@ -101,8 +101,8 @@ public class BankOpenRecordManagerController extends BaseController{
      * @param request
      * @return
      */
-    private Map<String,String> setAccountRecordRequest(AccountRecordRequest request){
-        Map<String,String> mapRaram = new HashMap<String,String>();
+    private Map<String,Object> setAccountRecordRequest(AccountRecordRequest request){
+        Map<String,Object> mapRaram = new HashMap<String,Object>();
         mapRaram.put("openAccountPlat",request.getOpenAccountPlat());
         mapRaram.put("userName",request.getUserName());
         mapRaram.put("userProperty",request.getUserProperty());
@@ -119,8 +119,8 @@ public class BankOpenRecordManagerController extends BaseController{
      * @param request
      * @return
      */
-    private Map<String,String>  setBankAccountRecordRequest(BankAccountRecordRequest request){
-        Map<String,String> mapRaram = new HashMap<String,String>();
+    private Map<String,Object>  setBankAccountRecordRequest(BankAccountRecordRequest request){
+        Map<String,Object> mapRaram = new HashMap<String,Object>();
         mapRaram.put("openAccountPlat",request.getOpenAccountPlat());
         mapRaram.put("userName",request.getUserName());
         mapRaram.put("customerAccount",request.getCustomerAccount());

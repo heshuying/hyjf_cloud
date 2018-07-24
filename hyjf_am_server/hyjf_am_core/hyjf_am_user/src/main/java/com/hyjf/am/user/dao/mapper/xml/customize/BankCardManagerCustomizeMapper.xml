@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper">
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.BankCardManagerCustomizeMapper">
     <resultMap id="BankCardListPOMap" type="com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize">
         <id column="user_id" property="userId" jdbcType="INTEGER" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -37,7 +37,7 @@
         INNER JOIN ht_account_bank hyduab ON hydu.user_id = hyduab.user_id
 --         LEFT JOIN ht_bank_config hydbc ON hydbc. CODE = hyduab.bank
         <include refid="Where_Clause" />
-        ORDER BY hyduab.addtime DESC
+        ORDER BY hyduab.create_time DESC
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
@@ -52,7 +52,6 @@
     </select>
     <sql id="Where_Clause">
         <where>
-            hyduab.`status` = 0
             <if test="userName != null and userName !='' ">
                 AND hydu.username LIKE CONCAT('%', #{userName}, '%')
             </if>
@@ -81,10 +80,10 @@
                 </if>
             </if>
             <if test="addTimeStart != null and addTimeStart !='' ">
-                AND FROM_UNIXTIME( hyduab.addtime, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+                AND FROM_UNIXTIME( hyduab.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
             </if>
             <if test="addTimeEnd != null and addTimeEnd !='' ">
-                AND FROM_UNIXTIME( hyduab.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+                AND FROM_UNIXTIME( hyduab.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
             </if>
         </where>
     </sql>
@@ -114,7 +113,7 @@
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-        INNER JOIN ht_account_bank hbc ON hbc.user_id = hydu.user_id
+        INNER JOIN ht_bank_card hbc ON hbc.user_id = hydu.user_id
         <include refid="New_Where_Clause" />
         ORDER BY hbc.create_time DESC
         <if test="limitStart != null and limitEnd !=null" >
@@ -127,7 +126,7 @@
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
-        INNER JOIN ht_account_bank hbc ON hbc.user_id = hydu.user_id
+        INNER JOIN ht_bank_card hbc ON hbc.user_id = hydu.user_id
         <include refid="New_Where_Clause" />
     </select>
     <sql id="New_Where_Clause">

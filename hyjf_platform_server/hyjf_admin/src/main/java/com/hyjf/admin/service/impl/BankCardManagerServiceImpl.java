@@ -97,14 +97,7 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
     public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         BankCardLogResponse response =  bankCardManagerClient.selectBankCardLogByExample(request);
-        if(null!=response){
-            if(null!=response.getResultList()&&response.getResultList().size()>0){
-                for(BankCardLogVO bankCardLogVO:response.getResultList()){
-//                    bankCardLogVO.setBankName(bankcardProperty.getOrDefault(bankCardLogVO.getBankCode(),null));
-                }
-            }
-        }
-        return bankCardManagerClient.selectBankCardLogByExample(request);
+        return response;
     }
 
 
