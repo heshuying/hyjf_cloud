@@ -12,22 +12,18 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.trade.BankCardBeanResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +61,24 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+
+    /**
+     * 获取银行卡配置信息
+     * @param code
+     * @return
+     */
+    @GetMapping("/selectBankConfigByCode/{code}")
+    public BanksConfigResponse selectBankConfigByCode(@PathVariable String  code){
+        BanksConfigResponse response = new BanksConfigResponse();
+        BankConfig bankConfig = bankConfigService.selectBankConfigByCode(code);
+        if(null != bankConfig){
+            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BeanUtils.copyProperties(bankConfig,banksConfigVO);
+            response.setResult(banksConfigVO);
+        }
+        return response;
+    }
+
 
     /**
      *

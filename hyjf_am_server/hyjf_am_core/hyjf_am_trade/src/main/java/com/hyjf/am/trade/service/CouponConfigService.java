@@ -181,4 +181,13 @@ public interface CouponConfigService {
      * @return
      */
     Integer updateRecoverPeriod(String tenderNid, Integer period);
+
+    String selectCouponInterestTotal(Integer userId);
+
+    /**
+     * 获取某用户优惠券累计收益总和
+     * @param userId
+     * @return
+     */
+    String selectCouponReceivedInterestTotal(Integer userId);
 }

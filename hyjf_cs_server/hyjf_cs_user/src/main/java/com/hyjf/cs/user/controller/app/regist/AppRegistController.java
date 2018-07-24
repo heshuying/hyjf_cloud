@@ -6,10 +6,8 @@ package com.hyjf.cs.user.controller.app.regist;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
-import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
-import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -59,7 +57,7 @@ public class AppRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "app端-用户注册")
     @PostMapping(value = "/registAction")
-    public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request) throws UnsupportedEncodingException {
+    public JSONObject register(@RequestHeader(value = "key") String key, HttpServletRequest request){
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/registAction");
         // 版本号
@@ -111,6 +109,9 @@ public class AppRegistController extends BaseUserController {
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
         ret = registService.appCheckParam(register);
+        if(ret!=null){
+            return ret;
+        }
         registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
         boolean active = false;
@@ -123,7 +124,11 @@ public class AppRegistController extends BaseUserController {
             BaseMapBean baseMapBean=new BaseMapBean();
             baseMapBean.set("imageUrl", "");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+            try {
+                baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             baseMapBean.set("imageUrlOperation", "");
             baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
@@ -147,7 +152,11 @@ public class AppRegistController extends BaseUserController {
             BaseMapBean baseMapBean = new BaseMapBean();
             baseMapBean.set("imageUrl", record.getImage());
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+            try {
+                baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             baseMapBean.set("imageUrlOperation", operationUrl);
             baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);

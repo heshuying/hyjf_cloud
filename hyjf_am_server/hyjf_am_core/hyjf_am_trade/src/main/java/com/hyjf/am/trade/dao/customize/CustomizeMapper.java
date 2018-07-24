@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.mapper.customize.AppUserInvestCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.WebPandectCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,4 +130,9 @@ public class CustomizeMapper extends AutoMapper {
 	@Autowired
 	protected HjhDayCreditDetailCustomizeMapper hjhDayCreditDetailCustomizeMapper;
 
+	@Autowired
+	protected WebPandectCustomizeMapper webPandectCustomizeMapper;
+
+	@Autowired
+	protected AppUserInvestCustomizeMapper appUserInvestCustomizeMapper;
 }

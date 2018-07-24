@@ -148,4 +148,6 @@ public interface BaseUserService extends BaseService{
 	List<BankCardVO> getBankOpenAccountById(UserVO userVO);
 
     String getBankReturnErrorMsg(String retCode);
+
+    String strEncode(String str);
 }
