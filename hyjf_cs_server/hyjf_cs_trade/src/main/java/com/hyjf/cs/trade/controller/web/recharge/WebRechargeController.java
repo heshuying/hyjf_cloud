@@ -40,7 +40,7 @@ import java.util.Map;
 @Api(value = "web端用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/web/recharge")
+@RequestMapping(value = "/hyjf-web/recharge")
 public class WebRechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(WebRechargeController.class);
