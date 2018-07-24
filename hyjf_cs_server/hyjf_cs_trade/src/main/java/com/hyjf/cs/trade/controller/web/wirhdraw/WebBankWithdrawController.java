@@ -33,7 +33,7 @@ import java.util.Map;
 @Api(value = "web端用户提现接口" ,description = "web端用户提现接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/withdraw")
+@RequestMapping("/hyjf-web/withdraw")
 public class WebBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
