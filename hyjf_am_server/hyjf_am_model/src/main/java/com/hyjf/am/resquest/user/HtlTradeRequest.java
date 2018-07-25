@@ -14,6 +14,8 @@ public class HtlTradeRequest extends BasePage {
     private Integer userId;
     //状态
     private Integer status;
+    //操作平台
+    private String client;
     //查询用  时间
     private String timeStartSrch;
     //查询用  时间
@@ -35,6 +37,14 @@ public class HtlTradeRequest extends BasePage {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public String getTimeStartSrch() {

@@ -71,9 +71,8 @@ public class BankSettingController extends BaseController {
         AdminBankSettingResponse response= null ;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
-        String ids =bankSettingRequestBean.getIds();
-        if (StringUtils.isNotEmpty(bankSettingRequestBean.getIds())) {
-            Integer id = Integer.valueOf(bankSettingRequestBean.getIds());
+        Integer id =request.getId();
+        if (id != null) {
             response = this.bankSettingService.getRecord(request);
             //String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
         }
@@ -150,8 +149,8 @@ public class BankSettingController extends BaseController {
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        if(StringUtils.isNotBlank(bankSettingRequestBean.getIds())){
-            request.setId(Integer.valueOf(bankSettingRequestBean.getIds()));
+        Integer id =request.getId();
+        if(id != null){
             response = this.bankSettingService.deleteRecord(request);
         }
         if(response==null) {
