@@ -9,9 +9,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.cs.user.bean.BaseResultBean;
-import com.hyjf.cs.user.bean.SimpleResultBean;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
@@ -21,7 +21,6 @@ import com.hyjf.cs.user.vo.MyProfileVO;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,13 +54,14 @@ public class MyProfileController extends BaseUserController {
     @SignValidate
     @RequestMapping("/profile")
     @ResponseBody
-    public BaseResultBean myProfile(HttpServletRequest request) {
-
-        SimpleResultBean<MyProfileVO> result = new SimpleResultBean<>();
-
+    public WeChatResult myProfile(HttpServletRequest request) {
+        WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
-
         Integer userId = requestUtil.getRequestUserId(request);
+        if(userId==null){
+            result.buildErrorResponse(MsgEnum.ERR_USER_NOT_LOGIN);
+            return result;
+        }
 
         String trueUserName = myProfileService.getUserTrueName(userId);
 
@@ -75,7 +75,7 @@ public class MyProfileController extends BaseUserController {
 
         myProfileService.buildOutInfo(userId, myProfileVO);
 
-        result.setObject(myProfileVO);
+        result.setData(myProfileVO);
 
         this.getIconUrl(userId, myProfileVO);
 
@@ -102,15 +102,15 @@ public class MyProfileController extends BaseUserController {
     @SignValidate
     @GetMapping("/couponlist")
     @ResponseBody
-    public BaseResultBean getCouponList(HttpServletRequest request) {
-        SimpleResultBean<List<CouponUserListCustomizeVO>> resultBean = new SimpleResultBean<>();
+    public WeChatResult getCouponList(HttpServletRequest request) {
+        WeChatResult resultBean = new WeChatResult();
         Integer userId = requestUtil.getRequestUserId(request);
         String resultStr = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
         JSONObject resultJson = JSONObject.parseObject(resultStr);
         JSONArray data = resultJson.getJSONArray("data");
         List<CouponUserForAppCustomizeVO> configs = JSON.parseArray(data.toJSONString(), CouponUserForAppCustomizeVO.class);
         List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(configs);
-        resultBean.setObject(lstCoupon);
+        resultBean.setData(lstCoupon);
         return resultBean;
     }
 

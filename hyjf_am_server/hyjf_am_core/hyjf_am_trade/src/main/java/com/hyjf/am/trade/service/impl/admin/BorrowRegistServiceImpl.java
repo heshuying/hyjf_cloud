@@ -151,7 +151,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             int userId = borrow.getUserId();
             RUser user = rUserMapper.selectByPrimaryKey(userId);
             if (Validator.isNotNull(user)) {
-                //todo 用account中的account_id代替
+                //用account中的account_id代替
                 Account bankOpenAccount = accountService.getAccount(userId);
                 if (Validator.isNotNull(bankOpenAccount)) {
                     // 更新相应的标的状态为备案中
@@ -195,7 +195,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                         // 年化利率
                         debtRegistBean.setRate(String.valueOf(borrow.getBorrowApr()));
                         if (Validator.isNotNull(borrowInfo.getRepayOrgUserId())) {
-                            //todo 用account中的account_id代替
+                            //用account中的account_id代替
                             Account account = accountService.getAccount(borrowInfo.getRepayOrgUserId());
                             if (Validator.isNotNull(account)) {
                                 debtRegistBean.setBailAccountId(account.getAccountId());

@@ -473,22 +473,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         msg.put(VAL_AMOUNT, repayTotal.toString());
         msg.put(VAL_USER_ID, String.valueOf(userId));
         msg.put(VAL_HJH_TITLE, planName);
-        RUser userInfo = rUserMapper.selectByPrimaryKey(Integer.valueOf(msg.get(VAL_USER_ID)));
-        //todo 用户冗余表 暂用固定值
-        msg.put(VAL_SEX, "先生");
-//		Integer sex = userInfo.getSex();
-//		if (Validator.isNotNull(sex)) {
-//			if (sex.intValue() == 2) {
-//				msg.put(VAL_SEX, "女士");
-//			} else {
-//				msg.put(VAL_SEX, "先生");
-//			}
-//		}
-        //todo 原子层这里不是很好处理 能不能在消mq消费端判断？
-//		Users users = getUsersByUserId(userId);
-//		if (users == null || Validator.isNull(users.getMobile()) || (users.getInvestSms() != null && users.getInvestSms() == 1)) {
-//			return;
-//		}
+
         logger.info("userId=" + msg.get(VAL_USER_ID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
         SmsMessage smsMessage = null;
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
@@ -534,16 +519,6 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 } else {
                     msg.put(VAL_NAME, users.getTruename());
                 }
-                //todo user冗余表 暂用固定值
-                msg.put(VAL_SEX, "先生");
-//                Integer sex = users.getSex();
-//                if (Validator.isNotNull(sex)) {
-//                    if (sex.intValue() == 2) {
-//                        msg.put(VAL_SEX, "女士");
-//                    } else {
-//                        msg.put(VAL_SEX, "先生");
-//                    }
-//                }
                 AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
                 try {
                     appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),
@@ -1010,12 +985,12 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             bean.setOrdid(accedeOrderId);
             bean.setTransType(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN);
             bean.setTenderUserId(userId);
-            bean.setSignDate(GetDate.getDataString(GetDate.date_sdf));//签署日期
+            //签署日期
+            bean.setSignDate(GetDate.getDataString(GetDate.date_sdf));
             bean.setPlanStartDate(GetDate.getDateMyTimeInMillis(countInterestTime));
             bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(quitTime));
             bean.setTenderInterestFmt(waitTotal.toString());
-            //todo 法大大生成合同MQ
-//			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+            // 法大大生成合同MQ
             fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
                     MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 
@@ -1062,7 +1037,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     }
 
     /**
-     * 优惠券还款
+     * 优惠券还款队列
      *
      * @param hjhAccede
      */
@@ -1073,19 +1048,20 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         params.put("orderId", hjhAccede.getAccedeOrderId());
         //TODO: 优惠券还款队列
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY_HJH, JSONObject.toJSONString(params));
-        // add by  优惠券还款请求加入到消息队列 end
     }
 
-
+    /**
+     * 优惠券放款队列
+     *
+     * @param hjhAccede
+     */
     private void couponLoan(HjhAccede hjhAccede) {
-        // add by  优惠券放款请求加入到消息队列 start
         Map<String, String> params = new HashMap<String, String>();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
         //TODO: 优惠券放款队列
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
-        // add by  优惠券放款请求加入到消息队列 end
     }
 
     /**

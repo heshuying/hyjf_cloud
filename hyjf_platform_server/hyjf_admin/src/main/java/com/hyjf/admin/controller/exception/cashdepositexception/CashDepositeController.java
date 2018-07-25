@@ -82,6 +82,7 @@ public class CashDepositeController extends BaseController {
      * @param menuHide  1  重新验证保证金 0 流标
      * @return
      */
+    @ApiOperation(value = "批量处理", notes = "批量处理")
     @PostMapping("/modifyAsset")
     private JSONObject modifyAction(AssetListViewRequest form,String menuHide){
         JSONObject ret = new JSONObject();

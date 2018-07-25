@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @Auther:yangchangwei
@@ -9,22 +10,34 @@ import com.hyjf.am.vo.BasePage;
  */
 public class HjhDebtCreditListRequest extends BasePage{
 
-    /**
-     * 计划编号
-     */
+
+    @ApiModelProperty(value = "出让人计划编号")
     private String planNid;
+    @ApiModelProperty(value = "出让人计划订单号")
     private String planOrderId;
+    @ApiModelProperty(value = "清算后计划编号")
     private String planNidNew;
+    @ApiModelProperty(value = "出让人")
     private String userName;
+    @ApiModelProperty(value = "债转编号")
     private String creditNid;
+    @ApiModelProperty(value = "原项目编号")
     private String borrowNid;
+    @ApiModelProperty(value = "还款方式")
     private String repayStyle;
+    @ApiModelProperty(value = "转让状态")
     private String creditStatus;
+    @ApiModelProperty(value = "还款状态")
     private String repayStatus;
+    @ApiModelProperty(value = "实际清算开始时间")
     private String liquidatesTimeStart;
+    @ApiModelProperty(value = "实际清算结束时间")
     private String liquidatesTimeEnd;
+    @ApiModelProperty(value = "当期应还款开始时间")
     private String repayNextTimeStart;
+    @ApiModelProperty(value = "当期应还款开始时间")
     private String repayNextTimeEnd;
+
 
     public String getPlanNid() {
         return planNid;

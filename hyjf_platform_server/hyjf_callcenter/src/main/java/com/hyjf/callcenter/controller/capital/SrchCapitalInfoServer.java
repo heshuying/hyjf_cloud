@@ -2,6 +2,7 @@ package com.hyjf.callcenter.controller.capital;
 
 import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
+import com.hyjf.am.vo.trade.RUserVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.ResultListBean;
 import com.hyjf.callcenter.beans.SrchCapitalInfoBean;
@@ -59,8 +60,11 @@ public class SrchCapitalInfoServer extends CallcenterBaseController {
 			//查询条件使用userId精确查询
 			callCenterAccountDetailRequest.setUserId(user.getUserId());
 			callCenterAccountDetailRequest.setUserName(user.getUsername());
-			// todo 推荐人要查询
-			//callCenterAccountDetailRequest.setReferrerName(user.getReferrerUserName());
+			//查询推荐人信息
+			RUserVO referrerUser = this.getRefereerInfoByUserId(user.getUserId());
+			if(referrerUser != null){
+				callCenterAccountDetailRequest.setReferrerName(referrerUser.getUsername());
+			}
 			// 分页开始结束
 			callCenterAccountDetailRequest.setLimitStart(bean.getLimitStart());
 			callCenterAccountDetailRequest.setLimitEnd(bean.getLimitSize());

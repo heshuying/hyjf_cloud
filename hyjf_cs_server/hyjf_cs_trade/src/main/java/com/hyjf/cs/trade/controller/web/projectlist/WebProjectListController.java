@@ -158,6 +158,16 @@ public class WebProjectListController extends BaseTradeController {
 
 
 
+    @ApiOperation(value = "计划详情加入记录" , notes = "计划详情加入记录")
+    @PostMapping(value = "/getPlanAccedeList", produces = "application/json; charset=utf-8")
+    public Object getPlanAccedeList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) String userId){
+        WebResult result  = webProjectListService.getPlanAccedeList(requestBean,userId);
+        return result;
+    }
+
+
+
+
 
 
 

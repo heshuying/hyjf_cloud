@@ -28,13 +28,13 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public List<BankOpenAccountRecordCustomize> selectBankAccountList(Map<String,String> mapParam,int limitStart, int limitEnd){
+    public List<BankOpenAccountRecordCustomize> selectBankAccountList(Map<String,Object> mapParam,int limitStart, int limitEnd){
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
-            mapParam.put("limitStart", String.valueOf(limitStart));
+            mapParam.put("limitStart", limitStart);
         }
         if (limitEnd > 0) {
-            mapParam.put("limitEnd", String.valueOf(limitEnd));
+            mapParam.put("limitEnd", limitEnd);
         }
         List<BankOpenAccountRecordCustomize> listBankAccountRecord = bankOpenRecordCustomizeMapper.selectBankAccountList(mapParam);
         if (CollectionUtils.isNotEmpty(listBankAccountRecord)) {
@@ -54,13 +54,13 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,String> mapParam, int limitStart, int limitEnd){
+    public List<BankOpenAccountRecordCustomize> selectAccountList(Map<String,Object> mapParam, int limitStart, int limitEnd){
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
-            mapParam.put("limitStart", String.valueOf(limitStart));
+            mapParam.put("limitStart", limitStart);
         }
         if (limitEnd > 0) {
-            mapParam.put("limitEnd", String.valueOf(limitEnd));
+            mapParam.put("limitEnd", limitEnd);
         }
         List<BankOpenAccountRecordCustomize> listBankAccountRecord = bankOpenRecordCustomizeMapper.selectAccountList(mapParam);
         if (CollectionUtils.isNotEmpty(listBankAccountRecord)) {
@@ -80,7 +80,7 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public int countBankRecordTotal(Map<String,String> mapParam){
+    public int countBankRecordTotal(Map<String,Object> mapParam){
 //        Map<String,String> mapParam =setBankAccountRecordRequest(request);
         Integer intCount = bankOpenRecordCustomizeMapper.countBankRecordTotal(mapParam);
         return  intCount.intValue();
@@ -91,7 +91,7 @@ public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerSe
      * @return
      */
     @Override
-    public int countRecordTotal(Map<String,String> mapParam){
+    public int countRecordTotal(Map<String,Object> mapParam){
 //        Map<String,String> mapParam = setAccountRecordRequest(request);
         Integer integerCount = bankOpenRecordCustomizeMapper.countRecordTotal(mapParam);
         return integerCount.intValue();

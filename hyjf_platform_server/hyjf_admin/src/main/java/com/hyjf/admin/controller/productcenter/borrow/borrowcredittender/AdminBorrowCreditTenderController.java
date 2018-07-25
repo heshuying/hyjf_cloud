@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api(value = "产品中心-汇转让")
+@Api(value = "产品中心-汇转让-承接信息" , description = "产品中心-汇转让-承接信息")
 @RestController
 @RequestMapping("/borrow/creditTender")
 public class AdminBorrowCreditTenderController {
@@ -32,7 +32,7 @@ public class AdminBorrowCreditTenderController {
 
 
     @ApiOperation(value = "承接信息导出", notes = "承接信息导出")
-    @GetMapping("/exportData")
+    @PostMapping("/exportData")
     @ResponseBody
     public void exportBorrowCreditTender( BorrowCreditTenderRequest request, HttpServletResponse response){
         borrowCreditTenderService.exportCreditTenderList(request,response);
@@ -41,7 +41,7 @@ public class AdminBorrowCreditTenderController {
 
 
     @ApiOperation(value = "查看债权人债权信息", notes = "查看债权人债权信息")
-    @GetMapping("/getCreditUserInfo")
+    @PostMapping("/getCreditUserInfo")
     @ResponseBody
     public Object  getCreditUserInfo(HttpServletRequest request){
         AdminResult result =  borrowCreditTenderService.getCreditUserInfo(request);

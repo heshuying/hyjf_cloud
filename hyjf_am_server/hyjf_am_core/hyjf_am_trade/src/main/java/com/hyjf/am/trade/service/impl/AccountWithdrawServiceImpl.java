@@ -70,13 +70,9 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
     @Override
     public int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankRequest) {
 
-        BigDecimal transAmt=bankRequest.getTransAmt();
-        String fee=bankRequest.getFee();
-        BigDecimal feeAmt=bankRequest.getFeeAmt();
         BigDecimal total=bankRequest.getTotal();
         Integer userId=bankRequest.getUserId();
         String ordId=bankRequest.getOrdId();
-        int nowTime=bankRequest.getNowTime();
         String accountId=bankRequest.getAccountId();
         String ip=bankRequest.getIp();
         AccountWithdrawVO accountWithdrawVO=bankRequest.getAccountWithdrawVO();
@@ -252,4 +248,5 @@ public class AccountWithdrawServiceImpl extends BaseServiceImpl implements Accou
     public List<WithdrawCustomize> getWithdrawRecordList(WithdrawBeanRequest request) {
         return withdrawCustomizeMapper.selectWithdrawList(request);
     }
+
 }

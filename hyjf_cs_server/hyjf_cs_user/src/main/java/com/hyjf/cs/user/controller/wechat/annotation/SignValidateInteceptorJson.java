@@ -1,9 +1,10 @@
 package com.hyjf.cs.user.controller.wechat.annotation;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.SecretUtil;
-import com.hyjf.cs.user.controller.wechat.base.BaseResultBean;
+import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.util.ResultEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -61,19 +62,19 @@ public class SignValidateInteceptorJson extends HandlerInterceptorAdapter {
 			request.setAttribute("accountId", accountId);
 		}
 		if (signValidate != null) {
-			BaseResultBean result = new BaseResultBean();
+			WeChatResult<String> result = new WeChatResult<String>();
 			response.setContentType("application/json; charset=utf-8");
 			PrintWriter out = null;
 			if (StringUtils.isNotBlank(sign)) {
 				// 如果查询不到 证明过期了 需要重新登录
 				if (userId == null || userId - 0 == 0) {
 					out = response.getWriter();
-					out.append(JSONObject.toJSONString(result.setEnum(ResultEnum.LOGININVALID)));
+					out.append(JSONObject.toJSONString(result.buildErrorResponse(MsgEnum.ERROR_LOGIN_INVALID)));
 					return false;
 				}
 			} else {
 				out = response.getWriter();
-				out.append(JSONObject.toJSONString(result.setEnum(ResultEnum.NOTLOGIN)));
+				out.append(JSONObject.toJSONString(result.buildErrorResponse(MsgEnum.ERR_USER_NOT_LOGIN)));
 				return false;
 			}
 		}

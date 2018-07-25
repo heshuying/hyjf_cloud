@@ -264,5 +264,48 @@ public class ProjectListController extends BaseController{
 
     // --------------------------------------app end-------------------------------------------------
 
+    // --------------------------------------wechat start--------------------------------------------------
+
+    /**
+     * 微信端获取首页项目列表
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @RequestMapping("/wechat/searchHomeProejctList")
+    public WechatProjectListResponse searchHomeProejctList(@RequestBody @Valid Map<String,Object> map){
+        WechatProjectListResponse response = new WechatProjectListResponse();
+        List<WechatHomeProjectListVO> list = projectListService.searchWechatProjectList(map);
+        response.setResultList(list);
+        return response;
+    }
+
+    /**
+     * 微信端首页汇计划加载两条稍后开启
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @RequestMapping("/wechat/selectHomeHjhOpenLaterList")
+    public WechatProjectListResponse selectHomeHjhOpenLaterList(){
+        WechatProjectListResponse response = new WechatProjectListResponse();
+        List<WechatHomeProjectListVO> list = projectListService.selectHomeHjhOpenLaterList();
+        response.setResultList(list);
+        return response;
+    }
+
+
+    /**
+     * 微信端首页汇计划加载两条稍后开启
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @GetMapping("/wechat/selectHomeRepaymentsProjectList")
+    public WechatProjectListResponse selectHomeRepaymentsProjectList(){
+        WechatProjectListResponse response = new WechatProjectListResponse();
+        List<WechatHomeProjectListVO> list = projectListService.selectHomeRepaymentsProjectList();
+        response.setResultList(list);
+        return response;
+    }
+
+    // --------------------------------------wechat end--------------------------------------------------
 
 }

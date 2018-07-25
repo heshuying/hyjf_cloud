@@ -11,15 +11,15 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.config.WhereaboutsPictureResponse;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,5 +95,19 @@ public class WhereaboutsPageController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>();
+	}
+
+	/**
+	 * 资料上传
+	 *
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "移动端着陆页管理", notes = "资料上传")
+	@RequestMapping("/uploadFile")
+	public WhereaboutsPictureResponse uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		WhereaboutsPictureResponse files = this.whereaboutsPageService.uploadFile(request, response);
+		return files;
 	}
 }

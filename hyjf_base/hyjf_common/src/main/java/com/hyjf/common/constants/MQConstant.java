@@ -176,7 +176,7 @@ public interface MQConstant {
 	/**
 	 * 汇计划退出
 	 */
-	String HJH_QUIT = "HJH_QUIT";
+	String HJH_QUIT_GROUP = "HJH_QUIT_GROUP";
 	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
 
 	/**

@@ -1,22 +1,24 @@
 package com.hyjf.callcenter.controller.base;
 
-import com.hyjf.am.vo.user.UserVO;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.validation.BindException;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.RUserVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.callcenter.beans.BaseFormBean;
 import com.hyjf.callcenter.beans.UserBean;
 import com.hyjf.callcenter.result.BaseResultBean;
 import com.hyjf.callcenter.service.UserService;
 import com.hyjf.callcenter.util.ValidatorCheckUtil;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 /**
@@ -60,6 +62,15 @@ public class CallcenterBaseController {
 		
 		//查询用户信息
 		return userService.getUser(bean);
+	}
+
+	/**
+	 * 根据用户ID查询推荐人信息
+	 * @param userId
+	 * @return
+	 */
+	protected RUserVO getRefereerInfoByUserId(Integer userId){
+		return userService.getRefereerInfoByUserId(userId);
 	}
 	
 	/**

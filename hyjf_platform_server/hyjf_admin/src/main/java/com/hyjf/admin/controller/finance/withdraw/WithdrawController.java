@@ -61,7 +61,6 @@ public class WithdrawController extends BaseController {
 	 */
 	@ApiOperation(value = "提现管理页面载入", notes = "提现管理页面载入")
 	@PostMapping("/init")
-	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<AdminWithdrawAPIVO>> init(WithdrawBeanAPIRequest request) {
 

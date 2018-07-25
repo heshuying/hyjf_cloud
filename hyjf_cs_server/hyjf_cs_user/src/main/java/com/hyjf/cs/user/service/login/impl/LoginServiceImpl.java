@@ -522,13 +522,19 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                     // +债转
                     .subtract(CreditInterestAmountYes);
                     // -已债转
-            if (request.getParameter("version").startsWith("1.1.0")) {
-                result.setWaitInterest(account.getBankAwaitInterest().add(account.getPlanInterestWait()) + "");
-                result.setInterestTotle(account.getBankInterestSum() + "");
-            } else {
-                result.setWaitInterest(DF_FOR_VIEW.format(account.getBankAwaitInterest().add(account.getPlanInterestWait())));
-                result.setInterestTotle(DF_FOR_VIEW.format(account.getBankInterestSum()));
+            if(null!=account){
+                if (request.getParameter("version").startsWith("1.1.0")) {
+                    result.setWaitInterest(account.getBankAwaitInterest().add(account.getPlanInterestWait()) + "");
+                    result.setInterestTotle(account.getBankInterestSum() + "");
+                } else {
+                    result.setWaitInterest(DF_FOR_VIEW.format(account.getBankAwaitInterest().add(account.getPlanInterestWait())));
+                    result.setInterestTotle(DF_FOR_VIEW.format(account.getBankInterestSum()));
+                }
+            }else {
+                result.setWaitInterest(DF_FOR_VIEW.format(0));
+                result.setInterestTotle(DF_FOR_VIEW.format(0));
             }
+
             BigDecimal bankTotal = account.getBankTotal() == null? BigDecimal.ZERO :account.getBankTotal();
             result.setAccountTotle(DF_FOR_VIEW.format(bankTotal));
 
