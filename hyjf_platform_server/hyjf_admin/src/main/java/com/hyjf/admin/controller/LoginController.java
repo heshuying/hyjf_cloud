@@ -29,6 +29,7 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 
 import io.swagger.annotations.Api;
@@ -73,7 +74,7 @@ public class LoginController extends BaseController {
 			return info;
 		}
 		String uuid=UUID.randomUUID().toString();
-		RedisUtils.set("admin@"+username, uuid, 3600);
+		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
 		this.setUser(request, prs.getResult());
 		System.out.println(prs.getResult().getId());
 		info.put("uuid", uuid);

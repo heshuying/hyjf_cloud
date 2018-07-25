@@ -114,4 +114,22 @@ public class ContentLinksServiceImpl implements ContentLinksService {
             record.setIsindex(0);
         }
     }
+	/**
+	 * 合作机构
+	 * @return
+	 */
+	@Override
+	public List<Link> getLinks() {
+		LinkExample example = new LinkExample();
+		LinkExample.Criteria cra = example.createCriteria();
+		cra.andTypeEqualTo(2);
+		cra.andPartnerTypeEqualTo(7);
+
+		List<Link> links = linkMapper.selectByExample(example);
+
+		if (links != null && links.size() > 0) {
+			return links;
+		}
+		return null;
+	}
 }

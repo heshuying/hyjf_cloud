@@ -9,7 +9,7 @@ public class Borrow implements Serializable {
 
     private String borrowNid;
 
-    private Boolean projectType;
+    private Integer projectType;
 
     private Integer userId;
 
@@ -159,11 +159,11 @@ public class Borrow implements Serializable {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public Boolean getProjectType() {
+    public Integer getProjectType() {
         return projectType;
     }
 
-    public void setProjectType(Boolean projectType) {
+    public void setProjectType(Integer projectType) {
         this.projectType = projectType;
     }
 

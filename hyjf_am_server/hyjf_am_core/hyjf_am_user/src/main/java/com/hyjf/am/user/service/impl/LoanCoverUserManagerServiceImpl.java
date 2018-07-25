@@ -248,4 +248,36 @@ public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerServ
             return null;
         }
     }
+  	/**
+  	 * 根据社会统一信用代码或身份证号查询用户是否做过CA认证
+  	 * @param idNo
+  	 * @param name
+  	 * @return
+  	 */
+  	@Override
+  	public boolean isCAIdNoCheck(String idNo, String name) {
+
+  		LoanSubjectCertificateAuthorityExample example = new LoanSubjectCertificateAuthorityExample();
+  		LoanSubjectCertificateAuthorityExample.Criteria cra = example.createCriteria();
+  		cra.andIdNoEqualTo(idNo);
+  		List<LoanSubjectCertificateAuthority> loanSubjectlist = this.loanSubjectCertificateAuthorityMapper.selectByExample(example);
+
+  		CertificateAuthorityExample caExample = new CertificateAuthorityExample();
+  		CertificateAuthorityExample.Criteria caCra = caExample.createCriteria();
+  		caCra.andIdNoEqualTo(idNo);
+  		List<CertificateAuthority> caList = this.certificateAuthorityMapper.selectByExample(caExample);
+
+  		LoanSubjectCertificateAuthority loanSubjectCertificateAuthority = null;
+  		if(loanSubjectlist!=null && loanSubjectlist.size()>0){
+  			loanSubjectCertificateAuthority = loanSubjectlist.get(0);
+  		}
+  		CertificateAuthority certificateAuthority = null;
+  		if (caList != null && caList.size()>0){
+  			certificateAuthority = caList.get(0);
+  		}
+  		if (loanSubjectCertificateAuthority == null && certificateAuthority == null ){
+  			return false;
+  		}
+  		return true;
+  	}
 }

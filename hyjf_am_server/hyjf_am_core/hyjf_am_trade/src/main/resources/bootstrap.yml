@@ -28,7 +28,10 @@ spring:
 logging:
   file: am-trade.log
 file:
-   physical:
-      path:D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
-   domain:
-      url:http://test.hyjf.com:8083/hyjf-admin/
+ physical:
+  path: D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
+ domain:
+  url: http://test.hyjf.com:8083/hyjf-admin/
+ upload:
+  real:
+   path: 123

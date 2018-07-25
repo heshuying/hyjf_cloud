@@ -37,7 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-app/msgpush")
 public class MessagePushController extends BaseController {
-	@Value("hyjf.web.host")
+	@Value("${hyjf.web.host}")
 	private String webHost;
 	@Autowired
 	private MsgPushService msgPushService;
@@ -302,4 +302,5 @@ public class MessagePushController extends BaseController {
 		ret.put("statusDesc", "成功");
 		return ret;
 	}
+
 }
