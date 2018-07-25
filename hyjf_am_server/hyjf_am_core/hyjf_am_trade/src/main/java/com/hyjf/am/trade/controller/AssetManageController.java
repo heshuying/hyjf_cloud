@@ -278,4 +278,41 @@ public class AssetManageController extends BaseController {
         return response;
     }
 
+
+
+    /**
+     * @Description App获取用户当前持有债权列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectAppAlreadyRepayList")
+    public AssetManageResponse selectAppAlreadyRepayList(@RequestBody AssetManageBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        List<AppAlreadyRepayListCustomize> list = assetManageService.selectAppAlreadyRepayList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<AppAlreadyRepayListCustomizeVO> voList = CommonUtils.convertBeanList(list, AppAlreadyRepayListCustomizeVO.class);
+            response.setAppAlreadyRepayList(voList);
+        }
+        return response;
+    }
+    /**
+     * @Description App 获取用户当前持有债权列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/searchAppCreditRecordList")
+    public AssetManageResponse searchAppCreditRecordList(@RequestBody AssetManageBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        List<AppTenderCreditRecordListCustomize> list = assetManageService.searchAppCreditRecordList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<AppTenderCreditRecordListCustomizeVO> voList = CommonUtils.convertBeanList(list, AppTenderCreditRecordListCustomizeVO.class);
+            response.setAppTenderCreditRecordList(voList);
+        }
+        return response;
+    }
+
 }

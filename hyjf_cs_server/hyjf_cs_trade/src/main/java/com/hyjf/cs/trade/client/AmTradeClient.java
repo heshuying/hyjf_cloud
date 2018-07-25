@@ -1390,4 +1390,8 @@ public interface AmTradeClient {
      * @return
      */
     List<AppAccountTradeListCustomizeVO> searchAppTradeTypes();
+
+    List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest params);
+
+    List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
 }

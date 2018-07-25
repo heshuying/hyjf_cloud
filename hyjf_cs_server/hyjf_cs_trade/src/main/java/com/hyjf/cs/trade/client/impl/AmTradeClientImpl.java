@@ -3248,4 +3248,26 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    @Override
+    public List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectAppAlreadyRepayList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppAlreadyRepayList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/searchAppCreditRecordList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppTenderCreditRecordList();
+        }
+        return null;
+    }
+
 }
