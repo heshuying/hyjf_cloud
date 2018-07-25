@@ -17,6 +17,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -133,6 +135,29 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	}
 
 	/**
+	 * 绑卡校验APP
+	 * @param user
+	 */
+	@Override
+	public String checkParamBindCardPageAPP(WebViewUserVO user) {
+		if(user == null){
+			return "用户未登录";
+		}
+		if(!this.checkIsOpen(user.getUserId())){
+			return "用户未开户";
+		}
+		if(user.getIsSetPassword() != 1){
+			return "未设置过交易密码，请先设置交易密码";
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+		if(count > 0){
+			return "用户已绑定银行卡,请先解除绑定,然后重新操作！";
+		}
+
+		return "";
+	}
+
+	/**
 	 * 绑卡接口请求
 	 * @auther: hesy
 	 * @date: 2018/6/22
@@ -216,6 +241,42 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         }
         
         return retBean;
+	}
+
+	@Override
+	public ModelAndView getCallbankMV(BindCardPageBean bean) {
+		ModelAndView mv = new ModelAndView();
+		// 获取共同参数
+		String orderDate = GetOrderIdUtils.getOrderDate();
+		String idType = BankCallConstant.ID_TYPE_IDCARD;
+
+		// 调用开户接口
+		BankCallBean bindCardBean = new BankCallBean();
+		bindCardBean.setTxCode(bean.getTxCode());// 消息类型(用户开户)
+		bindCardBean.setIdType(idType);
+		bindCardBean.setIdNo(bean.getIdNo());
+		bindCardBean.setName(bean.getName());
+		bindCardBean.setAccountId(bean.getAccountId());
+		bindCardBean.setUserIP(bean.getUserIP());
+		bindCardBean.setRetUrl(bean.getRetUrl());
+		bindCardBean.setSuccessfulUrl(bean.getSuccessfulUrl());
+		bindCardBean.setForgotPwdUrl(bean.getForgetPassworedUrl());
+		bindCardBean.setNotifyUrl(bean.getNotifyUrl());
+		// 页面调用必须传的
+		String orderId = GetOrderIdUtils.getOrderId2(bean.getUserId());
+		bindCardBean.setLogBankDetailUrl(BankCallConstant.BANK_URL_BIND_CARD_PAGE);
+		bindCardBean.setLogOrderId(orderId);
+		bindCardBean.setLogOrderDate(orderDate);
+		bindCardBean.setLogUserId(String.valueOf(bean.getUserId()));
+		bindCardBean.setLogRemark("外部服务接口:绑卡页面");
+		bindCardBean.setLogIp(bean.getUserIP());
+		bindCardBean.setLogClient(Integer.parseInt(bean.getPlatform()));
+		try {
+			mv = BankCallUtils.callApi(bindCardBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
 	}
 	
 	/**
@@ -553,6 +614,17 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public Integer getBankInterfaceFlagByType(String type) {
 		return amConfigClient.getBankInterfaceFlagByType(type);
+	}
+
+	/**
+	 * 查询用户已绑定的有效卡
+	 * @param userId
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public BankCardVO queryUserCardValid(String userId, String cardNo) {
+		return amUserClient.queryUserCardValid(userId, cardNo);
 	}
 }
 

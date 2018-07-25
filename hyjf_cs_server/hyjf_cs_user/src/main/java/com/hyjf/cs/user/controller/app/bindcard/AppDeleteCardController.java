@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
@@ -31,6 +32,8 @@ import java.net.URLEncoder;
 public class AppDeleteCardController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 解绑银行卡
@@ -101,7 +104,7 @@ public class AppDeleteCardController extends BaseUserController {
                 baseMapBean.set("sign", "");
                 Integer urlType = bindCardService.getBankInterfaceFlagByType("BIND_CARD");
                 baseMapBean.set("urlType", urlType.toString());//绑卡开关 0跳转老接口  1跳转新接口
-                baseMapBean.setCallBackAction(CustomConstants.HOST + "/user/bankCard/unbind/result/success");
+                baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/unbind/result/success");
                 info.put(CustomConstants.APP_STATUS, 0);
                 //info.put(CustomConstants.APP_STATUS_DESC, "恭喜您！您的普通银行卡删除成功");
                 info.put(CustomConstants.APP_STATUS_DESC, "");
