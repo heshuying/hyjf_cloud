@@ -3,13 +3,6 @@
  */
 package com.hyjf.cs.message.service.msgpush.impl;
 
-import java.util.List;
-import java.util.UUID;
-
-import com.hyjf.cs.message.client.AmConfigClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -18,12 +11,20 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePush;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
+import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
+import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
 import com.hyjf.cs.message.mq.producer.AppMessageProducer;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author fuqiang
@@ -43,6 +44,9 @@ public class MsgPushServiceImpl implements MsgPushService {
 
 	@Autowired
 	private AmConfigClient amConfigClient;
+
+	@Autowired
+	private MessagePushMsgHistoryDao msgHistoryDao;
 
 	@Override
 	public void pushMessage() {
@@ -69,6 +73,16 @@ public class MsgPushServiceImpl implements MsgPushService {
 		for (int i = 0; i < templateList.size(); i++) {
 			this.insertTemplateStatics(templateList.get(i));
 		}
+		return null;
+	}
+
+	@Override
+	public Integer countMsgHistoryRecord(Integer tagId, Integer userId, String platform) {
+		return msgHistoryDao.countMsgHistoryRecord(tagId, userId, platform);
+	}
+
+	@Override
+	public List<MessagePushMsgHistory> getMsgHistoryList(Integer tagId, Integer userId, String platform, int limitStart, int limitEnd) {
 		return null;
 	}
 
