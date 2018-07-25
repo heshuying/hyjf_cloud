@@ -19,7 +19,9 @@ public class AssetManageBeanRequest extends BasePage {
 
     private Integer limitEnd;
 
-
+    private String host;
+    private String sign;
+    private String countStatus;
     public String getUserId() {
         return userId;
     }
@@ -69,5 +71,29 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getCountStatus() {
+        return countStatus;
+    }
+
+    public void setCountStatus(String countStatus) {
+        this.countStatus = countStatus;
     }
 }

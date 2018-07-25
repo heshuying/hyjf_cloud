@@ -10,11 +10,9 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author zhangqingqing
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "web端-同步余额",description = "web端-同步余额")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/bank/synbalance")
 public class SynBalanceController {
 
@@ -30,6 +29,7 @@ public class SynBalanceController {
     /**
      * 用户同步余额
      */
+    @ApiOperation(value = "用户同步余额",notes = "用户同步余额")
     @PostMapping(value = "/init", produces = "application/json; charset=utf-8")
     public WebResult synBalance(@RequestHeader(value = "userId") Integer userId) {
         WebResult result = new WebResult();

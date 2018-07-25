@@ -30,7 +30,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-web/tradedetail")
 public class TradeDetailController  extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(TradeDetailController.class);
     @Autowired
     private TradeDetailService tradeDetailService;
     /**

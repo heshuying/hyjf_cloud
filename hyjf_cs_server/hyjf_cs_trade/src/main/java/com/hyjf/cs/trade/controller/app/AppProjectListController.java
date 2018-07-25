@@ -41,7 +41,7 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端获取散标投资列表
-     *
+     * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
      * @return
      */
@@ -71,7 +71,7 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端债转列表数据
-     *
+     * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
      * @return
      */
@@ -105,7 +105,7 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端计划列表数据
-     *
+     * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
      * @return
      */

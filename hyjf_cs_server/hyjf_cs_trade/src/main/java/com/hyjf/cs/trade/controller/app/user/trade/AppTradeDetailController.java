@@ -29,7 +29,7 @@ import java.util.List;
 @Api(value = "app端交易详情",description = "app端交易详情")
 @RestController
 @RequestMapping("/hyjf-app/user/trade")
-public class TradeDetailController extends BaseTradeController {
+public class  AppTradeDetailController extends BaseTradeController {
 
     @Autowired
     private TradeDetailService tradeDetailService;
