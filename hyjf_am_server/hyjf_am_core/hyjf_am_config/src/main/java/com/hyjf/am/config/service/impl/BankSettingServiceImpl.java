@@ -67,7 +67,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public JxBankConfig bankSettingInfo(AdminBankSettingRequest adminRequest) {
-        return jxBankConfigMapper.selectByPrimaryKey(Integer.valueOf(adminRequest.getIds()));
+        return jxBankConfigMapper.selectByPrimaryKey(Integer.valueOf(adminRequest.getId()));
     }
 
     /**
