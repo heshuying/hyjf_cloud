@@ -20,6 +20,6 @@ public class AppNewsConfigServiceImpl implements AppNewsConfigService {
 
     @Override
     public int updateAppNewsConfig(UserVO users) {
-        return 0;// todo
+        return amConfigClient.updateAppNewsConfig(users);
     }
 }
