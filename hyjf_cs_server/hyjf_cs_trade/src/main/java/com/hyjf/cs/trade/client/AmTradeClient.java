@@ -13,6 +13,7 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
@@ -291,7 +292,7 @@ public interface AmTradeClient {
 	/**
 	 * @param list
 	 */
-	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
+	void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list);
 
     List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean);
 
@@ -1383,4 +1384,10 @@ public interface AmTradeClient {
      * @return
      */
     TenderAgreementVO getTenderAgreementInfoByPrimaryKey(String tenderAgreementID);
+
+    /**
+     * 交易类型
+     * @return
+     */
+    List<AppAccountTradeListCustomizeVO> searchAppTradeTypes();
 }
