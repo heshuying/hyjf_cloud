@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "wechat端用户资产管理接口",description = "wechat端用户资产管理接口")
 @Controller
 @RequestMapping("/wechat/myproject")
-public class WechatmMyProjectController {
+public class WechatMyProjectController {
     //当前持有项目列表标示
     public static final String CURRENTHOLD_TYPE = "currentHold";
     //已回款项目列表标示

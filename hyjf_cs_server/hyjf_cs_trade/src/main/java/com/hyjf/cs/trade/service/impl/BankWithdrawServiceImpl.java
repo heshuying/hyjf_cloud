@@ -760,9 +760,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
-        String retUrl = super.getFrontHost(systemConfig,platform)+"/borrow/userBankWithdrawReturn.do";
-        String bgRetUrl = super.getFrontHost(systemConfig,platform)+"/borrow/userBankWithdrawBgreturn.do";
-        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/borrow/userBankWithdrawReturn.do?isSuccess=1&withdrawmoney=" + transAmt
+        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess";
+        String bgRetUrl = systemConfig.getWebHost()+"/hyjf-web/withdraw/userBankWithdrawBgreturn.do";
+        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
                 + "&wifee=" + fee;//
         // 路由代码
         String routeCode = "";
