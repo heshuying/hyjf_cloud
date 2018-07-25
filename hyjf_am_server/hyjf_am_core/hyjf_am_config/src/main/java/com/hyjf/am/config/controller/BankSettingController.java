@@ -3,28 +3,18 @@
  */
 package com.hyjf.am.config.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.config.dao.model.auto.FeeConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.service.BankSettingService;
-import com.hyjf.am.config.service.FeeConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
-import com.hyjf.am.response.admin.AdminFeeConfigResponse;
-import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
-import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
-import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
-import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -122,4 +112,41 @@ public class BankSettingController {
         }
         return response;
     }
+
+    /**
+     * 修改 江西银行 银行卡配置
+     * @param adminRequest
+     * @return
+     */
+    @RequestMapping("/update")
+    public AdminBankSettingResponse updateBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
+        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        try{
+            int result =this.bankSettingService.updateBankSetting(adminRequest);
+            if(result > 0 ){
+                response.setRtn(Response.SUCCESS);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    /**
+     * 删除 江西银行 银行卡配置
+     * @param adminRequest
+     * @return
+     */
+    @RequestMapping("/delete")
+    public AdminBankSettingResponse deleteFeeConfig(@RequestBody AdminBankSettingRequest adminRequest) {
+        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        if(adminRequest.getId() != null){
+            this.bankSettingService.deleteFeeConfig(adminRequest.getId());
+            response.setRtn(Response.SUCCESS);
+        }
+        return  response;
+    }
+
+
+
 }

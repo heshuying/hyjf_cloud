@@ -4,7 +4,6 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
-import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 
 import java.util.List;
@@ -36,4 +35,18 @@ public interface BankSettingService {
      * @param adminRequest
      */
     int insertBankSetting(AdminBankSettingRequest adminRequest);
+
+    /**
+     * 修改 江西银行 银行卡配置
+     * @param adminRequest
+     * @return
+     */
+    int updateBankSetting(AdminBankSettingRequest adminRequest);
+
+    /**
+     * 删除 江西银行 银行卡配置
+     * @param id
+     * @return
+     */
+    void deleteFeeConfig(Integer id);
 }
