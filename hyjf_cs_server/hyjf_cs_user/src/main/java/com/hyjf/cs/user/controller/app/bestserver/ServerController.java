@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.app.bestserver;
 
 import java.util.Date;
 
+import com.hyjf.common.cache.RedisConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -97,7 +98,7 @@ public class ServerController extends BaseUserController {
 					// 保存到Redis中
 					SignValue signValue = new SignValue(initKey);
 					signValue.setVersion(version);
-					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+					RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
 					resultBean.setServerIp(DES.encryptDES_ECB(testServerIp, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
@@ -113,7 +114,7 @@ public class ServerController extends BaseUserController {
 					// 保存到Redis中
 					SignValue signValue = new SignValue(initKey);
 					signValue.setVersion(version);
-					RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+					RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 
 					resultBean.setServerIp(DES.encryptDES_ECB(hyjf_app_server_host, initKey));
 					resultBean.setInitKey(DES.encryptDES_ECB(initKey, appKey));
@@ -152,7 +153,7 @@ public class ServerController extends BaseUserController {
 				SignValue signValue = JSON.parseObject(value, SignValue.class);
 				signValue.setKey(key);
 				signValue.setVersion(version);
-				RedisUtils.set(sign, JSON.toJSONString(signValue));
+				RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue));
 				resultBean.setKey(DES.encryptDES_ECB(key, signValue.getInitKey()));
 				logger.info("---------获取key的值：key:" + key + "加密key:" + DES.encryptDES_ECB(key, signValue.getInitKey()));
 			} else {
@@ -164,7 +165,7 @@ public class ServerController extends BaseUserController {
 				SignValue signValue = JSON.parseObject(value, SignValue.class);
 				signValue.setKey(key);
 				signValue.setVersion(version);
-				RedisUtils.set(sign, JSON.toJSONString(signValue));
+				RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue));
 
 				resultBean.setKey(DES.encryptDES_ECB(key, signValue.getInitKey()));
 			}

@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.app.login;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.AppUserToken;
@@ -392,7 +393,7 @@ public class AppLoginController extends BaseUserController {
             String encryptString = JSON.toJSONString(token);
             encryptValue = DES.encryptDES_ECB(encryptString, signValue.getKey());
             signValue.setToken(encryptValue);
-            RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+            RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
         } else {
             throw new RuntimeException("参数异常");
         }
