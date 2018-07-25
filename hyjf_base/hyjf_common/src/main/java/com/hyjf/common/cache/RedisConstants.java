@@ -172,4 +172,8 @@ public class RedisConstants {
      * wechat sign
      */
     public static final String SIGN = "SIGN:";
+    /**
+     * admin单点登陆用户
+     */
+    public static final String ADMIN_REQUEST = "Admin:";
 }

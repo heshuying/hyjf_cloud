@@ -606,7 +606,7 @@ public class AllocationEngineController extends BaseController{
 		hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
 		List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
 		
-		
+
 		if (hjhAllocationEngineList != null) {
 			for(HjhAllocationEngineVO object : hjhAllocationEngineList){
 				//取自DB的LabelSort

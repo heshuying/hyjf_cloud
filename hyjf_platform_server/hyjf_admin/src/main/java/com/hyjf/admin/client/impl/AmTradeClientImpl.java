@@ -12,8 +12,15 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
+import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
@@ -48,6 +55,9 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqingqing
@@ -3062,5 +3072,91 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return restTemplate.postForObject("http://AM-TRADE/am-trade/datacenter/coupon/getdatacentercouponlist",
 				requestBean, DataCenterCouponResponse.class);
 	}
+
+	@Override
+	public BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest) {
+		BorrowCommonResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/infoAction", borrowCommonRequest, BorrowCommonResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
+
+	@Override
+	public BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception {
+		BorrowCommonResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/insertAction", borrowCommonRequest, BorrowCommonResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
+
+
+
+	@Override
+	public int isExistsUser(String userId) {
+		int response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsUser/"+userId , Integer.class)
+                .getBody();
+        return response;
+	}
+
+
+
+	@Override
+	public String getBorrowPreNid() {
+		String response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getBorrowPreNid", String.class)
+                .getBody();
+        return response;
+	}
+
+	@Override
+	public String getXJDBorrowPreNid() {
+		String response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getXJDBorrowPreNid", String.class)
+                .getBody();
+        return response;
+	}
+	
+	@Override
+	public boolean isExistsBorrowPreNidRecord(String borrowPreNid) {
+		boolean response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsBorrowPreNidRecord/"+borrowPreNid , boolean.class)
+                .getBody();
+        return response;
+	}
+
+	@Override
+	public String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest) {
+		String response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/borrowcommon/isExistsBorrowPreNidRecord",borrowCommonRequest, String.class)
+                .getBody();
+        return response;
+	}
+
+	@Override
+	public BorrowCommonResponse getProductTypeAction(String instCode) {
+		BorrowCommonResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/getProductTypeAction/"+instCode, BorrowCommonResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+	}
+
+	@Override
+	public int isEntrustedExistsUser(String userName) {
+		int response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/borrowcommon/isEntrustedExistsUser/"+userName, int.class)
+                .getBody();
+        return response;
+	}
+
 
 }

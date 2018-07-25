@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
 
 /**
+ * app端账户总览
  * @author jun
  * @version MyAssetController, v0.1 2018/7/5 17:04
  */

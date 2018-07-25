@@ -4,11 +4,9 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
-import com.hyjf.am.config.dao.model.auto.FeeConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
 import com.hyjf.am.config.service.BankSettingService;
-import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
@@ -83,5 +81,28 @@ public class BankSettingServiceImpl implements BankSettingService {
         adminRequest.setUpdateTime(GetDate.getNowTime10());
         BeanUtils.copyProperties(adminRequest,jxBankConfig);
         return jxBankConfigMapper.insertSelective(jxBankConfig);
+    }
+
+    /**
+     * 修改 江西银行 银行卡配置
+     * @param adminRequest
+     * @return
+     */
+    @Override
+    public int updateBankSetting(AdminBankSettingRequest adminRequest) {
+        JxBankConfig record = new JxBankConfig();
+        BeanUtils.copyProperties(adminRequest,record);
+        record.setUpdateTime(GetDate.getDate());
+        return  jxBankConfigMapper.updateByPrimaryKeySelective(record);
+    }
+
+    /**
+     * 删除 江西银行 银行卡配置
+     * @param id
+     * @return
+     */
+    @Override
+    public void deleteFeeConfig(Integer id) {
+        jxBankConfigMapper.deleteByPrimaryKey(id);
     }
 }

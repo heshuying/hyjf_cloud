@@ -29,7 +29,7 @@ public class BatchBankInvestServiceImpl extends BaseTradeServiceImpl implements 
 		List<BatchBorrowTenderCustomizeVO> list=this.amTradeClient.queryAuthCodeBorrowTenderList();
 		if (CollectionUtils.isNotEmpty(list)){
 			logger.info("BatchBankInvestServiceImpl.run.start...");
-			amTradeClient.insertAuthCode(list);
+			amTradeClient.updateAuthCode(list);
 			logger.info("BatchBankInvestServiceImpl.run.end...");
 		}
 	}

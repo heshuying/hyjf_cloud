@@ -27,7 +27,7 @@ import com.hyjf.common.util.CommonUtils;
  * @version ContentLinksController, v0.1 2018/7/14 14:12
  */
 @RestController
-@RequestMapping("/hyjf-admin/content/contentlinks")
+@RequestMapping("/am-config/content/contentlinks")
 public class ContentLinksController extends BaseConfigController {
     @Autowired
     private ContentLinksService contentLinksService;
@@ -106,6 +106,17 @@ public class ContentLinksController extends BaseConfigController {
         LinkResponse response = new LinkResponse();
         contentLinksService.deleteById(id);
         response.setRtn(AdminResponse.SUCCESS);
+        return response;
+    }
+    @RequestMapping("/getLinks")
+    public LinkResponse getLinks() {
+        logger.info("查询内容中心-友情链接开始......");
+        LinkResponse response = new LinkResponse();
+        List<Link> list = contentLinksService.getLinks();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<LinkVO> voList = CommonUtils.convertBeanList(list, LinkVO.class);
+            response.setResultList(voList);
+        }
         return response;
     }
 }

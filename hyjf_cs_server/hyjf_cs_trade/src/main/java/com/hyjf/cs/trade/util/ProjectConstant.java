@@ -53,6 +53,19 @@ public class ProjectConstant {
      * 加入条件
      */
     public  static  final String PLAN_ADD_CONDITION = "{0}元起，以{1}元的倍数递增";
+
+    /**
+     * 交易详情类请求地址
+     */
+    public static final String USER_TRADE_REQUEST_MAPPING = "/user/trade";
+
+
+    /**
+     * 交易详情-交易类型
+     */
+    public static final String USER_TRADE_TYPES_ACTION = "/getTradeTypes";
+
+
     /**
      * 计息时间
      */

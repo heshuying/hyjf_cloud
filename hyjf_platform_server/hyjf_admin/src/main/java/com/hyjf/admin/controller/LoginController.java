@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +30,12 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -57,8 +61,12 @@ public class LoginController extends BaseController {
     @ApiOperation(value = "admin登陆验证密码", notes = "admin登陆验证密码")
     @PostMapping(value = "/login")
 	@ResponseBody
+	@ApiImplicitParams({ 
+        @ApiImplicitParam(name = "username",value = "用户名称",dataType = "string"),
+        @ApiImplicitParam(name = "password",value = "用户密码",dataType = "string")
+	})
 	@AuthorityAnnotation(key = key, value = ShiroConstants.PERMISSION_AUTH)
-	public JSONObject login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
+	public AdminResult<Map<String,Object>> login(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> map) {
     	JSONObject info = new JSONObject();
 		String username=map.get("username");
 		logger.info("登陆开始用户:"+username);
@@ -68,19 +76,15 @@ public class LoginController extends BaseController {
 		adminSystemRequest.setPassword(password);
 		AdminSystemResponse prs = loginService.getUserInfo(adminSystemRequest);
 		if(!Response.isSuccess(prs)) {
-			info.put("status", "99");
-			info.put("msg", prs.getMessage());
-			return info;
+			return new AdminResult<>(FAIL, prs.getMessage());
 		}
 		String uuid=UUID.randomUUID().toString();
-		RedisUtils.set("admin@"+username, uuid, 3600);
+		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
 		this.setUser(request, prs.getResult());
-		System.out.println(prs.getResult().getId());
-		info.put("uuid", uuid);
-		info.put("user", prs.getResult());
-		info.put("status", "00");
-		info.put("msg", "登录成功");
-		return info;
+		Map<String,Object> result = null;
+		result.put("uuid", uuid);
+		result.put("user", prs.getResult());
+		return new AdminResult<Map<String,Object>>(result);
 	}
     /**
      * @Author: dongzeshan
