@@ -1,10 +1,9 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.List;
 
@@ -29,4 +28,10 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<BankConfigVO> getBankConfigRecordList(String bankName);
+
+	/**
+	 * 查询江西银行配置（快捷支付）
+	 * @return
+	 */
+	List<JxBankConfigVO> getQuickPaymentJxBankConfig();
 }

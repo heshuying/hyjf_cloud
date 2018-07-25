@@ -11,10 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -28,6 +25,7 @@ import java.util.Map;
  */
 @Api(value = "web端-邀请记录",description = "web端-邀请记录")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/invite")
 public class InviteController {
     private static final Logger logger = LoggerFactory.getLogger(InviteController.class);

@@ -43,6 +43,7 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
      */
     @Override
     public List<HtlProductIntoRecordVO> getIntoRecordList(HtlTradeRequest htlTradeRequest) {
+        //TODO:这里还会用到amUser
         return amTradeClient.getIntoRecordList(htlTradeRequest);
     }
     /**
@@ -61,6 +62,7 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
      */
     @Override
     public List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest) {
+        //TODO:这里还会用到amUser
         return amTradeClient.getRedeemRecordList(htlTradeRequest);
     }
 }
