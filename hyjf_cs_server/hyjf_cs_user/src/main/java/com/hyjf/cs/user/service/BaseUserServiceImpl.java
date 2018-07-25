@@ -625,7 +625,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Override
 	public List<BankCardVO> getBankOpenAccountById(UserVO userVO) {
-		return  amUserClient.getBankOpenAccountById(userVO);
+		return  amUserClient.getBankOpenAccountById(userVO.getUserId());
 	}
 
 	@Override

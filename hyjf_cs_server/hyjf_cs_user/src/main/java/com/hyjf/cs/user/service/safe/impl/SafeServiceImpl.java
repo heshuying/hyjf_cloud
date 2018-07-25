@@ -43,11 +43,8 @@ import sun.misc.BASE64Decoder;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 
 /**
@@ -135,7 +132,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 紧急联系人类型 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
         resultMap.put("userRelation", result);
-
+        // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
+        List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
+        BankCardVO bankCard = new BankCardVO();
+        if(!bankCards.isEmpty()) {
+            bankCard = bankCards.get(0);
+            bankCard.setCardNo(BankCardUtil.getCardNo(bankCard.getCardNo()));
+        }
+        resultMap.put("bankCard", bankCard);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectById(user.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         resultMap.put("bankOpenAccount", bankOpenAccount);

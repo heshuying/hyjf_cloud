@@ -347,6 +347,7 @@ public class WebPassWordController {
             ret.put("pubexponent", "10001");
             ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
             ret.put("userId",userId);
+            result.setData(ret);
         } catch (Exception e) {
             logger.error("修改密码时，生成密码加密密钥错误",e);
         }

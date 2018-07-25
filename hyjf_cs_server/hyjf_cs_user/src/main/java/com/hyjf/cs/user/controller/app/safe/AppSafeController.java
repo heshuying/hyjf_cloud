@@ -14,8 +14,6 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.safe.SafeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,39 +42,8 @@ public class AppSafeController extends BaseUserController {
     @ApiOperation(value = "获取联系人类型",notes = "获取联系人类型")
     @PostMapping ("/getRelationTypes")
     public JSONObject getRelationTypes(HttpServletRequest request) {
-        JSONObject ret = new JSONObject();
+        JSONObject ret = checkAppBaseParam(request);
         ret.put("request", "/hyjf-app/appUser/getRelationTypes");
-
-        // 版本号
-        String version = request.getParameter("version");
-        // 网络状态
-        String netStatus = request.getParameter("netStatus");
-        // 平台
-        String platform = request.getParameter("platform");
-        // token
-        String token = request.getParameter("token");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // 随机字符串
-        String randomString = request.getParameter("randomString");
-        // Order
-        String order = request.getParameter("order");
-
-        // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
-        // 取得加密用的Key
-        String key = SecretUtil.getKey(sign);
-        if (Validator.isNull(key)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
         // 业务逻辑
         try {
             Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
@@ -108,48 +75,20 @@ public class AppSafeController extends BaseUserController {
     @PostMapping("/updateUrgentAction")
     @ApiOperation(value = "修改紧急联系人",notes = "修改紧急联系人")
     public JSONObject updateUrgentAction(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
-        JSONObject ret = new JSONObject();
+        JSONObject ret = checkAppBaseParam(request);
         ret.put("request", "/hyjf-app/appUser/updateUrgentAction");
-
-        // 版本号
-        String version = request.getParameter("version");
-        // 网络状态
-        String netStatus = request.getParameter("netStatus");
-        // 平台
-        String platform = request.getParameter("platform");
-        // token
-        String token = request.getParameter("token");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // 随机字符串
-        String randomString = request.getParameter("randomString");
-        // Order
-        String order = request.getParameter("order");
-
         // 紧急联系人关系
         String urgentRelation = request.getParameter("urgentRelation");
         // 紧急联系人姓名
         String urgentName = request.getParameter("urgentName");
         // 紧急联系人电话
         String urgentMobile = request.getParameter("urgentMobile");
-
-        WebViewUserVO webViewUserVO = safeService.getWebViewUserByUserId(userId);
-
-        // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
+        // 唯一标识
+        String sign = request.getParameter("sign");
         // 取得加密用的Key
         String key = SecretUtil.getKey(sign);
-        if (Validator.isNull(key)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
 
+        WebViewUserVO webViewUserVO = safeService.getWebViewUserByUserId(userId);
         // 业务逻辑
         try {
             if (userId != null) {

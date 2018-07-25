@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
-
-import static com.hyjf.cs.trade.util.ProjectConstant.APP_BORROW_PROJECT_METHOD;
 
 /**
  * 移动端项目列表
