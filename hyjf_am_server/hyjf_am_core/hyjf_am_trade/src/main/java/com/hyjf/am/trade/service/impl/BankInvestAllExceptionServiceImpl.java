@@ -27,6 +27,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -224,7 +225,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			// 新需求判断顺序变化
 			// 将投资金额转化为BigDecimal
 			BigDecimal accountBigDecimal = new BigDecimal(account);
-			String balance = RedisUtils.get(borrowNid);
+			String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 			if (StringUtils.isEmpty(balance)) {
 				return jsonMessage("您来晚了，下次再来抢吧", "1");
 			}
@@ -1141,7 +1142,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		Jedis jedis = pool.getResource();
 		BigDecimal accountBigDecimal = new BigDecimal(account);
 		while ("OK".equals(jedis.watch(borrowNid))) {
-			String balanceLast = RedisUtils.get(borrowNid);
+			String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 			if (StringUtils.isNotBlank(balanceLast)) {
 				System.out.println("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
 				BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
@@ -1177,11 +1178,11 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		String status = BankCallConstant.STATUS_FAIL; // 发送状态
 		JSONObject info = new JSONObject();
 		BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
-		String accountRedisWait = RedisUtils.get(borrowNid);
+		String accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 		if (StringUtils.isNotBlank(accountRedisWait)) {
 			// 操作redis
 			while ("OK".equals(jedis.watch(borrowNid))) {
-				accountRedisWait = RedisUtils.get(borrowNid);
+				accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 				if (StringUtils.isNotBlank(accountRedisWait)) {
 					System.out.println("PC用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
 					if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {
