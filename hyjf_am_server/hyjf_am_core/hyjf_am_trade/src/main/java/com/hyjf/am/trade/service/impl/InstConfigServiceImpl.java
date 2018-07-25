@@ -91,5 +91,26 @@ public class InstConfigServiceImpl extends BaseServiceImpl implements InstConfig
             }
         }
     }
+    /**
+     * 根据机构属性获取机构配置
+     * @param instType
+     * @return
+     */
+    @Override
+    public List<HjhInstConfig> getInstConfigByType(int instType) {
+        HjhInstConfigExample example = new HjhInstConfigExample();
+
+        HjhInstConfigExample.Criteria criteria1 = example.createCriteria();
+        criteria1.andInstTypeEqualTo(instType);
+
+        HjhInstConfigExample.Criteria criteria2 = example.createCriteria();
+        criteria2.andInstTypeEqualTo(2);
+
+        example.or(criteria2);
+
+        example.setLimitStart(-1);
+        example.setLimitEnd(-1);
+        return hjhInstConfigMapper.selectByExample(example);
+    }
 
 }

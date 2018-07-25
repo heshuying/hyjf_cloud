@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller.admin;
 import java.util.List;
 
 import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -113,7 +114,6 @@ public class AdminSystemController extends BaseConfigController {
 	 * @param userId 用户id
 	 * @return response admin用户信息
 	 */
-	@ApiOperation(value = "根据userId查询admin用户信息",notes = "根据userId查询admin用户信息")
 	@GetMapping(value = "/get_admin_system_by_userid/{userId}")
 	public AdminSystemResponse getAdminSystemByUserId(@PathVariable Integer userId){
 		logger.info("userId========{}",userId);
@@ -136,6 +136,20 @@ public class AdminSystemController extends BaseConfigController {
 		CouponTenderResponse response = new CouponTenderResponse();
 		AdminSystem adminSystem = adminSystemService.getUserInfoByUserId(userId);
 		response.setAttrbute(adminSystem==null?"":adminSystem.getUsername());
+		return response;
+	}
+	/**
+	 * 项目申请人是否存在
+	 * @param request
+	 * @return
+	 */
+	@GetMapping(value = "/isexistsapplicant/{applicant}")
+	public AdminSystemResponse isExistsApplicant(@PathVariable String applicant) {
+		int ea=adminSystemService.isExistsApplicant(applicant);
+		AdminSystemResponse response = new AdminSystemResponse();
+		if (ea == 0) {
+			response.setRtn(Response.FAIL);
+		}
 		return response;
 	}
 }

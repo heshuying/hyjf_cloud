@@ -21,3 +21,11 @@ server:
      timeout:36000
 logging:
   file: admin.log
+file:
+   physical:
+      path:D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
+   domain:
+      url:http://test.hyjf.com:8083/hyjf-admin/
+   upload:
+      temp:
+         path:/data/upfiles/filetemp/image
