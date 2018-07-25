@@ -52,7 +52,7 @@ public class AppBorrowImageController extends BaseController {
     private String TEMP_PATH;
 
 
-    @ApiOperation(value = "产品图片列表查询", notes = "产品图片列表查询")
+    @ApiOperation(value = "产品图片:列表查询", notes = "产品图片:列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
     public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody  AppBorrowImageRequest request) {
@@ -64,7 +64,7 @@ public class AppBorrowImageController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取详细画面", notes = "获取详细画面")
+    @ApiOperation(value = "产品图片:获取详细画面", notes = "产品图片:获取详细画面")
     @PostMapping(value = "/searchinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> searchinfo(@RequestBody AppBorrowImageRequest request) {
@@ -76,7 +76,7 @@ public class AppBorrowImageController extends BaseController {
     }
 
 
-    @ApiOperation(value = "添加维护信息", notes = "添加维护信息")
+    @ApiOperation(value = "产品图片添加维护信息", notes = "产品图片:添加维护信息")
     @PostMapping(value = "/insertinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
@@ -89,7 +89,7 @@ public class AppBorrowImageController extends BaseController {
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
-    @ApiOperation(value = "修改维护信息", notes = "修改维护信息")
+    @ApiOperation(value = "产品图片:修改维护信息", notes = "产品图片:修改维护信息")
     @PostMapping(value = "/updateinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
@@ -102,7 +102,7 @@ public class AppBorrowImageController extends BaseController {
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
-    @ApiOperation(value = "刪除信息", notes = "刪除信息")
+    @ApiOperation(value = "产品图片:刪除信息", notes = "产品图片:刪除信息")
     @PostMapping(value = "/deleteinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
@@ -120,7 +120,7 @@ public class AppBorrowImageController extends BaseController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "资料上传", notes = "资料上传")
+    @ApiOperation(value = "产品图片:资料上传", notes = "产品图片:资料上传")
     @PostMapping(value = "/uploadFile")
     @ResponseBody
     public String uploadFile(HttpServletRequest request) throws Exception {
