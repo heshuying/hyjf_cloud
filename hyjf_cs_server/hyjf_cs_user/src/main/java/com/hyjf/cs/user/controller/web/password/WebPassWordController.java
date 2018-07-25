@@ -42,6 +42,7 @@ import java.util.Map;
  */
 @Api(value = "web端-密码相关服务",description = "web端-密码相关服务")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/password")
 public class WebPassWordController {
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
