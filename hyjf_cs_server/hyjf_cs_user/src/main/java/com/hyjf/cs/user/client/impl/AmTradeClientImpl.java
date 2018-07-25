@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.vo.trade.*;

@@ -8,11 +8,9 @@ import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanResponse;
-import com.hyjf.am.response.config.AdminSystemResponse;
-import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
@@ -34,11 +32,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author zhangqingqing
@@ -1572,93 +1565,87 @@ public interface AmTradeClient {
     DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
 
 
-    
-    
-    
-    
-    
     //董泽杉
+    /**
+     * 迁移到详细画面
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+    BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
 
-	/**
-	 * 迁移到详细画面
-	 *
-	 * @param request
-	 * @param form
-	 * @return
-	 */
-	 BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
-
-	/**
-	 * 添加信息
-	 *
-	 * @param request
-	 * @param form
-	 * @return
-	 * @throws Exception
-	 */
-	 BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception;
-
-
-	/**
-	 * 用户是否存在
-	 *
-	 * @param request
-	 * @return
-	 */
-	 int isExistsUser(String userId);
+    /**
+     * 添加信息
+     *
+     * @param request
+     * @param form
+     * @return
+     * @throws Exception
+     */
+    BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception;
 
 
-	/**
-	 * 获取最新的借款预编码
-	 *
-	 * @param request
-	 * @return
-	 */
+    /**
+     * 用户是否存在
+     *
+     * @param request
+     * @return
+     */
+    int isExistsUser(String userId);
 
-	 String getBorrowPreNid();
 
-	/**
-	 * 获取现金贷的借款预编号
-	 *
-	 * @param request
-	 * @return
-	 */
-	 String getXJDBorrowPreNid();
+    /**
+     * 获取最新的借款预编码
+     *
+     * @param request
+     * @return
+     */
 
-	/**
-	 * 借款预编码是否存在
-	 *
-	 * @param request
-	 * @return
-	 */
-	 boolean isExistsBorrowPreNidRecord(String borrowPreNid);
+    String getBorrowPreNid();
 
-	/**
-	 * 获取融资服务费率 & 账户管理费率
-	 *
-	 * @param request
-	 * @return
-	 */
-	 String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
+    /**
+     * 获取现金贷的借款预编号
+     *
+     * @param request
+     * @return
+     */
+    String getXJDBorrowPreNid();
 
-	/**
-	 * 根据资产编号查询该资产下面的产品类型
-	 *
-	 * @param request
-	 * @param attr
-	 * @param instCode
-	 * @return
-	 */
-	 BorrowCommonResponse getProductTypeAction(String instCode);
+    /**
+     * 借款预编码是否存在
+     *
+     * @param request
+     * @return
+     */
+    boolean isExistsBorrowPreNidRecord(String borrowPreNid);
 
-	/**
-	 * 受托用户是否存在
-	 *
-	 * @param request
-	 * @return
-	 */
+    /**
+     * 获取融资服务费率 & 账户管理费率
+     *
+     * @param request
+     * @return
+     */
+    String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
-	 int isEntrustedExistsUser(String userName);
+    /**
+     * 根据资产编号查询该资产下面的产品类型
+     *
+     * @param request
+     * @param attr
+     * @param instCode
+     * @return
+     */
+    BorrowCommonResponse getProductTypeAction(String instCode);
+
+    /**
+     * 受托用户是否存在
+     *
+     * @param request
+     * @return
+     */
+
+    int isEntrustedExistsUser(String userName);
 
 
 
