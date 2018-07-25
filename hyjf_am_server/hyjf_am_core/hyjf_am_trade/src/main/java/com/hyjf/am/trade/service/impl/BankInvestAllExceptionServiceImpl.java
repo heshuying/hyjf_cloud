@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
@@ -59,61 +60,17 @@ import java.util.*;
  * @since 20180623
  */
 @Service
-public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
+public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implements BankInvestAllService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestAllExceptionServiceImpl.class);
 
 	public static JedisPool pool = RedisUtils.getPool();
 
 	@Autowired
-	private BorrowTenderTmpMapper borrowTenderTmpMapper;
-	@Autowired
-	private AccountMapper accountMapper;
-	@Autowired
-	private BorrowMapper borrowMapper;
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-
-	@Autowired
-	private TransactionDefinition transactionDefinition;
-	@Autowired
-	private BorrowProjectTypeMapper borrowProjectTypeMapper;
-	@Autowired
-	private WebUserInvestListCustomizeMapper webUserInvestListCustomizeMapper;
-	@Autowired
-	private CouponUserCustomizeMapper couponUserCustomizeMapper;
-	@Autowired
-	private BorrowStyleMapper borrowStyleMapper;
-	@Autowired
-	private IncreaseInterestInvestMapper increaseInterestInvestMapper;
-	@Autowired
-	private BorrowTenderMapper borrowTenderMapper;
-	@Autowired
-	private FreezeListMapper freezeListMapper;
-	@Autowired
-	private AdminAccountCustomizeMapper adminAccountCustomizeMapper; 
-	@Autowired
-	private AccountListMapper accountListMapper;
-	@Autowired
-	private CalculateInvestInterestMapper calculateInvestInterestMapper;
-	@Autowired
-	private BorrowCustomizeMapper borrowCustomizeMapper;
-	@Autowired
-	private BorrowSendTypeMapper borrowSendTypeMapper;
-	@Autowired
-	private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
-	@Autowired
 	private SmsProducer smsProducer;
 
-//	@Value("${hyjf.bank.instcode}")
-	private String BANK_INSTCODE;
-
-//	@Value("${hyjf.bank.bankcode}")
-	private String BANK_BANKCODE;
+	@Autowired
+	private SystemConfig systemConfig;
 
 
 	private Borrow getBorrowByNid(String borrowNid) {
@@ -397,7 +354,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("couponGrantId", couponGrantId);
         paramMap.put("userId", userId);
-        CouponConfigCustomizeV2 ccTemp = this.couponUserCustomizeMapper.selectCouponConfigByGrantId(paramMap);
+        CouponConfigCustomizeV2 ccTemp = couponUserCustomizeMapper.selectCouponConfigByGrantId(paramMap);
         return ccTemp;
     }
 
@@ -414,7 +371,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
      * @param borrowNid
      * @return
      */
-    private BorrowInfo getBorrowInfoByNid(String borrowNid) {
+	public BorrowInfo getBorrowInfoByNid(String borrowNid) {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
@@ -436,8 +393,8 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);// 消息类型
-		bean.setInstCode(BANK_INSTCODE);// 机构代码
-		bean.setBankCode(BANK_BANKCODE);
+		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+		bean.setBankCode(systemConfig.getBankBankcode());
 		bean.setTxDate(GetOrderIdUtils.getTxDate());
 		bean.setTxTime(GetOrderIdUtils.getTxTime());
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -680,8 +637,8 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		// 调用汇付接口(交易状态查询)
 		BankCallBean bean = new BankCallBean();
 		String orderId = GetOrderIdUtils.getOrderId2(investUserId);
-		String bankCode = BANK_BANKCODE;
-		String instCode = BANK_INSTCODE;
+		String bankCode = systemConfig.getBankBankcode();
+		String instCode = systemConfig.getBankInstcode();
 		Account investUser = this.getAccountByUserId(investUserId);
 		bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
 		bean.setTxCode(BankCallMethodConstant.TXCODE_BID_CANCEL); // 交易代码
