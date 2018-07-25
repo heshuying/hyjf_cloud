@@ -1512,4 +1512,25 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	}
 
 
+
+	/**
+	 * 查询承接总记录数
+	 * @author zhangyk
+	 * @date 2018/7/25 17:19
+	 */
+	@Override
+	public int getCreditTenderCount(Map<String, Object> params) {
+		return creditTenderCustomizeMapper.getCreditListCount(params);
+	}
+
+
+	/**
+	 * 查询承接list
+	 * @author zhangyk
+	 * @date 2018/7/25 17:28
+	 */
+	@Override
+	public List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String, Object> params) {
+		return creditTenderCustomizeMapper.getCreditTenderList(params);
+	}
 }
