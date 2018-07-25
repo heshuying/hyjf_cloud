@@ -1,9 +1,14 @@
 package com.hyjf.am.config.service.impl;
 
+import com.hyjf.am.config.dao.mapper.auto.ConfigApplicantMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper;
+import com.hyjf.am.config.dao.model.auto.ConfigApplicant;
+import com.hyjf.am.config.dao.model.auto.ConfigApplicantExample;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +24,8 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 	@Autowired
 	protected AdminSystemMapper adminSystemMapper;
 	
-
+	@Autowired
+	protected ConfigApplicantMapper configApplicantMapper;
 	/**
 	 * 
 	 * 获取菜单列表
@@ -168,5 +174,21 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 	@Override
 	public List<AdminSystem> getUserPermission(AdminSystem adminSystem) {
 		return this.adminSystemMapper.getUserPermission(adminSystem);
+	}
+	@Override
+	public int isExistsApplicant(String applicant) {
+		if (StringUtils.isNotEmpty(applicant)) {
+			ConfigApplicantExample example = new ConfigApplicantExample();
+			ConfigApplicantExample.Criteria cra = example.createCriteria();
+			cra.andApplicantEqualTo(applicant);
+			List<ConfigApplicant> applicants = this.configApplicantMapper.selectByExample(example);
+
+			if (applicants == null || applicants.size() == 0) {
+				// 项目申请人不存在。
+				return 0;
+			}
+			return 1;
+		}
+		return 0;
 	}
 }

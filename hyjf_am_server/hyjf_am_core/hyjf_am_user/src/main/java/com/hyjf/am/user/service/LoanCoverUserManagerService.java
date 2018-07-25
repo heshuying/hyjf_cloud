@@ -71,4 +71,5 @@ public interface LoanCoverUserManagerService {
      * @return
      */
     CertificateAuthority selectCertificateAuthorityByIdNoName(String idno, String tureName);
+	boolean isCAIdNoCheck(String idNo, String name);
 }

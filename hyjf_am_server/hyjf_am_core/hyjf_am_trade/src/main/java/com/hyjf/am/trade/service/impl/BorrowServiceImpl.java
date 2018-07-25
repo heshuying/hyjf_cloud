@@ -46,7 +46,9 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -521,5 +523,25 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
        return borrowCustomizeMapper.getTotalInverestCount(userId);
     }
 
+	/**
+	 * COUNT
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 */
+	public Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.countBorrow(borrowCommonCustomizeVO);
+	}
+
+
+
+	/**
+	 * 借款列表
+	 * 
+	 * @return
+	 */
+	public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.selectBorrowList(borrowCommonCustomizeVO);
+	}
 
 }
