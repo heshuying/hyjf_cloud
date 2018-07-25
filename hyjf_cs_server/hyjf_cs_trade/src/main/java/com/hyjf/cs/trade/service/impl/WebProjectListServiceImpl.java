@@ -806,6 +806,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             CreditTenderListResponse res = baseClient.postExe(CREDIT_DETAIL_TENDER_LIST_URL, req, CreditTenderListResponse.class);
             // 查询列表数据
             List<CreditTenderListCustomizeVO> list = res.getResultList();
+            CommonUtils.convertNullToEmptyString(list);
             info.put("recordList", list);
             BorrowCreditVO borrowCreditVO = amTradeClient.getBorrowCreditByCreditNid(creditNid);
             if (borrowCreditVO != null) {
