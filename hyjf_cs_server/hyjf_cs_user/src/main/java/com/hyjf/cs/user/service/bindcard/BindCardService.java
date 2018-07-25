@@ -22,13 +22,17 @@ public interface BindCardService extends BaseUserService {
 
 	void checkParamUnBindCard(BindCardVO bindCardVO, Integer userId);
 
-	void updateAfterUnBindCard(BankCallBean bean);
+    String checkParamUnBindCardAPP(WebViewUserVO webViewUserVO, String cardNo);
 
-	BankCallBean callBankUnBindCard(BindCardVO bindCardVO, Integer userId);
+    void updateAfterUnBindCard(BankCallBean bean);
+
+	BankCallBean callBankUnBindCard(String cardNo, Integer userId);
 
 	void checkParamSendcode(Integer userId, String mobile, String cardNo);
 
-    boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo, Integer cardId);
+    boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo);
+
+    Integer getBankInterfaceFlagByType(String type);
 }
 
 	

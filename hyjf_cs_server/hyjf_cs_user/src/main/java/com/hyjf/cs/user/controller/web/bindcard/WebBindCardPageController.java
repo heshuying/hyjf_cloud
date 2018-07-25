@@ -119,14 +119,14 @@ public class WebBindCardPageController extends BaseUserController{
         logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+        WebViewUserVO user = bindCardService.getUsersByToken(token);
 
         bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
 
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
         try {
-            bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
+            bankBean = bindCardService.callBankUnBindCard(bindCardVO.getCardNo(), user.getUserId());
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());

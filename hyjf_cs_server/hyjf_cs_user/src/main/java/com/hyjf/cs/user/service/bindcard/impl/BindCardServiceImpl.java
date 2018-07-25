@@ -365,12 +365,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	
 	/**
 	 * 请求银行解绑卡接口
-	 * @param bindCardVO
-	 * @param userId
-	 * @return
 	 */
 	@Override
-	public BankCallBean callBankUnBindCard(BindCardVO bindCardVO, Integer userId) {
+	public BankCallBean callBankUnBindCard(String cardNo, Integer userId) {
 		BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
 		UserInfoVO  userInfo = amUserClient.findUserInfoById(userId);
 		UserVO user = amUserClient.findUserById(userId);
@@ -391,9 +388,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bean.setIdNo(userInfo.getIdcard());// 证件号
 		bean.setName(userInfo.getTruename());// 姓名
 		bean.setMobile(user.getMobile());// 手机号
-		bean.setCardNo(bindCardVO.getCardNo());// 银行卡号
+		bean.setCardNo(cardNo);// 银行卡号
 		LogAcqResBean logAcqResBean = new LogAcqResBean();
-		logAcqResBean.setCardNo(bindCardVO.getCardNo());// 银行卡号
+		logAcqResBean.setCardNo(cardNo);// 银行卡号
 		bean.setLogAcqResBean(logAcqResBean);
 		
 		return BankCallUtils.callApiBg(bean);
@@ -464,6 +461,42 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
         
 	}
+
+	/**
+	 * app端解绑银行卡校验
+	 * @param webViewUserVO
+	 * @param cardNo
+	 * @return
+	 */
+	@Override
+	public String checkParamUnBindCardAPP(WebViewUserVO webViewUserVO, String cardNo) {
+		// 银行卡号校验
+		if(StringUtils.isBlank(cardNo)) {
+			return "银行卡号未填写";
+		}
+
+		// 开户校验
+		if (!webViewUserVO.isOpenAccount()) {
+			return "用户未开户";
+		}
+
+		// 账户余额校验
+		AccountVO account = amTradeClient.getAccount(webViewUserVO.getUserId());
+		BigDecimal bankBalance = this.queryBankBlance(webViewUserVO.getUserId(), webViewUserVO.getBankAccount());
+		if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
+				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
+			return "账户尚有余额，不能解绑银行卡";
+		}
+
+		// 待解绑卡校验
+		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(webViewUserVO.getUserId()), cardNo);
+		if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
+			return "没有要解绑的银行卡";
+		}
+
+		return "";
+
+	}
 	
 	/**
 	 * 解绑接口请求后业务处理
@@ -499,7 +532,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 * 用户删除银行卡后调用方法
 	 */
 	@Override
-	public boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo, Integer cardId){
+	public boolean updateAfterDeleteCard(Integer userId, String userName, String cardNo){
 		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
 		if(bankCard == null){
 			return false;
@@ -509,8 +542,17 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		requestBean.setUserId(userId);
 		requestBean.setCardNo(cardNo);
 		requestBean.setUserName(userName);
-		requestBean.setCardId(cardId);
 		return amUserClient.updateAfterDeleteCard(requestBean);
+	}
+
+	/**
+	 * 判断江西银行绑卡使用新/旧接口
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public Integer getBankInterfaceFlagByType(String type) {
+		return amConfigClient.getBankInterfaceFlagByType(type);
 	}
 }
 
