@@ -43,4 +43,24 @@ public interface MsgPushService {
 	 * @return
 	 */
 	List<MessagePushMsgHistory> getMsgHistoryList(Integer tagId,Integer userId,String platform,int limitStart,int limitEnd);
+
+	/**
+	 * 获得具体信息
+	 * @param msgId
+	 * @return
+	 */
+	MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId);
+
+	/**
+	 * 更新历史记录信息
+	 * @param msgHistory
+	 */
+	void updateMsgPushMsgHistory(MessagePushMsgHistory msgHistory);
+
+	/**
+	 * 消息全部已读
+	 * @param userId
+	 * @param platform
+	 */
+	void updateAllMsgPushMsgHistory(Integer userId, String platform);
 }

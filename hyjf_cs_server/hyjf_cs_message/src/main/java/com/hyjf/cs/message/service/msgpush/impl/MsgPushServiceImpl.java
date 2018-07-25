@@ -20,6 +20,8 @@ import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.mq.base.MessageContent;
 import com.hyjf.cs.message.mq.producer.AppMessageProducer;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ import java.util.UUID;
  */
 @Service
 public class MsgPushServiceImpl implements MsgPushService {
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private MessagePushMsgDao messagePushMsgDao;
@@ -83,7 +86,22 @@ public class MsgPushServiceImpl implements MsgPushService {
 
 	@Override
 	public List<MessagePushMsgHistory> getMsgHistoryList(Integer tagId, Integer userId, String platform, int limitStart, int limitEnd) {
-		return null;
+		return msgHistoryDao.getMsgHistoryList(tagId, userId, platform, limitStart, limitEnd);
+	}
+
+	@Override
+	public MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId) {
+		return msgHistoryDao.getMsgPushMsgHistoryById(msgId);
+	}
+
+	@Override
+	public void updateMsgPushMsgHistory(MessagePushMsgHistory msgHistory) {
+		msgHistoryDao.updateMsgPushMsgHistory(msgHistory);
+	}
+
+	@Override
+	public void updateAllMsgPushMsgHistory(Integer userId, String platform) {
+		logger.info("全部已读什么都不做，等二期处理....");
 	}
 
 	private void insertTemplateStatics(MessagePushTemplateVO template) {

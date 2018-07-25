@@ -3,29 +3,31 @@
  */
 package com.hyjf.cs.message.controller.app.msgpush;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.http.HtmlUtil;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.MsgPushBean;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistoryNew;
+import com.hyjf.cs.message.service.msgpush.MsgPushService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HtmlUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
-import com.hyjf.cs.message.bean.mc.MessagePushMsgHistoryNew;
-import com.hyjf.cs.message.service.msgpush.MsgPushService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author fq
@@ -35,6 +37,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/hyjf-app/msgpush")
 public class MessagePushController extends BaseController {
+	@Value("hyjf.web.host")
+	private String webHost;
 	@Autowired
 	private MsgPushService msgPushService;
 
@@ -105,6 +109,197 @@ public class MessagePushController extends BaseController {
 			return ret;
 		}
 		ret.put("msgTypeList", msgTypeList);
+		return ret;
+	}
+
+	@ApiOperation(value = "获取通知列表", notes = "获取通知列表")
+	@RequestMapping("/getMsgListAction")
+	public JSONObject getMsgListAction(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request) {
+		JSONObject ret = new JSONObject();
+		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
+		// 版本号
+		String version = request.getParameter("version");
+		// 平台
+		String platform = request.getParameter("platform");
+		// 检查参数正确性
+		if (Validator.isNull(version) || Validator.isNull(platform)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+
+		ret.put("status", "0");
+		ret.put("statusDesc", "成功");
+		// 获取标签信息
+		// 查询列表数量
+		int count = msgPushService.countMsgHistoryRecord(0, null, null);
+
+		// 返回列表
+		List<MsgPushBean> msgPushList = new ArrayList<MsgPushBean>();
+		page = Integer.valueOf(page);
+		pageSize = Integer.valueOf(pageSize);
+		int limitStart = pageSize * (page - 1);
+		try {
+			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, null, null, limitStart, pageSize);
+			boolean firstFlag = false;
+			if (page <= 1) {
+				firstFlag = true;
+			}
+			for (MessagePushMsgHistory msg : list) {
+				MsgPushBean msgbean = new MsgPushBean();
+				msgbean.setMsgTitle(msg.getMsgTitle());
+				msgbean.setMsgContent(msg.getMsgContent().replaceAll("</?[^>]+>", ""));
+				msgbean.setActionUrl(msg.getMsgActionUrl());
+				msgbean.setMsgId(String.valueOf(msg.getId()));
+				msgbean.setMsgAction(String.valueOf(msg.getMsgAction()));
+				// 如果发送时间大于 时间戳 则为今天的数据
+				msgbean.setTime(GetDate.timestamptoStrYYYYMMDDHHMM(msg.getSendTime().toString()));
+				msgbean.setMsgType(String.valueOf(msg.getMsgDestinationType()));
+
+				// 标识第一条通知数据返回大图片
+				if (firstFlag) {
+					String webhost = UploadFileUtils.getDoPath(webHost) + "/hyjf-app".substring(1, "/hyjf-app".length())
+							+ "/";
+					webhost = webhost.substring(0, webhost.length() - 1);// http://new.hyjf.com/hyjf-app/
+					msgbean.setImgUrl(webhost + msg.getMsgImageUrl());
+					firstFlag = false;
+				}
+				// 屏蔽了原始代码，这里统一设置已读标志为已读
+				msgbean.setReadFlag("1");
+				// if(msg.getMsgReadCountAndroid() > 0){
+				// msgbean.setReadFlag("1");
+				// }else if(msg.getMsgReadCountIos() > 0){
+				// msgbean.setReadFlag("1");
+				// }else{
+				// msgbean.setReadFlag("0");
+				// }
+				msgPushList.add(msgbean);
+			}
+		} catch (Exception e) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "获取通知列表失败");
+			return ret;
+		}
+		// 暂时屏蔽等产品需求修改完成后返回正确数据
+		// ret.put("count", count);
+		// ret.put("msgList", msgPushList);
+		ret.put("count", 0);
+		ret.put("msgList", new ArrayList<MsgPushBean>());
+		return ret;
+	}
+
+	@ApiOperation(value = "消息标识已读", notes = "消息标识已读")
+	@RequestMapping("/alreadyReadAction")
+	public JSONObject alreadyReadAction(HttpServletRequest request) {
+		JSONObject ret = new JSONObject();
+		ret.put("request", "/hyjf-app/msgpush/alreadyReadAction");
+		// 版本号
+		String version = request.getParameter("version");
+		// 平台
+		String platform = request.getParameter("platform");
+		// 唯一标识
+		String sign = request.getParameter("sign");
+		// 检查参数正确性
+		if (Validator.isNull(version) || Validator.isNull(platform) || Validator.isNull(sign)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		// 取得加密用的Key
+		String key = SecretUtil.getKey(sign);
+		if (Validator.isNull(key)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		// 取得用户iD
+		Integer userId = null;
+		try {
+			userId = SecretUtil.getUserId(sign);
+		} catch (Exception e) {
+			userId = null;
+		}
+		ret.put("status", "0");
+		ret.put("statusDesc", "成功");
+		this.msgPushService.updateAllMsgPushMsgHistory(userId, platform);
+		return ret;
+	}
+
+	@ApiOperation(value = "消息及消息推送已读", notes = "消息及消息推送已读")
+	@RequestMapping("/msgReadAction")
+	public JSONObject msgReadAction(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject ret = new JSONObject();
+		ret.put("request", "/hyjf-app/msgpush/getMsgListAction");
+		// 版本号
+		String version = request.getParameter("version");
+		// 平台
+		String platform = request.getParameter("platform");
+		// 唯一标识
+		String sign = request.getParameter("sign");
+		//消息ID
+		String msgIdStr = request.getParameter("msgId");
+
+		// 检查参数正确性
+		if (Validator.isNull(version) || Validator.isNull(platform) ||  Validator.isNull(sign)||  Validator.isNull(msgIdStr)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		// 取得加密用的Key
+		String key = SecretUtil.getKey(sign);
+		if (Validator.isNull(key)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		ret.put("status", "0");
+		ret.put("statusDesc", "成功");
+		//更新记录信息
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		if(msgHistory != null){
+			//第一次阅读
+			if(msgHistory.getMsgReadCountAndroid() == 0 && msgHistory.getMsgReadCountIos() == 0){
+				msgHistory.setMsgFirstreadPlat(Integer.valueOf(platform));
+			}
+			if(platform.equals(CustomConstants.CLIENT_ANDROID)){
+				msgHistory.setMsgReadCountAndroid(msgHistory.getMsgReadCountAndroid() + 1);
+
+			}else if(platform.equals(CustomConstants.CLIENT_IOS)){
+				msgHistory.setMsgReadCountIos(msgHistory.getMsgReadCountIos() + 1);
+			}
+			this.msgPushService.updateMsgPushMsgHistory(msgHistory);
+		}
+		return ret;
+	}
+
+	@ApiOperation(value = "通知详情页", notes = "通知详情页")
+	@RequestMapping("/msgDetailAction")
+	public JSONObject msgDetailAction(HttpServletRequest request) {
+		JSONObject ret = new JSONObject();
+		// 唯一标识
+		String sign = request.getParameter("sign");
+		// 消息ID
+		String msgIdStr = request.getParameter("msgId");
+
+		// 检查参数正确性
+		if (Validator.isNull(sign) || Validator.isNull(msgIdStr)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		// 取得加密用的Key
+		String key = SecretUtil.getKey(sign);
+		if (Validator.isNull(key)) {
+			ret.put("status", "1");
+			ret.put("statusDesc", "请求参数非法");
+			return ret;
+		}
+		// 获取记录信息
+		MessagePushMsgHistory msgHistory = this.msgPushService.getMsgPushMsgHistoryById(Integer.valueOf(msgIdStr));
+		ret.put("msgHistory", msgHistory);
+		ret.put("status", "0");
+		ret.put("statusDesc", "成功");
 		return ret;
 	}
 }
