@@ -22,7 +22,7 @@ public class HjhQuitProducer extends Producer {
     @Override
     protected ProducerFieldsWrapper getFieldsWrapper() {
     ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-    wrapper.setGroup(MQConstant.HJH_QUIT);
+    wrapper.setGroup(MQConstant.HJH_QUIT_GROUP);
     wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
     return wrapper;
 }

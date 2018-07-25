@@ -17,8 +17,23 @@ public class SystemConfig {
     @Value("${hyjf.web.user.host}")
     public String webUserHost;
 
+    /**
+     * pc前端地址
+     */
     @Value("${hyjf.front.host}")
     public String frontHost;
+
+    /**
+     * app前端地址
+     */
+    @Value("${hyjf.front.app.host}")
+    public String AppFrontHost;
+
+    /**
+     * 微信前端地址
+     */
+    @Value("${hyjf.front.wei.host}")
+    public String WeiFrontHost;
 
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
@@ -320,5 +335,21 @@ public class SystemConfig {
 
     public void setHyjfEnvTest(boolean hyjfEnvTest) {
         this.hyjfEnvTest = hyjfEnvTest;
+    }
+
+    public String getAppFrontHost() {
+        return AppFrontHost;
+    }
+
+    public void setAppFrontHost(String appFrontHost) {
+        AppFrontHost = appFrontHost;
+    }
+
+    public String getWeiFrontHost() {
+        return WeiFrontHost;
+    }
+
+    public void setWeiFrontHost(String weiFrontHost) {
+        WeiFrontHost = weiFrontHost;
     }
 }

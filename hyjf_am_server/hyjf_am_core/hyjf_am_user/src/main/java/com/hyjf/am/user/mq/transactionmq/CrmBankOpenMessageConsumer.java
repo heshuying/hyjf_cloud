@@ -4,6 +4,7 @@
 package com.hyjf.am.user.mq.transactionmq;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,10 @@ import java.util.TreeMap;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -23,10 +28,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
@@ -89,15 +94,16 @@ public class CrmBankOpenMessageConsumer extends Consumer{
                 logger.info("【crm开户同步】接收到的消息：" + msg);
                 String msgBody = new String(msg.getBody());
                 Map<String,Integer> msgMap = JSONObject.parseObject(msgBody, Map.class);
-                ResponseEntity<CloseableHttpResponse> result = null;
+                logger.info("【crm开户同步】接收到的用户ID：" + msgMap.get("userId"));
+                CloseableHttpResponse result = null;
                 try {
-                   result = restTemplate.postForEntity(crmInsertUrl,buildData(msgMap.get("userId")),CloseableHttpResponse.class);
+                    result = postJson(crmInsertUrl, buildData(msgMap.get("userId")).toJSONString());
                 } catch (Exception e) {
-                    logger.info("【crm开户同步】异常，重新投递");
+                    logger.error("【crm开户同步】异常，重新投递", e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }
-                if (!result.getStatusCode().equals(HttpStatus.SC_OK) ) {
-                    logger.info("【crm开户同步】网络异常，重新投递");
+                if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK ) {
+                    logger.error("【crm开户同步】网络异常，重新投递");
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 } else {
                     logger.info("【crm开户同步】投递成功");
@@ -107,7 +113,7 @@ public class CrmBankOpenMessageConsumer extends Consumer{
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
-    private Object buildData(Integer userId) {
+    private JSONObject buildData(Integer userId) {
         JSONObject ret = new JSONObject();
         Map<String, Object> map = Maps.newHashMap();
 
@@ -135,7 +141,7 @@ public class CrmBankOpenMessageConsumer extends Consumer{
         map.put("customerUsername", user.getUsername());
         map.put("openingTimeStr", GetDate.dateToDateFormatStr(account.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
         map.put("platformInstcode", 10000001);
-        map.put("registerTimeStr", GetDate.timestamptoStrYYYYMMDDHHMMSS(String.valueOf(user.getRegTime())));
+        map.put("registerTimeStr", GetDate.dateToDateFormatStr(user.getRegTime(), "yyyy-MM-dd HH:mm:ss"));
 
         String sign = encryptByRSA(map, "10000001");
         ret.put("instCode", "10000001");
@@ -182,6 +188,45 @@ public class CrmBankOpenMessageConsumer extends Consumer{
         }
         String requestMerged = buff.toString();
         return requestMerged.replaceAll("[\\t\\n\\r]", "");
+    }
+
+    private CloseableHttpResponse postJson(String url, String jsonStr) {
+
+        // 实例化httpClient
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        // 实例化post方法
+        HttpPost httpPost = new HttpPost(url);
+
+        // 结果
+        CloseableHttpResponse response = null;
+        try {
+            // 提交的参数
+            StringEntity uefEntity = new StringEntity(jsonStr, "utf-8");
+            uefEntity.setContentEncoding("UTF-8");
+            uefEntity.setContentType("application/json");
+            // 将参数给post方法
+            httpPost.setEntity(uefEntity);
+            // 执行post方法
+            response = httpclient.execute(httpPost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (httpclient != null) {
+                try {
+                    httpclient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return response;
     }
 
 }

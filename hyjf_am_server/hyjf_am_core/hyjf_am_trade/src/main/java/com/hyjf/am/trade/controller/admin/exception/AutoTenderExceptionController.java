@@ -45,7 +45,6 @@ public class AutoTenderExceptionController  extends BaseController {
     public AutoTenderExceptionResponse selectAccedeRecordList(@RequestBody @Valid AutoTenderExceptionRequest request) {
         logger.info("---selectAccedeRecordList by param---  " + JSONObject.toJSON(request));
         AutoTenderExceptionResponse response = new AutoTenderExceptionResponse();
-        String returnCode = Response.FAIL;
         Map<String,Object> mapParam = setParam(request);
         int intCountAccede = autoTenderExceptionService.countAccedeRecord(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), intCountAccede, request.getPageSize());
@@ -54,21 +53,20 @@ public class AutoTenderExceptionController  extends BaseController {
         }
         mapParam.put("limitStart", paginator.getOffset());
         mapParam.put("limitEnd", paginator.getLimit());
-        if (request.getLimitFlg()==0) {
+        if (request.isLimitFlg()) {
             //代表获取全部
             mapParam.put("limitStart", 0);
             mapParam.put("limitEnd", 0);
         }
         List<AdminPlanAccedeListCustomize> userManagerCustomizeList = autoTenderExceptionService.selectAccedeRecordList(mapParam);
+        response.setCount(intCountAccede);
         if (intCountAccede > 0) {
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AdminPlanAccedeListCustomizeVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AdminPlanAccedeListCustomizeVO.class);
                 response.setResultList(userVoList);
-                response.setCount(intCountAccede);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
             }
         }
-        response.setRtn(returnCode);
         return response;
     }
 
@@ -90,7 +88,7 @@ public class AutoTenderExceptionController  extends BaseController {
      * @return
      */
     @RequestMapping(value = "/selectHjhAccedeByParam", method = RequestMethod.POST)
-    public HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest){
+    public HjhAccedeResponse selectHjhAccedeByParam(@RequestBody @Valid TenderExceptionSolveRequest tenderExceptionSolveRequest){
         Map<String,Object> mapReturn = mapTenderExcption(tenderExceptionSolveRequest);
         HjhAccedeResponse response = new HjhAccedeResponse();
         String strRtnMsg = Response.FAIL_MSG;

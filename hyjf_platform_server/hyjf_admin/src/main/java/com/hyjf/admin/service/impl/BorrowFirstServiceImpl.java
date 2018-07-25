@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
+import com.hyjf.admin.beans.vo.AdminBorrowFirstCustomizeVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -19,6 +20,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
@@ -68,8 +70,9 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         //查询列表 总计
         if (count > 0) {
             List<BorrowFirstCustomizeVO> list = amTradeClient.selectBorrowFirstList(borrowFirstRequest);
+            List<AdminBorrowFirstCustomizeVO> adminList = CommonUtils.convertBeanList(list, AdminBorrowFirstCustomizeVO.class);
             String sumAccount = amTradeClient.sumBorrowFirstAccount(borrowFirstRequest);
-            borrowFirstResponseBean.setRecordList(list);
+            borrowFirstResponseBean.setRecordList(adminList);
             borrowFirstResponseBean.setSumAccount(sumAccount);
         }
         return borrowFirstResponseBean;
@@ -136,7 +139,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
     @Override
     public AdminResult getFireInfo(String borrowNid) {
         if (StringUtils.isNotBlank(borrowNid)) {
-            // 0 未使用引擎 ; 1使用引擎 todo wangjun 现在前台已经注释 是否需要判断？
+            // 0 未使用引擎 ; 1使用引擎 前台已经注释 暂时删除
 //            int engineFlag = this.borrowFirstClient.isEngineUsed(borrowNid);
 //            jsonObject.put("engineFlag", engineFlag);
 
@@ -146,8 +149,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 BorrowFireInfoResponseBean response = new BorrowFireInfoResponseBean();
                 BeanUtils.copyProperties(borrowVO, response);
                 response.setName(borrowInfoVO.getName());
-                //addtime已经改名 copy时VO获取不到数据
-                response.setCreateTime(borrowVO.getAddtime());
+                response.setCreateTime(GetDate.date2Str(borrowVO.getCreateTime(), GetDate.datetimeFormat));
 
                 if (borrowVO.getOntime() != null && borrowVO.getOntime() != 0) {
                     response.setOntime(GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(borrowVO.getOntime())));

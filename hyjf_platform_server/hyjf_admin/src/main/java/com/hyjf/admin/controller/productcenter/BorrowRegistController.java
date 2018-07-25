@@ -69,7 +69,7 @@ public class BorrowRegistController extends BaseController {
     @PostMapping("/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-    public AdminResult<BorrowRegistResponseBean> getRegistList(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
+    public AdminResult<BorrowRegistResponseBean> search(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
         BeanUtils.copyProperties(borrowRegistRequestBean, borrowRegistListRequest);
         BorrowRegistResponseBean responseBean = borrowRegistService.getRegistList(borrowRegistListRequest);
@@ -80,9 +80,8 @@ public class BorrowRegistController extends BaseController {
     @GetMapping("/debt_regist/{borrowNid}")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
-    public AdminResult init(HttpServletRequest request, @PathVariable String borrowNid) {
-        //todo wangjun 取得当前用户信息 备用 后期修改
+    public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
-        return borrowRegistService.updateBorrowRegist(borrowNid, "123", "Admin");
+        return borrowRegistService.updateBorrowRegist(borrowNid, currUser.getId(), currUser.getUsername());
     }
 }

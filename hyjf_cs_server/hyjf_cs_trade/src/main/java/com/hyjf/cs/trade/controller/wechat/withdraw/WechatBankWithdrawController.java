@@ -36,7 +36,7 @@ import java.util.Map;
  */
 @Api(value = "wechat端用户提现接口")
 @Controller
-@RequestMapping("/wechat/withdraw")
+@RequestMapping("/hyjf-wechat/withdraw")
 public class WechatBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatBankWithdrawController.class);

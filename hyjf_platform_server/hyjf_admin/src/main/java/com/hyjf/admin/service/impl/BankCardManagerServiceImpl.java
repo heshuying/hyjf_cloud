@@ -10,7 +10,7 @@ import com.hyjf.am.response.user.BankCardLogResponse;
 import com.hyjf.am.response.user.BankCardManagerResponse;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardLogVO;
 import com.hyjf.am.vo.user.BankcardManagerVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -38,7 +38,7 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
      * @return
      */
     @Override
-    public List<BanksConfigVO> selectBankConfigList() {
+    public List<BankConfigVO> selectBankConfigList() {
         return amConfigClient.selectBankConfigList();
     }
 
@@ -68,11 +68,11 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
      * @param bankcardManagerVO
      */
     private void setBankCardName(BankcardManagerVO bankcardManagerVO){
-        List<BanksConfigVO> banksConfigVOList = amConfigClient.selectBankConfigList();
+        List<BankConfigVO> banksConfigVOList = amConfigClient.selectBankConfigList();
         if(null!=banksConfigVOList&&banksConfigVOList.size()>0){
-            for (BanksConfigVO banksConfigVO : banksConfigVOList) {
-                if (bankcardManagerVO.getBank().equals(banksConfigVO.getBankCode())) {
-                    bankcardManagerVO.setBank(banksConfigVO.getBankName());
+            for (BankConfigVO banksConfigVO : banksConfigVOList) {
+                if (bankcardManagerVO.getBank().equals(banksConfigVO.getCode())) {
+                    bankcardManagerVO.setBank(banksConfigVO.getName());
                 }
             }
         }
@@ -97,14 +97,7 @@ public class BankCardManagerServiceImpl implements BankCardManagerService {
     public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
         Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         BankCardLogResponse response =  bankCardManagerClient.selectBankCardLogByExample(request);
-        if(null!=response){
-            if(null!=response.getResultList()&&response.getResultList().size()>0){
-                for(BankCardLogVO bankCardLogVO:response.getResultList()){
-//                    bankCardLogVO.setBankName(bankcardProperty.getOrDefault(bankCardLogVO.getBankCode(),null));
-                }
-            }
-        }
-        return bankCardManagerClient.selectBankCardLogByExample(request);
+        return response;
     }
 
 

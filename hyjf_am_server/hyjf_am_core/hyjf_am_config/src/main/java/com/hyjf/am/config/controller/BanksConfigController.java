@@ -10,23 +10,20 @@ import com.hyjf.am.config.service.QuestionService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.trade.BankCardBeanResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +61,24 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+
+    /**
+     * 获取银行卡配置信息
+     * @param code
+     * @return
+     */
+    @GetMapping("/selectBankConfigByCode/{code}")
+    public BanksConfigResponse selectBankConfigByCode(@PathVariable String  code){
+        BanksConfigResponse response = new BanksConfigResponse();
+        BankConfig bankConfig = bankConfigService.selectBankConfigByCode(code);
+        if(null != bankConfig){
+            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BeanUtils.copyProperties(bankConfig,banksConfigVO);
+            response.setResult(banksConfigVO);
+        }
+        return response;
+    }
+
 
     /**
      *
@@ -115,7 +130,7 @@ public class BanksConfigController extends BaseConfigController{
      */
     @RequestMapping("/selectBankConfigList")
     public BanksConfigResponse selectBankConfigList(){
-        BanksConfigResponse response=null;
+        BanksConfigResponse response = new BanksConfigResponse();
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
         if(null!=listBankConfig&&listBankConfig.size()>0){
             List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
@@ -297,6 +312,24 @@ public class BanksConfigController extends BaseConfigController{
             }
         }
         return  res;
+    }
+
+    /**
+     * 根据银行code获取银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    @GetMapping(value = "/getBankConfigByCode/{code}")
+    public BankConfigResponse getBankConfigByCode(@PathVariable String code){
+        BankConfigResponse response = new BankConfigResponse();
+        List<BankConfig> bankConfigList = bankConfigService.getBankConfigByCode(code);
+        if(!CollectionUtils.isEmpty(bankConfigList)){
+            BankConfigVO bankConfigVO = CommonUtils.convertBean(bankConfigList.get(0),BankConfigVO.class);
+            response.setResult(bankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
     }
 
 }

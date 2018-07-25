@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -12,39 +13,29 @@ import java.io.Serializable;
  * @version BorrowFirstRequestBean, v0.1 2018/7/3 14:50
  */
 public class BorrowFirstRequestBean extends BaseRequest implements Serializable {
-    /**
-     * 检索条件 借款编号
-     */
+    @ApiModelProperty(value = "借款编号(初审接口用到借款编号的都在这个字段赋值)")
     private String borrowNidSrch;
-    /**
-     * 检索条件 借款期限
-     */
+
+    @ApiModelProperty(value = "借款期限")
     private String borrowPeriod;
 
-    /**
-     * 检索条件 用户名
-     */
+    @ApiModelProperty(value = "用户名")
     private String usernameSrch;
 
-    /**
-     * 检索条件 资金来源
-     */
+    @ApiModelProperty(value = "资金来源")
     private String instCodeSrch;
 
-    /**
-     *标的初审状态
-     */
+    @ApiModelProperty(value = "标的初审状态(初审接口用到标的初审状态的都在这个字段赋值)")
     private String verifyStatusSrch;
 
-    /**
-     * 检索条件 发布时间开始
-     */
+    @ApiModelProperty(value = "发布时间开始")
     private String timeStartSrch;
 
-    /**
-     * 检索条件 发布时间结束
-     */
+    @ApiModelProperty(value = "发布时间结束")
     private String timeEndSrch;
+
+    @ApiModelProperty(value = "定时发标时间")
+    private String ontime;
 
     public String getBorrowNidSrch() {
         return borrowNidSrch;
@@ -100,5 +91,13 @@ public class BorrowFirstRequestBean extends BaseRequest implements Serializable 
 
     public void setTimeEndSrch(String timeEndSrch) {
         this.timeEndSrch = timeEndSrch;
+    }
+
+    public String getOntime() {
+        return ontime;
+    }
+
+    public void setOntime(String ontime) {
+        this.ontime = ontime;
     }
 }

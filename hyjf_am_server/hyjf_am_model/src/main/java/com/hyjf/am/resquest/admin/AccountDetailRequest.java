@@ -125,8 +125,8 @@ public class AccountDetailRequest extends BasePage {
      * 交易状态
      */
     private String tradeStatus;
-    //分页区分
-    private  boolean limitFlg =false ;
+    //默认为true ,获取全部数据，为false时，获取部分数据
+    private  boolean limitFlg =false;
 
 
     public String getStartDate() {

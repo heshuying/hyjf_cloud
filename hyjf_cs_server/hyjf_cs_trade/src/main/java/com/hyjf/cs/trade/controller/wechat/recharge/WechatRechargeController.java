@@ -37,7 +37,7 @@ import java.util.Map;
 @Api(value = "wechat端用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/wechat/recharge")
+@RequestMapping(value = "/hyjf-wechat/recharge")
 public class WechatRechargeController extends BaseTradeController{
 	
 	Logger logger = LoggerFactory.getLogger(WechatRechargeController.class);

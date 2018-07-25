@@ -3,10 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
-import com.hyjf.am.response.trade.BorrowInfoResponse;
-import com.hyjf.am.response.trade.BorrowResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
@@ -17,6 +14,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.UserCouponConfigCustomizeVo;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -25,7 +23,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -35,10 +32,12 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
 import com.hyjf.cs.trade.bean.PlanDetailBean;
+import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.service.WebProjectListService;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -49,10 +48,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * web端项目列表Service实现类
@@ -65,7 +61,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
 
-    public static final  String INVEST_INVEREST_AMOUNT_URL = "http://AM-DATA-COLLECT/am-statistic/search/getTotalInvestAndInterestEntity";
+    public static final  String HJH_DETAIL_BORROW_LIST_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowListCount";
+
+    public static final  String HJH_DETAIL_BORROW_LIST_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowList";
+
+    /*加入记录count*/
+    public static final  String HJH_DETAIL_ACCEDE_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeCount";
+
+    /*加入记录list*/
+    public static final  String HJH_DETAIL_ACCEDE_LIST_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeList";
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -78,6 +82,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private WebProjectListClient webProjectListClient;
 
 
     /**
@@ -781,7 +788,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchPlanData(ProjectListRequest request) {
-        TotalInvestAndInterestResponse response = baseClient.getExe(INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse response = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();
         Map<String, Object> map = new HashMap<>();
         if(totalInvestAndInterestVO != null){
@@ -1041,6 +1048,128 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         webResult.setData(result);
         return webResult;
     }
+
+
+
+    /**
+     *  计划详情:标的组成
+     * @author zhangyk
+     * @date 2018/7/23 10:09
+     */
+    @Override
+    public WebResult getPlanBorrowList(WebPlanRequestBean request) {
+        WebResult result = new WebResult();
+        String planNid = request.getPlanNid();
+        Date date = GetDate.getDate();
+        int dayStart10 = GetDate.getDayStart10(date);
+        int dayEnd10 = GetDate.getDayEnd10(date);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", planNid);
+        params.put("startTime", dayStart10);
+        params.put("endTime", dayEnd10);
+        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_BORROW_LIST_COUNT_URL,params,HjhAccedeResponse.class);
+        int count = response.getAccedeCount();
+        result.setData(new ArrayList<>());
+        if (count > 0){
+            params.put("limitStart",page.getOffset());
+            params.put("limitEnd",page.getLimit());
+            BorrowResponse res = baseClient.postExe(HJH_DETAIL_BORROW_LIST_URL,params,BorrowResponse.class);
+            List<BorrowVO> list = res.getResultList();
+            formatUserName(list);
+            result.setData(list);
+        }
+        page.setTotal(count);
+        result.setPage(page);
+        return result;
+    }
+
+
+    /**
+     * 计划详情:加入记录
+     * @author zhangyk
+     * @date 2018/7/24 18:51
+     */
+    @Override
+    public WebResult getPlanAccedeList(WebPlanRequestBean requestBean, String userId) {
+        WebResult result = new WebResult();
+        JSONObject info  = new JSONObject();
+        CheckUtil.check(StringUtils.isNotBlank(requestBean.getPlanNid()), MsgEnum.ERR_OBJECT_REQUIRED,"计划编号");
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", requestBean.getPlanNid());
+        HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_ACCEDE_COUNT_URL,params,HjhAccedeResponse.class);
+        Map<String,Object> totalData = response.getTotalData();
+        int count;
+        double accedeTotal ;
+        if (totalData == null || totalData.get("count") == null){
+            count = 0;
+            accedeTotal = 0.00;
+        }else{
+             count = (Integer) totalData.get("count");
+             accedeTotal = (double) totalData.get("sum");
+        }
+        Page page = Page.initPage(requestBean.getCurrPage(),requestBean.getPageSize());
+        info.put("planAccedeList",new ArrayList<>());
+        if (count > 0 ){
+            params.put("limitStart",page.getOffset());
+            params.put("limitEnd",page.getLimit());
+            HjhAccedeListResponse res  = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL,params,HjhAccedeListResponse.class);
+            List<HjhAccedeCustomizeVO> list = res.getResultList();
+            info.put("planAccedeList",list);
+        }
+
+        info.put("accedeTimes",count);
+        info.put("accedeTotal",accedeTotal);
+        result.setData(info);
+        page.setTotal(count);
+        result.setPage(page);
+        return result;
+    }
+
+    /**
+     * 格式化用户姓名
+     * @author zhangyk
+     * @date 2018/7/23 14:49
+     */
+    private void formatUserName(List<BorrowVO> list){
+        for (BorrowVO planAccede : list) {
+            String borrowNid = planAccede.getBorrowNid();
+            if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
+                BorrowUserVO borrowUser = amTradeClient.getBorrowUser(borrowNid);
+                String trueName= borrowUser.getUsername();
+                String str = "******";
+                if (trueName != null && trueName != "") {
+                    if (trueName.length() <= 2) {
+                        trueName = str + trueName;
+                    }else if (trueName.length() > 2) {
+                        String substring = trueName.substring(trueName.length()-2);
+                        trueName = str + substring;
+                    }
+                }
+                planAccede.setBorrowUserName(trueName);
+            }else if("2".equals(planAccede.getCompanyOrPersonal())){//类型是个人 huiyingdai_borrow_maninfo
+                //根据borrowNid查询查询个人的真实姓名
+                BorrowManinfoVO borrowManinfoVO =amTradeClient.getBorrowManinfo(borrowNid);
+                String trueName = borrowManinfoVO.getName();
+                String str = "**";
+                if (trueName != null && trueName != "") {
+                    if (trueName.length() == 1) {
+                        trueName =  trueName + str;
+                    }else if (trueName.length() >= 1) {
+                        String substring = trueName.substring(0,1);
+                        trueName =  substring + str;
+                    }
+                }
+                planAccede.setBorrowUserName(trueName);
+            }
+        }
+    }
+
+
+
+
+
 
 
 }

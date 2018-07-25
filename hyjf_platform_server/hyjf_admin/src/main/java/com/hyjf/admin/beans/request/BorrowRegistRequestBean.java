@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -13,56 +14,32 @@ import java.io.Serializable;
  */
 public class BorrowRegistRequestBean extends BaseRequest implements Serializable {
 
-    /**
-     * 检索条件 借款编号
-     */
+    @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
 
-    /**
-     * 检索条件 借款标题
-     */
+    @ApiModelProperty(value = "借款标题")
     private String borrowNameSrch;
 
-    /**
-     * 检索条件 借款标题
-     */
+    @ApiModelProperty(value = "借款期限")
     private String borrowPeriodSrch;
 
-    /**
-     * 检索条件 用户名
-     */
+    @ApiModelProperty(value = "用户名")
     private String usernameSrch;
 
-
-    /**
-     * 检索条件 发布时间开始
-     */
+    @ApiModelProperty(value = "发布时间开始")
     private String timeStartSrch;
 
-    /**
-     * 检索条件 发布时间结束
-     */
+    @ApiModelProperty(value = "发布时间结束")
     private String timeEndSrch;
 
-    /**
-     * 标的备案状态
-     */
+    @ApiModelProperty(value = "标的备案状态")
     private String registStatusSrch;
 
-    /**
-     * 标的备案状态
-     */
+    @ApiModelProperty(value = "项目类型")
     private String projectTypeSrch;
 
-    /**
-     * 标的备案状态
-     */
+    @ApiModelProperty(value = "还款方式")
     private String borrowStyleSrch;
-
-    /**
-     * 借款人用户名
-     */
-    private String userName;
 
     public String getRegistStatusSrch() {
         return registStatusSrch;
@@ -134,13 +111,5 @@ public class BorrowRegistRequestBean extends BaseRequest implements Serializable
 
     public void setBorrowStyleSrch(String borrowStyleSrch) {
         this.borrowStyleSrch = borrowStyleSrch;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -269,4 +270,29 @@ public interface AmUserClient {
 	 * @param mobileCode
 	 */
 	void insertMobileCode(UserAliasVO mobileCode);
+
+	/**
+	 * 根据用户id获取银行卡信息
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	List<AccountBankVO> getBankCardByUserId(Integer userId);
+
+	/**
+	 * 获取用户信息中vip信息
+	 * @param vipId
+	 * @return
+	 */
+    VipInfoVO findVipInfoById(Integer vipId);
+
+	/**
+	 *
+	 * @param userId
+	 * @param status
+	 * @return
+	 */
+    List<AccountBankVO> selectAccountBank(Integer userId, int status);
+
+    List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
 }

@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Api(value = "Web交易明细页面")
 @RestController
-@RequestMapping("/web/tradedetail")
+@RequestMapping("/hyjf-web/tradedetail")
 public class TradeDetailController  extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(TradeDetailController.class);
     @Autowired

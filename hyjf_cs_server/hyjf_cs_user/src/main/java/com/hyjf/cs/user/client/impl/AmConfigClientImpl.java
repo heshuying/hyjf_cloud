@@ -1,9 +1,11 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
@@ -11,6 +13,7 @@ import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
@@ -165,7 +168,37 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr) {
         VersionConfigBeanResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/appversion/getUpdateversion/" + type+"/"+isupdate+"/"+versionStr, VersionConfigBeanResponse.class).getBody();
+                .getForEntity(configService+"/appversion/getUpdateversion/" + type+"/"+isupdate+"/"+versionStr, VersionConfigBeanResponse.class).getBody();
         return response.getResult();
+    }
+
+    @Override
+    public BankConfigVO selectBankConfigByCode(String code) {
+        BankConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/selectBankConfigByCode/" + code, BankConfigResponse.class).getBody();
+        return response.getResult();
+    }
+    /**
+     * 根据银行code查询银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    @Override
+    public BankConfigVO getBankConfigByCode(String code) {
+        String url = configService+"/config/getBankConfigByCode/" + code;
+        BankConfigResponse response = restTemplate
+                .getForEntity(url, BankConfigResponse.class).getBody();
+        return response.getResult();
+    }
+
+    @Override
+    public Integer getBankInterfaceFlagByType(String type) {
+        BankInterfaceResponse response = restTemplate
+                .getForEntity(configService+"/bankInterface/getBankInterfaceFlagByType/" + type, BankInterfaceResponse.class).getBody();
+        if (response != null) {
+            return response.getFlag();
+        }
+        return null;
     }
 }

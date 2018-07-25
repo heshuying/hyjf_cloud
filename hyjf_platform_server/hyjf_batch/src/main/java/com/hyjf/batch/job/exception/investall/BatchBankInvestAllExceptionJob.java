@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
  * @since 20180619	
  */
 public class BatchBankInvestAllExceptionJob extends BaseJob implements Job{
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

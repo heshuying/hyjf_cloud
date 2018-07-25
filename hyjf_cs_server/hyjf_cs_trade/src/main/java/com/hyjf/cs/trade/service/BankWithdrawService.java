@@ -122,4 +122,11 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param param
      */
     void getWithdrawResult(int userId, String logOrderId, Map<String,String> param);
+
+    /**
+     * 根据订单号查询提现失败原因
+     * @param logOrdId
+     * @return
+     */
+    WebResult<Object> seachUserBankWithdrawErrorMessgae(String logOrdId);
 }

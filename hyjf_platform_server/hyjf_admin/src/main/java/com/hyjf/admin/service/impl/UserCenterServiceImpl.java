@@ -6,15 +6,18 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -23,6 +26,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +49,8 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     private AmUserClient userCenterClient;
     @Autowired
     private AmTradeClient amTradeClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
     /**卡号不存在*/
     public static final String RESPCODE_CORPRATION_QUERY_EXIST = "CA000054";
 
@@ -398,7 +404,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     @Override
     public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest) {
         UserVO user = this.selectUserByUserId(updCompanyRequest.getUserId());
-        String bankId = userCenterClient.queryBankIdByCardNo(updCompanyRequest.getAccount());
+        String bankId = amConfigClient.queryBankIdByCardNo(updCompanyRequest.getAccount());
         if (StringUtils.isNotBlank(bankId)) {
             String bankName = getBankNameById(bankId);
             String payAllianceCode = null;
@@ -427,9 +433,12 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         String bankName = "";
         if (StringUtils.isNotBlank(bankId)) {
             int bankIdInt = Integer.parseInt(bankId);
-            BanksConfigVO banksConfigVO = userCenterClient.getBanksConfigByBankId(bankIdInt);
-            if (null != banksConfigVO) {
-                bankName = banksConfigVO.getBankName();
+            JxBankConfigResponse jxBankConfigResponse = amConfigClient.getJXbankConfigByBankId(bankIdInt);
+            if(null!=jxBankConfigResponse&&Response.SUCCESS.equals(jxBankConfigResponse.getRtn())){
+                JxBankConfigVO jxBankConfigVO = jxBankConfigResponse.getResult();
+                if (null != jxBankConfigVO) {
+                    bankName = jxBankConfigVO.getBankName();
+                }
             }
         }
         return bankName;
@@ -444,9 +453,13 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public String getPayAllianceCodeByBankId(String bankId) {
         String payAllianceCode = "";
         if (StringUtils.isNotBlank(bankId)) {
-            BanksConfigVO banksConfigVO = userCenterClient.getBanksConfigByBankId(Integer.parseInt(bankId));
-            if (null != banksConfigVO) {
-                payAllianceCode = banksConfigVO.getPayAllianceCode();
+            int bankIdInt = Integer.parseInt(bankId);
+            JxBankConfigResponse jxBankConfigResponse = amConfigClient.getJXbankConfigByBankId(bankIdInt);
+            if(null!=jxBankConfigResponse&&Response.SUCCESS.equals(jxBankConfigResponse.getRtn())){
+                JxBankConfigVO banksConfigVO = new JxBankConfigVO();
+                if (null != banksConfigVO) {
+                    payAllianceCode = banksConfigVO.getPayAllianceCode();
+                }
             }
         }
         return payAllianceCode;

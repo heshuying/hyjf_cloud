@@ -75,7 +75,7 @@
 			END borrow_period,
 			bb.borrow_nid AS is_bail,
 			CASE WHEN b.ontime IS NULL OR b.ontime = 0 THEN '' ELSE FROM_UNIXTIME( b.ontime, '%Y-%m-%d %H:%i:%s' ) END ontime,
-			b.create_time,
+			DATE_FORMAT(b.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
 			b.verify_status,
 			bi.project_type,
 			hic.inst_name

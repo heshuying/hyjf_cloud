@@ -91,12 +91,8 @@ public class AdminTransferExceptionLogController extends BaseController {
             ret = adminTransferExceptionLogService.transferAfter(jsonObject);
         } catch (Exception e) {
             e.printStackTrace();
-            ret = false;
-        }finally {
-            return ret;
         }
-
-
+        return ret;
     }
 
 }

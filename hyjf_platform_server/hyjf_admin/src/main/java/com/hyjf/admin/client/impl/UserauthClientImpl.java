@@ -25,12 +25,6 @@ public class UserauthClientImpl implements UserauthClient {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	/**
-	 * am-user层查询自动投资债转异常列表
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
 	@Override
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest) {
 		AdminUserAuthListResponse response = restTemplate

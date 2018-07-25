@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.mq.consumer;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +82,12 @@ public class CalculateInvestInterestConsumer extends Consumer {
                     // 已收利息
                     BigDecimal recoverInterestAmount = (BigDecimal) data.get("recoverInterestAmount");
                     Integer type = (Integer) data.get("type");
-                    if ("1".equals(type)) { // 投资增加交易总额
+                    if (type == null) {
+                        logger.error("传入参数错误！type为空！");
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+                    // 投资增加交易总额
+                    if (type.equals(1)) {
                         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
                         // 第一次插入
                         if (entity == null) {
@@ -92,14 +98,16 @@ public class CalculateInvestInterestConsumer extends Consumer {
                         logger.info("运营数据type=1, entity is :{}", entity);
                         // save没有插入，有则更新
                         totalInvestAndInterestMongoDao.save(entity);
-                    } else if ("2".equals(type)) {  // 还款添加收益
+                    } else if (type.equals(2)) {
+                        // 还款添加收益
                         // 累计收益(实时)
                         //BigDecimal totalInterestAmount = operationDataService.countTotalInterestAmount();
                         BigDecimal totalInterestAmount = recoverInterestAmount == null ? BigDecimal.ZERO : recoverInterestAmount;
                         logger.info("已收收益： {}", totalInterestAmount.toString());
 
                         // TODO: 2018/7/7 这里需要查询   没用到  先放
-                        List<Map<String, Object>> list =null;//operationDataService.searchPlanStatisticData();
+                        //operationDataService.searchPlanStatisticData();
+                        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
                         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
                         // 第一次插入
                         if (entity == null) {
@@ -114,7 +122,7 @@ public class CalculateInvestInterestConsumer extends Consumer {
                         logger.info("运营数据type=2, entity is :{}", entity);
                         // save没有插入，有则更新
                         totalInvestAndInterestMongoDao.save(entity);
-                    } else if ("3".equals(type)) {  // 计划
+                    } else if (type.equals(3)) {  // 计划
                         // 查询计划数据
                         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
                         if (entity == null) {

@@ -48,8 +48,8 @@ public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 
 	public  WeChatResult  buildErrorResponse(MsgEnum msgEnum){
 		WeChatResult weChatResult = new WeChatResult();
-		weChatResult.setStatusDesc(FAIL);
-		weChatResult.setStatusDesc(FAIL_DESC);
+		weChatResult.setStatus(msgEnum.getCode());
+		weChatResult.setStatusDesc(msgEnum.getMsg());
 		return weChatResult;
 	}
 }

@@ -3,65 +3,19 @@
  */
 package com.hyjf.am.trade.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowInfoMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowSendTypeMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpMapper;
-import com.hyjf.am.trade.dao.mapper.auto.CalculateInvestInterestMapper;
-import com.hyjf.am.trade.dao.mapper.auto.FreezeListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.IncreaseInterestInvestMapper;
+import com.hyjf.am.trade.config.SystemConfig;
+import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebUserInvestListCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowSendType;
-import com.hyjf.am.trade.dao.model.auto.BorrowSendTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
-import com.hyjf.am.trade.dao.model.auto.FreezeList;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomizeV2;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.BankInvestAllService;
@@ -73,14 +27,11 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
 import com.hyjf.common.validator.Validator;
@@ -89,10 +40,20 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 投資全部掉單处理
@@ -100,61 +61,17 @@ import redis.clients.jedis.Transaction;
  * @since 20180623
  */
 @Service
-public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
+public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implements BankInvestAllService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestAllExceptionServiceImpl.class);
 
 	public static JedisPool pool = RedisUtils.getPool();
 
 	@Autowired
-	private BorrowTenderTmpMapper borrowTenderTmpMapper;
-	@Autowired
-	private AccountMapper accountMapper;
-	@Autowired
-	private BorrowMapper borrowMapper;
-    @Autowired
-    private BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    private PlatformTransactionManager transactionManager;
-
-	@Autowired
-	private TransactionDefinition transactionDefinition;
-	@Autowired
-	private BorrowProjectTypeMapper borrowProjectTypeMapper;
-	@Autowired
-	private WebUserInvestListCustomizeMapper webUserInvestListCustomizeMapper;
-	@Autowired
-	private CouponUserCustomizeMapper couponUserCustomizeMapper;
-	@Autowired
-	private BorrowStyleMapper borrowStyleMapper;
-	@Autowired
-	private IncreaseInterestInvestMapper increaseInterestInvestMapper;
-	@Autowired
-	private BorrowTenderMapper borrowTenderMapper;
-	@Autowired
-	private FreezeListMapper freezeListMapper;
-	@Autowired
-	private AdminAccountCustomizeMapper adminAccountCustomizeMapper; 
-	@Autowired
-	private AccountListMapper accountListMapper;
-	@Autowired
-	private CalculateInvestInterestMapper calculateInvestInterestMapper;
-	@Autowired
-	private BorrowCustomizeMapper borrowCustomizeMapper;
-	@Autowired
-	private BorrowSendTypeMapper borrowSendTypeMapper;
-	@Autowired
-	private WebCalculateInvestInterestCustomizeMapper webCalculateInvestInterestCustomizeMapper;
-
-	@Autowired
 	private SmsProducer smsProducer;
 
-//	@Value("${hyjf.bank.instcode}")
-	private String BANK_INSTCODE;
-
-//	@Value("${hyjf.bank.bankcode}")
-	private String BANK_BANKCODE;
+	@Autowired
+	private SystemConfig systemConfig;
 
 
 	private Borrow getBorrowByNid(String borrowNid) {
@@ -169,13 +86,12 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 	}
 
 
-    /**
-     * 拼装返回信息
-     *
-     * @param message
-     * @param status
-     * @return
-     */
+	/**
+	 * 拼装返回信息
+	 * @param data
+	 * @param error
+	 * @return
+	 */
     public JSONObject jsonMessage(String data, String error) {
         JSONObject jo = null;
         if (Validator.isNotNull(data)) {
@@ -188,10 +104,10 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 
 	/**
 	 * 投资校验
-	 * @param userId
-	 * @param o
 	 * @param borrowNid
 	 * @param account
+	 * @param userIdInt
+	 * @param platform
 	 * @param couponGrantId
 	 * @param request
 	 * @return
@@ -309,7 +225,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 			// 新需求判断顺序变化
 			// 将投资金额转化为BigDecimal
 			BigDecimal accountBigDecimal = new BigDecimal(account);
-			String balance = RedisUtils.get(borrowNid);
+			String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 			if (StringUtils.isEmpty(balance)) {
 				return jsonMessage("您来晚了，下次再来抢吧", "1");
 			}
@@ -375,7 +291,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 
 	/**
 	 * 根据userID获取account表信息
-	 * @param parseInt
+	 * @param userId
 	 * @return
 	 */
 	private Account getAccountByUserId(int userId) {
@@ -408,7 +324,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 
 	/**
 	 * 获取项目类型
-	 * @param valueOf
+	 * @param projectType
 	 * @return
 	 */
     private BorrowProjectType getBorrowProjectType(String projectType) {
@@ -432,23 +348,31 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 	/**
      * 取得用户优惠券信息
      * @param couponGrantId
-     * @param userIdInt
+     * @param userId
      * @return
      */
     private CouponConfigCustomizeV2 getCouponUser(String couponGrantId, Integer userId) {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("couponGrantId", couponGrantId);
         paramMap.put("userId", userId);
-        CouponConfigCustomizeV2 ccTemp = this.couponUserCustomizeMapper.selectCouponConfigByGrantId(paramMap);
+        CouponConfigCustomizeV2 ccTemp = couponUserCustomizeMapper.selectCouponConfigByGrantId(paramMap);
         return ccTemp;
     }
+
+    @Override
+	public List<CouponUserCustomize> selectLatestCouponValidUNReadList(Integer userId){
+		List<CouponUserCustomize> list = couponUserCustomizeMapper.selectLatestCouponValidUNReadList(userId);
+		return list;
+	}
+
+
 
     /**
      * 获取borrowInfo
      * @param borrowNid
      * @return
      */
-    private BorrowInfo getBorrowInfoByNid(String borrowNid) {
+	public BorrowInfo getBorrowInfoByNid(String borrowNid) {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
@@ -470,8 +394,8 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		BankCallBean bean = new BankCallBean();
 		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);// 消息类型
-		bean.setInstCode(BANK_INSTCODE);// 机构代码
-		bean.setBankCode(BANK_BANKCODE);
+		bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+		bean.setBankCode(systemConfig.getBankBankcode());
 		bean.setTxDate(GetOrderIdUtils.getTxDate());
 		bean.setTxTime(GetOrderIdUtils.getTxTime());
 		bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -701,10 +625,11 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 
 	/**
 	 * 投标失败后,调用投资撤销接口
-	 * 
-	 * @param ordId
-	 * @param ordDate
-	 * @param queryTransType
+	 * @param investUserId
+	 * @param investUserAccountId
+	 * @param productId
+	 * @param orgOrderId
+	 * @param txAmount
 	 * @return
 	 */
 	private BankCallBean bidCancel(Integer investUserId, String investUserAccountId, String productId, 
@@ -713,8 +638,8 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		// 调用汇付接口(交易状态查询)
 		BankCallBean bean = new BankCallBean();
 		String orderId = GetOrderIdUtils.getOrderId2(investUserId);
-		String bankCode = BANK_BANKCODE;
-		String instCode = BANK_INSTCODE;
+		String bankCode = systemConfig.getBankBankcode();
+		String instCode = systemConfig.getBankInstcode();
 		Account investUser = this.getAccountByUserId(investUserId);
 		bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
 		bean.setTxCode(BankCallMethodConstant.TXCODE_BID_CANCEL); // 交易代码
@@ -1217,7 +1142,7 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		Jedis jedis = pool.getResource();
 		BigDecimal accountBigDecimal = new BigDecimal(account);
 		while ("OK".equals(jedis.watch(borrowNid))) {
-			String balanceLast = RedisUtils.get(borrowNid);
+			String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 			if (StringUtils.isNotBlank(balanceLast)) {
 				System.out.println("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
 				BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
@@ -1253,11 +1178,11 @@ public class BankInvestAllExceptionServiceImpl implements BankInvestAllService {
 		String status = BankCallConstant.STATUS_FAIL; // 发送状态
 		JSONObject info = new JSONObject();
 		BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
-		String accountRedisWait = RedisUtils.get(borrowNid);
+		String accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 		if (StringUtils.isNotBlank(accountRedisWait)) {
 			// 操作redis
 			while ("OK".equals(jedis.watch(borrowNid))) {
-				accountRedisWait = RedisUtils.get(borrowNid);
+				accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 				if (StringUtils.isNotBlank(accountRedisWait)) {
 					System.out.println("PC用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
 					if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {

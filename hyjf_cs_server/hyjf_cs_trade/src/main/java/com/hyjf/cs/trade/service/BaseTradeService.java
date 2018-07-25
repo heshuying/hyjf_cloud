@@ -4,7 +4,9 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.trade.config.SystemConfig;
 
 import java.math.BigDecimal;
 
@@ -52,4 +54,6 @@ public interface BaseTradeService extends BaseService{
     public boolean checkIsNewUserCanInvest(Integer userId);
 
     AccountVO getAccountByUserId(Integer userId);
+
+
 }

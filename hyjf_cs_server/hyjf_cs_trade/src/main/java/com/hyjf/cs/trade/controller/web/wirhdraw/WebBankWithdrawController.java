@@ -30,10 +30,10 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "web端用户提现接口")
+@Api(value = "web端用户提现接口" ,description = "web端用户提现接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/web/withdraw")
+@RequestMapping("/hyjf-web/withdraw")
 public class WebBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebBankWithdrawController.class);
@@ -47,7 +47,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "获取用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "web端获取用户银行提现", notes = "用户提现")
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
@@ -66,7 +66,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date  用户提现调用银行页面
      */
-    @ApiOperation(value = "用户银行提现", notes = "用户提现")
+    @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "token", required = true) String token,
                                          @RequestParam @Valid String withdrawmoney, @RequestParam @Valid String widCard,
@@ -139,5 +139,18 @@ public class WebBankWithdrawController extends BaseTradeController {
         result.setStatus(true);
         logger.info("[web用户银行提现异步回调结束]");
         return JSONObject.toJSONString(result, true);
+    }
+
+    /**
+     * @Description 查询开户失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
+    @RequestMapping("/seachFiledMess")
+    @ResponseBody
+    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(logOrdId);
+        return result;
     }
 }

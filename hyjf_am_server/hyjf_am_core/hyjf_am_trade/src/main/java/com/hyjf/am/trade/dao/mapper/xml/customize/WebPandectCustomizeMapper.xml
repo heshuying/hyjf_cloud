@@ -37,7 +37,7 @@
 		(sum(assign_capital)-sum(assign_repay_capital)) as credit_capital_wait,
 		sum(assign_capital) as credit_capital,
 		(sum(assign_account)-sum(assign_capital)-sum(assign_repay_interest)) as credit_interest_wait
-		FROM huiyingdai_credit_tender t
+		FROM ht_credit_tender t
 		WHERE user_id= #{userId}
 	</select>
 
@@ -51,9 +51,9 @@
 					SELECT
 						sum(ct.assign_interest-ct.assign_repay_interest)
 					FROM
-						huiyingdai_borrow_recover r
-					LEFT JOIN huiyingdai_borrow_credit bc ON bc.tender_nid = r.nid
-					LEFT JOIN huiyingdai_credit_tender ct on ct.credit_nid = bc.credit_nid and ct.credit_tender_nid = bc.tender_nid
+					ht_borrow_recover r
+					LEFT JOIN ht_borrow_credit bc ON bc.tender_nid = r.nid
+					LEFT JOIN ht_credit_tender ct on ct.credit_nid = bc.credit_nid and ct.credit_tender_nid = bc.tender_nid
 					WHERE 1=1
 						<if test="userId!=null and userId != 0">
 							AND r.user_id= #{userId}
@@ -66,9 +66,9 @@
 					SELECT
 						sum(ct.assign_repay_interest)
 					FROM
-						huiyingdai_borrow_recover r
-					LEFT JOIN huiyingdai_borrow_credit bc ON bc.tender_nid = r.nid
-					LEFT JOIN huiyingdai_credit_tender ct on ct.credit_nid = bc.credit_nid and ct.credit_tender_nid = bc.tender_nid
+					ht_borrow_recover r
+					LEFT JOIN ht_borrow_credit bc ON bc.tender_nid = r.nid
+					LEFT JOIN ht_credit_tender ct on ct.credit_nid = bc.credit_nid and ct.credit_tender_nid = bc.tender_nid
 					WHERE 1=1
 						<if test="userId!=null and userId != 0">
 							AND r.user_id= #{userId}
@@ -77,8 +77,8 @@
 					SELECT
 						sum(r.credit_interest_amount)
 					FROM
-						huiyingdai_borrow_recover r
-					LEFT JOIN huiyingdai_borrow_credit bc ON bc.tender_nid = r.nid
+				ht_borrow_recover r
+					LEFT JOIN ht_borrow_credit bc ON bc.tender_nid = r.nid
 					AND r.recover_period = bc.credit_period
 					WHERE 1=1
 						<if test="userId!=null and userId != 0">
@@ -87,7 +87,7 @@
 				),0) AS credit_interest_amount
 			</if>
 		</if>
-			FROM huiyingdai_borrow_recover r
+			FROM ht_borrow_recover r
 		WHERE 1=1
 		<if test="userId!=null and userId != 0">
 			AND r.user_id= #{userId}
@@ -114,7 +114,7 @@
 		parameterType="java.lang.Integer">
 		SELECT
 		sum(account) as frost_capital
-		FROM huiyingdai_borrow_tender
+		FROM ht_borrow_tender
 		WHERE user_id= #{userId}
 		AND status=0
 	</select>
@@ -124,7 +124,7 @@
 		parameterType="java.lang.Integer">
 		SELECT
 		sum(account) as account_all
-		FROM huiyingdai_borrow_tender
+		FROM ht_borrow_tender
 		WHERE user_id= #{userId}
 		AND status=1
 	</select>
@@ -134,7 +134,7 @@
 		SELECT
 		sum(recover_account_capital_wait) as wait_capital,
 		sum(recover_account_interest_wait) as recover_interest
-		FROM huiyingdai_borrow_tender
+		FROM ht_borrow_tender
 		WHERE user_id= #{userId}
 		AND status=1
 	</select>
@@ -142,7 +142,7 @@
  	<select id="queryWaitMoneyForRtb" resultMap="WaitMoneyResult" parameterType="java.lang.Integer">
 		SELECT
 		sum(repay_interest_wait) as recover_interest
-		FROM hyjf_increase_interest_invest
+		FROM ht_increase_interest_invest
 		WHERE user_id= #{userId}
 		AND status=1
 	</select>
@@ -152,7 +152,7 @@
 		SELECT
 		sum(recover_capital_yes) as recover_capital,
 		sum(recover_interest_yes) as recover_interest
-		FROM huiyingdai_borrow_recover
+		FROM ht_borrow_recover
 		WHERE user_id= #{userId}
 		AND status=1
 	</select>
@@ -160,7 +160,7 @@
  	<select id="queryRecoverMoneyForRtb" resultMap="RecoverMoneyResult" parameterType="java.lang.Integer">
 		SELECT
 			sum(repay_interest_yes) as recover_interest
-		FROM hyjf_increase_interest_loan
+		FROM ht_increase_interest_loan
 		WHERE user_id= #{userId}
 	</select>
 
@@ -169,7 +169,7 @@
 		>
 		SELECT
 			sum(recover_account) as recover_account
-		FROM huiyingdai_borrow_recover
+		FROM ht_borrow_recover
 		WHERE user_id= #{userId}
 		AND status=1        <!-- 所有都是1，无意义  -->
 		AND recover_status=0  <!-- recover_status  0是未还（包含分期未还完），1是已还 -->
@@ -182,7 +182,7 @@
 		SELECT  user_id, recover_account, recover_interest,
 				recover_capital, recover_account_yes, recover_interest_yes,
 				recover_capital_yes, recover_account_wait
-		FROM huiyingdai_borrow_recover
+		FROM ht_borrow_recover
 		WHERE user_id= #{userId}
 		AND recover_status=0
 
@@ -194,7 +194,7 @@
  	<select id="queryHtlSumRestAmount" resultType="java.math.BigDecimal"
 		parameterType="java.lang.Integer">
 		SELECT   sum(rest_amount) as rest_amount
-		FROM huiyingdai_product_list
+		FROM ht_product_list
 		WHERE user_id= #{userId}
 		AND status=0  <!-- 0  未赎回 1 已赎回 -->
 	</select>
@@ -203,12 +203,12 @@
  	<select id="queryHtlSumInterest" resultType="java.math.BigDecimal"
 		parameterType="java.lang.Integer">
 		SELECT   sum(interest) as interest
-		FROM huiyingdai_product_redeem
+		FROM ht_product_redeem
 		WHERE user_id= #{userId}
 	</select>
 
 	<update id="updateUserAuthStatus" parameterType="java.util.HashMap" >
-			UPDATE  huiyingdai_users
+			UPDATE  ht_r_user
 			SET auth_type =#{authType},
 			 auth_status =#{appointment},
 			 auth_time =now()
