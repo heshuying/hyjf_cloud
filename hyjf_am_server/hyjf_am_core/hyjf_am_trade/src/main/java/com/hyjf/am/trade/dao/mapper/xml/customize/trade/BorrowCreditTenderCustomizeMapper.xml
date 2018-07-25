@@ -247,4 +247,44 @@
 			</if>
 		</where>
 	</select>
+
+
+	<select id="getCreditListCount" resultType="int">
+		SELECT
+		count(hct.assign_id)
+		FROM
+		ht_credit_tender hct
+		<where>
+			<if test="creditNid != null and creditNid != ''">
+				AND hct.credit_nid = #{creditNid}
+			</if>
+		</where>
+	</select>
+
+	<select id="getCreditTenderList" resultType="com.hyjf.am.vo.trade.CreditTenderListCustomizeVO">
+		SELECT
+		hct.assign_id AS id,
+		CONCAT(
+		substring(hu.truename, 1, 1),
+		'**'
+		) AS userName,
+		-- CASE WHEN hui.vip_id IS NOT NULL THEN 1 ELSE 0 END AS is_vip,
+		SUBSTRING(FORMAT(hct.assign_capital,4),1,LENGTH(FORMAT(hct.assign_capital,4))-2) AS assignCapital,
+		hct.create_time AS assignTime,
+		hct.client AS client
+		FROM
+		ht_credit_tender hct
+		LEFT JOIN ht_r_user hu ON hu.user_id = hct.user_id
+
+		<where>
+			<if test="creditNid != null and creditNid != ''">
+				AND hct.credit_nid = #{creditNid}
+			</if>
+		</where>
+		ORDER BY
+		hct.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 </mapper>

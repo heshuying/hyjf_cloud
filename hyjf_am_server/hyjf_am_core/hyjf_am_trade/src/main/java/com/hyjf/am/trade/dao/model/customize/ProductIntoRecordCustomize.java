@@ -34,6 +34,7 @@ public class ProductIntoRecordCustomize implements Serializable {
     private String mobile;//手机号
     private BigDecimal balance;//本金
     private Integer investStatus;//投资状态
+    private Integer department;
     private String regionName;
     private String branceName;
     private String departmentName;
@@ -207,4 +208,11 @@ public class ProductIntoRecordCustomize implements Serializable {
         this.departmentName = departmentName;
     }
 
+    public Integer getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Integer department) {
+        this.department = department;
+    }
 }

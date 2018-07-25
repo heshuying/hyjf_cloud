@@ -4,15 +4,13 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.resquest.user.HtlTradeRequest;
-import com.hyjf.am.trade.dao.model.auto.ProductList;
-import com.hyjf.am.trade.dao.model.auto.ProductListExample;
-import com.hyjf.am.trade.dao.model.auto.ProductRedeem;
-import com.hyjf.am.trade.dao.model.auto.ProductRedeemExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.ProductRedeemCustomize;
 import com.hyjf.am.trade.service.HtlTradeService;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,16 +36,11 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
         for(ProductIntoRecordCustomize productIntoRecordCustomize:productIntoRecordCustomizes){
             logger.info("数据库获取并转换bean以后的时间戳[{}]",productIntoRecordCustomize.getInvestTime());
             productIntoRecordCustomize.setInvestTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(productIntoRecordCustomize.getInvestTime())));
-            //TODO:这里是从数据库中循环获取
-            /*
-                 d3.NAME AS region_name,
-				 d2.NAME AS brance_name,
-				 d1.NAME AS department_name
-				FROM
-				LEFT JOIN hyjf_crm.oa_department d1 ON d1.id = p.department
-				LEFT JOIN hyjf_crm.oa_department d2 ON d2.id = d1.parentid
-				LEFT JOIN hyjf_crm.oa_department d3 ON d3.id = d2.parentid
-            */
+            // 获取部门名称
+            String[] department = getDepartment(productIntoRecordCustomize.getDepartment());
+            productIntoRecordCustomize.setDepartmentName(department[0]);
+            productIntoRecordCustomize.setBranceName(department[1]);
+            productIntoRecordCustomize.setRegionName(department[2]);
         }
         return productIntoRecordCustomizes;
     }
@@ -66,20 +59,49 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
         for(ProductRedeemCustomize productRedeemCustomize:productIntoRecordCustomizes){
             logger.info("数据库获取并转换bean以后的时间戳[{}]",productRedeemCustomize.getRedeemTime());
             productRedeemCustomize.setRedeemTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(productRedeemCustomize.getRedeemTime())));
-            //TODO:这里是从数据库中循环获取
-            /*
-                 d3.NAME AS region_name,
-				 d2.NAME AS brance_name,
-				 d1.NAME AS department_name
-				FROM
-				LEFT JOIN hyjf_crm.oa_department d1 ON d1.id = p.department
-				LEFT JOIN hyjf_crm.oa_department d2 ON d2.id = d1.parentid
-				LEFT JOIN hyjf_crm.oa_department d3 ON d3.id = d2.parentid
-            */
+            // 获取部门名称
+            String[] department = getDepartment(productRedeemCustomize.getDepartment());
+            productRedeemCustomize.setDepartmentName(department[0]);
+            productRedeemCustomize.setBranceName(department[1]);
+            productRedeemCustomize.setRegionName(department[2]);
         }
         return productIntoRecordCustomizes;
     }
 
+    private String[] getDepartment(Integer id){
+        String[] department = new String[3];
+        ROaDepartmentExample departmentExample = new ROaDepartmentExample();
+        ROaDepartmentExample.Criteria departmentExampleCriteria = departmentExample.createCriteria();
+        departmentExampleCriteria.andIdEqualTo(id);
+        List<ROaDepartment> departmentList = rOaDepartmentMapper.selectByExample(departmentExample);
+        if(!CollectionUtils.isEmpty(departmentList)){
+            department[0] = departmentList.get(0).getName();
+
+            ROaDepartmentExample branceExample = new ROaDepartmentExample();
+            ROaDepartmentExample.Criteria branceExampleCriteria = branceExample.createCriteria();
+            branceExampleCriteria.andParentidEqualTo(id);
+            List<ROaDepartment> branceList = rOaDepartmentMapper.selectByExample(branceExample);
+            if(!CollectionUtils.isEmpty(branceList)) {
+                department[1] = branceList.get(0).getName();
+
+                ROaDepartmentExample regionExample = new ROaDepartmentExample();
+                ROaDepartmentExample.Criteria regionCriteria = regionExample.createCriteria();
+                regionCriteria.andParentidEqualTo(id);
+                List<ROaDepartment> regionList = rOaDepartmentMapper.selectByExample(regionExample);
+                if(!CollectionUtils.isEmpty(branceList)) {
+                    department[2] = regionList.get(0).getName();
+                }
+            }
+        }
+        return department;
+    }
+
+    /**
+     * request转example
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     private ProductListExample convertProductListExample(HtlTradeRequest request){
         ProductListExample example = new ProductListExample();
         ProductListExample.Criteria criteria = example.createCriteria();
@@ -108,7 +130,12 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
         }
         return example;
     }
-
+    /**
+     * request转example
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     private ProductRedeemExample convertProductRedeemExample(HtlTradeRequest request){
         ProductRedeemExample example = new ProductRedeemExample();
         ProductRedeemExample.Criteria criteria = example.createCriteria();
