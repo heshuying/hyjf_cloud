@@ -142,7 +142,7 @@ public class WebBindCardPageController extends BaseUserController{
         // 绑卡请求后业务处理
         try {
             LogAcqResBean logAcqResBean = bankBean.getLogAcqResBean();
-            boolean updateResult = bindCardService.updateAfterDeleteCard(user.getUserId(),user.getUsername(),logAcqResBean.getCardNo(),logAcqResBean.getCardId());
+            boolean updateResult = bindCardService.updateAfterDeleteCard(user.getUserId(),user.getUsername(),logAcqResBean.getCardNo());
             if(!updateResult){
                 result.setStatus(ApiResult.FAIL);
                 result.setStatusDesc("更新银行卡失败");
