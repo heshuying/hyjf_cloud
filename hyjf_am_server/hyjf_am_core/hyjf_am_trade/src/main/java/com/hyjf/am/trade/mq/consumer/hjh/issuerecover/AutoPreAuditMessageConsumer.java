@@ -12,6 +12,7 @@ import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.trade.hjh.issuerecover.AutoIssuerecoverVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -139,7 +140,7 @@ public class AutoPreAuditMessageConsumer extends Consumer {
                             }
                         } else {
                             // 散标修改redis：借款的borrowNid,account借款总额
-                            RedisUtils.set(borrow.getBorrowNid(), borrow.getAccount().toString());
+                            RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
                         }
                     }
                 }

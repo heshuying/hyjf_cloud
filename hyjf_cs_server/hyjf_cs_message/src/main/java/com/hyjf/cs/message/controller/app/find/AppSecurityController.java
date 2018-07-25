@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.controller.app;
+package com.hyjf.cs.message.controller.app.find;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.AppFindSecurityCustomizeVO;

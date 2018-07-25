@@ -1,6 +1,7 @@
 package com.hyjf.common.util;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.RandomUtils;
@@ -85,7 +86,7 @@ public class SecretUtil {
         AppUserToken token = new AppUserToken(userId, username, accountId);
         String encryptString = JSON.toJSONString(token);
         String sign = createSign();
-        RedisUtils.set(sign, encryptString, RedisUtils.signExpireTime);
+        RedisUtils.set(RedisConstants.SIGN+sign, encryptString, RedisUtils.signExpireTime);
         return sign;
     }
 
@@ -242,7 +243,7 @@ public class SecretUtil {
 			// 清除token
 			signValue.setToken(null);
 			// 更新缓存
-			RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+			RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 		}
 	}
 
@@ -333,7 +334,7 @@ public class SecretUtil {
      */
     public static String createSignSec(String sign) {
         String signSec = createSign();
-        RedisUtils.set(signSec, RedisUtils.get(sign));
+        RedisUtils.set(RedisConstants.SIGN+signSec, RedisUtils.get(RedisConstants.SIGN+sign));
         return signSec;
     }
 
