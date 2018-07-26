@@ -4,12 +4,16 @@
 package com.hyjf.cs.user.controller.app.common;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.common.CornerService;
 import io.swagger.annotations.Api;
@@ -30,7 +34,7 @@ import java.util.Map;
 @Api(description = "汇天利资金中心接口")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
-public class CornerController {
+public class CornerController extends BaseController {
 
     @Autowired
     CornerService cornerService;
@@ -219,65 +223,55 @@ public class CornerController {
     /**
      * 设置角标
      * @param request
-     * @param userId 用户id
+     * @param key
      * @return
      */
     @ApiOperation(value = "设置角标",notes = "设置角标")
-    @PostMapping(value = "/setCorne")
-    public JSONObject setCorner(@RequestHeader(value = "userId")Integer userId, HttpServletRequest request) {
+    @PostMapping(value = "/setCorner")
+    public AppResult setCorner(@RequestHeader(value = "key")String key, HttpServletRequest request) {
+        AppResult result = new AppResult();
 
-        JSONObject map = new JSONObject();
-        //map.put("request", WEB_URL + AppCommonDefine.REQUEST_MAPPING + AppCommonDefine.CORNER_MAPPING);
+        Map<String,String> map = new HashMap<>();
+        map.put("request", "/hyjf-app/app/common/setCorner");
         // 唯一标识
         String sign = request.getParameter("sign");
         //设备标识码
         String mobileCodeStr = request.getParameter("mobileCode");
         //角标
         String cornerStr = request.getParameter("corner");
+        logger.info("key=[{}],sign=[{}],mobileCode=[{}],corner=[{}]",key,sign,mobileCodeStr,cornerStr);
         // 取得加密用的Key
-        String key = SecretUtil.getKey(sign);
         if (Validator.isNull(key)) {
-            map.put("status", "1");
-            map.put("statusDesc", "请求参数非法");
-            return map;
+            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"key");
+            return result;
         }
         if(StringUtils.isEmpty(mobileCodeStr)){
-            map.put("status","1");
-            map.put("statusDesc","请求参数非法");
+            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"mobileCode");
+            return result;
         }
         if(StringUtils.isEmpty(cornerStr)){
-            map.put("status","1");
-            map.put("statusDesc","请求参数非法");
+            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"corner");
+            return result;
         }
 
-
-        map.put("status","0");
-        map.put("statusDesc","请求成功");
-
         // 检查参数
-        Map<String,String> result = new HashMap<String,String>();
-        //result.put("request", AppCommonDefine.CORNER_MAPPING);
-        result.put("status","0");
-        result.put("statusDesc","设置成功");
         try {
             int corner = Integer.parseInt(cornerStr);
-            UserCornerVO cornerInfo = cornerService.getUserCornerBySign(sign);//appCommonService.getUserCornerByUserId(userId);
+            UserCornerVO cornerInfo = cornerService.getUserCornerBySign(sign);
             if(cornerInfo != null){
                 cornerInfo.setCorner(corner);
                 cornerService.updateUserCorner(cornerInfo);
-                //appCommonService.updateUserCorner(cornerInfo);
             }else{
                 cornerInfo = new UserCornerVO();
                 cornerInfo.setCorner(corner);
                 cornerInfo.setSign(sign);
                 cornerService.insertUserCorner(cornerInfo);
-                //cornerInfo.setUserId(userid);
-                //appCommonService.insertUserCorner(cornerInfo);
             }
+            result.setStatusInfo(BaseResult.SUCCESS,"设置成功");
         } catch (Exception e) {
-            map.put("status","1");
-            map.put("statusDesc","设置角标异常");
+            result.setStatusInfo(BaseResult.FAIL,"设置角标异常");
         }
-        return map;
+        result.setData(map);
+        return result;
     }
 }
