@@ -7,6 +7,8 @@ import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -118,4 +120,19 @@ public interface BorrowService extends BaseService{
      * @date 2018/7/5 17:35
      */
     Integer getTotalInverestCount(Integer userId);
+    
+	/**
+	 * 合计
+	 * 
+	 * @return
+	 */
+	public Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+
+
+	/**
+	 * 借款列表
+	 * 
+	 * @return
+	 */
+	public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
 }

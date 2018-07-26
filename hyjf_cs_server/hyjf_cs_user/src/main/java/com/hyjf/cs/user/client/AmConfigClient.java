@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -122,4 +123,28 @@ public interface AmConfigClient {
      * @return
      */
     Integer getBankInterfaceFlagByType(String type);
+
+    /**
+     * 根据设备唯一标识获取用户角标
+     * @auth sunpeikai
+     * @param sign 设备唯一标识
+     * @return
+     */
+    UserCornerVO getUserCornerBySign(String sign);
+
+    /**
+     * 更新用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    Integer updateUserCorner(UserCornerVO userCornerVO);
+
+    /**
+     * 插入一条新的用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    Integer insertUserCorner(UserCornerVO userCornerVO);
 }

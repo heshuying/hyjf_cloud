@@ -163,4 +163,17 @@ public class RedisConstants {
      * 单用户防止重复提交redis 前缀
      */
     public static final String PRE_REQUEST_LIMIT = "ReqLimit:";
+
+    /**
+     * borrowNid
+     */
+    public static final String BORROW_NID = "BORROW_NID:";
+    /**
+     * wechat sign
+     */
+    public static final String SIGN = "SIGN:";
+    /**
+     * admin单点登陆用户
+     */
+    public static final String ADMIN_REQUEST = "Admin:";
 }

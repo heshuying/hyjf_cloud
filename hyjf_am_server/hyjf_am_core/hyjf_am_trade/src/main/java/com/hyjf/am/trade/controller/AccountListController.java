@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.service.AccountListService;
 import com.hyjf.am.vo.trade.account.AccountListVO;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * @author ${yaoy}
+ * @author $yaoy
  * @version AccountController, v0.1 2018/6/14 16:59
  */
 @RestController

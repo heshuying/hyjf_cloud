@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.cs.trade.bean.TradeDetailBean;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface TradeDetailService extends BaseTradeService{
     TradeDetailBean searchUserRechargeList(TradeDetailBeanRequest form);
 
     TradeDetailBean searchUserWithdrawList(TradeDetailBeanRequest form);
+
+    List<AppAccountTradeListCustomizeVO> searchAppTradeTypes();
 }

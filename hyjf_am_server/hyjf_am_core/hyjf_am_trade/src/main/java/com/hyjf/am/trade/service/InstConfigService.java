@@ -39,5 +39,11 @@ public interface InstConfigService {
      * @param recordList
      */
     public void deleteInstConfig( AdminInstConfigListRequest recordList) ;
+    /**
+     * 根据机构属性获取机构配置
+     * @param instType
+     * @return
+     */
+    List<HjhInstConfig> getInstConfigByType(int instType);
 
 }

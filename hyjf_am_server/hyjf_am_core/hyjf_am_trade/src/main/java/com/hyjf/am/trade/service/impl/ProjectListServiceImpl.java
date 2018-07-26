@@ -9,16 +9,17 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.mapper.customize.trade.WebProjectListCustomizeMapper;
 import com.hyjf.am.trade.service.ProjectListService;
 
 /**
@@ -28,9 +29,8 @@ import com.hyjf.am.trade.service.ProjectListService;
  * @version ProjectListServiceImpl, v0.1 2018/6/13 11:38
  */
 @Service
-public class ProjectListServiceImpl implements ProjectListService {
-    @Autowired
-    private WebProjectListCustomizeMapper webProjectListCustomizeMapper;
+public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectListService {
+
 
     /**
      * 获取标的列表
@@ -219,6 +219,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         Integer limitEnd = request.getLimitEnd();
         params.put("projectType", projectType);
         params.put("borrowClass", borrowClass);
+        params.put("host",request.getHost());
+        params.put("type",request.getType());
+        params.put("platform",request.getPlatform());
         return webProjectListCustomizeMapper.countAppProject(params);
     }
 
@@ -242,6 +245,9 @@ public class ProjectListServiceImpl implements ProjectListService {
         params.put("borrowClass", borrowClass);
         params.put("limitStart",limitStart);
         params.put("limitEnd", limitEnd);
+        params.put("host",request.getHost());
+        params.put("type",request.getType());
+        params.put("platform",request.getPlatform());
         return webProjectListCustomizeMapper.searchAppProjectList(params);
     }
 
@@ -313,6 +319,65 @@ public class ProjectListServiceImpl implements ProjectListService {
         return webProjectListCustomizeMapper.searchAppPlanList(params);
     }
 
+    /**
+     * app端散标投资记录数
+     * @param params
+     * @return
+     */
+    @Override
+    public int countProjectInvestRecordTotal(Map<String, Object> params) {
+        int hztInvestTotal = appProjectListCustomizeMapper.countProjectInvestRecordTotal(params);
+        return hztInvestTotal;
+    }
+
+    /**
+     * 散标投资记录
+     * @param params
+     * @return
+     */
+    @Override
+    public List<AppProjectInvestListCustomize> selectProjectInvestList(Map<String, Object> params) {
+        List<AppProjectInvestListCustomize> list = appProjectListCustomizeMapper.selectProjectInvestList(params);
+        return list;
+    }
+
 
     // ----------------------------------------app end ----------------------------------------------------
+
+
+    //  -----------------------------------------wechat start ----------------------------------------------
+
+
+    /**
+     * 查询微信端首页产品列表
+     * @author zhangyk
+     * @date 2018/7/24 13:45
+     */
+    @Override
+    public List<WechatHomeProjectListVO> searchWechatProjectList(Map<String, Object> params) {
+        return  webProjectListCustomizeMapper.searchWechatProjectList(params);
+    }
+
+    /**
+     * 微信端加载两条计划稍后开启
+     * @author zhangyk
+     * @date 2018/7/24 14:30
+     */
+    @Override
+    public List<WechatHomeProjectListVO> selectHomeHjhOpenLaterList() {
+        return webProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
+    }
+
+    /**
+     * 首页无可投散标加载两条还款中和复审中记录
+     * @author zhangyk
+     * @date 2018/7/24 14:33
+     */
+    @Override
+    public List<WechatHomeProjectListVO> selectHomeRepaymentsProjectList() {
+        return webProjectListCustomizeMapper.selectHomeRepaymentsProjectList();
+    }
+
+
+    //  -----------------------------------------wechat end   -----------------------------------------------
 }

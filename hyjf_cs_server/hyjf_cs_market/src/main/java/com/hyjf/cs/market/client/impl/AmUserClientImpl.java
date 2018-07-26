@@ -4,7 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.market.UtmRegResponse;
-import com.hyjf.am.response.trade.AccountRechargeResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;

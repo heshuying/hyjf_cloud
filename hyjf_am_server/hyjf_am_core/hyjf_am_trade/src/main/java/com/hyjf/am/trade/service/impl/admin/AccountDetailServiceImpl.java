@@ -12,6 +12,7 @@ import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailDataRepairCustomize;
 import com.hyjf.am.trade.service.admin.AccountDetailService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -26,12 +27,8 @@ import java.util.Map;
  * @version AccountDetailServiceImpl, v0.1 2018/6/29 13:58
  */
 @Service
-public class AccountDetailServiceImpl implements AccountDetailService {
-    @Autowired
-    private AdminAccountDetailCustomizeMapper adminAccountDetailCustomizeMapper;
-    @Autowired
-    private AccountListMapper accountListMapper;
-    private static Logger logger = LoggerFactory.getLogger(AccountDetailServiceImpl.class);
+public class AccountDetailServiceImpl extends BaseServiceImpl implements AccountDetailService {
+
 
     /**
      * 资金明细 （列表）

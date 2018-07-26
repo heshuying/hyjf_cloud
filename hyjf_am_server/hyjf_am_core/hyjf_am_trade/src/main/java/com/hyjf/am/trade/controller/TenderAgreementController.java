@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.response.trade.AssetManageResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
-import com.hyjf.am.resquest.trade.TenderAgreementRequest;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.service.TenderAgreementService;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -58,10 +57,6 @@ public class TenderAgreementController extends BaseController{
         return response;
     }
 
-    @PostMapping("/updateTenderAgreement")
-    public boolean updateTenderAgreement(@RequestBody TenderAgreementRequest request){
-        return tenderAgreementService.updateTenderAgreement(request);
-    }
 
     @GetMapping("/selectTenderAgreementByTenderNid/{tenderNid}")
     public TenderAgreementResponse selectTenderAgreementByTenderNid(@PathVariable String tenderNid){

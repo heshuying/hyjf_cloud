@@ -40,9 +40,6 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     private AccountListMapper accountListMapper;
 
     @Autowired
-    private AccountWebListMapper accountWebListMapper;
-
-    @Autowired
     private BankMerchantAccountMapper bankMerchantAccountMapper;
 
     @Autowired
@@ -111,19 +108,6 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     public Integer insertAccountList(AccountListVO accountListVO) {
         AccountList accountList = CommonUtils.convertBean(accountListVO,AccountList.class);
         return accountListMapper.insertSelective(accountList);
-    }
-
-    /**
-     * 插入网站收支表记录
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表信息
-     * @return
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
-        AccountWebList accountWebList = CommonUtils.convertBean(accountWebListVO,AccountWebList.class);
-        return accountWebListMapper.insertSelective(accountWebList);
     }
 
     /**

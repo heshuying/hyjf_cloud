@@ -34,7 +34,7 @@ public class AutoTenderExceptionRequest extends BasePage implements Serializable
 	 */
 	private String searchEndDate;
 
-	private Integer limitFlg = 1;
+	private boolean limitFlg = false;
 
 	public String getDebtPlanNidSrch() {
 		return debtPlanNidSrch;
@@ -92,11 +92,11 @@ public class AutoTenderExceptionRequest extends BasePage implements Serializable
 		this.searchEndDate = searchEndDate;
 	}
 
-	public Integer getLimitFlg() {
+	public boolean isLimitFlg() {
 		return limitFlg;
 	}
 
-	public void setLimitFlg(Integer limitFlg) {
+	public void setLimitFlg(boolean limitFlg) {
 		this.limitFlg = limitFlg;
 	}
 }

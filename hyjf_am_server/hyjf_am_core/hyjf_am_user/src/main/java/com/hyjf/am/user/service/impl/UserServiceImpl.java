@@ -700,7 +700,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public AccountChinapnr getAccountChinapnr(Integer userId) {
 		AccountChinapnr accountChinapnr = null;
 		if (userId == null) {
-			return null;
+			return new AccountChinapnr();
 		}
 		AccountChinapnrExample example = new AccountChinapnrExample();
 		AccountChinapnrExample.Criteria criteria = example.createCriteria();

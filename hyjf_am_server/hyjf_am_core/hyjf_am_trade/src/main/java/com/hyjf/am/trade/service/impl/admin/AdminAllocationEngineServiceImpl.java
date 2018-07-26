@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,19 +38,8 @@ import com.hyjf.common.util.CommonUtils;
  * @version AdminAllocationEngineServiceImpl.java, v0.1 2018年7月3日 下午2:02:58
  */
 @Service
-public class AdminAllocationEngineServiceImpl implements AdminAllocationEngineService{
+public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements AdminAllocationEngineService{
 
-    @Autowired
-    HjhRegionMapper hjhRegionMapper;
-    
-    @Autowired
-    HjhPlanMapper hjhPlanMapper;
-    
-    @Autowired
-    HjhAllocationEngineMapper hjhAllocationEngineMapper;
-    
-    @Autowired
-    protected HjhLabelMapper hjhLabelMapper;
 	
 	@Override
 	public Integer countHjhRegionRecordTotal(AllocationEngineRuquest request) {

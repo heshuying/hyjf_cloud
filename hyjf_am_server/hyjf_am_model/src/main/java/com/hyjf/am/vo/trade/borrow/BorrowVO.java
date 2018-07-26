@@ -470,6 +470,8 @@ public class BorrowVO extends BaseVO implements Serializable {
 
     private Integer isEngineUsed;
 
+    private Date createTime;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -2294,5 +2296,13 @@ public class BorrowVO extends BaseVO implements Serializable {
 
     public void setIsEngineUsed(Integer isEngineUsed) {
         this.isEngineUsed = isEngineUsed;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

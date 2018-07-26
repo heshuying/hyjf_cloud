@@ -267,7 +267,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 将投资金额转化为BigDecimal
         BigDecimal accountBigDecimal = new BigDecimal(account);
-        String balance = RedisUtils.get(borrow.getBorrowNid());
+        String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrow.getBorrowNid());
         // 您来晚了，下次再来抢吧
         if (StringUtils.isEmpty(balance)) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE);
@@ -883,7 +883,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private void redisTender(Integer userId, String borrowNid, String txAmount) {
         // 冻结前验证
         BigDecimal accountDecimal = new BigDecimal(txAmount);
-        String accountRedisWait = RedisUtils.get(borrowNid);
+        String accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
         if (StringUtils.isNotBlank(accountRedisWait)) {
             // 操作redis
             JedisPool pool = RedisUtils.getPool();
@@ -891,7 +891,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             MsgCode redisMsgCode = null;
             try {
                 while ("OK".equals(jedis.watch(borrowNid))) {
-                    accountRedisWait = RedisUtils.get(borrowNid);
+                    accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
                     if (StringUtils.isNotBlank(accountRedisWait)) {
                         logger.info("用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
                         if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {

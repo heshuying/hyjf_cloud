@@ -3,15 +3,18 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -262,7 +265,70 @@ public class ProjectListController extends BaseController{
     }
 
 
+    @RequestMapping("/app/countProjectInvestRecordTotal")
+    public int countProjectInvestRecordTotal(@RequestBody Map<String, Object> params){
+        return projectListService.countProjectInvestRecordTotal(params);
+    }
+
+
+    /**
+     * 散标投资记录
+     * @return
+     */
+    @RequestMapping("/app/selectProjectInvestList")
+    public AppProjectInvestListCustomizeResponse selectProjectInvestList(@RequestBody Map<String, Object> params){
+        AppProjectInvestListCustomizeResponse response = new AppProjectInvestListCustomizeResponse();
+        List<AppProjectInvestListCustomize> list=projectListService.selectProjectInvestList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,AppProjectInvestListCustomizeVO.class));
+        }
+        return response;
+    }
+
     // --------------------------------------app end-------------------------------------------------
 
+    // --------------------------------------wechat start--------------------------------------------------
+
+    /**
+     * 微信端获取首页项目列表
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @RequestMapping("/wechat/searchHomeProejctList")
+    public WechatProjectListResponse searchHomeProejctList(@RequestBody @Valid Map<String,Object> map){
+        WechatProjectListResponse response = new WechatProjectListResponse();
+        List<WechatHomeProjectListVO> list = projectListService.searchWechatProjectList(map);
+        response.setResultList(list);
+        return response;
+    }
+
+    /**
+     * 微信端首页汇计划加载两条稍后开启
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @RequestMapping("/wechat/selectHomeHjhOpenLaterList")
+    public WechatProjectListResponse selectHomeHjhOpenLaterList(){
+        WechatProjectListResponse response = new WechatProjectListResponse();
+        List<WechatHomeProjectListVO> list = projectListService.selectHomeHjhOpenLaterList();
+        response.setResultList(list);
+        return response;
+    }
+
+
+    /**
+     * 微信端首页汇计划加载两条稍后开启
+     * @author zhangyk
+     * @date 2018/6/22 10:22
+     */
+    @GetMapping("/wechat/selectHomeRepaymentsProjectList")
+    public WechatProjectListResponse selectHomeRepaymentsProjectList(){
+        WechatProjectListResponse response = new WechatProjectListResponse();
+        List<WechatHomeProjectListVO> list = projectListService.selectHomeRepaymentsProjectList();
+        response.setResultList(list);
+        return response;
+    }
+
+    // --------------------------------------wechat end--------------------------------------------------
 
 }

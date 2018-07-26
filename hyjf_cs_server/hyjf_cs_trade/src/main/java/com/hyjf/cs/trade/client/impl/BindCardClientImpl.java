@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 
-import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 

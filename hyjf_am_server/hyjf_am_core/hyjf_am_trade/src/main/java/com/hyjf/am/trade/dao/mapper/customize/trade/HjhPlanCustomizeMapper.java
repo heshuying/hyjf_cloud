@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 
 /**
@@ -97,4 +98,19 @@ public interface HjhPlanCustomizeMapper {
      * @date 2018/7/23 10:43
      */
     List<BorrowVO> getPlanBorrowList(Map<String,Object> params);
+
+    /**
+     * 计划加入总数 和加入金额总计
+     * @author zhangyk
+     * @date 2018/7/24 19:05
+     */
+    Map<String,Object> getPlanAccedeTotal(Map<String,Object> params);
+
+
+    /**
+     * 加入记录list
+     * @author zhangyk
+     * @date 2018/7/24 19:05
+     */
+    List<HjhAccedeCustomizeVO> getPlanAccedeList(Map<String,Object> params);
 }

@@ -3,10 +3,12 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
@@ -17,6 +19,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
@@ -28,6 +31,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
+import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.AppProjectListService;
@@ -36,7 +41,6 @@ import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.ant.Project;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -45,13 +49,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * App端项目列表Service实现类
@@ -90,7 +94,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     @Override
     public JSONObject searchAppProjectList(ProjectListRequest request) {
         // TODO: 2018/6/20   参数验证
-        CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
+        //CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getPage(), request.getPageSize());
         JSONObject info = new JSONObject();
@@ -98,8 +102,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
+        ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
         // ①查询count
-        Integer count = amTradeClient.countAppProjectList(request);
+        Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
         AppResult appResult = new AppResult();
         // 先抛错方式，避免代码看起来头重脚轻。
@@ -119,9 +124,12 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }else {
                 result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
         }
+        info.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
+        info.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(ProjectConstant.APP_PAGE,request.getPage());
         info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_BORROW_PROJECT_METHOD);
         return info;
@@ -1022,6 +1030,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     }
 
 
+
     /**
      * APP端投资债转列表数据
      *
@@ -1064,7 +1073,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_CREDIT_LIST_METHOD);
         return info;
     }
-
 
     private List<AppProjectListCsVO> convertToAppProjectHZRType(List<WebProjectListCustomizeVO> resultList) {
         List<AppProjectListCsVO> appProjectTypes = new ArrayList<>();
@@ -1397,9 +1405,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app查询计划原子层list异常");
                 throw new RuntimeException("app查询计划原子层list异常");
             }
-            //appResult.setData(list);
+            List<AppProjectListCustomizeVO> list2 = convertToAppProjectList(list);
             info.put("projectTotal", count);
-            info.put("projectList", list);
+            info.put("projectList", list2);
         } else {
             info.put("projectTotal", 0);
             info.put("projectList", new ArrayList<>());
@@ -1411,6 +1419,65 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         return info;
 
     }
+
+
+    /**
+     * 适应客户端返回数据格式
+     * @param planList
+     * @return
+     */
+    private List<AppProjectListCustomizeVO> convertToAppProjectList(List<HjhPlanCustomizeVO> planList) {
+        List<AppProjectListCustomizeVO> appProjectList = new ArrayList<>();
+        String url = "";
+        AppProjectListCustomizeVO appProjectListCustomize;
+        if (!CollectionUtils.isEmpty(planList)) {
+            appProjectList = new ArrayList<AppProjectListCustomizeVO>();
+            String host = systemConfig.getWebHost();
+            for (HjhPlanCustomizeVO entity : planList) {
+                appProjectListCustomize = new AppProjectListCustomizeVO();
+                /*重构整合 开始*/
+                appProjectListCustomize.setBorrowTheFirst(entity.getPlanApr() + "%");
+                appProjectListCustomize.setBorrowTheFirstDesc("历史年回报率");
+                appProjectListCustomize.setBorrowTheSecond(entity.getPlanPeriod());
+                appProjectListCustomize.setBorrowTheSecondDesc("锁定期限");
+                appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
+                /*重构整合 结束*/
+                appProjectListCustomize.setStatus(entity.getStatus());
+                appProjectListCustomize.setBorrowName(entity.getPlanName());
+                appProjectListCustomize.setPlanApr(entity.getPlanApr());
+                appProjectListCustomize.setBorrowApr(entity.getPlanApr());
+                appProjectListCustomize.setPlanPeriod(entity.getPlanPeriod());
+                appProjectListCustomize.setBorrowPeriod(entity.getPlanPeriod());
+                appProjectListCustomize.setBorrowAccountWait(entity.getAvailableInvestAccount());
+                appProjectListCustomize.setStatusName(entity.getStatusName());
+                appProjectListCustomize.setBorrowNid(entity.getPlanNid());
+                appProjectListCustomize.setBorrowAccountWait(entity.getAvailableInvestAccount());
+                String couponEnable = entity.getCouponEnable();
+                if (org.apache.commons.lang.StringUtils.isEmpty(couponEnable) || "0".equals(couponEnable)) {
+                    couponEnable = "0";
+                } else {
+                    couponEnable = "1";
+                }
+                appProjectListCustomize.setCouponEnable(couponEnable);
+                // 项目详情url
+                url = host + ProjectConstant.HJH_DETAIL_INFO_URL+  entity.getPlanNid() ;
+                appProjectListCustomize.setBorrowUrl(url);
+                appProjectListCustomize.setProjectType("HJH");
+                appProjectListCustomize.setBorrowType("HJH");
+
+                // 应客户端要求，返回空串
+                CommonUtils.convertNullToEmptyString(appProjectListCustomize);
+                appProjectList.add(appProjectListCustomize);
+            }
+        }
+        return appProjectList;
+    }
+
+
+
+
+
+
 
     /**
      * 移动端计划详情
@@ -1442,6 +1509,53 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         return appResult;
 
 
+    }
+
+    /**
+     * 散标投资记录列表
+     * @param info
+     * @param form
+     */
+    @Override
+    public void createProjectInvestPage(JSONObject info, AppProjectInvestBeanRequest form) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid", form.getBorrowNid());
+        int recordTotal = this.amTradeClient.countProjectInvestRecordTotal(params);
+        String count = this.amTradeClient.countMoneyByBorrowId(params);
+        if(count != null && !"".equals(count)){
+            info.put("account", DF_FOR_VIEW.format(new BigDecimal(count)));
+        }else{
+            info.put("account", "0");
+        }
+        if (recordTotal > 0) { // 查询相应的汇直投列表数据
+            int limit = form.getPageSize();
+            int page = form.getCurrPage();
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<AppProjectInvestListCustomizeVO> recordList = amTradeClient.selectProjectInvestList(params);
+            Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+            for (AppProjectInvestListCustomizeVO obj : recordList){
+                obj.setClientName(relationMap.get(String.valueOf(obj.getClient())));
+            }
+
+            info.put("list", recordList);
+            info.put("userCount", String.valueOf(recordTotal));
+            //判断本次查询是否已经全部查出数据
+            if((page * limit) > recordTotal){
+                info.put("isEnd", true);
+            }else{
+                info.put("isEnd", false);
+            }
+        } else {
+            info.put("list", new ArrayList<AppProjectInvestListCustomizeVO>());
+            info.put("userCount", "0");
+            info.put("isEnd", true);
+        }
     }
 
 

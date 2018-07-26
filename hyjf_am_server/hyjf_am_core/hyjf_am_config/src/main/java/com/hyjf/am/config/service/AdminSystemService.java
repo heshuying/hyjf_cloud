@@ -18,4 +18,8 @@ public interface AdminSystemService {
 	public AdminSystem getUserInfo(AdminSystem adminSystem);
 	public List<Tree> selectLeftMenuTree2(String id);
 	public AdminSystem getUserInfoByUserId(Integer userId);
+	/**
+	 * 验证项目申请人是否存在
+	 */
+	public int isExistsApplicant(String applicant);
 }

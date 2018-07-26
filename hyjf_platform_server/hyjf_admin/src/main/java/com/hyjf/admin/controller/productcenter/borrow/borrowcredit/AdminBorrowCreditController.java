@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2018/7/9 14:59
  */
 
-@Api(value = "产品中心-汇转让")
+@Api(value = "产品中心-汇转让-债权转让", description = "产品中心-汇转让-债权转让")
 @RestController
 @RequestMapping("/borrow/credit")
 public class AdminBorrowCreditController {

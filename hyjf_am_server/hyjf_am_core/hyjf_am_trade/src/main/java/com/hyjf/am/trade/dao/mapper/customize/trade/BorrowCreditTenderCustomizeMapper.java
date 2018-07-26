@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
+import com.hyjf.am.vo.trade.CreditTenderListCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +32,9 @@ public interface BorrowCreditTenderCustomizeMapper {
 
 	BigDecimal getHzrTenderPrice(@Param("list") List<Integer> list, @Param("dayStart") String dayStart,
 			@Param("dayEnd") String dayEnd);
+
+
+	Integer getCreditListCount(Map<String,Object> params);
+
+	List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String,Object> params);
 }

@@ -606,6 +606,40 @@ ORDER BY
 		</if>
 	</select>
 
+	<select id="getPlanAccedeTotal" resultType="map">
+		SELECT
+			COUNT(1) as count ,sum(accede_account) as sum
+		FROM
+			ht_hjh_accede
+			where plan_nid = #{planNid}
+	</select>
+
+	<select id="getPlanAccedeList" resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO"  parameterType="Map">
+		SELECT
+		dpa.user_id as userId,
+		CASE WHEN LENGTH(dpa.user_name)<![CDATA[>]]>1
+		THEN
+		CONCAT(SUBSTR(dpa.user_name,1,1),'**')
+		ELSE
+		dpa.user_name
+		END userName,
+		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accedeAccount,
+		dpa.create_time as accedeTime,
+		-- IFNULL(hui.vip_id,0) vip_id,
+		-- hui.vip_value,
+		 dpa.client
+		FROM
+		ht_hjh_accede dpa
+		LEFT JOIN ht_r_user hui ON hui.user_id = dpa.user_id
+		-- LEFT JOIN hyjf_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
+		WHERE dpa.plan_nid=#{planNid}
+		ORDER BY
+		dpa.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
 
 
 </mapper>

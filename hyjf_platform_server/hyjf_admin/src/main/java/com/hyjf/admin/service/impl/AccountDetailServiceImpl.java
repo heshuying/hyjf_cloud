@@ -7,12 +7,15 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AccountDetailService;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.admin.AccountListRequest;
+import com.hyjf.am.vo.trade.AccountTradeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author nixiaoling
@@ -94,4 +97,14 @@ public class AccountDetailServiceImpl implements AccountDetailService {
     }
 
 
+    /**
+     * @Description 获取交易类型列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @Override
+    public List<AccountTradeVO> selectTradeTypes(){
+        return accountDetailClient.selectTradeTypes();
+    }
 }

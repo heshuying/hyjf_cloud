@@ -17,9 +17,9 @@
                     AND CASE
                     WHEN ( htb.`status` = 1 AND htb.verify_status = 3)
                     THEN
-                    htb.ontime + ( hbi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                    htb.ontime + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                     ELSE
-                    htb.verify_time + ( hbi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
+                    htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                     END
                 </if>
             </if>
@@ -27,7 +27,7 @@
                 AND
                 (
                 ( htb.`status` = 1 AND htb.verify_status = 3 )
-                OR ( htb.`status` = 2 AND htb.verify_time + ( hbi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 OR ( htb.`status` = 3 )
                 OR ( htb.`status` = 4 )
                 )
@@ -40,7 +40,7 @@
                 </if>
                 <!-- 获取 投资中 -->
                 <if test="status == '2'.toString()">
-                    AND ( htb.`status` = 2 AND htb.verify_time + ( hbi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                    AND ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 </if>
                 <!-- 获取 投标结束 -->
                 <if test="status == '3'.toString()">
@@ -243,7 +243,7 @@
             TRUNCATE((htb.borrow_account_yes/htb.account)*100,2) AS borrow_schedule,
             CASE WHEN htb.`status` = 1 AND htb.verify_status = 3 THEN '10'
             WHEN htb.`status` = 2
-            AND (htb.verify_time + (hbi.borrow_valid_time * 24 * 60 * 60) > UNIX_TIMESTAMP(NOW())) THEN
+            AND (htb.verify_time + (htb.borrow_valid_time * 24 * 60 * 60) > UNIX_TIMESTAMP(NOW())) THEN
             '11'
             WHEN htb.`status` = 3 THEN
             '12'
@@ -349,7 +349,7 @@
         hydb.borrow_account_wait AS invest_account,
         htbi.company_or_personal AS com_or_per,
         hydbs.`name` AS repay_style,
-        -- hydb.borrow_account_scale AS borrow_schedule,
+        hydb.borrow_account_scale AS borrow_schedule,
          -- hydb.booking_status,
          -- hydb.booking_begin_time,
          -- hydb.booking_end_time,
@@ -372,7 +372,7 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS full_time,
         FROM_UNIXTIME(
-        (hydb.verify_time + htbi.borrow_valid_time * 24 * 60 * 60),
+        (hydb.verify_time + hydb.borrow_valid_time * 24 * 60 * 60),
         '%Y-%m-%d %H:%i:%s'
         ) AS borrow_end_time,
         CASE
@@ -391,7 +391,7 @@
         WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
         AND (
         hydb.verify_time + (
-        htbi.borrow_valid_time * 24 * 60 * 60
+        hydb.borrow_valid_time * 24 * 60 * 60
         ) > UNIX_TIMESTAMP(NOW())
         ) THEN
         '11'
@@ -447,7 +447,7 @@
         AND hydb.borrow_full_status = 0
         AND (
         hydb.verify_time + (
-        htbi.borrow_valid_time * 24 * 60 * 60
+        hydb.borrow_valid_time * 24 * 60 * 60
         ) > UNIX_TIMESTAMP(NOW())
         )
         )
@@ -503,8 +503,8 @@
     <select id="countCreditList" resultType="int" parameterType="Map">
         select count(ht_borrow_credit.credit_nid)
         from   ht_borrow_credit
-        INNER JOIN ht_borrow hydb ON ht_borrow_credit.bid_nid = hydb.borrow_nid
-        INNER JOIN ht_borrow_style hbs ON hydb.borrow_style = hbs.nid
+        INNER JOIN ht_borrow  ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+        INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
 
@@ -513,7 +513,7 @@
     <!--债权转让(web，app)查询公用where-->
     <sql id="Credit_Common_Where_Column">
         <where>
-            hydb.is_show <![CDATA[<>]]> 1
+            ht_borrow.is_show <![CDATA[<>]]> 1
             <if test="creditStatus != null and creditStatus != ''">
                 AND credit_status = #{creditStatus}
             </if>
@@ -524,7 +524,7 @@
                 </if>
             </if>
             AND ((
-                hydb.borrow_style !='endday'
+                ht_borrow.borrow_style !='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
                     AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin}
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
@@ -532,7 +532,7 @@
                     </if>
                 </if>
             ) OR (
-                hydb.borrow_style ='endday'
+                ht_borrow.borrow_style ='endday'
                 <if test="borrowAprMin != null and borrowAprMin != ''">
                     AND ht_borrow_credit.bid_apr <![CDATA[>=]]>  #{borrowAprMin} * 30
                     <if test=" borrowAprMax != null and borrowAprMax != ''">
@@ -778,21 +778,21 @@
         <include refid="App_Where_Clause" />
     </select>
 
-    <select id="searchAppProjectList"  resultType="com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize" parameterType="Map">
+    <select id="searchAppProjectList" resultType="com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize" parameterType="Map">
         SELECT
-        hydbpt.borrow_class AS borrow_type,
-        hydbpt.borrow_name AS borrow_desc,
-        hydb.borrow_nid,
+        hydbpt.borrow_class AS borrowType,
+        hydbpt.borrow_name AS borrowDesc,
+        hydb.borrow_nid as borrowNid,
 
-        hydb.borrow_nid AS borrow_name,
+        hydb.borrow_nid AS borrowName,
 
-        hydb.borrow_apr,
+        hydb.borrow_apr as borrowApr,
         CASE WHEN hydb.borrow_style = 'endday'
         THEN CONCAT(hydb.borrow_period, '天')
         ELSE CONCAT(hydb.borrow_period, '个月')
-        END borrow_period,
-        hydb.borrow_period borrow_period_int,
-        CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+        END borrowPeriod,
+        hydb.borrow_period borrowPeriodInt,
+        CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrowPeriodType,
         CASE
         WHEN hydb.account >= 10000 THEN
         CASE
@@ -834,7 +834,7 @@
         '元'
         )
         END AS borrow_total,
-        hydb.borrow_account_scale AS borrow_schedule,
+        hydb.borrow_account_scale AS borrowSchedule,
         CASE
         WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
         WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
@@ -843,29 +843,30 @@
         ELSE
         ''
         END AS status,
-        CONCAT(#{host},'?borrowNid=',hydb.borrow_nid) AS borrow_url,
+        CONCAT(#{host},'?borrowNid=',hydb.borrow_nid) AS borrowUrl,
         CASE
         WHEN hydb.`status` = 1 AND hydb.verify_status =3
         THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
         ELSE ''
-        END AS on_time,
-        (hydb.borrow_interest_coupon or hydb.borrow_taste_money) as couponEnable,
-        case when hydb.borrow_extra_yield=0 then
+        END AS onTime,
+         (hbi.borrow_interest_coupon or hbi.borrow_taste_money) as couponEnable,
+        case when hbi.borrow_extra_yield=0 then
         ''
         else
-        CONCAT('+',hydb.borrow_extra_yield, '%')
+        CONCAT('+',hbi.borrow_extra_yield, '%')
         end
-        borrow_extra_yield,
+        borrowExtraYield,
         case
         when hydb.project_type = 4 then 'XSH'
         when hydb.project_type = 11 then 'ZXH'
         when hydb.project_type = 13 then 'HJLC'
         else 'HZT'
         end project_type_code,
-        IFNULL(hydb.borrow_account_wait,0) borrow_account_wait
+        IFNULL(hydb.borrow_account_wait,0) borrowAccountWait
         FROM
         ht_borrow hydb
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        LEFT JOIN ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
         <include refid="App_Where_Clause" />
         ORDER BY
         hydb.`status` ASC,
@@ -883,15 +884,15 @@
         END DESC,
         CASE
         WHEN hydb.`status` = '2' and hydb.borrow_account_scale=0
-        THEN hydb.addtime
+        THEN hydb.create_time
         END DESC,
         CASE
         WHEN hydb.`status` = '3'
-        THEN hydb.addtime
+        THEN hydb.create_time
         END DESC,
         CASE
         WHEN hydb.`status` = '4'
-        THEN hydb.addtime
+        THEN hydb.create_time
         END DESC
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
@@ -954,7 +955,7 @@
                 AND
                 (
                 ( hydb.`status` = 1 AND hydb.verify_status = 3 )
-                OR ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 OR ( hydb.`status` = 3 )
                 OR ( hydb.`status` = 4 )
                 )
@@ -966,7 +967,7 @@
                 </when>
                 <!-- 获取 投资中 -->
                 <when test="status == '11'">
-                    AND ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+                    AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 </when>
                 <!-- 获取 投标结束 -->
                 <when test="status == '12'">
@@ -1022,8 +1023,8 @@
         SELECT
         COUNT(ht_borrow_credit.credit_nid)
         from ht_borrow_credit
-        INNER JOIN ht_borrow hydb ON ht_borrow_credit.bid_nid = hydb.borrow_nid INNER JOIN ht_borrow_style hbs
-        ON hydb.borrow_style = hbs.nid
+        INNER JOIN ht_borrow  ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid INNER JOIN ht_borrow_style hbs
+        ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
     </select>
 
@@ -1089,10 +1090,10 @@
         hydc.create_time AS add_time,
         '0' AS couponEnable
         from ht_borrow_credit hydc
-        INNER JOIN ht_borrow hydb
-        ON hydc.bid_nid = hydb.borrow_nid
+        INNER JOIN ht_borrow
+        ON hydc.bid_nid = ht_borrow.borrow_nid
         INNER JOIN ht_borrow_style hbs
-        ON hydb.borrow_style = hbs.nid
+        ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
         ORDER BY
         borrow_schedule DESC, borrow_period DESC
@@ -1166,6 +1167,328 @@
     </sql>
 
     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>app end<<<<<<<<<<<<<<<<<<<<<<<<<<<-->
+
+
+     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>wechat start<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <resultMap id="wechatHomeProjectListMap" type="com.hyjf.am.vo.trade.WechatHomeProjectListVO">
+        <!-- 项目id-->
+        <id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <!-- 项目标题 -->
+        <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+        <!-- 项目类型 (HZT,HXF)-->
+        <result column="borrow_type" property="borrowType" jdbcType="VARCHAR" />
+        <!-- 项目年华收益率-->
+        <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+        <!-- 项目期限-->
+        <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+        <!-- 项目期限计量单位 -->
+        <result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR"/>
+        <!-- 项目状态-->
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <!-- 定时发标时间-->
+        <result column="on_time" property="onTime" jdbcType="VARCHAR" />
+        <!-- 剩余可投金额-->
+        <result column="account_wait" property="accountWait" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="searchWechatProjectList" resultMap="wechatHomeProjectListMap">
+        select t.* from (
+        (SELECT 'HJH' borrow_type,
+        t.plan_nid borrow_nid,
+        t.plan_name  borrow_name,
+        t.expect_apr borrow_apr,
+        t.borrow_period borrow_period,
+        t.borrow_period_type borrow_period_type,
+        t.order_by_status_name status,
+        t.plan_invest_status_name on_time,
+        t.order_by_available_invest_account account_wait,
+        '1' type ,
+         0 borrow_account_scale,
+        '0' verify_time
+        FROM (SELECT
+        hp.id as order_by_id,
+        hp.plan_nid AS plan_nid,
+        hp.plan_name AS plan_name,
+        hp.expect_apr AS expect_apr,
+        CASE
+        WHEN hp.borrow_style = 'endday'
+        THEN CONCAT(hp.lock_period, '天')
+        ELSE CONCAT(hp.lock_period, '个月')
+        END AS lock_period,
+        hp.lock_period borrow_period,
+        CASE WHEN hp.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+        CASE
+        WHEN hp.plan_invest_status = 1
+        THEN CONCAT(
+        FORMAT(
+        hp.available_invest_account / 10000,
+        2
+        ),
+        '万'
+        )
+        WHEN hp.plan_invest_status = 2
+        THEN '0.00 万'
+        ELSE '0.00 万'
+        END AS available_invest_account,
+        CASE
+        WHEN hp.plan_invest_status = 1
+        THEN hp.available_invest_account
+        ELSE 0
+        END AS order_by_available_invest_account,
+        hp.plan_invest_status AS plan_invest_status,
+        CASE
+        WHEN hp.plan_invest_status = 1
+        AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
+        THEN '稍后开启'
+        WHEN hp.plan_invest_status = 1
+        THEN '立即加入'
+        WHEN hp.plan_invest_status = 2
+        THEN '稍后开启'
+        ELSE ''
+        END AS plan_invest_status_name,
+        CASE
+        WHEN hp.plan_invest_status = 1
+        AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
+        THEN 2
+        WHEN hp.plan_invest_status = 1
+        THEN 1
+        WHEN hp.plan_invest_status = 2
+        THEN 2
+        ELSE 2
+        END AS order_by_status_name,
+        CASE
+        WHEN hp.borrow_style = 'endday'
+        THEN hp.lock_period
+        ELSE hp.lock_period * 30
+        END AS order_by_lock_period,
+        coupon_config
+        FROM
+        ht_hjh_plan hp
+        WHERE hp.del_flag = 0
+        AND hp.plan_display_status = 1
+        ) t
+        where (t.order_by_status_name=2 or t.order_by_status_name=1)
+        <if test="showPlanFlag != null and showPlanFlag=='fc'" >
+            AND 1=2
+        </if>
+        )
+        UNION ALL
+        (SELECT
+        hydbpt.borrow_class AS borrow_type,
+        hydb.borrow_nid,
+
+        hydb.borrow_nid AS borrow_name,
+
+        hydb.borrow_apr,
+        hydb.borrow_period borrow_period,
+        CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
+        WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) ) THEN '11'
+        WHEN hydb.`status` = 3 THEN '12'
+        WHEN hydb.`status` = 4 THEN '13'
+        ELSE
+        ''
+        END AS tstatus,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status =3
+        THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
+        ELSE ''
+        END AS on_time,
+        IFNULL(hydb.borrow_account_wait,0) borrow_account_wait,
+        '2' type,
+        hydb.borrow_account_scale borrow_account_scale,
+        hydb.verify_time verify_time
+        FROM
+        ht_borrow hydb
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        WHERE
+        hydbpt.borrow_project_type = 'HZT'
+        AND hydb.project_type  <![CDATA[<>]]>  '4'
+        AND hydb.project_type  <![CDATA[<>]]>  '11'
+        AND hydb.is_show  <![CDATA[<>]]>  1
+        AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) )
+        )
+        UNION ALL
+        (SELECT
+        hydbpt.borrow_class AS borrow_type,
+        hydb.borrow_nid,
+
+        hydb.borrow_nid AS borrow_name,
+
+        hydb.borrow_apr,
+        hydb.borrow_period borrow_period,
+        CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
+        WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) ) THEN '11'
+        WHEN hydb.`status` = 3 THEN '12'
+        WHEN hydb.`status` = 4 THEN '13'
+        ELSE
+        ''
+        END AS tstatus,
+        CASE
+        WHEN hydb.`status` = 1 AND hydb.verify_status =3
+        THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
+        ELSE ''
+        END AS on_time,
+        IFNULL(hydb.borrow_account_wait,0) borrow_account_wait,
+        '2' type,
+        hydb.borrow_account_scale borrow_account_scale,
+        hydb.verify_time verify_time
+        FROM
+        ht_borrow hydb
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        WHERE
+        hydbpt.borrow_project_type = 'HZT'
+        AND hydb.project_type  <![CDATA[<>]]>  '4'
+        AND hydb.project_type  <![CDATA[<>]]>  '11'
+        AND hydb.is_show  <![CDATA[<>]]>  1
+        AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+
+        )
+        ) t
+        order by t.type,t.`status` ASC,t.on_time ASC, t.borrow_account_scale DESC,
+        t.verify_time DESC,t.status ASC,t.account_wait ASC
+        <if test="limitStart != null and limitEnd !=null" >
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+
+    </select>
+
+
+
+    <!--微信端首页汇计划加载两条稍后开启-->
+    <select id="selectHomeHjhOpenLaterList" resultMap="wechatHomeProjectListMap" parameterType="Map">
+			select t.* from (
+				SELECT 'HJH' borrow_type,
+					t.plan_nid borrow_nid,
+					t.plan_name  borrow_name,
+					t.expect_apr borrow_apr,
+					t.borrow_period borrow_period,
+					t.borrow_period_type borrow_period_type,
+					t.order_by_status_name status,
+					t.plan_invest_status_name on_time,
+					t.order_by_available_invest_account account_wait,
+					'1' type ,
+					 0 borrow_account_scale,
+					'0' verify_time,
+					t.order_by_lock_period
+					FROM (SELECT
+						hp.id as order_by_id,
+						hp.plan_nid AS plan_nid,
+						hp.plan_name AS plan_name,
+						hp.expect_apr AS expect_apr,
+						CASE
+							WHEN hp.borrow_style = 'endday'
+							THEN CONCAT(hp.lock_period, '天')
+							ELSE CONCAT(hp.lock_period, '个月')
+						END AS lock_period,
+						hp.lock_period borrow_period,
+						CASE WHEN hp.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+						CASE
+							WHEN hp.plan_invest_status = 1
+							THEN CONCAT(
+								FORMAT(
+									hp.available_invest_account / 10000,
+									2
+								),
+								'万'
+							)
+							WHEN hp.plan_invest_status = 2
+							THEN '0.00 万'
+							ELSE '0.00 万'
+						END AS available_invest_account,
+						CASE
+							WHEN hp.plan_invest_status = 1
+							THEN hp.available_invest_account
+							ELSE 0
+						END AS order_by_available_invest_account,
+						hp.plan_invest_status AS plan_invest_status,
+						CASE
+							WHEN hp.plan_invest_status = 1
+							AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
+							THEN '稍后开启'
+							WHEN hp.plan_invest_status = 1
+							THEN '立即加入'
+							WHEN hp.plan_invest_status = 2
+							THEN '稍后开启'
+							ELSE ''
+						END AS plan_invest_status_name,
+						CASE
+							WHEN hp.plan_invest_status = 1
+							AND FORMAT(hp.available_invest_account, 2) <![CDATA[<=]]> 0.00
+							THEN 2
+							WHEN hp.plan_invest_status = 1
+							THEN 1
+							WHEN hp.plan_invest_status = 2
+							THEN 2
+							ELSE 2
+						END AS order_by_status_name,
+						CASE
+							WHEN hp.borrow_style = 'endday'
+							THEN hp.lock_period
+							ELSE hp.lock_period * 30
+						END AS order_by_lock_period,
+						coupon_config
+					FROM
+						ht_hjh_plan hp
+					WHERE hp.del_flag = 0
+					AND hp.plan_display_status = 1
+					) t
+					where t.order_by_status_name=2
+			) t
+			ORDER BY t.status ASC, t.order_by_lock_period ASC,
+	      	LIMIT 0 , 2
+	</select>
+
+
+
+    <!--首页无可投散标加载两条还款中和复审中记录-->
+    <select id="selectHomeRepaymentsProjectList" resultMap="wechatHomeProjectListMap" parameterType="Map">
+			select t.* from (
+				(SELECT
+					hydbpt.borrow_class AS borrow_type,
+					hydb.borrow_nid,
+
+					hydb.borrow_nid AS borrow_name,
+
+					hydb.borrow_apr,
+					hydb.borrow_period borrow_period,
+					CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+					CASE
+						WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
+						WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 )  <![CDATA[>]]>  UNIX_TIMESTAMP( NOW() ) ) THEN '11'
+						WHEN hydb.`status` = 3 THEN '12'
+			      WHEN hydb.`status` = 4 THEN '13'
+					ELSE
+					  ''
+					END AS status,
+					CASE
+						WHEN hydb.`status` = 1 AND hydb.verify_status =3
+							THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
+					ELSE ''
+					END AS on_time,
+					IFNULL(hydb.borrow_account_wait,0) account_wait,
+					'2' type,
+				    hydb.borrow_account_scale borrow_account_scale,
+					hydb.verify_time verify_time
+					FROM
+			        	ht_borrow hydb
+					LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+			        WHERE
+			        	hydbpt.borrow_project_type = 'HZT'
+					AND hydb.project_type  <![CDATA[<>]]>  '4'
+					AND hydb.project_type  <![CDATA[<>]]>  '11'
+					AND hydb.is_show  <![CDATA[<>]]>  1
+					AND ( hydb.`status` = 3 or (hydb.`status` = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3)))
+					)
+			) t
+			order by t.status ASC,t.verify_time DESC
+	      	LIMIT 0 , 2
+	</select>
+    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>wechat end<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 
 </mapper>
