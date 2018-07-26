@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.impl.admin.finance;
 
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountWebListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.SubCommissionListConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.SubCommissionMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -32,9 +31,6 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
 
     @Autowired
     private SubCommissionMapper subCommissionMapper;
-
-    @Autowired
-    private AccountWebListMapper accountWebListMapper;
 
     /**
      * 查询发起账户分佣所需的detail信息
@@ -89,21 +85,6 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
         SubCommission subCommission = CommonUtils.convertBean(subCommissionVO,SubCommission.class);
         return subCommissionMapper.updateByPrimaryKeySelective(subCommission);
-    }
-
-    /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    @Override
-    public Integer accountWebListByOrderId(String orderId) {
-        AccountWebListExample example = new AccountWebListExample();
-        AccountWebListExample.Criteria cra = example.createCriteria();
-        cra.andOrdidEqualTo(orderId);
-        cra.andTradeEqualTo("fee_share_out");
-        return this.accountWebListMapper.countByExample(example);
     }
 
     /**
