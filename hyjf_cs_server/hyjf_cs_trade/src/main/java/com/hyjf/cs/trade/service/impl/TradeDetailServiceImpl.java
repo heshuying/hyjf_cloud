@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -95,6 +96,15 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
         }
         result.setPage(page);
         return result;
+    }
+
+    /**
+     * 获取交易类型
+     * @return
+     */
+    @Override
+    public List<AppAccountTradeListCustomizeVO> searchAppTradeTypes() {
+        return amTradeClient.searchAppTradeTypes();
     }
 }
 

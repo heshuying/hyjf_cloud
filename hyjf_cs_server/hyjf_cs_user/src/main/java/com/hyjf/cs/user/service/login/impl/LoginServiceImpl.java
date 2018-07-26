@@ -293,7 +293,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
                 }
             // 未绑卡
                 int bingCardStatus = ClientConstants.BANK_BINDCARD_STATUS_FAIL;
-                List<BankCardVO> bankCardList = amUserClient.getBankOpenAccountById(user);
+                List<BankCardVO> bankCardList = amUserClient.getBankOpenAccountById(user.getUserId());
                 if (bankCardList != null && bankCardList.size() > 0) {
                     bingCardStatus = ClientConstants.BANK_BINDCARD_STATUS_SUCCESS;
                 }
@@ -312,7 +312,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
                 iconUrl = user.getIconUrl();
 
-                if (user.getIfReceiveNotice() != null && user.getIfReceiveNotice() == true) {
+                if (user.getIfReceiveNotice() != null && user.getIfReceiveNotice() == 1) {
                     result.setStartOrStopPush(CustomConstants.FLAG_PUSH_YES);
                 } else {
                     result.setStartOrStopPush(CustomConstants.FLAG_PUSH_NO);

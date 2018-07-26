@@ -492,7 +492,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
         if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
-            List<BankCardVO> bankCardVOList = amUserClient.getBankOpenAccountById(userVO);
+            List<BankCardVO> bankCardVOList = amUserClient.getBankOpenAccountById(userVO.getUserId());
             if (null != bankCardVOList && bankCardVOList.size() > 0) {
                 BankCardVO bankCardVO = bankCardVOList.get(0);
                 webViewUserVO.setBankOpenAccount(true);

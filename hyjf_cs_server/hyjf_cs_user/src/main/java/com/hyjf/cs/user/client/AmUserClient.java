@@ -173,7 +173,7 @@ public interface AmUserClient {
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 
-    List<BankCardVO> getBankOpenAccountById(UserVO user);
+    List<BankCardVO> getBankOpenAccountById(Integer userId);
 
     /**
      * @Description 查询开户失败原因

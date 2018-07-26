@@ -1,8 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.user.UserEvalationResultResponse;
-import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.cs.trade.client.AccountListClient;
 import org.springframework.beans.factory.annotation.Autowired;

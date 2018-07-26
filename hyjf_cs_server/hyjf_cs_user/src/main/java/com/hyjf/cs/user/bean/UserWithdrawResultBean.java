@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.app.withdraw;
+package com.hyjf.cs.user.bean;
 
 import com.hyjf.cs.user.bean.BaseResultBean;
 

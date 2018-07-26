@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -133,4 +134,32 @@ public interface AmTradeClient {
      * @return
      */
     List<CouponUserCustomizeVO> selectLatestCouponValidUNReadList(Integer userId);
+
+    /**
+     * 获得购买列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    Integer countHtlIntoRecord(HtlTradeRequest htlTradeRequest);
+
+
+    /**
+     * 获取购买产品列表
+     * @param htlTradeRequest
+     * @return
+     */
+    List<HtlProductIntoRecordVO> getIntoRecordList(HtlTradeRequest htlTradeRequest);
+
+    /**
+     * 获得汇天利转出列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    Integer countProductRedeemRecord(HtlTradeRequest htlTradeRequest);
+    /**
+     * 获取汇天利转出记录列表(自定义)
+     * @param htlTradeRequest
+     * @return
+     */
+    List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest);
 }

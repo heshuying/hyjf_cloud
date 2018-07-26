@@ -49,4 +49,6 @@ public interface ContentLinksService {
      * @param id
      */
     void deleteById(Integer id);
+
+	List<Link> getLinks();
 }

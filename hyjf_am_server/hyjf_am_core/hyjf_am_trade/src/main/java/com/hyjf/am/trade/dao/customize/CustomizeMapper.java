@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.dao.customize;
 
-import com.hyjf.am.trade.dao.mapper.customize.AppUserInvestCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.WebPandectCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
@@ -140,4 +137,16 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected CouponUserCustomizeMapper couponUserCustomizeMapper;
+
+	@Autowired
+	protected BatchBorrowTenderExceptionCustomizeMapper batchBorrowTenderExceptionCustomizeMapper;
+
+	@Autowired
+	protected AppAccountTradeCustomizeMapper appAccountTradeCustomizeMapper;
+
+	@Autowired
+	protected AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
+
+	@Autowired
+	protected AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
 }

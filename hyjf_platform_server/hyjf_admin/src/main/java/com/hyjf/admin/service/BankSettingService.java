@@ -3,12 +3,12 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.request.BankSettingRequestBean;
-import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
 public interface BankSettingService {
 
     /**
-     *（条件）列表查询
+     *（条件）列表查询 江西银行 银行卡配置
      * @param request
      * @return
      */
@@ -32,7 +32,7 @@ public interface BankSettingService {
     AdminBankSettingResponse getRecord(AdminBankSettingRequest request);
 
     /**
-     * （条件）数据查询
+     * （条件）数据查询 江西银行 银行卡配置
      * @param bank
      * @param limitStart
      * @param limitEnd
@@ -41,9 +41,30 @@ public interface BankSettingService {
     List<JxBankConfigVO> getRecordList(JxBankConfigVO bank,int limitStart,int limitEnd);
 
     /**
-     * 添加
+     * 添加 江西银行 银行卡配置
      * @param request
      * @return
      */
     AdminBankSettingResponse insertRecord(AdminBankSettingRequest request);
+
+    /**
+     * 修改 江西银行 银行卡配置
+     * @param request
+     * @return
+     */
+    AdminBankSettingResponse updateRecord(AdminBankSettingRequest request);
+
+    /**
+     * 删除 江西银行 银行卡配置
+     * @param request
+     * @return
+     */
+    AdminBankSettingResponse deleteRecord(AdminBankSettingRequest request);
+
+    /**
+     * 江西银行 资料上传
+     * @param request
+     * @return
+     */
+    String uploadFile(HttpServletRequest request, HttpServletResponse response);
 }

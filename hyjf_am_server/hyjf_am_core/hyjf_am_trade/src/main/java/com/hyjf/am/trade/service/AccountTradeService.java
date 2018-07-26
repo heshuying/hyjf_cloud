@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service;
 
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
+import com.hyjf.am.trade.dao.model.customize.trade.AppAccountTradeListCustomize;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ import java.util.List;
 public interface AccountTradeService {
     List<AccountTrade> selectTradeTypes();
 
+    List<AppAccountTradeListCustomize> searchAppTradeTypes();
 }

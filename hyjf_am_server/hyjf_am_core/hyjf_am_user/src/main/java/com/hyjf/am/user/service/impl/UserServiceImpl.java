@@ -673,7 +673,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if (userEvalationResult != null && userEvalationResult.size() > 0) {
 			return userEvalationResult.get(0);
 		} else {
-			return null;
+			return new UserEvalationResult();
 		}
 	}
 
@@ -700,7 +700,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public AccountChinapnr getAccountChinapnr(Integer userId) {
 		AccountChinapnr accountChinapnr = null;
 		if (userId == null) {
-			return null;
+			return new AccountChinapnr();
 		}
 		AccountChinapnrExample example = new AccountChinapnrExample();
 		AccountChinapnrExample.Criteria criteria = example.createCriteria();

@@ -4,8 +4,10 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -223,6 +225,66 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<CouponUserCustomizeVO> selectLatestCouponValidUNReadList(Integer userId) {
         CouponUserCustomizeResponse response = restTemplate
                 .getForEntity(tradeService+"/bankException/selectLatestCouponValidUNReadList/" + userId, CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获得购买列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    @Override
+    public Integer countHtlIntoRecord(HtlTradeRequest htlTradeRequest) {
+        HtlProductIntoRecordResponse response = restTemplate
+                .postForEntity(tradeService+"/htl/countHtlIntoRecord", htlTradeRequest,HtlProductIntoRecordResponse.class).getBody();
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取购买产品列表
+     * @param htlTradeRequest
+     * @return
+     */
+    @Override
+    public List<HtlProductIntoRecordVO> getIntoRecordList(HtlTradeRequest htlTradeRequest) {
+        HtlProductIntoRecordResponse response = restTemplate
+                .postForEntity(tradeService+"/htl/getIntoRecordList", htlTradeRequest,HtlProductIntoRecordResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获得汇天利转出列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    @Override
+    public Integer countProductRedeemRecord(HtlTradeRequest htlTradeRequest) {
+        HtlProductRedeemResponse response = restTemplate
+                .postForEntity(tradeService+"/htl/countProductRedeemRecord", htlTradeRequest,HtlProductRedeemResponse.class).getBody();
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取汇天利转出记录列表(自定义)
+     * @param htlTradeRequest
+     * @return
+     */
+    @Override
+    public List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest) {
+        HtlProductRedeemResponse response = restTemplate
+                .postForEntity(tradeService+"/htl/getRedeemRecordList", htlTradeRequest,HtlProductRedeemResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

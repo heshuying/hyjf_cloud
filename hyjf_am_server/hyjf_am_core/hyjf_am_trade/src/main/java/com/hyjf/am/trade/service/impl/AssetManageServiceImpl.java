@@ -213,6 +213,21 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         return vo;
     }
 
+    @Override
+    public List<CurrentHoldObligatoryRightListCustomize> selectAppCurrentHoldObligatoryRightList(AssetManageBeanRequest request) {
+        return null;
+    }
+
+    @Override
+    public List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.selectAppAlreadyRepayList(request);
+    }
+
+    @Override
+    public List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.searchAppCreditRecordList(request);
+    }
+
     private Map<String,Object> createParame(AssetManageBeanRequest request) {
         Map<String,Object> params=new HashMap<String,Object>();
 

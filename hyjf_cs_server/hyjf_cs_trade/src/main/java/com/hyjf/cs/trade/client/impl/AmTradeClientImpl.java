@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.HjhPlanResponse;
@@ -24,6 +25,7 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
@@ -712,8 +714,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * 插入AuthCode
 	 */
 	@Override
-	public void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
-		String url = "http://AM-TRADE/am-trade/bankException/insertAuthCode";
+	public void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
+		String url = "http://AM-TRADE/am-trade/bankException/updateAuthCode";
 		BatchBorrowTenderCustomizeRequest request = new BatchBorrowTenderCustomizeRequest();
 		request.setBatchBorrowTenderCustomizeList(list);
 		restTemplate.postForEntity(url,request,Boolean.class).getBody();
@@ -2303,7 +2305,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AccountTradeVO> selectTradeTypes() {
-        String url = "http://AM-TRADE/am-trade/accounttrade/selectTradeTypes";
+        String url = "http://AM-TRADE/am-trade/accountTrade/selectTradeTypes";
         AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -3232,4 +3234,40 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 交易类型
+     * @return
+     */
+    @Override
+    public List<AppAccountTradeListCustomizeVO> searchAppTradeTypes() {
+        String url = "http://AM-TRADE/am-trade/accountTrade/searchAppTradeTypes";
+        AppAccountTradeListCustomizeResponse response = restTemplate.getForEntity(url,AppAccountTradeListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectAppAlreadyRepayList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppAlreadyRepayList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/searchAppCreditRecordList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppTenderCreditRecordList();
+        }
+        return null;
+    }
+
 }

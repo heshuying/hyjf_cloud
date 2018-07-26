@@ -5,6 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
@@ -176,5 +177,35 @@ public class AmConfigClientImpl implements AmConfigClient {
                 .getForEntity("http://AM-CONFIG/am-config/config/getJXbankConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
         return response;
     }
+	 /**
+	 * 合作机构
+	 * @return
+	 */
+	@Override
+	public LinkResponse getLinks() {
+		LinkResponse response = restTemplate
+               .getForEntity("http://AM-CONFIG/am-config/content/contentlinks/getLinks", LinkResponse.class)
+               .getBody();
+       if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+           return response;
+       }
+       return null;
+	}
+	/**
+	 * 项目申请人是否存在
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public AdminSystemResponse isExistsApplicant(String applicant) {
+		AdminSystemResponse response = restTemplate
+               .getForEntity("http://AM-CONFIG/am-config/adminSystem/isexistsapplicant/"+applicant, AdminSystemResponse.class)
+               .getBody();
+       if (response != null ) {
+           return response;
+       }
+       return null;
+	}
+	
 
 }

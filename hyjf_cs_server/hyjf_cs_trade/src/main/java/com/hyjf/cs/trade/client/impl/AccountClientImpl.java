@@ -3,7 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
