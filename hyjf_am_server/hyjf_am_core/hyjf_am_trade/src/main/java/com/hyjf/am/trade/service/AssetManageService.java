@@ -43,4 +43,10 @@ public interface AssetManageService  extends BaseService {
     QueryMyProjectVO selectWechatCurrentHoldPlanList(WechatMyProjectRequest request);
 
     QueryMyProjectVO selectWechatRepayMentPlanList(WechatMyProjectRequest request);
+
+    List<CurrentHoldObligatoryRightListCustomize> selectAppCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
+
+    List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request);
+
+    List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request);
 }

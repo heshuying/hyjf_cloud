@@ -10,13 +10,15 @@ import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.WechatMyProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "wechat端用户资产管理接口",description = "wechat端用户资产管理接口")
 @Controller
 @RequestMapping("/wechat/myproject")
-public class WechatMyProjectController {
+public class WechatMyProjectController extends BaseTradeController {
     //当前持有项目列表标示
     public static final String CURRENTHOLD_TYPE = "currentHold";
     //已回款项目列表标示

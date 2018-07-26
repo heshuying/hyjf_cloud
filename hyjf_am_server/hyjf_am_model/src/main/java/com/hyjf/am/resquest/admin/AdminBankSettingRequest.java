@@ -88,7 +88,17 @@ public class AdminBankSettingRequest extends BasePage {
 
     private BigDecimal monthCardQuota;
 
+    private JxBankConfigVO jxBankConfig;
+
     private static final long serialVersionUID = 1L;
+
+    public JxBankConfigVO getJxBankConfig() {
+        return jxBankConfig;
+    }
+
+    public void setJxBankConfig(JxBankConfigVO jxBankConfig) {
+        this.jxBankConfig = jxBankConfig;
+    }
 
     public Integer getId() {
         return id;

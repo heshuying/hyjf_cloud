@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 账户总览
+ * 微信端账户总览
  * @author jun
  * @version MyProfileController, v0.1 2018/7/3 15:52
  */

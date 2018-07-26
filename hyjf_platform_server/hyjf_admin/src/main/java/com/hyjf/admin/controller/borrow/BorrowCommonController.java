@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,7 +95,7 @@ public class BorrowCommonController extends BaseController {
      * @return
      */
 	@ApiOperation(value = "查询信息")
-	@RequestMapping("/infoAction")
+	@PostMapping("/infoAction")
     public AdminResult<BorrowCommonResponse>  moveToInfoAction(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonResponse bcr=borrowCommonService.moveToInfoAction(borrowCommonRequest);
 		if(bcr==null) {
@@ -122,7 +123,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "插入")
-	@RequestMapping("/insertAction")
+	@PostMapping("/insertAction")
 	public  AdminResult<BorrowCommonResponse> insertAction(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) throws Exception {
 		
 		BorrowCommonResponse bcr = borrowCommonService.insertAction(borrowCommonRequest);
@@ -150,7 +151,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "检查用户Id")
-	@RequestMapping("/isExistsUser")
+	@PostMapping("/isExistsUser")
 	public AdminResult isExistsUser(@PathVariable  String userId) {
 
 		int usersFlag=this.borrowCommonService.isExistsUser(userId);
@@ -173,7 +174,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "项目申请人是否存在")
-	@RequestMapping("/isExistsApplicant")
+	@PostMapping("/isExistsApplicant")
 	public AdminResult isExistsApplicant(@PathVariable  String applicant) {
 		  AdminSystemResponse bcs = this.borrowCommonService.isExistsApplicant(applicant);
 			if (!Response.isSuccess(bcs)) {
@@ -190,7 +191,7 @@ public class BorrowCommonController extends BaseController {
 //	 * @return
 //	 */
 	@ApiOperation(value = "验证发标金额是否合法")
-	@RequestMapping("/isAccountLegal")
+	@PostMapping("/isAccountLegal")
 	public AdminResult isAccountLegal(@PathVariable  String accountM) {
 
 		BigDecimal account = new BigDecimal(accountM);
@@ -215,7 +216,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "垫付机构用户名是否存在")
-	@RequestMapping("/isRepayOrgUser")
+	@PostMapping("/isRepayOrgUser")
 	public AdminResult isRepayOrgUser(@PathVariable String userName) {
 		 List<UserVO> user = this.borrowCommonService.selectUserByUsername(userName);
 		if(!user.isEmpty()) {
@@ -238,7 +239,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = " 获取最新的借款预编码")
-	@RequestMapping("/getBorrowPreNid")
+	@PostMapping("/getBorrowPreNid")
 	public AdminResult<Map<String, String>> getBorrowPreNid() {
 		Map<String, String> data = null;
 		data.put("borrowPreNid", this.borrowCommonService.getBorrowPreNid());
@@ -252,7 +253,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = " 获取现金贷的借款预编号")
-	@RequestMapping("/getXJDBorrowPreNid")
+	@PostMapping("/getXJDBorrowPreNid")
 	public  AdminResult<Map<String, String>>  getXJDBorrowPreNid() {
 		Map<String, String> data = null;
 		data.put("borrowPreNid", this.borrowCommonService.getXJDBorrowPreNid());
@@ -266,7 +267,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = " 借款预编码是否存在")
-	@RequestMapping("/isExistsBorrowPreNidRecord")
+	@PostMapping("/isExistsBorrowPreNidRecord")
 	public AdminResult isExistsBorrowPreNidRecord(@PathVariable  String borrowPreNid) {
 //		LogUtil.startLog(BorrowCommonController.class.toString(), BorrowCommonDefine.ISEXISTSBORROWPRENIDRECORD);
 //		String message = this.borrowCommonService.isExistsBorrowPreNidRecord(request);
@@ -287,7 +288,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
-	@RequestMapping("/getBorrowServiceScale")
+	@PostMapping("/getBorrowServiceScale")
 	public AdminResult<String> getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		String ncv = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest.getBorrowPeriod(), borrowCommonRequest.getBorrowStyle(), borrowCommonRequest.getProjectType(), borrowCommonRequest.getInstCode());
 		return new AdminResult<String>(ncv);
@@ -306,7 +307,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "资料上传")
-	@RequestMapping("/uploadFile")
+	@PostMapping("/uploadFile")
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
@@ -365,7 +366,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/downloadCarAction")
+	@PostMapping("/downloadCarAction")
 	public void downloadCarAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// 表格sheet名称
@@ -399,7 +400,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "资料上传")
-	@RequestMapping("/uploadCarAction")
+	@PostMapping("/uploadCarAction")
 	public AdminResult<ListResult<BorrowCommonCarVO>> uploadCarAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
@@ -486,7 +487,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/downloadHouseAction")
+	@PostMapping("/downloadHouseAction")
 	public void downloadHouseAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// 表格sheet名称
@@ -520,7 +521,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/uploadHouseAction")
+	@PostMapping("/uploadHouseAction")
 	public AdminResult<ListResult<BorrowHousesVO>> uploadHouseAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
@@ -591,7 +592,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/downloadAuthenAction")
+	@PostMapping("/downloadAuthenAction")
 	public void downloadAuthenAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// 表格sheet名称
@@ -625,7 +626,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "导出功能")
-	@RequestMapping("/downloadAuthenAction")
+	@PostMapping("/uploadAuthenAction")
 	public AdminResult<ListResult<BorrowCommonCompanyAuthenVO>> uploadAuthenAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
@@ -683,7 +684,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = " 借款内容填充")
-	@RequestMapping("/contentFillAction")
+	@PostMapping("/contentFillAction")
 	public AdminResult<Map<String,String>> contentFillAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 		MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
@@ -955,7 +956,7 @@ public class BorrowCommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@ApiOperation(value = "下载借款内容模板")
-	@RequestMapping("/downloadContentFillAction")
+	@PostMapping("/downloadContentFillAction")
 	public void downloadContentFillAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// 表格sheet名称
 				String sheetName = "借款内容填充模板";
@@ -1578,7 +1579,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = " 根据资产编号查询该资产下面的产品类型")
-	@RequestMapping("/getProductTypeAction/{instCode}")
+	@PostMapping("/getProductTypeAction/{instCode}")
 	public AdminResult<BorrowCommonResponse> getProductTypeAction(@PathVariable  String instCode) {
 		BorrowCommonResponse bcr=borrowCommonService.getProductTypeAction(instCode);
 		return new AdminResult<BorrowCommonResponse>(bcr);
@@ -1591,7 +1592,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = " 受托用户是否存在")
-	@RequestMapping("/isEntrustedExistsUser/{userName}")
+	@PostMapping("/isEntrustedExistsUser/{userName}")
 	public int isEntrustedExistsUser(@PathVariable  String userName) {
 		return this.borrowCommonService.isEntrustedExistsUser(userName);
 	}
@@ -1603,7 +1604,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "借款主体CA认证check")
-	@RequestMapping("/isBorrowUserCACheck")
+	@PostMapping("/isBorrowUserCACheck")
 	public boolean isBorrowUserCACheck(@PathVariable  String param,@PathVariable  String name) {
 
 
@@ -1618,7 +1619,7 @@ public class BorrowCommonController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "借款主体CA认证check")
-	@RequestMapping("/isCAIdNoCheck")
+	@PostMapping("/isCAIdNoCheck")
 	public boolean isCAIdNoCheck(@PathVariable  String param,@PathVariable  String name) {
 		boolean ret = this.borrowCommonService.isCAIdNoCheck(param, name);
 
