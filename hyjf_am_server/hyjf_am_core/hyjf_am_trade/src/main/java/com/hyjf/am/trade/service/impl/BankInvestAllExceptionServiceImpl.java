@@ -207,6 +207,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		}
 		
 		Borrow borrow1 = this.getBorrowByNid(borrowNid);
+		if(borrow1 == null){
+			return jsonMessage("查询项目失败", "1");
+		}
 		// 判断借款是否流标
 		if (borrow1.getStatus() == 6) { // 流标
 			return jsonMessage("此项目已经流标", "1");
@@ -261,6 +264,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			}
 			// 投资人记录
 			Account tenderAccount = this.getAccountByUserId(Integer.parseInt(userId));
+			if (tenderAccount == null) {
+				return jsonMessage("未查询到投资人信息！", "1");
+			}
 			if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
 				return jsonMessage("余额不足，请充值！", "1");
 			}
@@ -467,6 +473,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 							}
 							// 进行投资, tendertmp锁住
 							BorrowInfo borrow1=this.getBorrowInfoByNid(borrowNid);
+							if (borrow1 == null) {
+								throw new Exception("查询标的信息失败");
+							}
 							JSONObject tenderResult = this.updateTender(borrow,borrow1,bean,request);
 							// 投资成功
 							if ("1".equals(tenderResult.getString("status"))) {
@@ -598,7 +607,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			System.out.print("投资失败交易接口查询接口返回码：" + queryRespCode);
 			// 调用接口失败时(000以外)
 			if (!BankCallConstant.RESPCODE_SUCCESS.equals(queryRespCode)) {
-				String message = queryTransStatBean == null ? "" : queryTransStatBean.getRetMsg();
+				String message = queryTransStatBean.getRetMsg();
 				logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[投资订单号：" + orgOrderId + "]", null);
 				throw new Exception("调用投标申请撤销失败。" + queryRespCode + "：" + message + ",[投资订单号：" + orgOrderId + "]");
 			} else if (queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1) || queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2)) {
@@ -1006,6 +1015,11 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				// 插入account_list表
 				System.out.println("用户:" + userId + "***********************************更新account，订单号：" + orderId);
 				Account account = this.getAccountByUserId(userId);
+				if(account==null){
+					result.put("message", "投资失败！");
+					result.put("status", 0);
+					throw new Exception("查询Account失败");
+				}
 				AccountList accountList = new AccountList();
 				accountList.setAmount(accountDecimal);
 				/** 银行存管相关字段设置 */
@@ -1076,7 +1090,13 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				}
 
 				// 计算此时的剩余可投资金额
-				BigDecimal accountWait = this.getBorrowByNid(borrowNid).getBorrowAccountWait();
+				Borrow waitBorrow = this.getBorrowByNid(borrowNid);
+				if (waitBorrow == null) {
+					result.put("message", "投资失败！");
+					result.put("status", 0);
+					throw new Exception("查询标的信息失败");
+				}
+				BigDecimal accountWait = waitBorrow.getBorrowAccountWait();
 				// 满标处理
 				if (accountWait.compareTo(new BigDecimal(0)) == 0) {
 					System.out.println("用户:" + userId + "***********************************项目满标，订单号：" + orderId);
