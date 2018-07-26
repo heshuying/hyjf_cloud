@@ -6,7 +6,12 @@ import java.io.Serializable;
 
 public class BorrowCreditVO extends BaseVO implements Serializable {
 
-    private String creditId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String creditId;
 
     private String creditNid;
 

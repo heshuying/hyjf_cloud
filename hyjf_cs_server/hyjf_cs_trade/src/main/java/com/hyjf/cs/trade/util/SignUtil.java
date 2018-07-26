@@ -41,7 +41,7 @@ public class SignUtil {
             sign = timestamp + instCode + assetType;
         } else if(Objects.equals("/synbalance", methodName)){
             SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
-            sign =  bean.getAccountId() + bean.getTimestamp();
+            sign =  bean.getAccountId()+bean.getInstCode() + bean.getTimestamp();
         }
 
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

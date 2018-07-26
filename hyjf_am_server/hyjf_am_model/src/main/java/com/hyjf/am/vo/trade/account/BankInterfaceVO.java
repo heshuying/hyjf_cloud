@@ -33,6 +33,26 @@ public class BankInterfaceVO extends BaseVO implements Serializable {
     private Integer isUsable;
 
     private Integer isDelete;
+    //interfaceStatus =0 isusable 是'老接口'  interfaceStatus =1 isusable 是'新接口'
+    private String isusable;
+    //interfaceStatus=  0  interfacestatus '不可用'  interfacestatus1'可用'
+    private String interfacestatus;
+
+    public String getIsusable() {
+        return isusable;
+    }
+
+    public void setIsusable(String isusable) {
+        this.isusable = isusable;
+    }
+
+    public String getInterfacestatus() {
+        return interfacestatus;
+    }
+
+    public void setInterfacestatus(String interfacestatus) {
+        this.interfacestatus = interfacestatus;
+    }
 
     private static final long serialVersionUID = 1L;
 

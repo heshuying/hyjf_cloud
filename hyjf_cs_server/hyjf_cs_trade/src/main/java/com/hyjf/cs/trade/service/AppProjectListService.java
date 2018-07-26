@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -61,4 +62,11 @@ public interface AppProjectListService extends BaseTradeService{
      * @date 2018/6/29 16:27
      */
     public AppResult getAppPlanDetail(Map<String,String> param, String token);
+
+    /**
+     * 散标投资记录列表
+     * @param info
+     * @param form
+     */
+    void createProjectInvestPage(JSONObject info, AppProjectInvestBeanRequest form);
 }

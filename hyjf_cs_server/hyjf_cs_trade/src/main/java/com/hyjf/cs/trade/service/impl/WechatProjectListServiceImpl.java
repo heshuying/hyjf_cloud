@@ -6,13 +6,19 @@ import java.text.MessageFormat;
 import java.util.*;
 
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
+import com.hyjf.cs.trade.bean.app.AppModuleBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -497,12 +503,46 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @date 2018/7/24 10:46
      */
     @Override
-    public BaseResultBean getHomeProejctList(int currPage, int pageSize, String showPlanFlag, String token) {
-        BaseResultBean result = new BaseResultBean();
+    public WechatHomePageResult getHomeProejctList(int currPage, int pageSize, String showPlanFlag, String token) {
+        WechatHomePageResult result = new WechatHomePageResult();
         Page page = Page.initPage(currPage,pageSize);
         WechatHomePageResult vo = new WechatHomePageResult();
         vo.setCurrentPage(currPage);
         vo.setPageSize(pageSize);
+        result = getProjectListAsyn(result,currPage,pageSize,showPlanFlag);
+
+        if(currPage == 1){
+            //获取用户id
+            WebViewUser webViewUser = null;
+            Integer userId= null;
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(token)) {
+                webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
+            }
+            if (webViewUser != null) {
+                userId = webViewUser.getUserId();
+            }
+            String HOST = systemConfig.getWebHost();
+            //判断用户是否登录
+            if (userId == null||userId <= 0  ) {
+                //获取新手标
+                vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
+            } else {
+                //查询用户是否开户
+                UserVO userVO = amUserClient.findUserById(userId);
+                Integer userType = userVO ==null? 0: userVO.getBankOpenAccount();
+                if (userType == 0) {//未开户
+                    //获取新手标
+                    vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
+                } else if (userType == 1) {//已开户
+                    //获取用户累计投资条数
+                    Integer count = amTradeClient.getTotalInverestCount(String.valueOf(userId));
+                    if (count == null || count <= 0) {
+                        //获取新手标
+                        vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -814,7 +854,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      */
     private  WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo,int currentPage, int pageSize, String showPlanFlag) {
 
-       /* List<WechatHomeProjectList> list=new ArrayList<WechatHomeProjectList>();
+        List<WechatHomeProjectListVO> list= null;
         Map<String, Object> projectMap = new HashMap<String, Object>();
         // 汇盈金服app首页定向标过滤
         projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
@@ -828,8 +868,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if(showPlanFlag!=null){
             projectMap.put("showPlanFlag", showPlanFlag);
         }
-        list=appProjectListCustomizeMapper.selectHomeProjectListAsyn(projectMap);
-
+        WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL,projectMap,WechatProjectListResponse.class);
+        list = response.getResultList();
         if(!CollectionUtils.isEmpty(list)) {
             if(list.size()==(pageSize+1)){
                 list.remove(list.size() - 1);
@@ -847,31 +887,29 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
         if(showPlanFlag==null){
             if(currentPage==1){
+                WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL,WechatProjectListResponse.class);
+                List<WechatHomeProjectListVO> hjhList  = res.getResultList();
                 if(list.size()==0){
                     //补两条
-                    List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
                     hjhList.addAll(list);
                     list=hjhList;
                 }else if(list.size()>0&&!"HJH".equals(list.get(0).getBorrowType())){
                     //补两条
-                    List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
                     hjhList.addAll(list);
                     list=hjhList;
                 }else if(list.size()>1&&!"HJH".equals(list.get(1).getBorrowType())){
                     //补一条
-                    List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeHjhOpenLaterList();
                     list.add(1, hjhList.get(0));
                 }
             }
         }
         if(vo.getEndPage()==1){
+            WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_REPAYMENT_URL,WechatProjectListResponse.class);
+            List<WechatHomeProjectListVO> hjhList = res.getResultList();
             if(list.size()>0&&"HJH".equals(list.get(list.size()-1).getBorrowType())){
-
-                List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeRepaymentsProjectList();
                 list.addAll(hjhList);
                 //补两条
             }else if(list.size()>1&&"HJH".equals(list.get(list.size()-2).getBorrowType())){
-                List<WechatHomeProjectListCustomize> hjhList=appProjectListCustomizeMapper.selectHomeRepaymentsProjectList();
                 list.add(hjhList.get(0));
                 //补一条
             }
@@ -879,7 +917,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
-        for (WechatHomeProjectListCustomize wechatHomeProjectListCustomize : list) {
+        for (WechatHomeProjectListVO wechatHomeProjectListCustomize : list) {
             if("HJH".equals(wechatHomeProjectListCustomize.getBorrowType())){
                 if("1".equals(wechatHomeProjectListCustomize.getStatus())){
                     wechatHomeProjectListCustomize.setStatus("20");
@@ -918,8 +956,97 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
         // 字段为null时，转为""
         CommonUtils.convertNullToEmptyString(list);
-        vo.setHomeProjectList(list);*/
-        return null;
+        vo.setHomeProjectList(list);
+        return vo;
+    }
+
+
+    /**
+     *
+     * 获取新手标数据
+     * @author
+     * @param
+     */
+    private List<WechatHomeProjectListVO> createProjectNewPage(Integer userId, String HOST) {
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        List<WechatHomeProjectListVO> list= new ArrayList<>();
+        String host = HomePageDefine.WECHAT_DETAIL_REQUEST_MAPPING + HomePageDefine.WECHAT_DETAIL_METHOD;
+        List<AppProjectListCustomizeVO> projectList = searchProjectNewList(host);
+        if(projectList != null && !projectList.isEmpty() && projectList.size() != 0){
+            if(list.size()==0&&projectList.size()!=0){
+                AppProjectListCustomizeVO project=projectList.get(0);
+                WechatHomeProjectListVO customize=new WechatHomeProjectListVO();
+                customize.setBorrowNid(project.getBorrowNid());
+                customize.setBorrowName(project.getBorrowName());
+                customize.setBorrowType(project.getBorrowType());
+                customize.setBorrowApr(project.getBorrowApr());
+                customize.setBorrowPeriod(project.getBorrowPeriodInt()+"");
+                customize.setBorrowPeriodType(project.getBorrowPeriodType());
+                if("0".equals(project.getOnTime())||"".equals(project.getOnTime())){
+                    switch (project.getStatus()) {
+                        case "10":
+                            customize.setOnTime(project.getOnTime());
+                            break;
+                        case "11":
+                            customize.setOnTime("立即投资");
+                            break;
+                        case "12":
+                            customize.setOnTime("复审中");
+                            break;
+                        case "13":
+                            customize.setOnTime("还款中");
+                            break;
+                        case "14":
+                            customize.setOnTime("已退出");
+                            break;
+                    }
+
+                }else{
+                    customize.setOnTime(project.getOnTime());
+                }
+                customize.setStatus(project.getStatus());
+                customize.setAccountWait(df.format(new BigDecimal(project.getBorrowAccountWait())));
+                list.add(customize);
+            }
+        }
+
+    return list;
+    }
+
+
+    private  List<AppProjectListCustomizeVO> searchProjectNewList(String host){
+        List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
+
+        // 取得新手汇项目（定时发标）
+        AppProjectListRequest request = new AppProjectListRequest();
+        request.setPlatform("wx");
+        request.setType("4");
+        request.setHost(host);
+        // 查询首页定时发标的项目
+        List<AppProjectListCustomizeVO> listNewOnTime = amTradeClient.searchAppProjectList(request);
+
+
+        // 取得新手汇项目（投资中）
+        String statusNewInvest = "15";
+        request.setStatus(statusNewInvest);
+        // 查询首页定时发标的项目
+        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectList(request);
+        if (listNewInvest != null && listNewInvest.size() > 0) {
+            for (int i = 0; i < listNewInvest.size(); i++) {
+                AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
+                projectList.add(newInvest);
+            }
+        }
+        // 新手汇项目（投资中）为空
+        if (projectList.size() == 0) {
+            if (listNewOnTime != null && listNewOnTime.size() > 0) {
+                for (int i = 0; i < listNewOnTime.size(); i++) {
+                    AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
+                    projectList.add(newOnTime);
+                }
+            }
+        }
+        return projectList;
     }
 
 

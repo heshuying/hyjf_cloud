@@ -24,6 +24,8 @@ public class AppProjectListRequest extends BasePage {
     private String host;
 
     private String  type;
+
+    private String platform;
     /**
      * app端计划列表查询使用
      */
@@ -91,5 +93,13 @@ public class AppProjectListRequest extends BasePage {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 }

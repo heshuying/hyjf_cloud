@@ -26,41 +26,23 @@ public class VersionConfigBeanRequest extends VersionVO implements Serializable 
 
     private String nameSrh;
     private String versionSrh;
+
+    /**
+     * 当前页码
+     */
+    private int currPage;
+
+    /**
+     * 当前页条数
+     */
+    private int pageSize;
+
     public String getIds() {
         return ids;
     }
 
     public void setIds(String ids) {
         this.ids = ids;
-    }
-
-    /**
-     * 翻页机能用的隐藏变量
-     */
-    private int paginatorPage = 1;
-
-    /**
-     * 列表画面自定义标签上的用翻页对象：paginator
-     */
-    private Paginator paginator;
-
-    public int getPaginatorPage() {
-        if (paginatorPage == 0) {
-            paginatorPage = 1;
-        }
-        return paginatorPage;
-    }
-
-    public void setPaginatorPage(int paginatorPage) {
-        this.paginatorPage = paginatorPage;
-    }
-
-    public Paginator getPaginator() {
-        return paginator;
-    }
-
-    public void setPaginator(Paginator paginator) {
-        this.paginator = paginator;
     }
 
     public List<VersionVO> getRecordList() {
@@ -85,5 +67,21 @@ public class VersionConfigBeanRequest extends VersionVO implements Serializable 
 
     public void setVersionSrh(String versionSrh) {
         this.versionSrh = versionSrh;
+    }
+
+    public int getCurrPage() {
+        return currPage;
+    }
+
+    public void setCurrPage(int currPage) {
+        this.currPage = currPage;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -3,7 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -54,23 +54,13 @@ public class AccountClientImpl implements AccountClient {
 
     @Override
     public int countAccountWebList(String nid, String trade) {
-        AccountWebListResponse result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/account/countaccountweblist/"+ nid + "/" + trade,
-                AccountWebListResponse.class).getBody();
-        if (result == null) {
-            return result.getRecordTotal();
-        }
+        // todo 去cs-mesage查询 limeng
         return 0;
     }
 
     @Override
     public int insertAccountWebList(AccountWebListVO accountWebList) {
-        AccountWebListResponse result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/account/insertaccountweblist",accountWebList,
-                AccountWebListResponse.class).getBody();
-        if (result == null) {
-            return result.getRecordTotal();
-        }
+        // todo  mq插入 limeng
         return 0;
     }
 

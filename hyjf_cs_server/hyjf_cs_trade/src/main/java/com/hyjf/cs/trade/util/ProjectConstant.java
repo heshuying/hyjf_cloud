@@ -53,6 +53,19 @@ public class ProjectConstant {
      * 加入条件
      */
     public  static  final String PLAN_ADD_CONDITION = "{0}元起，以{1}元的倍数递增";
+
+    /**
+     * 交易详情类请求地址
+     */
+    public static final String USER_TRADE_REQUEST_MAPPING = "/user/trade";
+
+
+    /**
+     * 交易详情-交易类型
+     */
+    public static final String USER_TRADE_TYPES_ACTION = "/getTradeTypes";
+
+
     /**
      * 计息时间
      */
@@ -100,6 +113,9 @@ public class ProjectConstant {
     public static final String HJH_DATA_INTEREST_TOTAL = "interestTotal";
 
     public static final String HJH_DATA_ACCEDE_TIMES = "accedeTimes";
+
+    /*展示给app的计划详情链接*/
+    public static final String HJH_DETAIL_INFO_URL = REQUEST_HOME + "/plan/";
     /*汇计划接口相关 结束*/
 
 

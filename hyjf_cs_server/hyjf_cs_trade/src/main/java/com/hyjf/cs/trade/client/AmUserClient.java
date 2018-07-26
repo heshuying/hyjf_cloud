@@ -282,4 +282,7 @@ public interface AmUserClient {
      * @return
      */
     List<BankCardVO> selectBankCardByUserIdAndStatus(Integer userId,Integer status);
+
+
+	UtmPlatVO selectUtmPlatByUserId(Integer userId);
 }

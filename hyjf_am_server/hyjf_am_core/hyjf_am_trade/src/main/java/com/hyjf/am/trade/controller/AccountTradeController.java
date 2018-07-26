@@ -1,12 +1,15 @@
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AppAccountTradeListCustomizeResponse;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
+import com.hyjf.am.trade.dao.model.customize.app.AppAccountTradeListCustomize;
 import com.hyjf.am.trade.service.AccountTradeService;
 import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +21,7 @@ import java.util.List;
  * @version AccountTradeController, v0.1 2018/6/27 11:06
  */
 @RestController
-@RequestMapping("am-trade/accounttrade")
+@RequestMapping("/am-trade/accountTrade")
 public class AccountTradeController extends BaseController {
 
     @Autowired
@@ -34,4 +37,15 @@ public class AccountTradeController extends BaseController {
         }
         return response;
     }
+
+    @GetMapping("/searchAppTradeTypes")
+    public AppAccountTradeListCustomizeResponse searchAppTradeTypes(){
+        AppAccountTradeListCustomizeResponse response = new AppAccountTradeListCustomizeResponse();
+        List<AppAccountTradeListCustomize> list = accountTradeService.searchAppTradeTypes();
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,AppAccountTradeListCustomizeVO.class));
+        }
+        return response;
+    }
+
 }

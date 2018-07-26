@@ -37,7 +37,7 @@ public class BankCardLogRequest extends BasePage{
 
     private Date updateTime;
     // 分页区分
-    private int limitFlg;
+    private boolean limitFlg =false;
 
     private static final long serialVersionUID = 1L;
 
@@ -145,11 +145,11 @@ public class BankCardLogRequest extends BasePage{
         this.updateTime = updateTime;
     }
 
-    public int getLimitFlg() {
+    public boolean isLimitFlg() {
         return limitFlg;
     }
 
-    public void setLimitFlg(int limitFlg) {
+    public void setLimitFlg(boolean limitFlg) {
         this.limitFlg = limitFlg;
     }
 }

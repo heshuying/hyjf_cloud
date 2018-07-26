@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
@@ -107,4 +108,18 @@ public interface BorrowCustomizeMapper {
        * @return
        */
     String getXJDBorrowPreNid(@Param("mmdd") String mmdd);
+	/**
+	 * 获取借款列表
+	 * 
+	 * @param alllBorrowCustomize
+	 * @return
+	 */
+	List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+	/**
+	 * COUNT
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 */
+	Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
 }

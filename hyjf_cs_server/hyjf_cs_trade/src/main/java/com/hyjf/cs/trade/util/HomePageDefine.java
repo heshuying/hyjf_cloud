@@ -69,7 +69,17 @@ public class HomePageDefine {
 
     // WECHAT START
 
+    public static String WECHAT_HOME_PROJECT_LIST_URL = "http://AM-TRADE/am-trade/projectlist/wechat/searchHomeProejctList";
+
+	public static String WECHAT_HOME_PLAN_LATER_URL = "http://AM-TRADE/am-trade/projectlist/wechat/selectHomeHjhOpenLaterList";
+
+	public static String WECHAT_HOME_REPAYMENT_URL = "http://AM-TRADE/am-trade/projectlist/wechat/selectHomeRepaymentsProjectList";
+
 	public static final String WECHAT_REQUEST_MAPPING = "/hyjf-wechat/homepage";
+
+	public static final String WECHAT_DETAIL_REQUEST_MAPPING = "/hyjf-wechat/project";
+
+	public static final String WECHAT_DETAIL_METHOD = "getProjectDetail";
 	/*首页统计数据方法*/
 	public static final String WECHAT_HOME_INDEX_DATA_METHOD = "/getIndexData";
 	/*首页项目列表*/

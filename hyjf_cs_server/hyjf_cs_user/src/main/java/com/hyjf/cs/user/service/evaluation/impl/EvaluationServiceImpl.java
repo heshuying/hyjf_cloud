@@ -3,29 +3,11 @@
  */
 package com.hyjf.cs.user.service.evaluation.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
-import com.hyjf.am.vo.user.ActivityListVO;
-import com.hyjf.am.vo.user.EvalationVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.QuestionCustomizeVO;
-import com.hyjf.am.vo.user.UserEvalationBehaviorVO;
-import com.hyjf.am.vo.user.UserEvalationResultCustomizeVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -44,11 +26,15 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.base.Producer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.soa.apiweb.CommonParamBean;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -189,7 +175,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             return CommonConstant.ACTIVITYID_IS_NULL;
         }
         ActivityListVO activityList = amMarketClient.selectActivityList(new Integer(activityId));
-        if (activityList.getPlatform().indexOf(platform) == -1) {
+        if (activityList!=null&&activityList.getPlatform().indexOf(platform) == -1) {
             // 操作平台
             Map<String, String> clients = CacheUtil.getParamNameMap("CLIENT");
             // 被选中操作平台

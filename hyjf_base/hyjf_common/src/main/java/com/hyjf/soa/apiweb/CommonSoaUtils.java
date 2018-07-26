@@ -1,35 +1,36 @@
 package com.hyjf.soa.apiweb;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.http.HttpClientUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.hyjf.common.util.PropertiesConstants;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5;
-
 public class CommonSoaUtils {
 	private static Logger logger = LoggerFactory.getLogger(CommonSoaUtils.class);
 
 	private static String SOA_INTERFACE_KEY;
 	
-	private static String HYJF_API_WEB_URL;
+	private static String HYJF_API_WEB_URL="http://localhost:8081";
 	
 	private static final String COUPON_CHECK = "/invest/validateCoupon.json";
 	
 	// 优惠券投资接口
 	private static final String COUPON_INVEST = "/invest/couponTender.json";
 
-
+	// 优惠券投资接口
+	private static final String  SYNBALANCE= "/hyjf-api/synbalance/synbalance.json";
 
 	private static ExecutorService exec = Executors.newFixedThreadPool(50);
     
@@ -147,6 +148,23 @@ public class CommonSoaUtils {
     }
 
 
+	public static JSONObject synBalanceRetPost(String account, String instCode, String webHost, String aopAccesskey) {
+		Map<String, String> params = new HashMap<String, String>();
+		String timestamp = GetDate.getNowTime10() + "";
+		// 时间戳
+		params.put("timestamp", timestamp);
+		params.put("accountId", account);
+		params.put("instCode", instCode);
+		// 优惠券投资url
+		String requestUrl = webHost + CommonSoaUtils.SYNBALANCE;
+		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instCode + timestamp + aopAccesskey));
+		params.put("chkValue", sign);
+		logger.info("同步余额调用:" + requestUrl);
+
+		String result = HttpClientUtils.post(requestUrl, params);
+		JSONObject status = JSONObject.parseObject(result);
+		return status;
+	}
 }
 
 class Task implements Callable<String> {

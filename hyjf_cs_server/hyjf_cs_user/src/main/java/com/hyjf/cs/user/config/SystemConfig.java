@@ -101,6 +101,17 @@ public class SystemConfig {
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
 
+    @Value("${hyjf.chinapnr.mercustid}")
+    private String chinapnrMercustid;
+
+    public String getChinapnrMercustid() {
+        return chinapnrMercustid;
+    }
+
+    public void setChinapnrMercustid(String chinapnrMercustid) {
+        this.chinapnrMercustid = chinapnrMercustid;
+    }
+
     public String getWechatQrcodeUrl() {
         return wechatQrcodeUrl;
     }

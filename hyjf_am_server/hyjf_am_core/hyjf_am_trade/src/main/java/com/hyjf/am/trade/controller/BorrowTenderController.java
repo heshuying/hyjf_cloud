@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -285,4 +286,15 @@ public class BorrowTenderController extends BaseController{
         response.setFlag(flag);
         return response;
     }
+
+    /**
+     * 通过borrowId获取对应的总钱数
+     * @param params
+     * @return
+     */
+    @PostMapping("/countMoneyByBorrowId")
+    public String countMoneyByBorrowId(@RequestBody Map<String, Object> params){
+        return borrowTenderService.countMoneyByBorrowId(params);
+    }
+
 }

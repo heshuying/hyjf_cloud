@@ -6,6 +6,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowManinfoExample;
 import com.hyjf.am.trade.service.BorrowManinfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class BorrowManinfoServiceImpl implements BorrowManinfoService {
         BorrowManinfoExample.Criteria cri = example.createCriteria();
         cri.andBorrowNidEqualTo(borrowNid);
         List<BorrowManinfo> list = borrowManinfoMapper.selectByExample(example);
-        return list.get(0);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
     }
 }

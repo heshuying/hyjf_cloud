@@ -5,10 +5,13 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.admin.AccountListRequest;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+
+import java.util.List;
 
 /**
  * @author nxl
@@ -44,4 +47,12 @@ public interface AccountDetailService {
 
     // 更新用户的交易明细
     int updateAccountList(AccountListRequest accountListRequest);
+
+    /**
+     * @Description 获取交易类型列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    List<AccountTradeVO> selectTradeTypes();
 }

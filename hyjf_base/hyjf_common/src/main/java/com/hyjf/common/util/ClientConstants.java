@@ -305,4 +305,13 @@ public class ClientConstants implements Serializable {
 	public final static String PLATFORM_LIMIT="本活动限***端参与";
 	//该活动用户已参与
 	public final static String ACTIVITY_LIMIT="该活动用户已参与";
+
+	/** 提现规则  路径 */
+	public static final String WITHDRAW_RULE_PATH = "/withdraw/withdraw";
+
+	/** 获取提现信息  */
+	public static final String GET_WITHDRAW_INFO_MAPPING = "/getInfoAction";
+
+	/** @RequestMapping值 */
+	public static final String GET_WITHDRAW_RULE_MAPPING = "/getRule";
 }

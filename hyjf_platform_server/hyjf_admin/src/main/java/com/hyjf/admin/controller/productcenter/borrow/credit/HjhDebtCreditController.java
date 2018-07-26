@@ -31,7 +31,7 @@ import java.util.List;
  * @Date:2018/7/3
  * @Description: 汇计划-转让记录
  */
-@Api(value = "汇计划-转让记录")
+@Api(value = "Admin端产品中心-汇计划-转让记录",description="Admin端产品中心-汇计划-转让记录")
 @RestController
 @RequestMapping("/hyjf-admin/hjhDebtCredit")
 public class HjhDebtCreditController extends BaseController{
@@ -100,6 +100,8 @@ public class HjhDebtCreditController extends BaseController{
             } else {
                 jsonObject = this.fail("暂无符合条件数据");
             }
+        }else{
+            jsonObject = this.fail("暂无符合条件数据");
         }
         return jsonObject;
     }

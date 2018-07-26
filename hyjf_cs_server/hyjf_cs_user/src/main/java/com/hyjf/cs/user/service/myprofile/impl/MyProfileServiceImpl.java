@@ -25,7 +25,6 @@ import com.hyjf.cs.user.vo.MyProfileVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -137,7 +136,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         }
 
         if (users.getUserId()!=null){
-            List<BankCardVO> bankCardList= this.amUserClient.getBankOpenAccountById(users);
+            List<BankCardVO> bankCardList= this.amUserClient.getBankOpenAccountById(users.getUserId());
 
             if(CollectionUtils.isNotEmpty(bankCardList) && bankCardList.size()>0){
                 userAccountInfo.setIsBindCard(true);

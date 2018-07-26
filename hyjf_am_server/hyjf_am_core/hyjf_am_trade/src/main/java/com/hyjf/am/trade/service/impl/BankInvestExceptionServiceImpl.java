@@ -31,19 +31,12 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @since 20180623
  */
 @Service
-public class BankInvestExceptionServiceImpl implements BankInvestService {
+public class BankInvestExceptionServiceImpl extends BaseServiceImpl implements BankInvestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestExceptionServiceImpl.class);
 
 	@Autowired
-	private BatchBorrowTenderExceptionCustomizeMapper batchBorrowTenderExceptionCustomizeMapper;
-
-	@Autowired
-	private BorrowTenderMapper borrowTenderMapper;
-
-	@Autowired
 	private SystemConfig systemConfig;
-
 
 	 /**
 	 * 查询出投资表authcode为空的记录
@@ -59,7 +52,7 @@ public class BankInvestExceptionServiceImpl implements BankInvestService {
 	 * @param list
 	 */
 	@Override
-	public void insertAuthCode(List<BatchBorrowTenderCustomize> list) {
+	public void updateAuthCode(List<BatchBorrowTenderCustomize> list) {
 		if (CollectionUtils.isNotEmpty(list)){
 			logger.info("开始处理掉单的投资,处理件数:[" + list.size() + "].");
 			for (BatchBorrowTenderCustomize batchBorrowTenderCustomize : list) {

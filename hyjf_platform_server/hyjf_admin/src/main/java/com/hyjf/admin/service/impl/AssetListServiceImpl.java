@@ -52,7 +52,6 @@ public class AssetListServiceImpl implements AssetListService {
 	/**
 	 * param原相关查询
 	 *
-	 * @param instCodeSrch
 	 * @return List<HjhAssetTypeVO>
 	 */
 	@Override
@@ -64,7 +63,6 @@ public class AssetListServiceImpl implements AssetListService {
 	/**
 	 * 资产列表查询
 	 *
-	 * @param instCodeSrch
 	 * @return List<HjhAssetTypeVO>
 	 */
 	@Override
@@ -76,7 +74,6 @@ public class AssetListServiceImpl implements AssetListService {
 	/**
 	 * 查询详情
 	 *
-	 * @param request
 	 * @return 查询详情
 	 */
 	@Override

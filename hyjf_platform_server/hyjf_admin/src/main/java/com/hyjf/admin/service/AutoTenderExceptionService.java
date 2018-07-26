@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.request.TenderExceptionSolveRequestBean;
+import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
@@ -20,7 +22,7 @@ import java.util.Map;
  * @author nixiaoling
  * @version AutoTenderExceptionService, v0.1 2018/7/12 10:30
  */
-public interface AutoTenderExceptionService {
+public interface AutoTenderExceptionService extends BaseService{
     /**
      * 检索汇计划加入明细列表
      * @param request
@@ -97,4 +99,10 @@ public interface AutoTenderExceptionService {
      * @author nxl
      */
     boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
+    /**
+     * 异常处理
+     * @param tenderExceptionSolveRequestBean
+     * @return
+     */
+    String tenderExceptionAction(TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean);
 }

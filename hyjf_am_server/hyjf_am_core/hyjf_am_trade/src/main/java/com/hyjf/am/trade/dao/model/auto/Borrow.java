@@ -9,7 +9,7 @@ public class Borrow implements Serializable {
 
     private String borrowNid;
 
-    private Boolean projectType;
+    private Integer projectType;
 
     private Integer userId;
 
@@ -76,6 +76,8 @@ public class Borrow implements Serializable {
     private BigDecimal borrowAccountYes;
 
     private BigDecimal borrowAccountWait;
+
+    private BigDecimal borrowAccountScale;
 
     private String borrowService;
 
@@ -159,11 +161,11 @@ public class Borrow implements Serializable {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public Boolean getProjectType() {
+    public Integer getProjectType() {
         return projectType;
     }
 
-    public void setProjectType(Boolean projectType) {
+    public void setProjectType(Integer projectType) {
         this.projectType = projectType;
     }
 
@@ -429,6 +431,14 @@ public class Borrow implements Serializable {
 
     public void setBorrowAccountWait(BigDecimal borrowAccountWait) {
         this.borrowAccountWait = borrowAccountWait;
+    }
+
+    public BigDecimal getBorrowAccountScale() {
+        return borrowAccountScale;
+    }
+
+    public void setBorrowAccountScale(BigDecimal borrowAccountScale) {
+        this.borrowAccountScale = borrowAccountScale;
     }
 
     public String getBorrowService() {

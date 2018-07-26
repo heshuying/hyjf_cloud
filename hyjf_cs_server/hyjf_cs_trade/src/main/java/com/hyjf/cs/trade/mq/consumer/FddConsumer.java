@@ -27,7 +27,6 @@ import java.util.List;
 
 /**
  * 法大大consumer
- * 
  * @author jijun
  * @version 20180627
  */
@@ -73,7 +72,7 @@ public class FddConsumer extends Consumer {
 					try {
 						FddGenerateContractBean bean = JSONObject.parseObject(msg.getBody(),
 								FddGenerateContractBean.class);
-						if (Validator.isNull(bean)) {
+						if (bean==null) {
 							logger.info("传入参数不得为空！");
 							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 						}

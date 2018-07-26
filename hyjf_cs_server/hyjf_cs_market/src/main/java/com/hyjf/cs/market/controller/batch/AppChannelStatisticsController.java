@@ -15,7 +15,7 @@ import com.hyjf.cs.market.service.AppChannelStatisticsService;
  * @version AppChannelStatisticsController, v0.1 2018/7/16 14:13
  */
 @RestController
-@RequestMapping("/cs-market/apphannelstatistics")
+@RequestMapping("/cs-market/appchannelstatistics")
 public class AppChannelStatisticsController extends BaseMarketController {
 	@Autowired
 	private AppChannelStatisticsService statisticsService;

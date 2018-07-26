@@ -42,6 +42,7 @@ import java.util.Map;
  */
 @Api(value = "web端-密码相关服务",description = "web端-密码相关服务")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/password")
 public class WebPassWordController {
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
@@ -327,6 +328,29 @@ public class WebPassWordController {
         ret.put("pubexponent", "10001");
         ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
         result.setData(ret);
+        return result;
+    }
+
+    /**
+     * 修改 登录密码 页面初始化
+     *
+     * @param token
+     * @return
+     */
+    @ApiOperation(value = "修改 登录密码 页面初始化",notes = "修改 登录密码 页面初始化")
+    @PostMapping(value = "/modifyCode")
+    public WebResult modifyCode(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId) {
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        try {
+            ret.put("tokenGrant",token);
+            ret.put("pubexponent", "10001");
+            ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+            ret.put("userId",userId);
+            result.setData(ret);
+        } catch (Exception e) {
+            logger.error("修改密码时，生成密码加密密钥错误",e);
+        }
         return result;
     }
 

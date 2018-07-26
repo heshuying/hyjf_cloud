@@ -137,4 +137,8 @@ public class CommonConstant {
 
     /** chinapnrForm值 */
     public static final String CHINAPNR_FORM = "chinapnrForm";
+
+    public static final  String PAGE_LIMIT_START = "limitStart";
+
+    public static final  String PAGE_LIMIT_END =   "limitEnd";
 }

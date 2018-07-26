@@ -77,11 +77,11 @@ public class LoanCoverUserManagerController extends BaseController{
             limitStart = 0;
         }
         List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,limitStart,limitEnd,dateStart,dateEnd);
+        response.setCount(registCount);
         if(registCount>0){
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<LoanCoverUserVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, LoanCoverUserVO.class);
                 response.setResultList(userVoList);
-                response.setCount(registCount);
                 //代表成功
                 response.setRtn(Response.SUCCESS);
             }
@@ -156,6 +156,29 @@ public class LoanCoverUserManagerController extends BaseController{
         String returnMsg = Response.FAIL_MSG;
         CertificateAuthorityVO certificateAuthorityVO = new CertificateAuthorityVO();
         if(null!=certificateAuthority){
+            BeanUtils.copyProperties(certificateAuthority,certificateAuthorityVO);
+            status = Response.SUCCESS;
+            returnMsg = Response.SUCCESS_MSG;
+            response.setResult(certificateAuthorityVO);
+        }
+        response.setMessage(returnMsg);
+        response.setRtn(status);
+        return response;
+    }
+    /**
+     * 根据证件号码和姓名查找用户CA认证记录表
+     * @param strIdNo
+     * @param tureName
+     * @return
+     */
+    @RequestMapping("/isCAIdNoCheck/{idNo}/{name}")
+    public CertificateAuthorityResponse isCAIdNoCheck(@PathVariable String idNo,@PathVariable String name){
+        boolean certificateAuthority = loanCoverUserManagerService.isCAIdNoCheck(idNo, name);
+        CertificateAuthorityResponse response = new CertificateAuthorityResponse();
+        String status = Response.FAIL;
+        String returnMsg = Response.FAIL_MSG;
+        CertificateAuthorityVO certificateAuthorityVO = new CertificateAuthorityVO();
+        if(certificateAuthority){
             BeanUtils.copyProperties(certificateAuthority,certificateAuthorityVO);
             status = Response.SUCCESS;
             returnMsg = Response.SUCCESS_MSG;

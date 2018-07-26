@@ -19,6 +19,15 @@ public class AssetManageBeanRequest extends BasePage {
 
     private Integer limitEnd;
 
+    private String host;
+    private String sign;
+    private String countStatus;
+
+    private String borrowNid;
+    private String tenderNid;
+    private Integer nowTime;
+
+    private String type;
 
     public String getUserId() {
         return userId;
@@ -69,5 +78,61 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getCountStatus() {
+        return countStatus;
+    }
+
+    public void setCountStatus(String countStatus) {
+        this.countStatus = countStatus;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
+
+    public String getTenderNid() {
+        return tenderNid;
+    }
+
+    public void setTenderNid(String tenderNid) {
+        this.tenderNid = tenderNid;
+    }
+
+    public Integer getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(Integer nowTime) {
+        this.nowTime = nowTime;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

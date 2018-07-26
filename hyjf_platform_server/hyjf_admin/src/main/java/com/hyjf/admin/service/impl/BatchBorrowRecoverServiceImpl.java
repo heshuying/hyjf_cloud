@@ -74,6 +74,11 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                 info.put(STATUS, FAIL);
                 return info;
             }
+        }else{
+            JSONObject info = new JSONObject();
+            info.put(MSG, "暂无符合条件数据");
+            info.put(STATUS, FAIL);
+            return info;
         }
         return jsonObject;
     }

@@ -4,10 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;
 
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 
 import java.util.List;
 
@@ -41,6 +38,15 @@ public class AssetManageResponse extends Response<BaseVO> {
     private Integer currentHoldPlanCount=0;
     //已回款计划数量
     private Integer repayMentPlanCount=0;
+
+    //app端已回款债权列表
+    private List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayList;
+    //app端转让列表
+    private List<AppTenderCreditRecordListCustomizeVO> appTenderCreditRecordList;
+    //app端计划列表
+    private List<AppMyPlanCustomizeVO> appMyPlanCustomizeList;
+    //app端计划列表数量
+    private Integer appMyPlanCount=0;
 
     public List<CurrentHoldObligatoryRightListCustomizeVO> getCurrentHoldObligatoryRightList() {
         return currentHoldObligatoryRightList;
@@ -120,5 +126,37 @@ public class AssetManageResponse extends Response<BaseVO> {
 
     public void setRepayMentPlanCount(Integer repayMentPlanCount) {
         this.repayMentPlanCount = repayMentPlanCount;
+    }
+
+    public List<AppAlreadyRepayListCustomizeVO> getAppAlreadyRepayList() {
+        return appAlreadyRepayList;
+    }
+
+    public void setAppAlreadyRepayList(List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayList) {
+        this.appAlreadyRepayList = appAlreadyRepayList;
+    }
+
+    public List<AppTenderCreditRecordListCustomizeVO> getAppTenderCreditRecordList() {
+        return appTenderCreditRecordList;
+    }
+
+    public void setAppTenderCreditRecordList(List<AppTenderCreditRecordListCustomizeVO> appTenderCreditRecordList) {
+        this.appTenderCreditRecordList = appTenderCreditRecordList;
+    }
+
+    public List<AppMyPlanCustomizeVO> getAppMyPlanCustomizeList() {
+        return appMyPlanCustomizeList;
+    }
+
+    public void setAppMyPlanCustomizeList(List<AppMyPlanCustomizeVO> appMyPlanCustomizeList) {
+        this.appMyPlanCustomizeList = appMyPlanCustomizeList;
+    }
+
+    public Integer getAppMyPlanCount() {
+        return appMyPlanCount;
+    }
+
+    public void setAppMyPlanCount(Integer appMyPlanCount) {
+        this.appMyPlanCount = appMyPlanCount;
     }
 }

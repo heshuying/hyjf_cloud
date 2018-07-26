@@ -8,15 +8,14 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -294,7 +293,7 @@ public interface AmTradeClient {
 	/**
 	 * @param list
 	 */
-	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
+	void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list);
 
     List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean);
 
@@ -1362,4 +1361,76 @@ public interface AmTradeClient {
     List<BorrowRecoverPlanVO> selectRecoverPlan(String borrowNid, Integer period);
 
     List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepay(String borrowNid, String tenderOrderId, int periodNow, int status);
+
+    QueryMyProjectVO selectWechatCurrentHoldObligatoryRightList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatRepaymentList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatCreditRecordList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatCurrentHoldPlanList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatRepayMentPlanList(WechatMyProjectRequest request);
+
+    /**
+     * 获取投资协议集合
+     * @param tenderNid
+     * @return
+     */
+    List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
+
+    /**
+     * 通过主键获取投资协议
+     * @param tenderAgreementID
+     * @return
+     */
+    TenderAgreementVO getTenderAgreementInfoByPrimaryKey(String tenderAgreementID);
+
+    /**
+     * 交易类型
+     * @return
+     */
+    List<AppAccountTradeListCustomizeVO> searchAppTradeTypes();
+
+    List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest params);
+
+    List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
+
+
+    /**
+     * 散标投资记录数
+     * @param params
+     * @return
+     */
+    int countProjectInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * borrowId对应的总钱数
+     * @param params
+     * @return
+     */
+    String countMoneyByBorrowId(Map<String,Object> params);
+
+    /**
+     * 散标投资记录
+     * @param params
+     * @return
+     */
+    List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String,Object> params);
+
+
+
+    /**
+     * 获取债转承接信息
+     * @param nid
+     * by libin
+     * @return
+     */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+
+    Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
+
+    Integer countAppMyPlan(AssetManageBeanRequest params);
+
+    List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
 }
