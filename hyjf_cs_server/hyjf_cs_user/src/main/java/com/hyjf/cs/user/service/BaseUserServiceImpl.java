@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -13,6 +14,7 @@ import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.ApiSignUtil;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.MD5;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -29,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -673,6 +676,26 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		}
 		return str;
 	}
+	@Autowired
+	private RestTemplate restTemplate;
+	// 同步余额接口
+	private static final String  SYNBALANCE= "/hyjf-api/synbalance/synbalance.json";
+	@Override
+	public JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey) {
+		SynBalanceRequestBean balanceRequestBean=new SynBalanceRequestBean();
+		balanceRequestBean.setAccountId(account);
+		balanceRequestBean.setInstCode(instcode);
+		Long timestamp=System.currentTimeMillis()/ 1000;
+		balanceRequestBean.setTimestamp(timestamp);
 
+		// 优惠券投资url
+		String requestUrl = webHost + SYNBALANCE;
+		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
+		balanceRequestBean.setChkValue(sign);
+		logger.info("同步余额调用:" + requestUrl);
+		String result = restTemplate.postForEntity(requestUrl,balanceRequestBean,String.class).getBody();
+		JSONObject status = JSONObject.parseObject(result);
+		return status;
+	}
 
 }
