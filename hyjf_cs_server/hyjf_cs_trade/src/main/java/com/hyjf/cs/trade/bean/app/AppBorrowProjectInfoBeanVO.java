@@ -8,7 +8,7 @@
  * Modification History:
  * Modified by : 
  */
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.trade.bean.app;
 
 import com.hyjf.am.vo.BaseVO;
 

@@ -1,17 +1,15 @@
 package com.hyjf.am.trade.service.impl;
 
-import com.google.common.collect.Maps;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.service.AssetManageService;
 import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -35,25 +35,6 @@ public interface AccountService {
 
     /**
      * @Author walter.limeng
-     * @Description  根据nid和trade查询
-     * @Date 11:36 2018/7/18
-     * @Param nid
-     * @Param trade
-     * @return
-     */
-    Integer countAccountWebList(String nid, String trade);
-
-    /**
-     * @Author walter.limeng
-     * @Description  新增AccountwebList
-     * @Date 14:10 2018/7/18
-     * @Param accountWebList
-     * @return
-     */
-    Integer insertAccountWebList(AccountWebListVO accountWebList);
-
-    /**
-     * @Author walter.limeng
      * @Description  根据accountCode查询红包账户
      * @Date 14:17 2018/7/18
      * @Param accountCode

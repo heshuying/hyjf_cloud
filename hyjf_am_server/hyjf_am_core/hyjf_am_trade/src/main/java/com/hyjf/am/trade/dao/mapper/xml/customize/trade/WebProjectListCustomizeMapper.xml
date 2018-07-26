@@ -778,7 +778,7 @@
         <include refid="App_Where_Clause" />
     </select>
 
-    <select id="searchAppProjectList"  resultType="com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize" parameterType="Map">
+    <select id="searchAppProjectList" resultType="com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize" parameterType="Map">
         SELECT
         hydbpt.borrow_class AS borrowType,
         hydbpt.borrow_name AS borrowDesc,

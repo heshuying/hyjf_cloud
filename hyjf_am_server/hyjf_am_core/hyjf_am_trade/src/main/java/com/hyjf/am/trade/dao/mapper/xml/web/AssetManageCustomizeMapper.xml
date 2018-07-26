@@ -1550,7 +1550,7 @@
 	</sql>
 
 
-	<resultMap id="AppAlreadyRepayListMap" type="com.hyjf.am.trade.dao.model.customize.trade.AppAlreadyRepayListCustomize">
+	<resultMap id="AppAlreadyRepayListMap" type="com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
 		<result column="interest" property="interest" jdbcType="VARCHAR" />
@@ -1790,7 +1790,7 @@
 	</select>
 
 	<!-- 获取用户转让记录列表 -->
-	<select id="searchAppCreditRecordList" resultType="com.hyjf.am.trade.dao.model.customize.trade.AppTenderCreditRecordListCustomize" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
+	<select id="searchAppCreditRecordList" resultType="com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
 		SELECT
 		<!-- 债转编号 -->
 		hbc.bid_nid AS creditNid,

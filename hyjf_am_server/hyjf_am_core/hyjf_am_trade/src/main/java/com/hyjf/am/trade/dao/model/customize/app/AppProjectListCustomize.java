@@ -2,14 +2,14 @@
  * Description:用户开户列表前端显示查询所用po
  * Copyright: Copyright (HYJF Corporation) 2015
  * Company: HYJF Corporation
- * @author: 王坤
+ * @author: jijun
  * @version: 1.0
- * Created at: 2015年11月11日 下午2:17:31
+ * Created at: 20180726
  * Modification History:
  * Modified by :
  */
 
-package com.hyjf.am.trade.dao.model.customize.trade;
+package com.hyjf.am.trade.dao.model.customize.app;
 
 import java.io.Serializable;
 

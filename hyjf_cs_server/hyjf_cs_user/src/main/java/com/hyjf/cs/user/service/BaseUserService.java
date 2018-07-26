@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -150,4 +151,6 @@ public interface BaseUserService extends BaseService{
     String getBankReturnErrorMsg(String retCode);
 
     String strEncode(String str);
+
+	JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey);
 }

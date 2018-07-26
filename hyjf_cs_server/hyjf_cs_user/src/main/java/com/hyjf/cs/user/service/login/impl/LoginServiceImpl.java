@@ -26,6 +26,7 @@ import com.hyjf.cs.user.controller.app.login.UserParameters;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
                 accountId = account.getAccount();
                 // 3. todo pangchengchao登录时自动同步线下充值记录
+                this.synBalance(accountId,systemConfig.getInstcode(),"http://CS-TRADE",systemConfig.getAopAccesskey());
             }
             if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
                 String sign = SecretUtil.createToken(userId, loginUserName, accountId);

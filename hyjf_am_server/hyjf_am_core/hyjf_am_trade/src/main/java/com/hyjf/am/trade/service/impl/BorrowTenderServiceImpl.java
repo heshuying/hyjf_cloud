@@ -20,23 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class BorrowTenderServiceImpl implements BorrowTenderService {
+public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTenderService {
 
-    @Autowired
-    private BorrowTenderMapper borrowTenderMapper;
-    @Autowired
-    private FddTempletMapper fddTempletMapper;
-    @Autowired
-    private TenderAgreementMapper tenderAgreementMapper;
-    @Autowired
-    private CreditTenderMapper creditTenderMapper;
-
-    @Autowired
-    private CreditTenderLogMapper creditTenderLogMapper;
-    @Autowired
-    private BorrowTenderCustomizeMapper borrowTenderCustomizeMapper;
-    @Resource
-    private BorrowTenderCpnMapper borrowTenderCpnMapper;
 
     @Override
     public Integer getCountBorrowTenderService(Integer userId, String borrowNid) {
@@ -174,5 +159,10 @@ public class BorrowTenderServiceImpl implements BorrowTenderService {
     @Override
     public Integer updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn) {
         return borrowTenderCpnMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(borrowTenderCpn,BorrowTenderCpn.class));
+    }
+
+    @Override
+    public String countMoneyByBorrowId(Map<String, Object> params) {
+        return borrowTenderInfoCustomizeMapper.countMoneyByBorrowId(params);
     }
 }

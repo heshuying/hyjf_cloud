@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -1395,12 +1396,36 @@ public interface AmTradeClient {
 
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
 
-	/**
-	 * 获取债转承接信息
-	 * @param nid
-	 * by libin
-	 * @return
-	 */
+
+    /**
+     * 散标投资记录数
+     * @param params
+     * @return
+     */
+    int countProjectInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * borrowId对应的总钱数
+     * @param params
+     * @return
+     */
+    String countMoneyByBorrowId(Map<String,Object> params);
+
+    /**
+     * 散标投资记录
+     * @param params
+     * @return
+     */
+    List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String,Object> params);
+
+
+
+    /**
+     * 获取债转承接信息
+     * @param nid
+     * by libin
+     * @return
+     */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
 
     Integer selectTenderToCreditListCount(AssetManageBeanRequest params);

@@ -2,7 +2,8 @@ package com.hyjf.am.trade.service;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
-import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;

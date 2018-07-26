@@ -1,5 +1,5 @@
 
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.trade.bean.app;
 
 import java.io.Serializable;
 

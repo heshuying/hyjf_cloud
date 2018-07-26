@@ -84,13 +84,6 @@ public class PlatformTransferController extends BaseController {
         return platformTransferService.insertAccountList(accountListVO);
     }
 
-
-    @ApiOperation(value = "平台转账-插入网站收支",notes = "平台转账-插入网站收支")
-    @PostMapping(value = "/insertaccountweblist")
-    public Integer insertAccountWebList(@RequestBody AccountWebListVO accountWebListVO){
-        return platformTransferService.insertAccountWebList(accountWebListVO);
-    }
-
     @ApiOperation(value = "平台转账-根据账户id查询BankMerchantAccount",notes = "平台转账-根据账户id查询BankMerchantAccount")
     @GetMapping(value = "/searchbankmerchantaccount/{accountId}")
     public BankMerchantAccountResponse searchBankMerchantAccountByAccountId(@PathVariable Integer accountId){
