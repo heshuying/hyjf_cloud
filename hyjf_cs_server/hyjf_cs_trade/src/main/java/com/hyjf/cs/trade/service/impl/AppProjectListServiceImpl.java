@@ -124,6 +124,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
         }
+        info.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
+        info.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(ProjectConstant.APP_PAGE,request.getPage());
         info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_BORROW_PROJECT_METHOD);
         return info;
