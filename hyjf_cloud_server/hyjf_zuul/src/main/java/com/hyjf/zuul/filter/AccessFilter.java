@@ -99,7 +99,7 @@ public class AccessFilter extends ZuulFilter {
 				ctx.addZuulRequestHeader("sign", sign);
 
 				if (secureVisitFlag) {
-					setUserIdByToken(request, ctx, secureVisitFlag);
+					setUserIdByToken(request, ctx, secureVisitFlag,APP_CHANNEL);
 				}
 			} else {
 				// 获取最优服务器
@@ -113,12 +113,12 @@ public class AccessFilter extends ZuulFilter {
 			return null;
 		} else if (requestUrl.contains(WEB_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WEB_CHANNEL);
 			}
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WEB_CHANNEL);
 			}
 			prefix = WECHAT_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
@@ -156,8 +156,13 @@ public class AccessFilter extends ZuulFilter {
 	 *            true 登录才能访问 false 登录不登录均可访问
 	 * @return
 	 */
-	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
-		String token = request.getParameter("token");
+	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary,String channel) {
+		String token = "";
+		if (APP_CHANNEL.equals(channel)){
+			token = request.getParameter("token");
+		}else {
+			token = request.getHeader("token");
+		}
 		if (StringUtils.isBlank(token) && isNecessary) {
 			logger.error("token is empty...");
 			// 不对其进行路由

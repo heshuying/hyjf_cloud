@@ -1,10 +1,7 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.BankConfigResponse;
-import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.config.SmsConfigResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
@@ -12,6 +9,7 @@ import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
+import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -200,5 +198,53 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getFlag();
         }
         return null;
+    }
+
+    /**
+     * 根据设备唯一标识获取用户角标
+     * @auth sunpeikai
+     * @param sign 设备唯一标识
+     * @return
+     */
+    @Override
+    public UserCornerVO getUserCornerBySign(String sign) {
+        UserCornerResponse response = restTemplate
+                .getForEntity(configService+"/userCorner/getUserCornerBySign/" + sign, UserCornerResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    @Override
+    public Integer updateUserCorner(UserCornerVO userCornerVO) {
+        UserCornerResponse response = restTemplate
+                .postForEntity(configService+"/userCorner/updateUserCorner",userCornerVO, UserCornerResponse.class).getBody();
+        if (response != null) {
+            return response.getSuccessCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 插入一条新的用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    @Override
+    public Integer insertUserCorner(UserCornerVO userCornerVO) {
+        UserCornerResponse response = restTemplate
+                .postForEntity(configService+"/userCorner/insertUserCorner", userCornerVO, UserCornerResponse.class).getBody();
+        if (response != null) {
+            return response.getSuccessCount();
+        }
+        return 0;
     }
 }
