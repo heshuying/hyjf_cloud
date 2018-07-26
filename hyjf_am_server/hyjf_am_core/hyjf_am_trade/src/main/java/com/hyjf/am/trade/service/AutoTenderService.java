@@ -7,7 +7,6 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -51,12 +50,12 @@ public interface AutoTenderService extends BaseService{
 
     /**
      * 银行自动投资成功后，更新投资数据
-     * @param borrow
-     * @param hjhAccede
+     * @param borrowNid
+     * @param accedeOrderId
      * @param bean
      * @return
      */
-    boolean updateBorrowForAutoTender(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     /**
      * 获取相应的标的详情
@@ -77,9 +76,10 @@ public interface AutoTenderService extends BaseService{
      * 删除 自动投资临时表
      * @param borrowNid
      * @param hjhAccede
+     * @param bean
      * @return
      */
-    boolean deleteBorrowTmp(String borrowNid, HjhAccede hjhAccede) ;
+    boolean deleteBorrowTmp(String borrowNid, HjhAccede hjhAccede, BankCallBean bean) ;
 
 
     /**
@@ -95,8 +95,6 @@ public interface AutoTenderService extends BaseService{
      */
     Map<String, Object> saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
 
-
-
     /**
      *
      * @param credit
@@ -111,17 +109,16 @@ public interface AutoTenderService extends BaseService{
 
     /**
      * 银行自动债转成功后，更新债转数据
-     * @param credit
-     * @param hjhAccede
-     * @param hjhPlan
+     * @param creditNid
+     * @param accedeOrderId
+     * @param planNid
      * @param bean
      * @param tenderUsrcustid
      * @param sellerUsrcustid
      * @param resultMap
      * @return
-     * @throws Exception
      */
-    boolean updateCreditForAutoTender(HjhDebtCredit credit, HjhAccede hjhAccede, HjhPlan hjhPlan, BankCallBean bean,
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                          String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
 
     /**

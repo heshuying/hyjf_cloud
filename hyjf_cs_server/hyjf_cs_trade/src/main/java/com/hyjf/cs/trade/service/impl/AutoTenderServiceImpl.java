@@ -1,9 +1,7 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -16,12 +14,13 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.AutoTenderService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +45,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     @Value("${hyjf.bank.bankcode}")
     private String bankCode;
 
+    public static final String urlBase = "http://AM-TRADE/am-trade/";
+
+    @Autowired
+    private BaseClient baseClient;
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
@@ -373,15 +376,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
                     logger.info("[" + accedeOrderId + "]" + " 银行自动购买债权接口成功调用后  " + credit.getBorrowNid());
 
-                    /** 4.5. 减去被投标的可投金额，部分承接时，余额推回队列	 */
-                    ketouplanAmoust = setRedisList(ketouplanAmoust, redisBorrow, queueName, assignPay, "R");
-                    // result = true 后继操作不再操作队列
-                    logger.info("==投后[" + accedeOrderId + "]" + "自动承接债转标的" + redisBorrow.getBorrowNid() + "(银行承接成功！队列可承金额更新，不可撤销)");
-                    logger.info("[" + accedeOrderId + "]" + "承后的可承金额：" + ketouplanAmoust + "，"
-                            + redisBorrow.getBorrowNid() + "可承余额：" + redisBorrow.getBorrowAccountWait());
-                    // 不再操作队列
-                    result = true;
-
                     /** 4.6. 更新同步数据库	 */
                     try {
                         this.amTradeClient.updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, tenderUsrcustid, sellerUsrcustid, resultMap);
@@ -389,8 +383,19 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
                         e.printStackTrace();
+                        // 不再操作队列
+                        result = true;
                         return false;
                     }
+
+                    /** 4.5. 减去被投标的可投金额，部分承接时，余额推回队列	 (20180719改银行和表更新都成功才推回队列)*/
+                    ketouplanAmoust = setRedisList(ketouplanAmoust, redisBorrow, queueName, assignPay, "R");
+                    // result = true 后继操作不再操作队列
+                    logger.info("==投后[" + accedeOrderId + "]" + "自动承接债转标的" + redisBorrow.getBorrowNid() + "(银行承接成功！队列可承金额更新，不可撤销)");
+                    logger.info("[" + accedeOrderId + "]" + "承后的可承金额：" + ketouplanAmoust + "，"
+                            + redisBorrow.getBorrowNid() + "可承余额：" + redisBorrow.getBorrowAccountWait());
+                    // 不再操作队列
+                    result = true;
 
                     /** 4.7. 完全承接时，结束债券  */
                     if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
@@ -407,8 +412,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             logger.info("[" + accedeOrderId + "]被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权失败。");
                         }
                         logger.info("[" + accedeOrderId + "]被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权成功。");
+
                         //银行结束债权后，更新债权表为完全承接
-                        ret = this.amTradeClient.updateHjhDebtCreditForEnd(credit) > 1 ? true : false;
+                        ret = updateHjhDebtCreditForEnd(credit.getId());
                         if (!ret) {
                             logger.info("[" + accedeOrderId + "]银行结束债权后，更新债权表为完全承接失败。");
                         }
@@ -484,7 +490,20 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     logger.info("[" + accedeOrderId + "]" + " 银行自动投标申请接口成功调用后  " + borrow.getBorrowNid());
 
-                    /** 5.5. 减去被投标的可投金额，部分投资时，余额推回队列	 */
+                    /** 5.6. 更新同步数据库	 */
+                    // 单笔标的投资
+                    try {
+                        this.amTradeClient.updateBorrowForAutoTender(borrow, hjhAccede, bean);
+                    } catch (Exception e) {
+                        this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
+                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
+                        e.printStackTrace();
+                        // 不再操作队列
+                        result = true;
+                        return false;
+                    }
+
+                    /** 5.5. 减去被投标的可投金额，部分投资时，余额推回队列	  (20180719改银行和表更新都成功才推回队列)*/
                     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
                     if (diversifyCount < 0) {
                         // 不分散投资（推回投资主队列）
@@ -508,18 +527,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     // 不再操作队列
                     result = true;
-
-                    /** 5.6. 更新同步数据库	 */
-                    // 单笔标的投资
-                    try {
-//						result = this.autoTenderService.updateBorrow(borrow, hjhAccede, realAmoust,bean,redisBorrow);
-                        this.amTradeClient.updateBorrowForAutoTender(borrow, hjhAccede, bean);
-                    } catch (Exception e) {
-                        this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
-                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
-                        e.printStackTrace();
-                        return false;
-                    }
                 } else {
                     logger.error("[" + accedeOrderId + "]" + "该计划没有可投标的！");
                     return false;
@@ -552,6 +559,22 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
 
         return true;
+    }
+
+    /**
+     * 银行结束债权后，更新债权表为完全承接
+     * @param idKey
+     * @return
+     */
+    private boolean updateHjhDebtCreditForEnd(Integer idKey) {
+        HjhDebtCreditVO hjhDebtCreditVO = new HjhDebtCreditVO();
+        hjhDebtCreditVO.setId(idKey);
+        //转让状态 2完全承接
+        hjhDebtCreditVO.setCreditStatus(2);
+        hjhDebtCreditVO.setIsLiquidates(1);
+        hjhDebtCreditVO.setUpdateTime(GetDate.getDate());
+        IntegerResponse response = baseClient.postExe(urlBase + "hjhDebtCredit/updateHjhDebtCreditByPK",hjhDebtCreditVO,IntegerResponse.class);
+        return response.getResultInt() > 1 ? true : false;
     }
 
     /**
@@ -773,7 +796,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         record.setCreateTime(nowDate);
         record.setUpdateUserId(1);
         record.setUpdateTime(nowDate);
-
+        logger.info("插入hjhPlanBorrowTmp表：" + JSON.toJSONString(record));
         this.amTradeClient.insertHjhPlanBorrowTmp(record);
 
         return record.getId();
@@ -808,11 +831,12 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * @param hjhAccede
      * @return
      */
-    private boolean deleteBorrowTmp(String borrowNid, HjhAccedeVO hjhAccede) {
+    private boolean deleteBorrowTmp(String borrowNid, HjhAccedeVO hjhAccede, BankCallBean bean) {
         HjhPlanBorrowTmpVO record = new HjhPlanBorrowTmpVO();
         record.setAccedeOrderId(hjhAccede.getAccedeOrderId());
         record.setBorrowNid(borrowNid);
         record.setUserId(hjhAccede.getUserId());
+        record.setOrderId(bean.getOrderId());
         return this.amTradeClient.deleteHjhPlanBorrowTmp(record) > 0 ? true : false;
     }
 }

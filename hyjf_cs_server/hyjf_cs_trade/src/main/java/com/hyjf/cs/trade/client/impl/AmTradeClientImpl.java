@@ -363,7 +363,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "autoTenderController/updateCreditForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
-        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(credit, hjhAccede, hjhPlan, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap);
+        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(
+                credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),
+                bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap
+        );
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动债转成功后，更新债转数据失败。");
@@ -383,7 +386,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "autoTenderController/updateBorrowForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
-        UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrow, hjhAccede, bankCallBeanVO);
+        UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(), bankCallBeanVO);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动投资成功后，更新投资数据失败。");

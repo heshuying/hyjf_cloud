@@ -8,7 +8,6 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.base.Producer;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.service.AutoTenderService;
@@ -160,28 +159,31 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      * @return
      */
     @Override
-    public boolean deleteBorrowTmp(String borrowNid, HjhAccede hjhAccede) {
+    public boolean deleteBorrowTmp(String borrowNid, HjhAccede hjhAccede, BankCallBean bean) {
 
         HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
         HjhPlanBorrowTmpExample.Criteria crt = hjhPlanBorrowTmpExample.createCriteria();
         crt.andAccedeOrderIdEqualTo(hjhAccede.getAccedeOrderId());
         crt.andBorrowNidEqualTo(borrowNid);
         crt.andUserIdEqualTo(hjhAccede.getUserId());
-
+        crt.andOrderIdEqualTo(bean.getOrderId());
         return this.hjhPlanBorrowTmpMapper.deleteByExample(hjhPlanBorrowTmpExample) > 0 ? true : false;
 
     }
 
     /**
      * 银行自动投资成功后，更新投资数据
-     * @param borrow
-     * @param hjhAccede
+     * @param borrowNid
+     * @param accedeOrderId
      * @param bean
      * @return
      */
     @Override
-    public boolean updateBorrowForAutoTender(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
+    public boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean) {
         boolean result = false;
+        // 防范主从数据库不同步，取读库传参改从写库拉数据
+        Borrow borrow = this.selectBorrowByNid(borrowNid);
+        HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
 
         String txAmount = bean.getTxAmount();// 借款金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
@@ -213,7 +215,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         updateBorrowFull(borrow, hjhAccede, bean);
 
         // 删除临时表
-        deleteBorrowTmp(borrow.getBorrowNid(), hjhAccede);
+        deleteBorrowTmp(borrow.getBorrowNid(), hjhAccede, bean);
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
@@ -588,21 +590,25 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 银行自动投资成功后，更新投资数据
-     * @param credit
-     * @param hjhAccede
-     * @param hjhPlan
+     * 银行自动债转成功后，更新债转数据
+     * @param creditNid
+     * @param accedeOrderId
+     * @param planNid
      * @param bean
      * @param tenderUsrcustid
      * @param sellerUsrcustid
      * @param resultMap
      * @return
-     * @throws Exception
      */
     @Override
-    public boolean updateCreditForAutoTender(HjhDebtCredit credit, HjhAccede hjhAccede, HjhPlan hjhPlan, BankCallBean bean,
+    public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                 String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap){
         boolean result = false;
+
+        // 防范主从数据库不同步，取读库传参改从写库拉数据
+        HjhDebtCredit credit = this.selectCreditByNid(creditNid);
+        HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
+        HjhPlan hjhPlan = this.selectHjhPlanByPlanNid(planNid);
 
         String txAmount = bean.getTxAmount();// 交易金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 交易金额(实际支付金额)
@@ -662,7 +668,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         }
 
         // 删除临时表 OK
-        deleteBorrowTmp(credit.getCreditNid(), hjhAccede);
+        deleteBorrowTmp(credit.getCreditNid(), hjhAccede, bean);
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
