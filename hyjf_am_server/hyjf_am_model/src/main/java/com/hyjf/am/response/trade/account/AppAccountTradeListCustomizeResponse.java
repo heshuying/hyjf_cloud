@@ -10,4 +10,5 @@ import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
  * @version AppAccountTradeListCustomizeResponse, v0.1 2018/7/25 14:50
  */
 public class AppAccountTradeListCustomizeResponse extends Response<AppAccountTradeListCustomizeVO> {
+
 }
