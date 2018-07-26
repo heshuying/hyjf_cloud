@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
@@ -31,11 +32,13 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
     @Override
     public List<ProductIntoRecordCustomize> getIntoRecordList(HtlTradeRequest htlTradeRequest) {
         ProductListExample example = convertProductListExample(htlTradeRequest);
+        example.setOrderByClause("invest_time desc");
         List<ProductList> productLists = productListMapper.selectByExample(example);
         List<ProductIntoRecordCustomize> productIntoRecordCustomizes = CommonUtils.convertBeanList(productLists,ProductIntoRecordCustomize.class);
         for(ProductIntoRecordCustomize productIntoRecordCustomize:productIntoRecordCustomizes){
+            logger.info(JSON.toJSONString(productIntoRecordCustomize));
             logger.info("数据库获取并转换bean以后的时间戳[{}]",productIntoRecordCustomize.getInvestTime());
-            productIntoRecordCustomize.setInvestTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(productIntoRecordCustomize.getInvestTime())));
+            productIntoRecordCustomize.setInvestTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(productIntoRecordCustomize.getInvestTime()));
             // 获取部门名称
             String[] department = getDepartment(productIntoRecordCustomize.getDepartment());
             productIntoRecordCustomize.setDepartmentName(department[0]);
@@ -54,11 +57,14 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
     @Override
     public List<ProductRedeemCustomize> getRedeemRecordList(HtlTradeRequest htlTradeRequest) {
         ProductRedeemExample example = convertProductRedeemExample(htlTradeRequest);
+        example.setOrderByClause("redeem_time desc");
         List<ProductRedeem> productRedeems = productRedeemMapper.selectByExample(example);
         List<ProductRedeemCustomize> productIntoRecordCustomizes = CommonUtils.convertBeanList(productRedeems,ProductRedeemCustomize.class);
         for(ProductRedeemCustomize productRedeemCustomize:productIntoRecordCustomizes){
+            logger.error(JSON.toJSONString(productRedeemCustomize));
+
             logger.info("数据库获取并转换bean以后的时间戳[{}]",productRedeemCustomize.getRedeemTime());
-            productRedeemCustomize.setRedeemTime(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(productRedeemCustomize.getRedeemTime())));
+            productRedeemCustomize.setRedeemTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(productRedeemCustomize.getRedeemTime()));
             // 获取部门名称
             String[] department = getDepartment(productRedeemCustomize.getDepartment());
             productRedeemCustomize.setDepartmentName(department[0]);
@@ -123,7 +129,6 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
         if (StringUtils.isNotEmpty(request.getTimeEndSrch())) {
             criteria.andInvestTimeLessThan(GetDate.strYYYYMMDD2Timestamp2(request.getTimeEndSrch()));
         }
-        example.setOrderByClause("invest_time desc");
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());

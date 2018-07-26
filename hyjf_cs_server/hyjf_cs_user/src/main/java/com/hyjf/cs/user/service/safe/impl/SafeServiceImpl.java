@@ -135,7 +135,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
         List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
         BankCardVO bankCard = new BankCardVO();
-        if(!bankCards.isEmpty()) {
+        if(bankCards!=null&&!bankCards.isEmpty()) {
             bankCard = bankCards.get(0);
             bankCard.setCardNo(BankCardUtil.getCardNo(bankCard.getCardNo()));
         }

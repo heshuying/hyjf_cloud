@@ -106,6 +106,14 @@ public class SystemConfig {
 
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
+    
+    /*需要在cs-trade的工程配置里面添加     #ftp图片存放路径    hyjf.ftp.basepath.img=hyjfdata/upfiles/contract/img/    */
+    @Value("${hyjf.ftp.basepath.img}")
+    private String basePathImage;
+    
+    /*需要在cs-trade的工程配置里面添加     #ftp图片映射路径    hyjf.ftp.url=http://testftp.hyjf.com  */
+    @Value("${hyjf.ftp.url}")
+    private String basePathurl;
 
     public String getBankInstcode() {
         return bankInstcode;
@@ -352,4 +360,20 @@ public class SystemConfig {
     public void setWeiFrontHost(String weiFrontHost) {
         WeiFrontHost = weiFrontHost;
     }
+
+	public String getBasePathImage() {
+		return basePathImage;
+	}
+
+	public void setBasePathImage(String basePathImage) {
+		this.basePathImage = basePathImage;
+	}
+
+	public String getBasePathurl() {
+		return basePathurl;
+	}
+
+	public void setBasePathurl(String basePathurl) {
+		this.basePathurl = basePathurl;
+	}
 }

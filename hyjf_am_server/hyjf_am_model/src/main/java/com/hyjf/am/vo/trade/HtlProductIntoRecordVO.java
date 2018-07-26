@@ -30,7 +30,7 @@ public class HtlProductIntoRecordVO extends BaseVO implements Serializable {
     //投资金额
     private BigDecimal amount;
     //投资时间
-    private String investTime;
+    private String investTimeStr;
     //已赎回金额
     private BigDecimal redeemed;
     //剩余金额
@@ -111,12 +111,12 @@ public class HtlProductIntoRecordVO extends BaseVO implements Serializable {
         this.amount = amount;
     }
 
-    public String getInvestTime() {
-        return investTime;
+    public String getInvestTimeStr() {
+        return investTimeStr;
     }
 
-    public void setInvestTime(String investTime) {
-        this.investTime = investTime;
+    public void setInvestTimeStr(String investTimeStr) {
+        this.investTimeStr = investTimeStr;
     }
 
     public BigDecimal getRedeemed() {

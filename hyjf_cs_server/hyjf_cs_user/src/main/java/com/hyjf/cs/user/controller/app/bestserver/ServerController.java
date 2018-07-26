@@ -1,21 +1,8 @@
 package com.hyjf.cs.user.controller.app.bestserver;
 
-import java.util.Date;
-
-import com.hyjf.common.cache.RedisConstants;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
@@ -29,6 +16,18 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AppAccessStatisticsProducer;
 import com.hyjf.cs.user.result.ServerResultBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -148,7 +147,7 @@ public class ServerController extends BaseUserController {
 					&& "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
 				String key = "iUq3OGYv";
 				// 保存Key
-				String value = RedisUtils.get(sign);
+				String value = RedisUtils.get(RedisConstants.SIGN+sign);
 				logger.info("value is :{}", value);
 				SignValue signValue = JSON.parseObject(value, SignValue.class);
 				signValue.setKey(key);
@@ -160,7 +159,7 @@ public class ServerController extends BaseUserController {
 				String key = GetCode.getRandomCode(8);
 
 				// 保存Key
-				String value = RedisUtils.get(sign);
+				String value = RedisUtils.get(RedisConstants.SIGN+sign);
 				logger.info("value is :{}", value);
 				SignValue signValue = JSON.parseObject(value, SignValue.class);
 				signValue.setKey(key);

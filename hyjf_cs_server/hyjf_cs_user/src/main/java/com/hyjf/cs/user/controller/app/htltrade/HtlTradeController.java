@@ -12,6 +12,7 @@ import com.hyjf.cs.user.service.htltrade.HtlTradeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +40,10 @@ public class HtlTradeController extends BaseController {
 	 */
 	@ApiOperation(value = "获取我的账单-汇天利")
     @PostMapping(value = "/htlList")
-    public JSONObject getHtlList(@RequestHeader(value = "userId") Integer userId,
+    public JSONObject getHtlList(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId,
 								 @RequestHeader(value = "version") String version,
 								 @RequestHeader(value = "sign") String sign,
-								 @RequestHeader(value = "key") String key,HttpServletRequest request) {
+								 @RequestHeader(value = "key") String key) {
 
     	JSONObject ret = new JSONObject();
     	ret.put("request", HtlTradeDefine.RETURN_REQUEST);
@@ -53,12 +54,14 @@ public class HtlTradeController extends BaseController {
         //账单类型：1全部，2购入，3赎回
         String tradeType= request.getParameter("tradeType");
 
+        logger.info("trade -> [{}],userId -> [{}]",tradeType,userId);
+
         // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(tradeType) ||  Validator.isNull(sign)) {
+/*        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(tradeType) ||  Validator.isNull(sign)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
-        }
+        }*/
 
 //        // 判断sign是否存在
 //        boolean isSignExists = SecretUtil.isExists(sign);
@@ -69,11 +72,11 @@ public class HtlTradeController extends BaseController {
 //        }
 
         // 取得加密用的Key
-        if (Validator.isNull(key)) {
+/*        if (Validator.isNull(key)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
-        }
+        }*/
 
 
 		List<HtlProductIntoRecordVO> tenders = new ArrayList<>();//购入
@@ -97,15 +100,17 @@ public class HtlTradeController extends BaseController {
 				tenderSize = htlTradeService.countHtlIntoRecord(htlTradeRequest);
 				count+=tenderSize;
 				tenders = htlTradeService.getIntoRecordList(htlTradeRequest);
-				
-				for(HtlProductIntoRecordVO tender: tenders){
-					HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
-					htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(tender.getAmount()));
-					htlTradeResultBean.setTradeType("2");
-					htlTradeResultBean.setCreateTime(tender.getInvestTime());
-					htlList.add(htlTradeResultBean);
+				if(!CollectionUtils.isEmpty(tenders)){
+					for(HtlProductIntoRecordVO tender: tenders){
+						HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
+						htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(tender.getAmount()));
+						htlTradeResultBean.setTradeType("2");
+						htlTradeResultBean.setCreateTime(tender.getInvestTimeStr());
+						htlList.add(htlTradeResultBean);
+					}
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				ret.put("status", "1");
 				ret.put("statusDesc", "获取购买列表失败");
 				return ret;
@@ -125,15 +130,18 @@ public class HtlTradeController extends BaseController {
 				redeemSize = htlTradeService.countProductRedeemRecord(htlTradeRequest);
 				count+=redeemSize;
 				redeems = htlTradeService.getRedeemRecordList(htlTradeRequest);
-
-				for(HtlProductRedeemVO redeem: redeems){
-					HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
-					htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(redeem.getAmount()));
-					htlTradeResultBean.setTradeType("3");
-					htlTradeResultBean.setCreateTime(redeem.getRedeemTime());
-					htlList.add(htlTradeResultBean);
+				if(!CollectionUtils.isEmpty(redeems)){
+					for(HtlProductRedeemVO redeem: redeems){
+						HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
+						htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(redeem.getAmount()));
+						htlTradeResultBean.setTradeType("3");
+						htlTradeResultBean.setCreateTime(redeem.getRedeemTimeStr());
+						htlList.add(htlTradeResultBean);
+					}
 				}
+
 			} catch (Exception e) {
+				e.printStackTrace();
 				ret.put("status", "1");
 				ret.put("statusDesc", "获取赎回列表失败");
 				return ret;

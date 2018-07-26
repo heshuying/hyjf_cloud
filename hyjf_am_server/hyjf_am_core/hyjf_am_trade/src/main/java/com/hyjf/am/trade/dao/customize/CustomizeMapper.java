@@ -149,4 +149,11 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
+
+    @Autowired
+    protected AdminAccountDetailCustomizeMapper adminAccountDetailCustomizeMapper;
+
+    @Autowired
+	protected BorrowFirstCustomizeMapper borrowFirstCustomizeMapper;
+
 }

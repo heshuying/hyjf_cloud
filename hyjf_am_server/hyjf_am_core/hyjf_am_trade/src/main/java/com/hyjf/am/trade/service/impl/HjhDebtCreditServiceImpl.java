@@ -13,7 +13,10 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -128,6 +131,19 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         return this.hjhDebtCreditMapper.updateByPrimaryKeySelective(hjhDebtCredit);
     }
 
-
-
+	/**
+	 * 获取债转承接信息
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid) {
+		HjhDebtCreditTenderVO hjhDebtCreditTenderVO = new HjhDebtCreditTenderVO();
+		HjhDebtCreditTender hjhDebtCreditTender = hjhDebtCreditTenderMapper.selectByPrimaryKey(nid);
+		if(hjhDebtCreditTender != null){
+			BeanUtils.copyProperties(hjhDebtCreditTender, hjhDebtCreditTenderVO);
+		}
+		return hjhDebtCreditTenderVO;
+	}
 }

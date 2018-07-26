@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,20 +47,8 @@ import com.hyjf.common.util.GetDate;
  * @version BorrowFirstServiceImpl, v0.1 2018/7/3 15:59
  */
 @Service
-public class BorrowFirstServiceImpl implements BorrowFirstService {
-    Logger logger = LoggerFactory.getLogger(BorrowFirstServiceImpl.class);
+public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFirstService {
 
-    @Autowired
-    BorrowFirstCustomizeMapper borrowFirstCustomizeMapper;
-
-    @Autowired
-    BorrowMapper borrowMapper;
-
-    @Autowired
-    BorrowBailMapper borrowBailMapper;
-
-    @Autowired
-    BorrowConfigMapper borrowConfigMapper;
 
     @Autowired
     BorrowFirstProducer borrowFirstProducer;
@@ -154,7 +143,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         return false;
     }
 
-    private String getBorrowConfig(String configCd) {
+    public String getBorrowConfig(String configCd) {
         BorrowConfig borrowConfig = borrowConfigMapper.selectByPrimaryKey(configCd);
         return borrowConfig.getConfigValue();
     }

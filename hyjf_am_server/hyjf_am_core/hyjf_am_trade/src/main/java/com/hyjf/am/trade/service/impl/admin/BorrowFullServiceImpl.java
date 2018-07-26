@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFullCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize;
 import com.hyjf.am.trade.service.admin.BorrowFullService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -41,29 +42,8 @@ import java.util.Map;
  * @version BorrowFullServiceImpl, v0.1 2018/7/6 15:17
  */
 @Service
-public class BorrowFullServiceImpl implements BorrowFullService {
-    Logger logger = LoggerFactory.getLogger(BorrowFullServiceImpl.class);
+public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFullService {
 
-    @Autowired
-    BorrowFullCustomizeMapper borrowFullCustomizeMapper;
-
-    @Autowired
-    BorrowMapper borrowMapper;
-
-    @Autowired
-    BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    BorrowApicronMapper borrowApicronMapper;
-
-    @Autowired
-    BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    BorrowTenderTmpMapper borrowTenderTmpMapper;
-
-    @Autowired
-    FreezeHistoryMapper freezeHistoryMapper;
 
     /**
      * 获取借款复审列表count
