@@ -2,11 +2,14 @@ package com.hyjf.am.market.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -180,6 +183,23 @@ public class ActivityController {
         CouponTenderResponse response = new CouponTenderResponse();
         if(null != activityList){
             response.setAttrbute(activityList.getTitle());
+        }
+        return response;
+    }
+
+
+    /**
+     * 获取有效活动列表
+     * @param request
+     * @return
+     */
+    @PostMapping("/selectRecordListValid")
+    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListRequest request) {
+        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
+        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(request,-1,-1);
+        if (!CollectionUtils.isEmpty(recordList)) {
+            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
+            response.setResultList(activityListCustomizeVOS);
         }
         return response;
     }

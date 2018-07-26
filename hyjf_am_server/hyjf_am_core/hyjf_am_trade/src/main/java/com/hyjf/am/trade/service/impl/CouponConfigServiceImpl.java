@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.mapper.auto.CouponConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponRecoverMapper;
@@ -267,5 +268,14 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		return couponInterestTotalWait;
 	}
 
+
+	@Override
+	public List<CouponConfigCustomize> getCouponConfigList(CouponConfigRequest request) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("status",request.getStatus());
+		map.put("limitStart",-1);
+		map.put("limitEnd",-1);
+		return couponConfigCustomizeMapper.selectCouponConfigList(map);
+	}
 
 }

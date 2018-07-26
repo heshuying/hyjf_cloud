@@ -25,6 +25,7 @@ import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -418,4 +419,26 @@ public class CouponConfigController extends BaseController {
         return total;
     }
 
+
+    /**
+     * 获取admin优惠券发放配置
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/adminCouponConfig")
+    public CouponConfigCustomizeResponse getCouponConfigList(@RequestBody CouponConfigRequest request) {
+        CouponConfigCustomizeResponse response = new CouponConfigCustomizeResponse();
+        //加载优惠券配置列表
+        CouponConfigCustomize configCustomize = new CouponConfigCustomize();
+        configCustomize.setStatus(request.getStatus());
+        configCustomize.setLimitStart(-1);
+        configCustomize.setLimitEnd(-1);
+        List<CouponConfigCustomize> couponConfigCustomizes = couponConfigService.getCouponConfigList(request);
+        if (!CollectionUtils.isEmpty(couponConfigCustomizes)) {
+            List<CouponConfigCustomizeVO> couponConfigCustomizeVOS = CommonUtils.convertBeanList(couponConfigCustomizes, CouponConfigCustomizeVO.class);
+            response.setResultList(couponConfigCustomizeVOS);
+        }
+        return response;
+    }
 }
