@@ -44,7 +44,7 @@ public class AppVersionController {
         }
         Integer count = appVersionService.countRecord(version);
         if (count != null && count > 0) {
-            Paginator paginator = new Paginator(form.getPaginatorPage(), count);
+            Paginator paginator = new Paginator(form.getCurrPage(), count);
             List<Version> recordList  = appVersionService.getRecordList(version, paginator.getOffset(), paginator.getLimit());
             List<VersionVO> versionVOS = CommonUtils.convertBeanList(recordList, VersionVO.class);
             response.setResultList(versionVOS);

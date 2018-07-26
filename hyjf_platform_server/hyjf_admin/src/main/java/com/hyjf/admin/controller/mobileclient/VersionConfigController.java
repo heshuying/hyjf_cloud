@@ -43,7 +43,7 @@ public class VersionConfigController extends BaseController {
      * 查询列表
      * @return
      */
-    @ApiOperation(value = "版本管理列表查询", notes = "版本管理列表查询")
+    @ApiOperation(value = "版本管理:列表查询", notes = "版本管理:列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
     public AdminResult<ListResult<VersionVO>> search(@RequestBody VersionConfigBeanRequest request) {
@@ -59,7 +59,7 @@ public class VersionConfigController extends BaseController {
      * 详情查询
      * @return
      */
-    @ApiOperation(value = "版本管理详情查询", notes = "版本管理详情查询")
+    @ApiOperation(value = "版本管理:详情查询", notes = "版本管理:详情查询")
     @PostMapping(value = "/searchinfo")
     @ResponseBody
     public AdminResult<VersionVO> searchinfo(@RequestBody VersionConfigBeanRequest request) {
@@ -70,7 +70,7 @@ public class VersionConfigController extends BaseController {
         return new AdminResult<VersionVO>(recordList.getResult());
     }
 
-    @ApiOperation(value = "添加信息", notes = "添加信息")
+    @ApiOperation(value = "版本管理:添加信息", notes = "版本管理:添加信息")
     @PostMapping(value = "/insertinfo")
     @ResponseBody
     public AdminResult<VersionVO> insertinfo(@RequestBody VersionConfigBeanRequest request) throws Exception {
@@ -84,7 +84,7 @@ public class VersionConfigController extends BaseController {
     }
 
 
-    @ApiOperation(value = "修改维护信息", notes = "修改维护信息")
+    @ApiOperation(value = "版本管理:修改信息", notes = "版本管理:修改信息")
     @PostMapping(value = "/updateinfo")
     @ResponseBody
     public AdminResult<VersionVO> updateinfo(@RequestBody VersionConfigBeanRequest request) throws Exception {
@@ -98,7 +98,7 @@ public class VersionConfigController extends BaseController {
     }
 
 
-    @ApiOperation(value = "刪除信息", notes = "刪除信息")
+    @ApiOperation(value = "版本管理:刪除信息", notes = "版本管理:刪除信息")
     @PostMapping(value = "/deleteinfo")
     @ResponseBody
     public AdminResult<VersionVO> deleteinfo(@RequestBody VersionConfigBeanRequest request) throws Exception {

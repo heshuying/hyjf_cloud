@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.consumer.AutoIssueConsumer;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,20 +39,9 @@ import com.hyjf.common.util.GetDate;
  * @version AdminHjhLabelServiceImpl.java, v0.1 2018年6月30日 上午10:54:14
  */
 @Service
-public class AdminHjhLabelServiceImpl implements AdminHjhLabelService{
+public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHjhLabelService{
 
-	private static final Logger logger = LoggerFactory.getLogger(AdminHjhLabelServiceImpl.class);
 
-    @Autowired
-    BorrowStyleMapper borrowStyleMapper;
-    @Autowired 
-    BorrowProjectTypeMapper borrowProjectTypeMapper;
-    @Autowired
-    HjhLabelMapper hjhLabelMapper;
-    @Autowired
-    AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
-    @Autowired
-    HjhAllocationEngineMapper hjhAllocationEngineMapper;
 	@Override
 	public List<BorrowStyleVO> selectBorrowStyleList() {
 		BorrowStyleExample example = new BorrowStyleExample();

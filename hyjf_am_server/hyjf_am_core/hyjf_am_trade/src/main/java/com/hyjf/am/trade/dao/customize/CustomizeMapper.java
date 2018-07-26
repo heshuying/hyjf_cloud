@@ -143,4 +143,10 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AppAccountTradeCustomizeMapper appAccountTradeCustomizeMapper;
+
+	@Autowired
+	protected AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
+
+	@Autowired
+	protected AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
 }
