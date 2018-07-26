@@ -19,7 +19,7 @@ public class HtlProductRedeemVO extends BaseVO implements Serializable {
     private Integer userId;
     private String orderId;
     private BigDecimal amount;
-    private String redeemTime;
+    private String redeemTimeStr;
     private BigDecimal interest;
     private BigDecimal total;
     private Integer referee;
@@ -69,12 +69,12 @@ public class HtlProductRedeemVO extends BaseVO implements Serializable {
         this.amount = amount;
     }
 
-    public String getRedeemTime() {
-        return redeemTime;
+    public String getRedeemTimeStr() {
+        return redeemTimeStr;
     }
 
-    public void setRedeemTime(String redeemTime) {
-        this.redeemTime = redeemTime;
+    public void setRedeemTimeStr(String redeemTimeStr) {
+        this.redeemTimeStr = redeemTimeStr;
     }
 
     public BigDecimal getInterest() {

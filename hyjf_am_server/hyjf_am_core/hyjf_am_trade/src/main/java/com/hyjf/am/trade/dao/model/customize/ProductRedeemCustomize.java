@@ -8,7 +8,8 @@ public class ProductRedeemCustomize implements Serializable {
     private Integer userId;
     private String orderId;
     private BigDecimal amount;
-    private String redeemTime;
+    private Integer redeemTime;
+    private String redeemTimeStr;
     private BigDecimal interest;
     private BigDecimal total;
     private Integer referee;
@@ -25,48 +26,6 @@ public class ProductRedeemCustomize implements Serializable {
 	private String regionName;
 	private String branceName;
 	private String departmentName;
-
-    public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getRefername() {
-		return refername;
-	}
-
-	public void setRefername(String refername) {
-		this.refername = refername;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public String getTurename() {
-		return turename;
-	}
-
-	public void setTurename(String turename) {
-		this.turename = turename;
-	}
-
-	private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -89,7 +48,7 @@ public class ProductRedeemCustomize implements Serializable {
     }
 
     public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
+        this.orderId = orderId;
     }
 
     public BigDecimal getAmount() {
@@ -100,12 +59,20 @@ public class ProductRedeemCustomize implements Serializable {
         this.amount = amount;
     }
 
-    public String getRedeemTime() {
+    public Integer getRedeemTime() {
         return redeemTime;
     }
 
-    public void setRedeemTime(String redeemTime) {
+    public void setRedeemTime(Integer redeemTime) {
         this.redeemTime = redeemTime;
+    }
+
+    public String getRedeemTimeStr() {
+        return redeemTimeStr;
+    }
+
+    public void setRedeemTimeStr(String redeemTimeStr) {
+        this.redeemTimeStr = redeemTimeStr;
     }
 
     public BigDecimal getInterest() {
@@ -161,7 +128,7 @@ public class ProductRedeemCustomize implements Serializable {
     }
 
     public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+        this.remark = remark;
     }
 
     public Integer getClient() {
@@ -171,29 +138,68 @@ public class ProductRedeemCustomize implements Serializable {
     public void setClient(Integer client) {
         this.client = client;
     }
-    
 
-	public String getRegionName() {
-		return regionName;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setRegionName(String regionName) {
-		this.regionName = regionName;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getBranceName() {
-		return branceName;
-	}
+    public String getRefername() {
+        return refername;
+    }
 
-	public void setBranceName(String branceName) {
-		this.branceName = branceName;
-	}
+    public void setRefername(String refername) {
+        this.refername = refername;
+    }
 
-	public String getDepartmentName() {
-		return departmentName;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getTurename() {
+        return turename;
+    }
+
+    public void setTurename(String turename) {
+        this.turename = turename;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
+
+    public String getBranceName() {
+        return branceName;
+    }
+
+    public void setBranceName(String branceName) {
+        this.branceName = branceName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
 }
