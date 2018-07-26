@@ -180,4 +180,11 @@ public interface BankCreditTenderService {
      * @date 2018/7/25 17:19
      */
     List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String,Object> params);
+    
+	/**
+	 * 获取债转承接信息AssignNid
+	 * @param nid
+	 * @return
+	 */
+    CreditTenderVO getCreditTenderByAssignNid(String assignNid);
 }

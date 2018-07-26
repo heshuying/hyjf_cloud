@@ -3359,4 +3359,51 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+	/**
+	 * 获取债转承接信息ByAssignOrderId
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
+		String url = "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditTenderByAssignOrderId/"+assignOrderId;
+        HjhDebtCreditTenderResponse response = restTemplate.getForEntity(url,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+		return null;
+	}
+	
+	/**
+	 * 获取债转承接信息AssignNid
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+	@Override
+	public CreditTenderVO getCreditTenderByAssignNid(String assignNid) {
+        CreditTenderResponse response =
+                restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/getCreditTenderByAssignNid/"+assignNid,
+                        CreditTenderResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+		return null;
+	}
+
+	/**
+	 * 获取协议模板by DisplayName
+	 * @param nid
+	 * @return
+	 */
+	@Override
+	public List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName) {
+		String url = "http://AM-TRADE/am-trade/protocol/getProtocolTemplateVOByDisplayName/"+displayName;
+		ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+		return null;
+	}
 }

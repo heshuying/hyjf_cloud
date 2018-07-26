@@ -11,14 +11,18 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.trade.client.AmBorrowClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.BorrowTenderClient;
 import com.hyjf.cs.trade.client.CouponUserClient;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
@@ -35,8 +39,12 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
     
     @Autowired
     private AmBorrowClient amBorrowClient;
+    
     @Autowired
-    CouponUserClient couponUserClient;	
+    private BorrowTenderClient borrowTenderClient;
+    
+    @Autowired
+    private CouponUserClient couponUserClient;	
 	/**
 	 * 获取债转承接信息
 	 * @param nid
@@ -107,5 +115,39 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	public List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String, Object> params) {
 		List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = this.amTradeClient.selectWebCreditTenderDetailForContract(params);
 		return tenderToCreditDetailList;
+	}
+
+	@Override
+	public List<BorrowTenderVO> getBorrowTenderListByNid(String tenderNid) {
+		List<BorrowTenderVO> tenderList = this.borrowTenderClient.getBorrowTenderListByNid(tenderNid);
+		return tenderList;
+	}
+
+	@Override
+	public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
+		return this.amBorrowClient.selectUserHjhInvistDetail(params);
+	}
+
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
+		HjhDebtCreditTenderVO vo = amTradeClient.getHjhDebtCreditTenderByAssignOrderId(assignOrderId);
+		return vo;
+	}
+
+	/**
+	 * 获取债转承接信息by AssignNid
+	 * @param AssignOrderId
+	 * @return
+	 */
+	@Override
+	public CreditTenderVO getCreditTenderByAssignNid(String assignNid) {
+		CreditTenderVO vo = amTradeClient.getCreditTenderByAssignNid(assignNid);
+		return vo;
+	}
+
+	@Override
+	public List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName) {
+		List<ProtocolTemplateVO> volist = amTradeClient.getProtocolTemplateVOByDisplayName(displayName);
+		return volist;
 	}
 }

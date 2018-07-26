@@ -55,4 +55,12 @@ public interface HjhDebtCreditService {
 	 * @return
 	 */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+    
+	/**
+	 * 获取债转承接信息 by AssignOrderId
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
 }

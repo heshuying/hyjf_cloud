@@ -31,7 +31,6 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -1433,4 +1432,26 @@ public interface AmTradeClient {
     Integer countAppMyPlan(AssetManageBeanRequest params);
 
     List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
+    
+	/**
+	 * 获取债转承接信息by AssignOrderId
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
+    
+	/**
+	 * 获取债转承接信息by AssignNid
+	 * @param AssignOrderId
+	 * @return
+	 */
+    CreditTenderVO getCreditTenderByAssignNid(String assignNid);
+    
+	/**
+	 * 获取协议模板by DisplayName
+	 * @param DisplayName
+	 * @return
+	 */
+    List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
 }
