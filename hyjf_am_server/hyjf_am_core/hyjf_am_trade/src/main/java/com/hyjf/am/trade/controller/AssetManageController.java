@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.hyjf.am.response.trade.QueryMyProjectVOResponse;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

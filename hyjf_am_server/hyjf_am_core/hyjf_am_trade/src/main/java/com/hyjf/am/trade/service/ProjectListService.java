@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
@@ -135,6 +136,23 @@ public interface ProjectListService {
      * @date 2018/6/22 10:27
      */
     List<HjhPlanVO>  searchAppPlanList(@Valid ProjectListRequest request);
+
+
+
+    /*
+     * 散表投资记录数
+     */
+    int countProjectInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * 获取散标投资记录
+     * @param params
+     * @return
+     */
+    List<AppProjectInvestListCustomize> selectProjectInvestList(Map<String,Object> params);
+
+
+
     // --------------------------app end --------------------------------------------------
 
     // -----------------------------wechat  start ------------------------------------------

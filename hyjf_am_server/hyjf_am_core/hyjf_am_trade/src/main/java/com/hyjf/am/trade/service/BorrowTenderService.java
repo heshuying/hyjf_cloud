@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface BorrowTenderService {
 
@@ -92,4 +93,11 @@ public interface BorrowTenderService {
      * @return
      */
     Integer updateBorrowTenderCpn(BorrowTenderCpnVO borrowTenderCpn);
+
+    /**
+     * 通过borrowId获取对应的总钱数
+     * @param params
+     * @return
+     */
+    String countMoneyByBorrowId(Map<String,Object> params);
 }

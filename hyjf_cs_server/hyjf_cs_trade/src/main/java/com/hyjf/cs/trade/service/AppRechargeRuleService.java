@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.cs.trade.bean.AppRechargeDescResultBean;
+import com.hyjf.cs.trade.bean.app.AppRechargeDescResultBean;
 
 /**
  * @author wangjun

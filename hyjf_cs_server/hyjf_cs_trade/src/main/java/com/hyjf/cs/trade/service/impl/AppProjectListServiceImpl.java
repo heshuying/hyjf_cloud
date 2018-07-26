@@ -3,10 +3,12 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
@@ -17,6 +19,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
 import com.hyjf.common.enums.MsgEnum;
@@ -28,6 +31,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
+import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.AppProjectListService;
@@ -36,7 +41,6 @@ import com.hyjf.cs.trade.service.RepayPlanService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.ant.Project;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -45,13 +49,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * App端项目列表Service实现类
@@ -1505,6 +1509,53 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         return appResult;
 
 
+    }
+
+    /**
+     * 散标投资记录列表
+     * @param info
+     * @param form
+     */
+    @Override
+    public void createProjectInvestPage(JSONObject info, AppProjectInvestBeanRequest form) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid", form.getBorrowNid());
+        int recordTotal = this.amTradeClient.countProjectInvestRecordTotal(params);
+        String count = this.amTradeClient.countMoneyByBorrowId(params);
+        if(count != null && !"".equals(count)){
+            info.put("account", DF_FOR_VIEW.format(new BigDecimal(count)));
+        }else{
+            info.put("account", "0");
+        }
+        if (recordTotal > 0) { // 查询相应的汇直投列表数据
+            int limit = form.getPageSize();
+            int page = form.getCurrPage();
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<AppProjectInvestListCustomizeVO> recordList = amTradeClient.selectProjectInvestList(params);
+            Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+            for (AppProjectInvestListCustomizeVO obj : recordList){
+                obj.setClientName(relationMap.get(String.valueOf(obj.getClient())));
+            }
+
+            info.put("list", recordList);
+            info.put("userCount", String.valueOf(recordTotal));
+            //判断本次查询是否已经全部查出数据
+            if((page * limit) > recordTotal){
+                info.put("isEnd", true);
+            }else{
+                info.put("isEnd", false);
+            }
+        } else {
+            info.put("list", new ArrayList<AppProjectInvestListCustomizeVO>());
+            info.put("userCount", "0");
+            info.put("isEnd", true);
+        }
     }
 
 

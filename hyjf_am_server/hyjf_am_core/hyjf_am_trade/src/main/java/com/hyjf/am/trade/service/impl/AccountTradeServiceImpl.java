@@ -2,7 +2,7 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.auto.AccountTradeExample;
-import com.hyjf.am.trade.dao.model.customize.trade.AppAccountTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppAccountTradeListCustomize;
 import com.hyjf.am.trade.service.AccountTradeService;
 import org.springframework.stereotype.Service;
 
