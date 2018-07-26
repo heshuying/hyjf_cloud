@@ -1394,4 +1394,12 @@ public interface AmTradeClient {
     List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest params);
 
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
+    
+	/**
+	 * 获取债转承接信息
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
 }
