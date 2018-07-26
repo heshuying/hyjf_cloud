@@ -1441,8 +1441,16 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectListCustomize.setBorrowTheSecond(entity.getPlanPeriod());
                 appProjectListCustomize.setBorrowTheSecondDesc("锁定期限");
                 appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
+
+                if ("稍后开启".equals(entity.getStatusName())){    //1.启用  2.关闭
+                    // 20.立即加入  21.稍后开启
+                    appProjectListCustomize.setStatus("21");
+                    appProjectListCustomize.setStatusName("稍后开启");
+                }else if("立即加入".equals(entity.getStatusName())){  //1.启用  2.关闭
+                    appProjectListCustomize.setStatus("20");
+                    appProjectListCustomize.setStatusName("立即加入");
+                }
                 /*重构整合 结束*/
-                appProjectListCustomize.setStatus(entity.getStatus());
                 appProjectListCustomize.setBorrowName(entity.getPlanName());
                 appProjectListCustomize.setPlanApr(entity.getPlanApr());
                 appProjectListCustomize.setBorrowApr(entity.getPlanApr());
@@ -1464,7 +1472,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectListCustomize.setBorrowUrl(url);
                 appProjectListCustomize.setProjectType("HJH");
                 appProjectListCustomize.setBorrowType("HJH");
-
+                appProjectListCustomize.setMark("");
                 // 应客户端要求，返回空串
                 CommonUtils.convertNullToEmptyString(appProjectListCustomize);
                 appProjectList.add(appProjectListCustomize);
