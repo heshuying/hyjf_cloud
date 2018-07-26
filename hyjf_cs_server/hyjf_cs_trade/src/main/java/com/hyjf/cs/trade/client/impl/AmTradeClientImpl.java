@@ -3289,4 +3289,35 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return null;
 	}
 
+    @Override
+    public Integer selectTenderToCreditListCount(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectTenderToCreditListCount";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getTenderCreditDetailCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer countAppMyPlan(AssetManageBeanRequest params) {
+        String url = urlBase +"assetmanage/countAppMyPlan";
+        AssetManageResponse response = restTemplate.postForEntity(url,params,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppMyPlanCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params) {
+        String url = urlBase +"assetmanage/selectAppMyPlanList";
+        AssetManageResponse response = restTemplate.postForEntity(url,params,AssetManageResponse.class).getBody();
+
+        if (response != null) {
+            return response.getAppMyPlanCustomizeList();
+        }
+        return null;
+    }
+
 }

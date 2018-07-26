@@ -1847,4 +1847,264 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
+
+
+	<!-- 获取可转让的投资列表 -->
+	<select id="selectTenderToCreditListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
+		SELECT
+		*
+		FROM
+		huiyingdai_borrow_recover hbr
+		LEFT JOIN huiyingdai_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
+		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		<include refid="TenderToCredit_Where_Clause" />
+	</select>
+	<!-- 获取可转让的投资查询条件 -->
+	<sql id="TenderToCredit_Where_Clause">
+		<where>
+			<if test="borrowNid != null and borrowNid != ''">
+				AND hbr.borrow_nid = #{borrowNid}
+			</if>
+			<if test="tenderNid != null and tenderNid != ''">
+				AND hbr.nid = #{tenderNid}
+			</if>
+			AND	hbr.recover_status = 0
+			AND hb.project_type != 8
+			AND hb.project_type != 13
+			AND hb.repay_last_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 30)
+			AND hb.borrow_style != 'month'
+			AND hb.borrow_style != 'principal'
+			AND hb.plan_nid IS NULL
+			AND hb.inst_code = 10000000
+			AND hbr.advance_status != 3
+			AND hbr.delay_days = 0
+			AND hbr.credit_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 3)
+			AND hbr.recover_capital <![CDATA[>=]]> 1000
+			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
+			AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 3600 * 24 * 30)
+			AND hbr.recover_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 3)
+			AND hbr.addtime <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)
+			AND CAST(IFNULL(hbr.repay_orddate,0) AS SIGNED)  <![CDATA[<]]> FROM_UNIXTIME((#{nowTime} - 24 * 3600 * 3),'%Y%m%d')
+			AND hbr.user_id = #{userId}
+			<!-- 分期标提前还款该月不允许债转 -->
+			AND (
+			CASE
+			WHEN hb.borrow_style = 'endmonth' THEN
+			(
+			SELECT
+			hbrp.recover_status AS recoverPlanStatus
+			FROM
+			huiyingdai_borrow_recover_plan hbrp
+			WHERE
+			hbrp.borrow_nid = hbr.borrow_nid
+			AND hbrp.tender_id = hbr.tender_id
+			AND hbrp.recover_period = (
+			hb.borrow_period - hbr.recover_period + 1
+			)
+			)
+			ELSE
+			(hbr.recover_status)
+			END
+			)<![CDATA[<>]]>1
+		</where>
+	</sql>
+
+
+	<select id="countAppMyPlan" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
+		SELECT count(1) FROM (
+		SELECT
+		hha.id
+		FROM ht_hjh_accede hha
+		LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
+		WHERE hha.user_id=#{userId}
+
+		<choose>
+			<when test="type == 1">
+				AND hha.order_status <![CDATA[<>]]>7
+			</when>
+			<when test="type == 2">
+				AND hha.order_status = 7
+			</when>
+		</choose>
+
+
+
+		UNION ALL
+		SELECT
+		hbtc.id
+		FROM
+		ht_borrow_tender_cpn hbtc
+		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
+		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
+		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
+		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
+		INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE hbtc.user_id= #{userId}
+		<choose>
+			<when test="type == 1">
+				AND hcr.recover_status=0
+			</when>
+			<when test="type == 2">
+				AND hcr.recover_status=1
+			</when>
+		</choose>
+		) t
+
+	</select>
+
+
+
+	<!-- app 我的计划列表 -->
+	<resultMap id="appMyPlanMap" type="com.hyjf.am.trade.dao.model.customize.trade.AppMyPlanCustomize">
+		<result column="plan_nid" property="borrowNid" />
+		<result column="plan_name" property="borrowName" />
+		<result column="order_id" property="orderId" />
+		<result column="expect_apr" property="expectApr" />
+		<result column="lock_period" property="lockPeriod" />
+		<result column="user_id" property="userId" />
+		<result column="account" property="account" />
+		<result column="accede_account" property="accedeAmount" />
+		<result column="repay_account_wait" property="interest" />
+		<result column="received_interest" property="receivedInterest" />
+		<result column="last_payment_time" property="recoverTime" />
+		<result column="statusName" property="statusName" />
+		<result column="coupon_type" property="label" />
+		<result column="coupon_code" property="couponCode" />
+		<result column="coupon_amount" property="couponAmount" />
+		<result column="coupon_profit_time" property="couponProfitTime" />
+		<result column="borrow_url" property="borrowUrl" />
+		<result column="type" property="type" />
+		<result column="label" property="label" />
+		<result column="create_time" property="createTime" />
+		<result column="repay_time" property="repayTime" />
+	</resultMap>
+	<select id="selectAppMyPlanList" resultMap="appMyPlanMap" parameterType="java.util.Map">
+		SELECT t.* FROM (
+		SELECT
+		hhp.plan_name plan_name,
+		hha.plan_nid plan_nid,
+		hha.accede_order_id order_id,
+		CONCAT(hhp.expect_apr, '%') expect_apr,
+		CASE
+		WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
+		ELSE CONCAT(hhp.lock_period,'个月')
+		END AS lock_period,
+		hha.user_id user_id,
+		hha.accede_account account,
+		hha.accede_account accede_account,
+
+		<choose>
+			<when test="type == 1">
+				IF(hha.wait_total=0,'--',hha.wait_total) repay_account_wait,
+				IF(hha.wait_total=0,'--',hha.wait_total) received_interest,
+				IFNULL(FROM_UNIXTIME( IF(hha.last_payment_time=0,NULL,hha.last_payment_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+
+			</when>
+			<when test="type == 2">
+				hha.received_total repay_account_wait,
+				hha.received_interest received_interest,
+				IF(hha.acctual_payment_time=NULL OR hha.acctual_payment_time=0 OR hha.acctual_payment_time='',
+				'--',FROM_UNIXTIME( hha.acctual_payment_time, '%Y-%m-%d' )) AS last_payment_time,
+			</when>
+		</choose>
+
+		FROM_UNIXTIME(hha.create_time,'%Y-%m-%d') as create_time,
+		hha.create_time as order_by_addtime,
+
+		CASE
+		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
+		ELSE ''
+		END AS statusName,
+		0 coupon_type,
+		hha.acctual_payment_time orderby_quit_time,
+		'' coupon_code,
+		'' coupon_amount,
+		'' coupon_profit_time,
+		'' AS borrow_url,
+		#{type} as type,
+		'0' as label
+		FROM ht_hjh_accede hha
+		LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
+		WHERE hha.user_id=#{userId}
+
+		<choose>
+			<when test="type == 1">
+				AND hha.order_status <![CDATA[<>]]>7
+			</when>
+			<when test="type == 2">
+				AND hha.order_status = 7
+			</when>
+		</choose>
+
+
+
+		UNION ALL
+		SELECT
+		hhp.plan_name plan_name,
+		hbtc.borrow_nid plan_nid,
+		hbtc.nid order_id,
+		CONCAT(hhp.expect_apr, '%') expect_apr,
+		CASE
+		WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
+		ELSE CONCAT(hhp.lock_period,'个月')
+		END AS lock_period,
+		hbtc.user_id user_id,
+		CASE
+		WHEN hcc.coupon_type = 2 THEN
+		hbtc.account
+		ELSE
+		hcc.coupon_quota
+		END AS account,
+		CASE
+		WHEN hcc.coupon_type = 2 THEN
+		hbtc.account
+		ELSE
+		hcc.coupon_quota
+		END AS accede_account,
+
+		hcr.recover_account repay_account_wait,
+		hcr.recover_account received_interest,
+
+		IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+
+		FROM_UNIXTIME(hbtc.create_time,'%Y-%m-%d') as create_time,
+		hbtc.create_time as order_by_addtime,
+		'' AS statusName,
+		hcc.coupon_type coupon_type,
+		hcr.recover_time orderby_quit_time ,
+		hcc.coupon_code coupon_code,
+		hcc.coupon_quota coupon_amount,
+		hcc.coupon_profit_time coupon_profit_time,
+		'' AS borrow_url,
+		#{type} as type ,
+		hcc.coupon_type label
+		FROM
+		ht_borrow_tender_cpn hbtc
+		INNER JOIN ht_hjh_plan hhp ON hbtc.borrow_nid = hhp.plan_nid
+		LEFT JOIN ht_coupon_recover hcr ON hbtc.nid=hcr.tender_id
+		INNER JOIN ht_coupon_tender hct ON hct.order_id = hbtc.nid
+		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
+		INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE hbtc.user_id= #{userId}
+		<choose>
+			<when test="type == 1">
+				AND hcr.recover_status=0
+			</when>
+			<when test="type == 2">
+				AND hcr.recover_status=1
+			</when>
+		</choose>
+		) t
+		<choose>
+			<when test="type == 1">
+				ORDER BY t.order_by_addtime desc, t.order_id asc
+			</when>
+			<when test="type == 2">
+				ORDER BY t.orderby_quit_time desc, t.order_id asc
+			</when>
+		</choose>
+		LIMIT #{limitStart} , #{limitEnd}
+
+	</select>
+
 </mapper>

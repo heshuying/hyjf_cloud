@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
+import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 
 import java.util.List;
@@ -44,9 +45,13 @@ public interface AssetManageService  extends BaseService {
 
     QueryMyProjectVO selectWechatRepayMentPlanList(WechatMyProjectRequest request);
 
-    List<CurrentHoldObligatoryRightListCustomize> selectAppCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
-
     List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request);
 
     List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request);
+
+    int selectTenderToCreditListCount(AssetManageBeanRequest request);
+
+    List<AppMyPlanCustomize> selectAppMyPlanList(AssetManageBeanRequest request);
+
+    int countAppMyPlan(AssetManageBeanRequest request);
 }

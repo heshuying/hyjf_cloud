@@ -38,7 +38,7 @@ import java.util.*;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "wechat端用户资产管理接口",description = "wechat端用户资产管理接口")
+@Api(value = "app端用户我的散标接口",description = "app端用户我的散标接口")
 @Controller
 @RequestMapping("/hyjf-app/user/invest")
 public class AppMyProjectController extends BaseTradeController {
@@ -318,19 +318,17 @@ public class AppMyProjectController extends BaseTradeController {
             // 判断用户所处渠道不允许债转
             return false;
         }
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("borrowNid", borrowNid);
-        params.put("tenderNid", tenderNid);
-        params.put("userId", userId);
-        params.put("nowTime", (int) (System.currentTimeMillis() / 1000));
-        params.put("limitStart", 0);
-        params.put("limitEnd", 1);
-        //TODO  需要添加
-        /*List<AppTenderToCreditListCustomizeVO> list = appTenderCreditService.selectTenderToCreditList(params);
-        if (!CollectionUtils.isEmpty(list)) {
+        AssetManageBeanRequest  params=new AssetManageBeanRequest();
+        params.setBorrowNid(borrowNid);
+        params.setTenderNid(tenderNid);
+        params.setUserId(userId+"");
+        params.setNowTime((int)(System.currentTimeMillis() / 1000));
+        params.setLimitStart(0);
+        params.setLimitEnd(1);
+        Integer count = appMyProjectService.selectTenderToCreditListCount(params);
+        if (count>0) {
             return true;
-        }*/
+        }
         return false;
     }
     /**

@@ -10,7 +10,6 @@ import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -56,5 +55,10 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
     @Override
     public List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params) {
         return amTradeClient.searchAppCreditRecordList(params);
+    }
+
+    @Override
+    public Integer selectTenderToCreditListCount(AssetManageBeanRequest params) {
+        return amTradeClient.selectTenderToCreditListCount(params);
     }
 }

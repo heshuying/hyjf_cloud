@@ -17,11 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -94,7 +91,7 @@ public class AccessFilter extends ZuulFilter {
 					// 不对其进行路由
 					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
-				SignValue signValue = RedisUtils.getObj(sign, SignValue.class);
+				SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN+sign, SignValue.class);
 				ctx.addZuulRequestHeader("key", signValue.getKey());
 				ctx.addZuulRequestHeader("initKey", signValue.getInitKey());
 				ctx.addZuulRequestHeader("version", signValue.getVersion());
