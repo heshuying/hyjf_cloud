@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.OperationReportJobCustomizeMapper">
+
+    <resultMap id="ageResultMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
+	    <id column="sex" property="sex" jdbcType="INTEGER" />
+	    <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="cityResultMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
+	    <id column="citycode" property="citycode" jdbcType="INTEGER" />
+	    <result column="count" property="count" jdbcType="INTEGER" />
+	    <result column="cityname" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <!-- 	每月交易金额 -->
+	<select id="getAccountByMonth" resultType="java.math.BigDecimal">
+		SELECT
+		sum(account)
+		FROM
+		(
+		-- 直投
+		SELECT
+		br.recover_capital AS account -- 放款金额
+		FROM
+		huiyingdai_borrow_recover br
+		INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+		WHERE
+		b.recover_last_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 放款时间
+		AND b.recover_last_time >= UNIX_TIMESTAMP(#{0})
+		AND br.accede_order_id IS NULL
+		UNION ALL
+		-- 汇计划
+		SELECT
+		sum(a.accede_account) AS account -- 加入金额
+		FROM
+		hyjf_hjh_accede a
+		WHERE
+		a.add_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 加入时间
+		AND a.add_time >= UNIX_TIMESTAMP(#{0})
+		UNION ALL
+		-- 债转
+		SELECT
+		sum(assign_capital) AS account -- 承接本金
+		FROM
+		huiyingdai_credit_tender ct
+		WHERE
+		ct.add_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 承接时间
+		AND ct.add_time >= UNIX_TIMESTAMP(#{0})
+		) t
+	</select>
+	<!-- 	每月交易笔数 -->
+	<select id="getTradeCountByMonth" resultType="int">
+		SELECT
+		sum(account)
+		FROM
+		(
+		-- 直投
+		SELECT
+		count(*) AS account -- 放款笔数
+		FROM
+		huiyingdai_borrow_tender br
+		INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+		WHERE
+		b.recover_last_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 放款时间
+		AND b.recover_last_time >= UNIX_TIMESTAMP(#{0})
+		AND br.accede_order_id IS NULL -- 刨除汇计划
+		UNION ALL
+		-- 汇计划
+		SELECT
+		count(*) AS account -- 加入笔数
+		FROM
+		hyjf_hjh_accede a
+		WHERE
+		a.add_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 加入时间
+		AND a.add_time >= UNIX_TIMESTAMP(#{0})
+		UNION ALL
+		-- 债转
+		SELECT
+		count(*) AS account -- 承接笔数
+		FROM
+		huiyingdai_credit_tender ct
+		WHERE
+		ct.add_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 承接时间
+		AND ct.add_time >= UNIX_TIMESTAMP(#{0})
+		) t
+	</select>
+	
+	
+	<!-- 	累计交易笔数 -->
+	<select id="getTradeCount" parameterType="java.util.Date" resultType="int">
+		SELECT
+			sum(counts)
+		FROM
+			(
+				SELECT
+					count(1) AS counts
+				FROM
+					huiyingdai_borrow_tender br
+				INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+					where br.status = 1 and br.accede_order_id IS NULL
+
+				UNION ALL
+					SELECT
+						count(1) AS counts
+					FROM
+						huiyingdai_credit_tender
+
+				UNION ALL
+				  SELECT
+					count(1) AS counts
+				  FROM
+					hyjf_hjh_accede
+			) tmp
+	</select>
+	
+	
+	<!-- 	统计投资人总数，截至日期为上个月的最后一天 -->
+	<select id="getTenderCount"  parameterType="java.util.Date" resultType="int">
+<!-- 		select count(*) from huiyingdai_users where reg_time &lt;= unix_timestamp(#{date}) -->
+		select count(*) from(
+			SELECT user_id FROM huiyingdai_borrow_tender where addtime &lt;=unix_timestamp(#{date}) 
+			UNION
+			SELECT user_id FROM huiyingdai_credit_tender where add_time &lt;=unix_timestamp(#{date})
+			UNION
+			SELECT user_id  FROM hyjf_borrow_tender_cpn WHERE addtime  &lt;=unix_timestamp(#{date})
+			UNION
+			SELECT user_id  FROM hyjf_hjh_accede  WHERE add_time  &lt;=unix_timestamp(#{date})
+		) as tmp
+	</select>	
+	<!-- 累计交易总额 -->
+	<select id="getTotalCount"   resultType="java.math.BigDecimal">
+		SELECT
+		  sum(account)
+		FROM
+		  (
+		-- 直投
+			SELECT
+			  br.recover_capital AS account -- 放款金额
+			FROM
+			  huiyingdai_borrow_recover br
+			INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+			WHERE
+			br.accede_order_id is null
+			union ALL
+		 -- 汇计划
+			select
+			  sum(a.accede_account) as account -- 加入金额
+			 from
+				hyjf_hjh_accede  a
+
+			UNION ALL
+		-- 债转
+			 select
+			   sum(assign_capital) AS account -- 承接本金
+			  from
+				 huiyingdai_credit_tender ct
+
+			 UNION ALL
+		-- 汇添金
+			  select
+			   sum(repay_capital) as account -- 应还本金
+			  from
+				hyjf_debt_plan_accede
+
+			 UNION ALL
+		 -- 汇添利
+			  SELECT
+				sum(amount) AS account  -- 加入金额
+			  FROM
+				  huiyingdai_product_list
+			  WHERE
+				  invest_status = 0  -- 投资成功
+
+		  )t
+	</select>
+	<!-- 累计用户收益 -->
+	<select id="getTotalInterest"   resultType="java.math.BigDecimal">
+		SELECT
+			sum(account)
+		FROM
+		(
+			-- 直投
+			SELECT
+				br.recover_interest_yes AS account -- 已收利息
+			FROM
+				huiyingdai_borrow_recover br
+			WHERE
+				br.accede_order_id IS NULL
+			UNION ALL
+				-- 汇计划
+				SELECT
+					sum(a.received_interest) AS account -- 已收利息
+				FROM
+					hyjf_hjh_accede a
+				UNION ALL
+					-- 汇添金
+					SELECT
+						sum(repay_interest_yes) AS account -- 已收利息
+					FROM
+						hyjf_debt_plan_accede
+					UNION ALL
+						-- 汇添利
+						SELECT
+							sum(interest) AS account -- 加入金额
+						FROM
+							huiyingdai_product_list
+						WHERE
+							invest_status = 0 -- 投资成功
+		) t
+	</select>
+
+<!-- 	平均满标时间 -->
+	<select id="getFullBillAverageTime"   resultType="float">
+		
+		SELECT 
+		    SUM(borrow_full_time - verify_time) / COUNT(*) / 60
+		FROM
+		    huiyingdai_borrow
+		WHERE
+		    verify_time  &lt;= unix_timestamp(#{date})
+	</select>	
+	
+	<!--代偿金额 -->
+	<select id="getRepayTotal"  parameterType="java.util.Date" resultType="java.math.BigDecimal">
+
+		SELECT
+		SUM(A.recover_capital_wait)
+		FROM
+		( select br.id,br.recover_capital_wait
+		FROM  huiyingdai_borrow b
+		LEFT JOIN huiyingdai_borrow_recover br ON b.borrow_nid = br.borrow_nid
+		WHERE
+		br.recover_time >= UNIX_TIMESTAMP(#{date})
+		and br.id not in
+		(
+		select br.id
+		FROM  huiyingdai_borrow b
+		LEFT JOIN huiyingdai_borrow_recover br ON b.borrow_nid = br.borrow_nid
+		WHERE br.recover_time >= UNIX_TIMESTAMP(#{date})
+		AND br.recover_yestime <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{date})
+		)
+
+		) A
+
+	</select>	
+	
+	<!-- 	投资人年龄分布 -->
+	<select id="getTenderAgeByRange"   resultType="int">
+		SELECT
+			count(t.user_id)
+			FROM
+			(SELECT
+						br .user_id
+					FROM
+						huiyingdai_borrow_tender  br
+					INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+					WHERE
+						b.recover_last_time  &lt;=  unix_timestamp(#{0})
+					UNION
+						SELECT
+							user_id
+						FROM
+							huiyingdai_credit_tender
+						WHERE
+							add_time  &lt;=  unix_timestamp(#{0})
+			
+						UNION
+						SELECT
+								hdpa.user_id
+							FROM
+								hyjf_debt_plan_accede hdpa
+			                left join hyjf_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
+							WHERE
+								hdp.plan_lock_time  &lt;=  unix_timestamp(#{0})
+				
+							UNION
+								SELECT
+									user_id
+								FROM
+									huiyingdai_product_list
+								WHERE
+									invest_time  &lt;=  unix_timestamp(#{0})
+			And  invest_status = 0
+			) t
+			LEFT JOIN huiyingdai_users u on t.user_id=u.user_id
+			LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
+			WHERE  TIMESTAMPDIFF(YEAR, ui.birthday, now())  &lt;#{2}
+			and TIMESTAMPDIFF(YEAR, ui.birthday, now()) &gt;=#{1}
+	</select>
+	<!-- 	投资人性别分布 -->
+	<select  id="getTenderSexGroupBy"  resultMap="ageResultMap">
+			SELECT
+			ui.sex as sex,count(1) as count
+			FROM
+			(SELECT
+						br.user_id
+					FROM
+						huiyingdai_borrow_tender br
+					INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+					WHERE
+						b.recover_last_time &lt;= unix_timestamp(#{0})
+					UNION 
+						SELECT
+							user_id
+						FROM
+							huiyingdai_credit_tender
+						WHERE
+							add_time &lt;= unix_timestamp(#{0})
+			
+						UNION
+							SELECT
+								hdpa.user_id
+							FROM
+								hyjf_debt_plan_accede hdpa
+			                left join hyjf_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
+							WHERE
+								hdp.plan_lock_time &lt;= unix_timestamp(#{0})
+				
+							UNION
+								SELECT
+									user_id
+								FROM
+									huiyingdai_product_list
+								WHERE
+									invest_time &lt;= unix_timestamp(#{0})
+			And  invest_status = 0
+			) t
+			LEFT JOIN huiyingdai_users u on t.user_id=u.user_id
+			LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id where ui.sex=2 or ui.sex=1
+			group by ui.sex;
+	</select>
+	<!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+	<select  id="getTenderCityGroupBy" parameterType="java.util.Date" resultMap="cityResultMap">
+			SELECT 
+		    	a.p AS citycode, a.counts AS count, b.area AS cityname
+		FROM
+		    (SELECT 
+		        LEFT(ui.idcard, 2) AS p, COUNT(u.user_id) AS counts
+		    FROM
+		        (SELECT 
+		        user_id
+		    FROM
+		        huiyingdai_borrow_tender
+		    WHERE
+		        addtime  &lt;= unix_timestamp(#{date}) UNION SELECT 
+		        user_id
+		    FROM
+		        huiyingdai_credit_tender
+		    WHERE
+		        add_time  &lt;= unix_timestamp(#{date}) UNION SELECT 
+		        hdpa.user_id
+		    FROM
+		        hyjf_debt_plan_accede hdpa
+		    LEFT JOIN hyjf_debt_plan hdp ON hdpa.plan_nid = hdp.debt_plan_nid
+		    WHERE
+		        hdp.plan_lock_time  &lt;= unix_timestamp(#{date}) UNION SELECT 
+		        user_id
+		    FROM
+		        huiyingdai_product_list
+		    WHERE
+		        invest_time  &lt;= unix_timestamp(#{date})
+		            AND invest_status = 0) t
+		    LEFT JOIN huiyingdai_users u ON t.user_id = u.user_id
+		    LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
+		    GROUP BY p) a
+		        LEFT JOIN
+		    (SELECT 
+		        LEFT(bm, 2) AS bm, LEFT(area, 3) AS area
+		    FROM
+		        huiyingdai_idcard
+		    GROUP BY LEFT(bm, 2)) b ON a.p = b.bm where a.p is not null and <![CDATA[ a.p<>'' ]]>		    																			
+		ORDER BY a.counts DESC
+	</select>
+<!-- 	借贷笔数 -->
+	<select  id="getLoanNum"  parameterType="java.util.Date" resultType="int">
+		select count(*) from huiyingdai_borrow where addtime &lt;=UNIX_TIMESTAMP(#{0})
+	</select>
+<!-- 	人均投资金额 -->
+	<select id="getPerInvestTotal" resultType="java.math.BigDecimal">
+		select sum(bank_invest_sum)/count(*) from huiyingdai_account where bank_invest_sum>0
+	</select>
+	
+	<select id="getInvestLastDate" parameterType="java.util.Date" resultType="java.lang.Double"  >
+		select sum(count) from(
+		select sum(already_invest) as count from hyjf_hjh_accede where  add_time &lt;= UNIX_TIMESTAMP(#{0}) union all
+		select sum(accede_account) as count from hyjf_debt_plan_accede where create_time &lt;= UNIX_TIMESTAMP(#{0}) union all
+		select sum(account) from huiyingdai_borrow_tender where addtime &lt;= UNIX_TIMESTAMP(#{date})) as tmp
+
+	</select>
+</mapper>
