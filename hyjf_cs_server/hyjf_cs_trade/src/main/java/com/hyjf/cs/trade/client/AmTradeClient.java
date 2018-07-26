@@ -1394,7 +1394,7 @@ public interface AmTradeClient {
     List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest params);
 
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
-    
+
 	/**
 	 * 获取债转承接信息
 	 * @param nid
@@ -1402,4 +1402,10 @@ public interface AmTradeClient {
 	 * @return
 	 */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+
+    Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
+
+    Integer countAppMyPlan(AssetManageBeanRequest params);
+
+    List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
 }
