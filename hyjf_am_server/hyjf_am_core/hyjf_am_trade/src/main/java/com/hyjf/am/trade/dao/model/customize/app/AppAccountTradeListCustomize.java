@@ -9,7 +9,7 @@
  * Modified by : 
  */
 
-package com.hyjf.am.trade.dao.model.customize.trade;
+package com.hyjf.am.trade.dao.model.customize.app;
 
 import java.io.Serializable;
 

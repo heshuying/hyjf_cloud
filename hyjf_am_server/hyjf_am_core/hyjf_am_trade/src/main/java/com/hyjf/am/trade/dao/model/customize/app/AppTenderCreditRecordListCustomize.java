@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.dao.model.customize.trade;
+package com.hyjf.am.trade.dao.model.customize.app;
 
 /**
  * @author pangchengchao
