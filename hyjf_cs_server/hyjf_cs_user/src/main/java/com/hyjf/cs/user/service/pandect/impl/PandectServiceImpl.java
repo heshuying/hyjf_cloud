@@ -136,6 +136,18 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         result.put("bankOpenAccount", bankAccount);
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
         result.put("recoverLatestList", recoverLatestList);
+        // 登录用户
+        UserInfoVO userInfo = this.getUserInfo(userId);
+        result.put("currentUsersInfo", userInfo);
+        boolean isVip = userInfo.getVipId() != null ? true : false;
+        result.put("isVip", isVip);
+        if (isVip) {
+            VipInfoVO vipInfo = amUserClient.findVipInfoById(userInfo.getVipId());
+            result.put("vipName", vipInfo.getVipName());
+        }
+
+        Integer validCount = amTradeClient.countCouponValid(userId);
+        result.put("couponValidCount", validCount);
         return result;
     }
 
