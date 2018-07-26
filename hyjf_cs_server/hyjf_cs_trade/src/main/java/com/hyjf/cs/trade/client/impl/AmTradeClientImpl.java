@@ -3269,5 +3269,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+    
+	/**
+	 * 获取债转承接信息
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid) {
+		String url = "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditTenderByPrimaryKey/"+nid;
+        HjhDebtCreditTenderResponse response = restTemplate.getForEntity(url,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+		return null;
+	}
 
 }

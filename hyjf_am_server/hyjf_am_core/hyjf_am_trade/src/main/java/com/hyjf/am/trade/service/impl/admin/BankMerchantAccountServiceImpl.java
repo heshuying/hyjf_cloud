@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
@@ -26,7 +27,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
  * @version BankMerchantAccountServiceImpl, v0.1 2018/7/9 16:19
  */
 @Service
-public class BankMerchantAccountServiceImpl extends AutoMapper implements BankMerchantAccountService {
+public class BankMerchantAccountServiceImpl extends BaseServiceImpl implements BankMerchantAccountService {
 
     /**
      * 查询商户子账户表相应的数据总数
