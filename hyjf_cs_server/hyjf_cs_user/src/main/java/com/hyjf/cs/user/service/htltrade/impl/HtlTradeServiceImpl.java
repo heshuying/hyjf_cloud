@@ -14,6 +14,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.htltrade.HtlTradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -46,12 +47,14 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
     @Override
     public List<HtlProductIntoRecordVO> getIntoRecordList(HtlTradeRequest htlTradeRequest) {
         List<HtlProductIntoRecordVO> htlProductIntoRecordVOList = amTradeClient.getIntoRecordList(htlTradeRequest);
-        for(HtlProductIntoRecordVO htlProductIntoRecordVO:htlProductIntoRecordVOList){
-            UserVO userVO = amUserClient.findUserById(htlProductIntoRecordVO.getUserId());
-            htlProductIntoRecordVO.setUsername(userVO.getUsername());
-            htlProductIntoRecordVO.setMobile(userVO.getMobile());
-            UserVO referee = amUserClient.findUserById(htlProductIntoRecordVO.getReferee());
-            htlProductIntoRecordVO.setRefername(referee.getUsername());
+        if(!CollectionUtils.isEmpty(htlProductIntoRecordVOList)){
+            for(HtlProductIntoRecordVO htlProductIntoRecordVO:htlProductIntoRecordVOList){
+                UserVO userVO = amUserClient.findUserById(htlProductIntoRecordVO.getUserId());
+                htlProductIntoRecordVO.setUsername(userVO.getUsername());
+                htlProductIntoRecordVO.setMobile(userVO.getMobile());
+                UserVO referee = amUserClient.findUserById(htlProductIntoRecordVO.getReferee());
+                htlProductIntoRecordVO.setRefername(referee.getUsername());
+            }
         }
         return htlProductIntoRecordVOList;
     }
@@ -72,14 +75,16 @@ public class HtlTradeServiceImpl extends BaseServiceImpl implements HtlTradeServ
     @Override
     public List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest) {
         List<HtlProductRedeemVO> htlProductRedeemVOList = amTradeClient.getRedeemRecordList(htlTradeRequest);
-        for(HtlProductRedeemVO htlProductRedeemVO:htlProductRedeemVOList){
-            UserVO userVO = amUserClient.findUserById(htlProductRedeemVO.getUserId());
-            htlProductRedeemVO.setUsername(userVO.getUsername());
-            htlProductRedeemVO.setMobile(userVO.getMobile());
-            UserVO referee = amUserClient.findUserById(htlProductRedeemVO.getReferee());
-            htlProductRedeemVO.setRefername(referee.getUsername());
-            UserInfoVO userInfoVO = amUserClient.findUserInfoById(htlProductRedeemVO.getUserId());
-            htlProductRedeemVO.setTurename(userInfoVO.getTruename());
+        if(!CollectionUtils.isEmpty(htlProductRedeemVOList)){
+            for(HtlProductRedeemVO htlProductRedeemVO:htlProductRedeemVOList){
+                UserVO userVO = amUserClient.findUserById(htlProductRedeemVO.getUserId());
+                htlProductRedeemVO.setUsername(userVO.getUsername());
+                htlProductRedeemVO.setMobile(userVO.getMobile());
+                UserVO referee = amUserClient.findUserById(htlProductRedeemVO.getReferee());
+                htlProductRedeemVO.setRefername(referee.getUsername());
+                UserInfoVO userInfoVO = amUserClient.findUserInfoById(htlProductRedeemVO.getUserId());
+                htlProductRedeemVO.setTurename(userInfoVO.getTruename());
+            }
         }
         return htlProductRedeemVOList;
     }

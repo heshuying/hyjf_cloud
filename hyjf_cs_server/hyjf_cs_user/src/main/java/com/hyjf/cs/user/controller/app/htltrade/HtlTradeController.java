@@ -12,6 +12,7 @@ import com.hyjf.cs.user.service.htltrade.HtlTradeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +40,10 @@ public class HtlTradeController extends BaseController {
 	 */
 	@ApiOperation(value = "获取我的账单-汇天利")
     @PostMapping(value = "/htlList")
-    public JSONObject getHtlList(@RequestHeader(value = "userId") Integer userId,
+    public JSONObject getHtlList(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId,
 								 @RequestHeader(value = "version") String version,
 								 @RequestHeader(value = "sign") String sign,
-								 @RequestHeader(value = "key") String key,HttpServletRequest request) {
+								 @RequestHeader(value = "key") String key) {
 
     	JSONObject ret = new JSONObject();
     	ret.put("request", HtlTradeDefine.RETURN_REQUEST);
@@ -52,6 +53,12 @@ public class HtlTradeController extends BaseController {
         String platform = request.getParameter("platform");
         //账单类型：1全部，2购入，3赎回
         String tradeType= request.getParameter("tradeType");
+
+        Integer page = Integer.valueOf(request.getParameter("page"));
+
+		Integer pageSize = Integer.valueOf(request.getParameter("pageSize"));
+
+        logger.info("trade -> [{}],userId -> [{}]",tradeType,userId);
 
         // 检查参数正确性
         if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(tradeType) ||  Validator.isNull(sign)) {
@@ -86,8 +93,6 @@ public class HtlTradeController extends BaseController {
         //汇天利购买记录
 		if ("1".equals(tradeType) || "2".equals(tradeType)) {
 			HtlTradeRequest htlTradeRequest = new HtlTradeRequest();
-			int page = Integer.valueOf(request.getParameter("page"));
-			int pageSize = Integer.valueOf(request.getParameter("pageSize"));
 			try {
 				htlTradeRequest.setUserId(userId);
 				htlTradeRequest.setLimitStart(pageSize * (page - 1));
@@ -97,15 +102,17 @@ public class HtlTradeController extends BaseController {
 				tenderSize = htlTradeService.countHtlIntoRecord(htlTradeRequest);
 				count+=tenderSize;
 				tenders = htlTradeService.getIntoRecordList(htlTradeRequest);
-				
-				for(HtlProductIntoRecordVO tender: tenders){
-					HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
-					htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(tender.getAmount()));
-					htlTradeResultBean.setTradeType("2");
-					htlTradeResultBean.setCreateTime(tender.getInvestTime());
-					htlList.add(htlTradeResultBean);
+				if(!CollectionUtils.isEmpty(tenders)){
+					for(HtlProductIntoRecordVO tender: tenders){
+						HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
+						htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(tender.getAmount()));
+						htlTradeResultBean.setTradeType("2");
+						htlTradeResultBean.setCreateTime(tender.getInvestTimeStr());
+						htlList.add(htlTradeResultBean);
+					}
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				ret.put("status", "1");
 				ret.put("statusDesc", "获取购买列表失败");
 				return ret;
@@ -114,8 +121,6 @@ public class HtlTradeController extends BaseController {
 		//汇天利赎回记录
 		if ("1".equals(tradeType) || "3".equals(tradeType)) {
 			HtlTradeRequest htlTradeRequest = new HtlTradeRequest();
-			int page = Integer.valueOf(request.getParameter("page"));
-			int pageSize = Integer.valueOf(request.getParameter("pageSize"));
 			try {
 				htlTradeRequest.setUserId(userId);
 				htlTradeRequest.setLimitStart(pageSize * (page - 1));
@@ -125,15 +130,18 @@ public class HtlTradeController extends BaseController {
 				redeemSize = htlTradeService.countProductRedeemRecord(htlTradeRequest);
 				count+=redeemSize;
 				redeems = htlTradeService.getRedeemRecordList(htlTradeRequest);
-
-				for(HtlProductRedeemVO redeem: redeems){
-					HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
-					htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(redeem.getAmount()));
-					htlTradeResultBean.setTradeType("3");
-					htlTradeResultBean.setCreateTime(redeem.getRedeemTime());
-					htlList.add(htlTradeResultBean);
+				if(!CollectionUtils.isEmpty(redeems)){
+					for(HtlProductRedeemVO redeem: redeems){
+						HtlTradeResultBean htlTradeResultBean= new HtlTradeResultBean();
+						htlTradeResultBean.setAmount(CustomConstants.DF_FOR_VIEW.format(redeem.getAmount()));
+						htlTradeResultBean.setTradeType("3");
+						htlTradeResultBean.setCreateTime(redeem.getRedeemTimeStr());
+						htlList.add(htlTradeResultBean);
+					}
 				}
+
 			} catch (Exception e) {
+				e.printStackTrace();
 				ret.put("status", "1");
 				ret.put("statusDesc", "获取赎回列表失败");
 				return ret;
