@@ -5,6 +5,7 @@ package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmHomePageClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @author dangzw
  * @version AmHomePageClientImpl, v0.1 2018/7/26 10:26
  */
-@Service
+@Cilent
 public class AmHomePageClientImpl implements AmHomePageClient {
 
     @Autowired

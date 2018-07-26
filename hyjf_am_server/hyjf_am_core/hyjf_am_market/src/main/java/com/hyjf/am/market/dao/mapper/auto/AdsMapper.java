@@ -31,5 +31,4 @@ public interface AdsMapper {
 
     int updateByPrimaryKey(Ads record);
 
-    List<AppAdsCustomize> selectAdsList(Map<String, Object> ads);
 }
