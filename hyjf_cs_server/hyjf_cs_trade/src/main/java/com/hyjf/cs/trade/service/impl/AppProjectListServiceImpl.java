@@ -1026,6 +1026,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     }
 
 
+
     /**
      * APP端投资债转列表数据
      *
@@ -1068,7 +1069,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_CREDIT_LIST_METHOD);
         return info;
     }
-
 
     private List<AppProjectListCsVO> convertToAppProjectHZRType(List<WebProjectListCustomizeVO> resultList) {
         List<AppProjectListCsVO> appProjectTypes = new ArrayList<>();
@@ -1401,9 +1401,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app查询计划原子层list异常");
                 throw new RuntimeException("app查询计划原子层list异常");
             }
-            //appResult.setData(list);
+            List<AppProjectListCustomizeVO> list2 = convertToAppProjectList(list);
             info.put("projectTotal", count);
-            info.put("projectList", list);
+            info.put("projectList", list2);
         } else {
             info.put("projectTotal", 0);
             info.put("projectList", new ArrayList<>());
@@ -1415,6 +1415,65 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         return info;
 
     }
+
+
+    /**
+     * 适应客户端返回数据格式
+     * @param planList
+     * @return
+     */
+    private List<AppProjectListCustomizeVO> convertToAppProjectList(List<HjhPlanCustomizeVO> planList) {
+        List<AppProjectListCustomizeVO> appProjectList = new ArrayList<>();
+        String url = "";
+        AppProjectListCustomizeVO appProjectListCustomize;
+        if (!CollectionUtils.isEmpty(planList)) {
+            appProjectList = new ArrayList<AppProjectListCustomizeVO>();
+            String host = systemConfig.getWebHost();
+            for (HjhPlanCustomizeVO entity : planList) {
+                appProjectListCustomize = new AppProjectListCustomizeVO();
+                /*重构整合 开始*/
+                appProjectListCustomize.setBorrowTheFirst(entity.getPlanApr() + "%");
+                appProjectListCustomize.setBorrowTheFirstDesc("历史年回报率");
+                appProjectListCustomize.setBorrowTheSecond(entity.getPlanPeriod());
+                appProjectListCustomize.setBorrowTheSecondDesc("锁定期限");
+                appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
+                /*重构整合 结束*/
+                appProjectListCustomize.setStatus(entity.getStatus());
+                appProjectListCustomize.setBorrowName(entity.getPlanName());
+                appProjectListCustomize.setPlanApr(entity.getPlanApr());
+                appProjectListCustomize.setBorrowApr(entity.getPlanApr());
+                appProjectListCustomize.setPlanPeriod(entity.getPlanPeriod());
+                appProjectListCustomize.setBorrowPeriod(entity.getPlanPeriod());
+                appProjectListCustomize.setBorrowAccountWait(entity.getAvailableInvestAccount());
+                appProjectListCustomize.setStatusName(entity.getStatusName());
+                appProjectListCustomize.setBorrowNid(entity.getPlanNid());
+                appProjectListCustomize.setBorrowAccountWait(entity.getAvailableInvestAccount());
+                String couponEnable = entity.getCouponEnable();
+                if (org.apache.commons.lang.StringUtils.isEmpty(couponEnable) || "0".equals(couponEnable)) {
+                    couponEnable = "0";
+                } else {
+                    couponEnable = "1";
+                }
+                appProjectListCustomize.setCouponEnable(couponEnable);
+                // 项目详情url
+                url = host + ProjectConstant.HJH_DETAIL_INFO_URL+  entity.getPlanNid() ;
+                appProjectListCustomize.setBorrowUrl(url);
+                appProjectListCustomize.setProjectType("HJH");
+                appProjectListCustomize.setBorrowType("HJH");
+
+                // 应客户端要求，返回空串
+                CommonUtils.convertNullToEmptyString(appProjectListCustomize);
+                appProjectList.add(appProjectListCustomize);
+            }
+        }
+        return appProjectList;
+    }
+
+
+
+
+
+
 
     /**
      * 移动端计划详情
