@@ -173,9 +173,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int selectMyRewardCount(MyInviteListRequest requestBean) {
-        int count = restTemplate
-                .postForEntity(urlBase + "reward/myRewardTotal", requestBean, Integer.class).getBody();
-        return count;
+        Response<Integer> response = restTemplate
+                .postForEntity(urlBase + "reward/myRewardCount", requestBean, Response.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return 0;
     }
 
     /**

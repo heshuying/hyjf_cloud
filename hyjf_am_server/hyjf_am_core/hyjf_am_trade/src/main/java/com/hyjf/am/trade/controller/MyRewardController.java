@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyRewardListResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.trade.service.MyRewardService;
@@ -38,6 +39,17 @@ public class MyRewardController extends BaseController{
         responseBean.setResultList(resultList);
 
         return responseBean;
+    }
+
+    /**
+     * 奖励总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/myRewardCount", method = RequestMethod.POST)
+    public Response<Integer> myRewardCount(@RequestBody @Valid MyInviteListRequest requestBean) {
+        Integer countResult =  myRewardService.countMyRewardTotal(requestBean.getUserId());
+        return new Response<>(countResult);
     }
 
     /**
