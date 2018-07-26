@@ -22,10 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -61,7 +58,7 @@ public class ServerController extends BaseUserController {
 	 * @return
 	 */
 	@ApiOperation(value = "获取最优服务器",notes = "获取最优服务器")
-	@RequestMapping("/getBestServerAction")
+	@PostMapping("/getBestServerAction")
 	public AppResult getBestServer(@RequestHeader String platform, @RequestHeader String randomString,
 								   @RequestHeader String secretKey, @RequestHeader String appId, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
@@ -138,7 +135,7 @@ public class ServerController extends BaseUserController {
 	 */
 	@ResponseBody
 	@ApiOperation(value = "获取算法密钥",notes = "获取算法密钥")
-	@RequestMapping("/getKeyAction")
+	@PostMapping("/getKeyAction")
 	public AppResult getKey(@RequestHeader String sign, @RequestHeader String version) {
 		ServerResultBean resultBean = new ServerResultBean();
 
