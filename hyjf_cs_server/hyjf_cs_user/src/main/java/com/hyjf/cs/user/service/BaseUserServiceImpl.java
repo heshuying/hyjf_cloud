@@ -226,7 +226,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
 		bean.setChannel(client);// 交易渠道000001手机APP 000002网页
-		bean.setReqType("2"); // 参照生产环境类型改为2
+		//bean.setReqType("2"); // 参照生产环境类型改为2
 		bean.setCardNo(cardNo);
 		bean.setSrvTxCode(srvTxCode);
 		bean.setMobile(mobile);// 交易渠道
