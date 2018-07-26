@@ -12,13 +12,13 @@ import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -173,6 +173,37 @@ public class HjhPlanServiceImpl implements HjhPlanService {
     }
 
     /**
+     * 查询计划标的组成count
+     * @author zhangyk
+     * @date 2018/7/23 10:43
+     */
+    @Override
+    public int getPlanBorrowListCount(Map<String, Object> params) {
+     return hjhPlanCustomizeMapper.getPlanBorrowListCount(params);
+    }
+
+    /**
+     * 查询计划标的组成list
+     * @author zhangyk
+     * @date 2018/7/23 10:43
+     */
+    @Override
+    public List<BorrowVO> getPlanBorrowList(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanBorrowList(params);
+    }
+
+    @Override
+    public Map<String, Object> getPlanAccecdeTotal(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanAccedeTotal(params);
+    }
+
+    @Override
+    public List<HjhAccedeCustomizeVO> getPlanAccecdeList(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanAccedeList(params);
+    }
+
+
+    /**
      * 插入资金明细表
      * @param request
      * @param accedeAccount
@@ -246,6 +277,9 @@ public class HjhPlanServiceImpl implements HjhPlanService {
             this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
         }*/
     }
+
+
+
 
 
 

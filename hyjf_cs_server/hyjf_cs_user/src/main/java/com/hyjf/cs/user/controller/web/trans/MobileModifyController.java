@@ -154,11 +154,11 @@ public class MobileModifyController extends BaseUserController {
      */
     @ApiOperation(value = "判断是否开户", notes = "判断是否开户")
     @PostMapping(value = "/checkOpenAccount", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> initMobile(@RequestHeader(value = "token") String token) {
+    public WebResult<Map<String,Object>> initMobile(@RequestHeader(value = "userId") Integer userId) {
         logger.info("web端获取开户未开户接口");
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         Map<String,Object> resultMap = new HashMap<>();
-        UserVO user = mobileModifyService.getUsers(token);
+        UserVO user = mobileModifyService.getUsersById(userId);
         Integer accountFlag = user.getBankOpenAccount();
         resultMap.put("bankOpenAccount", accountFlag);
         String mobile = user.getMobile();

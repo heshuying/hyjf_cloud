@@ -367,9 +367,7 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_CANT_BBY_YOURSELF("1","不可以承接自己出让的债权"),
 	ERROR_CREDIT_NO_BORROW_RECOVER("1","未查询到用户的放款记录"),
 	ERROR_CREDIT_NO_BORROW("1","当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试"),
-
-
-
+	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
 	// 枚举终结
 	ERR_ENUM("", "");

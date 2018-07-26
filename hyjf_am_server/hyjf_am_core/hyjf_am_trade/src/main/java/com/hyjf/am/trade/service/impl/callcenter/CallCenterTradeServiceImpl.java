@@ -3,12 +3,10 @@
  */
 package com.hyjf.am.trade.service.impl.callcenter;
 
-import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
-import com.hyjf.am.resquest.callcenter.CallCenterBaseRequest;
-import com.hyjf.am.resquest.callcenter.CallcenterHtjInvestRequest;
-import com.hyjf.am.resquest.callcenter.CallcenterHztInvestRequest;
-import com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest;
+import com.hyjf.am.resquest.callcenter.*;
 import com.hyjf.am.trade.dao.mapper.customize.callcenter.*;
+import com.hyjf.am.trade.dao.mapper.customize.trade.RUserCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.RUser;
 import com.hyjf.am.trade.dao.model.customize.callcenter.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.common.cache.CacheUtil;
@@ -49,6 +47,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     @Autowired
     private CallCenterCouponUserCustomizeMapper callCenterCouponUserCustomizeMapper;
+
+    @Autowired
+    private RUserCustomizeMapper rUserCustomizeMapper;
     /**
      *
      * 按照用户名/手机号查询还款明细（直投产品，含承接的债权）
@@ -238,4 +239,14 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 		}
 		return list;
 	}
+
+    /**
+     * 根据用户ID查询推荐人信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public RUser getRefereerInfoByUserId(Integer userId){
+        return rUserCustomizeMapper.selectRefUserInfoByUserId(userId);
+    }
 }

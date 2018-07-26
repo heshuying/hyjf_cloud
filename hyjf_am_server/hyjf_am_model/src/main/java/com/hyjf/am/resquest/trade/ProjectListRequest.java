@@ -21,6 +21,12 @@ public class ProjectListRequest extends BasePage {
     private Integer limitStart;
 
     private Integer limitEnd;
+
+    private String platform;
+
+    private String type;
+
+    private String host;
     /**
      * app端计划列表查询使用
      */
@@ -94,5 +100,30 @@ public class ProjectListRequest extends BasePage {
 
     public void setCreditStatus(String creditStatus) {
         this.creditStatus = creditStatus;
+    }
+
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }

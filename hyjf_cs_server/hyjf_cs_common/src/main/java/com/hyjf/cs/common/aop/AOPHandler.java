@@ -6,9 +6,9 @@ web * Description:（类功能描述-必填） 需要在每个方法前添加业
  * @version: 1.0
  * Created at: 2017年9月11日 下午5:16:43
  * Modification History:
- * Modified by : 
+ * Modified by :
  */
-	
+
 package com.hyjf.cs.common.aop;
 
 import com.hyjf.am.bean.result.BaseResult;

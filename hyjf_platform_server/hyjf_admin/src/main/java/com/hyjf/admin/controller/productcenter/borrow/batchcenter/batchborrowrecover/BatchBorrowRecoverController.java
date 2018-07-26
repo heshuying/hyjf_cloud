@@ -7,13 +7,12 @@ import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -30,7 +29,7 @@ import java.util.List;
  * @Date:2018/7/7
  * @Description: 批次中心-批次放款
  */
-@Api(value = "批次中心-批次放款")
+@Api(value = "Admin端产品中心-批次中心-批次放款",description="Admin端产品中心-批次中心-批次放款")
 @RestController
 @RequestMapping("/hyjf-admin/batchBorrowRecover")
 public class BatchBorrowRecoverController extends BaseController{
@@ -38,14 +37,15 @@ public class BatchBorrowRecoverController extends BaseController{
     @Autowired
     private BatchBorrowRecoverService batchBorrowRecoverService;
 
-    public static final String NAME_CLASS = "REPAY_STATUS";
+    public static final String NAME_CLASS = "REVERIFY_STATUS";
 
 
     @ApiOperation(value = "批次中心-批次放款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRecoverInit")
     @ResponseBody
     public JSONObject batchBorrowRecoverInit() {
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
+
         return jsonObject;
     }
 
@@ -69,6 +69,7 @@ public class BatchBorrowRecoverController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @ResponseBody
+    @ApiImplicitParam(name = "apicronID",value = "任务ID")
     public JSONObject querybatchBorrowRecoverBankInfoList(@RequestBody String apicronID) {
         JSONObject jsonObject;
         List<BorrowRecoverBankInfoVo> resultList= batchBorrowRecoverService.queryBatchBorrowRecoverBankInfoList(apicronID);

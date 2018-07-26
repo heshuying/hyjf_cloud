@@ -35,6 +35,15 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
+	<select id="countMyRewardTotal" resultType="int" parameterType="java.util.Map">
+		SELECT
+			COUNT(t.id)
+		FROM
+			ht_tender_commission t
+		INNER JOIN ht_r_user u ON t.tender_user_id = u.user_id
+		WHERE
+			t. STATUS = 1 AND t.user_id = #{userId}
+	</select>
 	<select id="sumMyRewardTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 		SELECT
 			SUM(IFNULL(t.commission,0))

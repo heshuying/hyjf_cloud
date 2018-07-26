@@ -29,7 +29,7 @@ import java.util.Map;
  */
 @Api(value = "web端散标债转投资")
 @RestController
-@RequestMapping("/web/tender/credit")
+@RequestMapping("/hyjf-web/tender/credit")
 public class BorrowCreditTenderController extends BaseTradeController {
 
     @Autowired

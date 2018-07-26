@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.admin.finance;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UserTransferResponse;
-import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
 import com.hyjf.am.resquest.admin.CustomerTransferRequest;
 import com.hyjf.am.resquest.admin.TransferListRequest;

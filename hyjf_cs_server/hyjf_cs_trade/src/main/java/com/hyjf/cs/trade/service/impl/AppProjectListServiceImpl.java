@@ -90,7 +90,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     @Override
     public JSONObject searchAppProjectList(ProjectListRequest request) {
         // TODO: 2018/6/20   参数验证
-        CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
+        //CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getPage(), request.getPageSize());
         JSONObject info = new JSONObject();
@@ -98,8 +98,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
+        ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
         // ①查询count
-        Integer count = amTradeClient.countAppProjectList(request);
+        Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
         AppResult appResult = new AppResult();
         // 先抛错方式，避免代码看起来头重脚轻。
@@ -119,9 +120,12 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }else {
                 result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
         }
+        info.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
+        info.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(ProjectConstant.APP_PAGE,request.getPage());
         info.put(CustomConstants.APP_REQUEST,ProjectConstant.APP_REQUEST_MAPPING + ProjectConstant.APP_BORROW_PROJECT_METHOD);
         return info;

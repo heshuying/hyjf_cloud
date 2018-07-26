@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.AccountService;

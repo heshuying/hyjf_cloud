@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,9 @@ import com.hyjf.common.cache.RedisUtils;
  * @version AssetListServiceImpl, v0.1 2018/6/13 17:23
  */
 @Service
-public class AssetListServiceImpl implements AssetListService{
-	
-    @Autowired
-    private AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
-    @Autowired
-    private HjhPlanAssetMapper hjhPlanAssetMapper;
-    
+public class AssetListServiceImpl extends BaseServiceImpl implements AssetListService{
+
+
 	@Override
 	public List<AssetListCustomizeVO> findAssetList(Map<String, Object> mapParam,int limitStart, int limitEnd) {
         // 封装查询条件

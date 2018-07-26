@@ -13,15 +13,14 @@ import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -293,7 +292,7 @@ public interface AmTradeClient {
 	/**
 	 * @param list
 	 */
-	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
+	void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list);
 
     List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean);
 
@@ -1329,4 +1328,84 @@ public interface AmTradeClient {
 
     BorrowConfigVO getConfigByCode(String code);
 
+    boolean updateBidCancelRecord(TenderCancelRequest request);
+
+    boolean updateTenderCancelExceptionData(BorrowTenderTmpVO info);
+
+    List<BorrowTenderTmpVO> getBorrowTenderTmpsForTenderCancel();
+
+    /**
+     * 查询汇计划债转投资表
+     * @param request
+     * @return
+     */
+    List<HjhDebtCreditTenderVO> getHjhDebtCreditTenderList(HjhDebtCreditTenderRequest request);
+
+    List<RepayListCustomizeVO> repayList(RepayListRequest requestBean);
+
+    List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean);
+
+    List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean);
+
+    int repayCount(RepayListRequest requestBean);
+
+    int orgRepayCount(RepayListRequest requestBean);
+
+    int orgRepayedCount(RepayListRequest requestBean);
+
+    Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
+
+    BorrowRecoverPlanVO selectRecoverPlanById(Integer id);
+
+    List<BorrowRecoverPlanVO> selectRecoverPlan(String borrowNid, Integer period);
+
+    List<HjhDebtCreditRepayVO> selectHjhDebtCreditRepay(String borrowNid, String tenderOrderId, int periodNow, int status);
+
+    QueryMyProjectVO selectWechatCurrentHoldObligatoryRightList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatRepaymentList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatCreditRecordList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatCurrentHoldPlanList(WechatMyProjectRequest request);
+
+    QueryMyProjectVO selectWechatRepayMentPlanList(WechatMyProjectRequest request);
+
+    /**
+     * 获取投资协议集合
+     * @param tenderNid
+     * @return
+     */
+    List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
+
+    /**
+     * 通过主键获取投资协议
+     * @param tenderAgreementID
+     * @return
+     */
+    TenderAgreementVO getTenderAgreementInfoByPrimaryKey(String tenderAgreementID);
+
+    /**
+     * 交易类型
+     * @return
+     */
+    List<AppAccountTradeListCustomizeVO> searchAppTradeTypes();
+
+    List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest params);
+
+    List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
+
+	/**
+	 * 获取债转承接信息
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+
+    Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
+
+    Integer countAppMyPlan(AssetManageBeanRequest params);
+
+    List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
 }

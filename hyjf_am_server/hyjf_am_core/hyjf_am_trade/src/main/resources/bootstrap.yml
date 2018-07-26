@@ -22,13 +22,16 @@ spring:
 #      defaultZone: http://127.0.0.1:1111/eureka/
 #  instance:
 #    preferIpAddress: true
-#server:
-#  port: 8096
+server:
+  port: 8096
 
 logging:
   file: am-trade.log
 file:
-   physical:
-      path:D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
-   domain:
-      url:http://test.hyjf.com:8083/hyjf-admin/
+ physical:
+  path: D:/apache-tomcat-7.0.64-windows-x64/webapps/hyjf-admin/
+ domain:
+  url: http://test.hyjf.com:8083/hyjf-admin/
+ upload:
+  real:
+   path: 123

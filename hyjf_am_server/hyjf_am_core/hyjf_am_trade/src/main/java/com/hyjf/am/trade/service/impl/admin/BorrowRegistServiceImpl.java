@@ -108,11 +108,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         if (!CollectionUtils.isEmpty(list)) {
             //处理标的备案状态
             Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
-            if (!CollectionUtils.isEmpty(map)) {
-                for (BorrowRegistCustomize borrowRegistCustomize : list) {
-                    borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(), null));
-                }
-            }
+            list.forEach((borrowRegistCustomize) -> borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(), null)));
         }
         return list;
     }
@@ -151,9 +147,9 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             int userId = borrow.getUserId();
             RUser user = rUserMapper.selectByPrimaryKey(userId);
             if (Validator.isNotNull(user)) {
-                //todo 用account中的account_id代替
+                //用account表中的account_id代替原代码中bank_open_account的account
                 Account bankOpenAccount = accountService.getAccount(userId);
-                if (Validator.isNotNull(bankOpenAccount)) {
+                if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
                     // 更新相应的标的状态为备案中
                     boolean debtRegistingFlag = this.updateBorrowRegist(borrow, 0, 1, currUserId, currUserName);
                     if (debtRegistingFlag) {
@@ -194,10 +190,11 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                         debtRegistBean.setTxAmount(String.valueOf(borrow.getAccount()));
                         // 年化利率
                         debtRegistBean.setRate(String.valueOf(borrow.getBorrowApr()));
+                        //如果有担保机构ID，则查询担保机构账户
                         if (Validator.isNotNull(borrowInfo.getRepayOrgUserId())) {
-                            //todo 用account中的account_id代替
+                            //用account表中的account_id代替原代码中bank_open_account的account
                             Account account = accountService.getAccount(borrowInfo.getRepayOrgUserId());
-                            if (Validator.isNotNull(account)) {
+                            if (Validator.isNotNull(account) && StringUtils.isNotBlank(account.getAccountId())) {
                                 debtRegistBean.setBailAccountId(account.getAccountId());
                             }
                         }
@@ -209,7 +206,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 
                         //备案接口(EntrustFlag和ReceiptAccountId要么都传，要么都不传)
                         if (borrowInfo.getEntrustedFlg() == 1) {
-
+                            //查询受托支付记录
                             StzhWhiteList stzhWhiteList = this.selectStzfWhiteList(borrowInfo.getInstCode().trim(), String.valueOf(borrowInfo.getEntrustedUserId()));
                             if (stzhWhiteList != null) {
                                 debtRegistBean.setEntrustFlag(borrowInfo.getEntrustedFlg().toString());
@@ -220,6 +217,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                             }
                         }
                         try {
+                            //调用银行接口
                             BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
                             String retCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
                             if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {

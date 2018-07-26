@@ -5,6 +5,7 @@ package com.hyjf.callcenter.client;
 
 import com.hyjf.am.resquest.callcenter.*;
 import com.hyjf.am.vo.callcenter.*;
+import com.hyjf.am.vo.trade.RUserVO;
 
 import java.util.List;
 
@@ -100,4 +101,11 @@ public interface AmTradeClient {
      * @return List<CallCenterWithdrawVO>
      */
     List<CallCenterWithdrawVO> getWithdrawRecordList(CallCenterBaseRequest callCenterBaseRequest);
+
+    /**
+     * 根据用户ID查询推荐人信息
+     * @param userId
+     * @return
+     */
+    RUserVO getRefereerInfoByUserId(Integer userId);
 }

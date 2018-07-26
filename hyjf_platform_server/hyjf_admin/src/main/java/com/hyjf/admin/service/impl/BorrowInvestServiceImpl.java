@@ -155,7 +155,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         if (!OK.equals(checkResult)) {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
-        BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccountByUserId(Integer.valueOf(investorDebtBean.getUserid()));
+        BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccountByUserId(Integer.valueOf(investorDebtBean.getUserId()));
         if (bankOpenAccount == null) {
             return new AdminResult(BaseResult.FAIL, "该用户没有开户信息！");
         }
@@ -180,14 +180,14 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
      * @return
      */
     private String checkItems(InvestorDebtBean investorDebtBean) {
-        if (StringUtils.isBlank(investorDebtBean.getBorrownid())) {
+        if (StringUtils.isBlank(investorDebtBean.getBorrowNid())) {
             return "标的编号为空";
         }
-        if (StringUtils.isBlank(investorDebtBean.getUserid())) {
+        if (StringUtils.isBlank(investorDebtBean.getUserId())) {
             return "用户ID为空";
         }
         try {
-            Integer.parseInt(investorDebtBean.getUserid());
+            Integer.parseInt(investorDebtBean.getUserId());
         } catch (NumberFormatException e) {
             return "用户ID不是数字";
         }
@@ -203,7 +203,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
      */
     private BankCallBean bankCallInvestorDebtQuery(InvestorDebtBean investorDebtBean, String accountId) {
         // 银行接口用BEAN
-        BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10, BankCallConstant.TXCODE_CREDIT_DETAILS_QUERY, Integer.valueOf(investorDebtBean.getUserid()));
+        BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10, BankCallConstant.TXCODE_CREDIT_DETAILS_QUERY, Integer.valueOf(investorDebtBean.getUserId()));
 
         //共同参数删除
 //        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);//机构代码
@@ -222,7 +222,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 //        bean.setSeqNo(seqNo);
 //        bean.setChannel(channel);
         bean.setAccountId(accountId);// 借款人电子账号
-        bean.setProductId(investorDebtBean.getBorrownid());
+        bean.setProductId(investorDebtBean.getBorrowNid());
         bean.setState(BankCallConstant.ALL_INVESTOR_DEBT);//目前查所有债权
         bean.setStartDate(investorDebtBean.getStartTime().replace("-", ""));//画面自选开始时间
         bean.setEndDate(investorDebtBean.getEndTime().replace("-", ""));//画面自选结束时间
@@ -288,7 +288,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         JSONObject loanDetail = loanDetails.getJSONObject(j);
                         InvestorDebtBean info = new InvestorDebtBean();
                         //标的号
-                        info.setBorrownid(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));
+                        info.setBorrowNid(loanDetail.getString(BankCallConstant.PARAM_PRODUCTID));
                         //投标日期
                         info.setBuyDate(loanDetail.getString(BankCallConstant.PARAM_BUYDATE));
                         //订单号
@@ -367,9 +367,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
         // 用户ID
-        Integer userId = Integer.valueOf(investorDebtBean.getUserid());
+        Integer userId = Integer.valueOf(investorDebtBean.getUserId());
         // 标的编号
-        String borrowNid = investorDebtBean.getBorrownid();
+        String borrowNid = investorDebtBean.getBorrowNid();
         // 投资订单号
         String nid = investorDebtBean.getNid();
         // 获取标的放款记录
@@ -399,9 +399,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             bean.setOrdid(nid);
             bean.setTransType(1);
             bean.setBorrowNid(borrowNid);
-            //todo wangjun addtime已改成CreateTime 实体类未修改
-//            bean.setSignDate(GetDate.getDateMyTimeInMillis(br.getCreateTime()));
-            bean.setSignDate(GetDate.getDateMyTimeInMillis(GetDate.getNowTime10()));
+            bean.setSignDate(GetDate.date2Str(br.getCreateTime(), GetDate.date_sdf));
             bean.setTenderUserName(user.getUsername());
             bean.setTenderInterest(br.getRecoverInterest());
             bean.setTenderType(0);
@@ -428,9 +426,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         if (!OK.equals(checkResult)) {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
-        String userid = investorRequest.getUserid();
+        String userid = investorRequest.getUserId();
         String nid = investorRequest.getNid();
-        String borrownid = investorRequest.getBorrownid();
+        String borrownid = investorRequest.getBorrowNid();
         String email = investorRequest.getEmail();
         String msg = this.resendMessageAction(userid, nid, borrownid, email);
 
@@ -627,15 +625,15 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         if (!Validator.isEmailAddress(investorRequest.getEmail())) {
             return "邮箱格式不正确！";
         }
-        if (StringUtils.isBlank(investorRequest.getNid()) || StringUtils.isBlank(investorRequest.getBorrownid())) {
+        if (StringUtils.isBlank(investorRequest.getNid()) || StringUtils.isBlank(investorRequest.getBorrowNid())) {
             return "传递参数不正确！";
         }
 
-        if (StringUtils.isBlank(investorRequest.getUserid())) {
+        if (StringUtils.isBlank(investorRequest.getUserId())) {
             return "用户ID为空！";
         }
         try {
-            Integer.parseInt(investorRequest.getUserid());
+            Integer.parseInt(investorRequest.getUserId());
         } catch (NumberFormatException e) {
             return "用户ID不是数字！";
         }

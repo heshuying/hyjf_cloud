@@ -3,9 +3,10 @@
  */
 package com.hyjf.cs.message.service.msgpush;
 
-import java.util.List;
-
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -22,4 +23,44 @@ public interface MsgPushService {
 	 * @return
 	 */
 	List<MessagePushTemplateVO> getAllTemplates();
+
+	/**
+	 * 获得消息列表数量
+	 * @param tagId
+	 * @param userId
+	 * @param platform
+	 * @return
+	 */
+	Integer countMsgHistoryRecord(Integer tagId,Integer userId,String platform);
+
+	/**
+	 * 获得消息列表
+	 * @param tagId
+	 * @param userId
+	 * @param platform
+	 * @param limitStart
+	 * @param limitEnd
+	 * @return
+	 */
+	List<MessagePushMsgHistory> getMsgHistoryList(Integer tagId,Integer userId,String platform,int limitStart,int limitEnd);
+
+	/**
+	 * 获得具体信息
+	 * @param msgId
+	 * @return
+	 */
+	MessagePushMsgHistory getMsgPushMsgHistoryById(Integer msgId);
+
+	/**
+	 * 更新历史记录信息
+	 * @param msgHistory
+	 */
+	void updateMsgPushMsgHistory(MessagePushMsgHistory msgHistory);
+
+	/**
+	 * 消息全部已读
+	 * @param userId
+	 * @param platform
+	 */
+	void updateAllMsgPushMsgHistory(Integer userId, String platform);
 }

@@ -3,18 +3,6 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -22,7 +10,6 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -54,6 +41,17 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wangc
@@ -108,6 +106,8 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         if (accountFlag!=1) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
+        int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+        CheckUtil.check(count>0, MsgEnum.ERR_CARD_NOT_BIND);
         // 判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
         CheckUtil.check(passwordFlag != 1, MsgEnum.STATUS_TP000001);
@@ -145,9 +145,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+       /* LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(userId);
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDSET);
@@ -196,9 +196,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
-        LogAcqResBean acqRes = new LogAcqResBean();
+        /*LogAcqResBean acqRes = new LogAcqResBean();
         acqRes.setUserId(userId);
-        bean.setLogAcqResBean(acqRes);
+        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);

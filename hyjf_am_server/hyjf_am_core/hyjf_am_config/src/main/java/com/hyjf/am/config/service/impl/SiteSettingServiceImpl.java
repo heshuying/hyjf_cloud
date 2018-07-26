@@ -69,7 +69,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
             
             Thread.sleep(num*1000);
             
-            updateTest2();
+           // updateTest2();
 	    
 	    
 	}
@@ -84,7 +84,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 		}
 	}
 
-	public void updateTest2() {
+	/*public void updateTest2() {
         SiteSettingExample example = new SiteSettingExample();
         
 //      example.createCriteria();
@@ -109,12 +109,10 @@ public class SiteSettingServiceImpl implements SiteSettingService {
             } catch (InterruptedException e) {
                  e.printStackTrace();
             }
-            
-            if(1==1) {
+
+		*//*if (1 == 1) {
 //                throw new RuntimeException("测试异常", 12);
-                throw new RuntimeException("测试异常");
-            }
-        
-        
-    }
+			throw new RuntimeException("测试异常");
+		}*//*
+    }*/
 }

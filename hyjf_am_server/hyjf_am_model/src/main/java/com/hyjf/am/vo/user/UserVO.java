@@ -32,7 +32,7 @@ public class UserVO extends BaseVO implements Serializable {
 
 	private Integer withdrawSms;
 
-	private Boolean ifReceiveNotice;
+	private Integer ifReceiveNotice;
 
 	private Integer investSms;
 
@@ -176,11 +176,11 @@ public class UserVO extends BaseVO implements Serializable {
 		this.withdrawSms = withdrawSms;
 	}
 
-	public Boolean getIfReceiveNotice() {
+	public Integer getIfReceiveNotice() {
 		return ifReceiveNotice;
 	}
 
-	public void setIfReceiveNotice(Boolean ifReceiveNotice) {
+	public void setIfReceiveNotice(Integer ifReceiveNotice) {
 		this.ifReceiveNotice = ifReceiveNotice;
 	}
 

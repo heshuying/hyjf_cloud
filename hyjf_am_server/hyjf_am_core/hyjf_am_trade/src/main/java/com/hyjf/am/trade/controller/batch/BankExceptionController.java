@@ -1,21 +1,19 @@
 package com.hyjf.am.trade.controller.batch;
 
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
+import com.hyjf.am.resquest.trade.TenderCancelRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 import com.hyjf.am.trade.service.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -23,8 +21,12 @@ import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.common.util.CommonUtils;
-
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
@@ -224,11 +226,11 @@ public class BankExceptionController extends BaseController {
      * 处理投资掉单
      * add by jijun 20180623
      */
-    @PostMapping("/insertAuthCode")
-    public void insertAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
+    @PostMapping("/updateAuthCode")
+    public void updateAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
         List<BatchBorrowTenderCustomizeVO> batchBorrowTenderCustomizeVOList = request.getBatchBorrowTenderCustomizeList();
         List<BatchBorrowTenderCustomize> list = CommonUtils.convertBeanList(batchBorrowTenderCustomizeVOList,BatchBorrowTenderCustomize.class);
-        bankInvestExceptionService.insertAuthCode(list);
+        bankInvestExceptionService.updateAuthCode(list);
 
     }
 
@@ -245,6 +247,21 @@ public class BankExceptionController extends BaseController {
         return response;
     }
 
+    /**
+     * 查询有效未读的优惠券列表
+     * @param userId
+     * @return
+     */
+    @GetMapping("/selectLatestCouponValidUNReadList/{userId}")
+    public CouponUserCustomizeResponse selectLatestCouponValidUNReadList(@PathVariable Integer userId){
+        List<CouponUserCustomize> list = bankInvestAllExceptionService.selectLatestCouponValidUNReadList(userId);
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
+        if (null!=list){
+            List<CouponUserCustomizeVO> couponUserCustomizeVOS = CommonUtils.convertBeanList(list,CouponUserCustomizeVO.class);
+            response.setResultList(couponUserCustomizeVOS);
+        }
+        return response;
+    }
 
     /**
      * 开始进行掉单修复
@@ -264,7 +281,10 @@ public class BankExceptionController extends BaseController {
         return ret;
     }
 
-
+    /**
+     * 查询前一天的投资临时数据并进行处理
+     * @return
+     */
     @GetMapping("/getBorrowTenderTmpsForTenderCancel")
     public BorrowTenderTmpResponse getBorrowTenderTmpsForTenderCancel(){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
@@ -275,16 +295,24 @@ public class BankExceptionController extends BaseController {
         return response;
     }
 
-
+    /**
+     * 投资撤销历史数据处理
+     * @param request
+     * @return
+     */
     @PostMapping("/updateBidCancelRecord")
-    public boolean updateBidCancelRecord(@RequestBody JSONObject para){
-        return this.bankTenderCancelService.updateBidCancelRecord(para);
+    public boolean updateBidCancelRecord(@RequestBody TenderCancelRequest request){
+        return this.bankTenderCancelService.updateBidCancelRecord(request);
     }
 
 
-
+    /**
+     * 处理撤销出现异常的数据
+     * @param info
+     * @return
+     */
     @PostMapping("/updateTenderCancelExceptionData")
-    public int updateTenderCancelExceptionData(@RequestBody BorrowTenderTmpVO info){
+    public boolean updateTenderCancelExceptionData(@RequestBody BorrowTenderTmpVO info){
         return this.bankTenderCancelService.updateTenderCancelExceptionData(CommonUtils.convertBean(info,BorrowTenderTmp.class));
     }
 

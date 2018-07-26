@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.response.BorrowFullInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFullResponseBean;
+import com.hyjf.admin.beans.vo.AdminBorrowFullCustomizeVO;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
@@ -17,6 +18,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,9 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         if (count > 0) {
             List<BorrowFullCustomizeVO> list = amTradeClient.selectBorrowFullList(borrowFullRequest);
             BorrowFullCustomizeVO sumAccount = amTradeClient.sumAccount(borrowFullRequest);
-            borrowFullResponseBean.setRecordList(list);
+            //对应前端swagger
+            List<AdminBorrowFullCustomizeVO> adminList = CommonUtils.convertBeanList(list, AdminBorrowFullCustomizeVO.class);
+            borrowFullResponseBean.setRecordList(adminList);
             Map<String, String> accountMap = new HashMap<>();
             accountMap.put("sumAccount", sumAccount.getSumAccount());
             accountMap.put("sumBorrowAccountYes", sumAccount.getSumBorrowAccountYes());
@@ -98,7 +102,9 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                     //查询
                     List<BorrowFullCustomizeVO> list = amTradeClient.getFullList(borrowFullRequest);
                     BorrowFullCustomizeVO sumAccount = amTradeClient.sumAmount(borrowFullRequest.getBorrowNidSrch());
-                    borrowFullInfoResponseBean.setRecordList(list);
+                    //对应前端swagger
+                    List<AdminBorrowFullCustomizeVO> adminList = CommonUtils.convertBeanList(list, AdminBorrowFullCustomizeVO.class);
+                    borrowFullInfoResponseBean.setRecordList(adminList);
                     Map<String, String> accountMap = new HashMap<>();
                     accountMap.put("investmentAmount", sumAccount.getInvestmentAmount());
                     accountMap.put("loanAmount", sumAccount.getLoanAmount());

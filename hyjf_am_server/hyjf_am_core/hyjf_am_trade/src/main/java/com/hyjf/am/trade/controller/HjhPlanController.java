@@ -3,10 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.trade.HjhAccedeResponse;
-import com.hyjf.am.response.trade.HjhLabelResponse;
-import com.hyjf.am.response.trade.HjhPlanResponse;
-import com.hyjf.am.response.trade.UserHjhInvistDetailCustomizeResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
@@ -18,10 +15,8 @@ import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
@@ -158,4 +153,60 @@ public class HjhPlanController extends BaseController{
         return response;
     }
 
+
+
+    /**
+     * 查询汇计划标的组成List
+     * @author zhangyk
+     * @date 2018/7/23 10:41
+     */
+    @RequestMapping("/getPlanBorrowList")
+    public BorrowResponse getPlanBorrowList(@RequestBody Map<String,Object> params){
+        BorrowResponse response = new BorrowResponse();
+        List<BorrowVO> list =  hjhPlanService.getPlanBorrowList(params);
+        response.setResultList(list);
+        return response;
+    }
+
+
+    /**
+     * 查询汇计划标的组成count和总加入金额
+     * @author zhangyk
+     * @date 2018/7/23 10:41
+     */
+    @RequestMapping("/getPlanBorrowListCount")
+    public HjhAccedeResponse getPlanBorrowListCount(@RequestBody Map<String,Object> params){
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        Integer count =  hjhPlanService.getPlanBorrowListCount(params);
+        response.setAccedeCount(count);
+        return response;
+    }
+
+    /**
+     * 查询汇计划加入记录count
+     * @author zhangyk
+     * @date 2018/7/23 10:41
+     */
+    @RequestMapping("/getPlanAccedeCount")
+    public HjhAccedeResponse getPlanAccedeCount(@RequestBody Map<String,Object> params){
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        Map<String,Object> totalData =  hjhPlanService.getPlanAccecdeTotal(params);
+        response.setTotalData(totalData);
+        return response;
+    }
+
+
+
+    /**
+     * 汇计划加入记录list
+     * @author zhangyk
+     * @date 2018/7/24 19:29
+     */
+    @RequestMapping("/getPlanAccedeList")
+    public HjhAccedeListResponse  getPlanAccedeList(@RequestBody Map<String,Object> params) {
+        HjhAccedeListResponse response = new HjhAccedeListResponse();
+        List<HjhAccedeCustomizeVO> list = hjhPlanService.getPlanAccecdeList(params);
+        response.setResultList(list);
+        return response;
+    }
 }

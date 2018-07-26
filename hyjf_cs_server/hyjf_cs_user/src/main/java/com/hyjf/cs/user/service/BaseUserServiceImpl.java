@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -623,7 +625,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Override
 	public List<BankCardVO> getBankOpenAccountById(UserVO userVO) {
-		return  amUserClient.getBankOpenAccountById(userVO);
+		return  amUserClient.getBankOpenAccountById(userVO.getUserId());
 	}
 
 	@Override
@@ -656,5 +658,21 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		}
 		return null;
 	}
+
+	/**
+	 * 特殊字符编码
+	 * @param str
+	 * @return
+	 */
+	@Override
+	public String strEncode(String str) {
+		try {
+			str = URLEncoder.encode(str, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return str;
+	}
+
 
 }

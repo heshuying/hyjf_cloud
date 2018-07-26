@@ -34,6 +34,7 @@ import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -759,9 +760,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
-        String retUrl = systemConfig.getWebHost()+CLIENT_HEADER_MAP.get(platform)+"/borrow/userBankWithdrawReturn.do";
-        String bgRetUrl = systemConfig.getWebHost()+CLIENT_HEADER_MAP.get(platform)+"/borrow/userBankWithdrawBgreturn.do";
-        String successfulUrl = systemConfig.getWebHost()+CLIENT_HEADER_MAP.get(platform)+"/borrow/userBankWithdrawReturn.do?isSuccess=1&withdrawmoney=" + transAmt
+        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess";
+        String bgRetUrl = systemConfig.getWebHost()+"/hyjf-web/withdraw/userBankWithdrawBgreturn.do";
+        String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
                 + "&wifee=" + fee;//
         // 路由代码
         String routeCode = "";
@@ -931,5 +932,16 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 result.put("status", "0");
             }
         }
+    }
+
+    @Override
+    public WebResult<Object> seachUserBankWithdrawErrorMessgae(String logOrdId) {
+        WebResult<Object> result = new WebResult<Object>();
+        AccountWithdrawVO vo = amTradeClient.getAccountWithdrawByOrdId(logOrdId);
+        result.setStatus(WebResult.SUCCESS);
+        Map<String,String> map = new HashedMap();
+        map.put("error",vo.getReason());
+        result.setData(map);
+        return result;
     }
 }

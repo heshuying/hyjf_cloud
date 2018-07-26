@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.beans.response;
 
-import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
+import com.hyjf.admin.beans.vo.AdminBorrowFirstCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -22,7 +22,7 @@ public class BorrowFirstResponseBean {
     private Map<String, String> borrowStatusList;
 
     @ApiModelProperty(value = "初审列表")
-    private List<BorrowFirstCustomizeVO> recordList;
+    private List<AdminBorrowFirstCustomizeVO> recordList;
 
     @ApiModelProperty(value = "列表统计")
     private String sumAccount;
@@ -46,11 +46,11 @@ public class BorrowFirstResponseBean {
         this.borrowStatusList = borrowStatusList;
     }
 
-    public List<BorrowFirstCustomizeVO> getRecordList() {
+    public List<AdminBorrowFirstCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowFirstCustomizeVO> recordList) {
+    public void setRecordList(List<AdminBorrowFirstCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 

@@ -6,6 +6,8 @@ package com.hyjf.cs.trade.controller.web.projectlist;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.WebCreditRequestBean;
+import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.WebProjectListService;
 import io.swagger.annotations.Api;
@@ -85,7 +87,7 @@ public class WebProjectListController extends BaseTradeController {
     }
 
     /**
-     * 散标专区债权转让列表数据
+     * 散标专区-债权转让列表
      * @param request
      * @return
      */
@@ -98,7 +100,7 @@ public class WebProjectListController extends BaseTradeController {
 
 
     /**
-     * 散标专区债权转让详情
+     * 散标专区-债权转让详情
      * @return
      */
     @ApiOperation(value = "散标专区债权转让详情", notes = "散标专区债权转让详情")
@@ -107,6 +109,21 @@ public class WebProjectListController extends BaseTradeController {
         WebResult result =  webProjectListService.getCreditDetail(map,userId);
         return result;
     }
+
+
+    /**
+     * 散标专区-债权转让详情-承接记录
+     * 原接口：com.hyjf.web.bank.web.user.credit.CreditController.searchCreditTenderList()
+     * @return
+     */
+    @ApiOperation(value = "散标专区债权转让详情:承接记录", notes = "散标专区债权转让详情:承接记录")
+    @PostMapping(value = "/getCreditTenderList", produces = "application/json; charset=utf-8")
+    public Object getCreditTenderList(@RequestBody WebCreditRequestBean requestBean){
+        WebResult result =  webProjectListService.getCreditTenderList(requestBean);
+        return result;
+    }
+
+
 
 
 
@@ -146,6 +163,24 @@ public class WebProjectListController extends BaseTradeController {
         WebResult result =  webProjectListService.getPlanDetail(map,userId);
         return result;
     }
+
+
+    @ApiOperation(value = "计划详情标的组成" , notes = "计划详情标的组成")
+    @PostMapping(value = "/getPlanBorrowList", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "token",required = false) String token){
+        WebResult result  = webProjectListService.getPlanBorrowList(requestBean);
+        return result;
+    }
+
+
+
+    @ApiOperation(value = "计划详情加入记录" , notes = "计划详情加入记录")
+    @PostMapping(value = "/getPlanAccedeList", produces = "application/json; charset=utf-8")
+    public Object getPlanAccedeList(@RequestBody @Valid WebPlanRequestBean requestBean,@RequestHeader(value = "userId",required = false) String userId){
+        WebResult result  = webProjectListService.getPlanAccedeList(requestBean,userId);
+        return result;
+    }
+
 
 
 

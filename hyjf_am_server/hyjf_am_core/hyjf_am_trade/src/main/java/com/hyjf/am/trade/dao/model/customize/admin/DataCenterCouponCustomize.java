@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 
 /**
  * @author fq
- * @version DataCenterCouponCustomize, v0.1 2018/7/19 9:42
+ * @version DataCenterCouponCustomizeMapper, v0.1 2018/7/19 9:42
  */
 public class DataCenterCouponCustomize implements Serializable {
     /**

@@ -4,10 +4,7 @@ import com.hyjf.am.user.dao.auto.AutoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.MspConfigureCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserAliasCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.*;
 import com.hyjf.am.user.dao.mapper.customize.batch.TzjCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,4 +28,7 @@ public class CustomizeMapper extends AutoMapper {
     protected UserMapper userMapper;
     @Autowired
     protected UserInfoMapper userInfoMapper;
+
+    @Autowired
+    protected UserAdminBankAccountCheckCustomizeMapper userAdminBankAccountCheckCustomizeMapper;
 }

@@ -1,6 +1,7 @@
 package com.hyjf.common.util;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.RandomUtils;
@@ -85,7 +86,7 @@ public class SecretUtil {
         AppUserToken token = new AppUserToken(userId, username, accountId);
         String encryptString = JSON.toJSONString(token);
         String sign = createSign();
-        RedisUtils.set(sign, encryptString, RedisUtils.signExpireTime);
+        RedisUtils.set(RedisConstants.SIGN+sign, encryptString, RedisUtils.signExpireTime);
         return sign;
     }
 
@@ -193,7 +194,7 @@ public class SecretUtil {
      * @return
      */
     public static String getKey(String sign) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if (value != null) {
             SignValue signValue = JSON.parseObject(value, SignValue.class);
             return signValue.getKey();
@@ -236,13 +237,13 @@ public class SecretUtil {
      */
 	public static void clearToken(String sign) {
 		// 获取sign缓存
-		String value = RedisUtils.get(sign);
+		String value = RedisUtils.get(RedisConstants.SIGN+sign);
 		if (!Validator.isNull(value)) {
 			SignValue signValue = JSON.parseObject(value, SignValue.class);
 			// 清除token
 			signValue.setToken(null);
 			// 更新缓存
-			RedisUtils.set(sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+			RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
 		}
 	}
 
@@ -272,7 +273,7 @@ public class SecretUtil {
      * @return
      */
     public static boolean checkToken(String sign, String token) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         SignValue signValue = JSON.parseObject(value, SignValue.class);
         if (null != token) {
             if (token.equals(signValue.getToken())) {
@@ -333,7 +334,7 @@ public class SecretUtil {
      */
     public static String createSignSec(String sign) {
         String signSec = createSign();
-        RedisUtils.set(signSec, RedisUtils.get(sign));
+        RedisUtils.set(RedisConstants.SIGN+signSec, RedisUtils.get(RedisConstants.SIGN+sign));
         return signSec;
     }
 
@@ -345,7 +346,7 @@ public class SecretUtil {
      * @return
      */
     public static String getToken(String sign) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(Validator.isNull(value)){
         	return null;
         }
@@ -361,7 +362,7 @@ public class SecretUtil {
      */
     public static Integer getUserId(String sign) {
     	// 获取sign缓存
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(Validator.isNull(value)){
         	return null;
         }
@@ -381,6 +382,30 @@ public class SecretUtil {
         }
         return appUserToken.getUserId();
     }
-    
-    
+
+
+    public static AppUserToken getAppUserToken(String sign) {
+        // 获取sign缓存
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
+        if(StringUtils.isBlank(value)){
+            return null;
+        }
+        AppUserToken signValue = JSON.parseObject(value, AppUserToken.class);
+        if (null == signValue) {
+            throw new RuntimeException("用户未登陆");
+        }
+        return signValue;
+    }
+
+    public static void refreshSign(String sign) {
+        if(StringUtils.isEmpty(sign)){
+            return ;
+        }
+        // 获取sign缓存
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
+        if(StringUtils.isEmpty(value)){
+            return ;
+        }
+        RedisUtils.expire(sign,RedisUtils.signExpireTime);
+    }
 }

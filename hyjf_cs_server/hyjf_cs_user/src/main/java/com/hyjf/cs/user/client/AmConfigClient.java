@@ -2,7 +2,9 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
@@ -99,4 +101,50 @@ public interface AmConfigClient {
      * @return
      */
     VersionVO getUpdateversion(Integer type, Integer isupdate, String versionStr);
+
+    /**
+     * 根据银行code查询银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    BankConfigVO getBankConfigByCode(String code);
+
+    /**
+     * 银行配置信息
+     * @param code
+     * @return
+     */
+    BankConfigVO selectBankConfigByCode(String code);
+
+    /**
+     * 判断江西银行绑卡使用新
+     * @param type
+     * @return
+     */
+    Integer getBankInterfaceFlagByType(String type);
+
+    /**
+     * 根据设备唯一标识获取用户角标
+     * @auth sunpeikai
+     * @param sign 设备唯一标识
+     * @return
+     */
+    UserCornerVO getUserCornerBySign(String sign);
+
+    /**
+     * 更新用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    Integer updateUserCorner(UserCornerVO userCornerVO);
+
+    /**
+     * 插入一条新的用户角标数据
+     * @auth sunpeikai
+     * @param userCornerVO 用户角标数据
+     * @return
+     */
+    Integer insertUserCorner(UserCornerVO userCornerVO);
 }

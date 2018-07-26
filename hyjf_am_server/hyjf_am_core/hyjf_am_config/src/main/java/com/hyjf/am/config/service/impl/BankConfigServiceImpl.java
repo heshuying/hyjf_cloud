@@ -1,16 +1,10 @@
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.BankConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.BankReturnCodeConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
-import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.am.config.dao.mapper.auto.*;
 import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +30,9 @@ public class BankConfigServiceImpl implements BankConfigService {
 	@Autowired
 	private ParamNameMapper paramNameMapper;
 
+	@Autowired
+	private JxBankConfigMapper jxBankConfigMapper;
+
 	/**
 	 * 获取银行卡配置信息
 	 */
@@ -52,6 +49,24 @@ public class BankConfigServiceImpl implements BankConfigService {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据卡号获取银行卡配置信息
+	 */
+	@Override
+	public BankConfig selectBankConfigByCode(String code) {
+		if (code == null) {
+			return null;
+		}
+		BankConfigExample example = new BankConfigExample();
+		example.createCriteria().andCodeEqualTo(code);
+		List<BankConfig> BankConfigList = bankConfigMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(BankConfigList)) {
+			return BankConfigList.get(0);
+		}
+		return null;
+	}
+
 
 	@Override
 	public BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example) {
@@ -266,5 +281,33 @@ public class BankConfigServiceImpl implements BankConfigService {
 		bankConfigMapper.updateByPrimaryKeySelective(record);
 	}
 
+	/**
+	 * 根据银行code获取银行配置
+	 * @auth sunpeikai
+	 * @param code 银行code,例如：招商银行,code是CMB
+	 * @return
+	 */
+	@Override
+	public List<BankConfig> getBankConfigByCode(String code) {
+		BankConfigExample bankConfigExample = new BankConfigExample();
+		BankConfigExample.Criteria criteria = bankConfigExample.createCriteria();
+		criteria.andCodeEqualTo(code);
+		return bankConfigMapper.selectByExample(bankConfigExample);
+	}
+	/**
+	 * 根据bankId查找江西银行的银行卡配置表
+	 * @param bankId
+	 * @return
+	 */
+	@Override
+	public JxBankConfig getJxBankConfigByBankId(int bankId){
+		JxBankConfigExample example = new JxBankConfigExample();
+		example.createCriteria().andBankIdEqualTo(bankId);
+		List<JxBankConfig> jxBankConfigList = jxBankConfigMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(jxBankConfigList)) {
+			return jxBankConfigList.get(0);
+		}
+		return null;
+	}
 
 }

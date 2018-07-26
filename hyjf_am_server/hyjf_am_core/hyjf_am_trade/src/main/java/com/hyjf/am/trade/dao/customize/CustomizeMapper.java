@@ -1,30 +1,22 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
+import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchHjhBorrowRepayCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.BatchUserPortraitQueryCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.AutoReqRepayBorrowCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.EmployeeCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhDebtDetailCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.ManualReverseCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.RUserCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.TenderCreditCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.UserTradeDetailCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
 
 @Service
 public class CustomizeMapper extends AutoMapper {
@@ -127,5 +119,41 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected HjhDayCreditDetailCustomizeMapper hjhDayCreditDetailCustomizeMapper;
+
+	@Autowired
+	protected WebPandectCustomizeMapper webPandectCustomizeMapper;
+
+	@Autowired
+	protected AppUserInvestCustomizeMapper appUserInvestCustomizeMapper;
+
+	@Autowired
+	protected PlatformTransactionManager transactionManager;
+
+	@Autowired
+	protected TransactionDefinition transactionDefinition;
+
+	@Autowired
+	protected WebUserInvestListCustomizeMapper webUserInvestListCustomizeMapper;
+
+	@Autowired
+	protected CouponUserCustomizeMapper couponUserCustomizeMapper;
+
+	@Autowired
+	protected BatchBorrowTenderExceptionCustomizeMapper batchBorrowTenderExceptionCustomizeMapper;
+
+	@Autowired
+	protected AppAccountTradeCustomizeMapper appAccountTradeCustomizeMapper;
+
+	@Autowired
+	protected AssetListServiceCustomizeMapper assetListServiceCustomizeMapper;
+
+	@Autowired
+	protected AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
+
+    @Autowired
+    protected AdminAccountDetailCustomizeMapper adminAccountDetailCustomizeMapper;
+
+    @Autowired
+	protected BorrowFirstCustomizeMapper borrowFirstCustomizeMapper;
 
 }

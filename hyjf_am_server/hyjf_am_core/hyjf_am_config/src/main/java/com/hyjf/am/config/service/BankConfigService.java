@@ -1,13 +1,8 @@
 package com.hyjf.am.config.service;
 
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 
 import java.util.List;
 
@@ -19,6 +14,8 @@ public interface BankConfigService {
      * @return
      */
     BankConfig getBankConfigByBankId(Integer bankId);
+
+    BankConfig selectBankConfigByCode(String code);
 
     BankReturnCodeConfig selectByExample(BankReturnCodeConfigExample example);
 
@@ -61,5 +58,18 @@ public interface BankConfigService {
      */
     void deleteBankConfigById(Integer id);
 
+    /**
+     * 根据银行code获取银行配置
+     * @auth sunpeikai
+     * @param code 银行code,例如：招商银行,code是CMB
+     * @return
+     */
+    List<BankConfig> getBankConfigByCode(String code);
+    /**
+     * 根据bankId查找江西银行的银行卡配置表
+     * @param bankId
+     * @return
+     */
+    JxBankConfig getJxBankConfigByBankId(int bankId);
 
 }

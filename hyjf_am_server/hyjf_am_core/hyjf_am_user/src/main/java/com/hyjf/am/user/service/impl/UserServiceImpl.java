@@ -9,15 +9,11 @@ import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.AccountProducer;
 import com.hyjf.am.user.service.UserService;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.http.HttpDeal;
@@ -33,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -504,6 +499,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			HjhUserAuth hjhUserAuth=new HjhUserAuth();
 			hjhUserAuth.setAutoInvesStatus(0);
 			hjhUserAuth.setAutoCreditStatus(0);
+			hjhUserAuth.setAutoPaymentStatus(0);
+			hjhUserAuth.setAutoRepayStatus(0);
+			hjhUserAuth.setAutoConsumeStatus(0);
 			return hjhUserAuth;
 		}
 	}
@@ -675,7 +673,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if (userEvalationResult != null && userEvalationResult.size() > 0) {
 			return userEvalationResult.get(0);
 		} else {
-			return null;
+			return new UserEvalationResult();
 		}
 	}
 
@@ -702,7 +700,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public AccountChinapnr getAccountChinapnr(Integer userId) {
 		AccountChinapnr accountChinapnr = null;
 		if (userId == null) {
-			return null;
+			return new AccountChinapnr();
 		}
 		AccountChinapnrExample example = new AccountChinapnrExample();
 		AccountChinapnrExample.Criteria criteria = example.createCriteria();

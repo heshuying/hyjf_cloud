@@ -1,26 +1,19 @@
 package com.hyjf.am.user.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
-import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.mapper.auto.BankSmsAuthCodeMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.auto.BankCardExample;
-import com.hyjf.am.user.dao.model.auto.BankCardLog;
-import com.hyjf.am.user.dao.model.auto.BankSmsAuthCode;
-import com.hyjf.am.user.dao.model.auto.BankSmsAuthCodeExample;
-import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BindCardService;
+import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 绑卡接口实现类
@@ -30,13 +23,13 @@ import com.hyjf.am.user.service.BindCardService;
 @Service
 public class BindCardServiceImpl implements BindCardService {
 
-	@Autowired
+	@Resource
 	private UserMapper userMapper;
-	@Autowired
+	@Resource
 	private BankCardMapper bankCardMapper;
-	@Autowired
+	@Resource
 	private BankCardLogMapper bankCardLogMapper;
-	@Autowired
+	@Resource
 	private BankSmsAuthCodeMapper bankSmsAuthCodeMapper;
 
 	/**
@@ -206,18 +199,13 @@ public class BindCardServiceImpl implements BindCardService {
 	 */
 	@Override
 	public synchronized boolean updateAfterDeleteCard(BankCardUpdateRequest requestBean) throws Exception {
-		int nowTime = GetDate.getNowTime10(); // 当前时间
-		boolean ret = false;
 		BankCardExample bankCardExample = new BankCardExample();
 		BankCardExample.Criteria aCriteria = bankCardExample.createCriteria();
 		aCriteria.andUserIdEqualTo(requestBean.getUserId());
 		aCriteria.andCardNoEqualTo(requestBean.getCardNo()); // 银行卡账号
-		aCriteria.andIdEqualTo(requestBean.getCardId());// 银行卡Id
 		List<BankCard> accountBank = this.bankCardMapper.selectByExample(bankCardExample);
-		boolean isDeleteFlag = this.bankCardMapper.deleteByExample(bankCardExample) > 0 ? true : false;
-		if (!isDeleteFlag) {
-			throw new Exception("删除银行卡失败,请联系客服人员!");
-		}
+		this.bankCardMapper.deleteByExample(bankCardExample);
+
 		// 插入操作记录表
 		BankCardLog bankCardLog = new BankCardLog();
 		bankCardLog.setUserId(requestBean.getUserId());
@@ -229,8 +217,8 @@ public class BindCardServiceImpl implements BindCardService {
 		bankCardLog.setOperationType(1);// 操作类型 0绑定 1删除
 		bankCardLog.setStatus(0);// 成功
 		bankCardLog.setCreateTime(GetDate.getNowTime());// 操作时间
-		ret = this.bankCardLogMapper.insertSelective(bankCardLog) > 0 ? true : false;
-		return ret;
+		this.bankCardLogMapper.insertSelective(bankCardLog);
+		return true;
 	}
 	
 }

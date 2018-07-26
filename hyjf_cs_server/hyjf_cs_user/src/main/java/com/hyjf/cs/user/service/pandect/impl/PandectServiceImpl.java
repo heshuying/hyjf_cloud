@@ -126,16 +126,14 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         result.put("account", account);
         // 获取用户的汇付信息
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
+        result.put("accountChinapnr", chinapnr);
         if (chinapnr != null) {
-            result.put("accountChinapnr", chinapnr);
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
         result.put("webViewUser", user);
         // 获取用户的银行电子账户信息
         BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
-        if (bankAccount != null) {
-            result.put("bankOpenAccount", bankAccount);
-        }
+        result.put("bankOpenAccount", bankAccount);
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
         result.put("recoverLatestList", recoverLatestList);
         return result;

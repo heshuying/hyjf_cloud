@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
@@ -52,7 +52,6 @@ public class AdminAccountDetailController {
     public AccountDetailResponse accountDetailList(@RequestBody @Valid AccountDetailRequest request) {
         logger.info("---accountdetaillist by param---  " + JSONObject.toJSON(request));
         AccountDetailResponse response = new AccountDetailResponse();
-        String returnCode = Response.FAIL;
         Map<String, Object> mapParam = paramSet(request);
         int intCountAccountDetail = accountDetailService.countAccountDetail(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), intCountAccountDetail, request.getPageSize());
@@ -67,15 +66,14 @@ public class AdminAccountDetailController {
             mapParam.put("limitEnd", 0);
         }
         List<AdminAccountDetailCustomize> userManagerCustomizeList = accountDetailService.queryAccountDetails(mapParam);
+        response.setRecordTotal(intCountAccountDetail);
         if (intCountAccountDetail > 0) {
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AccountDetailVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AccountDetailVO.class);
                 response.setResultList(userVoList);
-                response.setRecordTotal(intCountAccountDetail);
-                returnCode = Response.SUCCESS;
+                response.setRtn(Response.SUCCESS);
             }
         }
-        response.setRtn(returnCode);
         return response;
     }
 

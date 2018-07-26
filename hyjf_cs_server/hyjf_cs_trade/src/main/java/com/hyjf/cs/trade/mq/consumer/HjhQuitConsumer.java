@@ -40,7 +40,7 @@ public class HjhQuitConsumer extends Consumer  {
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.HJH_QUIT);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.HJH_QUIT_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
         defaultMQPushConsumer.subscribe(MQConstant.HJH_QUIT_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费

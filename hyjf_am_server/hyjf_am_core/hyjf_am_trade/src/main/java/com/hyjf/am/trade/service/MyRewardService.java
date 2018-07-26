@@ -14,4 +14,6 @@ public interface MyRewardService {
     List<MyRewardRecordCustomizeVO> selectMyRewardList(String userId, Integer limitStart, Integer limitEnd);
 
     BigDecimal sumMyRewardTotal(String userId);
+
+    Integer countMyRewardTotal(String userId);
 }

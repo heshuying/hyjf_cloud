@@ -33,7 +33,6 @@ import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 
@@ -55,7 +54,7 @@ public class PlanListController extends BaseController{
 	@Autowired
 	private SystemConfig systemConfig;
 	
-    /** 权限 */
+    /** 权限 */	
 	public static final String PERMISSIONS = "planlist";
 	
     /**

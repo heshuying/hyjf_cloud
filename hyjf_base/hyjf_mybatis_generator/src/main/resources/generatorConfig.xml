@@ -301,7 +301,6 @@
         </table>
 
         <table tableName="ht_user_contact" domainObjectName="UserContact">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_user_evalation" domainObjectName="UserEvalation">

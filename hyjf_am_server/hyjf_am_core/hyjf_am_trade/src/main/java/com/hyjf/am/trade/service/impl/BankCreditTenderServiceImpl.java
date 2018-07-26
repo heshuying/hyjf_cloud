@@ -176,25 +176,6 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		}
 	}
 
-
-	/**
-	 * 获取用户的账户信息
-	 *
-	 * @param userId
-	 * @return 获取用户的账户信息
-	 */
-	public Account getAccount(Integer userId) {
-		AccountExample example = new AccountExample();
-		AccountExample.Criteria criteria = example.createCriteria();
-		criteria.andUserIdEqualTo(userId);
-		List<Account> listAccount = accountMapper.selectByExample(example);
-		if (listAccount != null && listAccount.size() > 0) {
-			return listAccount.get(0);
-		}
-		return null;
-	}
-
-
 	private Borrow getBorrowByNid(String borrowNid) {
 		BorrowExample example = new BorrowExample();
 		BorrowExample.Criteria criteria = example.createCriteria();
@@ -221,7 +202,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		Integer borrowUserId = borrowRecover.getBorrowUserid();
 		String orderId = GetOrderIdUtils.getOrderId2(tenderUserId);
 		Account borrowUserAccount=this.getAccount(borrowUserId);
-		logger.info(borrowRecover.getBorrowNid()+" 异常修复承接结束债权  借款人: "+borrowUserId+"-"+borrowUserAccount.getAccountId()+" 投资人: "+tenderUserId+"-"+tenderAccountId+" 授权码: "+borrowRecover.getAuthCode()+" 原始订单号: "+borrowRecover.getNid());
+		logger.info(borrowRecover.getBorrowNid() + " 异常修复承接结束债权  借款人: " + borrowUserId + "-" + borrowUserAccount == null ? "" : borrowUserAccount.getAccountId() + " 投资人: "
+				+ tenderUserId + "-" + tenderAccountId + " 授权码: " + borrowRecover == null ? "" : borrowRecover.getAuthCode() + " 原始订单号: " + borrowRecover == null ? "" : borrowRecover.getNid());
 
 		BankCreditEnd record = new BankCreditEnd();
 		record.setUserId(borrowUserId);
@@ -334,10 +316,19 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			String creditNid = creditTenderLog.getCreditNid();
 			// 出让人账户信息
 			Account sellerAccount = this.getAccount(sellerUserId);
+			if (sellerAccount == null) {
+				throw new Exception("查询出让人账户信息失败，承接订单号：" + assignOrderId + ",用户userId:" + userId);
+			}
 			// 承接人账户信息
 			Account assignAccount = this.getAccount(userId);
+			if (sellerAccount == null) {
+				throw new Exception("查询承接人账户信息失败，承接订单号：" + assignOrderId + ",用户userId:" + userId);
+			}
 			// 项目详情
 			Borrow borrow = this.getBorrowByNid(borrowNid);
+			if (borrow == null) {
+				throw new Exception("查询borrow失败，承接订单号：" + assignOrderId + ",用户userId:" + userId);
+			}
 			// 还款方式
 			String borrowStyle = borrow.getBorrowStyle();
 			// 项目总期数
@@ -541,6 +532,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 				}
 				// 重新获取用户账户信息
 				sellerAccount = this.getAccount(sellerUserId);
+				if(sellerAccount==null){
+					throw new Exception("重新获取用户账户信息错误!承接订单号：" + assignOrderId);
+				}
 				AccountList sellerAccountList = new AccountList();
 				sellerAccountList.setNid(creditTender.getAssignNid());
 				sellerAccountList.setUserId(creditTender.getCreditUserId());
@@ -1031,7 +1025,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 						assignInterest = creditAccount.subtract(assignPay);
 						// 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
 						expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
-								.subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+								.subtract(assignPay.multiply(BigDecimal.valueOf(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
 					} else {// 按月
 						// 债转本息
 						creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrow.getBorrowPeriod());
@@ -1047,7 +1041,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 						assignInterest = creditAccount.subtract(assignPay);
 						// 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
 						expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
-								.subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+								.subtract(assignPay.multiply(BigDecimal.valueOf(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
 					}
 				}
 				// 等额本息和等额本金和先息后本
@@ -1085,10 +1079,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					assignInterest = creditAccount.subtract(assignPay);
 					// 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
 					expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
-							.subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+							.subtract(assignPay.multiply(BigDecimal.valueOf(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
 				}
 				// 服务费
-				creditFee = assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN);
+				creditFee = assignPay.multiply(BigDecimal.valueOf(0.01)).setScale(2, BigDecimal.ROUND_DOWN);
 			}
 		}
 		// 债转本息
@@ -1518,4 +1512,25 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	}
 
 
+
+	/**
+	 * 查询承接总记录数
+	 * @author zhangyk
+	 * @date 2018/7/25 17:19
+	 */
+	@Override
+	public int getCreditTenderCount(Map<String, Object> params) {
+		return creditTenderCustomizeMapper.getCreditListCount(params);
+	}
+
+
+	/**
+	 * 查询承接list
+	 * @author zhangyk
+	 * @date 2018/7/25 17:28
+	 */
+	@Override
+	public List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String, Object> params) {
+		return creditTenderCustomizeMapper.getCreditTenderList(params);
+	}
 }

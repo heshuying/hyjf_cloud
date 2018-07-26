@@ -3,13 +3,14 @@
  */
 package com.hyjf.cs.user.client;
 
-import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
-import com.hyjf.am.vo.trade.ProductSearchForPageVO;
+import com.hyjf.am.resquest.user.HtlTradeRequest;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -46,4 +47,119 @@ public interface AmTradeClient {
      * @return
      */
     ProductSearchForPageVO selectUserPrincipal(ProductSearchForPageVO productSearchForPage);
+
+    /**
+     * 已回收本金和 已回收利息
+     * @param userId
+     * @return
+     */
+    WebPandectRecoverMoneyCustomizeVO queryRecoverMoney(Integer userId);
+
+    /**
+     * 融通宝累计收益计算
+     * @param userId
+     * @return
+     */
+    WebPandectRecoverMoneyCustomizeVO queryRecoverMoneyForRtb(Integer userId);
+
+    /**
+     * 待收本金和 待收利息
+     * @param userId
+     * @return
+     */
+    WebPandectWaitMoneyCustomizeVO queryWaitMoney(Integer userId);
+
+    /**
+     * 插入预约授权记录表
+     * @param userId
+     * @return
+     */
+    WebPandectWaitMoneyCustomizeVO queryWaitMoneyForRtb(Integer userId);
+
+    /**
+     * 获取汇天利 购买明细表可赎回金额总额
+     * @param userId
+     * @return
+     */
+    BigDecimal queryHtlSumRestAmount(Integer userId);
+
+    /**
+     * 债转统计
+     * @param userId
+     * @return
+     */
+    WebPandectCreditTenderCustomizeVO queryCreditInfo(Integer userId);
+
+    /**
+     * 债转信息
+     * 去掉已债转（r.recover_status=1）; 去掉待收已债转（r.recover_status=0）
+     * @param userId
+     * @param recoverStatus
+     * @return
+     */
+    WebPandectBorrowRecoverCustomizeVO queryRecoverInfo(Integer userId, int recoverStatus);
+
+    /**
+     * 获取汇天利 总收益
+     * @param userId
+     * @return
+     */
+    BigDecimal queryHtlSumInterest(Integer userId);
+
+    /**
+     * 获取某用户优惠券待收收益总和
+     * @param userId
+     * @return
+     */
+    String selectCouponInterestTotal(Integer userId);
+
+    /**
+     *获取某用户优惠券累计收益总和
+     * @param userId
+     * @return
+     */
+    String selectCouponReceivedInterestTotal(Integer userId);
+
+
+    /**
+     * 查询用户投资次数 包含直投类、债转、汇添金
+     * @param userId
+     * @return
+     */
+    int selectUserTenderCount(Integer userId);
+
+    /**
+     * 查询有效未读的优惠券列表
+     * @param userId
+     * @return
+     */
+    List<CouponUserCustomizeVO> selectLatestCouponValidUNReadList(Integer userId);
+
+    /**
+     * 获得购买列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    Integer countHtlIntoRecord(HtlTradeRequest htlTradeRequest);
+
+
+    /**
+     * 获取购买产品列表
+     * @param htlTradeRequest
+     * @return
+     */
+    List<HtlProductIntoRecordVO> getIntoRecordList(HtlTradeRequest htlTradeRequest);
+
+    /**
+     * 获得汇天利转出列表数
+     * @param htlTradeRequest
+     * @return
+     */
+    Integer countProductRedeemRecord(HtlTradeRequest htlTradeRequest);
+    /**
+     * 获取汇天利转出记录列表(自定义)
+     * @param htlTradeRequest
+     * @return
+     */
+    List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest);
 }

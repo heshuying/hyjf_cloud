@@ -85,19 +85,11 @@ public class FddHandle {
 	@Autowired
 	private BorrowTenderClient borrowTenderClient;
 	@Autowired
-	private BankCreditTenderClient bankCreditTenderClient;
-	@Autowired
 	private BorrowCreditClient borrowCreditClient;
 	@Autowired
 	private HjhDebtCreditClient hjhDebtCreditClient;
 	@Autowired
-	private HjhDebtCreditTenderClient hjhDebtCreditTenderClient;
-	@Autowired
 	private HjhAccedeClient hjhAccedeClient;
-	@Autowired
-	private TenderAgreementClient tenderAgreementClient;
-	@Autowired
-	private BorrowRecoverClient borrowRecoverClient;
 	@Autowired
 	private SystemConfig systemConfig;
 
@@ -547,7 +539,7 @@ public class FddHandle {
     private void updateSaveSignInfo(DzqzCallBean platerCallBean, String contract_id, String borrowNid, Integer transType, String instCode, boolean isTenderCompany, boolean isCreditCompany) {
         String download_url = platerCallBean.getDownload_url();
         String viewpdf_url = platerCallBean.getViewpdf_url();
-        List<TenderAgreementVO> agreements = this.tenderAgreementClient.getTenderAgreementListByTenderNidAndStatusNot2(contract_id);
+        List<TenderAgreementVO> agreements = this.amTradeClient.getTenderAgreementListByTenderNidAndStatusNot2(contract_id);
         if (agreements != null && agreements.size() > 0) {
         	TenderAgreementVO tenderAgreement = agreements.get(0);
         	int nowTime = GetDate.getNowTime10();
@@ -747,14 +739,14 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
-        List<CreditTenderVO> creditTenderList = this.bankCreditTenderClient.getCreditTenderList(request);
+        List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 
             CreditTenderVO creditTender = creditTenderList.get(0);
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("creditNid", creditTender.getCreditNid());
             params.put("assignNid", creditTender.getAssignNid());
-			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = this.bankCreditTenderClient.selectWebCreditTenderDetailForContract(params);
+			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = this.amTradeClient.selectWebCreditTenderDetailForContract(params);
             if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
                 if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
                     tenderToCreditDetailList.get(0).setCreditRepayEndTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(tenderToCreditDetailList.get(0).getCreditRepayEndTime())));
@@ -1123,6 +1115,11 @@ public class FddHandle {
 		}
 	}
 
+	/**
+	 * 查询汇计划债转投资表
+	 * @param tenderCreditAssignedBean
+	 * @return
+	 */
 	private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 获取债转投资信息
@@ -1132,7 +1129,7 @@ public class FddHandle {
 		request.setCreditNid(tenderCreditAssignedBean.getCreditNid());
 		request.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
 		request.setAssignOrderId(tenderCreditAssignedBean.getAssignNid());
-		List<HjhDebtCreditTenderVO> creditTenderList =this.hjhDebtCreditTenderClient.getHjhDebtCreditTenderList(request);
+		List<HjhDebtCreditTenderVO> creditTenderList =this.amTradeClient.getHjhDebtCreditTenderList(request);
 		// 当前用户的id
 		Integer currentUserId = tenderCreditAssignedBean.getCurrentUserId();
 
@@ -1144,7 +1141,7 @@ public class FddHandle {
 			params.put("assignOrderId", creditTender.getAssignOrderId());//取得 hyjf_hjh_debt_credit_tender 表的债转编号
 
 			//查看债转详情
-			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList=this.bankCreditTenderClient.selectHJHWebCreditTenderDetail(params);
+			List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList=this.amTradeClient.selectHJHWebCreditTenderDetail(params);
 
 			if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
 				if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
@@ -1335,7 +1332,7 @@ public class FddHandle {
 				instCode = hjhAccede.getPlanNid();
 			}
 		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType){//债转服务协议
-			List<CreditTenderVO> creditTenderList=this.bankCreditTenderClient.selectCreditTender(contract_id);
+			List<CreditTenderVO> creditTenderList=this.amTradeClient.selectCreditTender(contract_id);
 			if (creditTenderList != null && creditTenderList.size() > 0) {
 				CreditTenderVO creditTender = creditTenderList.get(0);
 				userId = creditTender.getUserId();// 承接人
@@ -1521,7 +1518,7 @@ public class FddHandle {
 
 			//是否企业用户
 			boolean isCompanyUser = false;
-			TenderAgreementVO tenderAgrementInfo = this.tenderAgreementClient.getTenderAgreementInfo(tenderAgreementID);
+			TenderAgreementVO tenderAgrementInfo = this.amTradeClient.getTenderAgreementInfoByPrimaryKey(tenderAgreementID);
 			String borrowNid = tenderAgrementInfo.getBorrowNid();
 			if(StringUtils.isNotBlank(borrowNid)){
 				BorrowVO borrow=this.amBorrowClient.getBorrowByNid(borrowNid);
@@ -1585,7 +1582,7 @@ public class FddHandle {
 
 					// 发送邮件
 					if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
-						BorrowRecoverVO recover = this.borrowRecoverClient.selectBorrowRecoverByTenderNid(tenderAgreementID);
+						BorrowRecoverVO recover = this.amTradeClient.selectBorrowRecoverByTenderNid(tenderAgreementID);
 						if (recover != null && StringUtils.isBlank(recover.getAccedeOrderId())){
 							this.sendMail(recover);
 						}
@@ -1655,7 +1652,7 @@ public class FddHandle {
 				//String filePath = PropUtils.getSystem(CustomConstants.HYJF_MAKEPDF_TEMPPATH) + "/" + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
 				String filePath = "/pdf_tem/pdf/" + hjhAccede.getPlanNid();
 				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
-				List<TenderAgreementVO> tenderAgreementsNid=this.tenderAgreementClient.selectTenderAgreementByNid(hjhAccede.getAccedeOrderId());
+				List<TenderAgreementVO> tenderAgreementsNid=this.amTradeClient.selectTenderAgreementByNid(hjhAccede.getAccedeOrderId());
 				/***************************下载法大大协议******************************************/
 				//下载法大大协议--投资服务协议
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
@@ -1726,7 +1723,7 @@ public class FddHandle {
 				//String filePath = PropUtils.getSystem(CustomConstants.HYJF_MAKEPDF_TEMPPATH) + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
 				String  filePath = "/pdf_tem/pdf/" + orderId;
 				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
-				List<TenderAgreementVO> tenderAgreementsNid=this.tenderAgreementClient.selectTenderAgreementByNid(orderId);
+				List<TenderAgreementVO> tenderAgreementsNid=this.amTradeClient.selectTenderAgreementByNid(orderId);
 				/***************************下载法大大协议******************************************/
 				//下载法大大协议--居间
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
@@ -1747,7 +1744,7 @@ public class FddHandle {
 
 				// 更新BorrowRecover邮件发送状态
 				borrowRecover.setSendmail(1);
-				this.borrowRecoverClient.updateBorrowRecover(borrowRecover);
+				this.amTradeClient.updateBorrowRecover(borrowRecover);
 
 				logger.info("结束发送邮件。投资订单号:" + orderId);
 			}
@@ -1804,11 +1801,12 @@ public class FddHandle {
 	}
 
 	private void updateTenderAgreementImageURL(String tenderAgreementID, String iamgeurl, String tmpdfPath) {
-		TenderAgreementRequest request = new TenderAgreementRequest();
-		request.setTenderAgreementID(tenderAgreementID);
-		request.setImgUrl(iamgeurl);
-		request.setPdfUrl(tmpdfPath);
-		this.tenderAgreementClient.updateTenderAgreement(request);
+		TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+		tenderAgreement.setId(Integer.parseInt(tenderAgreementID));
+		tenderAgreement.setImgUrl(iamgeurl);
+		tenderAgreement.setPdfUrl(tmpdfPath);
+		tenderAgreement.setStatus(3);//下载成功
+		this.amTradeClient.updateTenderAgreement(tenderAgreement);
 	}
 
 
@@ -2083,7 +2081,6 @@ public class FddHandle {
 		}
 		String password = systemConfig.getHyjfFtpPassword();
 		String username = systemConfig.getHyjfFtpUsername();
-		FileInputStream in = null;
 		try {
 			logger.info("----------待上传目录：" + upParentDir);
 			File parentDir = new File(upParentDir);
@@ -2095,20 +2092,26 @@ public class FddHandle {
 				for (File file : files) {
 					String fileName = file.getName();
 					logger.info("--------循环目录，开始上传文件：" + fileName);
-					in = new FileInputStream(file);
-					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
-							basePathImage, saveDir, fileName, in);
-					if (!flag){
+					try(FileInputStream ins = new FileInputStream(file)){
+						boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+								basePathImage, saveDir, fileName, ins);
+						if (!flag){
+							throw new RuntimeException("上传失败!fileName:" + fileName);
+						}
+					}catch (Exception e){
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}
 			}else{
 				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
-				in = new FileInputStream(parentDir);
-				boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
-						basePathImage, saveDir, fileName, in);
-				if (!flag){
+				try(FileInputStream ins = new FileInputStream(parentDir)){
+					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
+							basePathImage, saveDir, fileName, ins);
+					if (!flag){
+						throw new RuntimeException("上传失败!fileName:" + fileName);
+					}
+				}catch (Exception e){
 					throw new RuntimeException("上传失败!fileName:" + fileName);
 				}
 			}
@@ -2121,14 +2124,6 @@ public class FddHandle {
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			ret = false;
-		}finally {
-			try {
-			    if (Validator.isNotNull(in)){
-                    in.close();
-                }
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		return ret;
 
