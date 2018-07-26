@@ -44,14 +44,14 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端散标列表", notes = "APP投资散标列表")
     @PostMapping(value = ProjectConstant.APP_BORROW_PROJECT_METHOD, produces = "application/json; charset=utf-8")
-    public Object homeBorrowProjectList(@RequestBody @Valid ProjectListRequest request) {
+    public Object homeBorrowProjectList(@ModelAttribute @Valid ProjectListRequest request) {
         // controller 不做业务处理
         JSONObject result = appProjectListService.searchAppProjectList(request);
         return result;
     }
 
     /**
-     * app端获取散标投资列表
+     * app端获取散标投资详情
      *
      * @param param
      * @return
@@ -74,7 +74,7 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端债转列表", notes = "APP端债转列表")
     @PostMapping(value = ProjectConstant.APP_CREDIT_LIST_METHOD, produces = "application/json; charset=utf-8")
-    public Object getCredittList(@RequestBody @Valid ProjectListRequest request) {
+    public Object getCredittList(@ModelAttribute @Valid ProjectListRequest request) {
         JSONObject result = null;
         try {
             result = appProjectListService.searchAppCreditList(request);
@@ -108,7 +108,7 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端计划列表", notes = "APP端计划列表")
     @PostMapping(value = ProjectConstant.APP_PLAN_LIST_METHOD, produces = "application/json; charset=utf-8")
-    public Object getPlanList(@RequestBody @Valid ProjectListRequest request) {
+    public Object getPlanList(@ModelAttribute @Valid ProjectListRequest request) {
         JSONObject result = null;
         try {
             result = appProjectListService.searchAppPlanList(request);

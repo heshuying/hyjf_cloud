@@ -4,9 +4,11 @@
 package com.hyjf.cs.user.controller.app.common;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.common.CornerService;
@@ -14,13 +16,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -211,6 +212,71 @@ public class CornerController {
         } catch (Exception e) {
             map.put("status","1");
             map.put("statusDesc","更新设备唯一标识异常");
+        }
+        return map;
+    }
+
+    /**
+     * 设置角标
+     * @param request
+     * @param userId 用户id
+     * @return
+     */
+    @ApiOperation(value = "设置角标",notes = "设置角标")
+    @PostMapping(value = "/setCorne")
+    public JSONObject setCorner(@RequestHeader(value = "userId")Integer userId, HttpServletRequest request) {
+
+        JSONObject map = new JSONObject();
+        //map.put("request", WEB_URL + AppCommonDefine.REQUEST_MAPPING + AppCommonDefine.CORNER_MAPPING);
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        //设备标识码
+        String mobileCodeStr = request.getParameter("mobileCode");
+        //角标
+        String cornerStr = request.getParameter("corner");
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            map.put("status", "1");
+            map.put("statusDesc", "请求参数非法");
+            return map;
+        }
+        if(StringUtils.isEmpty(mobileCodeStr)){
+            map.put("status","1");
+            map.put("statusDesc","请求参数非法");
+        }
+        if(StringUtils.isEmpty(cornerStr)){
+            map.put("status","1");
+            map.put("statusDesc","请求参数非法");
+        }
+
+
+        map.put("status","0");
+        map.put("statusDesc","请求成功");
+
+        // 检查参数
+        Map<String,String> result = new HashMap<String,String>();
+        //result.put("request", AppCommonDefine.CORNER_MAPPING);
+        result.put("status","0");
+        result.put("statusDesc","设置成功");
+        try {
+            int corner = Integer.parseInt(cornerStr);
+            UserCornerVO cornerInfo = cornerService.getUserCornerBySign(sign);//appCommonService.getUserCornerByUserId(userId);
+            if(cornerInfo != null){
+                cornerInfo.setCorner(corner);
+                cornerService.updateUserCorner(cornerInfo);
+                //appCommonService.updateUserCorner(cornerInfo);
+            }else{
+                cornerInfo = new UserCornerVO();
+                cornerInfo.setCorner(corner);
+                cornerInfo.setSign(sign);
+                cornerService.insertUserCorner(cornerInfo);
+                //cornerInfo.setUserId(userid);
+                //appCommonService.insertUserCorner(cornerInfo);
+            }
+        } catch (Exception e) {
+            map.put("status","1");
+            map.put("statusDesc","设置角标异常");
         }
         return map;
     }

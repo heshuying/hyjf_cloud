@@ -636,7 +636,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         {
             // 风险测评结果
             UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(userId);
-            if (userEvalationResult != null ) {
+            if (userEvalationResult != null) {
                 //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
                 Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(),1,1).getTime();
                 //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
