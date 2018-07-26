@@ -408,4 +408,30 @@ public class SecretUtil {
         }
         RedisUtils.expire(sign,RedisUtils.signExpireTime);
     }
+    
+    /**
+     * 从token中取得用户ID
+     *
+     * @param sign
+     * @return
+     */
+    public static Integer getUserIdNoException(String sign) {
+        if(StringUtils.isEmpty(sign)){
+            return null;
+        }
+        // 获取sign缓存
+        String value = RedisUtils.get(sign);
+        if(StringUtils.isEmpty(value)){
+            return null;
+        }
+        
+        SignValue signValue = JSON.parseObject(value, SignValue.class);
+        String token = signValue.getToken();
+        AppUserToken appUserToken;
+        if (null != token) {
+            appUserToken = JSON.parseObject(DES.decodeValue(signValue.getKey(), token), AppUserToken.class);
+            return appUserToken.getUserId();
+        } 
+        return null;
+    }
 }
