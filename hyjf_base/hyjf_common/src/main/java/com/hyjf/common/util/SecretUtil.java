@@ -194,7 +194,7 @@ public class SecretUtil {
      * @return
      */
     public static String getKey(String sign) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if (value != null) {
             SignValue signValue = JSON.parseObject(value, SignValue.class);
             return signValue.getKey();
@@ -237,7 +237,7 @@ public class SecretUtil {
      */
 	public static void clearToken(String sign) {
 		// 获取sign缓存
-		String value = RedisUtils.get(sign);
+		String value = RedisUtils.get(RedisConstants.SIGN+sign);
 		if (!Validator.isNull(value)) {
 			SignValue signValue = JSON.parseObject(value, SignValue.class);
 			// 清除token
@@ -273,7 +273,7 @@ public class SecretUtil {
      * @return
      */
     public static boolean checkToken(String sign, String token) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         SignValue signValue = JSON.parseObject(value, SignValue.class);
         if (null != token) {
             if (token.equals(signValue.getToken())) {
@@ -346,7 +346,7 @@ public class SecretUtil {
      * @return
      */
     public static String getToken(String sign) {
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(Validator.isNull(value)){
         	return null;
         }
@@ -362,7 +362,7 @@ public class SecretUtil {
      */
     public static Integer getUserId(String sign) {
     	// 获取sign缓存
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(Validator.isNull(value)){
         	return null;
         }
@@ -386,7 +386,7 @@ public class SecretUtil {
 
     public static AppUserToken getAppUserToken(String sign) {
         // 获取sign缓存
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(StringUtils.isBlank(value)){
             return null;
         }
@@ -402,7 +402,7 @@ public class SecretUtil {
             return ;
         }
         // 获取sign缓存
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         if(StringUtils.isEmpty(value)){
             return ;
         }

@@ -289,7 +289,7 @@ public class AppLoginController extends BaseUserController {
             return ret;
         }
         // 验证sign
-        if (RedisUtils.get(sign) == null) {
+        if (RedisUtils.get(RedisConstants.SIGN+sign) == null) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
@@ -385,7 +385,7 @@ public class AppLoginController extends BaseUserController {
         // 加密后的token
         String encryptValue;
         // 获取sign对应的加密key
-        String value = RedisUtils.get(sign);
+        String value = RedisUtils.get(RedisConstants.SIGN+sign);
         SignValue signValue;
         if (StringUtils.isNotBlank(value)) {
             signValue = JSON.parseObject(value, SignValue.class);
