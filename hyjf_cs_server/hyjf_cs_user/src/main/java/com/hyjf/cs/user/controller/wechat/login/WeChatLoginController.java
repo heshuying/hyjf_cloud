@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "weChat端用户登录接口",description = "weChat端-用户登录接口")
 @RestController
-@RequestMapping("/hyjf-wechat/user")
+@RequestMapping("/hyjf-wechat/wx/login")
 public class WeChatLoginController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatLoginController.class);
     @Autowired
@@ -44,9 +44,7 @@ public class WeChatLoginController extends BaseUserController {
 
     /**
      * 登录接口
-     *
      * @param request
-     * @param response
      * @param userName
      * @param password
      * @param env
@@ -54,8 +52,8 @@ public class WeChatLoginController extends BaseUserController {
      */
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
-    @PostMapping(value = "/login", produces = "application/json; charset=utf-8")
-    public BaseResultBean login(HttpServletRequest request, HttpServletResponse response, @RequestParam String userName, @RequestParam String password,
+    @PostMapping(value = "/doLogin.do", produces = "application/json; charset=utf-8")
+    public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
         LoginResultBean result = new LoginResultBean();
         StringBuffer url = request.getRequestURL();
@@ -101,7 +99,7 @@ public class WeChatLoginController extends BaseUserController {
     @SignValidate
     @ResponseBody
     @ApiOperation(value = "登出", notes = "登出")
-    @RequestMapping(value = "/logout")
+    @RequestMapping(value = "/doLoginOut.do")
     public BaseResultBean doLoginOut(HttpServletRequest request, HttpServletResponse response, String sign) {
         LoginResultBean result = new LoginResultBean();
         result.setStatus(ResultEnum.SUCCESS.getStatus());

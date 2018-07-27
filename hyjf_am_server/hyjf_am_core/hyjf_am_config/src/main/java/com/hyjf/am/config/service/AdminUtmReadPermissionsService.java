@@ -4,10 +4,13 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.LandingPage;
+import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
+import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 
 /**
  * @author tanyy
@@ -44,4 +47,15 @@ public interface AdminUtmReadPermissionsService {
      * @param id
      */
     void deleteById(Integer id);
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  根据用户ID查询渠道账号管理
+     * @Date 17:01 2018/7/24
+     * @Param userId
+     * @return
+     */
+    AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(Integer userId);
+
 }

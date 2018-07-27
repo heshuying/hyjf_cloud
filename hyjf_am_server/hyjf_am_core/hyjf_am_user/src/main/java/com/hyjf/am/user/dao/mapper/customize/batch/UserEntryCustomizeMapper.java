@@ -3,9 +3,10 @@
  */
 package com.hyjf.am.user.dao.mapper.customize.batch;
 
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 /**
  * @author wangjun
  * @version UserEntryCustomizeMapper, v0.1 2018/6/12 16:06
@@ -29,5 +30,5 @@ public interface UserEntryCustomizeMapper {
      * @param userId
      * @return
      */
-    List<UserInfo> queryEmployeeById(@Param("userId") String userId);
+    List<UserInfo> queryEmployeeById(@Param("userId") Integer userId);
 }

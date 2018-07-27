@@ -1,21 +1,7 @@
 package com.hyjf.cs.user.service.smscode.impl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.cs.user.config.SystemConfig;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserVO;
@@ -35,11 +21,19 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
 import com.hyjf.cs.user.vo.SmsRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * @author xiasq
@@ -63,12 +57,11 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      *
      * @param validCodeType
      * @param mobile
-     * @param token
      * @param ip
      * @throws MQException
      */
     @Override
-    public void sendSmsCode(String validCodeType, String mobile,String platform, String token, String ip) throws MQException {
+    public void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws MQException {
 
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);
@@ -397,5 +390,54 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         CheckUtil.check(StringUtils.isNotBlank(mobile),MsgEnum.STATUS_CE000001);
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
         CheckUtil.check(StringUtils.isNotBlank(code), MsgEnum.ERR_SMSCODE_BLANK);
+    }
+
+    @Override
+    public JSONObject wechatCheckParam(String verificationType, String mobile, String ipAddr,JSONObject ret) {
+        // 解密
+        if (Validator.isNull(verificationType)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "验证码类型不能为空");
+            return ret;
+        }
+        if (Validator.isNull(mobile)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "手机号不能为空");
+            return ret;
+        }
+        if (!Validator.isMobile(mobile)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "请输入您的真实手机号码");
+            return ret;
+        }
+
+        if (!(verificationType.equals(CommonConstant.PARAM_TPL_ZHUCE) || verificationType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA) || verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH) || verificationType.equals(CommonConstant.PARAM_TPL_YZYSJH))) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "无效的验证码类型");
+            return ret;
+        }
+        {
+            if (verificationType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
+                if (existUser(mobile)) {
+                    ret.put("status", "99");
+                    ret.put("statusDesc", "该手机号已经注册");
+                    return ret;
+                }
+            } else if (verificationType.equals(CommonConstant.PARAM_TPL_ZHAOHUIMIMA) || verificationType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
+                if (!existUser(mobile)) {
+                    ret.put("status", "99");
+                    ret.put("statusDesc", "该手机号尚未注册");
+                    return ret;
+                }
+
+            } else if (verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
+                if (existUser(mobile)) {
+                    ret.put("status", "99");
+                    ret.put("statusDesc", "手机号已存在，请重新填写");
+                    return ret;
+                }
+            }
+        }
+        return ret;
     }
 }

@@ -10,18 +10,22 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.DebtPlanBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -209,4 +213,53 @@ public class HjhPlanController extends BaseController{
         response.setResultList(list);
         return response;
     }
+
+
+    /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    @RequestMapping("/countPlanBorrowRecordTotal")
+    public int countPlanBorrowRecordTotal(@RequestBody Map<String, Object> params){
+        return hjhPlanService.countPlanBorrowRecordTotal(params);
+    }
+
+    /**
+     * 查询相应的计划标的记录列表
+     */
+    @RequestMapping("/selectPlanBorrowList")
+    public DebtPlanBorrowCustomizeResponse selectPlanBorrowList(@RequestBody Map<String, Object> params){
+        DebtPlanBorrowCustomizeResponse response = new DebtPlanBorrowCustomizeResponse();
+        List<DebtPlanBorrowCustomize> planAccedeList=hjhPlanService.selectPlanBorrowList(params);
+        if(CollectionUtils.isNotEmpty(planAccedeList)){
+            response.setResultList(CommonUtils.convertBeanList(planAccedeList,DebtPlanBorrowCustomizeVO.class));
+        }
+        return response;
+    }
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    @PostMapping("/selectPlanAccedeSum")
+    public Long selectPlanAccedeSum(@RequestBody Map<String, Object> params){
+        return hjhPlanService.selectPlanAccedeSum(params);
+    }
+
+
+    /**
+     * 查询相应的计划的加入列表
+     */
+    @PostMapping("/selectPlanAccedeList")
+    public DebtPlanAccedeCustomizeResponse selectPlanAccedeList(@RequestBody Map<String, Object> params){
+        DebtPlanAccedeCustomizeResponse response = new DebtPlanAccedeCustomizeResponse();
+        List<DebtPlanAccedeCustomize> list = hjhPlanService.selectPlanAccedeList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,DebtPlanAccedeCustomizeVO.class));
+        }
+        return response;
+    }
+
 }

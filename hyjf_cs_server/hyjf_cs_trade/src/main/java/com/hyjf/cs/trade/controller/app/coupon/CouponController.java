@@ -1,8 +1,10 @@
 package com.hyjf.cs.trade.controller.app.coupon;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.AppCouponRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -65,6 +67,46 @@ public class CouponController extends BaseTradeController {
         }
         return result;
     }
+
+    @ApiOperation(value = "APP根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表", notes = "根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表")
+    @PostMapping("/getProjectAvailableUserCoupon")
+    public JSONObject getProjectAvailableUserCoupon(@RequestHeader(value = "token") String token, @RequestBody AppCouponRequest appCouponRequest) throws Exception {
+        JSONObject ret = new JSONObject();
+        // 检查参数正确性
+        if ( Validator.isNull(appCouponRequest.getBorrowNid()) || Validator.isNull(appCouponRequest.getSign())||
+                Validator.isNull(appCouponRequest.getPlatform())) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        String money = appCouponRequest.getMoney();
+        if(money==null||"".equals(money)||money.length()==0){
+            money="0";
+        }
+        String investType = appCouponRequest.getBorrowType();
+        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        logger.info("investType is :{}", investType);
+
+        if(investType != null){
+
+            if(investType==null||!"HJH".equals(investType)){
+                // 如果为空  就执行以前的逻辑
+                ret = appCouponService.getBorrowCoupon(user.getUserId(),appCouponRequest.getBorrowNid(),money,appCouponRequest.getPlatform());
+            }else{
+                // HJH的接口
+                ret = appCouponService.getPlanCoupon(user.getUserId(),appCouponRequest.getBorrowNid(),money,appCouponRequest.getPlatform());
+            }
+        }else {
+            if(appCouponRequest.getBorrowNid().contains("HJH")){
+                ret = appCouponService.getPlanCoupon(user.getUserId(),appCouponRequest.getBorrowNid(),money,appCouponRequest.getPlatform());
+            }else{
+                // 如果为空  就执行以前的逻辑
+                ret = appCouponService.getBorrowCoupon(user.getUserId(),appCouponRequest.getBorrowNid(),money,appCouponRequest.getPlatform());
+            }
+        }
+        return ret;
+    }
+
 
     /**
      * APP,PC散标投资获取我的优惠券列表

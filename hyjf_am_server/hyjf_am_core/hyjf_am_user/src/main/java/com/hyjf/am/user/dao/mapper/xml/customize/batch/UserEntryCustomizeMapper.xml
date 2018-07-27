@@ -17,8 +17,8 @@
 			2
 		END AS attribute
 		FROM
-			hyjf_crm.oa_users oau
-		INNER JOIN hyjf_crm.oa_department oad ON oau.departmentid = oad.id
+			ht_r_oa_users oau
+		INNER JOIN ht_r_oa_department oad ON oau.departmentid = oad.id
 		WHERE
 			oau.user_status IN (
 				'E',
@@ -32,13 +32,13 @@
 	</select>
 
 	<update id="updateSpreadAttribute" parameterType="java.lang.Integer">
-			UPDATE ht_user_info u
-			inner join ht_spreads_user s on u.user_id=s.user_id
-			SET u.attribute = 1
-			WHERE spreads_user_id = #{referrer}
+		UPDATE ht_user_info u
+		INNER JOIN ht_spreads_user s on u.user_id=s.user_id
+		SET u.attribute = 1
+		WHERE spreads_user_id = #{referrer}
 	</update>
 	
-	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.String">
+	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.Integer">
 		SELECT
 			oau.hyd_id AS userId,
 		CASE WHEN oad.cuttype = 1 THEN
@@ -47,8 +47,8 @@
 			2
 		END AS attribute
 		FROM
-			hyjf_crm.oa_users oau
-		INNER JOIN hyjf_crm.oa_department oad ON oau.departmentid = oad.id
+			ht_r_oa_users oau
+		INNER JOIN ht_r_oa_department oad ON oau.departmentid = oad.id
 		WHERE
 			oau.user_status IN (
 				'E',

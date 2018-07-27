@@ -14,11 +14,10 @@ public interface SmsCodeService extends BaseUserService {
      * 发送短信验证码
      * @param validCodeType
      * @param mobile
-     * @param token
      * @param ip
      * @throws MQException
      */
-    void sendSmsCode(String validCodeType, String mobile,String platform, String token, String ip) throws MQException;
+    void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws MQException;
 
     /**
      *
@@ -37,4 +36,12 @@ public interface SmsCodeService extends BaseUserService {
     JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip);
 
     void checkParam(String verificationType, String code, String mobile);
+
+    /**
+     * 微信发送验证码参数校验
+     * @param verificationType
+     * @param mobile
+     * @param ipAddr
+     */
+    JSONObject wechatCheckParam(String verificationType, String mobile, String ipAddr,JSONObject ret);
 }

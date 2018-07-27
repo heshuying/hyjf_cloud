@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
+import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -26,6 +27,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -1563,6 +1565,134 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             info.put("list", new ArrayList<AppProjectInvestListCustomizeVO>());
             info.put("userCount", "0");
             info.put("isEnd", true);
+        }
+    }
+
+
+    /**
+     * 创建计划的标的组成分页信息
+     * @param result
+     * @param planId
+     * @param pageNo
+     * @param pageSize
+     */
+    @Override
+    public void searchHjhPlanBorrow(HjhPlanBorrowResultBean result, String planNid, int pageNo, int pageSize) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", planNid);
+        Date date = GetDate.getDate();
+        int dayStart10 = GetDate.getDayStart10(date);
+        int dayEnd10 = GetDate.getDayEnd10(date);
+        params.put("startTime", dayStart10);
+        params.put("endTime", dayEnd10);
+        int recordTotal = this.amTradeClient.countPlanBorrowRecordTotal(params);
+        // 加入总人次
+        result.setUserCount(recordTotal);
+        // 加入总金额
+        result.setAccount(this.getPlanAccedeAccount(params));
+        if (recordTotal > 0) {
+            int limit = pageSize;
+            int page = pageNo;
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<DebtPlanBorrowCustomizeVO> consumeList = amTradeClient.selectPlanBorrowList(params);
+
+            if (!CollectionUtils.isEmpty(consumeList)) {
+                List<HjhPlanBorrowResultBean.BorrowList> borrowList = result.getBorrowList();
+                HjhPlanBorrowResultBean.BorrowList borrow = null;
+                for (DebtPlanBorrowCustomizeVO entity : consumeList) {
+                    borrow = new HjhPlanBorrowResultBean.BorrowList();
+                    borrow.setBorrowApr(entity.getBorrowApr());
+                    borrow.setBorrowNid(entity.getBorrowNid());
+                    borrow.setBorrowPeriod(entity.getBorrowPeriod());
+                    borrow.setTureName(entity.getTrueName());
+                    borrowList.add(borrow);
+                }
+            }
+
+            // 判断本次查询是否已经全部查出数据
+            if ((page * limit) > recordTotal) {
+                result.setEnd(Boolean.TRUE);
+            } else {
+                result.setEnd(Boolean.FALSE);
+            }
+        }
+    }
+
+    /**
+     * app 端汇计划加入记录
+     * @param result
+     * @param planId
+     * @param currentPage
+     * @param pageSize
+     */
+    @Override
+    public void getHjhPlanAccede(HjhPlanAccedeResultBean result, String planNid, int pageNo, int pageSize) {
+
+        HjhAccedeRequest request = new HjhAccedeRequest();
+        request.setPlanNid(planNid);
+        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+
+        // 加入总人次
+        result.setUserCount(recordTotal);
+        // 加入总金额
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", planNid);
+        result.setAccount(this.getPlanAccedeAccount(params));
+        if (recordTotal > 0) {
+            int limit = pageSize;
+            int page = pageNo;
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<DebtPlanAccedeCustomizeVO> recordList = this.amTradeClient.selectPlanAccedeList(params);
+
+            if (!CollectionUtils.isEmpty(recordList)) {
+                List<HjhPlanAccedeResultBean.AccedeList> accedeList = result.getAccedeList();
+                HjhPlanAccedeResultBean.AccedeList accede = null;
+                Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+                for (DebtPlanAccedeCustomizeVO entity : recordList) {
+                    entity.setClientName(relationMap.get(String.valueOf(entity.getClient())));
+                    accede = new HjhPlanAccedeResultBean.AccedeList();
+                    accede.setAccedeAccount(entity.getAccedeAccount());
+                    accede.setAccedeTime(entity.getAccedeTime());
+                    accede.setUserName(entity.getUserName());
+
+                    accedeList.add(accede);
+                }
+            }
+
+            // 判断本次查询是否已经全部查出数据
+            if ((page * limit) > recordTotal) {
+                result.setEnd(Boolean.TRUE);
+            } else {
+                result.setEnd(Boolean.FALSE);
+            }
+        }
+
+    }
+
+    /**
+     * 根据planNid获取计划加入金额
+     * @param params
+     * @return
+     */
+    private String getPlanAccedeAccount(Map<String,Object> params) {
+        Long sum = amTradeClient.selectPlanAccedeSum(params);// 加入总金额
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        if (sum == null || sum == 0) {
+            return "0";
+        } else {
+            return df.format(sum);
         }
     }
 

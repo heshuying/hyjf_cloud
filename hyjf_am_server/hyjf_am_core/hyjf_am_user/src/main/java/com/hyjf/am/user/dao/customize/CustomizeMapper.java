@@ -6,6 +6,8 @@ import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.*;
 import com.hyjf.am.user.dao.mapper.customize.batch.TzjCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.batch.UserEntryCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.batch.UserLeaveCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +33,10 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserAdminBankAccountCheckCustomizeMapper userAdminBankAccountCheckCustomizeMapper;
+
+    @Autowired
+    protected UserEntryCustomizeMapper userEntryCustomizeMapper;
+
+    @Autowired
+    protected UserLeaveCustomizeMapper userLeaveCustomizeMapper;
 }
