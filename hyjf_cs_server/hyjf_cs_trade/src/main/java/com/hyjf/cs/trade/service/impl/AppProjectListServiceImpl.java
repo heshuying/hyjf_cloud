@@ -1666,7 +1666,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     accede.setAccedeAccount(entity.getAccedeAccount());
                     accede.setAccedeTime(entity.getAccedeTime());
                     accede.setUserName(entity.getUserName());
-
                     accedeList.add(accede);
                 }
             }

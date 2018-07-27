@@ -55,9 +55,13 @@ public class MyProfileController extends BaseUserController {
     @RequestMapping("/profile")
     @ResponseBody
     public WeChatResult myProfile(HttpServletRequest request) {
+        //临时创建
+        Integer userId = Integer.parseInt(request.getParameter("userId"));
+
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
-        Integer userId = requestUtil.getRequestUserId(request);
+        //临时关闭
+        //Integer userId = requestUtil.getRequestUserId(request);
         if(userId==null){
             result.buildErrorResponse(MsgEnum.ERR_USER_NOT_LOGIN);
             return result;
