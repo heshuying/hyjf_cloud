@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.impl.admin.finance;
 
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
-import com.hyjf.am.trade.dao.customize.finance.PushMoneyCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.PushMoneyCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.trade.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.finance.PushMoneyManageService;
 import org.springframework.beans.factory.annotation.Autowired;

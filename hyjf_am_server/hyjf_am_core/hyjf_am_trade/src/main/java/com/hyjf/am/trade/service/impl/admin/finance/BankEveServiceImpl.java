@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.service.impl.admin.finance;
 
-import com.hyjf.am.trade.dao.customize.finance.EveLogCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.EveLogCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankEveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class BankEveServiceImpl implements BankEveService {
 
     @Autowired
-    EveLogCustomizeMapper eveLogMapper;
+    private EveLogCustomizeMapper eveLogMapper;
 
     /**
      * 根据条件查询列表总数

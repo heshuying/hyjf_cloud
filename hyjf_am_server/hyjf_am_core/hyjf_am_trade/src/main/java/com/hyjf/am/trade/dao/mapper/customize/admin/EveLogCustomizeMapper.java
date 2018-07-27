@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.dao.customize.finance;
+package com.hyjf.am.trade.dao.mapper.customize.admin;
 
 import com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize;
 
