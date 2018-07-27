@@ -23,15 +23,7 @@ public interface SubConfigService {
     /*
     * 根据id查询分账名单记录
     * */
-    public SubCommissionListConfig getSubConfigRecordById(Map<String, Object> map);
-
-    /**
-     *
-     * 查询用户名信息
-     * @param form
-     * @return
-     */
-    public Map<String, Object> userMap(AdminSubConfigRequest form);
+    public SubCommissionListConfig getSubConfigRecordById(Integer id);
     /**
      *
      * 插入操作
@@ -50,5 +42,5 @@ public interface SubConfigService {
     /**
      * 删除
      */
-    public void deleteSubConfigRecord(List<Integer> list);
+    public void deleteSubConfigRecord(Integer id);
 }
