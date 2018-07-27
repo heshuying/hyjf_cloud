@@ -1,6 +1,7 @@
 package com.hyjf.am.market.service;
 
 import com.hyjf.am.market.dao.model.auto.ActivityList;
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 
 import javax.validation.Valid;
@@ -50,4 +51,11 @@ public interface ActivityService {
      * @return
      */
     Map<String, Object> deleteActivity(int id);
+
+    /**
+     * 获取有效活动
+     * @param request
+     * @return
+     */
+    List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int i, int i1);
 }

@@ -1,8 +1,10 @@
 package com.hyjf.am.market.service.impl;
 
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
+import com.hyjf.am.market.dao.mapper.customize.market.ActivityListCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.auto.ActivityListExample;
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     ActivityListMapper activityListMapper;
+    @Autowired
+    private ActivityListCustomizeMapper activityListCustomizeMapper;
 
     /**
      * 活动是否过期
@@ -118,6 +122,24 @@ public class ActivityServiceImpl implements ActivityService {
             map.put("msg", "删除失败");
         }
         return map;
+    }
+
+    /**
+     * 获取有效活动列表
+     * @param request
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
+    public List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int limitStart, int limitEnd) {
+        ActivityListCustomize example = new ActivityListCustomize();
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        example.setNowTime(GetDate.getNowTime10());
+        return activityListCustomizeMapper.queryActivityListValid(example);
     }
 
 

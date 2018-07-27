@@ -17,6 +17,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
+import com.hyjf.cs.trade.bean.app.AppModuleBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.util.HomePageDefine;

@@ -874,7 +874,7 @@ UNION
 	</select>
 
 
-	<resultMap id="AppUserInvestListMap" type="com.hyjf.am.trade.dao.model.customize.trade.AppUserInvestListCustomize">
+	<resultMap id="AppUserInvestListMap" type="com.hyjf.am.trade.dao.model.customize.app.AppUserInvestListCustomize">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="real_name" property="realName" jdbcType="VARCHAR" />
 		<result column="username" property="username" jdbcType="VARCHAR" />

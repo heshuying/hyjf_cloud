@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.hyjf.am.response.trade.QueryMyProjectVOResponse;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,7 +200,6 @@ public class AssetManageController extends BaseController {
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         int  repayMentPlanCount= this.assetManageService.countRepayMentPlanTotal(request);
-
         response.setRepayMentPlanCount(repayMentPlanCount);
         return response;
     }
@@ -273,7 +274,6 @@ public class AssetManageController extends BaseController {
         logger.info("请求参数:" +JSONObject.toJSON(request));
         QueryMyProjectVOResponse response = new QueryMyProjectVOResponse();
         QueryMyProjectVO  vo= this.assetManageService.selectWechatRepayMentPlanList(request);
-
         response.setResult(vo);
         return response;
     }
@@ -312,6 +312,55 @@ public class AssetManageController extends BaseController {
             List<AppTenderCreditRecordListCustomizeVO> voList = CommonUtils.convertBeanList(list, AppTenderCreditRecordListCustomizeVO.class);
             response.setAppTenderCreditRecordList(voList);
         }
+        return response;
+    }
+
+    /**
+     * @Description 获取用户已回款计划列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectTenderToCreditListCount")
+    public AssetManageResponse selectTenderToCreditListCount(@RequestBody AssetManageBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        int  tenderCreditDetailCount= this.assetManageService.selectTenderToCreditListCount(request);
+        response.setTenderCreditDetailCount(tenderCreditDetailCount);
+        return response;
+    }
+
+
+    /**
+     * @Description App 获取用户计划列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectAppMyPlanList")
+    public AssetManageResponse selectAppMyPlanList(@RequestBody AssetManageBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        List<AppMyPlanCustomize> list = assetManageService.selectAppMyPlanList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<AppMyPlanCustomizeVO> voList = CommonUtils.convertBeanList(list, AppMyPlanCustomizeVO.class);
+            response.setAppMyPlanCustomizeList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * @Description App 获取用户计划列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/countAppMyPlan")
+    public AssetManageResponse countAppMyPlan(@RequestBody AssetManageBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        AssetManageResponse response = new AssetManageResponse();
+        int  appMyPlanCount= this.assetManageService.countAppMyPlan(request);
+        response.setAppMyPlanCount(appMyPlanCount);
         return response;
     }
 

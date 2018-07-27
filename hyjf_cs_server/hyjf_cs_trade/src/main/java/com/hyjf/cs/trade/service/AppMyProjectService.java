@@ -1,17 +1,11 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
-import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
-import com.hyjf.cs.trade.bean.PlanAjaxBean;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -32,4 +26,6 @@ public interface AppMyProjectService extends BaseTradeService  {
     int countCreditRecord(AssetManageBeanRequest params);
 
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
+
+    Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
 }

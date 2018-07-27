@@ -48,4 +48,21 @@ public class MyRewardServiceImpl implements MyRewardService {
         }
         return result;
     }
+
+    /**
+     * 统计总记录数
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer countMyRewardTotal(String userId){
+        Map<String,Object> param = new HashMap<String, Object>();
+        param.put("userId", userId);
+
+        Integer result = myRewardCustomizeMapper.countMyRewardTotal(param);
+        if(result == null){
+            result = 0;
+        }
+        return result;
+    }
 }

@@ -49,13 +49,6 @@ public interface SubCommissionService {
      */
     Integer updateSubCommission(SubCommissionVO subCommissionVO);
 
-    /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    Integer accountWebListByOrderId(String orderId);
 
     /**
      * 根据筛选条件查询分佣数据count

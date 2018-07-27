@@ -43,6 +43,10 @@ public class AssetManageResponse extends Response<BaseVO> {
     private List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayList;
     //app端转让列表
     private List<AppTenderCreditRecordListCustomizeVO> appTenderCreditRecordList;
+    //app端计划列表
+    private List<AppMyPlanCustomizeVO> appMyPlanCustomizeList;
+    //app端计划列表数量
+    private Integer appMyPlanCount=0;
 
     public List<CurrentHoldObligatoryRightListCustomizeVO> getCurrentHoldObligatoryRightList() {
         return currentHoldObligatoryRightList;
@@ -138,5 +142,21 @@ public class AssetManageResponse extends Response<BaseVO> {
 
     public void setAppTenderCreditRecordList(List<AppTenderCreditRecordListCustomizeVO> appTenderCreditRecordList) {
         this.appTenderCreditRecordList = appTenderCreditRecordList;
+    }
+
+    public List<AppMyPlanCustomizeVO> getAppMyPlanCustomizeList() {
+        return appMyPlanCustomizeList;
+    }
+
+    public void setAppMyPlanCustomizeList(List<AppMyPlanCustomizeVO> appMyPlanCustomizeList) {
+        this.appMyPlanCustomizeList = appMyPlanCustomizeList;
+    }
+
+    public Integer getAppMyPlanCount() {
+        return appMyPlanCount;
+    }
+
+    public void setAppMyPlanCount(Integer appMyPlanCount) {
+        this.appMyPlanCount = appMyPlanCount;
     }
 }

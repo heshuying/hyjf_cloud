@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.JxBankConfigVO;
-import com.hyjf.cs.trade.bean.AppRechargeDescResultBean;
+import com.hyjf.cs.trade.bean.app.AppRechargeDescResultBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.service.AppRechargeRuleService;
 import org.springframework.beans.factory.annotation.Autowired;

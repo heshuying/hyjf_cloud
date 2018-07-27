@@ -52,26 +52,26 @@
 	<select id="getProjectDetail" resultType="com.hyjf.am.vo.trade.ProjectCustomeDetailVO"
 		parameterType="String">
 		SELECT
-		hydb.borrow_nid,
-		hydbpt.borrow_project_type AS project_type,
+		hydb.borrow_nid as borrowNid,
+		hydbpt.borrow_project_type AS projectType ,
 		hydbpt.borrow_cd AS TYPE,
-		hydbpt.borrow_name AS type_name,
-		hbi.`name` AS borrow_name, IFNULL(hbi.project_name,hydb.borrow_nid) AS
-		project_name,
-		hbi.borrow_contents,
-		hbi.borrow_measures_mea,
-		hbi.is_new,
-		hbi.finance_purpose,
-		hbi.monthly_income,
+		hydbpt.borrow_name AS typeName,
+		hbi.`name` AS borrowName, IFNULL(hbi.project_name,hydb.borrow_nid) AS
+		projectName,
+		hbi.borrow_contents as borrowContents,
+		hbi.borrow_measures_mea as borrowMeasuresMea,
+		hbi.is_new as isNew,
+		hbi.finance_purpose as financePurpose,
+		hbi.monthly_income monthlyIncome,
 		hbi.payment,
-		hbi.first_payment,
-		hbi.second_payment,
-		hbi.cost_introdution,
-		hbi.fiance_condition,
-		hydb.borrow_style,
-		hbi.inst_code,
-		hbi.asset_type,
-		hydb.is_show, CASE WHEN hbi.company_or_personal = 2 THEN
+		hbi.first_payment firstPayment,
+		hbi.second_payment secondPayment,
+		hbi.cost_introdution costIntrodution,
+		hbi.fiance_condition fianceCondition,
+		hydb.borrow_style borrowStyle,
+		hbi.inst_code  instCode,
+		hbi.asset_type assetType,
+		hydb.is_show as isShow, CASE WHEN hbi.company_or_personal = 2 THEN
 		(
 			SELECT
 					m.credit
@@ -88,37 +88,37 @@
 					ht_borrow_user u
 			WHERE
 					u.borrow_nid = hydb.borrow_nid
-		) END AS user_credit,
-		hbi.borrow_measures_instit AS measures_instit,
+		) END AS userCredit,
+		hbi.borrow_measures_instit AS measuresInstit,
 		hydb.account AS
-		borrow_account,
-		TRUNCATE(hydb.account/10000,2) AS borrow_account_wan,
-		hydb.borrow_apr,
+		borrowAccount,
+		TRUNCATE(hydb.account/10000,2) AS borrowAccountWan,
+		hydb.borrow_apr as  borrowApr,
 		hydb.borrow_period, CASE WHEN hydb.borrow_style =
-		'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
-		hydb.borrow_account_wait AS invest_account,
+		'endday' THEN '天' ELSE '个月' END AS borrowPeriodType,
+		hydb.borrow_account_wait AS investAccount,
 		hbi.company_or_personal AS
-		com_or_per,
-		hydbs.`name` AS repay_style,
+		comOrPer,
+		hydbs.`name` AS repayStyle,
 
-		TRUNCATE(hbi.tender_account_min/10000,2) tender_account_min_wan,
-		hbi.tender_account_max, CASE WHEN hydb.`status` = 1 AND
+		TRUNCATE(hbi.tender_account_min/10000,2) tenderAccountMinWan,
+		hbi.tender_account_max tenderAccountMax, CASE WHEN hydb.`status` = 1 AND
 		hydb.verify_status = 3 THEN FROM_UNIXTIME(hydb.ontime, '%Y-%m-%d
 		%H:%i') ELSE FROM_UNIXTIME(
 		hydb.verify_time,
 		'%Y-%m-%d %H:%i'
 		) END AS
-		send_time, FROM_UNIXTIME(
+		sendTime, FROM_UNIXTIME(
 		hydb.borrow_full_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS
-		full_time, FROM_UNIXTIME(
+		fullTime, FROM_UNIXTIME(
 		(hydb.verify_time + hydb.borrow_valid_time *
 		24 * 60 * 60),
 		'%Y-%m-%d %H:%i:%s'
-		) AS borrow_end_time, CASE WHEN
+		) AS borrowEndTime, CASE WHEN
 		hydb.`status` = 1 AND hydb.verify_status = 3 THEN FROM_UNIXTIME(
-		hydb.ontime, '%Y-%m-%d %H:%i:%s') ELSE '' END AS on_time,  CASE WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN hydb.ontime ELSE '' END AS TIME, CASE WHEN hydb.`status` = 1 AND
+		hydb.ontime, '%Y-%m-%d %H:%i:%s') ELSE '' END AS onTime,  CASE WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN hydb.ontime ELSE '' END AS TIME, CASE WHEN hydb.`status` = 1 AND
 		hydb.verify_status = 3 THEN '10' WHEN hydb.`status` = 2 AND
 		hydb.borrow_full_status = 0 AND (
 		hydb.verify_time + (
@@ -132,24 +132,24 @@
 		'14'
 		ELSE
 		'' END AS `status`,
-		hydb.`status` AS status_orginal,
-		hbi.borrow_increase_money increase_money,
+		hydb.`status` AS statusOrginal,
+		hbi.borrow_increase_money increaseMoney,
 		hbi.borrow_interest_coupon
-		interest_coupon,
-		hbi.borrow_taste_money taste_money,
-		hbi.borrow_asset_number,
-		hbi.borrow_project_source,
-		hbi.borrow_interest_time,
-		hbi.borrow_due_time,
-		hbi.borrow_safeguard_way,
-		hbi.borrow_income_description,
-		hbi.borrow_publisher,
-		hbi.borrow_extra_yield,
-		hbi.contract_period, FROM_UNIXTIME(
+		interestCoupon,
+		hbi.borrow_taste_money tasteMoney,
+		hbi.borrow_asset_number borrowAssetNumber,
+		hbi.borrow_project_source borrowProjectSource,
+		hbi.borrow_interest_time borrowInterestTime,
+		hbi.borrow_due_time borrowDueTime,
+		hbi.borrow_safeguard_way borrowSafeguardWay,
+		hbi.borrow_income_description borrowIncomeDescription,
+		hbi.borrow_publisher borrowPublisher,
+		hbi.borrow_extra_yield borrowExtraYield,
+		hbi.contract_period contractPeriod, FROM_UNIXTIME(
 		hydb.recover_last_time,
 		'%Y年%m月%d日'
-		) recover_last_time,
-		hbi.borrow_level
+		)  recoverLastTime,
+		hbi.borrow_level  borrowLevel
 FROM
 		ht_borrow hydb
 LEFT JOIN ht_borrow_project_type
@@ -191,7 +191,7 @@ WHERE
 	<select id="getProjectCompanyDetail" resultType="com.hyjf.am.vo.trade.ProjectCompanyDetailVO"
 		parameterType="String">
 		SELECT
-		hydb.borrow_contents,
+		-- hydb.borrow_contents,
 		CONCAT(
 		hydbu.province,
 		hydbu.city,
@@ -229,7 +229,7 @@ WHERE
 		hydbu.is_punished
 		FROM
 		ht_borrow hydb
-		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid =
+		LEFT JOIN ht_borrow_user hydbu ON hydb.borrow_nid =
 		hydbu.`borrow_nid`
 		WHERE
 		hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
@@ -242,11 +242,11 @@ WHERE
 		parameterType="String">
 
 		SELECT
-		hydb.borrow_contents,
+		-- hydb.borrow_contents,
 		hydbm.old AS age,
 		<!--pnr.`name` AS sex, pna.`name` AS merry, -->
 		CONCAT(hydbm.pro, hydbm.city) AS working_city,
-		hydb.account_contents,
+		-- hydb.account_contents,
 		hydbm.`name` AS true_name,
 		hydbm.position,
 		hydbm.card_no,
@@ -280,7 +280,7 @@ WHERE
 		hydb.borrow_nid
 		WHERE
 		hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
-		AND hydb.company_or_personal = 2
+		-- AND hydb.company_or_personal = 2
 	</select>
 
 	<select id="getTotalInverestCount" resultType="int"

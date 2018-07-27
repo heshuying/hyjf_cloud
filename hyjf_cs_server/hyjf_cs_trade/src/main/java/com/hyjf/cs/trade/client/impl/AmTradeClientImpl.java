@@ -7,6 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.admin.TransferExceptionLogResponse;
+import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -20,6 +21,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -173,9 +175,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int selectMyRewardCount(MyInviteListRequest requestBean) {
-        int count = restTemplate
-                .postForEntity(urlBase + "reward/myRewardTotal", requestBean, Integer.class).getBody();
-        return count;
+        Response<Integer> response = restTemplate
+                .postForEntity(urlBase + "reward/myRewardCount", requestBean, Response.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return 0;
     }
 
     /**
@@ -3286,4 +3291,119 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return null;
 	}
 
+    @Override
+    public Integer selectTenderToCreditListCount(AssetManageBeanRequest request) {
+        String url = urlBase +"assetmanage/selectTenderToCreditListCount";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getTenderCreditDetailCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer countAppMyPlan(AssetManageBeanRequest params) {
+        String url = urlBase +"assetmanage/countAppMyPlan";
+        AssetManageResponse response = restTemplate.postForEntity(url,params,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppMyPlanCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params) {
+        String url = urlBase +"assetmanage/selectAppMyPlanList";
+        AssetManageResponse response = restTemplate.postForEntity(url,params,AssetManageResponse.class).getBody();
+
+        if (response != null) {
+            return response.getAppMyPlanCustomizeList();
+        }
+        return null;
+    }
+
+    /**
+     * 散标投资记录数
+     * @param params
+     * @return
+     */
+    @Override
+    public int countProjectInvestRecordTotal(Map<String, Object> params) {
+        String url = BASE_URL +"/app/countProjectInvestRecordTotal";
+        return restTemplate.postForEntity(url,params,Integer.class).getBody();
+    }
+
+    /**
+     * 获取borrowId对应的总钱数
+     * @param params
+     * @return
+     */
+    @Override
+    public String countMoneyByBorrowId(Map<String, Object> params) {
+        String url = urlBase + "borrowTender/countMoneyByBorrowId";
+        return restTemplate.postForEntity(url,params,String.class).getBody();
+    }
+
+    /**
+     * 散标投资记录
+     * @param params
+     * @return
+     */
+    @Override
+    public List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String, Object> params) {
+        String url = BASE_URL +"/app/selectProjectInvestList";
+        AppProjectInvestListCustomizeResponse response = restTemplate.postForEntity(url,params,AppProjectInvestListCustomizeResponse.class).getBody();
+        if (response!=null){
+            response.getResultList();
+        }
+        return null;
+    }
+
+	/**
+	 * 获取债转承接信息ByAssignOrderId
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
+		String url = "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditTenderByAssignOrderId/"+assignOrderId;
+        HjhDebtCreditTenderResponse response = restTemplate.getForEntity(url,HjhDebtCreditTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
+		return null;
+	}
+	
+	/**
+	 * 获取债转承接信息AssignNid
+	 * @param nid
+	 * by libin
+	 * @return
+	 */
+	@Override
+	public CreditTenderVO getCreditTenderByAssignNid(String assignNid) {
+        CreditTenderResponse response =
+                restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/getCreditTenderByAssignNid/"+assignNid,
+                        CreditTenderResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+		return null;
+	}
+
+	/**
+	 * 获取协议模板by DisplayName
+	 * @param nid
+	 * @return
+	 */
+	@Override
+	public List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName) {
+		String url = "http://AM-TRADE/am-trade/protocol/getProtocolTemplateVOByDisplayName/"+displayName;
+		ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
+        if(Validator.isNotNull(response)) {
+            return response.getResultList();
+        }
+		return null;
+	}
 }

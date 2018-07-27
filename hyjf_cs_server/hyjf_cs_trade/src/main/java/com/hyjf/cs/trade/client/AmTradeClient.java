@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -30,7 +31,6 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -1394,12 +1394,64 @@ public interface AmTradeClient {
     List<AppAlreadyRepayListCustomizeVO> selectAppAlreadyRepayList(AssetManageBeanRequest params);
 
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
+
+
+    /**
+     * 散标投资记录数
+     * @param params
+     * @return
+     */
+    int countProjectInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * borrowId对应的总钱数
+     * @param params
+     * @return
+     */
+    String countMoneyByBorrowId(Map<String,Object> params);
+
+    /**
+     * 散标投资记录
+     * @param params
+     * @return
+     */
+    List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String,Object> params);
+
+
+
+    /**
+     * 获取债转承接信息
+     * @param nid
+     * by libin
+     * @return
+     */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+
+    Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
+
+    Integer countAppMyPlan(AssetManageBeanRequest params);
+
+    List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
     
 	/**
-	 * 获取债转承接信息
+	 * 获取债转承接信息by AssignOrderId
 	 * @param nid
 	 * by libin
 	 * @return
 	 */
-    HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
+    
+	/**
+	 * 获取债转承接信息by AssignNid
+	 * @param AssignOrderId
+	 * @return
+	 */
+    CreditTenderVO getCreditTenderByAssignNid(String assignNid);
+    
+	/**
+	 * 获取协议模板by DisplayName
+	 * @param DisplayName
+	 * @return
+	 */
+    List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
 }

@@ -468,8 +468,6 @@ public class AutoMapper {
     protected StzhWhiteListMapper sTZHWhiteListMapper;
 
     @Resource
-    protected AccountWebListMapper accountWebListMapper;
-    @Resource
     protected BorrowFullCustomizeMapper borrowFullCustomizeMapper;
     
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.trade.dao.model.customize.trade.AppUserInvestListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppUserInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectCompanyDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectConsumeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectInvestListCustomize;

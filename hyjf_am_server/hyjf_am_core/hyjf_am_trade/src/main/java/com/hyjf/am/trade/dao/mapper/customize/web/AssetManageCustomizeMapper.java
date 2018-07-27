@@ -12,8 +12,11 @@
 package com.hyjf.am.trade.dao.mapper.customize.web;
 
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -110,4 +113,10 @@ public interface AssetManageCustomizeMapper {
     List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request);
 
     List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request);
+
+    int selectTenderToCreditListCount(AssetManageBeanRequest request);
+
+    List<AppMyPlanCustomize> selectAppMyPlanList(AssetManageBeanRequest request);
+
+    int countAppMyPlan(AssetManageBeanRequest request);
 }

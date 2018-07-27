@@ -54,14 +54,18 @@ public class HtlTradeController extends BaseController {
         //账单类型：1全部，2购入，3赎回
         String tradeType= request.getParameter("tradeType");
 
+        Integer page = Integer.valueOf(request.getParameter("page"));
+
+		Integer pageSize = Integer.valueOf(request.getParameter("pageSize"));
+
         logger.info("trade -> [{}],userId -> [{}]",tradeType,userId);
 
         // 检查参数正确性
-/*        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(tradeType) ||  Validator.isNull(sign)) {
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(tradeType) ||  Validator.isNull(sign)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
-        }*/
+        }
 
 //        // 判断sign是否存在
 //        boolean isSignExists = SecretUtil.isExists(sign);
@@ -72,11 +76,11 @@ public class HtlTradeController extends BaseController {
 //        }
 
         // 取得加密用的Key
-/*        if (Validator.isNull(key)) {
+        if (Validator.isNull(key)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
-        }*/
+        }
 
 
 		List<HtlProductIntoRecordVO> tenders = new ArrayList<>();//购入
@@ -89,8 +93,6 @@ public class HtlTradeController extends BaseController {
         //汇天利购买记录
 		if ("1".equals(tradeType) || "2".equals(tradeType)) {
 			HtlTradeRequest htlTradeRequest = new HtlTradeRequest();
-			int page = Integer.valueOf(request.getParameter("page"));
-			int pageSize = Integer.valueOf(request.getParameter("pageSize"));
 			try {
 				htlTradeRequest.setUserId(userId);
 				htlTradeRequest.setLimitStart(pageSize * (page - 1));
@@ -119,8 +121,6 @@ public class HtlTradeController extends BaseController {
 		//汇天利赎回记录
 		if ("1".equals(tradeType) || "3".equals(tradeType)) {
 			HtlTradeRequest htlTradeRequest = new HtlTradeRequest();
-			int page = Integer.valueOf(request.getParameter("page"));
-			int pageSize = Integer.valueOf(request.getParameter("pageSize"));
 			try {
 				htlTradeRequest.setUserId(userId);
 				htlTradeRequest.setLimitStart(pageSize * (page - 1));

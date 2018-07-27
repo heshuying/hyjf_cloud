@@ -4,23 +4,28 @@
 package com.hyjf.cs.user.controller.app.common;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.common.CornerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -29,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(description = "汇天利资金中心接口")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
-public class CornerController {
+public class CornerController extends BaseController {
 
     @Autowired
     CornerService cornerService;
@@ -213,5 +218,60 @@ public class CornerController {
             map.put("statusDesc","更新设备唯一标识异常");
         }
         return map;
+    }
+
+    /**
+     * 设置角标
+     * @param request
+     * @param key
+     * @return
+     */
+    @ApiOperation(value = "设置角标",notes = "设置角标")
+    @PostMapping(value = "/setCorner")
+    public AppResult setCorner(@RequestHeader(value = "key")String key, HttpServletRequest request) {
+        AppResult result = new AppResult();
+
+        Map<String,String> map = new HashMap<>();
+        map.put("request", "/hyjf-app/app/common/setCorner");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        //设备标识码
+        String mobileCodeStr = request.getParameter("mobileCode");
+        //角标
+        String cornerStr = request.getParameter("corner");
+        logger.info("key=[{}],sign=[{}],mobileCode=[{}],corner=[{}]",key,sign,mobileCodeStr,cornerStr);
+        // 取得加密用的Key
+        if (Validator.isNull(key)) {
+            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"key");
+            return result;
+        }
+        if(StringUtils.isEmpty(mobileCodeStr)){
+            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"mobileCode");
+            return result;
+        }
+        if(StringUtils.isEmpty(cornerStr)){
+            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"corner");
+            return result;
+        }
+
+        // 检查参数
+        try {
+            int corner = Integer.parseInt(cornerStr);
+            UserCornerVO cornerInfo = cornerService.getUserCornerBySign(sign);
+            if(cornerInfo != null){
+                cornerInfo.setCorner(corner);
+                cornerService.updateUserCorner(cornerInfo);
+            }else{
+                cornerInfo = new UserCornerVO();
+                cornerInfo.setCorner(corner);
+                cornerInfo.setSign(sign);
+                cornerService.insertUserCorner(cornerInfo);
+            }
+            result.setStatusInfo(BaseResult.SUCCESS,"设置成功");
+        } catch (Exception e) {
+            result.setStatusInfo(BaseResult.FAIL,"设置角标异常");
+        }
+        result.setData(map);
+        return result;
     }
 }

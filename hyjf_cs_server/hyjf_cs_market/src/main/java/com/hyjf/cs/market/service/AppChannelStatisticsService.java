@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.service;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @author fuqiang
  * @version AppChannelStatisticsService, v0.1 2018/7/16 14:18

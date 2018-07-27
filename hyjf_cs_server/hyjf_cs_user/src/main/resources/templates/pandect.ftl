@@ -3,6 +3,9 @@
   "status": "${datas.status!''}",
   "statusDesc": "${datas.statusDesc!''}",
   "data": {
+        "isVip":"${(datas.data.isVip)?string('true', 'false')}",
+        "vipName":"${(datas.data.vipName)!''}",
+        "couponValidCount":"${(datas.data.couponValidCount)!''}",
         "bankOpenAccount": {
                 <#if datas.data.bankOpenAccount??>
                      <#assign bankOpenAccount = datas.data.bankOpenAccount >
@@ -10,7 +13,7 @@
                "account": "${(bankOpenAccount.account)!''}"
             },
        "userEvaluationResultFlag": "${(datas.data.userEvaluationResultFlag)!''}",
-        "auth": "${datas.data.auth}",
+        "auth": "${(datas.data.auth)!''}",
         "webViewUser": {
                 <#if datas.data.webViewUser??>
                     <#assign webViewUser = datas.data.webViewUser >
@@ -24,7 +27,7 @@
                     <#assign user = datas.data.user >
                 </#if>
                   "iconUrl": "${user.iconUrl!''}",
-                  "isSetPassword": "${user.isSetPassword!''}"
+                  "isSetPassword": "${user.isSetPassword!'0'}"
         },
          "account": {
                     <#if datas.data.account??>
