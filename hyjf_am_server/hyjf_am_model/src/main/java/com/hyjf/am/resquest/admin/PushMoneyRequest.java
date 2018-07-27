@@ -4,6 +4,8 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
+import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,57 +14,78 @@ import java.util.Date;
  * @author fuqiang
  * @version PushMoneyRequest, v0.1 2018/7/10 19:26
  */
-public class PushMoneyRequest extends Request implements Serializable {
+public class PushMoneyRequest extends BasePage implements Serializable {
 
-
-	private Integer id;
-
-	private String type;
-
-	private Integer projectType;
-
-	private Integer rewardSend;
-
-	private String dayTender;
-
-	private String monthTender;
-
-	private Integer createBy;
-
-	private Integer updateBy;
-
-	private Date createTime;
-
-	private Date updateTime;
-
-	private String remark;
-
-	//项目编号
+	/**
+	 * 检索条件-项目编号
+	 */
 	public String borrowNid;
-	// 项目标题
+	/**
+	 * 检索条件-项目标题
+	 */
 	public String borrowName;
-	// 项目还款方式  = endday 天   !=endday 个月
+	/**
+	 * 检索条件-项目还款方式  = endday 天   !=endday 个月
+	 */
 	public String borrowStyle;
-	// 融资期限
+	/**
+	 * 检索条件- 融资期限
+	 */
 	public String borrowPeriod;
-	// 融资金额
+	/**
+	 * 检索条件- 融资金额
+	 */
 	public String account;
-	// 提成总额
+	/**
+	 * j检索条件-提成总额
+	 */
 	public String commission;
-	// 放款时间
-	public String recoverLastTime;
+	/**
+	 * 检索条件-放款开始时间
+	 */
 	public String recoverLastTimeStart;
+
+	/**
+	 * 检索条件-放款结束时间
+	 */
 	public String recoverLastTimeEnd;
 
+	/**
+	 * 检索条件-项目类型
+	 */
+	public Integer projectType;
+
+	public int limit;
+
+	public int limitStart;
+
+	public int limitEnd;
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public int getLimitStart() {
+		return limitStart;
+	}
+
+	public void setLimitStart(int limitStart) {
+		this.limitStart = limitStart;
+	}
+
+	public int getLimitEnd() {
+		return limitEnd;
+	}
+
+	public void setLimitEnd(int limitEnd) {
+		this.limitEnd = limitEnd;
+	}
+
 	private static final long serialVersionUID = 1L;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getBorrowNid() {
 		return borrowNid;
@@ -112,14 +135,6 @@ public class PushMoneyRequest extends Request implements Serializable {
 		this.commission = commission;
 	}
 
-	public String getRecoverLastTime() {
-		return recoverLastTime;
-	}
-
-	public void setRecoverLastTime(String recoverLastTime) {
-		this.recoverLastTime = recoverLastTime;
-	}
-
 	public String getRecoverLastTimeStart() {
 		return recoverLastTimeStart;
 	}
@@ -135,16 +150,17 @@ public class PushMoneyRequest extends Request implements Serializable {
 	public void setRecoverLastTimeEnd(String recoverLastTimeEnd) {
 		this.recoverLastTimeEnd = recoverLastTimeEnd;
 	}
+
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
 
-	public String getType() {
-		return type;
+	public Paginator getPaginator() {
+		return paginator;
 	}
 
-	public void setType(String type) {
-		this.type = type == null ? null : type.trim();
+	public void setPaginator(Paginator paginator) {
+		this.paginator = paginator;
 	}
 
 	public Integer getProjectType() {
@@ -153,70 +169,6 @@ public class PushMoneyRequest extends Request implements Serializable {
 
 	public void setProjectType(Integer projectType) {
 		this.projectType = projectType;
-	}
-
-	public Integer getRewardSend() {
-		return rewardSend;
-	}
-
-	public void setRewardSend(Integer rewardSend) {
-		this.rewardSend = rewardSend;
-	}
-
-	public String getDayTender() {
-		return dayTender;
-	}
-
-	public void setDayTender(String dayTender) {
-		this.dayTender = dayTender == null ? null : dayTender.trim();
-	}
-
-	public String getMonthTender() {
-		return monthTender;
-	}
-
-	public void setMonthTender(String monthTender) {
-		this.monthTender = monthTender == null ? null : monthTender.trim();
-	}
-
-	public Integer getCreateBy() {
-		return createBy;
-	}
-
-	public void setCreateBy(Integer createBy) {
-		this.createBy = createBy;
-	}
-
-	public Integer getUpdateBy() {
-		return updateBy;
-	}
-
-	public void setUpdateBy(Integer updateBy) {
-		this.updateBy = updateBy;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark == null ? null : remark.trim();
 	}
 
 	/**

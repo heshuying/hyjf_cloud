@@ -5,6 +5,8 @@ package com.hyjf.admin.controller.finance.bankaleve;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.BankAleveVO;
@@ -30,16 +32,19 @@ import java.util.List;
  * 资金中心->银行账务明细
  */
 
-@Api(value = "资金中心->银行账务明细",description = "金中心->银行账务明细")
+@Api(value = "资金中心->银行账务明细",description = "资金中心->银行账务明细")
 @RestController
 @RequestMapping("/hyjf-admin/bankaleve")
 public class BankAleveController {
     @Autowired
     private BankAleveService bankAleveService;
+    /** 权限 */
+    public static final String PERMISSIONS = "bankalevelist";
 
     @ApiOperation(value = "银行账务明细", notes = "银行账务明细列表查询")
     @PostMapping(value = "/bankalevelist")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject getBankaleveList(@RequestBody BankAleveRequest bankAleveRequest){
         JSONObject jsonObject = new JSONObject();
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
