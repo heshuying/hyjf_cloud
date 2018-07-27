@@ -63,10 +63,10 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端散标详情", notes = "APP端散标详情")
     @ApiImplicitParam(name = "param", value = "{borrowId:string,borrowType:string<1是债转,0 普通>}", dataType = "Map")
-    @PostMapping(value = "/borrowProjectDetail", produces = "application/json; charset=utf-8")
-    public Object borrowProjectDetail(@RequestBody Map<String, String> param, @RequestHeader(value = "token", required = false) String token) {
+    @PostMapping(value = "/borrow/{borrowId}", produces = "application/json; charset=utf-8")
+    public Object borrowProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "token", required = false) String token) {
         // controller 不做业务处理
-        AppResult result = appProjectListService.getAppProjectDetail(param, token);
+        JSONObject result = appProjectListService.getAppProjectDetail(borrowId,request, token);
         return result;
     }
 
@@ -99,11 +99,6 @@ public class AppProjectListController extends BaseTradeController {
 
 
     /**
-     * app端获取散标还款计划
-     */
-
-
-    /**
      * app端债转列表数据
      * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
@@ -125,14 +120,14 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端债转详情
-     *
-     * @param param
+     * 原接口: com.hyjf.app.user.transfer.AppTransferController.searchTenderCreditDetail()
+     * @param
      * @return
      */
     @ApiOperation(value = "APP端债转详情", notes = "APP端债转详情")
-    @PostMapping(value = "/creditDetail", produces = "application/json; charset=utf-8")
-    public Object getCreditDetail(@RequestBody @Valid Map<String, String> param, @RequestHeader(value = "token", required = false) String token) {
-        AppResult result = appProjectListService.getAppCreditDetail(param, token);
+    @PostMapping(value = "/transfer/{transferId}", produces = "application/json; charset=utf-8")
+    public Object getCreditDetail(@PathVariable String transferId , @RequestHeader(value = "token", required = false) String token) {
+        JSONObject result= appProjectListService.getAppCreditDetail(transferId, token);
         return result;
     }
 
@@ -160,11 +155,14 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端计划详情
+     * 原接口：com.hyjf.app.hjhplan.HjhPlanController.searchHjhPlanDetail()
+     * @param
+     * @return
      */
     @ApiOperation(value = "APP端计划详情", notes = "APP端计划详情")
-    @PostMapping(value = "/planDetail", produces = "application/json; charset=utf-8")
-    public Object getPlanDetail(@RequestBody @Valid Map<String, String> param, @RequestHeader(value = "token", required = false) String token) {
-        AppResult result = appProjectListService.getAppPlanDetail(param, token);
+    @PostMapping(value ="/plan/{planId}", produces = "application/json; charset=utf-8")
+    public Object getPlanDetail(@PathVariable @Valid String planId , @RequestHeader(value = "token", required = false) String token) {
+         JSONObject result = appProjectListService.getAppPlanDetail(planId, token);
         return result;
     }
 
