@@ -7,13 +7,14 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
+import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
@@ -34,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author zhangqingqing
  * @version LoginController, v0.1 2018/6/11 14:33
  */
-@Api(value = "weChat端用户登录接口",description = "weChat端-用户登录接口")
+@Api(value = "weChat端用户登录接口", description = "weChat端-用户登录接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/login")
 public class WeChatLoginController extends BaseUserController {
@@ -44,6 +45,7 @@ public class WeChatLoginController extends BaseUserController {
 
     /**
      * 登录接口
+     *
      * @param request
      * @param userName
      * @param password
@@ -91,6 +93,7 @@ public class WeChatLoginController extends BaseUserController {
 
     /**
      * 退出操作
+     *
      * @param request
      * @param response
      * @param sign
@@ -110,6 +113,37 @@ public class WeChatLoginController extends BaseUserController {
         // 清除sign
         SecretUtil.clearToken(sign);
         RedisUtils.del("loginFrom" + userId);
+        return result;
+    }
+
+
+    /**
+     * 退出操作
+     * 请求地址:/wx/login/doLoginOut.do
+     * 需要参数: sign
+     * @param sign
+     * @return
+     */
+    @SignValidate
+    @ResponseBody
+    @ApiOperation(value = "登出", notes = "登出")
+    @RequestMapping(value = "/doLoginOut.do")
+    public BaseResultBean doLoginOut( String sign) {
+        LoginResultBean result = new LoginResultBean();
+        result.setStatus(ResultEnum.SUCCESS.getStatus());
+        result.setStatusDesc("退出成功");
+
+        if(StringUtils.isBlank(sign)){
+            return result.setEnum(ResultEnum.PARAM);
+        }
+        AppUserToken token = SecretUtil.getAppUserToken(sign);
+        if (token != null && token.getUserId() != null) {
+            // 清除sign
+            SecretUtil.clearToken(sign);
+            RedisUtils.del("loginFrom"+token.getUserId());
+        } else {
+            result.setEnum(ResultEnum.ERROR_004);
+        }
         return result;
     }
 

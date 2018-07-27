@@ -26,7 +26,6 @@ import com.hyjf.cs.user.controller.app.login.UserParameters;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,7 +96,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
         String codeSalt = userVO.getSalt();
         String passwordDb = userVO.getPassword();
         // 页面传来的密码
-        String password = MD5Utils.MD5(loginPassword + codeSalt);
+        String password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
 
         if (password.equals(passwordDb)) {
             // 是否禁用
