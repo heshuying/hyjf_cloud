@@ -286,8 +286,8 @@
         SELECT
         SUM(hbr.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover hbr
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
         WHERE
         hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -310,8 +310,8 @@
         SELECT
         SUM(hbrp.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover_plan hbrp
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
         WHERE
         hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -334,7 +334,7 @@
         SELECT
         sum(received_interest)
         FROM
-        hyjf_hjh_accede
+        ht_hjh_accede
         WHERE
         acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -356,8 +356,8 @@
         SELECT
         SUM(hbr.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover hbr
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
         WHERE
         hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -383,8 +383,8 @@
         SELECT
         SUM(hbrp.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover_plan hbrp
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
         WHERE
         hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -409,7 +409,7 @@
         SELECT
         sum(received_interest)
         FROM
-        hyjf_hjh_accede
+        ht_hjh_accede
         WHERE
         acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -431,7 +431,7 @@
         '平均预期收益率'  AS title,
         sum(borrow_apr) / count(*) as  sumAccount
         FROM
-        huiyingdai_borrow
+        ht_borrow
         WHERE
         recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
