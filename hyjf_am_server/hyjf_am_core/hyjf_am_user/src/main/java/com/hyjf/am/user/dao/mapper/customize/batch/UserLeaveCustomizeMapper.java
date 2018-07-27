@@ -19,25 +19,25 @@ public interface UserLeaveCustomizeMapper {
      * 查询符合条件的离职员工 列表
      * @return
      */
-    public List<User> queryEmployeeList();
+    List<User> queryEmployeeList();
 
     /**
      * 客户变员工后，其所推荐客户变为‘有主单’
      * @param referrer
      * @return
      */
-    public int updateSpreadAttribute(@Param("referrer") Integer referrer);
+    int updateSpreadAttribute(@Param("referrer") Integer referrer);
 
     /**
      * 根据关联关系查询OA表的内容,得到部门的线上线下属性
      * @return
      */
-    public List<UserUpdateParamCustomize> queryUserAndDepartment(@Param("userId") Integer userId);
+    List<UserUpdateParamCustomize> queryUserAndDepartment(@Param("userId") Integer userId);
 
     /**
      * 查询符合条件的离职员工
      * @param userId
      * @return
      */
-    public List<User> queryEmployeeById(@Param("userId") String userId);
+    List<User> queryEmployeeById(@Param("userId") Integer userId);
 }
