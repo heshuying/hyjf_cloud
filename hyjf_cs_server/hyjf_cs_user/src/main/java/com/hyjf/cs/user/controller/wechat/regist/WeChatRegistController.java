@@ -7,13 +7,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.regist.RegistService;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
@@ -71,7 +71,7 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    @PostMapping(value = "/registAction.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/registAction.do")
     public UserRegistResultVO registAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         UserRegistResultVO ret = new UserRegistResultVO();
         ret.setRequest("/registAction");
@@ -91,8 +91,8 @@ public class WeChatRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
-        ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
-        if (null!=ret){
+       ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
+        if(null!=ret.getStatus()){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));

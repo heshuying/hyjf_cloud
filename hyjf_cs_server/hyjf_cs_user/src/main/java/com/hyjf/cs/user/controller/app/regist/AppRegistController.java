@@ -114,7 +114,7 @@ public class AppRegistController extends BaseUserController {
         }catch (Exception e){
             return ret;
         }
-        if(ret!=null){
+        if(CustomConstants.APP_STATUS_FAIL.equals(ret.get(CustomConstants.APP_STATUS))){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));
@@ -151,9 +151,6 @@ public class AppRegistController extends BaseUserController {
                  record = registService.searchBanner(adsRequest);
             }catch (Exception e){
                 logger.info("获取活动信息失败...");
-            }
-            if (null==record){
-                record = new AppAdsCustomizeVO();
             }
             // 注册成功发券提示
             String operationUrl = jumpCommand + "://jumpCouponsList/?";

@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.password.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -228,10 +229,32 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     }
 
     @Override
-    public void weChatCheckParam(UserVO userVO,String newPassword, String oldPassword) {
+    public JSONObject weChatCheckParam(UserVO userVO,String newPassword, String oldPassword) {
+        JSONObject ret = new JSONObject();
         oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword) + userVO.getSalt());
         CheckUtil.check( StringUtils.isNotBlank(oldPassword) && oldPassword.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
         checkPassword(newPassword);
+        // 检查参数正确性
+        if (Validator.isNull(userVO) || Validator.isNull(newPassword) || Validator.isNull(oldPassword)) {
+            ret.put("status", "997");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+
+        try {
+            // 验证旧密码
+            oldPassword = MD5Utils.MD5(MD5Utils.MD5(oldPassword) + userVO.getSalt());
+            if(StringUtils.isBlank(oldPassword) || !oldPassword.equals(userVO.getPassword())){
+                ret.put("status", "99");
+                ret.put("statusDesc", "旧密码不正确");
+                return ret;
+            }
+        } catch (Exception e) {
+            logger.error("校验用户密码失败...");
+            ret.put("status", "99");
+            ret.put("statusDesc", e.getMessage());
+        }
+        return ret;
     }
 
     @Override

@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.password;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -60,7 +61,7 @@ public interface PassWordService extends BaseUserService {
      * @param newPassword
      * @param oldPassword
      */
-    void weChatCheckParam(UserVO userVO,String newPassword, String oldPassword);
+    JSONObject weChatCheckParam(UserVO userVO, String newPassword, String oldPassword);
 
     void backCheck(SendSmsVO sendSmsVo);
 

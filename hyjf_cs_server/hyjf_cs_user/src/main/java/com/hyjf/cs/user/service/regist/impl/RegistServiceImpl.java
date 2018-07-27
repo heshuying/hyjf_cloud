@@ -244,7 +244,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 return ret;
             }
         }
-        return null;
+        return ret;
     }
 
 
@@ -377,7 +377,11 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
     @Override
     public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest) {
-        return amMarketClient.searchBanner(adsRequest);
+        AppAdsCustomizeVO appAdsCustomizeVO =  amMarketClient.searchBanner(adsRequest);
+        if (null==appAdsCustomizeVO){
+            appAdsCustomizeVO = new AppAdsCustomizeVO();
+        }
+        return appAdsCustomizeVO;
     }
 
     @Override
@@ -478,7 +482,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             vo.setSuccessUrl("");
             return vo;
         }
-        return null;
+        return vo;
     }
 
     /**
