@@ -225,4 +225,37 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         }
         return knowledgeCustomizes;
     }
+
+    /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    @Override
+    public ContentArticleCustomize getContentArticleFlip(Map<String, Object> params, String offset) {
+        ContentArticle contentArticle=null;
+        if("0".equals(offset)){
+            contentArticle=contentArticleCustomizeMapper.getContentArticleUp(params);
+        }else{
+            contentArticle=contentArticleCustomizeMapper.getContentArticleDown(params);
+        }
+
+
+        if(contentArticle!=null){
+            ContentArticleCustomize customize=new ContentArticleCustomize();
+            customize.setTitle(contentArticle.getTitle());
+            customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
+            customize.setMessageId(contentArticle.getId()+"");
+            //customize.setMessageUrl(PropUtils.getSystem("hyjf.web.host")+AppContentArticleDefine.REQUEST_MAPPING+
+            //        AppContentArticleDefine.GET_CONTENT_ARTICLE_ID_ACTION.replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+            customize.setShareTitle(contentArticle.getTitle());
+            customize.setShareContent(contentArticle.getSummary());
+            customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+            //customize.setShareUrl(PropUtils.getSystem("hyjf.web.host")+AppContentArticleDefine.REQUEST_MAPPING+
+            //        AppContentArticleDefine.GET_CONTENT_ARTICLE_ID_ACTION.replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+            return customize;
+        }
+        return null;
+    }
 }

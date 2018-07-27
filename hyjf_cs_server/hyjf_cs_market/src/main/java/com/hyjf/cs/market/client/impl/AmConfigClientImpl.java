@@ -166,4 +166,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
 	}
+
+	@Override
+	public ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset) {
+		ContentArticleCustomizeResponse response = restTemplate
+				.getForObject("http://AM-CONFIG/am-config/article/getContentArticleFlip/" + params + offset, ContentArticleCustomizeResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
