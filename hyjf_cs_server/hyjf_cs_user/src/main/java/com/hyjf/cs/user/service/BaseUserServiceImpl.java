@@ -226,16 +226,19 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		// 调用存管接口发送验证码
 		BankCallBean retBean = null;
 		BankCallBean bean = new BankCallBean();
-		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
-		bean.setChannel(client);// 交易渠道000001手机APP 000002网页
-		//bean.setReqType("2"); // 参照生产环境类型改为2
+		// 交易代码cardBind
+		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);
+		// 交易渠道000001手机APP 000002网页
+		bean.setChannel(client);
 		bean.setCardNo(cardNo);
 		bean.setSrvTxCode(srvTxCode);
-		bean.setMobile(mobile);// 交易渠道
+		// 交易渠道
+		bean.setMobile(mobile);
 		bean.setSmsType("1");
-		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
-		bean.setLogUserId(String.valueOf(userId));// 请求用户名
+		// 订单号
+		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+		// 请求用户名
+		bean.setLogUserId(String.valueOf(userId));
 
 		try {
 			retBean  = BankCallUtils.callApiBg(bean);

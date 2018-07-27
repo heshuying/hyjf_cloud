@@ -9,6 +9,7 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.cs.user.controller.wechat.regist.UserRegistResultVO;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 
@@ -80,4 +81,14 @@ public interface RegistService extends BaseUserService {
      * @return
      */
     AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
+
+    /**
+     * 微信验证参数
+     * @param mobile
+     * @param password
+     * @param reffer
+     * @param verificationCode
+     * @return
+     */
+    UserRegistResultVO wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
 }
