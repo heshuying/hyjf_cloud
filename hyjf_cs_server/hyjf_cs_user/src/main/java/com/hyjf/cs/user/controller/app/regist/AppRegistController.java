@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -109,14 +110,14 @@ public class AppRegistController extends BaseUserController {
         register.setVerificationCode(verificationCode);
         register.setPlatform(platform);
         try{
-      //      ret = registService.appCheckParam(register);
+            ret = registService.appCheckParam(register);
         }catch (Exception e){
             return ret;
         }
         if(ret!=null){
-         //   return ret;
+            return ret;
         }
-      //  registService.register(register, GetCilentIP.getIpAddr(request));
+        registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
         boolean active = false;
         try {
