@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.controller.wechat.project;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.WechatProjectListService;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 @Api(value = "Web端项目详情")
 @RestController
-@RequestMapping("/hyjf-wechat/projectlist")
+@RequestMapping("/hyjf-wechat/wx/bank/wechat/plan")
 public class WechatProjectListController extends BaseTradeController {
 
     @Autowired
@@ -44,9 +45,9 @@ public class WechatProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "微信端:获取首页计划详情", notes = "微信端:获取首页计划详情")
     @PostMapping(value = "/getPlanDetail", produces = "application/json; charset=utf-8")
-    public Object getPlanDetail(@RequestBody Map<String,Object> map,  @RequestHeader(value = "token", required = false) String token){
-        WeChatResult weChatResult = wechatProjectListService.getPlanDetail(map,token);
-        return weChatResult;
+    public Object getPlanDetail(@PathVariable String planId,  @RequestHeader(value = "token", required = false) String token){
+        JSONObject jsonObject = wechatProjectListService.getPlanDetail(planId,token);
+        return jsonObject;
     }
 
     /**

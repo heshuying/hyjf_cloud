@@ -355,11 +355,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     }
 
     @Override
-    public WeChatResult getPlanDetail(Map<String, Object> param, String token) {
-        WeChatResult weChatResult = new WeChatResult();
-
+    public JSONObject getPlanDetail(String planId, String token) {
+        JSONObject jsonObject = new JSONObject();
         Map<String, Object> resultMap = new HashMap<>();
-        String planId = (String) param.get(ProjectConstant.PARAM_APP_PLAN_NID);
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
 
         // 根据计划编号获取相应的计划详情信息
@@ -368,15 +366,13 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             logger.error("传入计划id无对应计划,planNid is {}...", planId);
             throw new RuntimeException("传入计划id无对应计划信息");
         }
-
         // 计划基本信息
         this.setPlanInfo(resultMap, customize);
         // 用户的用户验证
         this.setUserValidationInfo(resultMap, token);
 
-        weChatResult.setData(resultMap);
-        return weChatResult;
-
+        jsonObject.put("object",resultMap);
+        return jsonObject;
     }
 
     /**
