@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqingqing
@@ -90,32 +89,6 @@ public class WeChatLoginController extends BaseUserController {
         }
         return result;
     }
-
-    /**
-     * 退出操作
-     *
-     * @param request
-     * @param response
-     * @param sign
-     * @return
-     */
-    @SignValidate
-    @ResponseBody
-    @ApiOperation(value = "登出", notes = "登出")
-    @RequestMapping(value = "/doLoginOut.do")
-    public BaseResultBean doLoginOut(HttpServletRequest request, HttpServletResponse response, String sign) {
-        LoginResultBean result = new LoginResultBean();
-        result.setStatus(ResultEnum.SUCCESS.getStatus());
-        result.setStatusDesc("退出成功");
-        CheckUtil.check(StringUtils.isNotBlank(sign), MsgEnum.STATUS_CE000001);
-        Integer userId = SecretUtil.getUserId(sign);
-        CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
-        // 清除sign
-        SecretUtil.clearToken(sign);
-        RedisUtils.del("loginFrom" + userId);
-        return result;
-    }
-
 
     /**
      * 退出操作
