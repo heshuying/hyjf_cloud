@@ -55,4 +55,6 @@ public interface AssetManageService  extends BaseService {
     List<AppMyPlanCustomize> selectAppMyPlanList(AssetManageBeanRequest request);
 
     int countAppMyPlan(AssetManageBeanRequest request);
+
+    List<AppAlreadyRepayListCustomize> selectAlreadyRepayList(AssetManageBeanRequest request);
 }

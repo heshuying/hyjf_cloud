@@ -41,7 +41,6 @@ import java.util.Map;
 
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
-	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
 
 	@Autowired
 	public AmUserClient amUserClient;
