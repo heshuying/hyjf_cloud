@@ -51,17 +51,13 @@ public class MyProfileController extends BaseUserController {
     private SystemConfig systemConfig;
 
 
-    //@SignValidate
+    @SignValidate
     @RequestMapping("/profile")
     @ResponseBody
     public WeChatResult myProfile(HttpServletRequest request) {
-        //临时创建
-        Integer userId = Integer.parseInt(request.getParameter("userId"));
-
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
-        //临时关闭
-        //Integer userId = requestUtil.getRequestUserId(request);
+        Integer userId = requestUtil.getRequestUserId(request);
         if(userId==null){
             result.buildErrorResponse(MsgEnum.ERR_USER_NOT_LOGIN);
             return result;
@@ -103,7 +99,7 @@ public class MyProfileController extends BaseUserController {
     }
 
 
-    //@SignValidate
+    @SignValidate
     @GetMapping("/couponlist")
     @ResponseBody
     public WeChatResult getCouponList(HttpServletRequest request) {
