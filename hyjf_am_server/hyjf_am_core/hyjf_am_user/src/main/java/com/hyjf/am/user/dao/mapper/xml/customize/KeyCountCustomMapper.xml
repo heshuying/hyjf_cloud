@@ -125,4 +125,63 @@
         "未知"
         END;
     </select>
+
+    <select id="getAgeCount" resultMap="performanceMap" parameterType="java.util.List">
+        SELECT
+        CASE
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
+        '60岁以上'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
+        '50-59岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
+        '40-49岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
+        '30-39岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
+        '18-29岁'
+        END AS title,
+        count(*) as dealSum
+        FROM
+        ht_user  u
+        LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+        WHERE
+        u.user_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+
+        GROUP BY
+        CASE
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
+        '60岁以上'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
+        '50-59岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
+        '40-49岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
+        '30-39岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
+        '18-29岁'
+        END;
+    </select>
+    <select id="getUserNames" resultMap="performanceMap" parameterType="java.util.List">
+        SELECT
+        u.user_id as userId,
+        u.username as userName
+        FROM
+        ht_user  u
+        WHERE
+        u.user_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </select>
 </mapper>

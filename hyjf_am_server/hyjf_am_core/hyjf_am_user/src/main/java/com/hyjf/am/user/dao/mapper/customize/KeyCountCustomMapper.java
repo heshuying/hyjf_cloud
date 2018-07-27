@@ -43,4 +43,20 @@ public interface KeyCountCustomMapper {
      */
     List<OperationReportJobVO> getSexCount( List<OperationReportJobVO> list);
 
+    /**
+     * 用户分析 - 年龄分布拆分
+     *
+     * @param list 多个用户id
+     * @return
+     */
+    List<OperationReportJobVO> getAgeCount( List<OperationReportJobVO> list);
+
+
+    /**
+     * 获取用户名
+     *
+     * @param list 多个用户id
+     * @return
+     */
+    List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
 }
