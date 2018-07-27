@@ -5,6 +5,11 @@ package com.hyjf.am.user.service.admin.extensioncenter;
 
 import com.hyjf.am.response.user.KeyCountResponse;
 import com.hyjf.am.resquest.user.KeyCountRequest;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
+
+import java.util.Date;
+import java.util.List;
+
 
 /**
  * @author tanyy
@@ -19,5 +24,22 @@ public interface KeyCountService {
 	 * @return
 	 */
 	KeyCountResponse searchAction(KeyCountRequest request);
+
+	/**
+	 * 通过时间统计平台注册人数
+	 * @param
+	 * @return
+	 *
+	 */
+	int countRegistUser();
+
+	/**
+	 * 用户分析 - 性别分布拆分
+	 *
+	 * @param list 多个用户id
+	 * @return
+	 */
+	List<OperationReportJobVO> getSexCount( List<OperationReportJobVO> list);
+
 
 }

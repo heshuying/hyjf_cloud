@@ -114,6 +114,24 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		return null;
 	}
 	@Override
+	public int countRegistUser(){
+		OperationReportJobResponse response =  restTemplate.getForEntity("http://AM-USER/am-user/batch/operation_report_job/countregistuser", OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getCount();
+		}
+		return 0;
+	}
+	@Override
+	public List<OperationReportJobVO> getSexCount(List<OperationReportJobVO> list){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(list);
+		OperationReportJobResponse response =  restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/sexcount",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
 	public List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setStartMonth(startMonth);

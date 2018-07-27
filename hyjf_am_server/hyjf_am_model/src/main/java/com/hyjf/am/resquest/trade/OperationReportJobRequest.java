@@ -4,11 +4,13 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author tanyy
@@ -24,6 +26,8 @@ public class OperationReportJobRequest extends Request {
     private int endMonth;
     private int  intervalMonth;
     private int userId;
+
+    List<OperationReportJobVO> operationReportJobVOList;
 
     public Date getDate() {
         return date;
@@ -95,5 +99,13 @@ public class OperationReportJobRequest extends Request {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public List<OperationReportJobVO> getOperationReportJobVOList() {
+        return operationReportJobVOList;
+    }
+
+    public void setOperationReportJobVOList(List<OperationReportJobVO> operationReportJobVOList) {
+        this.operationReportJobVOList = operationReportJobVOList;
     }
 }

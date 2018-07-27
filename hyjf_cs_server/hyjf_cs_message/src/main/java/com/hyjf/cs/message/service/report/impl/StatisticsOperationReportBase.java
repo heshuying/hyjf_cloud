@@ -361,7 +361,8 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     public Map<String, BigDecimal> getPerformanceSum() {
         Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
         List<OperationReportJobVO> listPerformanceSum = operationReportJobClient.getPerformanceSum();
-
+        //代码拆分
+        int countRegistUser =  operationReportJobClient.countRegistUser();
         if (!CollectionUtils.isEmpty(listPerformanceSum)) {
             for (OperationReportJobVO opear : listPerformanceSum) {
                 if ("累计交易总额".equals(opear.getTitle())) {
@@ -369,7 +370,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                 } else if ("累计用户收益".equals(opear.getTitle())) {
                     map.put("allProfit", opear.getSumAccount());
                 } else if ("平台注册人数".equals(opear.getTitle())) {
-                    map.put("registNum", opear.getSumAccount());
+                    map.put("registNum", new BigDecimal(countRegistUser));
                 }
             }
 
@@ -546,6 +547,8 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     public Map<String, Integer> getSexDistribute(int intervalMonth) {
         Map<String, Integer> map = new HashMap<String, Integer>();
         List<OperationReportJobVO> listSexDistribute = operationReportJobClient.getSexDistribute(intervalMonth);
+        //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
+        listSexDistribute =  operationReportJobClient.getSexCount(listSexDistribute);
         if (!CollectionUtils.isEmpty(listSexDistribute)) {
             for (OperationReportJobVO opear : listSexDistribute) {
                 if ("男".equals(opear.getTitle())) {
