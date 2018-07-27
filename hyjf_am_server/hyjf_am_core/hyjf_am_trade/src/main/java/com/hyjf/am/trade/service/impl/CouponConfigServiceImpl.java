@@ -89,7 +89,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 			mapParam.put("limitEnd", limitEnd);
 		}
 		//查询用户列表
-		List<CouponConfigCustomize> recordList = couponConfigCustomizeMapper.selectRecordList(mapParam);
+		List<CouponConfigCustomize> recordList = couponConfigCustomizeMapper.selectCouponConfigList(mapParam);
 		return recordList;
 	}
 
