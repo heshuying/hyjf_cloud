@@ -24,6 +24,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
+import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -155,6 +156,30 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 
 		return "";
+	}
+
+	/**
+	 * 绑卡校验WeChatcheckParamBindCardPageWeChat
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public ResultEnum checkParamBindCardPageWeChat(WebViewUserVO user) {
+		if(user == null){
+			return ResultEnum.NOTLOGIN;
+		}
+		if(!this.checkIsOpen(user.getUserId())){
+			return ResultEnum.USER_ERROR_200;
+		}
+		if(user.getIsSetPassword() != 1){
+			return ResultEnum.USER_ERROR_200;
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+		if(count > 0){
+			return ResultEnum.USER_ERROR_217;
+		}
+
+		return null;
 	}
 
 	/**
