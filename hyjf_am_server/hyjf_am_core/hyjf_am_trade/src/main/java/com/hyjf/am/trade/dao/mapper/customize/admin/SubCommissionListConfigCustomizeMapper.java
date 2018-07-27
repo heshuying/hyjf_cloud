@@ -21,12 +21,7 @@ public interface SubCommissionListConfigCustomizeMapper {
     /*
     * 根据id查询分账名单记录
     * */
-    SubCommissionListConfig getSubConfigRecordById(Map<String, Object> map);
-    /**
-     *
-     * 查询用户名信息
-     */
-    Map<String, Object> getUserInfo(String username);
+    SubCommissionListConfig getSubConfigRecordById(Integer id);
     /**
      *
      * 编辑分账名单

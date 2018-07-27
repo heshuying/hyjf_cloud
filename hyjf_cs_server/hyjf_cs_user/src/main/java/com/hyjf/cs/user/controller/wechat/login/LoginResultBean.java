@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.controller.wechat.login;
 
-import com.hyjf.cs.user.bean.BaseResultBean;
+
+import com.hyjf.cs.user.result.BaseResultBean;
 
 /**
  * 登录返回值

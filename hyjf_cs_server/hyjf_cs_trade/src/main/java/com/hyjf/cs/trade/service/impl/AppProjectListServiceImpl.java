@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
@@ -51,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -146,12 +148,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/28 16:15
      */
     @Override
-    public AppResult getAppProjectDetail(Map<String, String> param, String token) {
-        AppResult appResult = new AppResult();
+    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest req, String token) {
         JSONObject jsonObject = new JSONObject();
         JSONObject userValidation = new JSONObject();
-        String borrowNid = param.get(ProjectConstant.PARAM_BORROW_NID);
-        String type = param.get(ProjectConstant.PARAM_BORROW_TYPE);
+        String type = req.getParameter("borrowType");
         CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_PARAM_NUM);
         boolean isLogined = false;
         boolean isOpened = false;
@@ -449,8 +449,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             jsonObject.put("userValidation", userValidation);
             // add 汇计划二期前端优化  针对区分原始标与债转标  nxl 20180424 end
             jsonObject.put("repayPlan", repayPlanList);
-            appResult.setData(jsonObject);
-            return appResult;
+            jsonObject.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
+            jsonObject.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+            return jsonObject;
         }
     }
 
@@ -1123,12 +1124,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/30 10:41
      */
     @Override
-    public AppResult getAppCreditDetail(Map<String, String> param, String token) {
-        AppResult appResult = new AppResult();
-        Map<String, Object> resultMap = new HashMap<>();
-        String creditNid = param.get("transferId");
+    public JSONObject getAppCreditDetail(String creditNid, String token) {
+        JSONObject resultMap = new JSONObject();
 
-        CheckUtil.check(StringUtils.isBlank(creditNid), MsgEnum.ERR_PARAM_NUM);
+        CheckUtil.check(StringUtils.isNotBlank(creditNid), MsgEnum.ERR_PARAM_NUM);
 
         resultMap.put("userValidation", this.createUserValidation(token));
 
@@ -1252,8 +1251,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, new ArrayList<Object>());
             resultMap.put("repayPlan", new ArrayList<BorrowRepayPlanCsVO>());
         }
-        appResult.setData(resultMap);
-        return appResult;
+        resultMap.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
+        resultMap.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        return resultMap;
 
     }
 
@@ -1496,27 +1496,27 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/29 18:54
      */
     @Override
-    public AppResult getAppPlanDetail(Map<String, String> param, String token) {
-        AppResult appResult = new AppResult();
-        Map<String, Object> resultMap = new HashMap<>();
-        String planId = param.get(ProjectConstant.PARAM_APP_PLAN_NID);
-        CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
+    public JSONObject getAppPlanDetail(String planNid, String token) {
+        JSONObject result = new JSONObject();
+        //Map<String, Object> resultMap = new HashMap<>();
+        CheckUtil.check(StringUtils.isNotBlank(planNid), MsgEnum.ERR_PARAM_NUM);
 
 
-        PlanDetailCustomizeVO customize = amTradeClient.getPlanDetailByPlanNid(planId);
+        PlanDetailCustomizeVO customize = amTradeClient.getPlanDetailByPlanNid(planNid);
         if (customize == null) {
-            logger.error("传入计划id无对应计划,planNid is {}...", planId);
+            logger.error("传入计划id无对应计划,planNid is {}...", planNid);
             throw new RuntimeException("传入计划id无对应计划信息");
         }
 
         logger.info("customize:{}", JSONObject.toJSONString(customize));
         // 计划基本信息
-        this.setPlanInfo(resultMap, customize);
+        this.setPlanInfo(result, customize);
         // 用户的用户验证
-        this.setUserValidationInfo(resultMap, token);
+        this.setUserValidationInfo(result, token);
 
-        appResult.setData(resultMap);
-        return appResult;
+        result.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
+        result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        return  result;
 
 
     }
@@ -1666,7 +1666,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     accede.setAccedeAccount(entity.getAccedeAccount());
                     accede.setAccedeTime(entity.getAccedeTime());
                     accede.setUserName(entity.getUserName());
-
                     accedeList.add(accede);
                 }
             }
@@ -1702,7 +1701,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      *
      * @param token
      */
-    private void setUserValidationInfo(Map<String, Object> resultMap, String token) {
+    private void setUserValidationInfo(JSONObject resultMap, String token) {
 
         UserLoginInfo userLoginInfo = new UserLoginInfo();
         boolean loginFlag = false;
@@ -1798,7 +1797,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      *
      * @param customize
      */
-    private void setPlanInfo(Map<String, Object> resultMap, PlanDetailCustomizeVO customize) {
+    private void setPlanInfo(JSONObject resultMap, PlanDetailCustomizeVO customize) {
 
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setType(ProjectConstant.PLAN_TYPE_NAME);

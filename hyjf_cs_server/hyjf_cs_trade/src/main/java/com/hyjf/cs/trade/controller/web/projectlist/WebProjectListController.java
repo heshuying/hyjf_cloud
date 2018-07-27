@@ -124,19 +124,6 @@ public class WebProjectListController extends BaseTradeController {
     }
 
 
-    /**
-     * 散标专区-债权转让详情-还款计划
-     * 原接口：com.hyjf.web.bank.web.user.credit.CreditController.searchCreditTenderList()
-     * @return
-     */
-    @ApiOperation(value = "散标专区债权转让详情:还款计划", notes = "散标专区债权转让详情:还款计划")
-    @PostMapping(value = "/getCreditRepayPlan", produces = "application/json; charset=utf-8")
-    public Object getCreditRepayPlan(@RequestBody WebCreditRequestBean requestBean){
-        WebResult result = null;// webProjectListService.
-        return result;
-    }
-
-
 
 
     /**
