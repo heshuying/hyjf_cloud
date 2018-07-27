@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.customize.finance.EveLogCustomizeMapper">
+
+	<sql id="where-all-page-condition">
+		<if test="cardnbr != null and cardnbr != ''">
+			AND cardnbr = #{cardnbr}
+		</if>
+		<if test="seqno != null and seqno != 0">
+			AND seqno = #{seqno}
+		</if>
+		<if test="transtype != null and transtype != 0">
+			AND transtype = #{transtype}
+		</if>
+		<if test="startDate != null and startDate != ''">
+
+			AND FROM_UNIXTIME(cendt, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'
+			),'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="endDate != null and endDate != ''">
+
+			AND FROM_UNIXTIME(cendt, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'
+			),'%Y-%m-%d %H:%i:%s')
+		</if>
+	</sql>
+
+	<sql id="Base_Column_List" >
+		forcode, seqno, cendt, cardnbr, amount, crflag, msgtype, proccode, orderno, tranno,
+		reserved, revind, create_day AS createDay, transtype, create_user_id AS createUserId, create_time AS createTime, update_user_id AS updateUserId,
+		update_time AS updateTime, del_flg AS delFlg
+	</sql>
+
+	<select id="countRecord" resultType="java.lang.Integer"
+			parameterType="Map">
+		SELECT COUNT(1)
+		FROM hyjf_eve_log
+		WHERE 1=1
+		<include refid="where-all-page-condition"/>
+	</select>
+
+	<select id="selectBankEveInfoList" resultMap="com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize"	parameterType="Map">
+		SELECT
+		FROM_UNIXTIME(
+		cendt,
+		'%Y-%m-%d %H:%i:%S'
+		) AS 'cendtString',
+		<include refid="Base_Column_List" />
+		FROM
+		hyjf_eve_log
+		WHERE 1=1
+		<include refid="where-all-page-condition"/>
+		ORDER BY cendt DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+</mapper>
+
