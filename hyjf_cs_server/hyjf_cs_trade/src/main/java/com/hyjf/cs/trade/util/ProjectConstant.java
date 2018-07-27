@@ -83,6 +83,8 @@ public class ProjectConstant {
     public static final String PARAM_CREDIT_NID = "creditNid";
 
     /*计划参数*/
+    public static final String METHOD_PLAN = "/plan/";
+
     public static final String PARAM_PLAN_NID = "planNid";
 
     public static final String PARAM_APP_PLAN_NID = "planId";
