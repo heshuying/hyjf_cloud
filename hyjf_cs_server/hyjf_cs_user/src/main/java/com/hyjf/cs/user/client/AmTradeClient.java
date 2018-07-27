@@ -3,9 +3,11 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -162,4 +164,74 @@ public interface AmTradeClient {
      * @return
      */
     List<HtlProductRedeemVO> getRedeemRecordList(HtlTradeRequest htlTradeRequest);
+
+    /**
+     *获取用户当前持有债权列表总数
+     * @param
+     * @return
+     */
+    int selectCurrentHoldObligatoryRightListTotal(AssetManageBeanRequest request);
+
+    /**
+     * 获取用户当前持有债权列表
+     * @param request
+     * @return
+     */
+    List<CurrentHoldObligatoryRightListCustomizeVO> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
+
+    /**
+     * 获取用户已回款债权列表总数
+     * @param request
+     * @return
+     */
+    int selectRepaymentListTotal(AssetManageBeanRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    List<AppAlreadyRepayListCustomizeVO> selectAlreadyRepayList(AssetManageBeanRequest request);
+
+    /**
+     * 获取用户转让列表数量
+     * @param request
+     * @return
+     */
+    int countCreditRecordTotal(AssetManageBeanRequest request);
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    List<AppTenderCreditRecordListCustomizeVO> searchCreditRecordList(AssetManageBeanRequest request);
+
+    /**
+     * 获取当前持有计划列表总数
+     * @param request
+     * @return
+     */
+    int countCurrentHoldPlanTotal(AssetManageBeanRequest request);
+
+    /**
+     * 获取当前持有计划列表
+     * @param request
+     * @return
+     */
+    List<CurrentHoldPlanListCustomizeVO> selectCurrentHoldPlanList(AssetManageBeanRequest request);
+
+    /**
+     * 获取已回款计划列表总数
+     * @param request
+     * @return
+     */
+    Integer countRepayMentPlanTotal(AssetManageBeanRequest request);
+
+    /**
+     * 获取已回款计划列表
+     * @param request
+     * @return
+     */
+    List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request);
 }

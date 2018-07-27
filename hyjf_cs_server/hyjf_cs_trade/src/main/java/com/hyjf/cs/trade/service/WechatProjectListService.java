@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
@@ -18,14 +19,14 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 11:33
      */
-    public WeChatResult getProjectDetail(Map<String,Object> map,String token);
+    public JSONObject getProjectDetail(String borrowId,String type,String token);
 
     /**
      * 获取计划详情
      * @author zhangyk
      * @date 2018/7/2 15:39
      */
-    public WeChatResult getPlanDetail(Map<String,Object> map,String token);
+    public JSONObject getPlanDetail(String planId, String token);
 
     /**
      * 获取微信首页统计数据

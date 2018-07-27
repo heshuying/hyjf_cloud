@@ -238,6 +238,12 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         return assetManageCustomizeMapper.countAppMyPlan(request);
     }
 
+    @Override
+    public List<AppAlreadyRepayListCustomize> selectAlreadyRepayList(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return appUserInvestCustomizeMapper.selectAlreadyRepayList(params);
+    }
+
     private Map<String,Object> createParame(AssetManageBeanRequest request) {
         Map<String,Object> params=new HashMap<String,Object>();
 

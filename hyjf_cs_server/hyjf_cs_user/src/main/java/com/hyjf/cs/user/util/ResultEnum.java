@@ -7,6 +7,7 @@ public enum ResultEnum {
     SUCCESS2("000", "开户成功！"),
     SUCCESS3("000", "短信发送成功！"),
     SUCCESS4("000", "更新成功"),
+    SUCCESS5("000", "绑卡成功！"),
     
     FAIL("99", "失败"),
     NOTLOGIN("999", "请先登录!"),
@@ -84,6 +85,7 @@ public enum ResultEnum {
 
     USER_ERROR_215("215", "修改交易密码失败"),
     USER_ERROR_216("216", "原测评有效期已过，为更好保障您的投资利益，您须在重新完成风险测评后才可进行投资"),
+    USER_ERROR_217("217", "请先解绑已有银行卡"),
     USER_ERROR_1001("1001", "用户已评测"), USER_ERROR_1002("1002", "用户还未评测"), USER_ERROR_1003("1003", "用户未绑定银行卡"),
     USER_ERROR_1012("1012", "用户评测已过期"),
     
