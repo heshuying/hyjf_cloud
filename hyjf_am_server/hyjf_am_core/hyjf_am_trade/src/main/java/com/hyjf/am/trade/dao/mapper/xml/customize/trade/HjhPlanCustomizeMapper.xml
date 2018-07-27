@@ -776,7 +776,7 @@ ORDER BY
 	</select>
 
 
-	<resultMap id="PlanBorrowMap" type="com.hyjf.mybatis.model.customize.web.htj.DebtPlanBorrowCustomize">
+	<resultMap id="PlanBorrowMap" type="com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="name" property="borrowStyleName" jdbcType="VARCHAR" />
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
