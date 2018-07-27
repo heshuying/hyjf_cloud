@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.dao.customize.finance;
+package com.hyjf.am.trade.dao.mapper.customize.admin;
 
 
 import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * @author zdj
- * @version VipManageCustomizeMapper, v0.1 2018/7/2 18:08
+ * @version AleveLogCustomizeMapper, v0.1 2018/7/2 18:08
  */
 public interface AleveLogCustomizeMapper {
 
