@@ -100,4 +100,50 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="getContentArticleUp" resultMap="BaseResultMap"
+			parameterType="Map">
+		SELECT
+		*
+		FROM
+		huiyingdai_content_article
+		WHERE
+		id = (
+		SELECT
+		id
+		FROM
+		huiyingdai_content_article
+		WHERE
+		1=1
+		AND id <![CDATA[>]]> #{messageId}
+		AND STATUS = 1
+		AND type = #{type}
+		ORDER BY
+		create_time
+		LIMIT 1
+		)
+	</select>
+
+	<select id="getContentArticleDown" resultMap="BaseResultMap"
+			parameterType="Map">
+		SELECT
+		*
+		FROM
+		huiyingdai_content_article
+		WHERE
+		id = (
+		SELECT
+		id
+		FROM
+		huiyingdai_content_article
+		WHERE
+		1=1
+		AND id <![CDATA[<]]> #{messageId}
+		AND STATUS = 1
+		AND type = #{type}
+		ORDER BY
+		create_time DESC
+		LIMIT 1
+		)
+	</select>
 </mapper>

@@ -1,7 +1,10 @@
 package com.hyjf.am.response.market;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -11,6 +14,12 @@ public class ActivityListResponse extends Response<ActivityListVO> {
     private int count;
 
     private int flag;
+
+    private String status;
+
+    private String statusDesc;
+
+    private List<ActivityListBeanVO> activityList;
 
     public int getCount() {
         return count;
@@ -26,5 +35,29 @@ public class ActivityListResponse extends Response<ActivityListVO> {
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
+
+    public List<ActivityListBeanVO> getActivityList() {
+        return activityList;
+    }
+
+    public void setActivityList(List<ActivityListBeanVO> activityList) {
+        this.activityList = activityList;
     }
 }

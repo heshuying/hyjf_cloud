@@ -51,7 +51,7 @@ public class MyProfileController extends BaseUserController {
     private SystemConfig systemConfig;
 
 
-    @SignValidate
+    //@SignValidate
     @RequestMapping("/profile")
     @ResponseBody
     public WeChatResult myProfile(HttpServletRequest request) {
@@ -99,7 +99,7 @@ public class MyProfileController extends BaseUserController {
     }
 
 
-    @SignValidate
+    //@SignValidate
     @GetMapping("/couponlist")
     @ResponseBody
     public WeChatResult getCouponList(HttpServletRequest request) {

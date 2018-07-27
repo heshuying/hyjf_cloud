@@ -180,10 +180,10 @@ public class RedisConstants {
     /**
      * 协议模板---协议前台展示名称的别名
      */
-    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias_";
+    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias:";
     
     /**
      * 协议模板---协议文件存储Redis前缀
      */
-    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url_";
+    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
 }

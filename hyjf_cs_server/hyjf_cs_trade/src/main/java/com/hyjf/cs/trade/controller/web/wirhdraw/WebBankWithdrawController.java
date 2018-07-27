@@ -51,7 +51,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
-        if(null!=user||0==user.getIsSetPassword()){
+        if(null==user||0==user.getIsSetPassword()||!user.isBankOpenAccount()){
             return new WebResult<>();
         }
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
@@ -75,7 +75,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null!=userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
+        if(null==userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
             return result;
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));

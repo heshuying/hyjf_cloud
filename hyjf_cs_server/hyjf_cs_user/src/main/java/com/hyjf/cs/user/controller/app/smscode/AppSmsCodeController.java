@@ -223,7 +223,7 @@ public class AppSmsCodeController extends BaseUserController {
                 //判断用户是否登录
                 UserVO userVO = smsCodeService.getUsers(token);
                 // 发送短信
-                smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
+                smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
                     ret.put("status", "0");
                     ret.put("statusDesc", "发送验证码成功");
             }else{
@@ -234,7 +234,7 @@ public class AppSmsCodeController extends BaseUserController {
                 if (bankAccount == null) {
                     // 未开户  发送平台验证码
                     // 发送短信
-                    smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
+                    smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
                     ret.put("bankCode",  "");
                         ret.put("status", "0");
                         ret.put("statusDesc", "发送验证码成功");

@@ -87,7 +87,7 @@ public class WebAutoPlusController extends BaseUserController {
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
-        CheckUtil.check(userId==null,MsgEnum.ERR_USER_NOT_LOGIN);
+        CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.autoPlusService.getUsersById(userId);
         //检查用户信息
        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
