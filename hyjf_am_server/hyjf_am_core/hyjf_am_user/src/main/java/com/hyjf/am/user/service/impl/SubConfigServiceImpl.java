@@ -32,11 +32,11 @@ public class SubConfigServiceImpl implements SubConfigService {
             UserInfoCustomizeVO vo = new UserInfoCustomizeVO();
             if (map.get("user_id")!=null) {
                 vo.setUserId(Integer.parseInt(String.valueOf(map.get("user_id"))));
+                res.setResult(vo);
+                return res;
             }
-            res.setResult(vo);
-            return res;
-        }else {
             return null;
         }
+        return null;
     }
 }

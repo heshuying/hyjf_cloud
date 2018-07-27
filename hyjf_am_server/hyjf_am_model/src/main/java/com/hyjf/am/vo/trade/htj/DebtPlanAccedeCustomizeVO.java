@@ -36,7 +36,10 @@ public class DebtPlanAccedeCustomizeVO extends BaseVO implements Serializable {
 	//加入时间
 	public String accedeTime;
 	//加入平台
-	public String client;
+	public Integer client;
+
+	public String clientName;
+
 	/** 构造方法*/
 	public DebtPlanAccedeCustomizeVO() {
 		super();
@@ -90,15 +93,21 @@ public class DebtPlanAccedeCustomizeVO extends BaseVO implements Serializable {
 		this.accedeTime = accedeTime;
 	}
 
-	public String getClient() {
+	public Integer getClient() {
 		return client;
 	}
 
-	public void setClient(String client) {
+	public void setClient(Integer client) {
 		this.client = client;
 	}
 
+	public String getClientName() {
+		return clientName;
+	}
 
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
 }
 
 	

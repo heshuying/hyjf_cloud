@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.controller.admin;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
@@ -39,7 +38,7 @@ public class SubConfigController {
      * @return
      */
     @RequestMapping("/list")
-    public AdminSubConfigResponse selectSubConfigListByPage(AdminSubConfigRequest adminRequest) {
+    public AdminSubConfigResponse selectSubConfigListByPage(@RequestBody AdminSubConfigRequest adminRequest) {
         logger.info("分账名单列表..." + JSONObject.toJSON(adminRequest));
         AdminSubConfigResponse  result=new AdminSubConfigResponse();
         // 封装查询条件
@@ -47,7 +46,7 @@ public class SubConfigController {
         //查询配置中心条数
         int recordTotal = this.subConfigService.getSubConfigListCountByPage(conditionMap);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal);
             //查询记录
             List<SubCommissionListConfig> recordList =subConfigService.getSubConfigListByPage(conditionMap,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
@@ -66,13 +65,11 @@ public class SubConfigController {
      * @return
      */
     @RequestMapping("/info")
-    public AdminSubConfigResponse selectSubConfigInfoById(AdminSubConfigRequest adminRequest) {
+    public AdminSubConfigResponse selectSubConfigInfoById(@RequestBody AdminSubConfigRequest adminRequest) {
         logger.info("分账名单详情页面..." + JSONObject.toJSON(adminRequest));
         AdminSubConfigResponse  result=new AdminSubConfigResponse();
-        Map<String, Object> mapParam = new HashMap<>();
-        if (StringUtils.isNotEmpty(adminRequest.getIds())) {
-            mapParam.put("id", adminRequest.getIds());
-            SubCommissionListConfig record = this.subConfigService.getSubConfigRecordById(mapParam);
+        if (adminRequest.getId() != null) {
+            SubCommissionListConfig record = this.subConfigService.getSubConfigRecordById(adminRequest.getId());
             SubCommissionListConfigVo recordVo = new SubCommissionListConfigVo();
             if(null != record){
                 BeanUtils.copyProperties(record, recordVo);
@@ -91,11 +88,6 @@ public class SubConfigController {
     public AdminSubConfigResponse insertSubConfig(@RequestBody AdminSubConfigRequest req) {
         AdminSubConfigResponse resp = new AdminSubConfigResponse();
         try{
-            // 查询用户名信息
-            Map<String, Object> userMap=subConfigService.userMap(req);
-            if (userMap.get("user_id")!=null) {
-                req.setUserId(Integer.parseInt(String.valueOf(userMap.get("user_id"))));
-            }
             // 插入
             int cot = this.subConfigService.insertSubConfigRecord(req);
             if(cot > 0 ){
@@ -137,10 +129,10 @@ public class SubConfigController {
     public AdminSubConfigResponse deleteSubConfig(@RequestBody AdminSubConfigRequest req) {
         AdminSubConfigResponse resp = new AdminSubConfigResponse();
         try{
-            // 解析json字符串
-            List<Integer> recordList = JSONArray.parseArray(req.getIds(), Integer.class);
-            this.subConfigService.deleteSubConfigRecord(recordList);
-            resp.setRtn("SUCCESS");
+            if(req.getId() != null){
+                this.subConfigService.deleteSubConfigRecord(req.getId());
+                resp.setRtn("SUCCESS");
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
