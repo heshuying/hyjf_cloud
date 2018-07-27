@@ -18,6 +18,7 @@ import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BindCardPageBean;
+import com.hyjf.cs.user.bean.BindCardPageRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -42,6 +43,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -159,7 +161,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	}
 
 	/**
-	 * 绑卡校验WeChatcheckParamBindCardPageWeChat
+	 * 绑卡校验wechat
 	 * @param user
 	 * @return
 	 */
@@ -180,6 +182,36 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 
 		return null;
+	}
+
+	/**
+	 * 绑卡校验API端
+	 * @param bankCardRequestBean
+	 * @return
+	 */
+	@Override
+	public Map<String,String> checkParamBindCardPageApi(BindCardPageRequestBean bankCardRequestBean) {
+		Map<String,String> resultMap = new HashMap<>();
+		BankOpenAccountVO openAccountVO = amUserClient.selectBankOpenAccountByAccountId(bankCardRequestBean.getAccountId());
+		if(openAccountVO == null){
+			resultMap.put("key","CE000004");
+			resultMap.put("msg","没有根据电子银行卡找到用户");
+			logger.info("没有根据电子银行卡找到用户");
+		}
+		UserVO userVO = this.getUsersById(openAccountVO.getUserId());
+		if(userVO.getIsSetPassword() != 1){
+			resultMap.put("key","TP000002");
+			resultMap.put("msg","用户未设置交易密码");
+			logger.info("用户未设置交易密码");
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(userVO.getUserId()));
+		if(count > 0){
+			resultMap.put("key","BC000001");
+			resultMap.put("msg","用户已绑定银行卡,请先解除绑定,然后重新操作");
+			logger.info("用户已绑定银行卡,请先解除绑定,然后重新操作");
+		}
+
+		return resultMap;
 	}
 
 	/**

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.bean.BindCardPageBean;
+import com.hyjf.cs.user.bean.BindCardPageRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.BindCardVO;
@@ -21,6 +22,8 @@ public interface BindCardService extends BaseUserService {
     String checkParamBindCardPageAPP(WebViewUserVO user);
 
     ResultEnum checkParamBindCardPageWeChat(WebViewUserVO user);
+
+    Map<String,String> checkParamBindCardPageApi(BindCardPageRequestBean bankCardRequestBean);
 
     Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception;
 

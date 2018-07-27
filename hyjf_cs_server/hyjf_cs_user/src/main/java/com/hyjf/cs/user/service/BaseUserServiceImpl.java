@@ -155,6 +155,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 第三方用户测评结果记录
 			ThirdPartyEvaluationRequestBean bean = (ThirdPartyEvaluationRequestBean) paramBean;
 			sign =  bean.getInstCode() + bean.getMobile() + bean.getPlatform() + bean.getTimestamp();
+		} else if (BaseDefine.METHOD_SERVER_BIND_CARD_PAGE.equals(methodName)) {
+			// 页面绑卡
+			BindCardPageRequestBean bean = (BindCardPageRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getRetUrl() + bean.getForgotPwdUrl() + bean.getNotifyUrl() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -185,6 +189,17 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	@Override
 	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
 		BankOpenAccountVO bankAccount = this.amUserClient.selectById(userId);
+		return bankAccount;
+	}
+
+	/**
+	 * 根据accountId获取开户信息
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByAccount(String accountId) {
+		BankOpenAccountVO bankAccount = this.amUserClient.selectBankOpenAccountByAccountId(accountId);
 		return bankAccount;
 	}
 
@@ -699,6 +714,16 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		String result = restTemplate.postForEntity(requestUrl,balanceRequestBean,String.class).getBody();
 		JSONObject status = JSONObject.parseObject(result);
 		return status;
+	}
+
+	/**
+	 * 获取银行错误返回码
+	 * @param retCode
+	 * @return
+	 */
+	@Override
+	public String getBankRetMsg(String retCode) {
+		return amConfigClient.getBankRetMsg(retCode);
 	}
 
 }

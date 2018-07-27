@@ -80,7 +80,9 @@ public interface BaseUserService extends BaseService{
 	 */
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
-	/**
+    BankOpenAccountVO getBankOpenAccountByAccount(String accountId);
+
+    /**
 	 * 校验用户是否已开户
 	 * @param userId
 	 * @return
@@ -153,4 +155,6 @@ public interface BaseUserService extends BaseService{
     String strEncode(String str);
 
 	JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey);
+
+    String getBankRetMsg(String retCode);
 }
