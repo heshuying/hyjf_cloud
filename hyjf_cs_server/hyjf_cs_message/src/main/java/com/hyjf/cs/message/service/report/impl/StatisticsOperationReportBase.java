@@ -574,6 +574,8 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     public Map<String, Integer> getAgeDistribute(int intervalMonth) {
         Map<String, Integer> map = new HashMap<String, Integer>();
         List<OperationReportJobVO> listAgeDistribute = operationReportJobClient.getAgeDistribute(intervalMonth);
+        //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
+        listAgeDistribute =  operationReportJobClient.getAgeCount(listAgeDistribute);
         if (!CollectionUtils.isEmpty(listAgeDistribute)) {
             for (OperationReportJobVO opear : listAgeDistribute) {
                 if ("18-29岁".equals(opear.getTitle())) {
@@ -632,7 +634,16 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public List<OperationReportJobVO> getTenMostMoney(int intervalMonth) {
-
+        List<OperationReportJobVO> list = operationReportJobClient.getTenMostMoney(intervalMonth);
+        List<OperationReportJobVO> userNames = operationReportJobClient.getUserNames(list);
+        for(int i=0;i<list.size();i++){
+            OperationReportJobVO vo = list.get(i);
+            for (int j=0;j<userNames.size();j++){
+                if(vo.getUserId().equals(userNames.get(j).getUserId())){
+                    vo.setUserName(userNames.get(j).getUserName());
+                }
+            }
+        }
         return operationReportJobClient.getTenMostMoney(intervalMonth);
     }
 

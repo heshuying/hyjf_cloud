@@ -43,5 +43,18 @@ public class OperationReportJobController extends BaseController {
 		response.setResultList(list);
 		return response;
 	}
-
+    @RequestMapping("/agecount")
+    public OperationReportJobResponse ageCount(@RequestBody OperationReportJobRequest request) {
+        OperationReportJobResponse response = new OperationReportJobResponse();
+        List<OperationReportJobVO> list = keyCountService.getAgeCount(request.getOperationReportJobVOList());
+        response.setResultList(list);
+        return response;
+    }
+    @RequestMapping("/usernames")
+    public OperationReportJobResponse userNames(@RequestBody OperationReportJobRequest request) {
+        OperationReportJobResponse response = new OperationReportJobResponse();
+        List<OperationReportJobVO> list = keyCountService.getUserNames(request.getOperationReportJobVOList());
+        response.setResultList(list);
+        return response;
+    }
 }

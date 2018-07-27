@@ -39,5 +39,13 @@ public class KeyCountServiceImpl implements KeyCountService {
 	public List<OperationReportJobVO> getSexCount( List<OperationReportJobVO> list){
 		return keyCountCustomMapper.getSexCount(list);
 	}
+    @Override
+    public List<OperationReportJobVO> getAgeCount( List<OperationReportJobVO> list){
+        return keyCountCustomMapper.getAgeCount(list);
+    }
+	@Override
+	public List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list){
+		return keyCountCustomMapper.getUserNames(list);
+	}
 
 }

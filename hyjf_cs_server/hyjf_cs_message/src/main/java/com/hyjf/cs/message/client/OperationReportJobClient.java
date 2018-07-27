@@ -164,12 +164,20 @@ public interface OperationReportJobClient {
     List<OperationReportJobVO> getAgeDistribute( int intervalMonth);
 
     /**
+     * 用户分析 - 年龄分布拆分
+     *
+     * @param list 用户ids
+     * @return
+     */
+    List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list);
+    /**
      * 用户分析 - 金额分布
      *
      * @param intervalMonth 今年间隔月份
      * @return
      */
     List<OperationReportJobVO> getMoneyDistribute( int intervalMonth);
+
 
     /**
      * 十大投资人
@@ -179,6 +187,14 @@ public interface OperationReportJobClient {
      */
     List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
 
+
+    /**
+     * 十大投资人拆分
+     *
+     * @param list 多个用户id
+     * @return
+     */
+    List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
     /**
      * 超活跃，投资笔数最多
      *

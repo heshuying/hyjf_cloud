@@ -132,6 +132,26 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		return null;
 	}
 	@Override
+	public List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(list);
+		OperationReportJobResponse response =  restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/agecount",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(list);
+		OperationReportJobResponse response =  restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/usernames",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
 	public List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setStartMonth(startMonth);
@@ -214,6 +234,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return null;
 	}
+
 	@Override
 	public List<OperationReportJobVO> getTenMostMoney( int intervalMonth){
 		OperationReportJobRequest request = new OperationReportJobRequest();
