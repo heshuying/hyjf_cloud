@@ -14,7 +14,6 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.regist.RegistService;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -108,15 +107,16 @@ public class AppRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
+        register.setPlatform(platform);
         try{
-            ret = registService.appCheckParam(register);
+      //      ret = registService.appCheckParam(register);
         }catch (Exception e){
             return ret;
         }
         if(ret!=null){
-            return ret;
+         //   return ret;
         }
-        registService.register(register, GetCilentIP.getIpAddr(request));
+      //  registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
         boolean active = false;
         try {
@@ -150,6 +150,9 @@ public class AppRegistController extends BaseUserController {
                  record = registService.searchBanner(adsRequest);
             }catch (Exception e){
                 logger.info("获取活动信息失败...");
+            }
+            if (null==record){
+                record = new AppAdsCustomizeVO();
             }
             // 注册成功发券提示
             String operationUrl = jumpCommand + "://jumpCouponsList/?";

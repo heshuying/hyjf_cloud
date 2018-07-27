@@ -292,7 +292,7 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "验证原密码是否存在",notes = "验证原密码是否存在")
     @ApiImplicitParam(name = "param",value = "{oldPassword:String}",dataType = "Map")
-    @PostMapping(value = "checkoriginapw", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/checkoriginapw", produces = "application/json; charset=utf-8")
     public boolean checkPw(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param) {
         String pw = param.get("oldPassword");
         if (pw != null && !"".equals(pw.trim())) {
