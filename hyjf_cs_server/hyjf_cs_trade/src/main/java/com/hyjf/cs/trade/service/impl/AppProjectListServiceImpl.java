@@ -1659,8 +1659,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             if (!CollectionUtils.isEmpty(recordList)) {
                 List<HjhPlanAccedeResultBean.AccedeList> accedeList = result.getAccedeList();
                 HjhPlanAccedeResultBean.AccedeList accede = null;
-
+                Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
                 for (DebtPlanAccedeCustomizeVO entity : recordList) {
+                    entity.setClientName(relationMap.get(String.valueOf(entity.getClient())));
                     accede = new HjhPlanAccedeResultBean.AccedeList();
                     accede.setAccedeAccount(entity.getAccedeAccount());
                     accede.setAccedeTime(entity.getAccedeTime());

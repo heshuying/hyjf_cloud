@@ -1,21 +1,12 @@
 /**
  * Description:计划加入明细
- * Copyright: Copyright (HYJF Corporation) 2015
- * Company: HYJF Corporation
- * @author: 王坤
- * @version: 1.0
- * Created at: 2015年11月11日 下午2:17:31
- * Modification History:
- * Modified by : 
+ * @author: jijun
+ * @date 20180727
  */
 	
 package com.hyjf.am.trade.dao.model.customize.trade;
 
 import java.io.Serializable;
-
-/**
- * @author 王坤
- */
 
 public class DebtPlanAccedeCustomize implements Serializable {
 	
