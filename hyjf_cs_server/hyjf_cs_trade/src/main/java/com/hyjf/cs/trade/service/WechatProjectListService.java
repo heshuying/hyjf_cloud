@@ -19,7 +19,7 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 11:33
      */
-    public WeChatResult getProjectDetail(Map<String,Object> map,String token);
+    public JSONObject getProjectDetail(String borrowId,String type,String token);
 
     /**
      * 获取计划详情

@@ -89,14 +89,11 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @date 2018/7/2 11:33
      */
     @Override
-    public WeChatResult getProjectDetail(Map<String, Object> param, String token) {
-        String borrowNid = (String) param.get(ProjectConstant.PARAM_BORROW_NID);
+    public JSONObject getProjectDetail(String borrowNid, String type, String token) {
         CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_PARAM_NUM);
-        String type = (String) param.get(ProjectConstant.PARAM_BORROW_TYPE);
-        WeChatResult weChatResult = new WeChatResult();
         JSONObject userValidation = new JSONObject();
 
-        Map<String, Object> borrowDetailResultBean = new HashMap<>();
+       JSONObject borrowDetailResultBean = new JSONObject();
         //获取用户个人信息
         boolean isLogined = false;
         boolean isOpened = false;
@@ -201,8 +198,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if (borrow == null) {
             borrowDetailResultBean.put("status", "100");
             borrowDetailResultBean.put("statusDesc", "标的信息不存在");
-            weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
-            return weChatResult;
+            //weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+            return borrowDetailResultBean;
         } else {
             borrowDetailResultBean.put("status", WeChatResult.SUCCESS);
             borrowDetailResultBean.put("statusDesc", WeChatResult.SUCCESS_DESC);
@@ -348,8 +345,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             }
             borrowDetailResultBean.put("repayPlan", repayPlanList);
             borrowDetailResultBean.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
-            weChatResult.setData(borrowDetailResultBean);
-            return weChatResult;
+            borrowDetailResultBean.put(CustomConstants.APP_STATUS,HomePageDefine.WECHAT_STATUS_SUCCESS);
+            borrowDetailResultBean.put(CustomConstants.APP_STATUS_DESC,HomePageDefine.WECHAT_STATUC_DESC);
+            return borrowDetailResultBean;
 
         }
     }
@@ -372,6 +370,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         this.setUserValidationInfo(resultMap, token);
 
         jsonObject.put("object",resultMap);
+        jsonObject.put(CustomConstants.APP_STATUS,HomePageDefine.WECHAT_STATUS_SUCCESS);
+        jsonObject.put(CustomConstants.APP_STATUS_DESC,HomePageDefine.WECHAT_STATUC_DESC);
         return jsonObject;
     }
 
