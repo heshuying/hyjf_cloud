@@ -3,8 +3,8 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.BankAccountManageClient;
-import com.hyjf.admin.client.UserCenterClient;
 import com.hyjf.admin.service.PushMoneyManageService;
+import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.BorrowApicronRequest;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.resquest.admin.TenderCommissionRequest;
@@ -41,8 +41,6 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
     @Autowired
     public AmUserClient amUserClient;
 
-    @Autowired
-    private UserCenterClient userCenterClient;
 
     @Autowired
     private BankAccountManageClient bankAccountManageClient;
@@ -57,7 +55,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
      * @return
      */
     @Override
-    public List<PushMoneyVO> findPushMoneyList(PushMoneyRequest request) {
+    public PushMoneyResponse findPushMoneyList(PushMoneyRequest request) {
         return amTradeClient.findPushMoneyList(request);
     }
 
@@ -128,7 +126,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
             tenderCommissionRequest.setDepartmentName(borrowTender.getInviteDepartmentName());
             tenderCommissionRequest.setDepartmentId(borrowTender.getInviteDepartmentId());
 
-            UserInfoVO tenderUsersInfo = userCenterClient.findUserInfoById(borrowTender.getUserId());
+            UserInfoVO tenderUsersInfo = amUserClient.findUserInfoById(borrowTender.getUserId());
             int tenderIs51 = 0; // 1 是
             if (tenderUsersInfo != null && tenderUsersInfo.getIs51()!=null) {
                 tenderIs51 = tenderUsersInfo.getIs51();
@@ -141,7 +139,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
                     is51 = true;
                 }
             } else {
-                UserInfoVO refererUsersInfo = userCenterClient.findUserInfoById(borrowTender.getInviteUserId());
+                UserInfoVO refererUsersInfo = amUserClient.findUserInfoById(borrowTender.getInviteUserId());
                 if (borrowTender.getInviteUserAttribute() != null && borrowTender.getInviteUserAttribute() == 3) {
                     // 投资时推荐人的用户属性是线上员工，提成人是推荐人
                     tenderCommissionRequest.setUserId(borrowTender.getInviteUserId());
@@ -203,7 +201,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
     private PushMoneyVO getPushMoney(String type) {
         PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
         pushMoneyRequest.setProjectType(Integer.valueOf(type));
-        List<PushMoneyVO> list = this.amTradeClient.findPushMoneyList(pushMoneyRequest);
+        List<PushMoneyVO> list = this.amTradeClient.findPushMoneyList(pushMoneyRequest).getResultList();
         if (list != null && list.size() > 0) {
             return list.get(0);
         }

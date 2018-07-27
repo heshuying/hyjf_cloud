@@ -1561,7 +1561,7 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    List<PushMoneyVO> findPushMoneyList(PushMoneyRequest request);
+    PushMoneyResponse findPushMoneyList(PushMoneyRequest request);
 
 
 

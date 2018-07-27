@@ -30,7 +30,7 @@ import java.util.List;
  * 资金中心->银行账务明细
  */
 
-@Api(value = "银行账务明细")
+@Api(value = "资金中心->银行账务明细",description = "金中心->银行账务明细")
 @RestController
 @RequestMapping("/hyjf-admin/bankaleve")
 public class BankAleveController {

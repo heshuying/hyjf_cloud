@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
@@ -21,7 +22,7 @@ public interface PushMoneyManageService {
      * @param request
      * @return
      */
-    List<PushMoneyVO> findPushMoneyList(PushMoneyRequest request);
+    PushMoneyResponse findPushMoneyList(PushMoneyRequest request);
 
     /**
      * 取得借款API表

@@ -4,28 +4,39 @@
 package com.hyjf.admin.controller.finance.pushMoney;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.PlanListViewRequest;
+import com.hyjf.admin.beans.request.PushMoneyRequestBean;
+import com.hyjf.admin.beans.vo.AdminHjhPlanVO;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhPlanResponse;
+import com.hyjf.am.response.trade.PushMoneyResponse;
+import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetterUtil;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,27 +47,49 @@ import java.util.Map;
  * 资金中心->直投提成管理
  */
 
-@Api(value = "直投提成管理")
+@Api(value = "资金中心->直投提成管理",description = "资金中心->直投提成管理")
 @RestController
 @RequestMapping("/hyjf-admin/pushMoney")
-public class PushMoneyManageController {
+public class PushMoneyManageController extends BaseController {
     @Autowired
     private PushMoneyManageService pushMoneyManageService;
 
-    //直投提成管理列表查询
+    /** 权限 */
+    public static final String PERMISSIONS = "pushmoneymanagelist";
+
+    /**
+     * 直投提成管理列表查询
+     *
+     * @param request
+     * @return 计划列表         已测试
+     */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @ResponseBody
-    public JSONObject getPushMoneyList(PushMoneyRequest pushMoneyRequest){
-        JSONObject jsonObject = new JSONObject();
-        List<PushMoneyVO> pushMoneyList =pushMoneyManageService.findPushMoneyList(pushMoneyRequest);
-        String status="error";
-        if(null!=pushMoneyList&&pushMoneyList.size()>0){
-            jsonObject.put("record",pushMoneyList);
-            status="success";
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList(HttpServletRequest request, @RequestBody @Valid PushMoneyRequestBean requestBean) {
+        // 初始化原子层请求实体
+        PushMoneyRequest form = new PushMoneyRequest();
+        // 初始化返回LIST
+        List<PushMoneyVO> pushMoneyList = null;
+        // 将画面请求request赋值给原子层 request
+        BeanUtils.copyProperties(requestBean, form);
+        // 根据删选条件获取计划列表
+
+        PushMoneyResponse response = pushMoneyManageService.findPushMoneyList(form);
+        if(response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        jsonObject.put("status",status);
-        return jsonObject;
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        if(CollectionUtils.isNotEmpty(response.getResultList())){
+            // 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+            pushMoneyList = CommonUtils.convertBeanList(response.getResultList(), PushMoneyVO.class);
+            return new AdminResult<ListResult<PushMoneyVO>>(ListResult.build(pushMoneyList, response.getCount()));
+        } else {
+            return new AdminResult<ListResult<PushMoneyVO>>(ListResult.build(pushMoneyList, 0));
+        }
     }
     //计算提成
     @ApiOperation(value = "计算提成", notes = "计算提成")
@@ -114,7 +147,7 @@ public class PushMoneyManageController {
         // 文件名称
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
-        List<PushMoneyVO> pushMoneyVOList =pushMoneyManageService.findPushMoneyList(pushMoneyRequest);
+        List<PushMoneyVO> pushMoneyVOList =pushMoneyManageService.findPushMoneyList(pushMoneyRequest).getResultList();
         String[] titles = new String[] { "序号", "项目编号", "项目标题", "融资期限", "融资金额", "提成总额", "放款时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
