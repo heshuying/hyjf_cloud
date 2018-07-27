@@ -24,6 +24,7 @@ public class ActivityListRequest {
 
     private String endCreate;
 
+    // 平台（Android或iOS）
     private String platform;
 
     private String imgPc;
@@ -55,6 +56,21 @@ public class ActivityListRequest {
     private int updateTime;
 
     private int limit;
+
+    // 版本号
+    private String version;
+
+    // 网络状态
+    private String netStatus;
+
+    // 唯一标识
+    private String sign;
+
+    //页码
+    private Integer page = 1;
+
+    //每页显示条数
+    private Integer pageSize = 10;
 
     /**
      * 翻页机能用的隐藏变量
@@ -241,5 +257,45 @@ public class ActivityListRequest {
 
     public void setUpdateTime(int updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getNetStatus() {
+        return netStatus;
+    }
+
+    public void setNetStatus(String netStatus) {
+        this.netStatus = netStatus;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }
