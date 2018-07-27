@@ -295,4 +295,6 @@ public interface AmUserClient {
     List<AccountBankVO> selectAccountBank(Integer userId, int status);
 
     List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
+
+    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
 }

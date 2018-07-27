@@ -963,4 +963,19 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据accounId获取开户信息
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity(userService+"/user/selectBankOpenAccountByAccountId/" + accountId, BankOpenAccountResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
