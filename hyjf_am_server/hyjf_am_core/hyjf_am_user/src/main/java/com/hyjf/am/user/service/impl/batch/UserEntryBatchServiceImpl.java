@@ -1,14 +1,12 @@
 package com.hyjf.am.user.service.impl.batch;
 
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.batch.UserEntryCustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
 import com.hyjf.am.user.service.batch.UserEntryBatchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,22 +16,12 @@ import java.util.List;
  * @version UserEntryBatchServiceImpl, v0.1 2018/6/12 14:58
  */
 @Service
-public class UserEntryBatchServiceImpl implements UserEntryBatchService {
-
-    @Autowired
-    UserInfoMapper userInfoMapper;
-
-    @Autowired
-    UserEntryCustomizeMapper userEntryCustomizeMapper;
-
-    @Autowired
-    UserMapper userMapper;
-
-    @Autowired
-    SpreadsUserMapper spreadsUserMapper;
+public class UserEntryBatchServiceImpl extends BaseServiceImpl implements UserEntryBatchService {
+    private static final Logger logger = LoggerFactory.getLogger(UserEntryBatchServiceImpl.class);
 
     @Override
     public void updateUserEntryInfo() {
+        logger.info("员工入职，修改客户属性开始");
         List<UserInfo> users = this.queryEmployeeEntryList();
         for (UserInfo employee : users) {
             try {
@@ -44,9 +32,11 @@ public class UserEntryBatchServiceImpl implements UserEntryBatchService {
                 // 删除相应的用户的推荐人
                 this.deleteReferrer(employee.getUserId());
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                logger.error("员工入职更新失败,ID:" + employee.getUserId(), e);
+                throw e;
             }
         }
+        logger.info("员工入职，修改客户属性结束");
     }
 
     /**

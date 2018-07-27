@@ -8,6 +8,8 @@ import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
+import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -158,9 +160,6 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端计划详情
-     *
-     * @param
-     * @return
      */
     @ApiOperation(value = "APP端计划详情", notes = "APP端计划详情")
     @PostMapping(value = "/planDetail", produces = "application/json; charset=utf-8")
@@ -169,5 +168,30 @@ public class AppProjectListController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * app端计划标的组成
+     */
+    @ApiOperation(value = "APP端计划标的组成", notes = "APP端计划标的组成")
+    @RequestMapping(value = "/{planId}/borrowComposition",produces = "application/json; charset=utf-8")
+    public HjhPlanBorrowResultBean searchHjhPlanBorrow(
+            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId) {
+        HjhPlanBorrowResultBean result = new HjhPlanBorrowResultBean();
+        appProjectListService.searchHjhPlanBorrow(result, planId, currentPage, pageSize);
+        return result;
+    }
+
+    /**
+     * app 端汇计划的加入记录
+     */
+    @ApiOperation(value = "APP端汇计划加入记录", notes = "APP端汇计划加入记录")
+    @RequestMapping(value = "/{planId}/investRecord",produces = "application/json; charset=utf-8")
+    public HjhPlanAccedeResultBean searchHjhPlanAccede(
+            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId) {
+        HjhPlanAccedeResultBean result = new HjhPlanAccedeResultBean();
+        appProjectListService.getHjhPlanAccede(result, planId, currentPage, pageSize);
+        return result;
+    }
 
 }

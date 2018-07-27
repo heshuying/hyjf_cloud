@@ -32,6 +32,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -3323,6 +3324,32 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    @Override
+    public int countPlanBorrowRecordTotal(Map<String, Object> params) {
+	    String url = urlBase+"hjhPlan/countPlanBorrowRecordTotal";
+        return restTemplate.postForEntity(url,params,Integer.class).getBody();
+    }
+
+    /**
+     * 查询相应的计划标的记录列表
+     * @param params
+     * @return
+     */
+    @Override
+    public List<DebtPlanBorrowCustomizeVO> selectPlanBorrowList(Map<String, Object> params) {
+        String url = urlBase+"hjhPlan/selectPlanBorrowList";
+        DebtPlanBorrowCustomizeResponse response = restTemplate.postForEntity(url,params,DebtPlanBorrowCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 散标投资记录数
      * @param params
      * @return
@@ -3406,4 +3433,31 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
 		return null;
 	}
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    @Override
+    public Long selectPlanAccedeSum(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectPlanAccedeSum";
+        return restTemplate.postForEntity(url,params,Long.class).getBody();
+    }
+
+
+    /**
+     * 查询相应的计划的加入列表
+     * @param params
+     * @return
+     */
+    @Override
+    public List<DebtPlanAccedeCustomizeVO> selectPlanAccedeList(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectPlanAccedeList";
+        DebtPlanAccedeCustomizeResponse response = restTemplate.postForEntity(url,params,DebtPlanAccedeCustomizeResponse.class).getBody();
+        if (response!=null){
+             return response.getResultList();
+        }
+        return null;
+    }
 }

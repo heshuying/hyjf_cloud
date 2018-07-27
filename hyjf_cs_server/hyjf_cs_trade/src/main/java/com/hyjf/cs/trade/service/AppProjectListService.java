@@ -7,6 +7,8 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
+import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
 
 import java.util.Map;
 
@@ -69,4 +71,22 @@ public interface AppProjectListService extends BaseTradeService{
      * @param form
      */
     void createProjectInvestPage(JSONObject info, AppProjectInvestBeanRequest form);
+
+    /**
+     * 创建计划的标的组成分页信息
+     * @param result
+     * @param planId
+     * @param pageNo
+     * @param pageSize
+     */
+    void searchHjhPlanBorrow(HjhPlanBorrowResultBean result, String planId, int pageNo, int pageSize);
+
+    /**
+     * app 端汇计划加入记录
+     * @param result
+     * @param planId
+     * @param currentPage
+     * @param pageSize
+     */
+    void getHjhPlanAccede(HjhPlanAccedeResultBean result, String planId, int currentPage, int pageSize);
 }

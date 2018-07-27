@@ -162,6 +162,24 @@ public class ContentArticleController {
     }
 
     /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    @RequestMapping("/getContentArticleFlip")
+    public ContentArticleCustomizeResponse getContentArticleFlip(@RequestBody Map<String, Object> params, String offset) {
+        ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
+        ContentArticleCustomize list = contentArticleService.getContentArticleFlip(params, offset);
+        if (list != null) {
+            ContentArticleCustomizeVO voList = CommonUtils.convertBean(list, ContentArticleCustomizeVO.class);
+            response.setResult(voList);
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 网贷知识,风险教育
      * @author lisheng
      * @return
