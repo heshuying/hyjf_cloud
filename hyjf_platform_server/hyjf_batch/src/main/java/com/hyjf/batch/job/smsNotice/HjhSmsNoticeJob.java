@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.smsNotice;
+package com.hyjf.batch.job.smsnotice;
 
 import com.hyjf.batch.job.BaseJob;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,6 +14,7 @@ import org.quartz.JobExecutionException;
  * @author jijun
  * @version HjhSmsNoticeTask, v0.1 2018/6/26 9:21
  */
+@DisallowConcurrentExecution  // 禁止并发执行
 public class HjhSmsNoticeJob extends BaseJob implements Job {
 
     @Override
