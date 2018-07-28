@@ -88,7 +88,7 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
         // String userName = jsonObj.getString("userName");
         // String roleId = jsonObj.getString("roleId");
         // String trueName = jsonObj.getString("trueName");
-        String spreadUserId = jsonObj.getString("spreadUserId");
+        String spreadUserId = jsonObj.getString("spreadsUserId");
 
         if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(spreadUserId)) {
             RUser record = new RUser();
