@@ -103,7 +103,26 @@ public class SystemConfig {
 
     @Value("${hyjf.chinapnr.mercustid}")
     private String chinapnrMercustid;
+    @Value("${publickey.hjs}")
+    private String publickeyhjs;
+    @Value("${privatekey.hjs}")
+    private String privatekeyhjs;
+    
+    public String getPublickeyhjs() {
+		return publickeyhjs;
+	}
 
+	public void setPublickeyhjs(String publickeyhjs) {
+		this.publickeyhjs = publickeyhjs;
+	}
+
+	public String getPrivatekeyhjs() {
+		return privatekeyhjs;
+	}
+
+	public void setPrivatekeyhjs(String privatekeyhjs) {
+		this.privatekeyhjs = privatekeyhjs;
+	}
     public String getChinapnrMercustid() {
         return chinapnrMercustid;
     }

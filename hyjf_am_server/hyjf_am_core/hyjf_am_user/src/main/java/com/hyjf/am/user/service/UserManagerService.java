@@ -223,4 +223,10 @@ public interface UserManagerService extends BaseService{
      * @return
      */
     Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+
+	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
+
+	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId);
+
+	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 }

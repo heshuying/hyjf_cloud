@@ -297,4 +297,9 @@ public interface AmUserClient {
     List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
 
     BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+	Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId);
+
+	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
+
+	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
 }

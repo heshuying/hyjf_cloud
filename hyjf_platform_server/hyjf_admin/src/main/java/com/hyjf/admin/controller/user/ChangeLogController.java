@@ -117,7 +117,7 @@ public class ChangeLogController extends BaseController {
         String sheetName = "操作日志";
         List<ChangeLogVO> recordList = prs.getResultList();
 
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
         String[] titles = new String[] { "序号", "用户名", "姓名", "手机号", "用户角色", "用户属性", "推荐人", "51老用户", "用户状态", "修改人", "修改时间", "说明"};
         // 声明一个工作薄

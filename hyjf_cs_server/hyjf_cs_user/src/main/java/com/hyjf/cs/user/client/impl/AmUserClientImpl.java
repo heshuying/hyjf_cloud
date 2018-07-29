@@ -978,4 +978,19 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId) {
+		Integer id = restTemplate.getForEntity(userService+"/userManager/getUserIdByBind/"+bindUniqueId+"/"+bindPlatformId, Integer.class).getBody();
+		return id;
+	}
+
+	@Override
+	public String getBindUniqueIdByUserId(int userId, int bindPlatformId) {
+		return restTemplate.getForEntity(userService+"/userManager/getBindUniqueIdByUserId/"+userId+"/"+bindPlatformId, String.class).getBody();
+	}
+
+	@Override
+	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
+		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	}
 }

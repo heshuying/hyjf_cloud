@@ -642,4 +642,28 @@ public class UserManagerController extends BaseController{
         Response bankCardResponse = userManagerService.saveCompanyInfo(updCompanyRequest);
         return bankCardResponse;
     }
+    @RequestMapping("/getUserIdByBind/{bindUniqueId}/{bindPlatformId}")
+    public Integer getUserIdByBind(@PathVariable Integer bindUniqueId,@PathVariable Integer bindPlatformId){
+    	return userManagerService.getUserIdByBind(bindUniqueId, bindPlatformId);
+    }
+    /**
+     * 根据绑定信息取得用户id
+     * @param bindUniqueId
+     * @return
+     */
+    @RequestMapping("/getBindUniqueIdByUserId/{userId}/{bindPlatformId}")
+    public String getBindUniqueIdByUserId(int userId, int bindPlatformId) {
+    	return userManagerService.getBindUniqueIdByUserId( userId,  bindPlatformId);
+    }
+	/**
+	 * 给第三方平台用户登陆授权
+	 * @param userId
+	 * @param bindUniqueId
+	 * @param bindPlatformId
+	 * @return
+	 */
+    @RequestMapping("/bindThirdUser/{userId}/{bindUniqueId}/{bindPlatformId}")
+    public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
+    	return userManagerService. bindThirdUser( userId,  bindUniqueId,  bindPlatformId);
+    }
 }

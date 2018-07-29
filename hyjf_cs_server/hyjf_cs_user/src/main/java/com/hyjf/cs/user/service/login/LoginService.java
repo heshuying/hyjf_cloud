@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.login;
 
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.controller.app.login.UserParameters;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -38,4 +39,10 @@ public interface LoginService extends BaseUserService {
      * @param iconUrl
      */
     void updateUserIconImg(Integer userId, String iconUrl);
+    UserVO getUser(String loginUserName);
+	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
+
+	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
+
+	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
 }
