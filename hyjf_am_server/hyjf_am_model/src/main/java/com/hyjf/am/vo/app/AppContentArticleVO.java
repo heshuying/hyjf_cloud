@@ -1,16 +1,18 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.market.bean;
+package com.hyjf.am.vo.app;
+
+import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author fq
- * @version AppContentArticleBean, v0.1 2018/7/20 9:38
+ * @author dangzw
+ * @version AppContentArticleVO, v0.1 2018/7/31 0:15
  */
-public class AppContentArticleBean extends AppBaseBean implements Serializable {
+public class AppContentArticleVO extends BaseVO implements Serializable {
 
     private Integer messageId;
     private Integer page=1;
