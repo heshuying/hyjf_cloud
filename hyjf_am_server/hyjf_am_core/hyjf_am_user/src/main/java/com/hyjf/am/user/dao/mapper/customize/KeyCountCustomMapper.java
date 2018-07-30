@@ -59,4 +59,11 @@ public interface KeyCountCustomMapper {
      * @return
      */
     List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
+    /**
+     * 通过用户ID查询 用户年龄，用户地区
+     *
+     * @param userId 用户id
+     * @return
+     */
+    OperationReportJobVO getUserAgeAndArea(int userId);
 }

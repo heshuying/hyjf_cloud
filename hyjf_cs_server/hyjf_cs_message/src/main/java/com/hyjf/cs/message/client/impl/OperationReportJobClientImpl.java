@@ -269,7 +269,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public OperationReportJobVO getUserAgeAndArea(Integer userId){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setUserId(userId);
-		OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/userageandarea",request, OperationReportJobResponse.class).getBody();
+		OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/userageandarea",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

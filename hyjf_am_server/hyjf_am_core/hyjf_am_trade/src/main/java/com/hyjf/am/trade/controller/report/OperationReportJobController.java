@@ -327,16 +327,4 @@ public class OperationReportJobController extends BaseController {
         return response;
     }
 
-    /**
-     * 通过用户ID查询 用户年龄，用户地区
-     *
-     * @param request 今年间隔月份
-     */
-    @PostMapping("/userageandarea")
-    public OperationReportJobResponse userAgeAndArea(@RequestBody OperationReportJobRequest request) {
-        OperationReportJobResponse response = new OperationReportJobResponse();
-        OperationReportJobVO  result = operationReportJobService.getUserAgeAndArea(request.getUserId());
-        response.setResult(result);
-        return response;
-    }
 }

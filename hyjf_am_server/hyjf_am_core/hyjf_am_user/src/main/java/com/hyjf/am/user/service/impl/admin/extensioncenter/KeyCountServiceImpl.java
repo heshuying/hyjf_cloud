@@ -47,5 +47,9 @@ public class KeyCountServiceImpl implements KeyCountService {
 	public List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list){
 		return keyCountCustomMapper.getUserNames(list);
 	}
+	@Override
+	public OperationReportJobVO getUserAgeAndArea(int userId){
+		return keyCountCustomMapper.getUserAgeAndArea(userId);
+	}
 
 }

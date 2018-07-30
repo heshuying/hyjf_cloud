@@ -5,6 +5,7 @@ package com.hyjf.am.user.service.admin.extensioncenter;
 
 import com.hyjf.am.response.user.KeyCountResponse;
 import com.hyjf.am.resquest.user.KeyCountRequest;
+import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 import java.util.List;
@@ -55,4 +56,11 @@ public interface KeyCountService  {
 	 * @return
 	 */
 	List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
+	/**
+	 * 通过用户ID查询 用户年龄，用户地区
+	 *
+	 * @param userId 用户ID
+	 * @return
+	 */
+	OperationReportJobVO getUserAgeAndArea(int userId);
 }

@@ -6,6 +6,7 @@ package com.hyjf.am.user.controller.batch;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import io.swagger.annotations.Api;
@@ -57,4 +58,12 @@ public class OperationReportJobController extends BaseController {
         response.setResultList(list);
         return response;
     }
+
+	@RequestMapping("/userageandarea")
+	public OperationReportJobResponse userAgeAndArea(@RequestBody OperationReportJobRequest request) {
+		OperationReportJobResponse response = new OperationReportJobResponse();
+		OperationReportJobVO info = keyCountService.getUserAgeAndArea(request.getUserId());
+		response.setResult(info);
+		return response;
+	}
 }

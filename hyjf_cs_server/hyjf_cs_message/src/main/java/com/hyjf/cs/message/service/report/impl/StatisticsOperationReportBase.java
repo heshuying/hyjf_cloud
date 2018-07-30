@@ -644,7 +644,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                 }
             }
         }
-        return operationReportJobClient.getTenMostMoney(intervalMonth);
+        return list;
     }
 
     /**
@@ -654,7 +654,17 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public List<OperationReportJobVO> getOneInvestMost(int intervalMonth) {
-        return operationReportJobClient.getOneInvestMost(intervalMonth);
+        List<OperationReportJobVO> list = operationReportJobClient.getOneInvestMost(intervalMonth);
+        List<OperationReportJobVO> userNames = operationReportJobClient.getUserNames(list);
+        for(int i=0;i<list.size();i++){
+            OperationReportJobVO vo = list.get(i);
+            for (int j=0;j<userNames.size();j++){
+                if(vo.getUserId().equals(userNames.get(j).getUserId())){
+                    vo.setUserName(userNames.get(j).getUserName());
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -664,7 +674,17 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public List<OperationReportJobVO> getOneInterestsMost(int intervalMonth) {
-        return operationReportJobClient.getOneInterestsMost(intervalMonth);
+        List<OperationReportJobVO> list = operationReportJobClient.getOneInterestsMost(intervalMonth);
+        List<OperationReportJobVO> userNames = operationReportJobClient.getUserNames(list);
+        for(int i=0;i<list.size();i++){
+            OperationReportJobVO vo = list.get(i);
+            for (int j=0;j<userNames.size();j++){
+                if(vo.getUserId().equals(userNames.get(j).getUserId())){
+                    vo.setUserName(userNames.get(j).getUserName());
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -674,7 +694,9 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public OperationReportJobVO getUserAgeAndArea(Integer userId) {
-        return operationReportJobClient.getUserAgeAndArea(userId);
+        OperationReportJobVO vo =  operationReportJobClient.getUserAgeAndArea(userId);
+        //todo ht_idcard
+        return vo;
     }
 
     /**
