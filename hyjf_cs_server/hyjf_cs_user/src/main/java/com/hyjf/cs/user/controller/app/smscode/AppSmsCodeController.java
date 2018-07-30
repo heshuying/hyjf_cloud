@@ -110,7 +110,7 @@ public class AppSmsCodeController extends BaseUserController {
             return ret;
         }
         mobile = DES.decodeValue(key, mobile);
-        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN);
+        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
         return ret;
     }

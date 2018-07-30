@@ -98,7 +98,7 @@ public class AppMobileModifyController extends BaseUserController {
                 // 判断是否开户  假如未开户  修改平台手机号   已开户 修改江西银行和平台
                 BankOpenAccountVO bankOpenAccount = mobileModifyService.getBankOpenAccount(userId);
                 if (bankOpenAccount == null) {
-                    int cnt = mobileModifyService.updateCheckMobileCode(mobile, verificationCode, UserConstant.PARAM_TPL_BDYSJH, platform, UserConstant.CKCODE_NEW, UserConstant.CKCODE_YIYAN);
+                    int cnt = mobileModifyService.updateCheckMobileCode(mobile, verificationCode, UserConstant.PARAM_TPL_BDYSJH, platform, UserConstant.CKCODE_NEW, UserConstant.CKCODE_YIYAN,true);
                     if (cnt > 0) {
                         // 未开户 修改平台手机号
                         UserVO userVO = new UserVO();

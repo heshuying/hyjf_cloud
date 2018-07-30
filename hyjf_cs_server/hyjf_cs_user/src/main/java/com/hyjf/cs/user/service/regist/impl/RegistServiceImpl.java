@@ -154,7 +154,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         CheckUtil.check(m.matches(), MsgEnum.ERR_FMT_PASSWORD);
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         CheckUtil.check(cnt != 0, MsgEnum.STATUS_ZC000015);
         String reffer = registerRequest.getReffer();
         if (StringUtils.isNotEmpty(reffer)) {
@@ -229,7 +229,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         }
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         if(cnt == 0){
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
@@ -470,7 +470,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
             {
                 String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
                 int cnt = amUserClient.checkMobileCode(mobile, verificationCode, verificationType, String.valueOf(ClientConstants.WECHAT_CLIENT),
-                        CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                        CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
                 if (cnt == 0) {
                     vo.setEnum(ResultEnum.ERROR_018);
                     vo.setSuccessUrl("");

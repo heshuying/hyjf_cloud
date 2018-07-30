@@ -199,7 +199,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-			Integer searchStatus, Integer updateStatus) {
+			Integer searchStatus, Integer updateStatus,boolean isUpdate) {
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(verificationCode);
@@ -207,7 +207,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setPlatform(platform);
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
-
+		request.setUpdate(isUpdate);
 		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
 				.getBody();
 		if (result == null) {

@@ -96,7 +96,7 @@ public class SmsServiceImpl implements SmsService {
 	 */
 	@Override
 	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-									 Integer searchStatus, Integer updateStatus) {
+									 Integer searchStatus, Integer updateStatus,boolean isUpdate) {
 		int time = (int) (System.currentTimeMillis()/1000);
 		// 15分钟有效 900
 		int timeAfter = time - 900;
@@ -116,7 +116,9 @@ public class SmsServiceImpl implements SmsService {
 				if (smsCode.getCheckfor().equals(MD5.toMD5Code(mobile + verificationCode + verificationType + platform))) {
 					// 已验8或已读9
 					smsCode.setStatus(updateStatus);
-					smsCodeMapper.updateByPrimaryKey(smsCode);
+					if(isUpdate) {
+						smsCodeMapper.updateByPrimaryKey(smsCode);
+					}
 					return 1;
 				}
 			}

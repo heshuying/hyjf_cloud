@@ -54,7 +54,12 @@ public interface PassWordService extends BaseUserService {
     void checkParam(UserVO userVO, String oldPW, String newPW, String pwSure);
 
 
-    void sendCode(SendSmsVO sendSmsVo);
+    /**
+     * 微信发送验证码
+     * @param sendSmsVo
+     * @return
+     */
+    JSONObject sendCode(SendSmsVO sendSmsVo);
 
     /**
      * 微信端检验参数
@@ -104,7 +109,13 @@ public interface PassWordService extends BaseUserService {
      */
     void appCheckParam(String key,UserVO userVO, String version, String netStatus, String platform, String sign, String token, String randomString, String order, String newPassword,String oldPassword);
 
-    String getBankRetMsg(String retCode);
-
     Map<String,Object> checkStatus(String token, String sign);
+
+    /**
+     * 微信验证短信验证码
+     * @param sendSmsVo
+     * @param b
+     * @return
+     */
+    JSONObject validateVerificationCoden(SendSmsVO sendSmsVo, boolean b);
 }

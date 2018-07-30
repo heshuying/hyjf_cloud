@@ -28,8 +28,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
@@ -175,8 +173,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-									 Integer searchStatus, Integer updateStatus) {
-		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
+									 Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus,isUpdate);
 		return cnt;
 	}
 

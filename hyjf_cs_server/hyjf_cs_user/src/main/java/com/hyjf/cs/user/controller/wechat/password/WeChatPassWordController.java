@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "密码相关服务",description = "weChat端-密码相关服务")
 @RestController
-@RequestMapping("/hyjf-wechat/user/password")
+@RequestMapping("/hyjf-wechat")
 public class WeChatPassWordController {
 
     @Autowired
@@ -158,4 +158,29 @@ public class WeChatPassWordController {
         }
         return ret;
     }
+
+
+    /**
+     * 微信端获取短信验证码
+     * @param sendSmsVO
+     * @return
+     */
+    @PostMapping(value = "/wx/user/resetpwd/sendVerificationCode.do")
+    public JSONObject sendVerificationCode(SendSmsVO sendSmsVO) {
+        return passWordService.sendCode(sendSmsVO);
+    }
+
+
+    /**
+     * 微信端验证短信验证码
+     * @param request
+     * @param sendSmsVo
+     * @return
+     */
+    @RequestMapping(value = "/wechatUser/validateVerificationCodeAction.do")
+    public JSONObject validateVerificationCoden(HttpServletRequest request,SendSmsVO sendSmsVo) {
+        return passWordService.validateVerificationCoden(sendSmsVo,false);
+    }
+
+
 }

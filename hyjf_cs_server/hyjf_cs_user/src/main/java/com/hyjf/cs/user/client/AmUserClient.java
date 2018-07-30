@@ -58,7 +58,7 @@ public interface AmUserClient {
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-						Integer searchStatus, Integer updateStatus);
+						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
 
 	void updateLoginUser(int userId, String ip);

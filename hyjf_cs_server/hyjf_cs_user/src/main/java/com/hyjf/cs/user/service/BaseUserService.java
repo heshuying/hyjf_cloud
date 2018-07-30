@@ -63,7 +63,7 @@ public interface BaseUserService extends BaseService{
 	 * @param ckcodeYiyan1
 	 * @return
 	 */
-	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
 
 	/**
 	 * 验证外部请求签名
