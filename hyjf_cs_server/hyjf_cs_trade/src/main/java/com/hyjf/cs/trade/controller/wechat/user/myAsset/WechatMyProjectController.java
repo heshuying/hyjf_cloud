@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "wechat端用户资产管理接口",description = "wechat端用户资产管理接口")
 @Controller
-@RequestMapping("/wx/myproject")
+@RequestMapping("/hyjf-wechat/wx/myproject")
 public class WechatMyProjectController extends BaseTradeController {
     //当前持有项目列表标示
     public static final String CURRENTHOLD_TYPE = "currentHold";
