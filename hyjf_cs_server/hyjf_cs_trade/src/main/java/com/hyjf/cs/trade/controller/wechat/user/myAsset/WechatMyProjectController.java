@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Api(value = "wechat端用户资产管理接口",description = "wechat端用户资产管理接口")
 @Controller
-@RequestMapping("/wechat/myproject")
+@RequestMapping("/wx/myproject")
 public class WechatMyProjectController extends BaseTradeController {
     //当前持有项目列表标示
     public static final String CURRENTHOLD_TYPE = "currentHold";
@@ -51,11 +51,12 @@ public class WechatMyProjectController extends BaseTradeController {
      */
     @ApiOperation(value = "微信端:获取我的散标信息", notes = "微信端:获取我的散标信息")
     @PostMapping(value = "/queryScatteredProject", produces = "application/json; charset=utf-8")
-    public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,
+                                                                 @RequestHeader(value = "token", required = false) String token,
+                                                                 @RequestHeader(value = "type", required = false) String type) {
 
         WeChatResult weChatResult = new WeChatResult();
 
-        String type = request.getParameter("type");
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
         if (Strings.isNullOrEmpty(type)) {
             return new WeChatResult(MsgEnum.ERR_PARAM_NUM);
