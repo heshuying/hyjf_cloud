@@ -36,7 +36,6 @@ import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -215,12 +214,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Override
     public void checkParam(UserVO userVO, String oldPW, String newPW, String pwSure) {
-        CheckUtil.check(StringUtils.isNotBlank(oldPW),MsgEnum.ERR_OBJECT_REQUIRED,"原始登录密码");
-        CheckUtil.check(StringUtils.isNotBlank(newPW)&&StringUtils.isNotBlank(pwSure),MsgEnum.ERR_OBJECT_REQUIRED,"新密码");
-        oldPW = RSAJSPUtil.rsaToPassword(oldPW);
-        newPW = RSAJSPUtil.rsaToPassword(newPW);
-        pwSure = RSAJSPUtil.rsaToPassword(pwSure);
-        CheckUtil.check(newPW.equals(pwSure),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         // 验证用的password
         oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + userVO.getSalt());
         CheckUtil.check(oldPW.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
@@ -346,7 +339,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             this.validateData(sendSmsVO,smsConfig);
             //发送短信并将发送数据存到数据库和Redis
             this.sendSms(sendSmsVO,smsConfig);
-        } catch (Exception e){
+        }catch (CheckException e){
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc",e.getMessage());
+        }catch (Exception e){
             logger.error("发送短信异常",e);
             jsonObject.put("status", "99");
             jsonObject.put("statusDesc","失败");
@@ -363,7 +359,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             throw new CheckException("99","验证码不能为空");
         }
         // 检查参数正确性
-        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,BankCallConstant.CHANNEL_WEI, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         if (cnt<=0){
             throw new CheckException("99","验证码不正确");
         }

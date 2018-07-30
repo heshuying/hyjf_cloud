@@ -17,7 +17,7 @@ import com.hyjf.am.config.dao.model.auto.MessagePushTemplateExample;
 import com.hyjf.am.config.service.MessagePushTemplateServcie;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 
 /**
@@ -32,7 +32,7 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 
 	@Override
 	public MessagePushTemplate findMessagePushTemplateByCode(String tplCode) {
-		MessagePushTemplate messagePushTemplate = RedisUtils.getObj(RedisKey.MESSAGE_PUSH_TEMPLATE,
+		MessagePushTemplate messagePushTemplate = RedisUtils.getObj(RedisConstants.MESSAGE_PUSH_TEMPLATE,
 				MessagePushTemplate.class);
 		if (messagePushTemplate == null) {
 			MessagePushTemplateExample example = new MessagePushTemplateExample();
@@ -41,7 +41,7 @@ public class MessagePushTemplateServcieImpl implements MessagePushTemplateServci
 			List<MessagePushTemplate> messagePushTemplateList = templateMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(messagePushTemplateList)) {
 				messagePushTemplate = messagePushTemplateList.get(0);
-				RedisUtils.setObjEx(RedisKey.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
 				return messagePushTemplate;
 			}
 		}

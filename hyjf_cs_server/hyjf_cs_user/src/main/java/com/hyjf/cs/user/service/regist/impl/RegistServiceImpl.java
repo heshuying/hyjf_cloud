@@ -17,7 +17,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -329,7 +329,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         String token = generatorToken(userId, userVO.getUsername());
         WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO);
         webViewUserVO.setToken(token);
-        RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+        RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 
         // 2. 注册成功用户保存账户表
         sendMqToSaveAccount(webViewUserVO.getUserId());

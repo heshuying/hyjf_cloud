@@ -55,12 +55,18 @@ public class WebPassWordController {
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
-    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,PasswordRequest passwordRequest){
+    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,@RequestBody PasswordRequest passwordRequest){
         UserVO userVO = passWordService.getUsersById(userId);
         WebResult<String> response = new WebResult<>();
         String oldPW = passwordRequest.getOldPassword();
         String newPW = passwordRequest.getNewPassword();
         String pwSure = passwordRequest.getPwSure();
+        CheckUtil.check(StringUtils.isNotBlank(oldPW),MsgEnum.ERR_OBJECT_REQUIRED,"原始登录密码");
+        CheckUtil.check(StringUtils.isNotBlank(newPW)&&StringUtils.isNotBlank(pwSure),MsgEnum.ERR_OBJECT_REQUIRED,"新密码");
+        CheckUtil.check(newPW.equals(pwSure),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
+        oldPW = RSAJSPUtil.rsaToPassword(oldPW);
+        newPW = RSAJSPUtil.rsaToPassword(newPW);
+        pwSure = RSAJSPUtil.rsaToPassword(pwSure);
         passWordService.checkParam(userVO,oldPW,newPW,pwSure);
         int result = passWordService.updatePassword(userVO, newPW);
        if(result>0){

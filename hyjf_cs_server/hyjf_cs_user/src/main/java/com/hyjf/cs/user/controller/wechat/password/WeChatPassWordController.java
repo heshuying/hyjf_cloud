@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.wechat.password;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
@@ -144,14 +145,18 @@ public class WeChatPassWordController {
             ret.put("statusDesc", "请求参数非法");
             return ret;
         }
-        // 校验验证码
-        passWordService.backCheck(sendSmsVo);
+
         // 业务逻辑
         try {
+            // 校验验证码
+            passWordService.backCheck(sendSmsVo);
             passWordService.updatePassWd(user,newPassword);
             ret.put("status", "000");
             ret.put("statusDesc", "修改密码成功");
-        } catch (Exception e) {
+        }catch (CheckException e){
+            ret.put("status", "99");
+            ret.put("statusDesc",e.getMessage());
+        }catch (Exception e) {
             logger.info("修改密码失败...");
             ret.put("status", "99");
             ret.put("statusDesc", "失败");
