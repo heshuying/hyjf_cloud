@@ -60,14 +60,6 @@ public interface PlatformTransferService {
     Integer insertAccountList(AccountListVO accountListVO);
 
     /**
-     * 插入网站收支表记录
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表信息
-     * @return
-     */
-    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
-
-    /**
      * 根据账户id查询BankMerchantAccount
      * @auth sunpeikai
      * @param accountId 账户id

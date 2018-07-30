@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class BorrowHousesController extends BaseController{
      * @date 2018/6/25 16:35
      */
     @GetMapping("/borrowhouses/{borrowNid}")
-    public BorrowHousesResponse getborrowHousesByNid(String borrowNid) {
+    public BorrowHousesResponse getborrowHousesByNid(@PathVariable  String borrowNid) {
         BorrowHousesResponse response = new BorrowHousesResponse();
         List<BorrowHouses> list = borrowHousesService.getBorrowHousesByNid(borrowNid);
         if (!CollectionUtils.isEmpty(list)) {

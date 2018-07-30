@@ -2,8 +2,10 @@ package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
+import com.hyjf.am.trade.dao.mapper.customize.app.AppProjectListCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
+import com.hyjf.am.trade.dao.mapper.customize.wdzj.BorrowTenderInfoCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -149,4 +151,25 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
+
+    @Autowired
+    protected AdminAccountDetailCustomizeMapper adminAccountDetailCustomizeMapper;
+
+    @Autowired
+	protected BorrowFirstCustomizeMapper borrowFirstCustomizeMapper;
+
+	@Autowired
+	protected WebProjectListCustomizeMapper webProjectListCustomizeMapper;
+
+	@Autowired
+	protected AppProjectListCustomizeMapper appProjectListCustomizeMapper;
+
+	@Autowired
+	protected BorrowTenderCustomizeMapper borrowTenderCustomizeMapper;
+
+	@Autowired
+	protected BorrowTenderInfoCustomizeMapper borrowTenderInfoCustomizeMapper;
+
+	@Autowired
+	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 }

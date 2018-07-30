@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -54,7 +55,8 @@ public class SynBalanceController extends BaseTradeController {
     @Autowired
     private SynBalanceService synBalanceService;
     @ApiOperation(value = "第三方同步余额", notes = "同步余额")
-    @PostMapping("/synbalance")
+    @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public SynBalanceResultBean synBalance(@RequestBody SynBalanceRequestBean synBalanceRequestBean, HttpServletRequest request) {
         logger.info(synBalanceRequestBean.getAccountId()+"第三方同步余额开始-----------------------------");
         logger.info("第三方请求参数："+JSONObject.toJSONString(synBalanceRequestBean));
@@ -98,7 +100,7 @@ public class SynBalanceController extends BaseTradeController {
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
         // TODO 从配置文件获取
-        if("true".equals("false")){
+        if("true".equals("true")){
             resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
             resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
             resultBean.setBankBalance(df.format(accountUser.getBankBalance()));

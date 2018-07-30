@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.synbalance;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.user.service.BaseUserService;
 
 /**
@@ -10,4 +11,5 @@ import com.hyjf.cs.user.service.BaseUserService;
  * @version SynBalanceService, v0.1 2018/7/25 15:10
  */
 public interface SynBalanceService extends BaseUserService {
+
 }

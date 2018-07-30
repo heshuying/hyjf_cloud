@@ -22,8 +22,8 @@ public class InstConfigClientImpl implements InstConfigClient {
      * @return
      */
     @Override
-    public AdminInstConfigListResponse instConfigInit(AdminInstConfigListRequest adminRequest){
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/list",adminRequest, AdminInstConfigListResponse.class)
+    public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/instconfig/list",adminRequest, AdminInstConfigDetailResponse.class)
                 .getBody();
     }
 

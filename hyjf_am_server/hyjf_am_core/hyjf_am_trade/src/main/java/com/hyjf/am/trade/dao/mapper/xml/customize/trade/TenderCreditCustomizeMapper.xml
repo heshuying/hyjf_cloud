@@ -75,7 +75,7 @@
 						SELECT
 							hbrp.recover_status AS recoverPlanStatus
 						FROM
-							huiyingdai_borrow_recover_plan hbrp
+							ht_borrow_recover_plan hbrp
 						WHERE
 							hbrp.borrow_nid = hbr.borrow_nid
 						AND hbrp.tender_id = hbr.tender_id
@@ -129,10 +129,10 @@
 				FROM_UNIXTIME(#{nowTime}, '%Y-%m-%d 00:00:00')
 			)) AS last_days
 		FROM
-			huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = hb.borrow_style
+			ht_borrow_recover hbr
+		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
 		<include refid="TenderToCredit_Where_Clause" />
 		) t1 
 		<if test="tenderTimeSort != null and tenderTimeSort != ''">
@@ -157,8 +157,8 @@
 		SELECT
 			 COUNT(hbr.nid) AS total
 		FROM
-			huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+			ht_borrow_recover hbr
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" /> 
 	</select>
 	
@@ -169,9 +169,9 @@
 				IFNULL(hbr.recover_capital, 0) - IFNULL(hbr.recover_capital_yes, 0) - IFNULL(hbr.credit_amount, 0)
 			),0) AS credit_account
 		FROM
-			huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+			ht_borrow_recover hbr
+		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
 	
@@ -179,9 +179,9 @@
 	<select id="selectInCreditMoneyTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 	  	select 
 	      IFNULL(SUM(IFNULL(credit_capital,0)),0) AS credit_capital
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
+	    from ht_borrow_credit INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
+	    LEFT JOIN ht_borrow_tender hbt ON ht_borrow_credit.bid_nid = hbt.borrow_nid AND ht_borrow_credit.tender_nid = hbt.nid
 	    <where>
 	    	credit_status = 0 
 			<if test="userId != null and userId != '' and userId != 0">
@@ -195,9 +195,9 @@
 	<select id="selectCreditSuccessMoneyTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 	  	select 
 	      IFNULL(SUM(IFNULL(credit_capital_assigned,0)),0) AS credit_capital
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
+	    from ht_borrow_credit INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
+	    LEFT JOIN ht_borrow_tender hbt ON ht_borrow_credit.bid_nid = hbt.borrow_nid AND ht_borrow_credit.tender_nid = hbt.nid
 	    <where>
 	    	1=1
 			<if test="userId != null and userId != '' and userId != 0">
@@ -207,45 +207,12 @@
 
 	</select>
 	
-	<!-- 统计债转中未被承接的本金和 -->
-	<select id="selectInCreditNotAssignedMoneyTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
-	  	select 
-	      IFNULL(SUM(IFNULL(credit_capital,0) - IFNULL(credit_capital_assigned,0)),0) AS credit_not_assigned
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
-	    <where>
-	    	credit_status = 0 
-			<if test="userId != null and userId != '' and userId != 0">
-				AND credit_user_id = #{userId}
-			</if>
-		</where>
-
-	</select>
-	
-	<!-- 统计债转中已被承接的本金和 -->
-	<select id="selectInCreditAssignedMoneyTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
-	  	select 
-	      IFNULL(SUM(IFNULL(credit_capital_assigned,0)),0) AS credit_not_assigned
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
-	    <where>
-	    	credit_status = 0 
-			<if test="userId != null and userId != '' and userId != 0">
-				AND credit_user_id = #{userId}
-			</if>
-		</where>
-
-	</select>
-	
-	
 	<!-- 获取投资人当天债转的条数 -->
 	<select id="tenderAbleToCredit" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
 			COUNT(hbc.credit_id)
 		FROM
-			huiyingdai_borrow_credit hbc
+			ht_borrow_credit hbc
 		<where>
 			<if test="userId != null and userId != '' and userId != 0">
 				AND hbc.credit_user_id = #{userId}
@@ -310,7 +277,7 @@
 	    bid_name, 
 	    borrow_style,
 	    hbs.name AS borrow_style_name,
-	    huiyingdai_borrow_credit.tender_nid, 
+	    ht_borrow_credit.tender_nid,
 	    credit_status, 
 	    credit_order, 
 	    credit_period, 
@@ -376,239 +343,6 @@
 	    recover_period,
 	   case when credit_capital>credit_capital_assigned and truncate(credit_capital_assigned/credit_capital*100,2)=100.00 then 99 else truncate(credit_capital_assigned/credit_capital*100,2) end   AS credit_inProgress
 	</sql>
-	<!-- 获取转让中债转列表资源 -->
-	<select id="selectCreditByStatus" resultMap="CreditBaseResultMap" parameterType="java.util.Map">
-		select 
-	    <include refid="Credit_Base_Column_List" />
-	    ,FROM_UNIXTIME(hbt.addtime, '%Y-%m-%d %H:%i:%s') AS tenderTime
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
-	    <where>
-			<if test="userId != null and userId != '' and userId != 0">
-				AND credit_user_id = #{userId}
-			</if>
-			<if test="creditStatus != null and creditStatus != '' and creditStatus==0">
-				AND credit_status = #{creditStatus}
-			</if>
-			<if test="creditStatus != null and creditStatus != '' and creditStatus!=0">
-				AND credit_status <![CDATA[>]]> 0
-			</if>
-		</where>
-		<if test="limitStart != null and limitEnd !=null" >
-	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-	    </if>
-	</select>
-	<!-- 获取转让中债转列表资源总数 -->
-	<select id="countCreditByStatus" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT
-			 COUNT(credit_nid) AS total
-		FROM
-			huiyingdai_borrow_credit
-		<where>
-			<if test="userId != null and userId != '' and userId != 0">
-				AND credit_user_id = #{userId}
-			</if>
-			<if test="creditStatus != null and creditStatus != '' and creditStatus==0">
-				AND credit_status = #{creditStatus}
-			</if>
-			<if test="creditStatus != null and creditStatus != '' and creditStatus!=0">
-				AND credit_status <![CDATA[>]]> 0
-			</if>
-		</where>
-	</select>
-	<!-- 获取转让记录列表资源 -->
-	<select id="selectCreditRecordList" resultMap="CreditBaseResultMap" parameterType="java.util.Map">
-		SELECT 
-			<!--项目编号  -->
-			hb.borrow_nid AS bid_nid,
-			<!-- 原始转让本金 -->
-			hbc.credit_capital,
-			<!-- 折让比例 -->
-			hbc.credit_discount,
-			<!-- 债转时间 -->
-			FROM_UNIXTIME(hbc.add_time,'%Y-%m-%d %H:%i') AS add_time,
-			<!-- 债转时间 -->
-			hbc.add_time AS add_time_int,
-			<!-- 已转让金额 -->
-			hbc.credit_capital_assigned,
-			<!-- 累计收到金额 -->
-			(
-				SELECT
-					IFNULL(SUM(hct.assign_pay - hct.credit_fee),0) 
-				FROM
-					huiyingdai_credit_tender hct
-				WHERE
-					hct.credit_tender_nid = hbc.tender_nid
-				AND hbc.credit_nid = hct.credit_nid
-			) AS receivedAccount,
-			FROM_UNIXTIME(hbt.addtime, '%Y-%m-%d %H:%i:%s') AS tenderTime,
-			(DATEDIFF(
-				FROM_UNIXTIME(
-					unix_timestamp(now()),
-					'%Y-%m-%d 00:00:00'
-				),
-				FROM_UNIXTIME(hb.recover_last_time, '%Y-%m-%d 00:00:00')
-			)) AS tender_period,
-			(DATEDIFF(
-				FROM_UNIXTIME(
-					CAST(hb.repay_last_time AS SIGNED),
-					'%Y-%m-%d 00:00:00'
-				),
-				FROM_UNIXTIME(unix_timestamp(now()), '%Y-%m-%d 00:00:00')
-			)) AS last_days,
-			CASE WHEN credit_capital>credit_capital_assigned AND TRUNCATE(credit_capital_assigned/credit_capital*100,2) = 100.00 
-			THEN 99 ELSE TRUNCATE(credit_capital_assigned/credit_capital*100,2) END AS credit_inProgress,
-			hbc.credit_nid,
-			hbc.credit_status,
-			hbc.credit_term
-		FROM huiyingdai_borrow_credit hbc 
-		INNER JOIN huiyingdai_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		INNER JOIN huiyingdai_borrow_style hbs ON hb.borrow_style = hbs.nid
-		LEFT JOIN huiyingdai_borrow_tender hbt ON hbc.bid_nid = hbt.borrow_nid AND hbc.tender_nid = hbt.nid
-		<where>
-			<if test="userId != null and userId != '' and userId != 0">
-				AND hbc.credit_user_id = #{userId}
-			</if>
-		</where>
-		order by hbc.credit_status, hbc.add_time desc
-		<if test="limitStart != null and limitEnd !=null" >
-	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-	    </if>
-	</select>
-	<!-- 获取转让记录列表资源总数 -->
-	<select id="countCreditRecordTotal" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT
-			 COUNT(credit_nid) AS total
-		FROM
-			huiyingdai_borrow_credit
-		<where>
-			<if test="userId != null and userId != '' and userId != 0">
-				AND credit_user_id = #{userId}
-			</if>
-		</where>
-	</select>
-	
-	
-	<!-- 获取Web页面查询汇转让数据列表资源 -->
-	<select id="selectWebCreditList" resultMap="CreditBaseResultMap" parameterType="java.util.Map">
-		select 
-	    <include refid="Credit_Base_Column_List" />,
-	    huiyingdai_borrow.project_name
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    <where>
-	    	huiyingdai_borrow.is_show <![CDATA[<>]]> 1
-			<if test="creditStatus != null and creditStatus != ''">
-				AND credit_status = #{creditStatus}
-			</if>
-			<if test="borrowPeriodMin != null and borrowPeriodMin != ''">
-				AND borrow_period <![CDATA[>=]]> #{borrowPeriodMin}
-				<if test="borrowPeriodMax != null and borrowPeriodMax != ''">
-					AND borrow_period <![CDATA[<]]> #{borrowPeriodMax}
-				</if>
-			</if>
-			<if test="borrowAprMin != null and borrowAprMin != ''">
-				AND huiyingdai_borrow_credit.bid_apr <![CDATA[>=]]> #{borrowAprMin}
-				<if test="borrowAprMax != null and borrowAprMax != ''">
-					AND huiyingdai_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax}
-				</if>
-			</if>
-				AND huiyingdai_borrow.borrow_style!='endday'
-		</where>
-		UNION (
-			select 
-		    <include refid="Credit_Base_Column_List" />,
-		    huiyingdai_borrow.project_name
-		    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-		    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-		    <where>
-		    	huiyingdai_borrow.is_show <![CDATA[<>]]> 1
-				<if test="creditStatus != null and creditStatus != ''">
-					AND credit_status = #{creditStatus}
-				</if>
-				<if test="borrowPeriodMin != null and borrowPeriodMin != ''">
-					AND borrow_period <![CDATA[>=]]> #{borrowPeriodMin}*30
-					<if test="borrowPeriodMax != null and borrowPeriodMax != ''">
-						AND borrow_period <![CDATA[<]]> #{borrowPeriodMax}*30
-					</if>
-				</if>
-				<if test="borrowAprMin != null and borrowAprMin != ''">
-					AND huiyingdai_borrow_credit.bid_apr <![CDATA[>=]]> #{borrowAprMin}
-					<if test="borrowAprMax != null and borrowAprMax != ''">
-						AND huiyingdai_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax}
-					</if>
-				</if>
-					AND huiyingdai_borrow.borrow_style='endday'
-			</where>		
-		)
-		ORDER BY credit_inProgress DESC,
-			<if test="discountSort != null and discountSort != ''">
-				credit_discount ${discountSort},
-			</if>
-			<if test="termSort != null and termSort != ''">
-				credit_term ${termSort},
-			</if>
-			<if test="capitalSort != null and capitalSort != ''">
-				credit_capital ${capitalSort},
-			</if>
-			add_time DESC
-		<if test="limitStart != null and limitEnd !=null" >
-	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-	    </if>
-	</select>
-	<!-- 获取Web页面查询汇转让数据总数 -->
-	<select id="countWebCredit" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT (
-			(SELECT 
-		    COUNT(credit_nid)
-		    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-		    <where>
-		    	huiyingdai_borrow.is_show <![CDATA[<>]]> 1
-				<if test="creditStatus != null and creditStatus != ''">
-					AND credit_status = #{creditStatus}
-				</if>
-				<if test="borrowPeriodMin != null and borrowPeriodMin != ''">
-					AND borrow_period <![CDATA[>=]]> #{borrowPeriodMin}
-					<if test="borrowPeriodMax != null and borrowPeriodMax != ''">
-						AND borrow_period <![CDATA[<]]> #{borrowPeriodMax}
-					</if>
-				</if>
-				<if test="borrowAprMin != null and borrowAprMin != ''">
-					AND huiyingdai_borrow_credit.bid_apr <![CDATA[>=]]> #{borrowAprMin}
-					<if test="borrowAprMax != null and borrowAprMax != ''">
-						AND huiyingdai_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax}
-					</if>
-				</if>
-					AND huiyingdai_borrow.borrow_style!='endday'
-			</where>
-			)
-		+ (
-			select 
-		    COUNT(credit_nid)
-		    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-		    <where>
-		    	huiyingdai_borrow.is_show <![CDATA[<>]]> 1
-				<if test="creditStatus != null and creditStatus != ''">
-					AND credit_status = #{creditStatus}
-				</if>
-				<if test="borrowPeriodMin != null and borrowPeriodMin != ''">
-					AND borrow_period <![CDATA[>=]]> #{borrowPeriodMin}*30
-					<if test="borrowPeriodMax != null and borrowPeriodMax != ''">
-						AND borrow_period <![CDATA[<]]> #{borrowPeriodMax}*30
-					</if>
-				</if>
-				<if test="borrowAprMin != null and borrowAprMin != ''">
-					AND huiyingdai_borrow_credit.bid_apr <![CDATA[>=]]> #{borrowAprMin}
-					<if test="borrowAprMax != null and borrowAprMax != ''">
-						AND huiyingdai_borrow_credit.bid_apr <![CDATA[<]]> #{borrowAprMax}
-					</if>
-				</if>
-					AND huiyingdai_borrow.borrow_style='endday'
-			</where>		
-		)
-		)AS total
-	</select>
 	
 	<!-- 点击购买后对债转进行投资详情 -->
 	<select id="selectWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize" parameterType="java.util.Map">
@@ -680,292 +414,14 @@
 					''
 				END AS `status`	
 		FROM
-			huiyingdai_borrow_credit hbc
-		LEFT JOIN huiyingdai_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+			ht_borrow_credit hbc
+		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
+		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 	</select>
-	<!-- 点击购买后对债转进行投资详情 -->
-	<select id="selectPlanWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize" parameterType="java.util.Map">
-		SELECT	hb.project_type type,
-			hb.company_or_personal AS comOrPer,
-			hb.borrow_nid AS borrowNid,
-			hb.borrow_apr AS borrowApr,
-			hb.borrow_style AS borrowStyle,
-			hbc.credit_nid AS creditNid,
-			hbc.sell_order_id AS tenderNid,
-			hbc.credit_capital AS creditCapital,
-			(
-				hbc.credit_capital - hbc.credit_capital_assigned
-			) AS creditAssignCapital,
-			hbc.credit_discount AS creditDiscount,
-			hbc.credit_term AS creditTerm,
-			hbc.hold_days AS creditTermHold,
-		CASE
-		WHEN hb.borrow_style = 'endday' THEN
-			CONCAT(hb.borrow_period, '天')
-		ELSE
-			CONCAT(hb.borrow_period, '个月')
-		END borrowPeriod,
-		 hbc.credit_price AS creditPrice,
-		 FROM_UNIXTIME(
-			hbc.create_time,
-			'%Y-%m-%d %H:%i:%s'
-		) AS creditTime,
-		 hbc.create_time AS creditTimeInt,
-		 hui.truename AS creditUserTrueName,
-		 hbc.user_id AS creditUserId,
-		 hbc.credit_repay_end_time AS creditRepayEndTime,
-		 	CASE
-				WHEN hb.`status` = 0
-				AND hb.verify_status = 1 THEN
-					'10'
-				WHEN hb.`status` = 1
-				AND hb.borrow_status = 1
-				AND hb.borrow_account_yes <![CDATA[<]]> hb.account
-				AND (
-					hb.verify_time + (
-						hb.borrow_valid_time * 24 * 60 * 60
-					) > UNIX_TIMESTAMP(NOW())
-				) THEN
-					'11'
-				WHEN hb.`status` = 1
-				AND hb.reverify_time = '0'
-				AND (
-					(
-						hb.reverify_status = 0
-						AND hb.borrow_account_yes >= hb.account
-					)
-					OR (
-						hb.verify_time + (
-							hb.borrow_valid_time * 24 * 60 * 60
-						) <![CDATA[<]]> UNIX_TIMESTAMP(NOW())
-					)
-				) THEN
-					'12'
-				WHEN hb.`status` = 3
-				AND hb.repay_full_status = 0 THEN
-					'13'
-				WHEN hb.`status` = 3
-				AND hb.repay_full_status = 1 THEN
-					'14'
-				<!-- WHEN hb.`status` = 2 THEN
-					'15' -->
-				ELSE
-					''
-				END AS `status`
-				
-		FROM
-			hyjf_debt_credit hbc
-		LEFT JOIN hyjf_debt_borrow hb ON hbc.borrow_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
-		WHERE
-			hbc.credit_nid = #{creditNid}
-	</select>
-	
-	<!-- 查询已经购买的债转的本金的总和 -->
-	<select id="creditTenderCapitalSum" resultType="java.lang.String" parameterType="java.util.Map">
-		SELECT
-			IFNULL(SUM(hct.assign_capital) ,0.00) capitalSum
-		FROM
-			huiyingdai_credit_tender_log hct
-		WHERE
-			hct.credit_nid = #{creditNid}
-		AND hct.status = 0
-	</select>
-	
-	<!-- 已承接或查看购买债转总数 -->
-	<select id="countCreditTenderAssigned" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT
-			 COUNT(hct.assign_id) AS total
-		FROM
-			huiyingdai_credit_tender hct
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hct.credit_nid=hbc.credit_nid AND hct.credit_tender_nid=hbc.tender_nid
-		<where>
-			<if test="userId != null and userId != ''">
-				AND hct.user_id = #{userId}
-			</if>
-			<if test="creditUserId != null and creditUserId != ''">
-				AND hbc.credit_user_id = #{creditUserId}
-			</if>
-			<if test="creditNid != null and creditNid != ''">
-				AND hbc.credit_nid = #{creditNid}
-			</if>
-			<if test="creditStatus != null and creditStatus != ''">
-				AND hbc.credit_status = #{creditStatus}
-			</if>
-		</where>
-	</select>
-	
-	<!-- 已承接或查看购买债转详情查询 -->
-	<select id="selectCreditTenderAssigned" resultType="com.hyjf.am.trade.dao.model.customize.trade.TenderCreditAssignedCustomize" parameterType="java.util.Map">
-		SELECT
-			hct.assign_id AS assignId,
-			hct.user_id AS userId,
-			hct.credit_user_id AS creditUserId,
-			hct.status AS status,
-			hct.bid_nid AS bidNid,
-			hct.credit_nid AS creditNid,
-			hct.credit_tender_nid AS creditTenderNid,
-			hct.assign_nid AS assignNid,
-			hct.assign_capital AS assignCapital,
-			hct.assign_account AS assignAccount,
-			hct.assign_interest AS assignInterest,
-			hct.assign_interest_advance AS assignInterestAdvance,
-			hct.assign_price AS assignPrice,
-			hct.assign_pay AS assignPay,
-			hct.assign_repay_account AS assignRepayAccount,
-			hct.assign_repay_capital AS assignRepayCapital,
-			hct.assign_repay_interest AS assignRepayInterest,
-			CASE
-			WHEN hct.assign_repay_end_time != 0 THEN
-				FROM_UNIXTIME( hct.assign_repay_end_time, '%Y-%m-%d' )
-			ELSE
-				NULL
-			END AS assignRepayEndTime,
-			CASE
-			WHEN hct.assign_repay_last_time != 0 THEN
-				FROM_UNIXTIME( hct.assign_repay_last_time, '%Y-%m-%d' )
-			ELSE
-				NULL
-			END AS assignRepayLastTime,
-			CASE
-			WHEN hct.assign_repay_next_time != 0 THEN
-				FROM_UNIXTIME( hct.assign_repay_next_time, '%Y-%m-%d' )
-			ELSE
-				NULL
-			END AS assignRepayNextTime,
-			CASE
-			WHEN hct.assign_repay_yes_time != 0 THEN
-				FROM_UNIXTIME( hct.assign_repay_yes_time, '%Y-%m-%d' )
-			ELSE
-				NULL
-			END AS assignRepayYesTime,
-			hct.assign_repay_period AS assignRepayPeriod,
-			DATE_FORMAT(hct.assign_create_date,'%Y-%m-%d') AS assignCreateDate,
-			hct.credit_fee AS creditFee,
-			FROM_UNIXTIME(hct.add_time,'%Y-%m-%d %H:%i:%s') AS addTime,
-			FROM_UNIXTIME(hct.add_time,'%Y-%m-%d') AS addTimeDay,
-			FROM_UNIXTIME(hct.add_time,'%H:%i:%s') AS addTimeHour,
-			hbc.credit_term AS creditTerm,
-			hbc.bid_apr AS bidApr,
-			hbc.credit_discount AS creditDiscount,
-			FROM_UNIXTIME( hbt.addtime, '%Y-%m-%d' ) AS tenderTime,
-			hui.username AS creditAssignUserTrueName,
-			pna.name AS client
-		FROM
-			huiyingdai_credit_tender hct
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hct.credit_nid=hbc.credit_nid AND hct.credit_tender_nid=hbc.tender_nid
-		LEFT JOIN huiyingdai_borrow_tender hbt ON hbc.tender_nid=hbt.nid AND hbc.bid_nid=hbt.borrow_nid
-		LEFT JOIN huiyingdai_users hui ON hui.user_id = hct.user_id
-		LEFT JOIN hyjf_param_name pna ON hct.client = pna.name_cd AND pna.name_class = 'CLIENT'
-		<where>
-			<if test="userId != null and userId != ''">
-				AND hct.user_id = #{userId}
-			</if>
-			<if test="creditUserId != null and creditUserId != ''">
-				AND hbc.credit_user_id = #{creditUserId}
-			</if>
-			<if test="creditNid != null and creditNid != ''">
-				AND hbc.credit_nid = #{creditNid}
-			</if>
-			<if test="creditStatus != null and creditStatus != ''">
-				AND hbc.credit_status = #{creditStatus}
-			</if>
-		</where>		
-		ORDER BY
-			hct.add_time DESC
-		<if test="limitStart != null and limitEnd !=null" >
-	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-	    </if>
-	</select>
-	
-	<!-- 债转承接数据统计 -->
-	<select id="selectCreditTenderAssignedStatistic" resultType="com.hyjf.am.trade.dao.model.customize.trade.TenderCreditAssignedStatisticCustomize" parameterType="java.util.Map">
-		SELECT
-			IFNULL(SUM(IFNULL(hct.assign_capital,0)),0) AS assignCapital,
-			IFNULL(SUM(IFNULL(hct.assign_interest_advance,0)),0) AS assignInterestAdvance,
-			IFNULL(SUM(IFNULL(hct.assign_pay,0) - IFNULL(hct.credit_fee,0)),0) AS moneyGet,
-			IFNULL(SUM(IFNULL(hct.credit_fee,0)),0) AS creditFee,
-			hbc.credit_capital AS creditCapital,
-			hbc.bid_nid AS bidNid,
-			FROM_UNIXTIME(hbc.add_time,'%Y-%m-%d %H:%i') AS addTime
-		FROM
-			huiyingdai_credit_tender hct
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hct.credit_nid=hbc.credit_nid AND hct.credit_tender_nid=hbc.tender_nid
-		LEFT JOIN huiyingdai_borrow_tender hbt ON hbc.tender_nid=hbt.nid AND hbc.bid_nid=hbt.borrow_nid
-		LEFT JOIN huiyingdai_users hui ON hui.user_id = hct.user_id
-		<where>
-			<if test="userId != null and userId != ''">
-				AND hct.user_id = #{userId}
-			</if>
-			<if test="creditUserId != null and creditUserId != ''">
-				AND hbc.credit_user_id = #{creditUserId}
-			</if>
-			<if test="creditNid != null and creditNid != ''">
-				AND hbc.credit_nid = #{creditNid}
-			</if>
-			<if test="creditStatus != null and creditStatus != ''">
-				AND hbc.credit_status = #{creditStatus}
-			</if>
-		</where>		
-	</select>
-	
-	
-	<!-- 已承接或查看还款计划列表详情查询 -->
-	<select id="selectCreditRepayPlan" resultType="com.hyjf.am.trade.dao.model.customize.trade.TenderCreditRepayPlanCustomize" parameterType="java.util.Map">
-		SELECT
-			hcr.user_id AS userId,
-			hcr.credit_user_id AS creditUserId,
-			hcr.status AS status,
-			hcr.bid_nid AS bidNid,
-			hcr.credit_nid AS creditNid,
-			hcr.credit_tender_nid AS creditTenderNid,
-			hcr.assign_nid AS assignNid,
-			hcr.assign_capital AS assignCapital,
-			hcr.assign_account AS assignAccount,
-			hcr.assign_interest AS assignInterest,
-			hcr.assign_interest_advance AS assignInterestAdvance,
-			CASE
-			WHEN hcr.assign_repay_next_time != 0 THEN
-				FROM_UNIXTIME( hcr.assign_repay_next_time, '%Y-%m-%d' )
-			ELSE
-				NULL
-			END AS assignRepayNextTime,
-			CASE
-			WHEN hcr.assign_repay_yes_time != 0 THEN
-				FROM_UNIXTIME( hcr.assign_repay_yes_time, '%Y-%m-%d' )
-			ELSE
-				NULL
-			END AS assignRepayYesTime,
-			hcr.assign_repay_period AS assignRepayPeriod,
-			hcr.recover_period AS recoverPeriod,
-			DATE_FORMAT(hcr.assign_create_date,'%Y-%m-%d') AS assignCreateDate,
-			FROM_UNIXTIME(hcr.add_time,'%Y-%m-%d %H:%i:%s') AS addTime
-		FROM
-			huiyingdai_credit_repay hcr
-		<where>
-			<if test="userId != null and userId != ''">
-				AND hcr.user_id = #{userId}
-			</if>
-			<if test="creditUserId != null and creditUserId != ''">
-				AND hcr.credit_user_id = #{creditUserId}
-			</if>
-			<if test="creditNid != null and creditNid != ''">
-				AND hcr.credit_nid = #{creditNid}
-			</if>
-			<if test="assignNid != null and assignNid != ''">
-				AND hcr.assign_nid = #{assignNid}
-			</if>
-			<if test="creditStatus != null and creditStatus != ''">
-				AND hcr.credit_status = #{creditStatus}
-			</if>
-		</where>		
-			ORDER BY hcr.add_time DESC
-	</select>
+
 	<resultMap id="creditTendeListMap" type="com.hyjf.am.trade.dao.model.customize.trade.CreditTenderListCustomize">
 		<!-- id -->
 		<result column="id" property="id" jdbcType="VARCHAR" />
@@ -980,56 +436,6 @@
 		<!-- 承接平台 -->
 		<result column="client" property="client" jdbcType="VARCHAR" />
 	</resultMap>
-	<!-- 已承接或查看购买债转详情查询 -->
-	<select id="selectWebCreditTenderList" resultMap="creditTendeListMap" parameterType="java.util.Map">
-		SELECT
-			hct.assign_id AS id,
-			CONCAT(
-				substring(hu.username, 1, 1),
-				'**'
-			) AS user_name,
-			CASE
-				WHEN hui.vip_id IS NOT NULL THEN
-				1
-			ELSE
-				0
-			END AS is_vip,
-			SUBSTRING(FORMAT(hct.assign_capital,4),1,LENGTH(FORMAT(hct.assign_capital,4))-2) AS assign_capital,
-			FROM_UNIXTIME(hct.add_time, '%Y-%m-%d %H:%i:%s') AS assign_time,
-		 	pna.`name` AS client
-		FROM
-			huiyingdai_credit_tender hct
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hct.user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hct.user_id
-		LEFT JOIN hyjf_param_name pna ON hct.client = pna.name_cd
-		AND pna.name_class = 'CLIENT'
-		<where>
-			<if test="creditNid != null and creditNid != ''">
-				AND hct.credit_nid = #{creditNid}
-			</if>
-		</where>		
-		ORDER BY
-			hct.add_time DESC
-		<if test="limitStart != null and limitEnd !=null" >
-	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-	    </if>
-	</select>
-	<!-- 已承接或查看购买债转详情查询 -->
-	<select id="countWebCreditTenderList" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT
-			count(hct.assign_id)
-		FROM
-			huiyingdai_credit_tender hct
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hct.user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hct.user_id
-		LEFT JOIN hyjf_param_name pna ON hct.client = pna.name_cd
-		AND pna.name_class = 'CLIENT'
-		<where>
-			<if test="creditNid != null and creditNid != ''">
-				AND hct.credit_nid = #{creditNid}
-			</if>
-		</where>		
-	</select>
 	
 	<!-- 点击购买后对债转进行投资详情(汇计划) -->
 	<select id="selectHJHWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize" parameterType="java.util.Map">
@@ -1112,9 +518,9 @@
 	FROM
 		hyjf_hjh_debt_credit hbc
 		
-	LEFT JOIN huiyingdai_borrow hb ON hbc.borrow_nid = hb.borrow_nid
-	LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.user_id
-	LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+	LEFT JOIN ht_borrow hb ON hbc.borrow_nid = hb.borrow_nid
+	LEFT JOIN ht_users hu ON hu.user_id = hbc.user_id
+	LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
 	LEFT JOIN hyjf_hjh_debt_credit_tender hdct ON hdct.credit_nid = hbc.credit_nid
 	WHERE
 		hbc.credit_nid = #{creditNid}
@@ -1197,16 +603,19 @@
 				) AS signTime
 				
 		FROM
-			huiyingdai_borrow_credit hbc
-		LEFT JOIN huiyingdai_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
-		LEFT JOIN huiyingdai_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+			ht_borrow_credit hbc
+		LEFT JOIN ht_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
+		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
+		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 			AND
 			hhh.assign_nid = #{assignNid}
 			
 	</select>
+
+
+
 	
 </mapper>

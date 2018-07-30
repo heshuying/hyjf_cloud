@@ -83,6 +83,8 @@ public class ProjectConstant {
     public static final String PARAM_CREDIT_NID = "creditNid";
 
     /*计划参数*/
+    public static final String METHOD_PLAN = "/plan/";
+
     public static final String PARAM_PLAN_NID = "planNid";
 
     public static final String PARAM_APP_PLAN_NID = "planId";
@@ -113,6 +115,9 @@ public class ProjectConstant {
     public static final String HJH_DATA_INTEREST_TOTAL = "interestTotal";
 
     public static final String HJH_DATA_ACCEDE_TIMES = "accedeTimes";
+
+    /*展示给app的计划详情链接*/
+    public static final String HJH_DETAIL_INFO_URL = REQUEST_HOME + "/plan/";
     /*汇计划接口相关 结束*/
 
 

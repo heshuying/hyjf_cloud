@@ -272,7 +272,7 @@ public class WebPassWordController {
         CheckUtil.check(StringUtils.isNotBlank(password2)&&password1.equals(password2),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         CheckUtil.check(password1.length() >= 6 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         // 改变验证码状态
-        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         // 再次验证验证码
         CheckUtil.check(checkStatus==1,MsgEnum.STATUS_ZC000015);
         UserVO user = passWordService.getUsersByMobile(mobile);
@@ -292,7 +292,7 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "验证原密码是否存在",notes = "验证原密码是否存在")
     @ApiImplicitParam(name = "param",value = "{oldPassword:String}",dataType = "Map")
-    @PostMapping(value = "checkoriginapw", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/checkoriginapw", produces = "application/json; charset=utf-8")
     public boolean checkPw(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param) {
         String pw = param.get("oldPassword");
         if (pw != null && !"".equals(pw.trim())) {

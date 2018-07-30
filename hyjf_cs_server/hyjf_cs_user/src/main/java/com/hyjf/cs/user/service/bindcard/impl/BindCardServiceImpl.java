@@ -18,12 +18,14 @@ import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BindCardPageBean;
+import com.hyjf.cs.user.bean.BindCardPageRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
+import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -41,6 +43,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -155,6 +158,60 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 
 		return "";
+	}
+
+	/**
+	 * 绑卡校验wechat
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public ResultEnum checkParamBindCardPageWeChat(WebViewUserVO user) {
+		if(user == null){
+			return ResultEnum.NOTLOGIN;
+		}
+		if(!this.checkIsOpen(user.getUserId())){
+			return ResultEnum.USER_ERROR_200;
+		}
+		if(user.getIsSetPassword() != 1){
+			return ResultEnum.USER_ERROR_200;
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+		if(count > 0){
+			return ResultEnum.USER_ERROR_217;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 绑卡校验API端
+	 * @param bankCardRequestBean
+	 * @return
+	 */
+	@Override
+	public Map<String,String> checkParamBindCardPageApi(BindCardPageRequestBean bankCardRequestBean) {
+		Map<String,String> resultMap = new HashMap<>();
+		BankOpenAccountVO openAccountVO = amUserClient.selectBankOpenAccountByAccountId(bankCardRequestBean.getAccountId());
+		if(openAccountVO == null){
+			resultMap.put("key","CE000004");
+			resultMap.put("msg","没有根据电子银行卡找到用户");
+			logger.info("没有根据电子银行卡找到用户");
+		}
+		UserVO userVO = this.getUsersById(openAccountVO.getUserId());
+		if(userVO.getIsSetPassword() != 1){
+			resultMap.put("key","TP000002");
+			resultMap.put("msg","用户未设置交易密码");
+			logger.info("用户未设置交易密码");
+		}
+		int count = amUserClient.countUserCardValid(String.valueOf(userVO.getUserId()));
+		if(count > 0){
+			resultMap.put("key","BC000001");
+			resultMap.put("msg","用户已绑定银行卡,请先解除绑定,然后重新操作");
+			logger.info("用户已绑定银行卡,请先解除绑定,然后重新操作");
+		}
+
+		return resultMap;
 	}
 
 	/**
@@ -564,7 +621,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 * @param bean
 	 */
 	@Override
-	public void updateAfterUnBindCard(BankCallBean bean) {
+	public boolean updateAfterUnBindCard(BankCallBean bean) {
 		LogAcqResBean logAcqResBean = bean.getLogAcqResBean();
 		UserVO user = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
 		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(bean.getLogUserId()), logAcqResBean.getCardNo());
@@ -585,8 +642,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			if (!isUpdateFlag) {
 				throw new ReturnMessageException(MsgEnum.ERR_CARD_DELETE);
 			}
+			return isUpdateFlag;
 		}
-		
+		return true;
 	}
 
 	/**
@@ -625,6 +683,17 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public BankCardVO queryUserCardValid(String userId, String cardNo) {
 		return amUserClient.queryUserCardValid(userId, cardNo);
+	}
+
+	/**
+	 * 根据电子账号查询用户在江西银行的可用余额
+	 * @param userId
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BigDecimal getBankBalance(Integer userId, String accountId) {
+		return this.queryBankBlance(userId, accountId);
 	}
 }
 

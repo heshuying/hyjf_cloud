@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.withdraw;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.AccountBankVO;
 import com.hyjf.cs.common.service.BaseService;
@@ -29,4 +30,15 @@ public interface UserWithdrawService extends BaseService {
      * @return
      */
     BankConfigVO getBankInfo(String bank);
+
+    /**
+     * 获取提现信息
+     * @param userId
+     * @param ret
+     * @param version
+     * @param bankCode
+     * @param getcash
+     * @return
+     */
+    JSONObject getCashInfo(Integer userId, JSONObject ret, String version, String bankCode, String getcash);
 }

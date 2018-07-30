@@ -1076,4 +1076,51 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         return null;
     }
 
+    
+	/**
+     * 根据绑定信息取得用户id
+     * @param bindUniqueId
+     * @return
+     */
+    @Override
+    public Integer getUserIdByBind(int bindUniqueId, int bindPlatformId) {
+        //检索条件
+        BindUserExample example = new BindUserExample();
+        BindUserExample.Criteria cra = example.createCriteria();
+        cra.andBindUniqueIdEqualTo(bindUniqueId);
+        cra.andBindPlatformIdEqualTo(bindPlatformId);
+        //检索
+        List<BindUser> list = bindUserMapper.selectByExample(example);
+        //无记录时，未绑定汇盈金服
+        if(list != null && list.size() > 0){
+            return list.get(0).getUserId();
+        }
+        return 0;
+    }
+
+	@Override
+	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
+		BindUser bindUsers = new BindUser();
+		bindUsers.setUserId(userId);
+		bindUsers.setBindUniqueId(bindUniqueId);
+		bindUsers.setBindPlatformId(bindPlatformId);
+		bindUsers.setCreateTime(new Date());
+		return bindUserMapper.insertSelective(bindUsers) > 0 ? true : false;
+	}
+
+	@Override
+	public String getBindUniqueIdByUserId(int userId, int bindPlatformId) {
+	       //检索条件
+        BindUserExample example = new BindUserExample();
+        BindUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        cra.andBindPlatformIdEqualTo(bindPlatformId);
+        //检索
+        List<BindUser> list = bindUserMapper.selectByExample(example);
+        //无记录时，未绑定汇盈金服
+        if(list != null && list.size() > 0){
+            return list.get(0).getBindUniqueId().toString();
+        }
+        return null;
+	}
 }

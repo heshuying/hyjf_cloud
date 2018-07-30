@@ -579,13 +579,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         // 项目类型
         Integer projectType = borrow.getProjectType();
+        BorrowInfoResponse borrowInfoResponse = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/" + borrowNid, BorrowInfoResponse.class);
+        BorrowInfoVO borrowInfoVO = borrowInfoResponse.getResult();
+        if (Validator.isNull(borrowInfoVO)){
+            throw new RuntimeException("标的info不存在");
+        }
         // 企业标的用户标的区分
-        String comOrPer = StringUtils.isBlank(borrow.getCompanyOrPersonal()) ? "0" : borrow.getCompanyOrPersonal();
+        String comOrPer = borrowInfoVO.getCompanyOrPersonal() == null ? "0" : String.valueOf(borrowInfoVO.getCompanyOrPersonal());
         result.put("creditDetail", creditDetail);
         ProjectCustomeDetailVO projectDetail = amTradeClient.selectProjectDetail(borrowNid);
         result.put(ProjectConstant.RES_PROJECT_INFO, projectDetail);
-        BorrowInfoResponse borrowInfoResponse = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/" + borrowNid, BorrowInfoResponse.class);
-        BorrowInfoVO borrowInfoVO = borrowInfoResponse.getResult();
+
         if (borrowInfoVO.getIsNew() == 0) {
             // 如果项目为汇资产项目
             if (projectType == 9) {  // TODO: 2018/6/26 汇资产暂不处理

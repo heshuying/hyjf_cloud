@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.bean;
 
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
+import com.hyjf.cs.trade.bean.app.AppModuleBean;
 
 import java.util.List;
 

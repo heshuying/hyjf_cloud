@@ -7,9 +7,11 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -287,6 +289,152 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .postForEntity(tradeService+"/htl/getRedeemRecordList", htlTradeRequest,HtlProductRedeemResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户当前持有债权列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int selectCurrentHoldObligatoryRightListTotal(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectCurrentHoldObligatoryRightListTotal";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getCurrentHoldObligatoryRightCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取用户当前持有债权列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<CurrentHoldObligatoryRightListCustomizeVO> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectCurrentHoldObligatoryRightList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getCurrentHoldObligatoryRightList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户已回款债权列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int selectRepaymentListTotal(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectRepaymentListTotal";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getRepayMentCount();
+        }
+        return 0;
+    }
+
+
+    @Override
+    public List<AppAlreadyRepayListCustomizeVO> selectAlreadyRepayList(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectAlreadyRepayList";
+        AppAlreadyRepayListCustomizeResponse response = restTemplate.postForEntity(url,request,AppAlreadyRepayListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public int countCreditRecordTotal(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/countCreditRecordTotal";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getTenderCreditDetailCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<AppTenderCreditRecordListCustomizeVO> searchCreditRecordList(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/searchAppCreditRecordList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getAppTenderCreditRecordList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前持有计划列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int countCurrentHoldPlanTotal(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/countCurrentHoldPlanTotal";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getCurrentHoldPlanCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 获取当前持有计划列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<CurrentHoldPlanListCustomizeVO> selectCurrentHoldPlanList(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectCurrentHoldPlanList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+
+        if (response != null) {
+            return response.getCurrentHoldPlanList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取已回款计划列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer countRepayMentPlanTotal(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/countRepayMentPlanTotal";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+        if (response != null) {
+            return response.getRepayMentPlanCount();
+        }
+        return 0;
+    }
+
+
+
+    /**
+     * 获取已回款计划列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectRepayMentPlanList";
+        AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
+
+        if (response != null) {
+            return response.getRepayMentPlanList();
         }
         return null;
     }

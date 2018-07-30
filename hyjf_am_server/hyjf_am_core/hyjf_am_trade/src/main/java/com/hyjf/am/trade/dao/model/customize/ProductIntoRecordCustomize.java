@@ -23,7 +23,8 @@ public class ProductIntoRecordCustomize implements Serializable {
     private String refername;//推荐人
     private Integer productId;//产品id
     private BigDecimal amount;//投资金额
-    private String investTime;//投资时间
+    private Integer investTime;//投资时间
+    private String investTimeStr;//投资时间str
     private BigDecimal redeemed;//已赎回金额
     private BigDecimal restAmount;//剩余金额
     private Integer status;//资金赎回状态
@@ -38,7 +39,6 @@ public class ProductIntoRecordCustomize implements Serializable {
     private String regionName;
     private String branceName;
     private String departmentName;
-
 
     public Integer getId() {
         return id;
@@ -96,12 +96,20 @@ public class ProductIntoRecordCustomize implements Serializable {
         this.amount = amount;
     }
 
-    public String getInvestTime() {
+    public Integer getInvestTime() {
         return investTime;
     }
 
-    public void setInvestTime(String investTime) {
+    public void setInvestTime(Integer investTime) {
         this.investTime = investTime;
+    }
+
+    public String getInvestTimeStr() {
+        return investTimeStr;
+    }
+
+    public void setInvestTimeStr(String investTimeStr) {
+        this.investTimeStr = investTimeStr;
     }
 
     public BigDecimal getRedeemed() {
@@ -184,6 +192,14 @@ public class ProductIntoRecordCustomize implements Serializable {
         this.investStatus = investStatus;
     }
 
+    public Integer getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Integer department) {
+        this.department = department;
+    }
+
     public String getRegionName() {
         return regionName;
     }
@@ -206,13 +222,5 @@ public class ProductIntoRecordCustomize implements Serializable {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
-    }
-
-    public Integer getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Integer department) {
-        this.department = department;
     }
 }

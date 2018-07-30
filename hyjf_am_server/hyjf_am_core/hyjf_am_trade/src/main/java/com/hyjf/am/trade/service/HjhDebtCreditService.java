@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
 import java.util.List;
 
@@ -46,4 +47,20 @@ public interface HjhDebtCreditService {
      * @return
      */
     int updateHjhDebtCreditByPK(HjhDebtCredit hjhDebtCredit);
+    
+	/**
+	 * 获取债转承接信息
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
+    
+	/**
+	 * 获取债转承接信息 by AssignOrderId
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
 }

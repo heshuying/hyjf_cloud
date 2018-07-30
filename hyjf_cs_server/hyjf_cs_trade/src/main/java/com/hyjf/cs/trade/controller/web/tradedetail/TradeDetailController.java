@@ -1,18 +1,16 @@
 package com.hyjf.cs.trade.controller.web.tradedetail;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.trade.bean.TradeDetailBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.TradeDetailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +61,7 @@ public class TradeDetailController  extends BaseTradeController {
                                                HttpServletRequest request) {
         logger.info("web获取用户收支明细列表分页数据, token is :{}", JSONObject.toJSONString(token));
         WebViewUserVO user=tradeDetailService.getUsersByToken(token);
+        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         form.setRoleId(user.getRoleId());
         form.setUserId(user.getUserId().toString());
         TradeDetailBean result  = tradeDetailService.searchUserTradeList(form);
@@ -84,6 +83,7 @@ public class TradeDetailController  extends BaseTradeController {
                                                HttpServletRequest request) {
         logger.info("web获取用户充值记录列表分页数据, token is :{}", JSONObject.toJSONString(token));
         WebViewUserVO user=tradeDetailService.getUsersByToken(token);
+        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         form.setRoleId(user.getRoleId());
         form.setUserId(user.getUserId().toString());
         TradeDetailBean result  = tradeDetailService.searchUserRechargeList(form);
@@ -104,6 +104,7 @@ public class TradeDetailController  extends BaseTradeController {
                                                   HttpServletRequest request) {
         logger.info("web获取用户提现记录列表分页数据, token is :{}", JSONObject.toJSONString(token));
         WebViewUserVO user=tradeDetailService.getUsersByToken(token);
+        CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         form.setRoleId(user.getRoleId());
         form.setUserId(user.getUserId().toString());
         TradeDetailBean result  = tradeDetailService.searchUserWithdrawList(form);

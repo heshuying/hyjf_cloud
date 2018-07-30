@@ -18,6 +18,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
@@ -354,6 +355,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);
 		this.checkUserMessage(bankCard,userId,money);
 		BankOpenAccountVO account = this.getBankOpenAccount(userId);
+		CheckUtil.check(null!=account&&null!=account.getAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
 		String cardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
 		UserInfoVO userInfo = this.getUsersInfoByUserId(userId);
 		String idNo = userInfo.getIdcard();
@@ -361,7 +363,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
 		String bgRetUrl = super.getFrontHost(systemConfig,"0") + "/bgreturn" + "?phone="+mobile;
-		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;//
+		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
 
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();

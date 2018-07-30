@@ -117,4 +117,35 @@ public class HjhDebtCreditController extends BaseController{
         BeanUtils.copyProperties(hjhDebtCreditVO, hjhDebtCredit);
         return new Response(this.hjhDebtCreditService.updateHjhDebtCreditByPK(hjhDebtCredit));
     }
+	/**
+	 * 获取债转承接信息 PrimaryKey
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+    @GetMapping("/getHjhDebtCreditTenderByPrimaryKey/{nid}")
+    public HjhDebtCreditTenderResponse getHjhDebtCreditTenderByPrimaryKey(@PathVariable Integer nid){
+        HjhDebtCreditTenderResponse response = new HjhDebtCreditTenderResponse();
+        HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditService.getHjhDebtCreditTenderByPrimaryKey(nid);
+        if (hjhDebtCreditTenderVO != null){
+            response.setResult(hjhDebtCreditTenderVO);
+        }
+        return response;
+    }
+    
+	/**
+	 * 获取债转承接信息 by AssignOrderId
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+    @GetMapping("/getHjhDebtCreditTenderByAssignOrderId/{assignOrderId}")
+    public HjhDebtCreditTenderResponse getHjhDebtCreditTenderByAssignOrderId(@PathVariable String assignOrderId){
+        HjhDebtCreditTenderResponse response = new HjhDebtCreditTenderResponse();
+        HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditService.getHjhDebtCreditTenderByAssignOrderId(assignOrderId);
+        if (hjhDebtCreditTenderVO != null){
+            response.setResult(hjhDebtCreditTenderVO);
+        }
+        return response;
+    }
 }

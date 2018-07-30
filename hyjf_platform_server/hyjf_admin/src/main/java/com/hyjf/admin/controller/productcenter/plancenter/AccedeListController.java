@@ -113,8 +113,6 @@ public class AccedeListController extends BaseController{
     /** 用户ID */
     private static final String VAL_USERID = "userId";
     private static final Logger _log = LoggerFactory.getLogger(AccedeListController.class);
-	private static final String PARAM_NAME = "hyjf_param_name:";
-	
     /**
      * 画面初始化
      *
@@ -763,10 +761,10 @@ public class AccedeListController extends BaseController{
         List<BorrowStyleVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
         //操作平台
-        Map<String, String> clientList = adminCommonService.getParamNameMap(PARAM_NAME + "CLIENT");
+        Map<String, String> clientList = adminCommonService.getParamNameMap("CLIENT");
         responseBean.setClientList(clientList);
         //投资方式
-        Map<String, String> investTypeList = adminCommonService.getParamNameMap(PARAM_NAME + "INVEST_TYPE");
+        Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
 	}

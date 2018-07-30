@@ -41,7 +41,7 @@ public class InviteController {
     @ApiOperation(value = "我的邀请列表", notes = "我的邀请列表")
     @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")
     @PostMapping(value = "/myInviteList", produces = "application/json; charset=utf-8")
-    public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "token", required = true) String token, Map<String,String> param, HttpServletRequest request){
+    public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "token", required = true) String token, @RequestBody  Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyInviteListCustomizeVO>> result = new WebResult<List<MyInviteListCustomizeVO>>();
         List<MyInviteListCustomizeVO> resultList = Collections.emptyList();
         WebViewUserVO userVO = inviteService.getUsersByToken(token);

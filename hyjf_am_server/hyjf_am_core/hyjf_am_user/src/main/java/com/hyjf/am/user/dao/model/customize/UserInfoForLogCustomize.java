@@ -1,5 +1,7 @@
 package com.hyjf.am.user.dao.model.customize;
 
+import java.util.Date;
+
 /**
  * 查询用户信息（更新用户保存log用）
  * @author nxl
@@ -30,7 +32,7 @@ public class UserInfoForLogCustomize {
     
     private Integer recommendUserId;
     
-    private Integer regTime;
+    private Date regTime;
     
     private Integer bankOpenAccount;
     
@@ -124,11 +126,11 @@ public class UserInfoForLogCustomize {
         this.recommendUserId = recommendUserId;
     }
 
-    public Integer getRegTime() {
+    public Date getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(Integer regTime) {
+    public void setRegTime(Date regTime) {
         this.regTime = regTime;
     }
 

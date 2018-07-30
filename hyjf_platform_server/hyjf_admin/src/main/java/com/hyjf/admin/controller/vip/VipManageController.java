@@ -32,7 +32,7 @@ import java.util.Map;
  * @author yaoyong
  * @version VIPManageController, v0.1 2018/7/2 14:49
  */
-@Api(value = "vip管理接口", description = "vip管理")
+@Api(value = "vip管理", description = "vip管理")
 @RestController
 @RequestMapping("/hyjf-admin/vipManage")
 public class VipManageController extends BaseController {

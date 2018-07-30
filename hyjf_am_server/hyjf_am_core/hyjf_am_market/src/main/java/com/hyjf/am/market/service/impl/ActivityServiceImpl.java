@@ -1,16 +1,21 @@
 package com.hyjf.am.market.service.impl;
 
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
+import com.hyjf.am.market.dao.mapper.customize.app.AppActivityListCustomizeMapper;
+import com.hyjf.am.market.dao.mapper.customize.market.ActivityListCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.auto.ActivityListExample;
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
+import com.hyjf.am.market.datasource.SystemConfig;
+import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.market.ActivityListBeanVO;
+import com.hyjf.am.vo.market.ActivityListCustomizeVO;
 import com.hyjf.common.util.GetDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.market.service.ActivityService;
-
-import javax.validation.Valid;
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +27,14 @@ import java.util.Map;
 @Service
 public class ActivityServiceImpl implements ActivityService {
 
-    @Autowired
+    @Resource
     ActivityListMapper activityListMapper;
+    @Resource
+    private ActivityListCustomizeMapper ActivityListCustomizeMapper;
+    @Resource
+    private AppActivityListCustomizeMapper AppActivityListCustomizeMapper;
+    @Resource
+    private SystemConfig systemConfig;
 
     /**
      * 活动是否过期
@@ -118,6 +129,77 @@ public class ActivityServiceImpl implements ActivityService {
             map.put("msg", "删除失败");
         }
         return map;
+    }
+
+    /**
+     * 获取有效活动列表
+     * @param request
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
+    public List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int limitStart, int limitEnd) {
+        ActivityListCustomize example = new ActivityListCustomize();
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        example.setNowTime(GetDate.getNowTime10());
+        return ActivityListCustomizeMapper.queryActivityListValid(example);
+    }
+
+    @Override
+    public Integer queryactivitycount(ActivityListRequest activityListRequest) {
+        ActivityListCustomizeVO activityListCustomize = dealActivityParam(activityListRequest);
+        return AppActivityListCustomizeMapper.queryactivitycount(activityListCustomize);
+    }
+
+    @Override
+    public List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest) {
+        ActivityListCustomizeVO activityListCustomize = dealActivityParam(activityListRequest);
+        List<ActivityListCustomizeVO> activitys = AppActivityListCustomizeMapper.queryActivityList(activityListCustomize);
+
+        List<ActivityListBeanVO> beanList= new ArrayList<ActivityListBeanVO>();
+        if(activitys!=null && activitys.size()>0){
+            for(ActivityListCustomizeVO al:activitys){
+                ActivityListBeanVO bean =new ActivityListBeanVO();
+                bean.setImg(systemConfig.getWebHost()+al.getImg());//应前台要求，路径给绝对路径
+                bean.setTitle(al.getTitle());
+                bean.setTimeStart(al.getTimeStart());
+                bean.setTimeEnd(al.getTimeEnd());
+                bean.setUrlForeground(al.getUrlForeground());
+                if (al.getTimeStart() >= GetDate.getNowTime10()) {
+                    bean.setStatus("未开始");
+                }
+                if (al.getTimeEnd() <= GetDate.getNowTime10()) {
+                    bean.setStatus("已完成");
+                }
+                if (al.getTimeEnd() >= GetDate.getNowTime10()
+                        && al.getTimeStart() <= GetDate.getNowTime10()) {
+                    bean.setStatus("进行中");
+                }
+                beanList.add(bean);
+            }
+        }
+        return beanList;
+    }
+
+    public ActivityListCustomizeVO dealActivityParam(ActivityListRequest activityListRequest){
+        ActivityListCustomizeVO activityListCustomize =new ActivityListCustomizeVO();
+        activityListCustomize.setPlatform(activityListRequest.getPlatform());
+
+        Integer page = activityListRequest.getPage();
+        Integer pageSize = activityListRequest.getPageSize();
+
+        int offSet = (page - 1) * pageSize;
+        if (offSet == 0 || offSet > 0) {
+            activityListCustomize.setLimitStart(offSet);
+        }
+        if (pageSize > 0) {
+            activityListCustomize.setLimitEnd(pageSize);
+        }
+        return activityListCustomize;
     }
 
 

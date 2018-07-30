@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomize;
@@ -190,4 +191,11 @@ public interface CouponConfigService {
      * @return
      */
     String selectCouponReceivedInterestTotal(Integer userId);
+
+    /**
+     * 获取后台优惠券发行配置列表
+     * @param request
+     * @return
+     */
+    List<CouponConfigCustomize> getCouponConfigList(CouponConfigRequest request);
 }

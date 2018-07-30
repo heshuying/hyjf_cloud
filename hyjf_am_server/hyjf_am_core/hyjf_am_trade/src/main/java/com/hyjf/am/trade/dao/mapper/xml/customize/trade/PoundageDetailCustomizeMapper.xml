@@ -3,12 +3,12 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.PoundageDetailCustomizeMapper">
 
     <insert id="insertTimerPoundageDetailList">
-		insert into ht_poundage_detail (nid,borrow_nid,borrow_type,add_time,usernname,invite_region_name,source,amount,invite_user_id,ledger_id,ledger_time,poundage_type)
+		insert into ht_poundage_detail (nid,borrow_nid,borrow_type,create_time,usernname,invite_region_name,source,amount,invite_user_id,ledger_id,ledger_time,poundage_type)
 			(SELECT
 						bt.nid,
 						bt.borrow_nid,
 						bpt.borrow_name as borrowType,
-						br.add_time,
+						br.create_time,
 						hu.username,
 						bt.invite_region_name as inviteRegionName,
 						'服务费' AS source,
@@ -38,8 +38,8 @@
 								AND b.reverify_status &lt;> 0
 							)
 						)
-					AND br.add_time >= CONCAT(UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),'')
-					AND br.add_time &lt; CONCAT(UNIX_TIMESTAMP(curdate()),'')
+					AND br.create_time >= CONCAT(UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),'')
+					AND br.create_time &lt; CONCAT(UNIX_TIMESTAMP(curdate()),'')
 					AND bt.invite_department_id IS NOT NULL
 					AND bt.invite_department_id > 0
 					AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type)))
@@ -86,7 +86,7 @@
 								ct.assign_nid,
 								ct.bid_nid,
 								bpt.borrow_name,
-								ct.add_time,
+								ct.create_time,
 								hu.username,
 								ct.invite_user_regionname,
 								'债转服务费' AS serviceName,
@@ -108,8 +108,8 @@
 								where hpl.type = 1 and if(hpl.source =0,1=1,hpl.source = 2) and hpl.status=0
 							) oatp on oatp.name = ct.invite_user_regionname
 							WHERE
-							 ct.add_time >= UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day))
-							AND ct.add_time &lt; UNIX_TIMESTAMP(curdate())
+							 ct.create_time >= UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day))
+							AND ct.create_time &lt; UNIX_TIMESTAMP(curdate())
 							AND ct.invite_user_regionname IS NOT NULL
 							AND ct.invite_user_regionname != ''
 							AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type)))
@@ -155,7 +155,7 @@
 						'--',
 						bt.borrow_nid,
 						bpt.borrow_name as borrowType,
-						br.add_time,
+						br.create_time,
 						'--',
 						'--',
 						'服务费' AS source,
@@ -185,8 +185,8 @@
 								AND b.reverify_status &lt;> 0
 							)
 						)
-					AND br.add_time >= CONCAT(UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),'')
-					AND br.add_time &lt; CONCAT(UNIX_TIMESTAMP(curdate()),'')
+					AND br.create_time >= CONCAT(UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),'')
+					AND br.create_time &lt; CONCAT(UNIX_TIMESTAMP(curdate()),'')
 					AND bt.invite_department_id IS NOT NULL
 					AND bt.invite_department_id > 0
 					AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type))

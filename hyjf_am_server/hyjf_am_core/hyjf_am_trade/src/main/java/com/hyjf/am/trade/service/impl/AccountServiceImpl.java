@@ -73,18 +73,6 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
     }
 
     @Override
-    public Integer countAccountWebList(String nid, String trade) {
-        AccountWebListExample example = new AccountWebListExample();
-        example.createCriteria().andOrdidEqualTo(nid).andTradeEqualTo(trade);
-        return this.accountWebListMapper.countByExample(example);
-    }
-
-    @Override
-    public Integer insertAccountWebList(AccountWebListVO accountWebList) {
-        return accountWebListMapper.insertSelective(CommonUtils.convertBean(accountWebList,AccountWebList.class));
-    }
-
-    @Override
     public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
         BankMerchantAccountVO bankMerchantAccountVO = null;
         BankMerchantAccountExample bankMerchantAccountExample = new BankMerchantAccountExample();

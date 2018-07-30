@@ -17,6 +17,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
+import com.hyjf.cs.trade.bean.app.AppModuleBean;
 import com.hyjf.cs.trade.client.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -87,14 +89,11 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @date 2018/7/2 11:33
      */
     @Override
-    public WeChatResult getProjectDetail(Map<String, Object> param, String token) {
-        String borrowNid = (String) param.get(ProjectConstant.PARAM_BORROW_NID);
+    public JSONObject getProjectDetail(String borrowNid, String type, String token) {
         CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_PARAM_NUM);
-        String type = (String) param.get(ProjectConstant.PARAM_BORROW_TYPE);
-        WeChatResult weChatResult = new WeChatResult();
         JSONObject userValidation = new JSONObject();
 
-        Map<String, Object> borrowDetailResultBean = new HashMap<>();
+       JSONObject borrowDetailResultBean = new JSONObject();
         //获取用户个人信息
         boolean isLogined = false;
         boolean isOpened = false;
@@ -199,8 +198,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if (borrow == null) {
             borrowDetailResultBean.put("status", "100");
             borrowDetailResultBean.put("statusDesc", "标的信息不存在");
-            weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
-            return weChatResult;
+            //weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+            return borrowDetailResultBean;
         } else {
             borrowDetailResultBean.put("status", WeChatResult.SUCCESS);
             borrowDetailResultBean.put("statusDesc", WeChatResult.SUCCESS_DESC);
@@ -346,18 +345,17 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             }
             borrowDetailResultBean.put("repayPlan", repayPlanList);
             borrowDetailResultBean.put("borrowMeasuresMea", borrow.getBorrowMeasuresMea());
-            weChatResult.setData(borrowDetailResultBean);
-            return weChatResult;
+            borrowDetailResultBean.put(CustomConstants.APP_STATUS,HomePageDefine.WECHAT_STATUS_SUCCESS);
+            borrowDetailResultBean.put(CustomConstants.APP_STATUS_DESC,HomePageDefine.WECHAT_STATUC_DESC);
+            return borrowDetailResultBean;
 
         }
     }
 
     @Override
-    public WeChatResult getPlanDetail(Map<String, Object> param, String token) {
-        WeChatResult weChatResult = new WeChatResult();
-
+    public JSONObject getPlanDetail(String planId, String token) {
+        JSONObject jsonObject = new JSONObject();
         Map<String, Object> resultMap = new HashMap<>();
-        String planId = (String) param.get(ProjectConstant.PARAM_APP_PLAN_NID);
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
 
         // 根据计划编号获取相应的计划详情信息
@@ -366,15 +364,15 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             logger.error("传入计划id无对应计划,planNid is {}...", planId);
             throw new RuntimeException("传入计划id无对应计划信息");
         }
-
         // 计划基本信息
         this.setPlanInfo(resultMap, customize);
         // 用户的用户验证
         this.setUserValidationInfo(resultMap, token);
 
-        weChatResult.setData(resultMap);
-        return weChatResult;
-
+        jsonObject.put("object",resultMap);
+        jsonObject.put(CustomConstants.APP_STATUS,HomePageDefine.WECHAT_STATUS_SUCCESS);
+        jsonObject.put(CustomConstants.APP_STATUS_DESC,HomePageDefine.WECHAT_STATUC_DESC);
+        return jsonObject;
     }
 
     /**

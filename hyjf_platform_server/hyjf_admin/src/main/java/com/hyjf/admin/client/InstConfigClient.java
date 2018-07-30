@@ -15,7 +15,7 @@ public interface InstConfigClient {
      *
      * @return
      */
-    public AdminInstConfigListResponse instConfigInit(AdminInstConfigListRequest adminRequest);
+    public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest);
 
     /**
      * 查询详情

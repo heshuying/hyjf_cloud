@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;

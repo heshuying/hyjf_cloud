@@ -98,18 +98,6 @@ public class SubCommissionController extends BaseController {
     }
 
     /**
-     * 根据订单号查询是否存在重复的AccountWebList数据
-     * @auth sunpeikai
-     * @param orderId 订单号
-     * @return
-     */
-    @ApiOperation(value = "根据订单号查询是否存在重复的AccountWebList数据",notes = "根据订单号查询是否存在重复的AccountWebList数据")
-    @GetMapping(value = "/accountweblistbyorderid/{orderId}")
-    public Integer accountWebListByOrderId(@PathVariable String orderId){
-        return subCommissionService.accountWebListByOrderId(orderId);
-    }
-
-    /**
      * 根据筛选条件查询分佣数据count
      * @auth sunpeikai
      * @param request 筛选条件
