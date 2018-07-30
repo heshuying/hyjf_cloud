@@ -66,4 +66,12 @@ public class OperationReportJobController extends BaseController {
 		response.setResult(info);
 		return response;
 	}
+	@RequestMapping("/tenderagebyrange")
+	public OperationReportJobResponse tenderAgeByRange(@RequestBody OperationReportJobRequest request) {
+		OperationReportJobResponse response = new OperationReportJobResponse();
+		int count = keyCountService.getTenderAgeByRange(request);
+		response.setCount(count);
+		return response;
+	}
+
 }

@@ -126,17 +126,20 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         // 投资人按照年龄分布
         Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
-        int age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), 0,
+        //代码拆分先查出所有符合条件的用户
+        List<OperationReportJobVO> ageRangeUserIds = operationReportJobClient.getTenderAgeByRangeList(getLastDay(cal), 0,
                 OperationMongoGroupEntity.ageRange1);
+        int age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), 0,
+                OperationMongoGroupEntity.ageRange1,ageRangeUserIds);
         ageMap.put(OperationMongoGroupEntity.ageRange1, age);
         age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntity.ageRange1,
-                OperationMongoGroupEntity.ageRange2);
+                OperationMongoGroupEntity.ageRange2,ageRangeUserIds);
         ageMap.put(OperationMongoGroupEntity.ageRange2, age);
         age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntity.ageRange2,
-                OperationMongoGroupEntity.ageRange3);
+                OperationMongoGroupEntity.ageRange3,ageRangeUserIds);
         ageMap.put(OperationMongoGroupEntity.ageRange3, age);
         age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntity.ageRange3,
-                OperationMongoGroupEntity.ageRange4);
+                OperationMongoGroupEntity.ageRange4,ageRangeUserIds);
         ageMap.put(OperationMongoGroupEntity.ageRange4, age);
 
         oegroup.setInvestorAgeMap(ageMap);

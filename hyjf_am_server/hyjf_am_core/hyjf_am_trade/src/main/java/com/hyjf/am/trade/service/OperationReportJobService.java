@@ -195,4 +195,14 @@ public interface OperationReportJobService {
      * @return
      */
     OperationReportJobVO getUserAgeAndArea(Integer userId);
+
+    /**
+     *投资人按照年龄分布 返回符合条件所有用户
+     *
+     * @param date 上个月的最后一天
+     * @param firstAge  年龄下限
+     * @param endAge	年龄上限
+     * @return
+     */
+    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date, int firstAge, int endAge);
 }

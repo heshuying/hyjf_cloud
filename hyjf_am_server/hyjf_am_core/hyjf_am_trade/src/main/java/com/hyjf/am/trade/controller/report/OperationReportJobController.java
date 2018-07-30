@@ -326,5 +326,11 @@ public class OperationReportJobController extends BaseController {
         response.setResultList(list);
         return response;
     }
-
+    @RequestMapping("/tenderagebyrangelist")
+    public OperationReportJobResponse tenderAgeByRangeList(@RequestBody OperationReportJobRequest request) {
+        OperationReportJobResponse response = new OperationReportJobResponse();
+        List<OperationReportJobVO> list = operationReportJobService.getTenderAgeByRangeList(request.getDate(),request.getFirstAge(),request.getEndAge());
+        response.setResultList(list);
+        return response;
+    }
 }

@@ -148,4 +148,8 @@ public class OperationReportJobServiceImpl implements OperationReportJobService 
 		return operationReportInfoJobCustomizeMapper.getUserAgeAndArea(userId);
 
 	}
+	@Override
+	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date, int firstAge, int endAge){
+		return operationReportInfoJobCustomizeMapper.getTenderAgeByRangeList(date,firstAge,endAge);
+	}
 }

@@ -28,13 +28,24 @@ public interface OperationReportJobClient {
     List<OperationReportJobVO>  getTenderSexGroupBy(Date date);
 
     /**
+     *投资人按照年龄分布 返回符合条件所有用户
      *
      * @param date 上个月的最后一天
      * @param firstAge  年龄下限
      * @param endAge	年龄上限
      * @return
      */
-    int getTenderAgeByRange(Date date,int firstAge,int endAge);
+    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date,int firstAge,int endAge);
+
+    /**
+     * 投资人按照年龄分布
+     *
+     * @param date 上个月的最后一天
+     * @param firstAge  年龄下限
+     * @param endAge	年龄上限
+     * @return
+     */
+    int getTenderAgeByRange(Date date,int firstAge,int endAge, List<OperationReportJobVO> ageRangeUserIds);
 
     /**
      * 按月统计平台的交易总额
@@ -54,6 +65,8 @@ public interface OperationReportJobClient {
      * @return
      */
     int getTradeCountByMonth(Date beginDate,Date endDate);
+
+
 
     /**
      * 借贷笔数

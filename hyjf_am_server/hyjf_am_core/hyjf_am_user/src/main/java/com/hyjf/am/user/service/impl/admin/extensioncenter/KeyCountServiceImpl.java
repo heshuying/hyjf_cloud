@@ -1,6 +1,7 @@
 package com.hyjf.am.user.service.impl.admin.extensioncenter;
 
 import com.hyjf.am.response.user.KeyCountResponse;
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
 import com.hyjf.am.user.dao.mapper.customize.KeyCountCustomMapper;
 import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
@@ -51,5 +52,8 @@ public class KeyCountServiceImpl implements KeyCountService {
 	public OperationReportJobVO getUserAgeAndArea(int userId){
 		return keyCountCustomMapper.getUserAgeAndArea(userId);
 	}
-
+	@Override
+	public int getTenderAgeByRange(OperationReportJobRequest request){
+		return keyCountCustomMapper.getTenderAgeByRange(request);
+	}
 }

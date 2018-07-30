@@ -196,4 +196,18 @@
         WHERE
         u.user_id = #{userId} LIMIT 1;
     </select>
+
+    <select id="getTenderAgeByRange" resultType="int"  parameterType="com.hyjf.am.resquest.trade.OperationReportJobRequest">
+        	SELECT
+			count(t.user_id)
+			FROM
+			  ht_user  u
+			  LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+			  WHERE  TIMESTAMPDIFF(YEAR, ui.birthday, now())  &lt;#{endAge}
+			  and TIMESTAMPDIFF(YEAR, ui.birthday, now()) &gt;=#{firstAge}
+			  AND    u.user_id in
+            <foreach collection="operationReportJobVOList" index="index" item="item" open="(" separator="," close=")">
+                #{item.userId}
+            </foreach>
+    </select>
 </mapper>
