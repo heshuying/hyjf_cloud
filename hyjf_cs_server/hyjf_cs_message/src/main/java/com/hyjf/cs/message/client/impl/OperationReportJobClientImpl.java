@@ -49,7 +49,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public  int getTenderAgeByRange(Date date,int firstAge,int endAge) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderAgeByRange",request, int.class).getBody();
+		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderagebyrange",request, int.class).getBody();
 		return count;
 	}
 
