@@ -316,23 +316,23 @@ public class AppRechargeController extends BaseUserController {
         resultVo.setRcvOpenBankName(RCV_OPEN_BANK_NAME);
         resultVo.setKindlyReminder(RECHARGE_KINDLY_REMINDER);
 
-        BankOpenAccountVO bankOpenAccount = appRechargeService.getBankOpenAccountByUserId(userId);
+        BankOpenAccountVO bankOpenAccount = appRechargeService.getBankOpenAccount(userId);
         if (bankOpenAccount != null) {
             resultVo.setRcvAccount(bankOpenAccount.getAccount());
         }
 
-        UserInfoVO usersInfo = appRechargeService.getUserInfoByUserId(userId);
+        UserInfoVO usersInfo = appRechargeService.getUserInfo(userId);
         if (usersInfo != null) {
             resultVo.setRcvAccountName(usersInfo.getTruename());
         }
         // 用户信息
-        UserVO users = appRechargeService.getUserByUserId(userId);
+        UserVO users = appRechargeService.getUsersById(userId);
         // 用户类型
         Integer userType = users.getUserType();
         // 如果是企业用户
         if (userType == 1) {
             // 根据用户ID查询企业用户账户信息
-            CorpOpenAccountRecordVO record = appRechargeService.getCorpOpenAccountRecordByUserId(userId);
+            CorpOpenAccountRecordVO record = appRechargeService.getCorpOpenAccountRecord(userId);
             resultVo.setRcvAccountName(record.getBusiName());
         }
 
