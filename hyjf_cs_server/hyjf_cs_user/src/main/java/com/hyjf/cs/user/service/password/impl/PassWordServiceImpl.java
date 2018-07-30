@@ -366,7 +366,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             throw new CheckException("99","验证码不能为空");
         }
         // 检查参数正确性
-        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,BankCallConstant.CHANNEL_WEI, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         if (cnt<=0){
             throw new CheckException("99","验证码不正确");
         }
