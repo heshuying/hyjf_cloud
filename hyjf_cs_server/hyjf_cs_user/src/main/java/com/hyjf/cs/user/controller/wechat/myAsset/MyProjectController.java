@@ -16,11 +16,10 @@ import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * 我的资产接口，散标、计划......
@@ -44,38 +43,34 @@ public class MyProjectController extends BaseUserController {
     @SignValidate
     @RequestMapping(value = "/queryScatteredProject", method = RequestMethod.GET)
     @ResponseBody
-    public WeChatResult queryScatteredProject(HttpServletRequest request) {
+    public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId,
+                                              @RequestParam @Valid String type,
+                                              @RequestParam @Valid String currentPage,
+                                              @RequestParam @Valid String pageSize) {
 
         WeChatResult result = new WeChatResult();
 
-        String type = request.getParameter("type");
 
         if (StringUtils.isEmpty(type)) {
             result.buildErrorResponse(MsgEnum.STATUS_CE000001);
             return result;
         }
-
-        String currentPageStr = request.getParameter("currentPage");
-        String pageSizeStr = request.getParameter("pageSize");
-
-        int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
-        int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
-
-        Integer userId = this.requestUtil.getRequestUserId(request);
+        int currentPageInt = Strings.isNullOrEmpty(currentPage) ? 1 : Integer.valueOf(currentPage);
+        int pageSizeInt = Strings.isNullOrEmpty(pageSize) ? 10 : Integer.valueOf(pageSize);
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
         switch (type) {
             case CustomConstants.CURRENTHOLD_TYPE:
-                myProjectService.selectCurrentHoldObligatoryRightList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectCurrentHoldObligatoryRightList(String.valueOf(userId), currentPageInt, pageSizeInt, vo);
                 break;
 
             case CustomConstants.REPAYMENT_TYPE:
-                myProjectService.selectRepaymentList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectRepaymentList(String.valueOf(userId), currentPageInt, pageSizeInt, vo);
                 break;
 
             case CustomConstants.CREDITRECORD_TYPE:
-                myProjectService.selectCreditRecordList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectCreditRecordList(String.valueOf(userId), currentPageInt, pageSizeInt, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);
@@ -98,31 +93,29 @@ public class MyProjectController extends BaseUserController {
     @SignValidate
     @RequestMapping(value = "/queryPlanedProject", method = RequestMethod.GET)
     @ResponseBody
-    public WeChatResult queryPlanedProject(HttpServletRequest request) {
+    public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") String userId,
+                                           @RequestParam @Valid String type,
+                                           @RequestParam @Valid String currentPage,
+                                           @RequestParam @Valid String pageSize) {
         WeChatResult result = new WeChatResult();
-        String type = request.getParameter("type");
         if (StringUtils.isEmpty(type)) {
             result.buildErrorResponse(MsgEnum.STATUS_CE000001);
             return result;
         }
 
-        String currentPageStr = request.getParameter("currentPage");
-        String pageSizeStr = request.getParameter("pageSize");
-
-        int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
-        int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
+        int currentPageInt = Strings.isNullOrEmpty(currentPage) ? 1 : Integer.valueOf(currentPage);
+        int pageSizeInt = Strings.isNullOrEmpty(pageSize) ? 10 : Integer.valueOf(pageSize);;
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
-        String userId = String.valueOf(requestUtil.getRequestUserId(request));
         Preconditions.checkArgument(!Strings.isNullOrEmpty(userId));
 
         switch (type) {
             case CustomConstants.HOLD_PLAN_TYPE:
-                myProjectService.selectCurrentHoldPlanList(userId, currentPage, pageSize, vo);
+                myProjectService.selectCurrentHoldPlanList(userId, currentPageInt, pageSizeInt, vo);
                 break;
             case CustomConstants.REPAYMENT_PLAN_TYPE:
-                myProjectService.selectRepayMentPlanList(userId, currentPage, pageSize, vo);
+                myProjectService.selectRepayMentPlanList(userId, currentPageInt, pageSizeInt, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);
