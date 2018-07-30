@@ -346,7 +346,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             this.validateData(sendSmsVO,smsConfig);
             //发送短信并将发送数据存到数据库和Redis
             this.sendSms(sendSmsVO,smsConfig);
-        } catch (Exception e){
+        }catch (CheckException e){
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc",e.getMessage());
+        }catch (Exception e){
             logger.error("发送短信异常",e);
             jsonObject.put("status", "99");
             jsonObject.put("statusDesc","失败");

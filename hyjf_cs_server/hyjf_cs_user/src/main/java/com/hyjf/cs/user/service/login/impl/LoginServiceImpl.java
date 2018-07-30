@@ -547,7 +547,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				result.setInterestTotle(DF_FOR_VIEW.format(0));
 			}
 
-			BigDecimal bankTotal = account.getBankTotal() == null ? BigDecimal.ZERO : account.getBankTotal();
+			BigDecimal bankTotal = (null==account||account.getBankTotal() == null) ? BigDecimal.ZERO : account.getBankTotal();
 			result.setAccountTotle(DF_FOR_VIEW.format(bankTotal));
 
 		}
@@ -887,7 +887,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	/**
 	 * 根据绑定信息取得用户id
 	 * 
-	 * @param bindUniqueId
+	 * @param
 	 * @return
 	 */
 	@Override

@@ -47,7 +47,7 @@ import java.util.Map;
 
 @Api(value = "weChat端用户授权自动投资债转接口",description = "weChat端用户授权自动投资债转接口")
 @RestController
-@RequestMapping("/hyjf-wechat/user/autoplus")
+@RequestMapping("/hyjf-wechat/wx/user/autoplus")
 public class WeChatAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WeChatAutoPlusController.class);
