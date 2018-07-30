@@ -22,8 +22,8 @@
         SELECT
         sum(br.recover_capital) AS account # 放款金额
         FROM
-        huiyingdai_borrow_recover br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -34,7 +34,7 @@
         SELECT
         sum(a.accede_account) AS account # 加入金额
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
         a.add_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -44,7 +44,7 @@
         SELECT
         sum(assign_capital) AS account # 承接本金
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
         ct.add_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -54,7 +54,7 @@
         SELECT
         sum(repay_capital) AS account # 应还本金
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
         create_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -64,7 +64,7 @@
         SELECT
         sum(amount) AS account # 加入金额
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -82,8 +82,8 @@
         SELECT
         sum(br.recover_interest_yes) AS account # 已收利息
         FROM
-        huiyingdai_borrow_recover br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -94,7 +94,7 @@
         SELECT
         sum(a.received_interest) AS account # 已收利息
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
         a.add_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -104,7 +104,7 @@
         SELECT
         sum(repay_interest_yes) AS account # 已收利息
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
         create_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -114,51 +114,40 @@
         SELECT
         sum(interest) AS account # 加入金额
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
         ) t
-        UNION ALL
-        # 3：平台注册人数
-        SELECT
-        '平台注册人数' AS title,
-        count(*) AS sumAccount
-        FROM
-        huiyingdai_users
-        WHERE
-        reg_time <![CDATA[ < ]]> unix_timestamp(
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        )
     </select>
 
     <!-- 	当月、季、半年、全年业绩  下面的  成交金额,根据月份计算 -->
     <select id="getMonthDealMoney" resultMap="performanceMap">
         SELECT
-        t.`month` as dealMonth,
-        sum(t.account) as sumAccount
+        t.`month` AS dealMonth,
+        sum(t.account) AS sumAccount
         FROM
         (
         # 直投
         SELECT
         date_format(
-        from_unixtime(b.recover_last_time),
+        from_unixtime(b.recover_time),
         '%Y%m'
         ) AS 'month',
         sum(br.recover_capital) AS account # 放款金额
         FROM
-        huiyingdai_borrow_recover br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
-        b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
+        b.recover_time <![CDATA[ < ]]>  unix_timestamp(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
         ) # 放款时间
-        AND b.recover_last_time <![CDATA[ >= ]]> unix_timestamp(
+        AND b.recover_time <![CDATA[ >= ]]> unix_timestamp(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
@@ -167,91 +156,91 @@
         AND br.accede_order_id IS NULL
         GROUP BY
         date_format(
-        from_unixtime(b.recover_last_time),
+        from_unixtime(b.recover_time),
         '%Y%m'
         )
         UNION ALL
         # 汇计划
         SELECT
         date_format(
-        from_unixtime(a.add_time),
+        a.create_time,
         '%Y%m'
         ) AS 'month',
         sum(a.accede_account) AS 'account' # 加入金额
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
-        ) # 加入时间
-        AND a.add_time <![CDATA[ >= ]]> unix_timestamp(
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(a.add_time),
+        a.create_time,
         '%Y%m'
         )
         UNION ALL
         # 债转
         SELECT
         date_format(
-        from_unixtime(ct.add_time),
+        ct.create_time,
         '%Y%m'
         ) AS 'month',
         sum(assign_capital) AS account # 承接本金
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
-        )
+
         ) # 承接时间
-        AND ct.add_time <![CDATA[ >= ]]> unix_timestamp(
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(ct.add_time),
+        ct.create_time,
         '%Y%m'
         )
         UNION ALL
         # 汇添金
         SELECT
         date_format(
-        from_unixtime(pa.create_time),
+        pa.create_time,
         '%Y%m'
         ) AS 'month',
         sum(pa.repay_capital) AS account # 应还本金
         FROM
-        hyjf_debt_plan_accede pa
+        ht_debt_plan_accede pa
         WHERE
-        pa.create_time <![CDATA[ < ]]> unix_timestamp(
+        pa.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
-        ) # 加入时间
-        AND pa.create_time <![CDATA[ >= ]]> unix_timestamp(
+         # 加入时间
+        AND pa.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(pa.create_time),
+        pa.create_time,
         '%Y%m'
         )
         UNION ALL
@@ -263,7 +252,7 @@
         ) AS 'month',
         sum(pl.amount) AS account # 加入金额
         FROM
-        huiyingdai_product_list pl
+        ht_product_list pl
         WHERE
         invest_status = 0 # 投资成功
         AND pl.invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -297,8 +286,8 @@
         SELECT
         SUM(hbr.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover hbr
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
         WHERE
         hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -321,8 +310,8 @@
         SELECT
         SUM(hbrp.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover_plan hbrp
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
         WHERE
         hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -345,7 +334,7 @@
         SELECT
         sum(received_interest)
         FROM
-        hyjf_hjh_accede
+        ht_hjh_accede
         WHERE
         acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -367,8 +356,8 @@
         SELECT
         SUM(hbr.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover hbr
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
         WHERE
         hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -394,8 +383,8 @@
         SELECT
         SUM(hbrp.recover_interest_yes)
         FROM
-        huiyingdai_borrow_recover_plan hbrp
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
         WHERE
         hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -420,7 +409,7 @@
         SELECT
         sum(received_interest)
         FROM
-        hyjf_hjh_accede
+        ht_hjh_accede
         WHERE
         acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -442,7 +431,7 @@
         '平均预期收益率'  AS title,
         sum(borrow_apr) / count(*) as  sumAccount
         FROM
-        huiyingdai_borrow
+        ht_borrow
         WHERE
         recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -461,34 +450,33 @@
         '充值金额' AS title,
         sum(money) AS sumAccount
         FROM
-        huiyingdai_account_recharge
+        ht_account_recharge
         WHERE
         `status` = 2
-        AND addtime <![CDATA[ <= ]]> unix_timestamp(
+        AND create_time <![CDATA[ <= ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        )
-        AND addtime <![CDATA[ >= ]]> unix_timestamp(
+
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         SELECT
         '充值笔数'  AS title,
         count(money)  AS sumAccount
         FROM
-        huiyingdai_account_recharge
+        ht_account_recharge
         WHERE
         `status` = 2
-        AND addtime  <![CDATA[ <= ]]>  unix_timestamp(
+        AND create_time  <![CDATA[ <= ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        )
-        AND addtime  <![CDATA[ >= ]]>  unix_timestamp(
+
+        AND create_time  <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
-        )
         )
     </select>
 
@@ -519,8 +507,8 @@
         sum(br.account) AS sum,
         count(*) AS account # 放款笔数
         FROM
-        huiyingdai_borrow_tender br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time  <![CDATA[ < ]]>  unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -541,17 +529,17 @@
         sum(accede_account) AS sum,
         count(*) AS account # 加入笔数
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time  <![CDATA[ < ]]>  unix_timestamp(
+        a.create_time  <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND a.add_time  <![CDATA[ >= ]]>  unix_timestamp(
+        # 加入时间
+        AND a.create_time  <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         GROUP BY
         client
         UNION ALL
@@ -561,16 +549,15 @@
         sum(assign_capital) AS sum,
         count(*) AS account # 承接笔数
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time  <![CDATA[ < ]]>  unix_timestamp(
+        ct.create_time  <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.add_time  <![CDATA[ >= ]]>  unix_timestamp(
+        # 承接时间
+        AND ct.create_time  <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
-        )
         )
         GROUP BY
         client
@@ -581,17 +568,17 @@
         sum(accede_account) AS sum,
         count(*) AS account # 加入笔数
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
-        create_time  <![CDATA[ < ]]>  unix_timestamp(
+        create_time  <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time  <![CDATA[ >= ]]>  unix_timestamp(
+        # 加入时间
+        AND create_time  <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         GROUP BY
         client
         UNION ALL
@@ -601,7 +588,7 @@
         sum(amount) AS sum,
         count(*) AS account # 加入笔数
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time  <![CDATA[ < ]]>  unix_timestamp(
@@ -650,8 +637,8 @@
         END AS title,
         count(borrow_nid) as dealSum
         FROM
-        huiyingdai_borrow b
-        LEFT JOIN huiyingdai_borrow_style c ON b.borrow_style = c.nid
+        ht_borrow b
+        LEFT JOIN ht_borrow_style c ON b.borrow_style = c.nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -681,23 +668,15 @@
     <!-- 	用户分析 - 性别分布 -->
     <select id="getSexDistribute" resultMap="performanceMap">
         SELECT
-        CASE ui.sex
-        WHEN 1 THEN
-        "男"
-        WHEN 2 THEN
-        "女"
-        ELSE
-        "未知"
-        END AS title,
-        count(*) as dealSum
+        t.user_id userId
         FROM
         (
         # 直投
         SELECT
         br.user_id
         FROM
-        huiyingdai_borrow_tender br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -714,55 +693,55 @@
         SELECT
         a.user_id
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND a.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION
         # 债转
         SELECT
         user_id
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION
         # 汇添金
         SELECT
         user_id
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION
         # 汇添利
         SELECT
         user_id
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -775,47 +754,17 @@
         )
         )
         ) t
-        LEFT JOIN huiyingdai_users u ON t.user_id = u.user_id
-        LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
-        GROUP BY
-        CASE ui.sex
-        WHEN 1 THEN
-        "男"
-        WHEN 2 THEN
-        "女"
-        ELSE
-        "未知"
-        END;
+
     </select>
 
     <!-- 	用户分析 - 年龄分布 -->
     <select id="getAgeDistribute" resultMap="performanceMap">
-        SELECT
-        CASE
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
-        '60岁以上'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
-        '50-59岁'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
-        '40-49岁'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
-        '30-39岁'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
-        '18-29岁'
-        END AS title,
-        count(*) as dealSum
-        FROM
-        (
         # 直投
         SELECT
         br.user_id
         FROM
-        huiyingdai_borrow_tender br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -832,55 +781,55 @@
         SELECT
         a.user_id
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND a.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION
         # 债转
         SELECT
         user_id
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION
         # 汇添金
         SELECT
         user_id
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION
         # 汇添利
         SELECT
         user_id
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -892,31 +841,11 @@
         INTERVAL #{intervalMonth} MONTH
         )
         )
-        ) t
-        LEFT JOIN huiyingdai_users u ON t.user_id = u.user_id
-        LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
-        GROUP BY
-        CASE
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
-        '60岁以上'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
-        '50-59岁'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
-        '40-49岁'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
-        '30-39岁'
-        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
-        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
-        '18-29岁'
-        END;
     </select>
 
     <!-- 	用户分析 - 金额分布 -->
     <select id="getMoneyDistribute" resultMap="performanceMap">
-        SELECT
+       SELECT
         CASE
         WHEN account <![CDATA[ >= ]]> 500000 THEN
         '50万以上'
@@ -945,8 +874,8 @@
         br.user_id,
         br.account
         FROM
-        huiyingdai_borrow_tender br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -964,58 +893,58 @@
         user_id,
         a.accede_account AS account
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND a.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 债转
         SELECT
         user_id,
         ct.assign_capital AS account # 承接笔数
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添金
         SELECT
         user_id,
         accede_account AS account # 加入笔数
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添利
         SELECT
         user_id,
         amount AS account # 加入笔数
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -1051,9 +980,8 @@
 
     <!-- 	十大投资人 -->
     <select id="getTenMostMoney" resultMap="performanceMap">
-        SELECT
+       SELECT
         tmp.user_id as userId,
-        aa.username as userName,
         account as sumAccount
         FROM
         (
@@ -1067,8 +995,8 @@
         br.user_id,
         br.account
         FROM
-        huiyingdai_borrow_tender br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -1086,58 +1014,58 @@
         user_id,
         a.accede_account AS account
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND a.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 债转
         SELECT
         user_id,
         ct.assign_capital AS account # 承接笔数
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添金
         SELECT
         user_id,
         accede_account AS account # 加入笔数
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添利
         SELECT
         user_id,
         amount AS account # 加入笔数
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -1156,7 +1084,6 @@
         account DESC
         LIMIT 11
         ) tmp
-        INNER JOIN huiyingdai_users aa ON tmp.user_id = aa.user_id;
     </select>
 
     <!-- 	超活跃，投资笔数最多 -->
@@ -1164,7 +1091,6 @@
         SELECT
         tmp.user_id as userId,
         account as dealSum,
-        aa.username as userName
         FROM
         (
         SELECT
@@ -1177,8 +1103,8 @@
         br.user_id,
         br.account
         FROM
-        huiyingdai_borrow_tender br
-        INNER JOIN huiyingdai_borrow b ON b.borrow_nid = br.borrow_nid
+        ht_borrow_tender br
+        INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
         b.recover_last_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
@@ -1196,58 +1122,58 @@
         user_id,
         a.accede_account AS account
         FROM
-        hyjf_hjh_accede a
+        ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND a.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+        # 加入时间
+        AND a.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 债转
         SELECT
         user_id,
         ct.assign_capital AS account # 承接笔数
         FROM
-        huiyingdai_credit_tender ct
+        ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.add_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添金
         SELECT
         user_id,
         accede_account AS account # 加入笔数
         FROM
-        hyjf_debt_plan_accede
+        ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添利
         SELECT
         user_id,
         amount AS account # 加入笔数
         FROM
-        huiyingdai_product_list
+        ht_product_list
         WHERE
         invest_status = 0 # 投资成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
@@ -1266,23 +1192,22 @@
         account DESC
         LIMIT 11
         ) tmp
-        INNER JOIN huiyingdai_users aa ON tmp.user_id = aa.user_id;
     </select>
 
     <!-- 	大赢家，收益最高 -->
     <select id="getOneInterestsMost" resultMap="performanceMap">
-        SELECT
+
+      SELECT
         sum(t.interest) as sumAccount,
-        s.username as userName,
-        s.user_id as userId
+        t.user_id as userId
         FROM
         (
         SELECT
         SUM(hbr.recover_interest_yes) AS interest,
         hbr.user_id
         FROM
-        huiyingdai_borrow_recover hbr
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbr.borrow_nid
+        ht_borrow_recover hbr
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
         WHERE
         hbr.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -1305,8 +1230,8 @@
         SUM(hbrp.recover_interest_yes) AS interest,
         hbrp.user_id
         FROM
-        huiyingdai_borrow_recover_plan hbrp
-        INNER JOIN huiyingdai_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
+        ht_borrow_recover_plan hbrp
+        INNER JOIN ht_borrow hb ON hb.borrow_nid = hbrp.borrow_nid
         WHERE
         hbrp.recover_yestime <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -1329,7 +1254,7 @@
         sum(received_interest) AS interest,
         user_id
         FROM
-        hyjf_hjh_accede
+        ht_hjh_accede
         WHERE
         acctual_payment_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
@@ -1343,26 +1268,13 @@
         GROUP BY
         user_id
         ) t
-        LEFT JOIN huiyingdai_users s ON t.user_id = s.user_id
+
         GROUP BY
-        s.username
+        t.user_id
         ORDER BY
         sum(t.interest) DESC
         LIMIT 11
     </select>
 
-    <!-- 	通过用户ID查询 用户年龄，用户地区 -->
-    <select id="getUserAgeAndArea" resultMap="performanceMap">
-        SELECT
-            TIMESTAMPDIFF(YEAR, ui.birthday, now()) as dealSum,
-            bc.area as title,
-            u.user_id as userId
-        FROM
-            huiyingdai_users u
-        LEFT JOIN huiyingdai_users_info ui ON u.user_id = ui.user_id
-        LEFT JOIN huiyingdai_idcard bc ON LEFT (ui.idcard, 6) = bc.bm
-        WHERE
-            u.user_id = #{userId} LIMIT 1;
-    </select>
 
 </mapper>

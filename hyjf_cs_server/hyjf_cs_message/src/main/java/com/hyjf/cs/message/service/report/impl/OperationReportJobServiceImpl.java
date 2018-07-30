@@ -148,7 +148,6 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
     @Override
     public BorrowUserStatistic selectBorrowUserStatistic() {
         Query query = new Query();
-        //Criteria criteria = Criteria.where("statisticsMonth").is(transferDateToInt(cal, sdf));
         List<BorrowUserStatistic> list = borrowUserStatisticMongDao.find(query);
         if(list == null || list.isEmpty()){
             return null;
