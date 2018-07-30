@@ -21,7 +21,6 @@ public interface PlatDataStatisticsService extends BaseService {
      */
     CalculateInvestInterest selectCalculateInvestInterest();
 
-	BorrowUserStatistic selectBorrowUserStatistic();
 
     /**
      * 查询累计投资

@@ -33,14 +33,6 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
         return  null;
     }
     
-    /**
-     * 检索运营统计数据
-     * @return
-     */
-	@Override
-	public BorrowUserStatistic selectBorrowUserStatistic(){
-        return  null;
-    }
 
     @Override
     public BigDecimal selectTotalInvest() {
