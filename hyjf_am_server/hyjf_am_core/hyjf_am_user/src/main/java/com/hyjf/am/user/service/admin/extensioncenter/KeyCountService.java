@@ -4,10 +4,12 @@
 package com.hyjf.am.user.service.admin.extensioncenter;
 
 import com.hyjf.am.response.user.KeyCountResponse;
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -63,4 +65,21 @@ public interface KeyCountService  {
 	 * @return
 	 */
 	OperationReportJobVO getUserAgeAndArea(int userId);
+
+
+	/**
+	 * 投资人按照年龄分布
+	 *
+	 * @param
+	 * @param
+	 * @param
+	 * @return
+	 */
+	int getTenderAgeByRange(OperationReportJobRequest request);
+
+	/**
+	 * 按照性别统计投资人的分布
+	 * @param request 上个月的最后一天
+	 */
+	List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request);
 }

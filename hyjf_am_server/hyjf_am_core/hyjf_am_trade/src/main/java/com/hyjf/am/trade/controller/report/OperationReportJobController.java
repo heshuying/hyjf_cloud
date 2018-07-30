@@ -49,10 +49,10 @@ public class OperationReportJobController extends BaseController {
      * @Param 上个月的最后一天
      * @return
      */
-    @PostMapping("/tendersexgroupby")
-    public OperationReportJobResponse tenderSexGroupBy(@RequestBody OperationReportJobRequest request) {
+    @PostMapping("/tendersexgroupbylist")
+    public OperationReportJobResponse tenderSexGroupByList(@RequestBody OperationReportJobRequest request) {
         OperationReportJobResponse response = new OperationReportJobResponse();
-        List<OperationReportJobVO> resultList =operationReportJobService.getTenderSexGroupBy(request);
+        List<OperationReportJobVO> resultList =operationReportJobService.getTenderSexGroupByList(request);
         response.setResultList(resultList);
         return response;
     }
@@ -326,5 +326,11 @@ public class OperationReportJobController extends BaseController {
         response.setResultList(list);
         return response;
     }
-
+    @RequestMapping("/tenderagebyrangelist")
+    public OperationReportJobResponse tenderAgeByRangeList(@RequestBody OperationReportJobRequest request) {
+        OperationReportJobResponse response = new OperationReportJobResponse();
+        List<OperationReportJobVO> list = operationReportJobService.getTenderAgeByRangeList(request.getDate(),request.getFirstAge(),request.getEndAge());
+        response.setResultList(list);
+        return response;
+    }
 }

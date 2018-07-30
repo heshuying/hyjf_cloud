@@ -36,21 +36,47 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	}
 
 	@Override
-	public  List<OperationReportJobVO> getTenderSexGroupBy(Date date) {
+	public  List<OperationReportJobVO> getTenderSexGroupBy(Date date,List<OperationReportJobVO> ageRangeUserIds) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendersexgroupby",request, OperationReportJobResponse.class).getBody();
+		request.setOperationReportJobVOList(ageRangeUserIds);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tendersexgroupby",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
 		return null;
 	}
 	@Override
-	public  int getTenderAgeByRange(Date date,int firstAge,int endAge) {
+	public  List<OperationReportJobVO> getTenderSexGroupByList(Date date) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderagebyrange",request, int.class).getBody();
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendersexgroupbylist",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public  int getTenderAgeByRange(Date date,int firstAge,int endAge,List<OperationReportJobVO> ageRangeUserIds) {
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setDate(date);
+		request.setFirstAge(firstAge);
+		request.setEndAge(endAge);
+		request.setOperationReportJobVOList(ageRangeUserIds);
+		int count = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tenderagebyrange",request, int.class).getBody();
 		return count;
+	}
+	@Override
+	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date,int firstAge,int endAge){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setDate(date);
+		request.setFirstAge(firstAge);
+		request.setEndAge(endAge);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderagebyrangelist",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
 	}
 
 	@Override

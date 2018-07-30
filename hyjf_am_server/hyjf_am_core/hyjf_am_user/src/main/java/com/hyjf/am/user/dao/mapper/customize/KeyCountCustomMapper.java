@@ -1,5 +1,6 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
@@ -66,4 +67,20 @@ public interface KeyCountCustomMapper {
      * @return
      */
     OperationReportJobVO getUserAgeAndArea(int userId);
+
+    /**
+     * 投资人按照年龄分布
+     *
+     * @param
+     * @param
+     * @param
+     * @return
+     */
+    int getTenderAgeByRange(OperationReportJobRequest request);
+
+    /**
+     * 按照性别统计投资人的分布
+     * @param request 上个月的最后一天
+     */
+    List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request);
 }
