@@ -9,7 +9,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
@@ -75,7 +75,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		// 获取密码错误次数
-		String errCount = RedisUtils.get(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+		String errCount = RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + loginUserName);
 		if (StringUtils.isNotBlank(errCount) && Integer.parseInt(errCount) > 6) {
 			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MANEY);
 		}
@@ -108,7 +108,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			amUserClient.updateLoginUser(userId, ip);
 			updateUserByUserId(userVO);
 			// 1. 登录成功将登陆密码错误次数的key删除
-			RedisUtils.del(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + loginUserName);
 			webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 			// 2. 缓存
 			webViewUserVO = setToken(webViewUserVO);
@@ -126,7 +126,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 		} else {
 			// 密码错误，增加错误次数
-			RedisUtils.incr(RedisKey.PASSWORD_ERR_COUNT + loginUserName);
+			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + loginUserName);
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		return webViewUserVO;

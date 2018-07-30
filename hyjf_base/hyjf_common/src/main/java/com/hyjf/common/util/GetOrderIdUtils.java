@@ -12,7 +12,7 @@
 package com.hyjf.common.util;
 
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -243,12 +243,12 @@ public class GetOrderIdUtils {
 	 */
 	public static synchronized String getBatchNo() {
 		int batchNo = 100000;
-		String batchNoStr = RedisUtils.get(RedisKey.BATCH_NO);
+		String batchNoStr = RedisUtils.get(RedisConstants.BATCH_NO);
 		if (StringUtils.isNotBlank(batchNoStr)) {
-			long result = RedisUtils.incr(RedisKey.BATCH_NO);
+			long result = RedisUtils.incr(RedisConstants.BATCH_NO);
 			return result + "";
 		} else {
-			RedisUtils.set(RedisKey.BATCH_NO, String.valueOf(batchNo));
+			RedisUtils.set(RedisConstants.BATCH_NO, String.valueOf(batchNo));
 			batchNoStr = String.valueOf(batchNo);
 		}
 		return batchNoStr;
