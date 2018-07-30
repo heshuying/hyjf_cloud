@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -35,6 +36,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -327,7 +329,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setMobile(rechargeBean.getMobile());
 		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
-		bean.setRetUrl(rechargeBean.getRetUrl());
+		bean.setRetUrl(rechargeBean.getRetUrl()+"?logOrdId="+logOrderId);
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
 		bean.setLogOrderId(logOrderId);
 		bean.setLogOrderDate(orderDate);
@@ -362,7 +364,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
-		String bgRetUrl = super.getFrontHost(systemConfig,"0") + "/bgreturn" + "?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/recharge/bgreturn" + "?phone="+mobile;
 		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
 
@@ -381,8 +383,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		directRechargeBean.setChannel(BankCallConstant.CHANNEL_PC);
 		directRechargeBean.setAccountId(account.getAccount());
 		directRechargeBean.setSuccessfulUrl(successfulUrl);
-		String forgetPassworedUrl = "http://www.hyjf.com";
-		directRechargeBean.setForgotPwdUrl(forgetPassworedUrl);
 		BankCallBean bean = this.insertGetMV(directRechargeBean);
 		return bean;
 	}
@@ -398,11 +398,11 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		}
 		Integer userId = user.getUserId();
 		// 判断用户是否开户
-		/*if (!user.isBankOpenAccount()) {
-			result.setStatus(BankWithdrawError.NOT_REGIST_ERROR.getCode());
-			result.setStatusDesc(BankWithdrawError.NOT_REGIST_ERROR.getMsg());
+		if (!user.isBankOpenAccount()) {
+			result.setStatus(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getCode());
+			result.setStatusDesc(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getMsg());
 			return result;
-		}*/
+		}
 		// 银行卡号
 		String cardNo = "";
 		// 银行卡Id
@@ -491,11 +491,21 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		//ret.put("bindCardUrl", RechargeDefine.HOST+BindCardPageDefine.REQUEST_MAPPING+BindCardPageDefine.REQUEST_BINDCARDPAGE+".do");
 		ret.put("bindCardUrl", "");
 		// 江西银行绑卡接口修改 update by wj 2018-5-17 start
-		//TODO 明天写新方法
 		ret.put("bindType",this.bankInterfaceClient.getBankInterfaceFlagByType("BIND_CARD"));
 		// 江西银行绑卡接口修改 update by wj 2018-5-17 end
 
 		result.setData(ret);
+		return result;
+	}
+
+	@Override
+	public WebResult<Object> seachUserBankRechargeErrorMessgae(String logOrdId) {
+		WebResult<Object> result = new WebResult<Object>();
+		AccountRechargeVO vo = amTradeClient.selectByOrderId(logOrdId);
+		result.setStatus(WebResult.SUCCESS);
+		Map<String,String> map = new HashedMap();
+		map.put("error",vo.getMessage());
+		result.setData(map);
 		return result;
 	}
 
