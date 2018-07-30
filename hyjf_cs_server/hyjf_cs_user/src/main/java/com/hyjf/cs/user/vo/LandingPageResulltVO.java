@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.vo;
 
+import com.hyjf.cs.user.result.BaseResultBean;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
  * @author wangjun
  * @version LandingPageResulltVO, v0.1 2018/7/30 14:03
  */
-public class LandingPageResulltVO {
+public class LandingPageResulltVO extends BaseResultBean {
     @ApiModelProperty("为用户赚取收益,亿元")
     private BigDecimal profitSum;
 
