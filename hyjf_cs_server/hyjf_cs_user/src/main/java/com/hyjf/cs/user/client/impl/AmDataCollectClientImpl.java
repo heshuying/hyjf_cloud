@@ -3,11 +3,15 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.WeChatLandingPageResponse;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
 
 /**
  * @author zhangqingqing
@@ -41,5 +45,15 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
                 dataCollectService+"/search/selectBankSmsSeq/" + userId+"/"+txcodeAutoBidAuthPlus,
                 String.class).getBody();
         return response;
+    }
+
+    @Override
+    public BigDecimal selectInterestSum(){
+        String url = "http://CS-MESSAGE/cs-message/wx/landingPage/selectInterestSum";
+        WeChatLandingPageResponse response = restTemplate.getForEntity(url, WeChatLandingPageResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult().getProfitSum();
+        }
+        return BigDecimal.ZERO;
     }
 }

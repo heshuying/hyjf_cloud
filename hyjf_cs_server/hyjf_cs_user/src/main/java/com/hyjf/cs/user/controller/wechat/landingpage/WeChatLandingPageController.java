@@ -1,0 +1,38 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.cs.user.controller.wechat.landingpage;
+
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.user.result.BaseResultBean;
+import com.hyjf.cs.user.service.landingpage.LandingPageService;
+import com.hyjf.cs.user.vo.LandingPageResulltVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author wangjun
+ * @version LandingPageController, v0.1 2018/7/30 11:58
+ */
+@Api(value = "wechat端着陆页用户信息接口",description = "wechat端着陆页用户信息接口")
+@RestController
+@RequestMapping("/hyjf-wechat/wx/landingPage")
+public class WeChatLandingPageController extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(WeChatLandingPageController.class);
+
+    @Autowired
+    private LandingPageService landingPageService;
+
+    @ApiOperation(value = "wechat端获取着陆页用户信息",notes = "wechat端获取着陆页用户信息")
+    @GetMapping(value = "/userData")
+    public LandingPageResulltVO landingPageUserData(){
+        LandingPageResulltVO landingPageResulltVO = landingPageService.userData();
+        return landingPageResulltVO;
+    }
+}

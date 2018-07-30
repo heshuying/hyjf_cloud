@@ -1204,4 +1204,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return null;
 	}
 
+	/**
+	 * 获取用户表总记录数
+	 * @return
+	 */
+	@Override
+	public Integer countAll(){
+		return userMapper.countByExample(new UserExample());
+	}
 }

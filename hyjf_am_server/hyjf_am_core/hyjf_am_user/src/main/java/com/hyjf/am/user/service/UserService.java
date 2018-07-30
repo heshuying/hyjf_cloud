@@ -205,4 +205,10 @@ public interface UserService extends BaseService {
      * @return
      */
 	List<SpreadsUserVO> selectByUserId(String userId);
+
+	/**
+	 * 获取用户表总记录数
+	 * @return
+	 */
+	Integer countAll();
 }

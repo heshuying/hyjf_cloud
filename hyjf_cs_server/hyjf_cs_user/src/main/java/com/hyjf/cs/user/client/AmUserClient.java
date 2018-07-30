@@ -304,4 +304,11 @@ public interface AmUserClient {
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
 
 	BankCardVO getBankCardByUserId(Integer userId);
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	Integer countAllUser();
 }
