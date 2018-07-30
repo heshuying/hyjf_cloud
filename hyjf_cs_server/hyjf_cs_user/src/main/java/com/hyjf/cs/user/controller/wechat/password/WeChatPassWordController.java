@@ -12,7 +12,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
@@ -23,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,19 +64,6 @@ public class WeChatPassWordController {
         }
         passWordService.updatePassWd(user,newPassword);
         return ret;
-    }
-
-
-    /**
-     * @author fengping
-     * 微信端验证短信验证码
-     * @param
-     * @return
-     */
-    @PostMapping(value = "validateVerificationCode")
-    public WeChatResult validateVerificationCoden(@RequestBody SendSmsVO sendSmsVo) {
-        //passWordService.validateVerificationCoden(sendSmsVo,false);
-        return null;
     }
 
     /**
@@ -178,12 +163,12 @@ public class WeChatPassWordController {
 
     /**
      * 微信端验证短信验证码
-     * @param request
+     * @param
      * @param sendSmsVo
      * @return
      */
-    @RequestMapping(value = "/wechatUser/validateVerificationCodeAction.do")
-    public JSONObject validateVerificationCoden(HttpServletRequest request,SendSmsVO sendSmsVo) {
+    @RequestMapping(value = "/wx/user/resetpwd/validateVerificationCodeAction.do")
+    public JSONObject validateVerificationCoden(SendSmsVO sendSmsVo) {
         return passWordService.validateVerificationCoden(sendSmsVo,false);
     }
 

@@ -111,7 +111,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 * 2.若验证码正确，则获取session数据，并将相应的注册数据写入数据库（三张表），跳转相应的注册成功界面
 	 */
 	@ApiOperation(value = "短信验证码校验", notes = "短信验证码校验")
-	@PostMapping(value = "/userRegist/validateVerificationCodeAction.do", produces = "application/json; charset=utf-8")
+	@PostMapping(value = "/wechatUser/validateVerificationCodeAction.do", produces = "application/json; charset=utf-8")
 	public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-wechat/userRegist/validateVerificationCodeAction");
@@ -167,5 +167,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 		}
 		return ret;
 	}
+
+
 
 }
