@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.bindcard;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public interface BindCardService extends BaseUserService {
 
     String checkParamUnBindCardAPP(WebViewUserVO webViewUserVO, String cardNo);
 
-    void updateAfterUnBindCard(BankCallBean bean);
+    boolean updateAfterUnBindCard(BankCallBean bean);
 
 	BankCallBean callBankUnBindCard(String cardNo, Integer userId);
 
@@ -48,6 +49,8 @@ public interface BindCardService extends BaseUserService {
     Integer getBankInterfaceFlagByType(String type);
 
     BankCardVO queryUserCardValid(String userId, String cardNo);
+
+    BigDecimal getBankBalance(Integer userId, String account);
 }
 
 	

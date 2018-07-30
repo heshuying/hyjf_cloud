@@ -621,7 +621,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	 * @param bean
 	 */
 	@Override
-	public void updateAfterUnBindCard(BankCallBean bean) {
+	public boolean updateAfterUnBindCard(BankCallBean bean) {
 		LogAcqResBean logAcqResBean = bean.getLogAcqResBean();
 		UserVO user = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
 		BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(bean.getLogUserId()), logAcqResBean.getCardNo());
@@ -642,8 +642,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			if (!isUpdateFlag) {
 				throw new ReturnMessageException(MsgEnum.ERR_CARD_DELETE);
 			}
+			return isUpdateFlag;
 		}
-		
+		return true;
 	}
 
 	/**
@@ -682,6 +683,17 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public BankCardVO queryUserCardValid(String userId, String cardNo) {
 		return amUserClient.queryUserCardValid(userId, cardNo);
+	}
+
+	/**
+	 * 根据电子账号查询用户在江西银行的可用余额
+	 * @param userId
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BigDecimal getBankBalance(Integer userId, String accountId) {
+		return this.queryBankBlance(userId, accountId);
 	}
 }
 

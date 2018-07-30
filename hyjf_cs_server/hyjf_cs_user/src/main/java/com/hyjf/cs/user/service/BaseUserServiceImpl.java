@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.RedisKey;
@@ -20,6 +21,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
@@ -41,10 +43,12 @@ import java.util.Map;
 
 public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserService {
 
+	Logger logger = LoggerFactory.getLogger(BaseUserServiceImpl.class);
 
 	@Autowired
 	public AmUserClient amUserClient;
-
+	@Autowired
+	public AmTradeClient amTradeClient;
 	@Autowired
 	public SystemConfig systemConfig;
 
@@ -713,6 +717,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		String result = restTemplate.postForEntity(requestUrl,balanceRequestBean,String.class).getBody();
 		JSONObject status = JSONObject.parseObject(result);
 		return status;
+	}
+
+	@Override
+	public AccountVO getAccountByUserId(Integer userId) {
+		return amTradeClient.getAccount(userId);
 	}
 
 	/**
