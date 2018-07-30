@@ -31,10 +31,22 @@ public class WechatProjectListController extends BaseTradeController {
      * @author zhangyk
      * @date 2018/7/2 16:27
      */
-    @ApiOperation(value = "微信端:获取首页散标详情", notes = "微信端:获取首页散标详情")
-    @PostMapping(value = "/{borrowId}", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "微信端:获取首页<散标>详情", notes = "微信端:获取首页<散标>详情")
+    @PostMapping(value = "/{borrowId}.do", produces = "application/json; charset=utf-8")
     public Object getProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "token", required = false) String token){
         JSONObject jsonObject = wechatProjectListService.getProjectDetail(borrowId,request.getParameter(ProjectConstant.PARAM_BORROW_TYPE),token);
+        return jsonObject;
+    }
+
+    /**
+     * 微信端获取首页散标加入记录
+     * @author zhangyk
+     * @date 2018/7/2 16:27
+     */
+    @ApiOperation(value = "微信端:获取首页<散标>加入记录", notes = "微信端:获取首页<散标>加入记录")
+    @PostMapping(value = "/{borrowId}/investRecord.do", produces = "application/json; charset=utf-8")
+    public Object getProjectInvestRecord(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId){
+        JSONObject jsonObject = wechatProjectListService.getProjectInvestRecord(borrowId,request,userId);
         return jsonObject;
     }
 
@@ -44,14 +56,47 @@ public class WechatProjectListController extends BaseTradeController {
      * @author zhangyk
      * @date 2018/7/2 16:28
      */
-    @ApiOperation(value = "微信端:获取首页计划详情", notes = "微信端:获取首页计划详情")
+    @ApiOperation(value = "微信端:获取首页<计划>详情", notes = "微信端:获取首页<计划>详情")
     @PostMapping(value = "/{planId}", produces = "application/json; charset=utf-8")
     public Object getPlanDetail(@PathVariable String planId,  @RequestHeader(value = "token", required = false) String token){
         JSONObject jsonObject = wechatProjectListService.getPlanDetail(planId,token);
         return jsonObject;
     }
 
-   /* *//**
+      /**
+     * 微信端获取计划标的组成
+     * @author zhangyk
+     * @date 2018/7/30 11:00
+     */
+    @ApiOperation(value = "微信端:获取首页<计划>标的组成", notes = "微信端:获取首页<计划>标的组成")
+    @PostMapping(value = "/{planId}/borrowComposition.do", produces = "application/json; charset=utf-8")
+    public Object getPlanBorrowList( @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+                                     @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId){
+        Object jsonObject = wechatProjectListService.getPlanBorrowList(planId,currentPage,pageSize);
+        return jsonObject;
+    }
+
+
+
+    /**
+     * 微信端获取计划加入记录
+     * @author zhangyk
+     * @date 2018/7/30 11:00
+     */
+    @ApiOperation(value = "微信端:获取首页<计划>加入记录", notes = "微信端:获取首页<计划>加入记录")
+    @PostMapping(value = "/{planId}/investRecord.do", produces = "application/json; charset=utf-8")
+    public Object getPlanAccedeList( @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+                                     @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId){
+        Object jsonObject = wechatProjectListService.getPlanAccedeList(planId,currentPage,pageSize);
+        return jsonObject;
+    }
+
+
+
+
+
+
+    /* *//**
      * 微信端获取债转详情
      * @author zhangyk
      * @date 2018/7/2 16:28

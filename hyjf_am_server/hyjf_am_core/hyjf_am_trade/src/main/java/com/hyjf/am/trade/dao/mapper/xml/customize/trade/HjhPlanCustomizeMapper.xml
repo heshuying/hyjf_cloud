@@ -653,11 +653,8 @@ ORDER BY
 				hb.borrow_user_name,
 				hb.borrow_apr,
 				hb.account,
-				hb.company_or_personal,
-				IFNULL(
-					hb.finance_purpose,
-					'无借款用途'
-				) financePurpose,
+				-- hb.company_or_personal,
+
 				CASE
 			WHEN hb.borrow_style = 'endday' THEN
 				CONCAT(hb.borrow_period, '天')
@@ -665,18 +662,18 @@ ORDER BY
 				CONCAT(hb.borrow_period, '个月')
 			END borrow_period,
 			IFNULL(hbs.NAME, '') NAME,
-			hb.addtime
+			hb.create_time
 
 		FROM
 			ht_borrow hb
 		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
 		inner JOIN ht_hjh_debt_credit ON credit_status IN (0, 1)
-		AND hb.borrow_nid = hyjf_hjh_debt_credit.borrow_nid
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
 		WHERE
-		hyjf_hjh_debt_credit.plan_nid_new = #{planNid}
+		ht_hjh_debt_credit.plan_nid_new = #{planNid}
 		AND hb.STATUS = 4
 	ORDER BY
-				hb.addtime ASC
+				hb.create_time ASC
 		)
 		UNION ALL
 			(
@@ -685,11 +682,8 @@ ORDER BY
 					hb.borrow_user_name,
 					hb.borrow_apr,
 					hb.account,
-					hb.company_or_personal,
-					IFNULL(
-						hb.finance_purpose,
-						'无借款用途'
-					) financePurpose,
+					-- hb.company_or_personal,
+
 					CASE
 				WHEN hb.borrow_style = 'endday' THEN
 					CONCAT(hb.borrow_period, '天')
@@ -697,7 +691,7 @@ ORDER BY
 					CONCAT(hb.borrow_period, '个月')
 				END borrow_period,
 				IFNULL(hbs.NAME, '') NAME,
-			hb.addtime
+			hb.create_time
 			FROM
 				ht_borrow hb
 			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
@@ -706,7 +700,7 @@ ORDER BY
 			AND hb.STATUS = 2
 			AND hb.borrow_full_status = 0
 			ORDER BY
-				hb.addtime ASC
+				hb.create_time ASC
 			)
 		UNION ALL
 			(
@@ -715,11 +709,8 @@ ORDER BY
 					hb.borrow_user_name,
 					hb.borrow_apr,
 					hb.account,
-					hb.company_or_personal,
-					IFNULL(
-						hb.finance_purpose,
-						'无借款用途'
-					) financePurpose,
+					-- hb.company_or_personal,
+
 					CASE
 				WHEN hb.borrow_style = 'endday' THEN
 					CONCAT(hb.borrow_period, '天')
@@ -727,7 +718,7 @@ ORDER BY
 					CONCAT(hb.borrow_period, '个月')
 				END borrow_period,
 				IFNULL(hbs.NAME, '') NAME,
-			hb.addtime
+			hb.create_time
 		FROM
 			ht_borrow hb
 		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
@@ -737,7 +728,7 @@ ORDER BY
 		AND hb.borrow_full_time &gt;= #{startTime}
 		AND hb.borrow_full_time &lt;= #{endTime}
 ORDER BY
-				hb.addtime ASC
+				hb.create_time ASC
 		)
 		UNION ALL
 			(
@@ -746,11 +737,8 @@ ORDER BY
 				hb.borrow_user_name,
 				hb.borrow_apr,
 				hb.account,
-				hb.company_or_personal,
-				IFNULL(
-					hb.finance_purpose,
-					'无借款用途'
-				) financePurpose,
+				-- hb.company_or_personal,
+
 				CASE
 			WHEN hb.borrow_style = 'endday' THEN
 				CONCAT(hb.borrow_period, '天')
@@ -758,7 +746,7 @@ ORDER BY
 				CONCAT(hb.borrow_period, '个月')
 			END borrow_period,
 			IFNULL(hbs.NAME, '') NAME,
-			hb.addtime
+			hb.create_time
 		FROM
 			ht_borrow hb
 		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
@@ -769,7 +757,7 @@ ORDER BY
 		WHERE
 			ht_hjh_debt_credit.plan_nid_new = #{planNid}
 			ORDER BY
-				hb.addtime ASC
+				hb.create_time ASC
 		))t
 		) AS t
 
@@ -871,7 +859,7 @@ ORDER BY
 		IFNULL(hbs.NAME, '') NAME,
 		hb.create_time
 		FROM
-		ht_borrow hb inner join ht_borrow_info hbi hb.borrow_nid = hbi.borrow_nid
+		ht_borrow hb inner join ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
 		WHERE
 		hb.plan_nid = #{planNid}
