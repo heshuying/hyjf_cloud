@@ -31,7 +31,7 @@ public class AccountBankController extends BaseController{
     @Autowired
     private AccountBankService accountBankService;
 
-    @GetMapping(value = "/getBankCardByUserId/{userId}")
+    @GetMapping(value = "/getAccountBankByUserId/{userId}")
     public AccountBankResponse getBankCardByUserId(@PathVariable Integer userId){
         AccountBankResponse response = new AccountBankResponse();
         List<AccountBank> accountBankList = accountBankService.getBankCardByUserId(userId);

@@ -331,5 +331,21 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
-
+    /**
+     * 获取银行卡配置信息
+     * @auth sunpeikai
+     * @param bankId 主键id
+     * @return
+     */
+    @GetMapping("/getBankConfigByBankId/{bankId}")
+    public BankConfigResponse getBankConfigByBankId(@PathVariable Integer bankId){
+        BankConfigResponse response = new BankConfigResponse();
+        BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
+        if(null != bankConfig){
+            BankConfigVO bankConfigVO = CommonUtils.convertBean(bankConfig,BankConfigVO.class);
+            response.setResult(bankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }

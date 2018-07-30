@@ -277,7 +277,7 @@ public interface AmUserClient {
 	 * @param userId 用户id
 	 * @return
 	 */
-	List<AccountBankVO> getBankCardByUserId(Integer userId);
+	List<AccountBankVO> getAccountBankByUserId(Integer userId);
 
 	/**
 	 * 获取用户信息中vip信息
@@ -302,4 +302,6 @@ public interface AmUserClient {
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+
+	BankCardVO getBankCardByUserId(Integer userId);
 }

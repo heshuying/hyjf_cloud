@@ -51,4 +51,11 @@ public interface BankRechargeService {
      * @return
      */
     List<BankRechargeConfig> selectExportRecordList(AdminBankRechargeConfigRequest adminRequest);
+    /**
+     * 根据bankId查询BankRechargeConfig
+     * @auth sunpeikai
+     * @param bankId
+     * @return
+     */
+    List<BankRechargeConfig> getBankRechargeConfigByBankId(Integer bankId);
 }
