@@ -43,34 +43,37 @@ public class MyProjectController extends BaseUserController {
     @SignValidate
     @RequestMapping(value = "/queryScatteredProject", method = RequestMethod.GET)
     @ResponseBody
-    public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId,
-                                              @RequestParam @Valid String type,
-                                              @RequestParam @Valid String currentPage,
-                                              @RequestParam @Valid String pageSize) {
+    public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
 
         WeChatResult result = new WeChatResult();
 
+        String type = request.getParameter("type");
 
         if (StringUtils.isEmpty(type)) {
             result.buildErrorResponse(MsgEnum.STATUS_CE000001);
             return result;
         }
-        int currentPageInt = Strings.isNullOrEmpty(currentPage) ? 1 : Integer.valueOf(currentPage);
-        int pageSizeInt = Strings.isNullOrEmpty(pageSize) ? 10 : Integer.valueOf(pageSize);
+
+        String currentPageStr = request.getParameter("currentPage");
+        String pageSizeStr = request.getParameter("pageSize");
+
+        int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
+        int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
+
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
         switch (type) {
             case CustomConstants.CURRENTHOLD_TYPE:
-                myProjectService.selectCurrentHoldObligatoryRightList(String.valueOf(userId), currentPageInt, pageSizeInt, vo);
+                myProjectService.selectCurrentHoldObligatoryRightList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
 
             case CustomConstants.REPAYMENT_TYPE:
-                myProjectService.selectRepaymentList(String.valueOf(userId), currentPageInt, pageSizeInt, vo);
+                myProjectService.selectRepaymentList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
 
             case CustomConstants.CREDITRECORD_TYPE:
-                myProjectService.selectCreditRecordList(String.valueOf(userId), currentPageInt, pageSizeInt, vo);
+                myProjectService.selectCreditRecordList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);
@@ -93,29 +96,29 @@ public class MyProjectController extends BaseUserController {
     @SignValidate
     @RequestMapping(value = "/queryPlanedProject", method = RequestMethod.GET)
     @ResponseBody
-    public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") String userId,
-                                           @RequestParam @Valid String type,
-                                           @RequestParam @Valid String currentPage,
-                                           @RequestParam @Valid String pageSize) {
+    public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
         WeChatResult result = new WeChatResult();
+        String type = request.getParameter("type");
         if (StringUtils.isEmpty(type)) {
             result.buildErrorResponse(MsgEnum.STATUS_CE000001);
             return result;
         }
 
-        int currentPageInt = Strings.isNullOrEmpty(currentPage) ? 1 : Integer.valueOf(currentPage);
-        int pageSizeInt = Strings.isNullOrEmpty(pageSize) ? 10 : Integer.valueOf(pageSize);;
+        String currentPageStr = request.getParameter("currentPage");
+        String pageSizeStr = request.getParameter("pageSize");
+
+        int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
+        int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(userId));
 
         switch (type) {
             case CustomConstants.HOLD_PLAN_TYPE:
-                myProjectService.selectCurrentHoldPlanList(userId, currentPageInt, pageSizeInt, vo);
+                myProjectService.selectCurrentHoldPlanList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
             case CustomConstants.REPAYMENT_PLAN_TYPE:
-                myProjectService.selectRepayMentPlanList(userId, currentPageInt, pageSizeInt, vo);
+                myProjectService.selectRepayMentPlanList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);
