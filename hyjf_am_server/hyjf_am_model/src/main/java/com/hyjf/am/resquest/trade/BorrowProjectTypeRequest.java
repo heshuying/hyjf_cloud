@@ -1,9 +1,6 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.trade.borrow;
+package com.hyjf.am.resquest.trade;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.io.Serializable;
@@ -11,10 +8,15 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author fuqiang
- * @version BorrowProjectTypeVO, v0.1 2018/6/12 17:49
+ * @author by xiehuili on 2018/7/27.
  */
-public class BorrowProjectTypeVO extends BaseVO implements Serializable {
+public class BorrowProjectTypeRequest  extends BasePage implements Serializable {
+    /**
+     * 接收还款方式
+     */
+    private String methodName;
+    private String modifyFlag;
+
     private Integer id;
 
     private String borrowProjectType;
@@ -52,16 +54,8 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private Integer interestCoupon;
 
     private Integer tasteMoney;
-    //modifyFlag
-    private String modifyFlag;
-    //modifyFlag
-    private List<BorrowProjectRepayVO> repayNames;
-    // 回显checkbox标签
-    private  List<BorrowStyleVO> repayStyles;
-    // 用户角色
-    private  List<ParamNameVO> investUsers;
-    // 获取数据字典表的下拉列表
-    private List<ParamNameVO> projectTypeList;
+
+    private List<ParamNameVO> paramNameVO;
 
     private static final long serialVersionUID = 1L;
 
@@ -217,6 +211,14 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.tasteMoney = tasteMoney;
     }
 
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
     public String getModifyFlag() {
         return modifyFlag;
     }
@@ -225,35 +227,11 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.modifyFlag = modifyFlag;
     }
 
-    public List<BorrowProjectRepayVO> getRepayNames() {
-        return repayNames;
+    public List<ParamNameVO> getParamNameVO() {
+        return paramNameVO;
     }
 
-    public void setRepayNames(List<BorrowProjectRepayVO> repayNames) {
-        this.repayNames = repayNames;
-    }
-
-    public List<BorrowStyleVO> getRepayStyles() {
-        return repayStyles;
-    }
-
-    public void setRepayStyles(List<BorrowStyleVO> repayStyles) {
-        this.repayStyles = repayStyles;
-    }
-
-    public List<ParamNameVO> getInvestUsers() {
-        return investUsers;
-    }
-
-    public void setInvestUsers(List<ParamNameVO> investUsers) {
-        this.investUsers = investUsers;
-    }
-
-    public List<ParamNameVO> getProjectTypeList() {
-        return projectTypeList;
-    }
-
-    public void setProjectTypeList(List<ParamNameVO> projectTypeList) {
-        this.projectTypeList = projectTypeList;
+    public void setParamNameVO(List<ParamNameVO> paramNameVO) {
+        this.paramNameVO = paramNameVO;
     }
 }
