@@ -18,19 +18,16 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
-import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -503,7 +500,7 @@ public class AppPassWordController {
                     return ret;
                 }
                 String verificationType = CommonConstant.PARAM_TPL_ZHAOHUIMIMA;
-                int cnt = passWordService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                int cnt = passWordService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
                 if (cnt == 0) {
                     ret.put("status", "1");
                     ret.put("statusDesc", "验证码无效");

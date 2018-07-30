@@ -2,11 +2,8 @@ package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SubCommissionListConfigCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
 import com.hyjf.am.trade.service.admin.SubConfigService;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,25 +44,10 @@ public class SubConfigServiceImpl implements SubConfigService {
       * 根据id查询分账名单记录
       * */
     @Override
-    public SubCommissionListConfig getSubConfigRecordById(Map<String, Object> map){
-        return subCommissionListConfigCustomizeMapper.getSubConfigRecordById(map);
+    public SubCommissionListConfig getSubConfigRecordById(Integer id){
+        return subCommissionListConfigCustomizeMapper.getSubConfigRecordById(id);
     }
 
-    /**
-     *
-     * 查询用户名信息
-     * @param form
-     * @return
-     */
-    @Override
-    public Map<String, Object> userMap(AdminSubConfigRequest form){
-        if (form.getUsername()!=null) {
-            Map<String, Object> subCommissionListConfigCustomize=subCommissionListConfigCustomizeMapper.getUserInfo(form.getUsername());
-            return subCommissionListConfigCustomize;
-        }else {
-            return null;
-        }
-    }
     /**
      *
      * 插入操作
@@ -98,11 +80,9 @@ public class SubConfigServiceImpl implements SubConfigService {
      * 删除
      */
     @Override
-    public void deleteSubConfigRecord(List<Integer> list){
-        for (Integer id : list) {
-            if (id != null &&id.intValue()>0) {
-                 subCommissionListConfigCustomizeMapper.deleteByPrimaryKey(id);
-            }
+    public void deleteSubConfigRecord(Integer id){
+        if (id != null &&id.intValue()>0) {
+             subCommissionListConfigCustomizeMapper.deleteByPrimaryKey(id);
         }
     }
 

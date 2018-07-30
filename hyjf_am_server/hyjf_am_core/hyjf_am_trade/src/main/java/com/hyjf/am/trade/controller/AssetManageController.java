@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller;
 
 import java.util.List;
 
+import com.hyjf.am.response.trade.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.QueryMyProjectVOResponse;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
@@ -9,6 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustom
 import com.hyjf.am.vo.trade.assetmanage.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -361,6 +363,17 @@ public class AssetManageController extends BaseController {
         AssetManageResponse response = new AssetManageResponse();
         int  appMyPlanCount= this.assetManageService.countAppMyPlan(request);
         response.setAppMyPlanCount(appMyPlanCount);
+        return response;
+    }
+
+
+    @PostMapping("/selectAlreadyRepayList")
+    public AppAlreadyRepayListCustomizeResponse selectAlreadyRepayList(@RequestBody AssetManageBeanRequest request){
+        AppAlreadyRepayListCustomizeResponse response = new AppAlreadyRepayListCustomizeResponse();
+        List<AppAlreadyRepayListCustomize> lst = assetManageService.selectAlreadyRepayList(request);
+        if (CollectionUtils.isNotEmpty(lst)){
+            response.setResultList(CommonUtils.convertBeanList(lst,AppAlreadyRepayListCustomizeVO.class));
+        }
         return response;
     }
 

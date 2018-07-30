@@ -10,8 +10,8 @@
 		SELECT
 			oau.hyd_id AS userId
 		FROM
-			hyjf_crm.oa_users oau
-			INNER JOIN hyjf_crm.oa_department oad ON oau.departmentid = oad.id
+			ht_r_oa_users oau
+			INNER JOIN ht_r_oa_department oad ON oau.departmentid = oad.id
 		WHERE
 			oau.user_status = 'Q'
 			AND oau.user_type=2
@@ -48,12 +48,12 @@
 		AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21')
 	</select>
 	
-	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.String">
+	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.Integer">
 		SELECT
 			oau.hyd_id AS userId
 		FROM
-			hyjf_crm.oa_users oau
-			INNER JOIN hyjf_crm.oa_department oad ON oau.departmentid = oad.id
+			ht_r_oa_users oau
+			INNER JOIN ht_r_oa_department oad ON oau.departmentid = oad.id
 		WHERE
 			oau.user_status = 'Q'
 			AND oau.user_type=2

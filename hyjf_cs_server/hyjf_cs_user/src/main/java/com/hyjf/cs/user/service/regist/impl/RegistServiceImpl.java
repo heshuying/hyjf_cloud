@@ -23,6 +23,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -32,12 +33,14 @@ import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.wechat.regist.UserRegistResultVO;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
 import org.apache.commons.lang3.StringUtils;
@@ -151,7 +154,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         CheckUtil.check(m.matches(), MsgEnum.ERR_FMT_PASSWORD);
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         CheckUtil.check(cnt != 0, MsgEnum.STATUS_ZC000015);
         String reffer = registerRequest.getReffer();
         if (StringUtils.isNotEmpty(reffer)) {
@@ -226,7 +229,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         }
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
         int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         if(cnt == 0){
             ret.put(CustomConstants.APP_STATUS, 1);
             ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
@@ -241,7 +244,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
                 return ret;
             }
         }
-        return null;
+        return ret;
     }
 
 
@@ -374,7 +377,112 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
 
     @Override
     public AppAdsCustomizeVO searchBanner(AdsRequest adsRequest) {
-        return amMarketClient.searchBanner(adsRequest);
+        AppAdsCustomizeVO appAdsCustomizeVO =  amMarketClient.searchBanner(adsRequest);
+        if (null==appAdsCustomizeVO){
+            appAdsCustomizeVO = new AppAdsCustomizeVO();
+        }
+        return appAdsCustomizeVO;
+    }
+
+    @Override
+    public UserRegistResultVO wechatCheckParam(String mobile, String password, String reffer, String verificationCode) {
+        UserRegistResultVO vo = new UserRegistResultVO();
+        if (StringUtils.isNotEmpty(reffer)) {
+            //无效推荐人
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID, "推荐人");
+        }
+        {
+            if (!Validator.isNull(reffer)) {
+                int count = amUserClient.countUserByRecommendName(reffer);
+                if (count == 0) {
+                    vo.setEnum(ResultEnum.ERROR_009);
+                    vo.setSuccessUrl("");
+                    return vo;
+                }
+            }
+        }
+        // 检查参数正确性
+        if (Validator.isNull(mobile) || Validator.isNull(verificationCode)) {
+            vo.setEnum(ResultEnum.PARAM);
+            vo.setSuccessUrl("");
+            return vo;
+        }
+        // 业务逻辑
+        try {
+
+            logger.info("当前注册手机号: {}", mobile);
+            if (Validator.isNull(mobile)) {
+                vo.setEnum(ResultEnum.ERROR_010);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+            if (Validator.isNull(verificationCode)) {
+                vo.setEnum(ResultEnum.ERROR_011);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+            if (Validator.isNull(password)) {
+                vo.setEnum(ResultEnum.ERROR_012);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+
+            if (password.length() < 6 || password.length() > 16) {
+                vo.setEnum(ResultEnum.ERROR_013);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+
+            boolean hasNumber = false;
+
+            for (int i = 0; i < password.length(); i++) {
+                if (Validator.isNumber(password.substring(i, i + 1))) {
+                    hasNumber = true;
+                    break;
+                }
+            }
+            if (!hasNumber) {
+                vo.setEnum(ResultEnum.ERROR_014);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+
+            String regEx = "^[a-zA-Z0-9]+$";
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(password);
+            if (!m.matches()) {
+                vo.setEnum(ResultEnum.ERROR_015);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+            if (!Validator.isMobile(mobile)) {
+                vo.setEnum(ResultEnum.ERROR_016);
+                vo.setSuccessUrl("");
+                return vo;
+            }
+            {
+                if (existUser(mobile)) {
+                    vo.setEnum(ResultEnum.ERROR_017);
+                    vo.setSuccessUrl("");
+                    return vo;
+                }
+            }
+            {
+                String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+                int cnt = amUserClient.checkMobileCode(mobile, verificationCode, verificationType, String.valueOf(ClientConstants.WECHAT_CLIENT),
+                        CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+                if (cnt == 0) {
+                    vo.setEnum(ResultEnum.ERROR_018);
+                    vo.setSuccessUrl("");
+                    return vo;
+                }
+            }
+        }catch (Exception e){
+            vo.setEnum(ResultEnum.PARAM);
+            vo.setSuccessUrl("");
+            return vo;
+        }
+        return vo;
     }
 
     /**

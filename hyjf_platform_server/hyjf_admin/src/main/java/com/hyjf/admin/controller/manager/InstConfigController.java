@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.manager;
 
-import com.hyjf.admin.beans.request.InstConfigRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -12,11 +11,9 @@ import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
 import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,11 +38,8 @@ public class InstConfigController extends BaseController {
     @ApiOperation(value = "配置中心保证金配置", notes = "查询配置中心保证金配置")
     @RequestMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<HjhInstConfigVO>> instConfigInit( @RequestBody InstConfigRequestBean adminInstConfigListRequest) {
-        AdminInstConfigListRequest adminRequest= new AdminInstConfigListRequest();
-        //可以直接使用
-        BeanUtils.copyProperties(adminInstConfigListRequest, adminRequest);
-        AdminInstConfigListResponse response=instConfigService.instConfigInit(adminRequest);
+    public AdminResult<ListResult<HjhInstConfigWrapVo>> instConfigInit( @RequestBody AdminInstConfigListRequest adminRequest) {
+        AdminInstConfigDetailResponse response=instConfigService.instConfigInit(adminRequest);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -53,15 +47,13 @@ public class InstConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<HjhInstConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<ListResult<HjhInstConfigWrapVo>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
     @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody InstConfigRequestBean adminInstConfigListRequest) {
-        AdminInstConfigListRequest adminRequest= new AdminInstConfigListRequest();
-        adminRequest.setIds(adminInstConfigListRequest.getIds());
+    public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody AdminInstConfigListRequest adminRequest) {
         AdminInstConfigDetailResponse adminResponse= instConfigService.searchInstConfigInfo(adminRequest);
         if (adminResponse == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -75,11 +67,15 @@ public class InstConfigController extends BaseController {
     @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody InstConfigRequestBean from) {
-        AdminInstConfigListRequest req = new AdminInstConfigListRequest();
-        BeanUtils.copyProperties(from, req);
-        //测试联调需要放开
-//        req.setUserId(Integer.valueOf(this.getUser(request).getId()));
+    public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
+        //登录用户id  todo   联调时要放开
+//        AdminSystemVO user = getUser(request);
+//        if(StringUtils.isNotBlank(user.getId())){
+//            req.setUserId(Integer.parseInt(user.getId()));
+//        }else{
+            req.setUserId(3);//为了接口测试用
+//        }
+
         AdminInstConfigListResponse prs = instConfigService.saveInstConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -93,11 +89,14 @@ public class InstConfigController extends BaseController {
     @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody InstConfigRequestBean from) {
-        AdminInstConfigListRequest req = new AdminInstConfigListRequest();
-        BeanUtils.copyProperties(from, req);
-        //测试联调需要放开
-//        req.setUserId(Integer.valueOf(this.getUser(request).getId()));
+    public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
+        //登录用户id  todo   联调时要放开
+//        AdminSystemVO user = getUser(request);
+//        if(StringUtils.isNotBlank(user.getId())){
+//            req.setUserId(Integer.parseInt(user.getId()));
+//        }else{
+        req.setUserId(3);//为了接口测试用
+//        }
         AdminInstConfigListResponse prs = instConfigService.updateInstConfig(req);
         if(prs==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -111,11 +110,9 @@ public class InstConfigController extends BaseController {
     @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteInstConfig( @RequestBody InstConfigRequestBean adminInstConfigListRequest) {
-        AdminInstConfigListRequest req = new AdminInstConfigListRequest();
+    public AdminResult deleteInstConfig( @RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse prs =new AdminInstConfigListResponse();
-        if(StringUtils.isNotBlank(adminInstConfigListRequest.getIds())){
-            req.setIds(adminInstConfigListRequest.getIds());
+        if(StringUtils.isNotBlank(req.getIds())){
             prs = instConfigService.deleteInstConfig(req);
         }
         if(prs==null) {

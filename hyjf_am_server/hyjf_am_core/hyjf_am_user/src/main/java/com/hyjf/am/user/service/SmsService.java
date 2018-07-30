@@ -22,7 +22,7 @@ public interface SmsService {
      * 检查短信验证码
      */
     int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-                              Integer searchStatus, Integer updateStatus);
+                              Integer searchStatus, Integer updateStatus,boolean isUpdate);
     /**
      * 只检查短信验证码对不对
      * @param mobile

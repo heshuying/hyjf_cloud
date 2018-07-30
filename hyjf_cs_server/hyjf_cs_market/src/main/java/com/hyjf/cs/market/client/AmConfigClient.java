@@ -6,6 +6,7 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 
 import java.util.List;
 import java.util.Map;
@@ -105,4 +106,22 @@ public interface AmConfigClient {
      * @return
      */
     ContentArticleVO getContentArticleById(Integer contentArticleId);
+
+    /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset);
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  获取分享信息
+     * @Date 9:08 2018/7/27
+     * @Param
+     * @return ShareNewsBeanVO
+     */
+    ShareNewsBeanVO queryShareNews();
 }

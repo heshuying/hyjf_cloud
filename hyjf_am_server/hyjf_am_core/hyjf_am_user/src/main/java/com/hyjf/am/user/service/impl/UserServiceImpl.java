@@ -345,7 +345,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		user.setUserType(0);
 		user.setIsSetPassword(0);
 		String codeSalt = GetCode.getRandomCode(6);
-		user.setPassword(MD5Utils.MD5(password + codeSalt));
+		user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
 		user.setRegIp(loginIp);
 		user.setRegTime(new Date());
 		user.setStatus(0);

@@ -109,7 +109,7 @@ public class CategoryController extends BaseConfigController {
      * @Param id
      * @return
      */
-    @RequestMapping("/infotypeaction")
+    @RequestMapping("/infotypeaction/{id}")
     public CategoryResponse infoTypeAction(@PathVariable Integer id) {
         CategoryResponse response = new CategoryResponse();
         Category category = categoryService.infoTypeAction(id);
@@ -200,7 +200,7 @@ public class CategoryController extends BaseConfigController {
      * @Param cid
      * @return
      */
-    @RequestMapping("/getbypcateidAandcateid")
+    @RequestMapping("/getbypcateidAandcateid/{pid}/{cid}")
     public CategoryResponse getCountByPcateIdAndcateId(@PathVariable Integer pid,@PathVariable Integer cid) {
         logger.info("根据pCateId和cateId查询总数......");
         CategoryResponse response = new CategoryResponse();
@@ -218,7 +218,7 @@ public class CategoryController extends BaseConfigController {
      * @Param cid
      * @return
      */
-    @RequestMapping("/getlistbypcateidandcateid")
+    @RequestMapping("/getlistbypcateidandcateid/{pid}/{cid}")
     public CategoryResponse getListByPcateIdAndcateId(@PathVariable Integer pid,@PathVariable Integer cid) {
         logger.info("根据pCateId和cateId查询List......");
         CategoryResponse response = new CategoryResponse();
@@ -235,7 +235,7 @@ public class CategoryController extends BaseConfigController {
      * @Param id
      * @return
      */
-    @RequestMapping("/delcontenthelp")
+    @RequestMapping("/delcontenthelp/{id}")
     public CategoryResponse delContentHelp(@PathVariable Integer id) {
         logger.info(" 删除ContentHelp......");
         CategoryResponse response = new CategoryResponse();
@@ -252,7 +252,7 @@ public class CategoryController extends BaseConfigController {
      * @Param id
      * @return
      */
-    @RequestMapping("/delcategory")
+    @RequestMapping("/delcategory/{id}")
     public CategoryResponse delCategory(@PathVariable Integer id) {
         logger.info(" 删除Catrgory......");
         CategoryResponse response = new CategoryResponse();
@@ -403,7 +403,7 @@ public class CategoryController extends BaseConfigController {
      * @Param zhiChiStatus  0:关闭   1：开启
      * @return
      */
-    @RequestMapping("/chancontenthelp")
+    @RequestMapping("/chancontenthelp/{contentId}/{status}/{zhiChiStatus}")
     public CategoryResponse chanContentHelp(@PathVariable Integer contentId,@PathVariable Integer status,@PathVariable Integer zhiChiStatus) {
         logger.info("修改问题......");
         CategoryResponse response = new CategoryResponse();

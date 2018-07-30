@@ -544,29 +544,4 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectAdsList" resultMap="BaseResultMap" parameterType="Map">
-    SELECT
-    ad.name,
-    ad.url,
-    CONCAT(#{host},ad.image) AS image,
-    ad.new_user_show
-    FROM
-    ht_ads ad
-    LEFT JOIN ht_ads_type adt ON ad.typeid = adt.typeid
-    WHERE
-    ad.`status` = 1
-    <if test="code != null and code != ''">
-      and adt.`code` = #{code}
-    </if>
-    <if test="platformType != null and platformType!= ''">
-      and ad.platform_type = #{platformType}
-    </if>
-    AND unix_timestamp(ad.start_time) <![CDATA[<=]]> unix_timestamp(NOW())
-    AND unix_timestamp(ad.end_time) <![CDATA[>=]]> unix_timestamp(NOW())
-    ORDER BY
-    ad.`order` ASC,ad.`create_time` desc
-    <if test="limitStart >= 0">
-      limit #{limitStart} , #{limitEnd}
-    </if>
-  </select>
 </mapper>

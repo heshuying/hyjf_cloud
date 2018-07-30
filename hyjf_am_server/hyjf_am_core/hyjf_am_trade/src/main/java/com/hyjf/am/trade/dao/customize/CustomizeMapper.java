@@ -169,4 +169,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowTenderInfoCustomizeMapper borrowTenderInfoCustomizeMapper;
+
+	@Autowired
+	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 }

@@ -58,7 +58,7 @@ public interface AmUserClient {
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-						Integer searchStatus, Integer updateStatus);
+						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
 
 	void updateLoginUser(int userId, String ip);
@@ -295,4 +295,11 @@ public interface AmUserClient {
     List<AccountBankVO> selectAccountBank(Integer userId, int status);
 
     List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
+
+    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+	Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId);
+
+	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
+
+	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
 }

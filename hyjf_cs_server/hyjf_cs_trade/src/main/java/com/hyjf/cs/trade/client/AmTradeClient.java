@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -1433,4 +1434,55 @@ public interface AmTradeClient {
     Integer countAppMyPlan(AssetManageBeanRequest params);
 
     List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
+
+
+    /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    int countPlanBorrowRecordTotal(Map<String,Object> params);
+
+    /**
+     * 查询相应的计划标的记录列表
+     * @param params
+     * @return
+     */
+    List<DebtPlanBorrowCustomizeVO> selectPlanBorrowList(Map<String,Object> params);
+
+    /**
+     * 获取债转承接信息by AssignOrderId
+     * @param nid
+     * by libin
+     * @return
+     */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
+
+    /**
+     * 获取债转承接信息by AssignNid
+     * @param AssignOrderId
+     * @return
+     */
+    CreditTenderVO getCreditTenderByAssignNid(String assignNid);
+
+    /**
+     * 获取协议模板by DisplayName
+     * @param DisplayName
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    Long selectPlanAccedeSum(Map<String,Object> params);
+
+    /**
+     * 查询相应的计划的加入列表
+     * @param params
+     * @return
+     */
+    List<DebtPlanAccedeCustomizeVO> selectPlanAccedeList(Map<String,Object> params);
 }

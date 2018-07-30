@@ -8,6 +8,8 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -113,4 +115,32 @@ public interface HjhPlanCustomizeMapper {
      * @date 2018/7/24 19:05
      */
     List<HjhAccedeCustomizeVO> getPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    int countPlanBorrowRecordTotal(Map<String,Object> params);
+
+    /**
+     * 计划标的组成
+     * @param params
+     * @return
+     */
+    List<DebtPlanBorrowCustomize> selectPlanBorrowList(Map<String,Object> params);
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    Long selectPlanAccedeSum(Map<String,Object> params);
+
+    /**
+     * 查询相应的计划的加入明细
+     * @param params
+     * @return
+     */
+    List<DebtPlanAccedeCustomize> selectPlanAccedeList(Map<String,Object> params);
 }

@@ -316,5 +316,18 @@ public class BankExceptionController extends BaseController {
         return this.bankTenderCancelService.updateTenderCancelExceptionData(CommonUtils.convertBean(info,BorrowTenderTmp.class));
     }
 
-
+	/**
+	 * 获取债转承接信息AssignNid
+	 * @param nid
+	 * @return
+	 */
+    @GetMapping("/getCreditTenderByAssignNid/{assignNid}")
+    public CreditTenderResponse getCreditTenderByAssignNid(@PathVariable String assignNid){
+        CreditTenderResponse response = new CreditTenderResponse();
+        CreditTenderVO vo = bankCreditTenderService.getCreditTenderByAssignNid(assignNid);
+        if(vo != null){
+        	response.setResult(vo);
+        }
+        return response;
+    }
 }

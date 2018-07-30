@@ -131,4 +131,12 @@ public interface ContentArticleService {
      * @return
      */
     List<ContentArticleCustomize> getContentArticleListByType(Map<String,Object> params);
+
+    /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    ContentArticleCustomize getContentArticleFlip(Map<String, Object> params, String offset);
 }

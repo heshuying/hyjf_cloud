@@ -15,7 +15,7 @@ public interface InstConfigService {
      * @param adminRequest
      * @return
      */
-    public AdminInstConfigListResponse instConfigInit(AdminInstConfigListRequest adminRequest);
+    public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest);
     /**
      * 查询详情页面
      * @param adminRequest

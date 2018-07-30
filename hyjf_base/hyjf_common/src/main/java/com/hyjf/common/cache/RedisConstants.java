@@ -176,4 +176,14 @@ public class RedisConstants {
      * admin单点登陆用户
      */
     public static final String ADMIN_REQUEST = "Admin:";
+    
+    /**
+     * 协议模板---协议前台展示名称的别名
+     */
+    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias:";
+    
+    /**
+     * 协议模板---协议文件存储Redis前缀
+     */
+    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
 }

@@ -35,4 +35,12 @@ public interface AppFindService extends BaseMarketService {
      * @return
      */
     ContentArticleVO getContentArticleById(Integer contentArticleId);
+
+    /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset);
 }

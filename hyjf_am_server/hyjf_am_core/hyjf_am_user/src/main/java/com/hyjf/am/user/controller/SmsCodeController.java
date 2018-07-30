@@ -1,17 +1,16 @@
 package com.hyjf.am.user.controller;
 
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.user.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.user.SmsCodeResponse;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
-import com.hyjf.am.user.service.SmsService;
+import javax.validation.Valid;
 
 /**
  * @author xiasq
@@ -55,8 +54,9 @@ public class SmsCodeController extends BaseController{
 		String platform = request.getPlatform();
 		Integer status = request.getStatus();
 		Integer updateStatus = request.getUpdateStatus();
+		boolean isUpdate = request.isUpdate();
 		int result = smsService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, status,
-				updateStatus);
+				updateStatus, isUpdate);
 		return result;
 	}
 
