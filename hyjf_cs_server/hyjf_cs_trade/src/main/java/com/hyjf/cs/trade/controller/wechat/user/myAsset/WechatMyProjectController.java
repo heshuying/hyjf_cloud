@@ -54,11 +54,10 @@ public class WechatMyProjectController extends BaseTradeController {
     @ApiOperation(value = "微信端:获取我的散标信息", notes = "微信端:获取我的散标信息")
     @PostMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
     public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,
-                                                                 @RequestHeader(value = "token", required = false) String token,
-                                                                 @RequestHeader(value = "type", required = false) String type) {
+                                                                 @RequestHeader(value = "token", required = false) String token) {
 
         WeChatResult weChatResult = new WeChatResult();
-
+        String type = request.getParameter("type");
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
         if (Strings.isNullOrEmpty(type)) {
             return new WeChatResult(MsgEnum.ERR_PARAM_NUM);
