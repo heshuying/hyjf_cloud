@@ -52,7 +52,7 @@ public class WechatMyProjectController extends BaseTradeController {
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "微信端:获取我的散标信息", notes = "微信端:获取我的散标信息")
-    @PostMapping(value = "/queryScatteredProject", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
     public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,
                                                                  @RequestHeader(value = "token", required = false) String token,
                                                                  @RequestHeader(value = "type", required = false) String type) {

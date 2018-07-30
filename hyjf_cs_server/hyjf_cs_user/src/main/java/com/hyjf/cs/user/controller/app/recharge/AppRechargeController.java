@@ -41,7 +41,7 @@ import java.util.List;
  * @author fq
  * @version AppRechargeController, v0.1 2018/7/30 9:34
  */
-@Api(value = "用户充值", description = "用户充值")
+@Api(value = "app端-用户充值", description = "app端-用户充值")
 @RestController
 @RequestMapping("/hyjf-app/user/bank/recharge")
 public class AppRechargeController extends BaseUserController {
