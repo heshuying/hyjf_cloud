@@ -229,6 +229,9 @@ public enum MsgEnum implements MsgCode {
 	ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
 	ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
 
+	// 订单相关ERR_ORDER_
+	ERR_ORDER_VERIFY("EOD000001","订单验证失败"),
+
 
 
 	// 时间日期相关错误信息ERR_DATE_
