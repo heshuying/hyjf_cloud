@@ -76,4 +76,10 @@ public interface KeyCountService  {
 	 * @return
 	 */
 	int getTenderAgeByRange(OperationReportJobRequest request);
+
+	/**
+	 * 按照性别统计投资人的分布
+	 * @param request 上个月的最后一天
+	 */
+	List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request);
 }

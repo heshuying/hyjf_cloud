@@ -28,7 +28,7 @@ public interface OperationReportJobService {
      * 按照性别统计投资人的分布 上个月的最后一天
      * @param request
      */
-    List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request);
+    List<OperationReportJobVO>  getTenderSexGroupByList(OperationReportJobRequest request);
 
     /**
      *

@@ -36,10 +36,21 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	}
 
 	@Override
-	public  List<OperationReportJobVO> getTenderSexGroupBy(Date date) {
+	public  List<OperationReportJobVO> getTenderSexGroupBy(Date date,List<OperationReportJobVO> ageRangeUserIds) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendersexgroupby",request, OperationReportJobResponse.class).getBody();
+		request.setOperationReportJobVOList(ageRangeUserIds);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tendersexgroupby",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public  List<OperationReportJobVO> getTenderSexGroupByList(Date date) {
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setDate(date);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendersexgroupbylist",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

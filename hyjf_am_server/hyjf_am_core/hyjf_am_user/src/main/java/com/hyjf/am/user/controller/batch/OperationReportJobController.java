@@ -73,5 +73,11 @@ public class OperationReportJobController extends BaseController {
 		response.setCount(count);
 		return response;
 	}
-
+	@RequestMapping("/tendersexgroupby")
+	public OperationReportJobResponse tenderSexGroupBy(@RequestBody OperationReportJobRequest request) {
+		OperationReportJobResponse response = new OperationReportJobResponse();
+		List<OperationReportJobVO> list = keyCountService.getTenderSexGroupBy(request);
+		response.setResultList(list);
+		return response;
+	}
 }

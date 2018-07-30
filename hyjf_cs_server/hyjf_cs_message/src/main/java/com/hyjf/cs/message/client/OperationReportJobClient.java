@@ -25,7 +25,13 @@ public interface OperationReportJobClient {
      * 按照性别统计投资人的分布
      * @param date 上个月的最后一天
      */
-    List<OperationReportJobVO>  getTenderSexGroupBy(Date date);
+    List<OperationReportJobVO>  getTenderSexGroupBy(Date date, List<OperationReportJobVO> ageRangeUserIds);
+
+    /**
+     * 按照性别统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
 
     /**
      *投资人按照年龄分布 返回符合条件所有用户

@@ -56,4 +56,9 @@ public class KeyCountServiceImpl implements KeyCountService {
 	public int getTenderAgeByRange(OperationReportJobRequest request){
 		return keyCountCustomMapper.getTenderAgeByRange(request);
 	}
+    @Override
+    public List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request){
+        return keyCountCustomMapper.getTenderSexGroupBy(request);
+    }
+
 }

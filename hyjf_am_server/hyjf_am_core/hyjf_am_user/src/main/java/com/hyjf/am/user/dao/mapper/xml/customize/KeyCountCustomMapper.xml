@@ -79,6 +79,11 @@
         <result column="userName" property="userName" jdbcType="VARCHAR" />
     </resultMap>
 
+    <resultMap id="ageResultMap" type="com.hyjf.mybatis.model.customize.TenderSexCount" >
+        <id column="sex" property="sex" jdbcType="INTEGER" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+
     <select id="searchAction" resultMap="selectListMap" parameterType="com.hyjf.am.resquest.user.KeyCountRequest">
         <include refid="Select_Clause" />
         <if test="limitStart >= 0" >
@@ -209,5 +214,19 @@
             <foreach collection="operationReportJobVOList" index="index" item="item" open="(" separator="," close=")">
                 #{item.userId}
             </foreach>
+    </select>
+    <!-- 	投资人性别分布 -->
+    <select id="getTenderSexGroupBy" resultMap="ageResultMap"  parameterType="com.hyjf.am.resquest.trade.OperationReportJobRequest">
+        SELECT
+        ui.sex as sex,count(1) as count
+        FROM
+        ht_user  u
+        LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+        WHERE ui.sex=2 or ui.sex=1
+        AND    u.user_id in
+        <foreach collection="operationReportJobVOList" index="index" item="item" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+        group by ui.sex;
     </select>
 </mapper>

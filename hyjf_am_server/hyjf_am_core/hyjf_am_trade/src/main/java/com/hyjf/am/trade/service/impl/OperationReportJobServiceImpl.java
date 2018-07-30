@@ -29,9 +29,9 @@ public class OperationReportJobServiceImpl implements OperationReportJobService 
 		return operationReportCustomizeMapper.getTenderCityGroupBy(request.getDate());
 	}
 	@Override
-	public  List<OperationReportJobVO> getTenderSexGroupBy(OperationReportJobRequest request){
+	public  List<OperationReportJobVO> getTenderSexGroupByList(OperationReportJobRequest request){
 
-		return operationReportCustomizeMapper.getTenderSexGroupBy(request.getDate());
+		return operationReportInfoJobCustomizeMapper.getTenderSexGroupByList(request.getDate());
 	}
 	@Override
 	public  int getTenderAgeByRange(Date date, int firstAge, int endAge){

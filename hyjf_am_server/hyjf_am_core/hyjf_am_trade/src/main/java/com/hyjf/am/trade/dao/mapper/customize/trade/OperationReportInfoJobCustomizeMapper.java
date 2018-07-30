@@ -47,6 +47,12 @@ public interface OperationReportInfoJobCustomizeMapper {
     List<OperationReportJobVO> getRechargeMoneyAndSum(int intervalMonth);
 
     /**
+     * 按照性别统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
+
+    /**
      * 渠道分析 ，成交笔数
      *
      * @param intervalMonth 今年间隔月份
