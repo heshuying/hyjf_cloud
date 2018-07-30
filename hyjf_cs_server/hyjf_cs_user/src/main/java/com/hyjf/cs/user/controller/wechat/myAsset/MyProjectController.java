@@ -16,11 +16,10 @@ import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * 我的资产接口，散标、计划......
@@ -44,7 +43,7 @@ public class MyProjectController extends BaseUserController {
     @SignValidate
     @RequestMapping(value = "/queryScatteredProject", method = RequestMethod.GET)
     @ResponseBody
-    public WeChatResult queryScatteredProject(HttpServletRequest request) {
+    public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
 
         WeChatResult result = new WeChatResult();
 
@@ -61,7 +60,6 @@ public class MyProjectController extends BaseUserController {
         int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
         int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
 
-        Integer userId = this.requestUtil.getRequestUserId(request);
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
@@ -98,7 +96,7 @@ public class MyProjectController extends BaseUserController {
     @SignValidate
     @RequestMapping(value = "/queryPlanedProject", method = RequestMethod.GET)
     @ResponseBody
-    public WeChatResult queryPlanedProject(HttpServletRequest request) {
+    public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
         WeChatResult result = new WeChatResult();
         String type = request.getParameter("type");
         if (StringUtils.isEmpty(type)) {
@@ -114,15 +112,13 @@ public class MyProjectController extends BaseUserController {
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
-        String userId = String.valueOf(requestUtil.getRequestUserId(request));
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(userId));
 
         switch (type) {
             case CustomConstants.HOLD_PLAN_TYPE:
-                myProjectService.selectCurrentHoldPlanList(userId, currentPage, pageSize, vo);
+                myProjectService.selectCurrentHoldPlanList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
             case CustomConstants.REPAYMENT_PLAN_TYPE:
-                myProjectService.selectRepayMentPlanList(userId, currentPage, pageSize, vo);
+                myProjectService.selectRepayMentPlanList(String.valueOf(userId), currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);

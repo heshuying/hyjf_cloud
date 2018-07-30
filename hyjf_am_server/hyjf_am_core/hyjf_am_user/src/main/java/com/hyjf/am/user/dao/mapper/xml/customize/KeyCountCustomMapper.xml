@@ -70,6 +70,15 @@
         <result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
     </resultMap>
 
+    <resultMap id="performanceMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="sumAccount" property="sumAccount" jdbcType="DECIMAL" />
+        <result column="dealMonth" property="dealMonth" jdbcType="VARCHAR" />
+        <result column="dealSum" property="dealSum" jdbcType="INTEGER" />
+        <result column="userId" property="userId" jdbcType="INTEGER" />
+        <result column="userName" property="userName" jdbcType="VARCHAR" />
+    </resultMap>
+
     <select id="searchAction" resultMap="selectListMap" parameterType="com.hyjf.am.resquest.user.KeyCountRequest">
         <include refid="Select_Clause" />
         <if test="limitStart >= 0" >
@@ -77,5 +86,114 @@
         </if>
     </select>
 
+    <select id="countRegistUser" resultType="java.lang.Integer">
+        SELECT
+        count(1) AS sumAccount
+        FROM
+        ht_user
+        WHERE
+        reg_time <![CDATA[ < ]]> DATE_FORMAT(CURDATE(), '%Y-%m-01')
+    </select>
 
+    <select id="getSexCount" resultMap="performanceMap" parameterType="java.util.List">
+    SELECT
+       CASE ui.sex
+        WHEN 1 THEN
+        "男"
+        WHEN 2 THEN
+        "女"
+        ELSE
+        "未知"
+        END AS title,
+        count(*) as dealSum
+        FROM
+        ht_user  u
+        LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+        WHERE
+        u.user_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                            #{item.userId}
+        </foreach>
+
+        GROUP BY
+        CASE ui.sex
+        WHEN 1 THEN
+        "男"
+        WHEN 2 THEN
+        "女"
+        ELSE
+        "未知"
+        END;
+    </select>
+
+    <select id="getAgeCount" resultMap="performanceMap" parameterType="java.util.List">
+        SELECT
+        CASE
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
+        '60岁以上'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
+        '50-59岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
+        '40-49岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
+        '30-39岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
+        '18-29岁'
+        END AS title,
+        count(*) as dealSum
+        FROM
+        ht_user  u
+        LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+        WHERE
+        u.user_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+
+        GROUP BY
+        CASE
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
+        '60岁以上'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
+        '50-59岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
+        '40-49岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
+        '30-39岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
+        '18-29岁'
+        END;
+    </select>
+    <select id="getUserNames" resultMap="performanceMap" parameterType="java.util.List">
+        SELECT
+        u.user_id as userId,
+        u.username as userName
+        FROM
+        ht_user  u
+        WHERE
+        u.user_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </select>
+
+    <!-- 	通过用户ID查询 用户年龄，用户地区 -->
+    <select id="getUserAgeAndArea" resultMap="performanceMap">
+        SELECT
+        TIMESTAMPDIFF(YEAR, ui.birthday, now()) as dealSum,
+        ui.idcard as title,
+        ui.user_id as userId
+        FROM
+        ht_user_info ui
+        WHERE
+        u.user_id = #{userId} LIMIT 1;
+    </select>
 </mapper>

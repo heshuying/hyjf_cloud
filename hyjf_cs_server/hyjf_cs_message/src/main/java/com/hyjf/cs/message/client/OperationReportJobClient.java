@@ -92,6 +92,14 @@ public interface OperationReportJobClient {
     List<OperationReportJobVO> getPerformanceSum();
 
     /**
+     * 通过时间统计平台注册人数
+     * @param
+     * @return
+     *
+     */
+    int countRegistUser();
+
+    /**
      * 当月、季、半年、全年业绩  下面的  成交金额,根据月份计算
      *
      * @param startMonth 开始月份
@@ -140,7 +148,13 @@ public interface OperationReportJobClient {
      * @return
      */
     List<OperationReportJobVO> getSexDistribute( int intervalMonth);
-
+    /**
+     * 用户分析 - 性别分布拆分
+     *
+     * @param list 用户ids
+     * @return
+     */
+    List<OperationReportJobVO> getSexCount( List<OperationReportJobVO> list);
     /**
      * 用户分析 - 年龄分布
      *
@@ -150,12 +164,20 @@ public interface OperationReportJobClient {
     List<OperationReportJobVO> getAgeDistribute( int intervalMonth);
 
     /**
+     * 用户分析 - 年龄分布拆分
+     *
+     * @param list 用户ids
+     * @return
+     */
+    List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list);
+    /**
      * 用户分析 - 金额分布
      *
      * @param intervalMonth 今年间隔月份
      * @return
      */
     List<OperationReportJobVO> getMoneyDistribute( int intervalMonth);
+
 
     /**
      * 十大投资人
@@ -165,6 +187,14 @@ public interface OperationReportJobClient {
      */
     List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
 
+
+    /**
+     * 十大投资人拆分
+     *
+     * @param list 多个用户id
+     * @return
+     */
+    List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
     /**
      * 超活跃，投资笔数最多
      *

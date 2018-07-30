@@ -64,7 +64,7 @@ public interface HjhLabelService {
 	 * @param  request
 	 * @return 
 	 */
-	void insertHjhLabelRecord(HjhLabelInfoRequest hjhLabelInfoRequest);
+	int insertHjhLabelRecord(HjhLabelInfoRequest hjhLabelInfoRequest);
 	
 	/**
 	 * 更新标签配置列表ByLabelName

@@ -49,7 +49,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public  int getTenderAgeByRange(Date date,int firstAge,int endAge) {
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderAgeByRange",request, int.class).getBody();
+		int count = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderagebyrange",request, int.class).getBody();
 		return count;
 	}
 
@@ -108,6 +108,44 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	@Override
 	public List<OperationReportJobVO> getPerformanceSum(){
 		OperationReportJobResponse response =  restTemplate.getForEntity("http://AM-TRADE/am-trade/report/operationreportjob/performanceSum", OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public int countRegistUser(){
+		OperationReportJobResponse response =  restTemplate.getForEntity("http://AM-USER/am-user/batch/operation_report_job/countregistuser", OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getCount();
+		}
+		return 0;
+	}
+	@Override
+	public List<OperationReportJobVO> getSexCount(List<OperationReportJobVO> list){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(list);
+		OperationReportJobResponse response =  restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/sexcount",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(list);
+		OperationReportJobResponse response =  restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/agecount",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(list);
+		OperationReportJobResponse response =  restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/usernames",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -196,6 +234,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return null;
 	}
+
 	@Override
 	public List<OperationReportJobVO> getTenMostMoney( int intervalMonth){
 		OperationReportJobRequest request = new OperationReportJobRequest();
@@ -230,7 +269,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public OperationReportJobVO getUserAgeAndArea(Integer userId){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setUserId(userId);
-		OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/userageandarea",request, OperationReportJobResponse.class).getBody();
+		OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/userageandarea",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
