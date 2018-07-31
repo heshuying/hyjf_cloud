@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;

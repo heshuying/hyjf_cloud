@@ -3,6 +3,7 @@ package com.hyjf.am.trade.dao.customize;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import com.hyjf.am.trade.dao.mapper.customize.app.AppProjectListCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.app.AppTenderCreditCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.*;
 import com.hyjf.am.trade.dao.mapper.customize.wdzj.BorrowTenderInfoCustomizeMapper;
@@ -172,4 +173,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
+
+	@Autowired
+	protected AppTenderCreditCustomizeMapper appTenderCreditCustomizeMapper;
 }
