@@ -26,7 +26,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version BankMerchantAccountController, v0.1 2018/7/9 16:07
  */
-@Api(value = "江西银行商户子账户")
+@Api(value = "江西银行商户子账户",description ="江西银行商户子账户")
 @RestController
 @RequestMapping("/hyjf-admin/bank/merchant/account")
 public class BankMerchantAccountController extends BaseController {

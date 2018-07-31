@@ -42,7 +42,7 @@ import java.util.List;
  * @author tanyy
  * @version KeyCountController, v0.1 2018/7/18 16:03
  */
-@Api(value = "关键词设计")
+@Api(value = "关键词设计",description ="关键词设计")
 @RestController
 @RequestMapping("/hyjf-admin/keycount")
 public class KeyCountController extends BaseController {

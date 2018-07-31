@@ -18,7 +18,7 @@ import javax.validation.Valid;
  * 产品中心 --> 汇计划 --> 订单退出
  * @Author : huanghui
  */
-@Api(value = "产品中心-汇计划-订单退出")
+@Api(value = "产品中心-汇计划-订单退出",description ="产品中心-汇计划-订单退出")
 @RestController
 @RequestMapping(value = "/planrepay")
 public class PlanRepayController extends BaseController {
