@@ -32,7 +32,7 @@ import java.util.List;
  * @Date: 2018/7/14 10:38
  * @Description: ChannelController
  */
-@Api(value = "推广管理列表")
+@Api(value = "推广管理列表",description ="推广管理列表")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/channel")
 public class ChannelController extends BaseController {

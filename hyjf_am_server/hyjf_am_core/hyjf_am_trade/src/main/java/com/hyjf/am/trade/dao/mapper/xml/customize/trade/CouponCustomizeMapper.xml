@@ -166,4 +166,43 @@
 		AND cc.del_flg = 0
 	</select>
 
+	<select id="getCouponTenderListByUserIdAndOrderId" resultType="com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO">
+		SELECT  c.coupon_name AS couponName,
+				c.coupon_code AS couponCode,
+				c.coupon_quota AS couponQuota,
+				c.coupon_type AS couponType,
+				d.real_tender_id AS realOrderId,
+				t.recover_account_capital_wait AS recoverAccountCapitalWait,
+				t.recover_account_interest_wait AS recoverAccountInterestWait,
+				t.recover_account_wait AS recoverAaccountWait
+		FROM hyjf_borrow_tender_cpn t
+		LEFT JOIN ht_coupon_tender a ON a.order_id = t.nid
+		LEFT JOIN ht_coupon_user b ON a.coupon_grant_id = b.id
+		LEFT JOIN ht_coupon_config c ON c.coupon_code = b.coupon_code
+		LEFT JOIN ht_coupon_real_tender d ON d.coupon_tender_id = t.nid
+		WHERE 2 = 2
+		<if test="userId != null" >
+			AND t.user_id = #{userId}
+		</if>
+		<if test="orderId != null" >
+			AND t.nid = #{orderId}
+		</if>
+		limit 1
+	</select>
+
+	<select id="couponRepaymentPlanList" resultType="com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO">
+		SELECT
+			hcr.tender_id nid,
+			hcr.recover_period recoverPeriod,
+			hcr.recover_account recoverAccountWait,
+			hcr.recover_capital recoverCapitalWait,
+			IF(hcr.recover_capital>0,hcr.recover_account-hcr.recover_capital,hcr.recover_interest) recoverInterestWait,
+			hcr.recover_account_yes recoverAccount,
+			FROM_UNIXTIME(IFNULL(hcr.recover_yestime,hcr.recover_time), '%Y-%m-%d' ) recoverTime,
+			IF(hcr.recover_status=0,'未回款','已回款') recoverStatus
+		FROM
+			ht_coupon_recover hcr
+		WHERE hcr.tender_id=#{nid}
+	</select>
+
 </mapper>

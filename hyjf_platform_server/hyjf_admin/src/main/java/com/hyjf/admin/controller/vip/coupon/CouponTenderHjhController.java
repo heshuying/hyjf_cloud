@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
  * @author walter.limeng
  * @version UtmController, v0.1 2018/7/03 16:17
  */
-@Api(value = "VIP管理汇计划列表")
+@Api(value = "VIP管理汇计划列表",description ="VIP管理汇计划列表")
 @RestController
 @RequestMapping("/hyjf-admin/coupon/tender/hjh")
 public class CouponTenderHjhController extends BaseController {

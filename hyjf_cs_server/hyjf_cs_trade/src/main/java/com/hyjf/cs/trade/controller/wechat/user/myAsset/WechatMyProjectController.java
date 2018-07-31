@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,13 +53,13 @@ public class WechatMyProjectController extends BaseTradeController {
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "微信端:获取我的散标信息", notes = "微信端:获取我的散标信息")
-    @PostMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
     public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,
-                                                                 @RequestHeader(value = "token", required = false) String token) {
+                                                                 @RequestHeader(value = "userId", required = false) Integer userId) {
 
         WeChatResult weChatResult = new WeChatResult();
         String type = request.getParameter("type");
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + userId, WebViewUserVO.class);
         if (Strings.isNullOrEmpty(type)) {
             return new WeChatResult(MsgEnum.ERR_PARAM_NUM);
         }
@@ -69,7 +70,6 @@ public class WechatMyProjectController extends BaseTradeController {
         int currentPage = Strings.isNullOrEmpty(currentPageStr) ? 1 : Integer.valueOf(currentPageStr);
         int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
 
-        Integer userId =webViewUserVO.getUserId();
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
 
@@ -104,10 +104,10 @@ public class WechatMyProjectController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "微信端:获取我的计划信息", notes = "微信端:获取我的计划信息")
-    @PostMapping(value = "/queryPlanedProject", produces = "application/json; charset=utf-8")
-    public WeChatResult queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    @GetMapping(value = "/queryPlanedProject", produces = "application/json; charset=utf-8")
+    public WeChatResult queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "userId", required = false) Integer userId) {
         WeChatResult weChatResult = new WeChatResult();
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + userId, WebViewUserVO.class);
         String type = request.getParameter("type");
 
         if (Strings.isNullOrEmpty(type)) {
@@ -121,8 +121,6 @@ public class WechatMyProjectController extends BaseTradeController {
         int pageSize = Strings.isNullOrEmpty(currentPageStr) ? 10 : Integer.valueOf(pageSizeStr);
 
         QueryMyProjectVO vo = new QueryMyProjectVO();
-
-        Integer userId =webViewUserVO.getUserId();
         switch (type) {
             case HOLD_PLAN_TYPE:
                 myProjectService.selectCurrentHoldPlanList(userId, currentPage, pageSize, vo);

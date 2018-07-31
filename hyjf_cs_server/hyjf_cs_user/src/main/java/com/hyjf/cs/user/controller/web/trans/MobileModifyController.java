@@ -67,7 +67,7 @@ public class MobileModifyController extends BaseUserController {
 
             WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = mobileModifyService.setToken(webUser);
+                webUser = mobileModifyService.updateToken(webUser);
                 result.setData(webUser);
             }
         }
@@ -98,10 +98,10 @@ public class MobileModifyController extends BaseUserController {
             try {
 				bankBean = mobileModifyService.callMobileModify(user.getUserId(), paraMap.get("newMobile"), paraMap.get("smsCode"), paraMap.get("srvAuthCode"));
 			} catch (Exception e) {
-				result.setStatus(WebResult.ERROR);
-	            result.setStatusDesc(WebResult.ERROR_DESC);
-	            logger.error("请求手机号码修改接口失败", e);
-			}
+                result.setStatus(WebResult.ERROR);
+                result.setStatusDesc(WebResult.ERROR_DESC);
+                logger.error("请求手机号码修改接口失败", e);
+            }
             
             if (bankBean == null) {
     			result.setStatus(WebResult.FAIL);
@@ -124,7 +124,7 @@ public class MobileModifyController extends BaseUserController {
 
             WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = mobileModifyService.setToken(webUser);
+                webUser = mobileModifyService.updateToken(webUser);
                 result.setData(webUser);
             }
         }

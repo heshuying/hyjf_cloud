@@ -46,7 +46,7 @@ import java.util.List;
  * @version BorrowRepaymentInfoListController, v0.1 2018/7/10 9:30
  */
 
-@Api(value = "产品中心-汇直投-还款明细列表")
+@Api(value = "产品中心-汇直投-还款明细列表",description ="产品中心-汇直投-还款明细列表")
 @RestController
 @RequestMapping("/borrow/borrowrepaymentinfo/infolist")
 public class BorrowRepaymentInfoListController {
