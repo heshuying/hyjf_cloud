@@ -1,7 +1,6 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
 
 import java.util.List;
 
