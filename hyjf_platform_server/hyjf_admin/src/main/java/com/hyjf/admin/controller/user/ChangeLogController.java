@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiOperation;
  * @package
  * @date 2018/6/27
  */
-@Api(value = "操作日志")
+@Api(value = "操作日志",description ="操作日志")
 @RestController
 @RequestMapping("/hyjf-admin/changelog")
 public class ChangeLogController extends BaseController {

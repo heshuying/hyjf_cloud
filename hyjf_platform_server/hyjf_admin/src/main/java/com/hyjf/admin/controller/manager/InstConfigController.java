@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author by xiehuili on 2018/7/5.
  * @version InstConfigController, v0.1 2018/7/5.
  */
-@Api(value = "配置中心保证金配置")
+@Api(value = "配置中心保证金配置",description ="配置中心保证金配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/instconfig")
 public class InstConfigController extends BaseController {
