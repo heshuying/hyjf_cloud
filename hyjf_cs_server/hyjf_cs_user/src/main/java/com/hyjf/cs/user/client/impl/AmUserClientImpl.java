@@ -1010,4 +1010,18 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer countAllUser(){
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/countAll",UserResponse.class).getBody();
+		if (!Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getCount();
+	}
 }

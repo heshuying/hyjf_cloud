@@ -689,4 +689,15 @@ public class UserController extends BaseController {
         response.setResultList(list);
         return response;
     }
+
+    /**
+     * 获取用户表总记录数
+     * @return
+     */
+    @RequestMapping("/countAll")
+    public UserResponse countAll() {
+        UserResponse response = new UserResponse();
+        response.setCount(userService.countAll());
+        return response;
+    }
 }
