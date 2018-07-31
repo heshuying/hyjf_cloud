@@ -112,6 +112,8 @@ public class AppSmsCodeController extends BaseUserController {
         mobile = DES.decodeValue(key, mobile);
         int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
+        ret.put("status", "0");
+        ret.put("statusDesc", "验证验证码成功");
         return ret;
     }
 
