@@ -13,6 +13,9 @@ import com.hyjf.cs.user.controller.wechat.regist.UserRegistResultVO;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author zhangqingqing
  * @version RegistService, v0.1 2018/6/11 15:09
@@ -91,4 +94,7 @@ public interface RegistService extends BaseUserService {
      * @return
      */
     UserRegistResultVO wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
+
+    UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source);
+
 }
