@@ -79,7 +79,7 @@
         <result column="userName" property="userName" jdbcType="VARCHAR" />
     </resultMap>
 
-    <resultMap id="ageResultMap" type="com.hyjf.mybatis.model.customize.TenderSexCount" >
+    <resultMap id="ageResultMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
         <id column="sex" property="sex" jdbcType="INTEGER" />
         <result column="count" property="count" jdbcType="INTEGER" />
     </resultMap>
