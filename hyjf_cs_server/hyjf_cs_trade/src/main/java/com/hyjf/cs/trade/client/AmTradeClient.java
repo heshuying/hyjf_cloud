@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
@@ -1452,7 +1453,7 @@ public interface AmTradeClient {
 
     /**
      * 获取债转承接信息by AssignOrderId
-     * @param nid
+     * @param assignOrderId
      * by libin
      * @return
      */
@@ -1460,14 +1461,14 @@ public interface AmTradeClient {
 
     /**
      * 获取债转承接信息by AssignNid
-     * @param AssignOrderId
+     * @param assignNid
      * @return
      */
     CreditTenderVO getCreditTenderByAssignNid(String assignNid);
 
     /**
      * 获取协议模板by DisplayName
-     * @param DisplayName
+     * @param displayName
      * @return
      */
     List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
@@ -1485,4 +1486,11 @@ public interface AmTradeClient {
      * @return
      */
     List<DebtPlanAccedeCustomizeVO> selectPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 获得协议模板图片
+     * @param aliasName 别名
+     * @return
+     */
+    AppNewAgreementVO setProtocolImg(String aliasName);
 }
