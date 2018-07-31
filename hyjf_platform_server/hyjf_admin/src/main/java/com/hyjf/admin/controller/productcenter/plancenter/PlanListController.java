@@ -282,13 +282,8 @@ public class PlanListController extends BaseController{
 	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody @Valid PlanListViewRequest viewRequest) {
     	// 初始化原子层请求实体
     	PlanListRequest form = new PlanListRequest();
-    	// 将画面请求request赋值给原子层 request
-    	BeanUtils.copyProperties(viewRequest, form);
-		// 原 String param = request.getParameter("param");  是从 HttpServletRequest 取参数
-		String planNid = form.getPlanNidSrch();
 		// 判空后期有校验
-		//form.setPlanNidSrch(planNid);
-		form.setPlanNidSrch(planNid);
+		form.setPlanNidSrch(viewRequest.getPlanNidSrch());
 		HjhPlanResponse response = this.planListService.getPlanNidAjaxCheck(form);
 		if(response==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
