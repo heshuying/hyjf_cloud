@@ -160,7 +160,7 @@ public class AccessFilter extends ZuulFilter {
 		String token = "";
 		if (APP_CHANNEL.equals(channel)){
 			token = request.getParameter("token");
-		}else if(WEB_CHANNEL.equals(channel)){
+		}else if(WECHAT_CHANNEL.equals(channel)){
 			String sign = request.getParameter("sign");
 			token = SecretUtil.getToken(sign);
 		}else {
