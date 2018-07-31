@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Api(value = "获取我的账单-汇天利",description = "获取我的账单-汇天利")
+@Api(value = "app端-获取我的账单(汇天利)",description = "app端-获取我的账单(汇天利)")
 @RestController
 @RequestMapping(value = "/hyjf-app/htl")
 public class HtlTradeController extends BaseController {
@@ -38,7 +38,7 @@ public class HtlTradeController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "获取我的账单-汇天利")
+	@ApiOperation(value = "获取我的账单(汇天利)")
     @PostMapping(value = "/htlList")
     public JSONObject getHtlList(HttpServletRequest request,@RequestHeader(value = "userId") Integer userId,
 								 @RequestHeader(value = "version") String version,

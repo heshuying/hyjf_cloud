@@ -2,13 +2,13 @@ package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
-import com.hyjf.am.resquest.trade.AppProjectListRequest;
-import com.hyjf.am.resquest.trade.CreditListRequest;
-import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.common.bean.result.WebResult;
 
-import java.util.Map;
+import com.hyjf.am.resquest.trade.ProjectListRequest;
+
+import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
+import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 移动项目列表Service
@@ -32,7 +32,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @date 2018/6/28 16:15
      */
-    public AppResult getAppProjectDetail(Map<String,String> param,String token);
+    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest request, String token);
 
 
     /**
@@ -47,7 +47,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @date 2018/6/30 10:40
      */
-    public AppResult getAppCreditDetail(Map<String,String> param,String token);
+    public JSONObject getAppCreditDetail(String creditNid,String token);
 
     /**
      * 移动端计划列表
@@ -61,7 +61,7 @@ public interface AppProjectListService extends BaseTradeService{
      * @author zhangyk
      * @date 2018/6/29 16:27
      */
-    public AppResult getAppPlanDetail(Map<String,String> param, String token);
+    public JSONObject getAppPlanDetail(String planNid, String token);
 
     /**
      * 散标投资记录列表
@@ -69,4 +69,22 @@ public interface AppProjectListService extends BaseTradeService{
      * @param form
      */
     void createProjectInvestPage(JSONObject info, AppProjectInvestBeanRequest form);
+
+    /**
+     * 创建计划的标的组成分页信息
+     * @param result
+     * @param planId
+     * @param pageNo
+     * @param pageSize
+     */
+    void searchHjhPlanBorrow(HjhPlanBorrowResultBean result, String planId, int pageNo, int pageSize);
+
+    /**
+     * app 端汇计划加入记录
+     * @param result
+     * @param planId
+     * @param currentPage
+     * @param pageSize
+     */
+    void getHjhPlanAccede(HjhPlanAccedeResultBean result, String planId, int currentPage, int pageSize);
 }

@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,7 @@ public class BorrowManinfoController extends BaseController{
      * @date 2018/6/25 16:35
      */
     @GetMapping("/borrowManinfo/{borrowNid}")
-    public BorrowManinfoResponse getborrowUser(String borrowNid) {
+    public BorrowManinfoResponse getborrowUser(@PathVariable  String borrowNid) {
         BorrowManinfoResponse response = new BorrowManinfoResponse();
         BorrowManinfo borrowManinfo = borrowManinfoService.getBorrowManinfoByNid(borrowNid);
         if (null != borrowManinfo) {

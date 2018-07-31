@@ -22,7 +22,7 @@ import java.util.Map;
  * @author dangzw
  * @version AppHomePageController, v0.1 2018/7/26 10:54
  */
-@Api(value = "App获取起始页广告信息", description = "App获取起始页广告信息")
+@Api(value = "App", description = "App")
 @RestController
 @RequestMapping("/am-market/homepage")
 public class AppHomePageController {
@@ -31,6 +31,7 @@ public class AppHomePageController {
     private AppHomePageService appHomePageService;
 
     /**
+     * 获取起始页广告信息
      * 查询首页的bannner列表
      */
     @PostMapping("/getStartPage")

@@ -11,7 +11,7 @@ import com.hyjf.cs.user.bean.BaseDefine;
  */
 public class UserWithdrawDefine extends BaseDefine {
     /** @RequestMapping值 */
-    public static final String REQUEST_MAPPING = "/user/withdraw";
+    public static final String REQUEST_MAPPING = "hyjf-app/user/withdraw";
     /** 获取我的银行卡  */
     public static final String GET_BANKCARD_MAPPING = "/getBankCardAction";
     /** @RequestMapping值 */

@@ -76,7 +76,7 @@ import io.swagger.annotations.ApiOperation;
  * @date 2015/07/09 17:00
  */
 
-@Api(value = "借款增加")
+@Api(value = "借款增加",description ="借款增加")
 @RestController
 @RequestMapping("/hyjf-admin/borrow/borrowcommon")
 public class BorrowCommonController extends BaseController {

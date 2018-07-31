@@ -10,6 +10,7 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
+import com.hyjf.cs.trade.vo.BankWithdrawVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -51,7 +52,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
-        if(null!=user||0==user.getIsSetPassword()){
+        if(null==user||0==user.getIsSetPassword()||!user.isBankOpenAccount()){
             return new WebResult<>();
         }
         WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
@@ -69,18 +70,18 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "token", required = true) String token,
-                                         @RequestParam @Valid String withdrawmoney, @RequestParam @Valid String widCard,
-                                         @RequestParam @Valid String payAllianceCode , HttpServletRequest request) {
+                                               @RequestBody @Valid BankWithdrawVO bankWithdrawVO , HttpServletRequest request) {
         logger.info("web端提现接口, token is :{}", JSONObject.toJSONString(token));
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null!=userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
+        if(null==userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
             return result;
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,withdrawmoney,widCard,payAllianceCode,CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
+                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ip);
 
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
@@ -90,27 +91,6 @@ public class WebBankWithdrawController extends BaseTradeController {
             e.printStackTrace();
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
-        return result;
-    }
-
-    /**
-     * 用户银行提现同步回调
-     * @Description
-     * @Author pangchengchao
-     * @Version v0.1
-     * @Date
-     */
-    @ApiOperation(value = "用户银行提现同步回调", notes = "用户银行提现同步回调")
-    @PostMapping("/userBankWithdrawReturn")
-    public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
-                                                      @ModelAttribute BankCallBean bean) {
-        logger.info("[web用户银行提现同步回调开始]");
-        logger.info("web端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
-        String isSuccess = request.getParameter("isSuccess");
-        String withdrawmoney = request.getParameter("withdrawmoney");
-        String wifee = request.getParameter("wifee");
-        Map<String, String> result = bankWithdrawService.userBankWithdrawReturn(bean, isSuccess,wifee,withdrawmoney);
-        logger.info("[web用户银行提现同步回调结束]");
         return result;
     }
 
@@ -142,8 +122,10 @@ public class WebBankWithdrawController extends BaseTradeController {
     }
 
     /**
-     * @Description 查询开户失败原因
-     * @Author sunss
+     * @Description web端查询提现失败原因
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
      */
     @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
     @RequestMapping("/seachFiledMess")

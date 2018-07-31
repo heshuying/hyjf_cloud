@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.user.controller.wechat.regist;
 
-import com.hyjf.cs.user.bean.BaseResultBean;
+import com.hyjf.cs.user.result.BaseResultBean;
 
 /**
  * 获取微信首页VO对象
@@ -26,11 +26,24 @@ public class UserRegistResultVO extends BaseResultBean {
 	
 	//登录完成后的sign值
 	private String sign;
-	
+
+	public UserRegistResultVO() {
+	}
+
+	public UserRegistResultVO(String request) {
+		super(request);
+	}
+
+	public UserRegistResultVO(String status, String statusDesc) {
+		super(status, statusDesc);
+	}
+
+	@Override
 	public String getRequest() {
 		return request;
 	}
 
+	@Override
 	public void setRequest(String request) {
 		this.request = request;
 	}

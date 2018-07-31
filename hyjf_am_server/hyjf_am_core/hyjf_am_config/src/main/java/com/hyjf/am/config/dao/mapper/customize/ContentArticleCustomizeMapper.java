@@ -21,19 +21,38 @@ public interface ContentArticleCustomizeMapper {
      */
     List<ContentArticle> selectContentArticle(ContentArticleRequest contentArticleCustomize);
 
+    /**
+     * 查询文章条数
+     * @param contentArticleCustomize
+     * @return
+     */
     Integer countContentArticle(ContentArticleRequest contentArticleCustomize);
 
     /**
-     * 查询文章条数
+     * (条件)查询文章条数
      * @param params
      * @return
      */
     Integer countContentArticleByType(Map<String,Object> params);
 
     /**
-     * 查询文章列表
+     * 通过类型查询文章列表
      * @param params
      * @return
      */
     List<ContentArticle> getContentArticleListByType(Map<String,Object> params);
+
+    /**
+     * (条件)查询文章列表(正序)
+     * @param params
+     * @return
+     */
+    ContentArticle getContentArticleUp(Map<String, Object> params);
+
+    /**
+     * (条件)查询文章列表(倒序)
+     * @param params
+     * @return
+     */
+    ContentArticle getContentArticleDown(Map<String, Object> params);
 }

@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.message.bean.ic;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -10,6 +12,7 @@ import java.math.BigDecimal;
  * @author fuqiang
  * @version BorrowUserStatistic, v0.1 2018/7/18 13:51
  */
+@Document(collection = "ht_borrow_user_statistic")
 public class BorrowUserStatistic implements Serializable {
     private String id;
 

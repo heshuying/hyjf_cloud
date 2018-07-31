@@ -44,6 +44,9 @@ public class AppSafeController extends BaseUserController {
     public JSONObject getRelationTypes(HttpServletRequest request) {
         JSONObject ret = checkAppBaseParam(request);
         ret.put("request", "/hyjf-app/appUser/getRelationTypes");
+        if (null!= ret&&"1".equals(ret.get("status"))){
+            return ret;
+        }
         // 业务逻辑
         try {
             Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
@@ -77,6 +80,9 @@ public class AppSafeController extends BaseUserController {
     public JSONObject updateUrgentAction(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         JSONObject ret = checkAppBaseParam(request);
         ret.put("request", "/hyjf-app/appUser/updateUrgentAction");
+        if (null!= ret&&"1".equals(ret.get("status"))){
+            return ret;
+        }
         // 紧急联系人关系
         String urgentRelation = request.getParameter("urgentRelation");
         // 紧急联系人姓名

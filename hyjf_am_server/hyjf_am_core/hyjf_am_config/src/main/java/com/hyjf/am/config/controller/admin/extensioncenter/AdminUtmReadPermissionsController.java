@@ -6,8 +6,11 @@ package com.hyjf.am.config.controller.admin.extensioncenter;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.AdminUtmReadPermissionsService;
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
+import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
 import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +85,23 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
 		adminUtmReadPermissionsService.deleteById(id);
 		response.setRtn(AdminResponse.SUCCESS);
+		return response;
+	}
+
+	/**
+	 * @Author walter.limeng
+	 * @user walter.limeng
+	 * @Description  根据用户Id查询渠道账号管理
+	 * @Date 16:57 2018/7/24
+	 * @Param userId
+	 * @return
+	 */
+	@RequestMapping("/getadminutmreadpermissions/{userId}")
+	public AdminUtmReadPermissionsResponse selectAdminUtmReadPermissions(@PathVariable Integer userId) {
+		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
+		AdminUtmReadPermissionsVO adminUtmReadPermissionsVO = adminUtmReadPermissionsService.selectAdminUtmReadPermissions(userId);
+		response.setRtn(AdminResponse.SUCCESS);
+		response.setResult(adminUtmReadPermissionsVO);
 		return response;
 	}
 

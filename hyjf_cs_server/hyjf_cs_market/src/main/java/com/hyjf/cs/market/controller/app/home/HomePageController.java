@@ -6,8 +6,10 @@ package com.hyjf.cs.market.controller.app.home;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.HomePageService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +27,10 @@ import java.util.Map;
  * @author dangzw
  * @version HomePageController, v0.1 2018/7/26 10:15
  */
-@Api(value = "app获取起始页广告信息", description = "app获取起始页广告信息")
+@Api(value = "app", description = "app")
 @RestController
 @RequestMapping("/hyjf-app/homepage")
-public class HomePageController {
+public class HomePageController extends BaseMarketController {
 
     @Autowired
     private HomePageService homePageService;
@@ -40,6 +42,7 @@ public class HomePageController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = "获取起始页广告信息", notes = "获取起始页广告信息")
     @RequestMapping(value = "/getStartPage", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
     public JSONObject getStartPage(HttpServletRequest request, HttpServletResponse response) {
         //LogUtil.startLog(HomePageDefine.THIS_CLASS, HomePageDefine.START_PAGE_ACTION);

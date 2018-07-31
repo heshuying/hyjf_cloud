@@ -146,4 +146,23 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
 		}
 		return hjhDebtCreditTenderVO;
 	}
+
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
+		HjhDebtCreditTenderVO hjhDebtCreditTenderVO = new HjhDebtCreditTenderVO();
+		HjhDebtCreditTender hjhDebtCreditTender = new HjhDebtCreditTender();
+		
+        HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
+        HjhDebtCreditTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andAssignOrderIdEqualTo(assignOrderId);
+        List<HjhDebtCreditTender> list = hjhDebtCreditTenderMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+        	hjhDebtCreditTender =  list.get(0);
+    		if(hjhDebtCreditTender != null){
+    			BeanUtils.copyProperties(hjhDebtCreditTender, hjhDebtCreditTenderVO);
+    		}
+    		return hjhDebtCreditTenderVO;
+        }
+		return null;
+	}
 }

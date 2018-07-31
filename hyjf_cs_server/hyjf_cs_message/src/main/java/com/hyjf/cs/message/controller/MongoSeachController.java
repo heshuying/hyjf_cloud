@@ -5,7 +5,7 @@ import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;

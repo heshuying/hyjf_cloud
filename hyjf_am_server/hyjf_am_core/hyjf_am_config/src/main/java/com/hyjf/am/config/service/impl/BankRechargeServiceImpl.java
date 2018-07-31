@@ -20,6 +20,8 @@ public class BankRechargeServiceImpl implements BankRechargeService {
 
     @Autowired
     private BankRechargeConfigMapper bankRechargeLimitConfigMapper;
+    @Autowired
+    private BankRechargeConfigMapper bankRechargeConfigMapper;
 
     /**
      * 查询查询快捷充值列表
@@ -96,5 +98,18 @@ public class BankRechargeServiceImpl implements BankRechargeService {
         // 条件查询
         example.setOrderByClause("create_time");
         return bankRechargeLimitConfigMapper.selectByExample(example);
+    }
+    /**
+     * 根据bankId查询BankRechargeConfig
+     * @auth sunpeikai
+     * @param bankId
+     * @return
+     */
+    @Override
+    public List<BankRechargeConfig> getBankRechargeConfigByBankId(Integer bankId) {
+        BankRechargeConfigExample example = new BankRechargeConfigExample();
+        BankRechargeConfigExample.Criteria criteria = example.createCriteria();
+        criteria.andBankIdEqualTo(bankId);
+        return bankRechargeConfigMapper.selectByExample(example);
     }
 }

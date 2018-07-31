@@ -24,7 +24,7 @@ import java.util.*;
  * @author zhangqingqing
  * @version BankRedPacketAccountController, v0.1 2018/7/9 18:06
  */
-@Api(value = "江西银行商户子账户")
+@Api(value = "江西银行商户子账户",description ="江西银行商户子账户")
 @RestController
 @RequestMapping("/hyjf-admin/bank/merchant/redpacket")
 public class BankRedPacketAccountController extends BaseController {

@@ -61,7 +61,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         String platform = request.getParameter("platform");
         WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null!=userVO||0==userVO.getIsSetPassword()){
+        if(null!=userVO||0==userVO.getIsSetPassword()||userVO.getOpenAccount()==0){
             return  new ModelAndView();
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
@@ -113,7 +113,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         logger.info("app端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
         bean.convert();
-        Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
+        // 用户ID
+        Integer userId = Integer.parseInt(bean.getLogUserId());
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(userId));

@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.market.service.impl;
 
+import com.hyjf.am.market.dao.mapper.auto.AdsCustomizeMapper;
 import com.hyjf.am.market.dao.mapper.auto.AdsMapper;
+import com.hyjf.am.market.dao.mapper.customize.app.AppAdsCustomizeMapper;
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AppHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,14 @@ import java.util.Map;
 public class AppHomePageServiceImpl implements AppHomePageService {
 
     @Autowired
-    AdsMapper adsMapper;
+    AppAdsCustomizeMapper appAdsCustomizeMapper;
 
     /**
      * 查询首页的bannner列表
      */
     @Override
     public List<AppAdsCustomize> searchBannerList(Map<String, Object> ads) {
-        List<AppAdsCustomize> adsList = adsMapper.selectAdsList(ads);
+        List<AppAdsCustomize> adsList = appAdsCustomizeMapper.selectAdsList(ads);
         return adsList;
     }
 }

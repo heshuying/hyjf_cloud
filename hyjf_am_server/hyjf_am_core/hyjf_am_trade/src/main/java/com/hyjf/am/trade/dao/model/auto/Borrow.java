@@ -77,6 +77,8 @@ public class Borrow implements Serializable {
 
     private BigDecimal borrowAccountWait;
 
+    private BigDecimal borrowAccountScale;
+
     private String borrowService;
 
     private Integer reverifyStatus;
@@ -429,6 +431,14 @@ public class Borrow implements Serializable {
 
     public void setBorrowAccountWait(BigDecimal borrowAccountWait) {
         this.borrowAccountWait = borrowAccountWait;
+    }
+
+    public BigDecimal getBorrowAccountScale() {
+        return borrowAccountScale;
+    }
+
+    public void setBorrowAccountScale(BigDecimal borrowAccountScale) {
+        this.borrowAccountScale = borrowAccountScale;
     }
 
     public String getBorrowService() {

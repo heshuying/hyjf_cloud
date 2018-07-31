@@ -5,7 +5,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -68,7 +68,7 @@ public class AppMyPlanController extends BaseTradeController {
         }
         Integer userId = null;
         try {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
             userId = webViewUserVO.getUserId();
         } catch (Exception e) { // token失效
             result.setStatus(CustomConstants.APP_STATUS_FAIL);

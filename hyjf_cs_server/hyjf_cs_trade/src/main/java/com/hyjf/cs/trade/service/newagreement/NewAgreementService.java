@@ -8,12 +8,16 @@ import java.util.Map;
 
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
@@ -70,4 +74,39 @@ public interface NewAgreementService extends BaseTradeService{
 	 * @return
 	 */
 	List<TenderToCreditDetailCustomizeVO> selectWebCreditTenderDetailForContract(Map<String,Object> params);
+	
+	/**
+	 * 根据参数查询 BorrowTenderVO
+	 * @param nid
+	 * @return
+	 */
+	List<BorrowTenderVO> getBorrowTenderListByNid(String tenderNid);
+	
+	/**
+	* 会计划投资详情
+	* @param params
+	* @return
+	*/
+	UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
+	
+	/**
+	 * 获取债转承接信息by AssignOrderId
+	 * @param AssignOrderId
+	 * @return
+	 */
+	HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
+	
+	/**
+	 * 获取债转承接信息by AssignNid
+	 * @param AssignOrderId
+	 * @return
+	 */
+	CreditTenderVO getCreditTenderByAssignNid(String assignNid);
+	
+	/**
+	 * 获取协议模板 by  DisplayName
+	 * @param DisplayName
+	 * @return
+	 */
+	List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
 }

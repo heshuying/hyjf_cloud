@@ -3,16 +3,18 @@
  */
 package com.hyjf.cs.user.controller.wechat.regist;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
-import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.regist.RegistService;
-import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +38,7 @@ import java.net.URLEncoder;
 
 @Api(value = "weChat端-用户注册接口",description = "weChat端-用户注册接口")
 @RestController
-@RequestMapping("/hyjf-wechat/user")
+@RequestMapping("/hyjf-wechat/userRegist")
 public class WeChatRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WeChatRegistController.class);
@@ -47,6 +49,20 @@ public class WeChatRegistController extends BaseUserController {
     SystemConfig systemConfig;
 
     /**
+     * 获取密码加密的公钥
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "获取密码加密的公钥",notes = "获取密码加密的公钥")
+    @PostMapping(value = "/findpublickey.do")
+    public JSONObject findPublicKeys() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("pubexponent", "10001");
+        jsonObject.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        return jsonObject;
+    }
+
+    /**
      * 注册
      * @param request
      * @param response
@@ -55,8 +71,8 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    @PostMapping(value = "/registAction", produces = "application/json; charset=utf-8")
-    public BaseResultBean registAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    @PostMapping(value = "/registAction.do")
+    public UserRegistResultVO registAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         UserRegistResultVO ret = new UserRegistResultVO();
         ret.setRequest("/registAction");
         // 手机号
@@ -65,15 +81,20 @@ public class WeChatRegistController extends BaseUserController {
         String verificationCode = request.getParameter("verificationCode");
         // 登录密码
         String password = request.getParameter("password");
+        //密码解密
+        password = RSAJSPUtil.rsaToPassword(password);
         // 推荐人
         String reffer = request.getParameter("reffer");
-
+        logger.info("当前注册手机号: {}", mobile);
         RegisterRequest register = new RegisterRequest();
         register.setMobile(mobile);
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
-        registService.checkParam(register);
+       ret = registService.wechatCheckParam(mobile,password,reffer,verificationCode);
+        if(null!=ret.getStatus()){
+            return ret;
+        }
         registService.register(register, GetCilentIP.getIpAddr(request));
         String statusDesc = "注册成功";
         if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
@@ -108,6 +129,36 @@ public class WeChatRegistController extends BaseUserController {
             return ret;
         }
     }
+    /**
+     * 点击下一步验证
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "点击下一步验证",notes = "点击下一步验证")
+    @PostMapping(value = "/nextStepAction.do")
+    public JSONObject nextStepAction(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject ret = new JSONObject();
 
+        ret.put("status", "000");
+        ret.put("statusDesc", "手机号校验通过");
+
+        // 手机号
+        String mobile = request.getParameter("mobile");
+        if (Validator.isNull(mobile)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "手机号不能为空");
+            return ret;
+        }
+        if (registService.existUser(mobile)) {
+            ret.put("status", "99");
+            ret.put("statusDesc", "该手机号已经注册");
+            return ret;
+        }
+
+        return ret;
+
+    }
 
 }

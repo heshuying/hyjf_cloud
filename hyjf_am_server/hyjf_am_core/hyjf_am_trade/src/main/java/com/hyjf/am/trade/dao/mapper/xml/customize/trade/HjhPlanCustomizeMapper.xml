@@ -641,5 +641,311 @@ ORDER BY
 	</select>
 
 
+	<select id="countPlanBorrowRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+
+		SELECT COUNT(1)
+		FROM
+		(
+				SELECT DISTINCT *
+		FROM(
+		(SELECT
+				hb.borrow_nid,
+				hb.borrow_user_name,
+				hb.borrow_apr,
+				hb.account,
+				-- hb.company_or_personal,
+
+				CASE
+			WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+			ELSE
+				CONCAT(hb.borrow_period, '个月')
+			END borrow_period,
+			IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		inner JOIN ht_hjh_debt_credit ON credit_status IN (0, 1)
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+		ht_hjh_debt_credit.plan_nid_new = #{planNid}
+		AND hb.STATUS = 4
+	ORDER BY
+				hb.create_time ASC
+		)
+		UNION ALL
+			(
+				SELECT
+					hb.borrow_nid,
+					hb.borrow_user_name,
+					hb.borrow_apr,
+					hb.account,
+					-- hb.company_or_personal,
+
+					CASE
+				WHEN hb.borrow_style = 'endday' THEN
+					CONCAT(hb.borrow_period, '天')
+				ELSE
+					CONCAT(hb.borrow_period, '个月')
+				END borrow_period,
+				IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+			FROM
+				ht_borrow hb
+			LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+			WHERE
+				hb.plan_nid = #{planNid}
+			AND hb.STATUS = 2
+			AND hb.borrow_full_status = 0
+			ORDER BY
+				hb.create_time ASC
+			)
+		UNION ALL
+			(
+				SELECT
+					hb.borrow_nid,
+					hb.borrow_user_name,
+					hb.borrow_apr,
+					hb.account,
+					-- hb.company_or_personal,
+
+					CASE
+				WHEN hb.borrow_style = 'endday' THEN
+					CONCAT(hb.borrow_period, '天')
+				ELSE
+					CONCAT(hb.borrow_period, '个月')
+				END borrow_period,
+				IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		WHERE
+			hb.plan_nid = #{planNid}
+		AND hb.borrow_full_status = 1
+		AND hb.borrow_full_time &gt;= #{startTime}
+		AND hb.borrow_full_time &lt;= #{endTime}
+ORDER BY
+				hb.create_time ASC
+		)
+		UNION ALL
+			(
+			SELECT
+				hb.borrow_nid,
+				hb.borrow_user_name,
+				hb.borrow_apr,
+				hb.account,
+				-- hb.company_or_personal,
+
+				CASE
+			WHEN hb.borrow_style = 'endday' THEN
+				CONCAT(hb.borrow_period, '天')
+			ELSE
+				CONCAT(hb.borrow_period, '个月')
+			END borrow_period,
+			IFNULL(hbs.NAME, '') NAME,
+			hb.create_time
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		inner JOIN ht_hjh_debt_credit ON credit_capital_wait = 0
+		AND end_time &gt;= #{startTime}
+		AND end_time &lt;= #{endTime}
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+			ht_hjh_debt_credit.plan_nid_new = #{planNid}
+			ORDER BY
+				hb.create_time ASC
+		))t
+		) AS t
+
+	</select>
+
+
+	<resultMap id="PlanBorrowMap" type="com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize">
+		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="name" property="borrowStyleName" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="company_or_personal" property="companyOrPersonal" jdbcType="VARCHAR" />
+		<result column="borrow_user_name" property="borrowUserName" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="account" property="borrowAmount" jdbcType="VARCHAR" />
+		<result column="financePurpose" property="borrowPurpose" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectPlanBorrowList" resultMap="PlanBorrowMap" parameterType="Map">
+		SELECT DISTINCT *
+		FROM(
+		(SELECT
+		hb.borrow_nid,
+		hb.borrow_user_name,
+		hb.borrow_apr,
+		hb.account,
+		hbi.company_or_personal,
+		IFNULL(
+		hbi.finance_purpose,
+		'无借款用途'
+		) financePurpose,
+		CASE
+		WHEN hb.borrow_style = 'endday' THEN
+		CONCAT(hb.borrow_period, '天')
+		ELSE
+		CONCAT(hb.borrow_period, '个月')
+		END borrow_period,
+		IFNULL(hbs.NAME, '') NAME,
+		hb.create_time
+		FROM
+		ht_borrow hb inner join ht_borrow_info hbi on hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		inner JOIN ht_hjh_debt_credit ON credit_status IN (0, 1)
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+		ht_hjh_debt_credit.plan_nid_new = #{planNid}
+		AND hb.STATUS = 4
+		ORDER BY
+		hb.create_time ASC
+		)
+		UNION ALL
+		(
+		SELECT
+		hb.borrow_nid,
+		hb.borrow_user_name,
+		hb.borrow_apr,
+		hb.account,
+		hbi.company_or_personal,
+		IFNULL(
+		hbi.finance_purpose,
+		'无借款用途'
+		) financePurpose,
+		CASE
+		WHEN hb.borrow_style = 'endday' THEN
+		CONCAT(hb.borrow_period, '天')
+		ELSE
+		CONCAT(hb.borrow_period, '个月')
+		END borrow_period,
+		IFNULL(hbs.NAME, '') NAME,
+		hb.create_time
+		FROM
+		ht_borrow hb inner join ht_borrow_info hbi on hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		WHERE
+		hb.plan_nid = #{planNid}
+		AND hb.STATUS = 2
+		AND hb.borrow_full_status = 0
+		ORDER BY
+		hb.create_time ASC
+		)
+		UNION ALL
+		(
+		SELECT
+		hb.borrow_nid,
+		hb.borrow_user_name,
+		hb.borrow_apr,
+		hb.account,
+		hbi.company_or_personal,
+		IFNULL(
+		hbi.finance_purpose,
+		'无借款用途'
+		) financePurpose,
+		CASE
+		WHEN hb.borrow_style = 'endday' THEN
+		CONCAT(hb.borrow_period, '天')
+		ELSE
+		CONCAT(hb.borrow_period, '个月')
+		END borrow_period,
+		IFNULL(hbs.NAME, '') NAME,
+		hb.create_time
+		FROM
+		ht_borrow hb inner join ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		WHERE
+		hb.plan_nid = #{planNid}
+		AND hb.borrow_full_status = 1
+		AND hb.borrow_full_time &gt;= #{startTime}
+		AND hb.borrow_full_time &lt;= #{endTime}
+		ORDER BY
+		hb.create_time ASC
+		)
+		UNION ALL
+		(
+		SELECT
+		hb.borrow_nid,
+		hb.borrow_user_name,
+		hb.borrow_apr,
+		hb.account,
+		hbi.company_or_personal,
+		IFNULL(
+		hbi.finance_purpose,
+		'无借款用途'
+		) financePurpose,
+		CASE
+		WHEN hb.borrow_style = 'endday' THEN
+		CONCAT(hb.borrow_period, '天')
+		ELSE
+		CONCAT(hb.borrow_period, '个月')
+		END borrow_period,
+		IFNULL(hbs.NAME, '') NAME,
+		hb.create_time
+		FROM
+		ht_borrow hb inner join ht_borrow_info hbi on hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_style hbs ON hbs.nid = hb.borrow_style
+		inner JOIN ht_hjh_debt_credit ON credit_capital_wait = 0
+		AND end_time &gt;= #{startTime}
+		AND end_time &lt;= #{endTime}
+		AND hb.borrow_nid = ht_hjh_debt_credit.borrow_nid
+		WHERE
+		ht_hjh_debt_credit.plan_nid_new = #{planNid}
+		ORDER BY
+		hb.create_time ASC
+		))t
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+
+	<select id="selectPlanAccedeSum" resultType="java.lang.Long" parameterType="Map">
+		SELECT
+			sum(accede_account) accedeSum
+		FROM
+			ht_hjh_accede
+		WHERE plan_nid=#{planNid}
+	</select>
+
+
+	<resultMap id="DebtPlanAccedeMap" type="com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize">
+		<id column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="accede_account" property="accedeAccount" jdbcType="VARCHAR" />
+		<result column="create_time" property="accedeTime" jdbcType="VARCHAR" />
+		<result column="client" property="client" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="selectPlanAccedeList" resultMap="DebtPlanAccedeMap" parameterType="Map">
+		SELECT
+		dpa.user_id,
+		CASE WHEN LENGTH(dpa.user_name)<![CDATA[>]]>1
+		THEN
+		CONCAT(SUBSTR(dpa.user_name,1,1),'**')
+		ELSE
+		dpa.user_name
+		END user_name,
+		SUBSTRING(FORMAT(dpa.accede_account,4),1,LENGTH(FORMAT(dpa.accede_account,4))-2) AS accede_account,
+		FROM_UNIXTIME(
+		dpa.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS create_time,
+		dpa.client
+		FROM
+		ht_hjh_accede dpa
+		WHERE dpa.plan_nid=#{planNid}
+		ORDER BY
+		dpa.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 
 </mapper>

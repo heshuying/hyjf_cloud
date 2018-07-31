@@ -25,7 +25,7 @@ public interface CouponConfigCustomizeMapper {
 	 * @param mapParam
 	 * @return
 	 */
-	List<CouponConfigCustomize> selectRecordList(Map<String, Object> mapParam);
+	List<CouponConfigCustomize> selectCouponConfigList(Map<String, Object> mapParam);
 
 	/**
 	 * 根据优惠券编号查询已发行数量
