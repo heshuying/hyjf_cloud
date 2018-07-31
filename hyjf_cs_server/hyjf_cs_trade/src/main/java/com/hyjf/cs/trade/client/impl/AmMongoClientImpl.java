@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.cs.trade.client.AmMongoClient;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -47,6 +47,11 @@ public class CouponConfigController extends BaseController {
     @Autowired
     private CouponConfigService couponConfigService;
 
+    /**
+     * 根据优惠券编码查询优惠券配置信息
+     * @param couponCode
+     * @return
+     */
     @RequestMapping("/selectCouponConfig/{couponCode}")
     public CouponConfigResponse selectCouponConfig(@PathVariable String couponCode) {
         CouponConfigResponse response = new CouponConfigResponse();
@@ -85,7 +90,11 @@ public class CouponConfigController extends BaseController {
         return new CouponConfigCustomizeResponse();
     }
 
-
+    /**
+     * 通过id查询优惠券信息
+     * @param couponConfigRequest
+     * @return
+     */
     @PostMapping("/getCouponConfig")
     public CouponConfigResponse getCouponConfig(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse ccr = new CouponConfigResponse();
@@ -102,6 +111,11 @@ public class CouponConfigController extends BaseController {
     }
 
 
+    /**
+     * 保存优惠券配置信息
+     * @param configRequest
+     * @return
+     */
     @PostMapping("/saveCouponConfig")
     public CouponConfigResponse saveCouponConfig(@RequestBody @Valid CouponConfigRequest configRequest) {
         CouponConfigResponse ccr = new CouponConfigResponse();
@@ -126,6 +140,11 @@ public class CouponConfigController extends BaseController {
     }
 
 
+    /**
+     * 插入优惠券配置信息
+     * @param couponConfigRequest
+     * @return
+     */
     @PostMapping("/insertCouponConfig")
     public CouponConfigResponse insertAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse ccr = new CouponConfigResponse();
@@ -147,7 +166,11 @@ public class CouponConfigController extends BaseController {
         return ccr;
     }
 
-
+    /**
+     * 根据id删除优惠券信息
+     * @param couponConfigRequest
+     * @return
+     */
     @PostMapping("/deleteCouponConfig")
     public CouponConfigResponse deleteAction(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse response = new CouponConfigResponse();
@@ -169,6 +192,11 @@ public class CouponConfigController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据id获取要修改的优惠券信息
+     * @param couponConfigRequest
+     * @return
+     */
     @PostMapping("/getAuditInfo")
     public CouponConfigResponse getAuditInfo(@RequestBody @Valid CouponConfigRequest couponConfigRequest) {
         CouponConfigResponse ccr = new CouponConfigResponse();
@@ -185,6 +213,11 @@ public class CouponConfigController extends BaseController {
     }
 
 
+    /**
+     * 修改优惠券信息
+     * @param request
+     * @return
+     */
     @PostMapping("/updateAuditInfo")
     public CouponConfigResponse updateAuditInfo(@RequestBody @Valid CouponConfigRequest request) {
         CouponConfigResponse configResponse = new CouponConfigResponse();

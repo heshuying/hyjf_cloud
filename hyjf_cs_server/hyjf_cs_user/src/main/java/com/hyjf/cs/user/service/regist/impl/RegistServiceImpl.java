@@ -535,9 +535,9 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         account.setVersion(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            logger.info("发送短信开始");
+            logger.info("发送mq开始");
             accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
-            logger.info("发送短信结束");
+            logger.info("发送mq结束");
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");

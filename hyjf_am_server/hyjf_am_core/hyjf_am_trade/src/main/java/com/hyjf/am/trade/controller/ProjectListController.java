@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
+import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
