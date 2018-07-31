@@ -44,7 +44,6 @@ public class AppFindController extends BaseMarketController {
         ret.put("statusDesc", "请求成功");
         ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleListByType");
         try {
-
             // 检查参数正确性
             if (Validator.isNull(form.getVersion()) || Validator.isNull(form.getPlatform())){
                 ret.put("status", "1");
