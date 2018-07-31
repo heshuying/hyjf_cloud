@@ -11,7 +11,7 @@ import com.hyjf.am.config.dao.model.auto.SmsConfig;
 import com.hyjf.am.config.dao.model.auto.SmsConfigExample;
 import com.hyjf.am.config.service.SmsConfigService;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 
 /**
  * @author xiasq
@@ -24,12 +24,12 @@ public class SmsConfigServiceImpl implements SmsConfigService {
 
 	@Override
 	public SmsConfig findOne() {
-		SmsConfig smsConfig = RedisUtils.getObj(RedisKey.SMS_CONFIG, SmsConfig.class);
+		SmsConfig smsConfig = RedisUtils.getObj(RedisConstants.SMS_CONFIG, SmsConfig.class);
 		if (smsConfig == null) {
 			List<SmsConfig> list = smsConfigMapper.selectByExample(new SmsConfigExample());
 			if (!CollectionUtils.isEmpty(list)) {
 				smsConfig = list.get(0);
-				RedisUtils.setObjEx(RedisKey.SMS_CONFIG, smsConfig, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.SMS_CONFIG, smsConfig, 24 * 60 * 60);
 				return smsConfig;
 			}
 		}

@@ -1,13 +1,10 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.config.UserCornerVO;
-import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
-import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 
 import java.util.List;
@@ -111,6 +108,14 @@ public interface AmConfigClient {
     BankConfigVO getBankConfigByCode(String code);
 
     /**
+     * 根据主键id查询银行配置
+     * @auth sunpeikai
+     * @param id 数据库表的主键id
+     * @return
+     */
+    BankConfigVO getBankConfigById(Integer id);
+
+    /**
      * 银行配置信息
      * @param code
      * @return
@@ -147,4 +152,12 @@ public interface AmConfigClient {
      * @return
      */
     Integer insertUserCorner(UserCornerVO userCornerVO);
+
+    /**
+     * 根据bankId查询BankRechargeConfig
+     * @auth sunpeikai
+     * @param bankId
+     * @return
+     */
+    BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId);
 }

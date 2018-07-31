@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.password;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -53,14 +54,19 @@ public interface PassWordService extends BaseUserService {
     void checkParam(UserVO userVO, String oldPW, String newPW, String pwSure);
 
 
-    void sendCode(SendSmsVO sendSmsVo);
+    /**
+     * 微信发送验证码
+     * @param sendSmsVo
+     * @return
+     */
+    JSONObject sendCode(SendSmsVO sendSmsVo);
 
     /**
      * 微信端检验参数
      * @param newPassword
      * @param oldPassword
      */
-    void weChatCheckParam(UserVO userVO,String newPassword, String oldPassword);
+    JSONObject weChatCheckParam(UserVO userVO, String newPassword, String oldPassword);
 
     void backCheck(SendSmsVO sendSmsVo);
 
@@ -103,7 +109,13 @@ public interface PassWordService extends BaseUserService {
      */
     void appCheckParam(String key,UserVO userVO, String version, String netStatus, String platform, String sign, String token, String randomString, String order, String newPassword,String oldPassword);
 
-    String getBankRetMsg(String retCode);
-
     Map<String,Object> checkStatus(String token, String sign);
+
+    /**
+     * 微信验证短信验证码
+     * @param sendSmsVo
+     * @param b
+     * @return
+     */
+    JSONObject validateVerificationCoden(SendSmsVO sendSmsVo, boolean b);
 }

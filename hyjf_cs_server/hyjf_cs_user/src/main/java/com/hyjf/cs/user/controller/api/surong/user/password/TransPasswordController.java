@@ -133,7 +133,7 @@ public class TransPasswordController extends BaseUserController{
         // + TransPasswordDefine.REQUEST_MAPPING + TransPasswordDefine.RETURL_SYN_PASSWORD_ACTION + ".do";
         
         // 现 同步调用路径
-        String retUrl = systemConfig.getWebHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_PASSWORD_ACTION;
+        String retUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_PASSWORD_ACTION;
         
         // 原 异步调用路
         // String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + request.getContextPath()
@@ -338,7 +338,7 @@ public class TransPasswordController extends BaseUserController{
 /*        String retUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + request.getContextPath() +  TransPasswordDefine.REQUEST_MAPPING
                 + TransPasswordDefine.RETURL_SYN_RESETPASSWORD_ACTION + ".do";*/
         // 新 同步调用路径
-        String retUrl = systemConfig.getWebHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_RESETPASSWORD_ACTION;
+        String retUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_RESETPASSWORD_ACTION;
         // 原 异步调用路径
 /*        String bgRetUrl = PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) + request.getContextPath() +  TransPasswordDefine.REQUEST_MAPPING
                 + TransPasswordDefine.RETURN_ASY_RESETPASSWORD_ACTION + ".do";*/

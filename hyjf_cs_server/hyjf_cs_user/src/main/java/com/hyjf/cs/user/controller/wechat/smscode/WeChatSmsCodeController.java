@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "weChat验证码",description = "weChat端-验证码")
 @RestController
-@RequestMapping("/hyjf-wechat/userRegist")
+@RequestMapping("/hyjf-wechat")
 public class WeChatSmsCodeController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WeChatSmsCodeController.class);
 
@@ -47,7 +47,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 * @return
 	 */
 	@ApiOperation(value = " 发送短信验证码",notes = " 发送短信验证码")
-	@PostMapping(value = "/sendVerificationCodeAction.do", produces = "application/json; charset=utf-8")
+	@PostMapping(value = "/userRegist/sendVerificationCodeAction.do", produces = "application/json; charset=utf-8")
 	public JSONObject sendVerificationCodeAction(@RequestHeader(value = "token", required = false) String token,HttpServletRequest request, HttpServletResponse response) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-wechat/userRegist/sendVerificationCodeAction");
@@ -111,7 +111,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 * 2.若验证码正确，则获取session数据，并将相应的注册数据写入数据库（三张表），跳转相应的注册成功界面
 	 */
 	@ApiOperation(value = "短信验证码校验", notes = "短信验证码校验")
-	@PostMapping(value = "/validateVerificationCodeAction.do", produces = "application/json; charset=utf-8")
+	@PostMapping(value = "/wechatUser/validateVerificationCodeAction.do", produces = "application/json; charset=utf-8")
 	public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-wechat/userRegist/validateVerificationCodeAction");
@@ -151,7 +151,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 				ret.put("statusDesc", "请输入您的真实手机号码");
 				return ret;
 			}
-			int cnt = sendSmsCode.updateCheckMobileCode(mobile, verificationCode, verificationType, CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+			int cnt = sendSmsCode.updateCheckMobileCode(mobile, verificationCode, verificationType, CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN,true);
 
 			if (cnt > 0) {
 				ret.put("status", "000");
@@ -167,5 +167,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 		}
 		return ret;
 	}
+
+
 
 }

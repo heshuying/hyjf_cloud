@@ -2226,9 +2226,13 @@ public class AmTradeClientImpl implements AmTradeClient{
 	}
 
 	@Override
-	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
-		restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord", request,
-				Object.class);
+	public int insertHjhLabelRecord(HjhLabelInfoRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhLabel/insertHjhLabelRecord";
+		Integer updateFlag = restTemplate.postForEntity(url,request,Integer.class).getBody();
+        if (updateFlag > 0) {
+            return updateFlag;
+        }
+        return 0;
 	}
 
 	@Override

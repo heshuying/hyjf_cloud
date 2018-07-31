@@ -97,13 +97,34 @@ public class SystemConfig {
     @Value("${wcsr.resetpassword}")
     // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd
     private String resetpassword;
-
+    @Value("${wcsr.deletecard.callback}")
+    // 需要在配置文件中 添加 wcsr.deletecard.callback=http://app.rongdongfeng.zhugedai.com/wcsr-app/deletecard/callBack
+    private String surongDeletecard;
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
 
     @Value("${hyjf.chinapnr.mercustid}")
     private String chinapnrMercustid;
+    @Value("${publickey.hjs}")
+    private String publickeyhjs;
+    @Value("${privatekey.hjs}")
+    private String privatekeyhjs;
+    
+    public String getPublickeyhjs() {
+		return publickeyhjs;
+	}
 
+	public void setPublickeyhjs(String publickeyhjs) {
+		this.publickeyhjs = publickeyhjs;
+	}
+
+	public String getPrivatekeyhjs() {
+		return privatekeyhjs;
+	}
+
+	public void setPrivatekeyhjs(String privatekeyhjs) {
+		this.privatekeyhjs = privatekeyhjs;
+	}
     public String getChinapnrMercustid() {
         return chinapnrMercustid;
     }
@@ -334,5 +355,13 @@ public class SystemConfig {
 
     public void setHyjfEnvTest(boolean hyjfEnvTest) {
         this.hyjfEnvTest = hyjfEnvTest;
+    }
+
+    public String getSurongDeletecard() {
+        return surongDeletecard;
+    }
+
+    public void setSurongDeletecard(String surongDeletecard) {
+        this.surongDeletecard = surongDeletecard;
     }
 }

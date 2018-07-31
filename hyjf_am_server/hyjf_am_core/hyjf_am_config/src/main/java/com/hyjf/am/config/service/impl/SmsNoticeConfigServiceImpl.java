@@ -14,7 +14,7 @@ import com.hyjf.am.config.dao.model.auto.SmsNoticeConfig;
 import com.hyjf.am.config.dao.model.auto.SmsNoticeConfigExample;
 import com.hyjf.am.config.service.SmsNoticeConfigService;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 
 /**
  * @author fuqiang
@@ -27,7 +27,7 @@ public class SmsNoticeConfigServiceImpl implements SmsNoticeConfigService {
 
 	@Override
 	public SmsNoticeConfig findSmsNoticeByCode(String tplCode) {
-		SmsNoticeConfig smsNoticeConfig = RedisUtils.getObj(RedisKey.SMS_NOTICE_CONFIG, SmsNoticeConfig.class);
+		SmsNoticeConfig smsNoticeConfig = RedisUtils.getObj(RedisConstants.SMS_NOTICE_CONFIG, SmsNoticeConfig.class);
 		if (smsNoticeConfig == null) {
 			SmsNoticeConfigExample example = new SmsNoticeConfigExample();
 			SmsNoticeConfigExample.Criteria criteria = example.createCriteria();
@@ -35,7 +35,7 @@ public class SmsNoticeConfigServiceImpl implements SmsNoticeConfigService {
 			List<SmsNoticeConfig> smsNoticeConfigList = smsNoticeConfigMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(smsNoticeConfigList)) {
 				smsNoticeConfig = smsNoticeConfigList.get(0);
-				RedisUtils.setObjEx(RedisKey.SMS_NOTICE_CONFIG, smsNoticeConfig, 24 * 60 * 60);
+				RedisUtils.setObjEx(RedisConstants.SMS_NOTICE_CONFIG, smsNoticeConfig, 24 * 60 * 60);
 				return smsNoticeConfig;
 			}
 		}

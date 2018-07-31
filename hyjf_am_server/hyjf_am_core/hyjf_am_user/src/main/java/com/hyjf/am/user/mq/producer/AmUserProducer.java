@@ -3,6 +3,10 @@
  */
 package com.hyjf.am.user.mq.producer;
 
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.stereotype.Component;
 
 import com.hyjf.am.user.mq.base.MessageContent;
@@ -28,6 +32,18 @@ public class AmUserProducer extends Producer {
 
     @Override
     public boolean messageSend(MessageContent messageContent) throws MQException {
-        return super.messageSend(messageContent);
-    }
+		try {
+			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
+					messageContent.body);
+			
+			// 为了设置延时消息
+			message.setDelayTimeLevel(2);
+			return send(message);
+		} catch (MQClientException | RemotingException | MQBrokerException e ) {
+			throw new MQException("mq send error", e);
+		} catch (InterruptedException e){
+			Thread.currentThread().interrupt();
+			throw new MQException("mq InterruptedException send error", e);
+		}
+	}
 }

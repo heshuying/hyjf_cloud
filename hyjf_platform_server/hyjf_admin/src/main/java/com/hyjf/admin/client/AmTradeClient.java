@@ -1038,7 +1038,7 @@ public interface AmTradeClient {
      * 插入标签配置列表
      * @param request
      */
-    void insertHjhLabelRecord(HjhLabelInfoRequest request);
+    int insertHjhLabelRecord(HjhLabelInfoRequest request);
     
 	/**
      * 更新标签配置列表

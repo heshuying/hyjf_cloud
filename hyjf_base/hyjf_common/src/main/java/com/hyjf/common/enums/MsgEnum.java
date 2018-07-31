@@ -229,6 +229,9 @@ public enum MsgEnum implements MsgCode {
 	ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
 	ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
 
+	// 订单相关ERR_ORDER_
+	ERR_ORDER_VERIFY("EOD000001","订单验证失败"),
+
 
 
 	// 时间日期相关错误信息ERR_DATE_
@@ -369,6 +372,7 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_NO_BORROW("1","当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试"),
 	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
+	ERR_BIND("1", "授权失败，请仔细阅读并同意《汇盈金服授权协议》"),
 	// 枚举终结
 	ERR_ENUM("", "");
 

@@ -12,6 +12,8 @@ import java.io.Serializable;
  */
 public class SendSmsVO implements Serializable {
     private static final long serialVersionUID = -1888109166151152404L;
+    // 唯一标识
+    private String sign;
     // 手机号
     private String mobile;
 
@@ -19,6 +21,14 @@ public class SendSmsVO implements Serializable {
     private String smscode;
 
     private String platform;
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
 
     public String getPlatform() {
         return platform;

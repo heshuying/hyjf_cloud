@@ -56,7 +56,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
      */
     @Override
     public List<AccountBankVO> getBankCardByUserId(Integer userId) {
-        return amUserClient.getBankCardByUserId(userId);
+        return amUserClient.getAccountBankByUserId(userId);
     }
     /**
      * 根据银行名查询银行配置
