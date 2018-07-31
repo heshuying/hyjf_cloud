@@ -10,7 +10,7 @@ import java.util.Date;
  * 汇计划-资金计划
  * @Author : huanghui
  */
-public class HjhPlanCapitalVO extends BaseVO implements Serializable {
+public class HjhPlanCapitalCustomizeVO extends BaseVO implements Serializable {
     private Integer id;
     private Date date;
     private String planNid;

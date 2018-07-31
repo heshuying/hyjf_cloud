@@ -52,4 +52,15 @@ public class BorrowRecoverPlanController extends BaseController{
 		return response;
 	}
 
+
+	@GetMapping("/getBorrowRecoverPlanListByTenderNid/{tenderNid}")
+	public BorrowRecoverPlanResponse selectBorrowRecover(@PathVariable String tenderNid){
+		BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
+		List<BorrowRecoverPlan> borrowRecoverPlan=borrowRecoverPlanService.selectRecoverPlanListByTenderNid(tenderNid);
+		if (Validator.isNotNull(borrowRecoverPlan)){
+			response.setResultList(CommonUtils.convertBeanList(borrowRecoverPlan,BorrowRecoverPlanVO.class));
+		}
+		return response;
+	}
+
 }

@@ -25,6 +25,11 @@ public class AppContentArticleController extends BaseConfigController {
 
     private AppContentArticleService appContentArticleService;
 
+    /**
+     * 根据id获取网贷知识
+     * @param contentArticleId
+     * @return
+     */
     @RequestMapping("/getContentArticleById/{contentArticleId}")
     public AppContentArticleResponse getContentArticleById(@PathVariable(value = "contentArticleId") Integer contentArticleId){
         logger.info("contentArticleId:" + contentArticleId);

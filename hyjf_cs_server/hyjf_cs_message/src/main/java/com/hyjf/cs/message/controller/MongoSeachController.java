@@ -12,7 +12,7 @@ import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
@@ -232,7 +232,7 @@ public class MongoSeachController extends BaseController {
      * @Author : huanghui
      */
     @RequestMapping(value = "/getPlanCapitalList")
-    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalVO hjhPlanCapitalVO){
+    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
         HjhPlanCapitalResponse hjhPlanCapitalResponse = new HjhPlanCapitalResponse();
 
         int recordTotal = (int) hjhPlanCapitalDao.getCount(hjhPlanCapitalVO);
@@ -241,7 +241,7 @@ public class MongoSeachController extends BaseController {
             List<HjhPlanCapital> responseList = hjhPlanCapitalDao.findAllList(hjhPlanCapitalVO);
 
             if (responseList != null) {
-                List<HjhPlanCapitalVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalVO.class);
+                List<HjhPlanCapitalCustomizeVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalCustomizeVO.class);
                 hjhPlanCapitalResponse.setResultList(voList);
             }
         }

@@ -1,6 +1,6 @@
 package com.hyjf.am.response.admin;
 
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
 public class HjhPlanCapitalResponse {
 
 
-    private List<HjhPlanCapitalVO> ResultList;
+    private List<HjhPlanCapitalCustomizeVO> ResultList;
 
-    public List<HjhPlanCapitalVO> getResultList() {
+    public List<HjhPlanCapitalCustomizeVO> getResultList() {
         return ResultList;
     }
 
-    public void setResultList(List<HjhPlanCapitalVO> resultList) {
+    public void setResultList(List<HjhPlanCapitalCustomizeVO> resultList) {
         ResultList = resultList;
     }
 }
