@@ -1200,4 +1200,228 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	public Integer countAll(){
 		return userMapper.countByExample(new UserExample());
 	}
+
+	/**
+	 * 微信提交注册接口插入数据
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public User insertUserActionUtm(UserActionUtmRequest userActionUtmRequest) {
+		String mobile = userActionUtmRequest.getMobile();
+		String loginIp = userActionUtmRequest.getLoginIp();
+		String reffer = userActionUtmRequest.getReffer();
+		String platform = userActionUtmRequest.getPlatform();
+		String password = userActionUtmRequest.getPassword();
+		String utmId = userActionUtmRequest.getUtm_id();
+		int userId = 0;
+		User user = new User();
+		try {
+			// 写入用户信息表
+			String userName = generateUniqueUsername(mobile);
+			user.setInstCode("10000000");
+			user.setIsInstFlag(0);
+			user.setUsername(userName);
+			user.setMobile(mobile);
+			//user.setLoginIp(loginIp);
+			user.setRechargeSms(0);
+			user.setWithdrawSms(0);
+			//user.setInvestflag(0);
+			user.setInvestSms(0);
+			user.setRecieveSms(0);
+			//user.setVersion(new BigDecimal("0"));
+			user.setUserType(0);
+			user.setIsSetPassword(0);// 是否设置了交易密码 0未设置
+			// user.setEmail(ru.getEmail());
+			List<User> recommends = null;
+			// 写入用户详情表
+			UserInfo userInfo = new UserInfo();
+			// 以下语句用来设置用户有无主单开始 2015年12月30日18:28:34 孙亮
+			// 默认为无主单
+			userInfo.setAttribute(0);
+			// 1.注册成功时，推荐人关联
+			// B1、用户在注册时，没有填写推荐人，也没有预注册，或预注册时没有关联推荐人，则推荐人为空；
+			// B2、用户注册时，填写了推荐人，忽略关联推荐人，以填写的推荐人为准；
+			// B3、用户注册时，没有填写推荐人，预注册表中，有关联推荐人，以关联的推荐人为准；
+			PreRegistExample preRegistExample = new PreRegistExample();
+			preRegistExample.createCriteria().andMobileEqualTo(mobile);
+			List<PreRegist> preRegistList = preRegistMapper.selectByExample(preRegistExample);
+			if (preRegistList != null && preRegistList.size() != 0) {
+				for (int i = 0; i < preRegistList.size(); i++) {
+					PreRegist model = preRegistList.get(i);
+					model.setRegistFlag(1);
+					model.setRegistTime(GetDate.getMyTimeInMillis());
+					preRegistMapper.updateByPrimaryKey(model);
+				}
+			}
+			if (StringUtils.isEmpty(reffer)) {
+				if (preRegistList != null && preRegistList.size() != 0) {
+					reffer = preRegistList.get(0).getReferrer();
+				}
+			}
+			if (StringUtils.isNotEmpty(reffer)) {
+				//推荐人标记 add by jijun 20180507
+				boolean isRefferValid = false;
+				UserExample exampleUser = new UserExample();
+				if (Validator.isMobile(reffer)) {
+					UserExample.Criteria criteria = exampleUser.createCriteria();
+					criteria.andMobileEqualTo(reffer);
+					isRefferValid=true;
+				} else {
+					//update by jijun 20180502 推荐人手机号不能转int
+					if(Validator.isNumber(reffer) && Long.valueOf(reffer)<=Integer.MAX_VALUE) {
+						UserExample.Criteria criteria1 = exampleUser.createCriteria();
+						Integer recommend = Integer.valueOf(reffer);
+						criteria1.andUserIdEqualTo(recommend);
+						isRefferValid=true;
+					}
+				}
+				if(isRefferValid) {
+					recommends = userMapper.selectByExample(exampleUser);
+				}
+				//recommends = usersMapper.selectByExample(exampleUser);
+				if (recommends != null && recommends.size() == 1) {
+					UserInfoExample puie = new UserInfoExample();
+					UserInfoExample.Criteria puipec = puie.createCriteria();
+					puipec.andUserIdEqualTo(recommends.get(0).getUserId());
+					List<UserInfo> pUsersInfoList = userInfoMapper.selectByExample(puie);
+					if (pUsersInfoList != null && pUsersInfoList.size() == 1) {
+						// 如果该用户的上级不为空
+						UserInfo parentInfo = pUsersInfoList.get(0);
+						if (Validator.isNotNull(parentInfo) && Validator.isNotNull(parentInfo.getAttribute())) {
+
+							//user.setReferrer(recommends.get(0).getUserId());
+							//user.setReferrerUserName(recommends.get(0).getUsername());
+							if (Validator.equals(parentInfo.getAttribute(), new Integer(2))
+									|| Validator.equals(parentInfo.getAttribute(), new Integer(3))) {
+								// 有推荐人且推荐人为员工(Attribute=2或3)时才设置为有主单
+								userInfo.setAttribute(1);
+							}
+						}
+					}
+				}
+			} else {
+
+			}
+			// 以上语句用来设置用户有无主单结束 2015年12月30日18:28:34 孙亮
+			if (StringUtils.isNotBlank(platform)) {
+				user.setRegEsb(Integer.parseInt(platform)); // 账户开通平台 0pc 1微信
+				// 2安卓 3IOS 4其他
+			}
+
+			Date time = GetDate.getNowTime();
+			String codeSalt = GetCode.getRandomCode(6);
+			user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
+			user.setRegIp(loginIp);
+			user.setRegTime(time);
+
+			// 插入登录日志数据
+			UserLoginLog userLoginLog = new UserLoginLog();
+			userLoginLog.setUserId(userId);
+			userLoginLog.setLoginIp(loginIp);
+			userLoginLog.setLoginTime(time);
+			userLoginLog.setLastIp(loginIp);
+			userLoginLog.setLastTime(time);
+			// 登录次数
+			userLoginLog.setLoginTimes(1);
+			userLoginLog.setCreateTime(time);
+			userLoginLog.setUpdateTime(time);
+			userLoginLogMapper.insertSelective(userLoginLog);
+
+
+			user.setStatus(0);
+			user.setSalt(codeSalt);
+			//user.setBorrowSms(0);
+			// user.setAccountEsb(0);
+			//user.setPid(0);
+			//user.setUsernamep("");
+			//user.setPtype(0);
+			user.setOpenAccount(0);
+			user.setBankOpenAccount(0);
+			userMapper.insertSelective(user);
+			// 赋值给retUser
+			//retUser = user;
+			// 根据ip获取注册地址
+			if(StringUtils.isNotEmpty(loginIp)){
+				getAddress(loginIp, userInfo);
+			}
+
+			userId = user.getUserId();
+			// userInfo表
+			userInfo.setUserId(userId);
+			userInfo.setRoleId(1);
+			userInfo.setMobileIsapprove(1);
+			userInfo.setTruenameIsapprove(0);
+			userInfo.setEmailIsapprove(0);
+			userInfo.setUpdateTime(time);
+			//userInfo.setPromoteway(0);
+			//userInfo.setIs51(0);
+			//userInfo.setIsStaff(0);
+			//userInfo.setDepartmentId(0);
+			//userInfo.setNickname("");
+			userInfo.setBirthday("");
+			userInfo.setSex(1);
+			userInfo.setIdcard("");
+			//userInfo.setEducation("");
+			userInfo.setAddress("");
+			//userInfo.setIntro("");
+			//userInfo.setInterest("");
+			//userInfo.setParentId(0);
+			userInfo.setTruenameIsapprove(0);
+			userInfo.setEmailIsapprove(0);
+			//userInfo.setPromoteway(0);
+			//userInfo.setIsContact(false);
+			userInfo.setIsContact(0);
+			System.out.println("saveRegistUser***********************************预插入userInfo："
+					+ JSON.toJSONString(userInfo));
+			userInfoMapper.insertSelective(userInfo);
+
+			if (recommends != null && recommends.size() == 1) {
+				int referer = recommends.get(0).getUserId();
+				SpreadsUser spreadUser = new SpreadsUser();
+				spreadUser.setUserId(userId);
+				spreadUser.setSpreadsUserId(referer);
+				spreadUser.setCreateIp(loginIp);
+				spreadUser.setCreateTime(time);
+				spreadUser.setType("reg");
+				spreadUser.setOpernote("reg");
+				spreadUser.setOperation(userId + "");
+				System.out.println("saveRegistUser***********************************预插入spreadUser："
+						+ JSON.toJSONString(spreadUser));
+				spreadsUserMapper.insertSelective(spreadUser);
+			}
+
+
+			if (StringUtils.isNotEmpty(utmId)) {
+				if (Validator.isNumber(utmId)) {
+					// 从request中取
+					UtmReg utmReg = new UtmReg();
+					utmReg.setCreateTime(GetDate.getNowTime());
+					utmReg.setUtmId(Integer.parseInt(utmId));
+					utmReg.setUserId(userId);
+					utmReg.setOpenAccount(0);
+					utmReg.setBindCard(0);
+					utmRegMapper.insertSelective(utmReg);
+					System.out.println("updateRegistUser***********************************预插入utmReg："
+							+ JSON.toJSONString(utmReg));
+				}
+			}
+			// 保存用户注册日志
+			{
+				UserLog userLog = new UserLog();
+				userLog.setUserId(userId);
+				userLog.setIp(loginIp);
+				userLog.setEvent("register");
+				userLog.setContent("注册成功");
+				System.out.println("saveRegistUser***********************************预插入userLog："
+						+ JSON.toJSONString(userLog));
+				usersLogMapper.insertSelective(userLog);
+			}
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return null;
+		}
+		return user;
+	}
 }

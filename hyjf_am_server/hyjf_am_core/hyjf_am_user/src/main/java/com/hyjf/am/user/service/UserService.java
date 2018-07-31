@@ -211,4 +211,12 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	Integer countAll();
+
+	/**
+	 * 微信提交注册接口插入数据
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	User insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
 }
