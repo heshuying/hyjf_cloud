@@ -23,7 +23,7 @@ public interface OperationReportJobService {
      * 按照省份统计投资人的分布  上个月的最后一天
      * @param request
      */
-    List<OperationReportJobVO> getTenderCityGroupBy(OperationReportJobRequest request);
+    List<OperationReportJobVO> getTenderCityGroupByList(OperationReportJobRequest request);
     /**
      * 按照性别统计投资人的分布 上个月的最后一天
      * @param request
