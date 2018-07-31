@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import com.hyjf.am.vo.app.AppNewAgreementVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -106,23 +106,23 @@ public class NewAgreementController extends BaseTradeController{
         Integer userId = null;
         try {
             if(userIdStr!= null && StringUtils.isNumeric(userIdStr)){
-                if (StringUtils.isEmpty(tenderNid)   
+                if (StringUtils.isEmpty(tenderNid)
                         || StringUtils.isEmpty(borrowNid)) {
                     newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
                     newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
                     newAgreementResultBean.setInfo(jsonObject);
                     return newAgreementResultBean;
-                } 
+                }
                 userId=Integer.parseInt(userIdStr);
             }else{
                 if (StringUtils.isEmpty(sign)
-                        || StringUtils.isEmpty(tenderNid)   
+                        || StringUtils.isEmpty(tenderNid)
                         || StringUtils.isEmpty(borrowNid)) {
                     newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
                     newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
                     newAgreementResultBean.setInfo(jsonObject);
                     return newAgreementResultBean;
-                } 
+                }
                 userId = SecretUtil.getUserId(sign);
             }
             /*userId = WebUtils.getUserId(request); */// 用户ID
@@ -165,7 +165,7 @@ public class NewAgreementController extends BaseTradeController{
             newAgreementResultBean.setInfo(jsonObject);
         }
         logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
-        return newAgreementResultBean;	
+        return newAgreementResultBean;
     }
 	
     /**
@@ -265,7 +265,6 @@ public class NewAgreementController extends BaseTradeController{
      * @author libin
      * @param request
      * @param response
-     * @param appTenderCreditAssignedBean
      * @return
      */
     @ApiOperation(value = "APP端协议接口", notes = "债权转让协议")
@@ -998,7 +997,7 @@ public class NewAgreementController extends BaseTradeController{
     
     /**
      * 获得 协议模板pdf显示地址
-     * @param request
+     * @param aliasName
      * @return
      */
     @ApiOperation(value = "APP端协议接口", notes = "获得 协议模板pdf显示地址")
@@ -1133,6 +1132,22 @@ public class NewAgreementController extends BaseTradeController{
             listImg.add(new StringBuilder().append(imgPath).append("/").append(str).append(".jpg").toString());
         }
         return listImg;
+    }
+
+    @ApiOperation(value = "APP端协议接口", notes = "获取协议模板")
+    @ResponseBody
+    @PostMapping("/getAgreementTemplateApi")
+    public NewAgreementResultBean getAgreementTemplateApi(@RequestParam String aliasName, HttpServletRequest request, HttpServletResponse response) {
+        logger.info("*******************************获取协议模板************************************");
+        NewAgreementResultBean result = new NewAgreementResultBean();
+        List<NewAgreementBean> bean = new ArrayList();
+        NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        if (template != null){
+            BeanUtils.copyProperties(template, bean);
+        }
+        result.setList(bean);
+        return result;
     }
     
 }
