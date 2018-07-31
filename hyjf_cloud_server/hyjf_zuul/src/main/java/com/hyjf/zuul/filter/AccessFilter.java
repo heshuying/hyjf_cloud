@@ -118,7 +118,7 @@ public class AccessFilter extends ZuulFilter {
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WEB_CHANNEL);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WECHAT_CHANNEL);
 			}
 			prefix = WECHAT_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
