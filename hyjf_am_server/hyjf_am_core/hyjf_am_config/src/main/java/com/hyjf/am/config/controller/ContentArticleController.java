@@ -1,7 +1,5 @@
 package com.hyjf.am.config.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
@@ -16,14 +14,11 @@ import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.WechatContentArticleResultVO;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,17 +31,14 @@ import java.util.Map;
  * @author zhangyk
  * @date 2018/7/5 9:46
  */
-@Api(value = "公司动态")
 @RestController
 @RequestMapping("/am-config/article")
 public class ContentArticleController {
-
 
     @Autowired
     private ContentArticleService contentArticleService;
     @Value("${hyjf.web.host}")
     public String webHost;
-
 
     /**
      * 查询公司动态列表
