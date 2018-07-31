@@ -23,7 +23,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
@@ -166,7 +166,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 判断用户是否登录
         WebViewUser webViewUser = null;
         if (StringUtils.isNotBlank(token)) {
-            webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
+            webViewUser = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUser.class);
         }
         if (webViewUser != null) {
             userId = webViewUser.getUserId();
@@ -1300,7 +1300,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         UserVO userVO = null;
         Integer userId = null;
         if (StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
             if (webViewUserVO != null) {
                 userId = webViewUserVO.getUserId();
                 userVO = amUserClient.findUserById(userId);
@@ -1708,7 +1708,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         UserVO userVO = null;
         Integer userId = null;
         if (StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
             if (webViewUserVO != null) {
                 userId = webViewUserVO.getUserId();
                 userVO = amUserClient.findUserById(userId);

@@ -8,7 +8,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
@@ -69,7 +69,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public WebViewUserVO getUsersByToken(String token) {
-		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 		return user;
 	}
 
@@ -179,8 +179,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-									 Integer searchStatus, Integer updateStatus) {
-		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
+									 Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus,isUpdate);
 		return cnt;
 	}
 
@@ -530,7 +530,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public WebViewUserVO setToken(WebViewUserVO webViewUserVO){
 		String token = generatorToken(webViewUserVO.getUserId(), webViewUserVO.getUsername());
 		webViewUserVO.setToken(token);
-		RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+		RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 		return webViewUserVO;
 	}
 

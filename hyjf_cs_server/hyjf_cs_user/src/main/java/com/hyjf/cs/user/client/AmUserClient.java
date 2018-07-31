@@ -58,7 +58,7 @@ public interface AmUserClient {
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-						Integer searchStatus, Integer updateStatus);
+						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
 
 	void updateLoginUser(int userId, String ip);
@@ -277,7 +277,7 @@ public interface AmUserClient {
 	 * @param userId 用户id
 	 * @return
 	 */
-	List<AccountBankVO> getBankCardByUserId(Integer userId);
+	List<AccountBankVO> getAccountBankByUserId(Integer userId);
 
 	/**
 	 * 获取用户信息中vip信息
@@ -302,4 +302,13 @@ public interface AmUserClient {
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+
+	BankCardVO getBankCardByUserId(Integer userId);
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	Integer countAllUser();
 }

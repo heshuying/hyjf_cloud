@@ -36,7 +36,6 @@ import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
-import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -215,12 +214,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Override
     public void checkParam(UserVO userVO, String oldPW, String newPW, String pwSure) {
-        CheckUtil.check(StringUtils.isNotBlank(oldPW),MsgEnum.ERR_OBJECT_REQUIRED,"原始登录密码");
-        CheckUtil.check(StringUtils.isNotBlank(newPW)&&StringUtils.isNotBlank(pwSure),MsgEnum.ERR_OBJECT_REQUIRED,"新密码");
-        oldPW = RSAJSPUtil.rsaToPassword(oldPW);
-        newPW = RSAJSPUtil.rsaToPassword(newPW);
-        pwSure = RSAJSPUtil.rsaToPassword(pwSure);
-        CheckUtil.check(newPW.equals(pwSure),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         // 验证用的password
         oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + userVO.getSalt());
         CheckUtil.check(oldPW.equals(userVO.getPassword()),MsgEnum.ERR_PASSWORD_OLD_INCORRECT);
@@ -335,7 +328,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
      * @param sendSmsVO
      */
     @Override
-    public void sendCode(SendSmsVO sendSmsVO) {
+    public JSONObject sendCode(SendSmsVO sendSmsVO) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", "000");
+        jsonObject.put("statusDesc", "短信发送成功");
         try {
             //获取系统参数
             SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
@@ -343,9 +339,15 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             this.validateData(sendSmsVO,smsConfig);
             //发送短信并将发送数据存到数据库和Redis
             this.sendSms(sendSmsVO,smsConfig);
-        } catch (Exception e){
-            throw new CheckException(MsgEnum.ERR_SYSTEM_UNUSUAL);
+        }catch (CheckException e){
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc",e.getMessage());
+        }catch (Exception e){
+            logger.error("发送短信异常",e);
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc","失败");
         }
+        return jsonObject;
     }
 
     @Override
@@ -357,7 +359,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             throw new CheckException("99","验证码不能为空");
         }
         // 检查参数正确性
-        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,BankCallConstant.CHANNEL_WEI, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        int cnt = amUserClient.checkMobileCode( sendSmsVo.getMobile(),sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA,CustomConstants.CLIENT_WECHAT, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         if (cnt<=0){
             throw new CheckException("99","验证码不正确");
         }
@@ -520,29 +522,34 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
      * @param sendSmsVo
      */
     private void validateData(SendSmsVO sendSmsVo,SmsConfigVO smsConfig) {
-        CheckUtil.check(StringUtils.isNotBlank(sendSmsVo.getMobile()),MsgEnum.ERR_OBJECT_REQUIRED,"手机号");
-        CheckUtil.check(Validator.isMobile(sendSmsVo.getMobile()),MsgEnum.STATUS_CE000010);
-        //查询该手机号是在数据库中已存在
-        CheckUtil.check(existUser(sendSmsVo.getMobile()),MsgEnum.ERR_USER_NOT_EXISTS);
+        //手机号为空
+        if (Validator.isNull(sendSmsVo.getMobile())) {
+            throw new CheckException("2001","请填写手机号");
+        }
+        //手机格式
+        if (!Validator.isMobile(sendSmsVo.getMobile())) {
+            throw new CheckException("2002","手机号格式不对");
+        }
+        //该手机号用户是否存在
+        if(!existUser(sendSmsVo.getMobile())){
+            throw new CheckException("2003","您的手机号尚未注册");
+        }
         // 判断发送间隔时间
         String key = sendSmsVo.getMobile() + ":" + CustomConstants.PARAM_TPL_ZHAOHUIMIMA + ":IntervalTime";
         String intervalTime = RedisUtils.get(key);
-        CheckUtil.check(StringUtils.isBlank(intervalTime),MsgEnum.ERR_SMSCODE_SEND_TOO_FAST);
+        if (StringUtils.isNotBlank(intervalTime)) {
+            throw new CheckException("2005","操作过于频繁,请稍后重试");
+        }
         //判断该设备号的发送次数（暂时不做）
-
         // 判断最大发送数max_phone_count（当日该手机号发送的次数）
-        String count = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVo.getMobile());
+        String count = RedisUtils.get(sendSmsVo.getMobile() + ":MaxPhoneCount");
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVo.getMobile(), "0");
+            RedisUtils.set(sendSmsVo.getMobile() + ":MaxPhoneCount", "0");
         }
-        CheckUtil.check(Integer.valueOf(count) <= smsConfig.getMaxPhoneCount(),MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
-    }
-
-    @Override
-    public String getBankRetMsg(String retCode) {
-        String msg = amConfigClient.getBankRetMsg(retCode);
-        return msg;
+        if (Integer.valueOf(count) > smsConfig.getMaxPhoneCount()) {
+            throw new CheckException("2006","该手机号短信请求次数超限，请明日再试");
+        }
     }
 
     @Override
@@ -587,5 +594,30 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
         result.put("user",user);
         return result;
+    }
+
+    @Override
+    public JSONObject validateVerificationCoden(SendSmsVO sendSmsVo, boolean isUpdate) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", "000");
+        jsonObject.put("statusDesc", "验证成功");
+        try {
+            if(StringUtils.isBlank(sendSmsVo.getMobile())){
+                throw new CheckException("2001","手机号不能为空");
+            }
+            if(StringUtils.isBlank(sendSmsVo.getSmscode())){
+                throw new CheckException("2002","验证码不能为空");
+            }
+            //验证
+           amUserClient.checkMobileCode( sendSmsVo.getMobile(),  sendSmsVo.getSmscode(), CustomConstants.PARAM_TPL_ZHAOHUIMIMA  ,  sendSmsVo.getPlatform(), CommonConstant.CKCODE_NEW,CommonConstant.CKCODE_YIYAN,isUpdate);
+        }catch (CheckException e){
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc",e.getMessage());
+        } catch (Exception e){
+            logger.error("发送短信异常",e);
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc","短信验证失败");
+        }
+        return jsonObject;
     }
 }

@@ -246,7 +246,7 @@ public class WithdrawController extends BaseController {
         String returnUrl = systemConfig.getFrontHost() + "/password/openError"+"?nid=" + nid + "&retUrl=" + retUrl
                 + "&from=" + from;// 提现同步回调路径
         String bgRetUrl = systemConfig.webHost + "/hyjf-web/user/password/resetPasswordBgreturn?nid=" + nid + "&callBackUrl="
-                + callBackUrl + "&from=" + from;// 提现异步回调路径
+        + callBackUrl + "&from=" + from;// 提现异步回调路径
 
         UserVO users = bankWithdrawService.getUserByUserId(userId);
         UserInfoVO usersInfo = bankWithdrawService.getUserInfoByUserId(userId);

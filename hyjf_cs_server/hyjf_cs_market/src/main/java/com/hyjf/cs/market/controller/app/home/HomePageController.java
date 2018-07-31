@@ -6,6 +6,7 @@ package com.hyjf.cs.market.controller.app.home;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.HomePageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +30,7 @@ import java.util.Map;
 @Api(value = "app", description = "app")
 @RestController
 @RequestMapping("/hyjf-app/homepage")
-public class HomePageController {
+public class HomePageController extends BaseMarketController {
 
     @Autowired
     private HomePageService homePageService;

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.response.trade;
+package com.hyjf.am.response.app;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
@@ -19,7 +19,7 @@ public class AppProjectListResponse extends Response<AppProjectListCustomizeVO> 
     // 数据查询条数 主要用于分页情况，原子层向组合层返回
     private  Integer  count;
 
-    // 计划专区需要统计数据
+    // 计划专区�?要统计数�?
     private Map<String,Object> totalData;
 
     public Integer getCount() {

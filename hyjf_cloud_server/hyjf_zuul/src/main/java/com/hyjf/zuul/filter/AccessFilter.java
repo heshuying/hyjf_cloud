@@ -5,7 +5,8 @@ import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.AppUserToken;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.SignValue;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -118,7 +119,7 @@ public class AccessFilter extends ZuulFilter {
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WEB_CHANNEL);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WECHAT_CHANNEL);
 			}
 			prefix = WECHAT_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
@@ -160,7 +161,33 @@ public class AccessFilter extends ZuulFilter {
 		String token = "";
 		if (APP_CHANNEL.equals(channel)){
 			token = request.getParameter("token");
-		}else {
+		}else if(WECHAT_CHANNEL.equals(channel)){
+            String sign = request.getParameter("sign");
+            Integer userId = null;
+            String accountId = null;
+            if (StringUtils.isBlank(sign)) {
+                sign = (String) request.getAttribute("sign");
+            }
+            if (StringUtils.isNotBlank(sign)) {
+                // 获取用户ID
+                AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
+                if (token != null) {
+                    userId = appUserToken.getUserId();
+                    accountId = appUserToken.getAccountId();
+                }
+                if (userId != null && userId - 0 > 0) {
+                    // 需要刷新 sign
+                    SecretUtil.refreshSign(sign);
+                }
+                request.setAttribute("userId", userId);
+                request.setAttribute("accountId", accountId);
+                ctx.addZuulRequestHeader("userId", userId + "");
+                ctx.addZuulRequestHeader("accountId", accountId);
+            }else {
+                this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+            }
+            return ctx;
+        }else {
 			token = request.getHeader("token");
 		}
 		if (StringUtils.isBlank(token) && isNecessary) {
@@ -169,7 +196,7 @@ public class AccessFilter extends ZuulFilter {
 			this.buildErrorRequestContext(ctx, 400, "token is empty!");
 			return ctx;
 		}
-		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
 		if (webViewUserVO == null) {
 			if (isNecessary) {
 				logger.error("user is not exist...");

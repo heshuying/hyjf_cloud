@@ -11,7 +11,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/bank/synbalance")
-public class SynBalanceController {
+public class WebSynBalanceController {
 
     @Autowired
     SynBalanceService synBalanceService;

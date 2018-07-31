@@ -6,12 +6,12 @@ package com.hyjf.cs.user.controller.wechat.password;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.SendSmsVO;
@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "密码相关服务",description = "weChat端-密码相关服务")
 @RestController
-@RequestMapping("/hyjf-wechat/user/password")
+@RequestMapping("/hyjf-wechat")
 public class WeChatPassWordController {
 
     @Autowired
@@ -65,19 +64,6 @@ public class WeChatPassWordController {
         }
         passWordService.updatePassWd(user,newPassword);
         return ret;
-    }
-
-
-    /**
-     * @author fengping
-     * 微信端验证短信验证码
-     * @param
-     * @return
-     */
-    @PostMapping(value = "validateVerificationCode")
-    public WeChatResult validateVerificationCoden(@RequestBody SendSmsVO sendSmsVo) {
-        //passWordService.validateVerificationCoden(sendSmsVo,false);
-        return null;
     }
 
     /**
@@ -144,18 +130,47 @@ public class WeChatPassWordController {
             ret.put("statusDesc", "请求参数非法");
             return ret;
         }
-        // 校验验证码
-        passWordService.backCheck(sendSmsVo);
+
         // 业务逻辑
         try {
+            // 校验验证码
+            passWordService.backCheck(sendSmsVo);
             passWordService.updatePassWd(user,newPassword);
             ret.put("status", "000");
             ret.put("statusDesc", "修改密码成功");
-        } catch (Exception e) {
+        }catch (CheckException e){
+            ret.put("status", "99");
+            ret.put("statusDesc",e.getMessage());
+        }catch (Exception e) {
             logger.info("修改密码失败...");
             ret.put("status", "99");
             ret.put("statusDesc", "失败");
         }
         return ret;
     }
+
+
+    /**
+     * 微信端获取短信验证码
+     * @param sendSmsVO
+     * @return
+     */
+    @PostMapping(value = "/wx/user/resetpwd/sendVerificationCode.do")
+    public JSONObject sendVerificationCode(SendSmsVO sendSmsVO) {
+        return passWordService.sendCode(sendSmsVO);
+    }
+
+
+    /**
+     * 微信端验证短信验证码
+     * @param
+     * @param sendSmsVo
+     * @return
+     */
+    @RequestMapping(value = "/wx/user/resetpwd/validateVerificationCodeAction.do")
+    public JSONObject validateVerificationCoden(SendSmsVO sendSmsVo) {
+        return passWordService.validateVerificationCoden(sendSmsVo,false);
+    }
+
+
 }

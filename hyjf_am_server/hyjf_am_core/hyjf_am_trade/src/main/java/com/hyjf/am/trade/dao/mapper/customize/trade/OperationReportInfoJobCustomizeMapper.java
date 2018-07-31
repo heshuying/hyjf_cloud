@@ -6,6 +6,7 @@ package com.hyjf.am.trade.dao.mapper.customize.trade;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,6 +45,12 @@ public interface OperationReportInfoJobCustomizeMapper {
      * @param intervalMonth 今年间隔月份
      */
     List<OperationReportJobVO> getRechargeMoneyAndSum(int intervalMonth);
+
+    /**
+     * 按照性别统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
 
     /**
      * 渠道分析 ，成交笔数
@@ -117,4 +124,13 @@ public interface OperationReportInfoJobCustomizeMapper {
      */
     OperationReportJobVO getUserAgeAndArea(Integer userId);
 
+    /**
+     *投资人按照年龄分布 返回符合条件所有用户
+     *
+     * @param date 上个月的最后一天
+     * @param firstAge  年龄下限
+     * @param endAge	年龄上限
+     * @return
+     */
+    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date, int firstAge, int endAge);
 }

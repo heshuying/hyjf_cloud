@@ -11,7 +11,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
@@ -134,7 +134,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         }
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
             if (StringUtils.isNotEmpty(token)) {
-                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
                 CheckUtil.check(webViewUserVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
                 // 验证原手机号校验
                 if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
@@ -250,7 +250,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         }
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
             if (StringUtils.isNotEmpty(token)) {
-                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
                 if (webViewUserVO == null){
                     ret.put("status", "1");
                     ret.put("statusDesc", "用户不存在");

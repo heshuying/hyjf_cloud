@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.response.trade.AppProjectListResponse;
+import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;

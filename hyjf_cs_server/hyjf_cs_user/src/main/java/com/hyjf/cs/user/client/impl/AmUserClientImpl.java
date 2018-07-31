@@ -199,7 +199,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-			Integer searchStatus, Integer updateStatus) {
+			Integer searchStatus, Integer updateStatus,boolean isUpdate) {
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(verificationCode);
@@ -207,7 +207,7 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setPlatform(platform);
 		request.setStatus(searchStatus);
 		request.setUpdateStatus(updateStatus);
-
+		request.setUpdate(isUpdate);
 		Integer result = restTemplate.postForEntity(userService+"/smsCode/check/", request, Integer.class)
 				.getBody();
 		if (result == null) {
@@ -944,7 +944,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public List<AccountBankVO> getBankCardByUserId(Integer userId) {
+	public List<AccountBankVO> getAccountBankByUserId(Integer userId) {
 		String url = userService + "/accountbank/getBankCardByUserId/" + userId;
 		AccountBankResponse response = restTemplate
 				.getForEntity(url, AccountBankResponse.class).getBody();
@@ -992,5 +992,36 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid) {
 		return restTemplate.getForEntity(userService+"/userManager/bindThirdUser/"+userId+"/"+bindUniqueId+"/"+pid, Boolean.class).getBody();
+	}
+
+	/**
+	 * 根据userId查询BankCard
+	 * @auth sunpeikai
+	 * @param userId 用户id
+	 * @return
+	 */
+	@Override
+	public BankCardVO getBankCardByUserId(Integer userId) {
+		String url = userService + "/bankCard/getBankCard/" + userId;
+		BankCardResponse response = restTemplate
+				.getForEntity(url, BankCardResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer countAllUser(){
+		UserResponse response = restTemplate.getForEntity("http://AM-USER/am-user/user/countAll",UserResponse.class).getBody();
+		if (!Response.isSuccess(response)) {
+			return 0;
+		}
+		return response.getCount();
 	}
 }

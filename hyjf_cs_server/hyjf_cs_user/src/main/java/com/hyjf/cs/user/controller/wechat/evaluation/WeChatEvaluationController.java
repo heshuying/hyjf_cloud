@@ -78,7 +78,7 @@ public class WeChatEvaluationController {
     @PostMapping(value = "/sumitResult.do", produces = "application/json; charset=utf-8")
     public BaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean();
-        CheckUtil.check(userId == null, MsgEnum.STATUS_CE000001);
+        CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //答案 "13_48,14_52"
         String userAnswer = qo.getUserAnswer();
         Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId, CustomConstants.CLIENT_WECHAT,null);

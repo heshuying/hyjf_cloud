@@ -4,9 +4,11 @@
 package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -50,6 +52,16 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private Integer interestCoupon;
 
     private Integer tasteMoney;
+    //modifyFlag
+    private String modifyFlag;
+    //modifyFlag
+    private List<BorrowProjectRepayVO> repayNames;
+    // 回显checkbox标签
+    private  List<BorrowStyleVO> repayStyles;
+    // 用户角色
+    private  List<ParamNameVO> investUsers;
+    // 获取数据字典表的下拉列表
+    private List<ParamNameVO> projectTypeList;
 
     private static final long serialVersionUID = 1L;
 
@@ -203,5 +215,45 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     public void setTasteMoney(Integer tasteMoney) {
         this.tasteMoney = tasteMoney;
+    }
+
+    public String getModifyFlag() {
+        return modifyFlag;
+    }
+
+    public void setModifyFlag(String modifyFlag) {
+        this.modifyFlag = modifyFlag;
+    }
+
+    public List<BorrowProjectRepayVO> getRepayNames() {
+        return repayNames;
+    }
+
+    public void setRepayNames(List<BorrowProjectRepayVO> repayNames) {
+        this.repayNames = repayNames;
+    }
+
+    public List<BorrowStyleVO> getRepayStyles() {
+        return repayStyles;
+    }
+
+    public void setRepayStyles(List<BorrowStyleVO> repayStyles) {
+        this.repayStyles = repayStyles;
+    }
+
+    public List<ParamNameVO> getInvestUsers() {
+        return investUsers;
+    }
+
+    public void setInvestUsers(List<ParamNameVO> investUsers) {
+        this.investUsers = investUsers;
+    }
+
+    public List<ParamNameVO> getProjectTypeList() {
+        return projectTypeList;
+    }
+
+    public void setProjectTypeList(List<ParamNameVO> projectTypeList) {
+        this.projectTypeList = projectTypeList;
     }
 }
