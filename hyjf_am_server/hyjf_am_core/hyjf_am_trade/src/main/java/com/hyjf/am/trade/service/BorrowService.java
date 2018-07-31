@@ -135,4 +135,9 @@ public interface BorrowService extends BaseService{
 	 * @return
 	 */
 	public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+
+	/**
+	 * 放款列表
+	 */
+	public List<AccountBorrow> getAccountBorrowList(String borrowNid);
 }

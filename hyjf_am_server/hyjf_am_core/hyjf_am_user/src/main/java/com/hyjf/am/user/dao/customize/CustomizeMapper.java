@@ -39,4 +39,7 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserLeaveCustomizeMapper userLeaveCustomizeMapper;
+
+    @Autowired
+    protected UserCustomizeMapper userCustomizeMapper;
 }

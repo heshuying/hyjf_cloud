@@ -169,10 +169,55 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 	}
 
 	@Override
-	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
+	public int insertHjhLabelRecord(HjhLabelInfoRequest request) {
 		HjhLabel HjhLabel  = new HjhLabel();
-		BeanUtils.copyProperties(request, HjhLabel);
-		hjhLabelMapper.insertSelective(HjhLabel);
+		if(StringUtils.isNotEmpty(request.getLabelName())){
+			HjhLabel.setLabelName(request.getLabelName());
+		}
+		HjhLabel.setLabelTermStart(request.getLabelTermStart());
+		HjhLabel.setLabelTermEnd(request.getLabelTermEnd());
+		if(StringUtils.isNotEmpty(request.getLabelTermType())){
+			HjhLabel.setLabelTermType(request.getLabelTermType());
+		}
+		HjhLabel.setLabelAprStart(request.getLabelAprStart());
+		HjhLabel.setLabelAprEnd(request.getLabelAprEnd());
+		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
+			HjhLabel.setBorrowStyle(request.getBorrowStyle());
+		}
+		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
+			HjhLabel.setBorrowStyleName(request.getBorrowStyleName());
+		}
+		HjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
+		HjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
+		if(StringUtils.isNotEmpty(request.getInstCode())){
+			HjhLabel.setInstCode(request.getInstCode());
+		}
+		if(StringUtils.isNotEmpty(request.getInstName())){
+			HjhLabel.setInstName(request.getInstName());
+		}
+		HjhLabel.setAssetType(request.getAssetType());
+		if(StringUtils.isNotEmpty(request.getAssetTypeName())){
+			HjhLabel.setAssetTypeName(request.getAssetTypeName());
+		}
+		HjhLabel.setProjectType(request.getProjectType());
+		
+		if(StringUtils.isNotEmpty(request.getProjectTypeName())){
+			HjhLabel.setProjectTypeName(request.getProjectTypeName());
+		}
+		HjhLabel.setIsCredit(request.getIsCredit());
+		HjhLabel.setIsLate(request.getIsLate());
+		HjhLabel.setCreditSumMax(request.getCreditSumMax());
+		
+		HjhLabel.setPushTimeStart(request.getPushTimeStart());
+		HjhLabel.setPushTimeEnd(request.getPushTimeEnd());
+		HjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
+		HjhLabel.setRemainingDaysEnd(request.getRemainingDaysEnd());
+		HjhLabel.setLabelState(request.getLabelState());
+		HjhLabel.setCreateUserId(request.getCreateUserId());
+		HjhLabel.setCreateTime(new Date());
+		/*BeanUtils.copyProperties(request, HjhLabel);*/
+		int flg = hjhLabelMapper.insertSelective(HjhLabel);
+		return flg;
 	}
 
 	@Override

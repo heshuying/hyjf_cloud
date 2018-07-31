@@ -3,6 +3,7 @@ package com.hyjf.am.resquest.user;
 import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author tanyy
@@ -24,6 +25,8 @@ public class KeyCountRequest extends BasePage implements Serializable {
      * 渠道
      */
     private String sourceName;
+
+    private Date nowDate;
 
     /**
      * 访问数
@@ -258,6 +261,14 @@ public class KeyCountRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public Date getNowDate() {
+        return nowDate;
+    }
+
+    public void setNowDate(Date nowDate) {
+        this.nowDate = nowDate;
     }
 }
 

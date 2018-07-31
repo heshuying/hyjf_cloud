@@ -46,4 +46,12 @@ public class BorrowRecoverPlanServiceImpl implements BorrowRecoverPlanService {
         return borrowRecovers;
     }
 
+
+    @Override
+    public List<BorrowRecoverPlan> selectRecoverPlanListByTenderNid(String tenderNid) {
+        BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
+        BorrowRecoverPlanExample.Criteria criteria = example.createCriteria();
+        criteria.andNidEqualTo(tenderNid);
+        return borrowRecoverPlanMapper.selectByExample(example);
+    }
 }

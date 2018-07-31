@@ -378,4 +378,10 @@ public interface MQConstant {
 
 	String CRM_USER_LEAVE_GROUP = "CRM_USER_LEAVE_GROUP";
 	String CRM_USER_LEAVE_TOPIC = "CRM_USER_LEAVE_TOPIC";
+
+	/**
+	 * 客户修改推荐人（原CRM调用接口，改为MQ实现）
+	 */
+	String CRM_REFEREE_GROUP = "CRM_REFEREE_GROUP";
+	String CRM_REFEREE_TOPIC = "CRM_REFEREE_TOPIC";
 }

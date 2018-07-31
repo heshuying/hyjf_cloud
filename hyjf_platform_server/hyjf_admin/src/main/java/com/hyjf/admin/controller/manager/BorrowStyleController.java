@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(value = "配置中心还款方式")
+@Api(value = "配置中心还款方式",description ="配置中心还款方式")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowstyle")
 public class BorrowStyleController extends BaseController {

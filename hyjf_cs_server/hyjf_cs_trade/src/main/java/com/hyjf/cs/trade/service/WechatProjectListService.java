@@ -1,10 +1,10 @@
 package com.hyjf.cs.trade.service;
 
-import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 微信端服务service
@@ -18,14 +18,37 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 11:33
      */
-    public WeChatResult getProjectDetail(Map<String,Object> map,String token);
+    public JSONObject getProjectDetail(String borrowId,String type,String token);
+
+
+    /**
+     * 获取散标详情：加入记录
+     * @author zhangyk
+     * @date 2018/7/30 10:28
+     */
+    public JSONObject getProjectInvestRecord(String borrowId, HttpServletRequest request,String userId);
 
     /**
      * 获取计划详情
      * @author zhangyk
      * @date 2018/7/2 15:39
      */
-    public WeChatResult getPlanDetail(Map<String,Object> map,String token);
+    public JSONObject getPlanDetail(String planId, String token);
+
+    /**
+     * 获取计划标的组成
+     * @author zhangyk
+     * @date 2018/7/30 11:09
+     */
+    public HjhPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize);
+
+    /**
+     * 获取计划标的加入记录
+     * @author zhangyk
+     * @date 2018/7/30 11:28
+     */
+    public Object getPlanAccedeList(String planId,int currPage, int pageSize);
+
 
     /**
      * 获取微信首页统计数据

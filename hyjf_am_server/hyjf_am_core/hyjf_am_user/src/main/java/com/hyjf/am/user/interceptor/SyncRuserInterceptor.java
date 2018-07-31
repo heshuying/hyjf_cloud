@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.AmUserProducer;
 import com.hyjf.common.constants.MQConstant;
@@ -55,20 +54,20 @@ public class SyncRuserInterceptor implements Interceptor {
 //        String namespace = sqlId.substring(0, sqlId.indexOf('.'));
 //        Executor exe = (Executor)invocation.getTarget();
         String realSql = boundSql.getSql();
+        String idMethod = mappedStatement.getId();
         String methodName = invocation.getMethod().getName();
         
         // 执行sql
         Object result = invocation.proceed();
 
         try {
-//            jObj.put("test", "johsndfasdfsd");
             
             // 执行成功后发送消息同步，下面判断先ht_user_info 是有原因的
             if(StringUtils.containsIgnoreCase(realSql, "insert into ht_user_info") || StringUtils.containsIgnoreCase(realSql, "update ht_user_info")) {
                 sendToMq(boundSql, methodName, "ht_user_info");
                 
                 // 注册一般，更新用户表基本不需要同步rUser
-            }else if(StringUtils.containsIgnoreCase(realSql, "insert into ht_user")) {
+            }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.insert")) {
                 sendToMq(boundSql, methodName, "ht_user");
                 
             }else if(StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user") || StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {

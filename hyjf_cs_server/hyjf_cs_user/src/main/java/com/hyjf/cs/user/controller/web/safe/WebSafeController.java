@@ -117,7 +117,7 @@ public class WebSafeController extends BaseUserController {
 
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
         if (null != webUser) {
-            webUser = safeService.setToken(webUser);
+            webUser = safeService.updateToken(webUser);
             result.setData(webUser);
         }
 
@@ -170,7 +170,7 @@ public class WebSafeController extends BaseUserController {
             safeService.updateEmail(user.getUserId(), bindEmailVO.getEmail());
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = safeService.setToken(webUser);
+                webUser = safeService.updateToken(webUser);
                 result.setData(webUser);
             }
         } catch (MQException e) {
@@ -216,7 +216,7 @@ public class WebSafeController extends BaseUserController {
             safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = safeService.setToken(webUser);
+                webUser = safeService.updateToken(webUser);
                 result.setData(webUser);
             }
         } catch (MQException e) {
@@ -251,7 +251,7 @@ public class WebSafeController extends BaseUserController {
          */
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
         if (null != webUser) {
-            webUser = safeService.setToken(webUser);
+            webUser = safeService.updateToken(webUser);
             result.setData(webUser);
         }
         return result;
@@ -295,7 +295,7 @@ public class WebSafeController extends BaseUserController {
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
-                webUser = safeService.setToken(webUser);
+                webUser = safeService.updateToken(webUser);
                 result.setData(webUser);
             }
             Map<String, String> map = new HashMap<>();

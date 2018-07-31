@@ -22,7 +22,7 @@ import io.swagger.annotations.Api;
  * @version BaseController.java, v0.1 2018年6月21日 下午7:26:10
  * admin 基础类
  */
-@Api(value = "admin基类")
+@Api(value = "admin基类",description ="admin基类")
 @RestController
 public class BaseController {
 	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);

@@ -77,7 +77,7 @@ public class WebSmsCodeController extends BaseUserController {
 		// 手机号码(必须,数字,最大长度)
 		String mobile = request.getMobile();
 		sendSmsCode.checkParam(verificationType,code,mobile);
-		int cnt = sendSmsCode.updateCheckMobileCode(mobile, code, verificationType, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN);
+		int cnt = sendSmsCode.updateCheckMobileCode(mobile, code, verificationType, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_YIYAN,true);
 		CheckUtil.check(cnt > 0,MsgEnum.STATUS_ZC000015);
 		return  result;
 	}

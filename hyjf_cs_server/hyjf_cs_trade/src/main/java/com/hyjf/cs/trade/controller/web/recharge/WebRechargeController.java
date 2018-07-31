@@ -10,6 +10,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.RechargeService;
+import com.hyjf.cs.trade.vo.BankRechargeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -70,19 +71,15 @@ public class WebRechargeController extends BaseTradeController{
 	 * 调用充值接口
 	 * @param request
 	 * @param
-	 * @param mobile
-	 * @param money
 	 * @return
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
-	public WebResult<Object> recharge(@RequestHeader(value = "token") String token,HttpServletRequest request,
-									  @RequestParam @Valid String mobile,
-									  @RequestParam @Valid String money) throws Exception {
+	public WebResult<Object> recharge(@RequestHeader(value = "token") String token,HttpServletRequest request,@RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
+		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		ModelAndView modelAndView = new ModelAndView();
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
@@ -94,50 +91,6 @@ public class WebRechargeController extends BaseTradeController{
 		return result;
 	}
 
-	/**
-	 * @Author: zhangqingqing
-	 * @Desc :页面充值同步
-	 * @Param: * @param request
-	 * @param bean
-	 * @Date: 12:40 2018/6/5
-	 * @Return: ModelAndView
-	 */
-	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
-	@PostMapping("/return")
-	public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
-		logger.info("[web页面充值同步回调开始]");
-		ModelAndView modelAndView = new ModelAndView();
-		String money = request.getParameter("txAmount");
-		String frontParams = request.getParameter("frontParams");
-		String isSuccess = request.getParameter("isSuccess");
-		// 充值成功
-		DecimalFormat df = new DecimalFormat("#,##0.00");
-		BigDecimal feeAmt = new BigDecimal(money);
-		if(StringUtils.isBlank(bean.getRetCode())&&StringUtils.isNotBlank(frontParams)){
-			JSONObject jsonParm = JSONObject.parseObject(frontParams);
-			if(jsonParm.containsKey("RETCODE")){
-				bean.setRetCode(jsonParm.getString("RETCODE"));
-			}
-		}
-		bean.convert();
-		if (isSuccess != null && "1".equals(isSuccess)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_success");
-			modelAndView.addObject("message", "页面充值成功");
-			modelAndView.addObject("balance", df.format(feeAmt).toString());
-			return modelAndView;
-		}
-		String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-		if (bean!=null&& BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_success");
-			modelAndView.addObject("message", "页面充值成功");
-			modelAndView.addObject("balance", df.format(feeAmt).toString());
-			return modelAndView;
-		} else {
-			modelAndView = new ModelAndView("/bank/user/recharge/recharge_error");
-			modelAndView.addObject("message", userRechargeService.getBankRetMsg(bean.getRetCode()));
-			return modelAndView;
-		}
-	}
 
 	/**
 	 * @Author: zhangqingqing
@@ -178,6 +131,21 @@ public class WebRechargeController extends BaseTradeController{
 		logger.info(WebRechargeController.class.getName(), "/bgreturn", "[用户充值完成后,回调结束]");
 		result.setMessage("充值失败");
 		result.setStatus(false);
+		return result;
+	}
+
+	/**
+	 * @Description web端查询充值失败原因
+	 * @Author pangchengchao
+	 * @Version v0.1
+	 * @Date
+	 */
+	@ApiOperation(value = "web端查询充值失败原因", notes = "web端查询充值失败原因")
+	@RequestMapping("/seachFiledMess")
+	@ResponseBody
+	public WebResult<Object> seachUserBankRechargeErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
+		logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);
+		WebResult<Object> result = userRechargeService.seachUserBankRechargeErrorMessgae(logOrdId);
 		return result;
 	}
 }

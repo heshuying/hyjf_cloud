@@ -46,7 +46,7 @@ public class UserEntryConsumer extends Consumer {
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
         defaultMQPushConsumer.registerMessageListener(new UserEntryConsumer.MessageListener());
-        // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
+        // Consumer对象在使用之前必须要调用start初始化，初始化一次即可
         defaultMQPushConsumer.start();
         logger.info("====更新入职员工信息(CRM) 消费端开始执行=====");
     }

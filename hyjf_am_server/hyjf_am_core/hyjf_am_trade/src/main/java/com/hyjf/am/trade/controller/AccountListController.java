@@ -71,6 +71,11 @@ public class AccountListController extends BaseController {
         return this.accountListService.updateOfPlanRepayAccount(accountVO);
     }
 
+    /**
+     * 根据订单id查询交易列表
+     * @param orderId
+     * @return
+     */
     @GetMapping("/selectAccountListByNidCoupon/{orderId}")
     public AccountListResponse selectAccountListByNidCoupon(@PathVariable String orderId) {
         AccountListResponse response = new AccountListResponse();

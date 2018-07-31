@@ -1,11 +1,12 @@
 package com.hyjf.cs.trade.controller.app.user.myplan;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -16,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +47,7 @@ public class AppMyPlanController extends BaseTradeController {
     @Autowired
     private AppMyPlanService appMyPlanService;
     /**
-     * 微信端获取首页散标详情
-     * @author zhangyk
+     * 微信端获取首页散标列表
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
@@ -68,7 +69,7 @@ public class AppMyPlanController extends BaseTradeController {
         }
         Integer userId = null;
         try {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
             userId = webViewUserVO.getUserId();
         } catch (Exception e) { // token失效
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
@@ -176,4 +177,18 @@ public class AppMyPlanController extends BaseTradeController {
         return params;
     }
 
+
+    /**
+     * App端:获取我的散标详情
+     * @author zhangyk
+     * @date 2018/7/30 18:27
+     * 原接口：com.hyjf.app.user.credit.AppTenderCreditBorrowController.searchTenderCreditDetail()
+     */
+    @ApiOperation(value = "App端:获取我的散标详情", notes = "App端:获取我的散标详情")
+    @PostMapping(value = "/{borrowId}", produces = "application/json; charset=utf-8")
+    public JSONObject getMyPlanList(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
+        JSONObject result = new JSONObject();
+        result = appMyPlanService.getMyPlanDetail(borrowId,request,userId);
+        return  result;
+    }
 }

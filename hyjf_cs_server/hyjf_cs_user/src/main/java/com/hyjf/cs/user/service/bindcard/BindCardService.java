@@ -1,12 +1,15 @@
 package com.hyjf.cs.user.service.bindcard;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Map;
 
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.bean.BindCardPageBean;
+import com.hyjf.cs.user.bean.BindCardPageRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
+import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,6 +21,10 @@ public interface BindCardService extends BaseUserService {
 	void checkParamBindCardPage(WebViewUserVO user);
 
     String checkParamBindCardPageAPP(WebViewUserVO user);
+
+    ResultEnum checkParamBindCardPageWeChat(WebViewUserVO user);
+
+    Map<String,String> checkParamBindCardPageApi(BindCardPageRequestBean bankCardRequestBean);
 
     Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception;
 
@@ -31,7 +38,7 @@ public interface BindCardService extends BaseUserService {
 
     String checkParamUnBindCardAPP(WebViewUserVO webViewUserVO, String cardNo);
 
-    void updateAfterUnBindCard(BankCallBean bean);
+    boolean updateAfterUnBindCard(BankCallBean bean);
 
 	BankCallBean callBankUnBindCard(String cardNo, Integer userId);
 
@@ -42,6 +49,8 @@ public interface BindCardService extends BaseUserService {
     Integer getBankInterfaceFlagByType(String type);
 
     BankCardVO queryUserCardValid(String userId, String cardNo);
+
+    BigDecimal getBankBalance(Integer userId, String account);
 }
 
 	

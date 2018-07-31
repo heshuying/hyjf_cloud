@@ -71,4 +71,11 @@ public interface RechargeService extends BaseTradeService{
 	 * @Date
 	 */
     WebResult<Object> toRecharge(WebViewUserVO user);
+	/**
+	 * @Description web端查询充值失败原因
+	 * @Author pangchengchao
+	 * @Version v0.1
+	 * @Date
+	 */
+	WebResult<Object> seachUserBankRechargeErrorMessgae(String logOrdId);
 }

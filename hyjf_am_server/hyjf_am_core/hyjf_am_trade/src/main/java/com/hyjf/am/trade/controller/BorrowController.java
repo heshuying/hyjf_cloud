@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -297,5 +298,20 @@ public class BorrowController extends BaseController{
         response.setCount(count);
         return response;
     }
+
+	/**
+	 * 获取放款记录
+	 * @author zhangyk
+	 * @date 2018/7/5 18:00
+	 */
+	@GetMapping("/getBorrowAccountList/{borrowNid}")
+	public Object getBorrowAccountList(@PathVariable String borrowNid){
+		BorrowAccountResponse response = new BorrowAccountResponse();
+		List<AccountBorrow> accountBorrows = borrowService.getAccountBorrowList(borrowNid);
+		if (CollectionUtils.isNotEmpty(accountBorrows)){
+			response.setResultList(CommonUtils.convertBeanList(accountBorrows,AccountBorrowVO.class));
+		}
+		return response;
+	}
 
 }
