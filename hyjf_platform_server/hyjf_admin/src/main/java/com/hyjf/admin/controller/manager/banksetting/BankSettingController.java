@@ -21,7 +21,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -38,9 +37,9 @@ import java.util.*;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 22:16
  */
-@Api(value = "配置中心银行配置 江西银行", description = "配置中心银行配置 江西银行")
+@Api(description = "配置中心银行配置 江西银行")
 @RestController
-@RequestMapping("/hyjf-admin/config/banksetting")
+@RequestMapping(value = "/hyjf-admin/config/banksetting")
 public class BankSettingController extends BaseController {
 
     //权限名称
@@ -55,7 +54,7 @@ public class BankSettingController extends BaseController {
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
         AdminBankSettingResponse response = this.bankSettingService.selectBankSettingList(request);
-        if(response==null) {
+        if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
@@ -68,10 +67,10 @@ public class BankSettingController extends BaseController {
     @PostMapping("/info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
-        AdminBankSettingResponse response= null ;
+        AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
-        Integer id =request.getId();
+        Integer id = request.getId();
         if (id != null) {
             response = this.bankSettingService.getRecord(request);
             //String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
@@ -105,7 +104,7 @@ public class BankSettingController extends BaseController {
             // 数据插入
             response = this.bankSettingService.insertRecord(request);
         }
-        if(response==null) {
+        if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
@@ -133,7 +132,7 @@ public class BankSettingController extends BaseController {
         }
         // 更新
         response = this.bankSettingService.updateRecord(request);
-        if(response==null) {
+        if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
@@ -149,16 +148,15 @@ public class BankSettingController extends BaseController {
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        Integer id =request.getId();
+        Integer id = request.getId();
         if(id != null){
             response = this.bankSettingService.deleteRecord(request);
         }
-        if(response==null) {
+        if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
-
         }
         return new AdminResult<>();
     }
@@ -168,9 +166,8 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public Map<String, Object> validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        BeanUtils.copyProperties(bankSettingRequestBean,request);
+        BeanUtils.copyProperties(bankSettingRequestBean ,request);
         List<JxBankConfigVO> list = bankSettingService.getRecordList(request.getJxBankConfig(), -1, -1);
         if (list != null && list.size() != 0) {
             if (bankSettingRequestBean.getId() != null) {
@@ -211,8 +208,7 @@ public class BankSettingController extends BaseController {
 
     @ApiOperation(value = "配置中心银行配置 江西银行列表导出", notes = "列表导出")
     @PostMapping(value = "/exportregist")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody BankSettingRequestBean bankSettingRequestBean) throws Exception {
-        AdminBankSettingResponse responseBean = null;
+    public void exportAction(HttpServletResponse response, @RequestBody BankSettingRequestBean bankSettingRequestBean) throws Exception {
         AdminBankSettingRequest requestBean = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, requestBean);
         // 表格sheet名称
