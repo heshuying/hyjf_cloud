@@ -13,7 +13,7 @@
 	</resultMap>
 
 
-	<select id="selectContentArticle" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.customize.IdCardCustomize">
+	<select id="getIdCardCustomize" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.customize.IdCardCustomize">
 		SELECT * FROM ht_idcard where 1=1
 		<if test="bm != null and bm != ''">
 			and bm = #{bm}
