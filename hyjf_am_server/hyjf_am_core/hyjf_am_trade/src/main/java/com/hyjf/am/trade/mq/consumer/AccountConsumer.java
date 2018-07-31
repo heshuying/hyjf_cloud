@@ -59,7 +59,7 @@ public class AccountConsumer extends Consumer {
 			AccountVO accountVO = JSONObject.parseObject(msg.getBody(), AccountVO.class);
 
 			if (accountVO != null) {
-				logger.info("注册保存账户表...accountVO :", accountVO);
+				logger.info("注册保存账户表...userId IS :", accountVO.getUserId());
 				Account account = new Account();
 				BeanUtils.copyProperties(accountVO, account);
 				accountService.insert(account);
