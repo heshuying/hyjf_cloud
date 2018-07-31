@@ -191,7 +191,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
         String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.webHost + "/hyjf-web/user/password/resetPasswordBgreturn";
+        String bgRetUrl = systemConfig.webHost + "/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
