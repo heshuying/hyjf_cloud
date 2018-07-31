@@ -26,7 +26,11 @@ public class AppContentArticleClientImpl implements AppContentArticleClient {
     @Autowired
     private RestTemplate restTemplate;
 
-
+    /**
+     * 根据id获取网贷知识
+     * @param contentArticleId
+     * @return
+     */
     @Override
     public AppContentArticleVO getContentArticleById(Integer contentArticleId) {
         String url = urlBase +"find/contentArticle/getContentArticleById/" + contentArticleId;
@@ -36,4 +40,6 @@ public class AppContentArticleClientImpl implements AppContentArticleClient {
         }
         return null;
     }
+
+
 }

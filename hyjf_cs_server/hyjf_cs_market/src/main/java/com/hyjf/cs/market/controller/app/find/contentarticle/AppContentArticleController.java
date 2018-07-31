@@ -36,7 +36,7 @@ public class AppContentArticleController extends BaseMarketController {
     /** 类名 */
     public static final String THIS_CLASS = AppContentArticleController.class.getName();
     /** 获取文章详情  */
-    public static final String GET_CONTENT_ARTICLE_ID_ACTION = "/${articleType}/${articleId}";
+    public static final String GET_CONTENT_ARTICLE_ID_ACTION = "/{articleType}/{articleId}";
 
     @Autowired
     private AppContentArticleService appContentArticleService;
