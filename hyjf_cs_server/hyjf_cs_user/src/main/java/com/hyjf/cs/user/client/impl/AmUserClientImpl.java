@@ -1024,4 +1024,19 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return response.getCount();
 	}
+	/**
+	 * 插入各种信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest) {
+		String url = userService + "/user/insertUserActionUtm";
+		UserResponse response = restTemplate.postForEntity(url,userActionUtmRequest,UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
 }
