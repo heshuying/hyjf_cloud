@@ -52,6 +52,7 @@ public class PandectController {
             JSONObject map = pandectService.pandect(user);
             result.setData(map);
             model.addAttribute("datas",result);
+            logger.info("pandect:"+result);
         return "pandect";
     }
 }

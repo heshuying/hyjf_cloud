@@ -300,7 +300,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
 
         // 3. 注册成功用户保存账户表
-        sendMqToSaveAccount(userVO.getUserId());
+        sendMqToSaveAccount(userVO.getUserId(),userVO.getUsername());
         return userVO;
     }
 
@@ -314,7 +314,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         UserVO userVO = amUserClient.surongRegister(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 注册成功用户保存账户表
-        sendMqToSaveAccount(userVO.getUserId());
+        sendMqToSaveAccount(userVO.getUserId(),userVO.getUsername());
         return userVO;
     }
 
@@ -332,7 +332,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 
         // 2. 注册成功用户保存账户表
-        sendMqToSaveAccount(webViewUserVO.getUserId());
+        sendMqToSaveAccount(webViewUserVO.getUserId(),webViewUserVO.getUsername());
 
         // 3. 注册送188元新手红包
         // 活动有效期校验
@@ -491,10 +491,13 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
      * @param userId
      * @throws MQException
      */
-    private void sendMqToSaveAccount(int userId) {
+    private void sendMqToSaveAccount(int userId,String userName) {
         AccountVO account = new AccountVO();
         account.setUserId(userId);
+        account.setUserName(userName);
         // 银行存管相关
+        account.setPlanAccedeBalance(BigDecimal.ZERO);
+        account.setPlanAccedeFrost(BigDecimal.ZERO);
         account.setBankBalance(BigDecimal.ZERO);
         account.setBankBalanceCash(BigDecimal.ZERO);
         account.setBankFrost(BigDecimal.ZERO);
@@ -512,19 +515,12 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         account.setBankAwaitOrg(BigDecimal.ZERO);
         // 汇付相关
         account.setTotal(BigDecimal.ZERO);
-        account.setIncome(BigDecimal.ZERO);
-        account.setExpend(BigDecimal.ZERO);
         account.setBalance(BigDecimal.ZERO);
         account.setBalanceCash(BigDecimal.ZERO);
         account.setBalanceFrost(BigDecimal.ZERO);
         account.setFrost(BigDecimal.ZERO);
         account.setAwait(BigDecimal.ZERO);
         account.setRepay(BigDecimal.ZERO);
-        account.setFrostCash(BigDecimal.ZERO);
-        account.setRecMoney(BigDecimal.ZERO);
-        account.setFee(BigDecimal.ZERO);
-        account.setInMoney(BigDecimal.ZERO);
-        account.setInMoneyFlag(0);
         account.setPlanAccedeTotal(BigDecimal.ZERO);
         account.setPlanBalance(BigDecimal.ZERO);
         account.setPlanFrost(BigDecimal.ZERO);
@@ -532,7 +528,6 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         account.setPlanCapitalWait(BigDecimal.ZERO);
         account.setPlanInterestWait(BigDecimal.ZERO);
         account.setPlanRepayInterest(BigDecimal.ZERO);
-        account.setVersion(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
             logger.info("发送mq开始");
