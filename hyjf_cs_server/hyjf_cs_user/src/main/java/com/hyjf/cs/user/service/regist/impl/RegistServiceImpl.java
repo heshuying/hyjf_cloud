@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -484,7 +485,22 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         }
         return vo;
     }
-
+    /**
+     * 保存用户信息
+     */
+    @Override
+    public UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source) {
+        UserActionUtmRequest request = new UserActionUtmRequest();
+        request.setMobile(mobile);
+        request.setPassword(password);
+        request.setVerificationCode(verificationCode);
+        request.setReffer(reffer);
+        request.setLoginIp(loginIp);
+        request.setPlatform(platform);
+        request.setUtm_id(utm_id);
+        request.setUtm_source(utm_source);
+        return amUserClient.insertUserActionUtm(request);
+    }
     /**
      * 注册保存账户表
      *

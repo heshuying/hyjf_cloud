@@ -80,4 +80,11 @@ public class OperationReportJobController extends BaseController {
 		response.setResultList(list);
 		return response;
 	}
+	@RequestMapping("/tendercitygroupbyuserids")
+	public OperationReportJobResponse tenderCityGroupByUserIds(@RequestBody OperationReportJobRequest request) {
+		OperationReportJobResponse response = new OperationReportJobResponse();
+		List<OperationReportJobVO> list = keyCountService.getTenderCityGroupByUserIds(request.getOperationReportJobVOList());
+		response.setResultList(list);
+		return response;
+	}
 }

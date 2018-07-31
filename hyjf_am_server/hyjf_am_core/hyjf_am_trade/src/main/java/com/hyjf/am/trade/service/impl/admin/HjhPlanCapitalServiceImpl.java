@@ -3,7 +3,7 @@ package com.hyjf.am.trade.service.impl.admin;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.trade.service.admin.HjhPlanCapitalService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 public class HjhPlanCapitalServiceImpl extends BaseServiceImpl implements HjhPlanCapitalService {
 
     @Override
-    public List<HjhPlanCapitalVO> getReinvestInfo(HjhReInvestDetailRequest request) {
+    public List<HjhPlanCapitalCustomizeVO> getReinvestInfo(HjhReInvestDetailRequest request) {
 
         Map<String, Object> param = new HashMap<String, Object>();
 
@@ -27,7 +27,7 @@ public class HjhPlanCapitalServiceImpl extends BaseServiceImpl implements HjhPla
             param.put("planNid", request.getPlanNidSrch());
         }
 
-        List<HjhPlanCapitalVO> recordList = hjhReInvestDetailCustomizeMapper.queryReInvestDetails(param);
+        List<HjhPlanCapitalCustomizeVO> recordList = hjhReInvestDetailCustomizeMapper.queryReInvestDetails(param);
         return recordList;
     }
 }

@@ -224,7 +224,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		HjhPlanExample example = new HjhPlanExample(); 
 		HjhPlanExample.Criteria cra = example.createCriteria();
 		if (StringUtils.isNotEmpty(planNid)) {
-			cra.andPlanNidNotEqualTo(planNid);
+			cra.andPlanNidEqualTo(planNid);
 			cra.andDelFlagEqualTo(0);
 		}
 		ret = this.hjhPlanMapper.countByExample(example);

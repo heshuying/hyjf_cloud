@@ -236,4 +236,9 @@ public class RedisConstants {
      */
     public static final String SMS_MAIL_TEMPLATE = "sms_mail_template";
 
+    /**
+     * 运营报告定时任务key
+     */
+    public static final String Statistics_Operation_Report = "StatisticsOperationReportTask";
+
 }

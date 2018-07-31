@@ -141,7 +141,7 @@ public class WebRechargeController extends BaseTradeController{
 	 * @Date
 	 */
 	@ApiOperation(value = "web端查询充值失败原因", notes = "web端查询充值失败原因")
-	@RequestMapping("/seachFiledMess")
+	@PostMapping("/seachFiledMess")
 	@ResponseBody
 	public WebResult<Object> seachUserBankRechargeErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
 		logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);

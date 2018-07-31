@@ -2,12 +2,10 @@ package com.hyjf.cs.trade.controller.wechat.user.myAsset;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.am.bean.result.BaseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -54,6 +52,7 @@ public class WechatMyProjectController extends BaseTradeController {
      */
     @ApiOperation(value = "微信端:获取我的散标信息", notes = "微信端:获取我的散标信息")
     @GetMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,
                                                                  @RequestHeader(value = "userId", required = false) Integer userId) {
 
@@ -61,7 +60,9 @@ public class WechatMyProjectController extends BaseTradeController {
         String type = request.getParameter("type");
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + userId, WebViewUserVO.class);
         if (Strings.isNullOrEmpty(type)) {
-            return new WeChatResult(MsgEnum.ERR_PARAM_NUM);
+            weChatResult.setStatus(MsgEnum.ERR_PARAM_NUM.getCode());
+            weChatResult.setStatusDesc(MsgEnum.ERR_PARAM_NUM.getMsg());
+            return weChatResult;
         }
 
         String currentPageStr = request.getParameter("currentPage");
@@ -94,7 +95,8 @@ public class WechatMyProjectController extends BaseTradeController {
         vo.setAwait(account.getBankAwait() == null ? "0.00" : CommonUtils.formatAmount(account.getBankAwait()));
 
         weChatResult.setData(vo);
-
+        weChatResult.setStatus(BaseResult.SUCCESS);
+        weChatResult.setStatusDesc(BaseResult.SUCCESS_DESC);
         return weChatResult;
     }
 
@@ -104,14 +106,17 @@ public class WechatMyProjectController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "微信端:获取我的计划信息", notes = "微信端:获取我的计划信息")
-    @GetMapping(value = "/queryPlanedProject", produces = "application/json; charset=utf-8")
-    public WeChatResult queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "userId", required = false) Integer userId) {
-        WeChatResult weChatResult = new WeChatResult();
+    @GetMapping(value = "/queryPlanedProject.do", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public WeChatResult<QueryMyProjectVO> queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "userId", required = false) Integer userId) {
+        WeChatResult<QueryMyProjectVO> weChatResult = new WeChatResult<QueryMyProjectVO>();
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + userId, WebViewUserVO.class);
         String type = request.getParameter("type");
 
         if (Strings.isNullOrEmpty(type)) {
-            return new WeChatResult(MsgEnum.ERR_PARAM_NUM);
+            weChatResult.setStatus(MsgEnum.ERR_PARAM_NUM.getCode());
+            weChatResult.setStatusDesc(MsgEnum.ERR_PARAM_NUM.getMsg());
+            return weChatResult;
         }
 
         String currentPageStr = request.getParameter("currentPage");
@@ -137,6 +142,8 @@ public class WechatMyProjectController extends BaseTradeController {
         vo.setAwait(account.getPlanAccountWait() == null ? "0.00" : CommonUtils.formatAmount(account.getPlanAccountWait()));
 
         weChatResult.setData(vo);
+        weChatResult.setStatus(BaseResult.SUCCESS);
+        weChatResult.setStatusDesc(BaseResult.SUCCESS_DESC);
         return weChatResult;
     }
 }
