@@ -171,7 +171,7 @@ public class AccessFilter extends ZuulFilter {
             if (StringUtils.isNotBlank(sign)) {
                 // 获取用户ID
                 AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-                if (token != null) {
+                if (appUserToken != null) {
                     userId = appUserToken.getUserId();
                     accountId = appUserToken.getAccountId();
                 }
