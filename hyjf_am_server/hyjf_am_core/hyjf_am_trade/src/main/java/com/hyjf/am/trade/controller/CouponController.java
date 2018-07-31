@@ -2,16 +2,19 @@ package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
+import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
@@ -20,7 +23,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 优惠券相关
@@ -138,5 +143,27 @@ public class CouponController extends BaseController{
         response.setResultList(CommonUtils.convertBeanList(list,BorrowTenderCpnVO.class));
         return response;
     }
+
+
+
+    @ApiOperation(value = "根据Nid和userId获取优惠券放款数据")
+    @PostMapping("/getborrowtendercpnByUserIdAndOrderId/")
+    public AppCouponInfoResponse getborrowtendercpnByUserIdAndOrderId(@RequestBody @Valid Map<String,Object> params){
+        AppCouponInfoResponse response = new AppCouponInfoResponse();
+        AppCouponInfoCustomizeVO infoCustomizeVO = couponService.getCouponInfo(params);
+        response.setResult(infoCustomizeVO);
+        return response;
+    }
+
+
+    @ApiOperation(value = "根据Nid获取优惠券还款数据")
+    @GetMapping("/getCounponRecoverList/{nid}")
+    public CouponRepayResponse getCounponRecoverList(@PathVariable String nid){
+        CouponRepayResponse response = new CouponRepayResponse();
+        List<CurrentHoldRepayMentPlanListVO> list = couponService.getCouponRecoverList(nid);
+        response.setResultList(list);
+        return response;
+    }
+
 
 }
