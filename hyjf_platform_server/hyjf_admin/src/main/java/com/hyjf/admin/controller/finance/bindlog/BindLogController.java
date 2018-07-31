@@ -33,7 +33,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: BindLogController, v0.1 2018/7/5 15:36
  */
-@Api(value = "资金中心-定向转账-绑定日志")
+@Api(value = "资金中心-定向转账-绑定日志",description ="资金中心-定向转账-绑定日志")
 @RestController
 @RequestMapping(value = "/hyjf-admin/bindlog")
 public class BindLogController extends BaseController {
