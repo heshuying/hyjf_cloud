@@ -440,4 +440,53 @@ public class AccountVO extends BaseVO implements Serializable {
 	public void setBankFrostCash(BigDecimal bankFrostCash) {
 		this.bankFrostCash = bankFrostCash;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountVO{" +
+				"id=" + id +
+				", userId=" + userId +
+				", total=" + total +
+				", income=" + income +
+				", expend=" + expend +
+				", balance=" + balance +
+				", balanceCash=" + balanceCash +
+				", balanceFrost=" + balanceFrost +
+				", frost=" + frost +
+				", await=" + await +
+				", repay=" + repay +
+				", frostCash=" + frostCash +
+				", isUpdate=" + isUpdate +
+				", isok=" + isok +
+				", recMoney=" + recMoney +
+				", fee=" + fee +
+				", inMoney=" + inMoney +
+				", inMoneyFlag=" + inMoneyFlag +
+				", version=" + version +
+				", planRepayInterest=" + planRepayInterest +
+				", planBalance=" + planBalance +
+				", planFrost=" + planFrost +
+				", planAccedeTotal=" + planAccedeTotal +
+				", planAccedeBalance=" + planAccedeBalance +
+				", planAccedeFrost=" + planAccedeFrost +
+				", planAccountWait=" + planAccountWait +
+				", planCapitalWait=" + planCapitalWait +
+				", planInterestWait=" + planInterestWait +
+				", bankTotal=" + bankTotal +
+				", bankBalance=" + bankBalance +
+				", bankFrost=" + bankFrost +
+				", bankWaitRepay=" + bankWaitRepay +
+				", bankWaitCapital=" + bankWaitCapital +
+				", bankWaitInterest=" + bankWaitInterest +
+				", bankWaitRepayOrg=" + bankWaitRepayOrg +
+				", bankInterestSum=" + bankInterestSum +
+				", bankInvestSum=" + bankInvestSum +
+				", bankAwait=" + bankAwait +
+				", bankAwaitCapital=" + bankAwaitCapital +
+				", bankAwaitInterest=" + bankAwaitInterest +
+				", bankAwaitOrg=" + bankAwaitOrg +
+				", bankBalanceCash=" + bankBalanceCash +
+				", bankFrostCash=" + bankFrostCash +
+				'}';
+	}
 }
