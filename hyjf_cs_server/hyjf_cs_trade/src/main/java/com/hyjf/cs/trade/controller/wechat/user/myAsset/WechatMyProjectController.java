@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +53,7 @@ public class WechatMyProjectController extends BaseTradeController {
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "微信端:获取我的散标信息", notes = "微信端:获取我的散标信息")
-    @PostMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/queryScatteredProject.do", produces = "application/json; charset=utf-8")
     public WeChatResult<QueryMyProjectVO> queryScatteredProject( HttpServletRequest request,
                                                                  @RequestHeader(value = "token", required = false) String token) {
 
@@ -104,7 +105,7 @@ public class WechatMyProjectController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "微信端:获取我的计划信息", notes = "微信端:获取我的计划信息")
-    @PostMapping(value = "/queryPlanedProject", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/queryPlanedProject", produces = "application/json; charset=utf-8")
     public WeChatResult queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
         WeChatResult weChatResult = new WeChatResult();
         WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
