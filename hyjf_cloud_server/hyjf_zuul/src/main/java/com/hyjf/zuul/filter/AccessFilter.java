@@ -5,6 +5,7 @@ import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.SignValue;
 import com.netflix.zuul.ZuulFilter;
@@ -161,9 +162,32 @@ public class AccessFilter extends ZuulFilter {
 		if (APP_CHANNEL.equals(channel)){
 			token = request.getParameter("token");
 		}else if(WECHAT_CHANNEL.equals(channel)){
-			String sign = request.getParameter("sign");
-			token = SecretUtil.getToken(sign);
-		}else {
+            String sign = request.getParameter("sign");
+            Integer userId = null;
+            String accountId = null;
+            if (StringUtils.isBlank(sign)) {
+                sign = (String) request.getAttribute("sign");
+            }
+            if (StringUtils.isNotBlank(sign)) {
+                // 获取用户ID
+                AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
+                if (token != null) {
+                    userId = appUserToken.getUserId();
+                    accountId = appUserToken.getAccountId();
+                }
+                if (userId != null && userId - 0 > 0) {
+                    // 需要刷新 sign
+                    SecretUtil.refreshSign(sign);
+                }
+                request.setAttribute("userId", userId);
+                request.setAttribute("accountId", accountId);
+                ctx.addZuulRequestHeader("userId", userId + "");
+                ctx.addZuulRequestHeader("accountId", accountId);
+            }else {
+                this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+            }
+            return ctx;
+        }else {
 			token = request.getHeader("token");
 		}
 		if (StringUtils.isBlank(token) && isNecessary) {
