@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author dangzw
  * @version HomePageController, v0.1 2018/7/26 10:15
  */
-@Api(value = "app", description = "app")
+@Api(description = "app起始页信息获取")
 @RestController
 @RequestMapping("/hyjf-app/homepage")
 public class HomePageController extends BaseMarketController {

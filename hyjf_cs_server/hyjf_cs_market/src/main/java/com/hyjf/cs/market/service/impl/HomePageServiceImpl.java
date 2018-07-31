@@ -8,7 +8,6 @@ import com.hyjf.cs.market.client.AmHomePageClient;
 import com.hyjf.cs.market.service.HomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 
