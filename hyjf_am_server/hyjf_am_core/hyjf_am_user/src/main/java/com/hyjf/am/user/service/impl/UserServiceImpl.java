@@ -116,11 +116,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 		// 7. 注册成功默认登录
 		this.updateLoginUser(userId, loginIp);
-		
-		if(1==1) {
-			throw new RuntimeException("就是让它抛出异常");
-		}
-		
 
 		return user;
 	}
@@ -363,14 +358,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			user.setRegEsb(Integer.parseInt(platform));
 			// 账户开通平台 0pc 1微信 2安卓 3IOS 4其他
 		}
-		
-		
-		
-		UserExample example = new UserExample();
-		example.createCriteria().andMobileEqualTo("13964210698");
-		
-		userMapper.updateByExampleSelective(user, example);
-		userMapper.deleteByExample(example);
+
 		
 		userMapper.insertSelective(user);
 		return user;
