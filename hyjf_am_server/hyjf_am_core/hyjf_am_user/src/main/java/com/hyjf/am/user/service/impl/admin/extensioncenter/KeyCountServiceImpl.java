@@ -61,4 +61,9 @@ public class KeyCountServiceImpl implements KeyCountService {
         return keyCountCustomMapper.getTenderSexGroupBy(request);
     }
 
+	@Override
+	public	List<OperationReportJobVO> getTenderCityGroupByUserIds(List<OperationReportJobVO> cityUserIds){
+		return keyCountCustomMapper.getTenderCityGroupByUserIds(cityUserIds);
+	}
+
 }
