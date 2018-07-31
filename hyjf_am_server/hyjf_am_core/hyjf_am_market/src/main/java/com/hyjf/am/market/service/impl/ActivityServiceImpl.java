@@ -87,6 +87,20 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * 根据日期条件查询活动列表
+     * @return
+     */
+    @Override
+    public List<ActivityList> getActivity(int day) {
+        ActivityListExample example = new ActivityListExample();
+        ActivityListExample.Criteria criteria = example.createCriteria();
+        criteria.andTimeStartLessThan(day);
+        criteria.andTimeEndGreaterThan(day);
+        example.setOrderByClause(" create_time desc ");
+        return activityListMapper.selectByExample(example);
+    }
+
+    /**
      * 添加活动
      *
      * @param activityList

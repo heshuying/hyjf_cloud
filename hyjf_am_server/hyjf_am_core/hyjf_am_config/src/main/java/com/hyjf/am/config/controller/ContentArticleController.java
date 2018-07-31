@@ -1,17 +1,23 @@
 package com.hyjf.am.config.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.config.ContentArticleCustomizeResponse;
+import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.config.WechatContentArticleResultVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -236,7 +242,89 @@ public class ContentArticleController {
     }
 
 
+    /**
+     * 用于展示发布的信息
+     * @param noticeType
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @PostMapping("/find/{noticeType}/{limitStart}/{limitEnd}")
+    private ContentArticleResponse appFind(	@PathVariable String noticeType,@PathVariable int limitStart,@PathVariable int limitEnd){
+        ContentArticleResponse response = new ContentArticleResponse();
+        List<ContentArticle> newsList =
+                contentArticleService.searchHomeNoticeList(noticeType, limitStart, limitEnd);
+        if (!CollectionUtils.isEmpty(newsList)){
+            List<ContentArticleVO> result = CommonUtils.convertBeanList(newsList,ContentArticleVO.class);
+            response.setResultList(result);
+        }
+        return  response;
+    }
 
+    /**
+     * 微信获取查询文章列表
+     * @return
+     */
+    @PostMapping("/getWechatContentArticleListByType")
+    public WechatContentArticleResponse getWechatContentArticleListByType(@RequestBody  WechatContentArticleRequest form) {
+        WechatContentArticleResponse result = new WechatContentArticleResponse();
+        //result.setEnum(ResultEnum.SUCCESS);
+        //返回当前页
+        result.setCurrentPage(form.getCurrentPage());
+        try {
+            // 检查参数正确性
+            if (form.getPageSize()<0||form.getCurrentPage()<0){
+                return result;
+            }
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("type", form.getType());
+            params.put("limitStart", -1);
+            params.put("limitEnd", -1);
+            // 查询总数
+            Integer count = contentArticleService.countContentArticleByType(params);
+            if (count != null && count > 0) {
+                // 构造分页
+                if(form.getCurrentPage()<=0){
+                    form.setCurrentPage(1);
+                }
+                if(form.getPageSize()<=0){
+                    form.setPageSize(10);
+                }
+                params.put("limitStart", form.getPageSize() * (form.getCurrentPage() - 1));
+                params.put("limitEnd", form.getPageSize()+1);params.put("limitEnd", form.getPageSize()+1);
+               // List<WechatContentArticleResultVO> list=
+                List<ContentArticleCustomize> contentArticleListByType = contentArticleService.getContentArticleListByType(params);
+
+                List<WechatContentArticleResultVO> list = CommonUtils.convertBeanList(contentArticleListByType, WechatContentArticleResultVO.class);
+
+                if(!CollectionUtils.isEmpty(list)){
+                    if(list.size()==(form.getPageSize()+1)) {
+                        //不是最后一页
+                        result.setEndPage(0);
+                    }else {
+                        //是最后一页
+                        result.setEndPage(1);
+                    }
+                    list.remove(list.size()-1);
+                }
+                if (!CollectionUtils.isEmpty(list)) {
+                    result.setMessageCount(count);
+                    result.setResultList(list);
+                } else {
+                    result.setMessageCount(0);
+                    result.setResultList(new ArrayList<WechatContentArticleResultVO>());
+                }
+            } else {
+                result.setMessageCount(0);
+                result.setResultList(new ArrayList<WechatContentArticleResultVO>());
+            }
+        } catch (Exception e) {
+            result.setMessageCount(0);
+            result.setResultList(new ArrayList<WechatContentArticleResultVO>());
+            return result;
+        }
+        return result;
+    }
 
 
 

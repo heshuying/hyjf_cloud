@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.service;
 
+import com.hyjf.am.response.config.WechatContentArticleResponse;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 
@@ -37,6 +39,23 @@ public interface AppFindService extends BaseMarketService {
     ContentArticleVO getContentArticleById(Integer contentArticleId);
 
     /**
+     * 用于展示发布的信息
+     * @param noticeType
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    List<ContentArticleVO> searchHomeNoticeList(String noticeType,int limitStart, int limitEnd) ;
+
+
+    /**
+     * 根据文章类型获取文章列表
+     * @param form
+     * @return
+     */
+    WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form);
+
+	/**
      * 上下翻页
      * @param params
      * @param offset

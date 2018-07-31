@@ -79,4 +79,9 @@ public interface ActivityService {
      * @return
      */
     List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest);
+    /**
+     * 根据日期条件查询活动列表
+     * @return
+     */
+    public List<ActivityList> getActivity(int day);
 }
