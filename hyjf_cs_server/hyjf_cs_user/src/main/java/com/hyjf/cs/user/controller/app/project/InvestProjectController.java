@@ -17,10 +17,8 @@ import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
-import com.hyjf.am.vo.trade.assetmanage.MyProjectVo;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
@@ -53,10 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Api(value = "app端我的资产",description = "app端我的资产")
 @Controller
@@ -69,6 +64,7 @@ public class InvestProjectController extends BaseUserController {
 	@Autowired
 	private SystemConfig systemConfig;
 
+
 	/**
 	 * 查询用户的投资项目列表还款中
 	 * 
@@ -78,7 +74,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = InvestProjectDefine.REPAY_LIST_ACTION, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/getRepayList", produces = "application/json; charset=utf-8")
 	public JSONObject searchRepayList(@ModelAttribute RepayListBean form, HttpServletRequest request,
                                       HttpServletResponse response) {
 
