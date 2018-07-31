@@ -10,9 +10,11 @@ import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import io.swagger.models.auth.In;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,6 +203,38 @@ public class ActivityController {
             List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
             response.setResultList(activityListCustomizeVOS);
         }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP根据条件查询活动列表总数
+     * @Date 11:53 2018/7/26
+     * @Param activityListRequest
+     * @return ActivityListResponse
+     */
+    @RequestMapping("/queryactivitycount")
+    public ActivityListResponse queryActivityCount(@RequestBody ActivityListRequest activityListRequest){
+        ActivityListResponse response = new ActivityListResponse();
+        Integer count = activityService.queryactivitycount(activityListRequest);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP根据条件分页查询数据
+     * @Date 11:54 2018/7/26
+     * @Param activityListRequest
+     * @return
+     */
+    @RequestMapping("/queryactivitylist")
+    public ActivityListResponse queryActivityList(@RequestBody ActivityListRequest activityListRequest){
+        ActivityListResponse response = new ActivityListResponse();
+        List<ActivityListBeanVO> list = activityService.queryActivityList(activityListRequest);
+        response.setActivityList(list);
         return response;
     }
 }

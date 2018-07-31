@@ -180,10 +180,60 @@ public class RedisConstants {
     /**
      * 协议模板---协议前台展示名称的别名
      */
-    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias_";
+    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias:";
     
     /**
      * 协议模板---协议文件存储Redis前缀
      */
-    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url_";
+    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
+    
+
+    /**
+     * 用户token令牌前缀
+     */
+    public static final String USER_TOKEN_REDIS = "user_token_";
+
+    /**
+     * 放款批次号key
+     */
+    public static final String BATCH_NO = "batchNo";
+    /**
+     *
+     */
+    public static final String DATA_BATCH_NO = "dataBatchNo";
+    /**
+     * 短信配置key
+     */
+    public static final String SMS_CONFIG = "smsConfig";
+
+    /**
+     * 记录密码错误次数Redis前缀
+     */
+    public static final String PASSWORD_ERR_COUNT = "password_err_count_";
+
+    /**
+     * 邮件配置key
+     */
+    public static final String SITE_SETTINGS = "site_settings";
+
+    /**
+     * 消息推送模版key
+     */
+    public static final String MESSAGE_PUSH_TEMPLATE = "message_push_template";
+
+    /**
+     * 短信通知配置key
+     */
+    public static final String SMS_NOTICE_CONFIG = "sms_notice_config";
+
+    /**
+     * 短信模版key
+     */
+    public static final String SMS_TEMPLATE = "sms_template";
+
+    /**
+     * 邮件模版key
+     */
+    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template";
+
 }

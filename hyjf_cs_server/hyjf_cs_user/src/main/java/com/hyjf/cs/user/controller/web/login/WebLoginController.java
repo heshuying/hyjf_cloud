@@ -8,7 +8,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -82,7 +82,7 @@ public class WebLoginController extends BaseUserController {
         // 退出到首页
         result.setData("index");
         try {
-            RedisUtils.del(RedisKey.USER_TOKEN_REDIS + token);
+            RedisUtils.del(RedisConstants.USER_TOKEN_REDIS + token);
         }catch (Exception e){
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("退出失败");

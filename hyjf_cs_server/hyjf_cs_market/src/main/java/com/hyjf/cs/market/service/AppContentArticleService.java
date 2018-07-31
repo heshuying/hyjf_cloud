@@ -3,33 +3,17 @@
  */
 package com.hyjf.cs.market.service;
 
-import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
-import com.hyjf.am.vo.config.ContentArticleVO;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
+import com.hyjf.am.vo.app.AppContentArticleVO;
 
 /**
  * @author dangzw
- * @version AppContentArticleService, v0.1 2018/7/26 15:04
+ * @version AppContentArticleService, v0.1 2018/7/30 23:36
  */
 public interface AppContentArticleService {
-
     /**
-     * 获取网贷知识列表总条数
-     * @author pcc
-     * @param params
+     * 根据id获取网贷知识
+     * @param contentArticleId
      * @return
      */
-    Integer countContentArticleByType(Map<String, Object> params);
-
-    /**
-     * 获取网贷知识列表
-     * @author pcc
-     * @param params
-     * @param request
-     * @return
-     */
-    List<ContentArticleCustomizeVO> getContentArticleListByType(Map<String, Object> params, HttpServletRequest request);
+    AppContentArticleVO getContentArticleById(Integer contentArticleId);
 }

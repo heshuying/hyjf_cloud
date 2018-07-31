@@ -5,7 +5,7 @@ import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.SignValue;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -118,7 +118,7 @@ public class AccessFilter extends ZuulFilter {
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WEB_CHANNEL);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WECHAT_CHANNEL);
 			}
 			prefix = WECHAT_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
@@ -160,6 +160,9 @@ public class AccessFilter extends ZuulFilter {
 		String token = "";
 		if (APP_CHANNEL.equals(channel)){
 			token = request.getParameter("token");
+		}else if(WECHAT_CHANNEL.equals(channel)){
+			String sign = request.getParameter("sign");
+			token = SecretUtil.getToken(sign);
 		}else {
 			token = request.getHeader("token");
 		}
@@ -169,7 +172,7 @@ public class AccessFilter extends ZuulFilter {
 			this.buildErrorRequestContext(ctx, 400, "token is empty!");
 			return ctx;
 		}
-		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
 		if (webViewUserVO == null) {
 			if (isNecessary) {
 				logger.error("user is not exist...");

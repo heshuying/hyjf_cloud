@@ -8,13 +8,13 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.regist.RegistService;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -108,12 +108,13 @@ public class AppRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
+        register.setPlatform(platform);
         try{
             ret = registService.appCheckParam(register);
         }catch (Exception e){
             return ret;
         }
-        if(ret!=null){
+        if(CustomConstants.APP_STATUS_FAIL.equals(ret.get(CustomConstants.APP_STATUS))){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));

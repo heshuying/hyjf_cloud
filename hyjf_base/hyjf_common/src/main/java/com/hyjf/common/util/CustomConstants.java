@@ -19,6 +19,13 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 后台系统admin的id */
     public static final int USERID_ADMIN = 3;
 
+    public static final String CURRENTHOLD_TYPE = "currentHold";
+    public static final String REPAYMENT_TYPE = "repayment";
+    public static final String CREDITRECORD_TYPE = "creditRecord";
+
+    public static final String HOLD_PLAN_TYPE = "holdPlan";
+    public static final String REPAYMENT_PLAN_TYPE = "repayMentPlan";
+
     /** 服务地址 */
 //    @Value("${hyjf.web.host}")
     public static String HOST = "";

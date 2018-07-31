@@ -75,7 +75,7 @@
 						SELECT
 							hbrp.recover_status AS recoverPlanStatus
 						FROM
-							huiyingdai_borrow_recover_plan hbrp
+							ht_borrow_recover_plan hbrp
 						WHERE
 							hbrp.borrow_nid = hbr.borrow_nid
 						AND hbrp.tender_id = hbr.tender_id
@@ -129,10 +129,10 @@
 				FROM_UNIXTIME(#{nowTime}, '%Y-%m-%d 00:00:00')
 			)) AS last_days
 		FROM
-			huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = hb.borrow_style
+			ht_borrow_recover hbr
+		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
 		<include refid="TenderToCredit_Where_Clause" />
 		) t1 
 		<if test="tenderTimeSort != null and tenderTimeSort != ''">
@@ -157,8 +157,8 @@
 		SELECT
 			 COUNT(hbr.nid) AS total
 		FROM
-			huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+			ht_borrow_recover hbr
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" /> 
 	</select>
 	
@@ -169,9 +169,9 @@
 				IFNULL(hbr.recover_capital, 0) - IFNULL(hbr.recover_capital_yes, 0) - IFNULL(hbr.credit_amount, 0)
 			),0) AS credit_account
 		FROM
-			huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+			ht_borrow_recover hbr
+		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
 	
@@ -179,9 +179,9 @@
 	<select id="selectInCreditMoneyTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 	  	select 
 	      IFNULL(SUM(IFNULL(credit_capital,0)),0) AS credit_capital
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
+	    from ht_borrow_credit INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
+	    LEFT JOIN ht_borrow_tender hbt ON ht_borrow_credit.bid_nid = hbt.borrow_nid AND ht_borrow_credit.tender_nid = hbt.nid
 	    <where>
 	    	credit_status = 0 
 			<if test="userId != null and userId != '' and userId != 0">
@@ -195,9 +195,9 @@
 	<select id="selectCreditSuccessMoneyTotal" resultType="java.math.BigDecimal" parameterType="java.util.Map">
 	  	select 
 	      IFNULL(SUM(IFNULL(credit_capital_assigned,0)),0) AS credit_capital
-	    from huiyingdai_borrow_credit INNER JOIN huiyingdai_borrow ON huiyingdai_borrow_credit.bid_nid = huiyingdai_borrow.borrow_nid
-	    INNER JOIN huiyingdai_borrow_style hbs ON huiyingdai_borrow.borrow_style = hbs.nid
-	    LEFT JOIN huiyingdai_borrow_tender hbt ON huiyingdai_borrow_credit.bid_nid = hbt.borrow_nid AND huiyingdai_borrow_credit.tender_nid = hbt.nid
+	    from ht_borrow_credit INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
+	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
+	    LEFT JOIN ht_borrow_tender hbt ON ht_borrow_credit.bid_nid = hbt.borrow_nid AND ht_borrow_credit.tender_nid = hbt.nid
 	    <where>
 	    	1=1
 			<if test="userId != null and userId != '' and userId != 0">
@@ -212,7 +212,7 @@
 		SELECT
 			COUNT(hbc.credit_id)
 		FROM
-			huiyingdai_borrow_credit hbc
+			ht_borrow_credit hbc
 		<where>
 			<if test="userId != null and userId != '' and userId != 0">
 				AND hbc.credit_user_id = #{userId}
@@ -277,7 +277,7 @@
 	    bid_name, 
 	    borrow_style,
 	    hbs.name AS borrow_style_name,
-	    huiyingdai_borrow_credit.tender_nid, 
+	    ht_borrow_credit.tender_nid,
 	    credit_status, 
 	    credit_order, 
 	    credit_period, 
@@ -414,10 +414,10 @@
 					''
 				END AS `status`	
 		FROM
-			huiyingdai_borrow_credit hbc
-		LEFT JOIN huiyingdai_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+			ht_borrow_credit hbc
+		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
+		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 	</select>
@@ -518,9 +518,9 @@
 	FROM
 		hyjf_hjh_debt_credit hbc
 		
-	LEFT JOIN huiyingdai_borrow hb ON hbc.borrow_nid = hb.borrow_nid
-	LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.user_id
-	LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+	LEFT JOIN ht_borrow hb ON hbc.borrow_nid = hb.borrow_nid
+	LEFT JOIN ht_users hu ON hu.user_id = hbc.user_id
+	LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
 	LEFT JOIN hyjf_hjh_debt_credit_tender hdct ON hdct.credit_nid = hbc.credit_nid
 	WHERE
 		hbc.credit_nid = #{creditNid}
@@ -603,16 +603,19 @@
 				) AS signTime
 				
 		FROM
-			huiyingdai_borrow_credit hbc
-		LEFT JOIN huiyingdai_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
-		LEFT JOIN huiyingdai_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN huiyingdai_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN huiyingdai_users_info hui ON hui.user_id = hu.user_id
+			ht_borrow_credit hbc
+		LEFT JOIN ht_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
+		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
+		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 			AND
 			hhh.assign_nid = #{assignNid}
 			
 	</select>
+
+
+
 	
 </mapper>

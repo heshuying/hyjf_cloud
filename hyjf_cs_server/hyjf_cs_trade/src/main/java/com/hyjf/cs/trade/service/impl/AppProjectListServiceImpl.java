@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
@@ -15,17 +16,19 @@ import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
+import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -49,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -144,12 +148,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/28 16:15
      */
     @Override
-    public AppResult getAppProjectDetail(Map<String, String> param, String token) {
-        AppResult appResult = new AppResult();
+    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest req, String token) {
         JSONObject jsonObject = new JSONObject();
         JSONObject userValidation = new JSONObject();
-        String borrowNid = param.get(ProjectConstant.PARAM_BORROW_NID);
-        String type = param.get(ProjectConstant.PARAM_BORROW_TYPE);
+        String type = req.getParameter("borrowType");
         CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_PARAM_NUM);
         boolean isLogined = false;
         boolean isOpened = false;
@@ -164,7 +166,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 判断用户是否登录
         WebViewUser webViewUser = null;
         if (StringUtils.isNotBlank(token)) {
-            webViewUser = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUser.class);
+            webViewUser = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUser.class);
         }
         if (webViewUser != null) {
             userId = webViewUser.getUserId();
@@ -447,8 +449,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             jsonObject.put("userValidation", userValidation);
             // add 汇计划二期前端优化  针对区分原始标与债转标  nxl 20180424 end
             jsonObject.put("repayPlan", repayPlanList);
-            appResult.setData(jsonObject);
-            return appResult;
+            jsonObject.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
+            jsonObject.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+            return jsonObject;
         }
     }
 
@@ -1121,12 +1124,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/30 10:41
      */
     @Override
-    public AppResult getAppCreditDetail(Map<String, String> param, String token) {
-        AppResult appResult = new AppResult();
-        Map<String, Object> resultMap = new HashMap<>();
-        String creditNid = param.get("transferId");
+    public JSONObject getAppCreditDetail(String creditNid, String token) {
+        JSONObject resultMap = new JSONObject();
 
-        CheckUtil.check(StringUtils.isBlank(creditNid), MsgEnum.ERR_PARAM_NUM);
+        CheckUtil.check(StringUtils.isNotBlank(creditNid), MsgEnum.ERR_PARAM_NUM);
 
         resultMap.put("userValidation", this.createUserValidation(token));
 
@@ -1250,8 +1251,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, new ArrayList<Object>());
             resultMap.put("repayPlan", new ArrayList<BorrowRepayPlanCsVO>());
         }
-        appResult.setData(resultMap);
-        return appResult;
+        resultMap.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
+        resultMap.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        return resultMap;
 
     }
 
@@ -1298,7 +1300,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         UserVO userVO = null;
         Integer userId = null;
         if (StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
             if (webViewUserVO != null) {
                 userId = webViewUserVO.getUserId();
                 userVO = amUserClient.findUserById(userId);
@@ -1494,27 +1496,27 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/29 18:54
      */
     @Override
-    public AppResult getAppPlanDetail(Map<String, String> param, String token) {
-        AppResult appResult = new AppResult();
-        Map<String, Object> resultMap = new HashMap<>();
-        String planId = param.get(ProjectConstant.PARAM_APP_PLAN_NID);
-        CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
+    public JSONObject getAppPlanDetail(String planNid, String token) {
+        JSONObject result = new JSONObject();
+        //Map<String, Object> resultMap = new HashMap<>();
+        CheckUtil.check(StringUtils.isNotBlank(planNid), MsgEnum.ERR_PARAM_NUM);
 
 
-        PlanDetailCustomizeVO customize = amTradeClient.getPlanDetailByPlanNid(planId);
+        PlanDetailCustomizeVO customize = amTradeClient.getPlanDetailByPlanNid(planNid);
         if (customize == null) {
-            logger.error("传入计划id无对应计划,planNid is {}...", planId);
+            logger.error("传入计划id无对应计划,planNid is {}...", planNid);
             throw new RuntimeException("传入计划id无对应计划信息");
         }
 
         logger.info("customize:{}", JSONObject.toJSONString(customize));
         // 计划基本信息
-        this.setPlanInfo(resultMap, customize);
+        this.setPlanInfo(result, customize);
         // 用户的用户验证
-        this.setUserValidationInfo(resultMap, token);
+        this.setUserValidationInfo(result, token);
 
-        appResult.setData(resultMap);
-        return appResult;
+        result.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
+        result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        return  result;
 
 
     }
@@ -1568,18 +1570,145 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
 
     /**
+     * 创建计划的标的组成分页信息
+     * @param result
+     * @param planId
+     * @param pageNo
+     * @param pageSize
+     */
+    @Override
+    public void searchHjhPlanBorrow(HjhPlanBorrowResultBean result, String planNid, int pageNo, int pageSize) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", planNid);
+        Date date = GetDate.getDate();
+        int dayStart10 = GetDate.getDayStart10(date);
+        int dayEnd10 = GetDate.getDayEnd10(date);
+        params.put("startTime", dayStart10);
+        params.put("endTime", dayEnd10);
+        int recordTotal = this.amTradeClient.countPlanBorrowRecordTotal(params);
+        // 加入总人次
+        result.setUserCount(recordTotal);
+        // 加入总金额
+        result.setAccount(this.getPlanAccedeAccount(params));
+        if (recordTotal > 0) {
+            int limit = pageSize;
+            int page = pageNo;
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<DebtPlanBorrowCustomizeVO> consumeList = amTradeClient.selectPlanBorrowList(params);
+
+            if (!CollectionUtils.isEmpty(consumeList)) {
+                List<HjhPlanBorrowResultBean.BorrowList> borrowList = result.getBorrowList();
+                HjhPlanBorrowResultBean.BorrowList borrow = null;
+                for (DebtPlanBorrowCustomizeVO entity : consumeList) {
+                    borrow = new HjhPlanBorrowResultBean.BorrowList();
+                    borrow.setBorrowApr(entity.getBorrowApr());
+                    borrow.setBorrowNid(entity.getBorrowNid());
+                    borrow.setBorrowPeriod(entity.getBorrowPeriod());
+                    borrow.setTureName(entity.getTrueName());
+                    borrowList.add(borrow);
+                }
+            }
+
+            // 判断本次查询是否已经全部查出数据
+            if ((page * limit) > recordTotal) {
+                result.setEnd(Boolean.TRUE);
+            } else {
+                result.setEnd(Boolean.FALSE);
+            }
+        }
+    }
+
+    /**
+     * app 端汇计划加入记录
+     * @param result
+     * @param planId
+     * @param currentPage
+     * @param pageSize
+     */
+    @Override
+    public void getHjhPlanAccede(HjhPlanAccedeResultBean result, String planNid, int pageNo, int pageSize) {
+
+        HjhAccedeRequest request = new HjhAccedeRequest();
+        request.setPlanNid(planNid);
+        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+
+        // 加入总人次
+        result.setUserCount(recordTotal);
+        // 加入总金额
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("planNid", planNid);
+        result.setAccount(this.getPlanAccedeAccount(params));
+        if (recordTotal > 0) {
+            int limit = pageSize;
+            int page = pageNo;
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<DebtPlanAccedeCustomizeVO> recordList = this.amTradeClient.selectPlanAccedeList(params);
+
+            if (!CollectionUtils.isEmpty(recordList)) {
+                List<HjhPlanAccedeResultBean.AccedeList> accedeList = result.getAccedeList();
+                HjhPlanAccedeResultBean.AccedeList accede = null;
+                Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
+                for (DebtPlanAccedeCustomizeVO entity : recordList) {
+                    entity.setClientName(relationMap.get(String.valueOf(entity.getClient())));
+                    accede = new HjhPlanAccedeResultBean.AccedeList();
+                    accede.setAccedeAccount(entity.getAccedeAccount());
+                    accede.setAccedeTime(entity.getAccedeTime());
+                    accede.setUserName(entity.getUserName());
+                    accedeList.add(accede);
+                }
+            }
+
+            // 判断本次查询是否已经全部查出数据
+            if ((page * limit) > recordTotal) {
+                result.setEnd(Boolean.TRUE);
+            } else {
+                result.setEnd(Boolean.FALSE);
+            }
+        }
+
+    }
+
+    /**
+     * 根据planNid获取计划加入金额
+     * @param params
+     * @return
+     */
+    private String getPlanAccedeAccount(Map<String,Object> params) {
+        Long sum = amTradeClient.selectPlanAccedeSum(params);// 加入总金额
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        if (sum == null || sum == 0) {
+            return "0";
+        } else {
+            return df.format(sum);
+        }
+    }
+
+
+    /**
      * 检查当前访问用户是否登录、是否开户、是否设置交易密码、是否允许使用、是否完成风险测评、是否授权
      *
      * @param token
      */
-    private void setUserValidationInfo(Map<String, Object> resultMap, String token) {
+    private void setUserValidationInfo(JSONObject resultMap, String token) {
 
         UserLoginInfo userLoginInfo = new UserLoginInfo();
         boolean loginFlag = false;
         UserVO userVO = null;
         Integer userId = null;
         if (StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
             if (webViewUserVO != null) {
                 userId = webViewUserVO.getUserId();
                 userVO = amUserClient.findUserById(userId);
@@ -1668,7 +1797,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      *
      * @param customize
      */
-    private void setPlanInfo(Map<String, Object> resultMap, PlanDetailCustomizeVO customize) {
+    private void setPlanInfo(JSONObject resultMap, PlanDetailCustomizeVO customize) {
 
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setType(ProjectConstant.PLAN_TYPE_NAME);

@@ -30,14 +30,14 @@ import java.util.Map;
 @Api(value = "weChat端风险测评接口",description = "weChat端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-wechat/user/evaluation")
+@RequestMapping("/hyjf-wechat/wx/financiaadvisor")
 public class WeChatEvaluationController {
 
     @Autowired
     EvaluationService evaluationService;
 
     @ApiOperation(value = "查询测评结果", notes = "查询测评结果")
-    @GetMapping(value = "/value")
+    @GetMapping(value = "/queryevaluation.do")
     public BaseResultBean queryEvaluationResult(@RequestHeader(value = "userId") Integer userId) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
@@ -54,7 +54,7 @@ public class WeChatEvaluationController {
     }
 
     @ApiOperation(value = "用户测评",notes = "用户测评")
-    @GetMapping(value = "/queryquestion")
+    @GetMapping(value = "/queryquestion.do")
     public BaseResultBean queryQuestions(@RequestHeader(value = "userId") Integer userId) {
         SimpleResultBean<List<QuestionCustomizeVO>> resultBean = new SimpleResultBean<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
@@ -75,10 +75,10 @@ public class WeChatEvaluationController {
     }
 
     @ApiOperation(value = "计算测评结果",notes = "计算测评结果")
-    @PostMapping(value = "/calculation", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/sumitResult.do", produces = "application/json; charset=utf-8")
     public BaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean();
-        CheckUtil.check(userId == null, MsgEnum.STATUS_CE000001);
+        CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //答案 "13_48,14_52"
         String userAnswer = qo.getUserAnswer();
         Map<String, Object> returnMap = evaluationService.answerAnalysisAndCoupon(userAnswer, userId, CustomConstants.CLIENT_WECHAT,null);

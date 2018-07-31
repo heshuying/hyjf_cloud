@@ -259,11 +259,11 @@ public class HjhLabelController extends BaseController{
 	public JSONObject addNewLabel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest hjhLabelInfoRequest = new HjhLabelInfoRequest();
-		// 获取当前登陆者id
+		// 获取当前登陆者id  暂时先注掉
 		if(StringUtils.isEmpty(this.getUser(request).getId())){
 			jsonObject.put("errorMsg", "请先登录！");
 			return jsonObject;
-		} 
+		}
 		// 画面验证
 		this.validatorFieldCheck(jsonObject, viewRequest);
 		// 如果校验报错则把错误消息 + 下拉菜单返回给info画面
@@ -282,13 +282,14 @@ public class HjhLabelController extends BaseController{
 			return jsonObject;
 		} 
 		// 如果无错误消息，准备插表--将viewRequest 的 参数 拼装 到 HjhLabelInfoRequest 插表
-		
 		hjhLabelInfoRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
-		/*Date nowTime = GetDate.getNowTime();*/
-		hjhLabelInfoRequest.setCreateTime(GetDate.getNowTime());
 		hjhLabelInfoRequest = setInfoParam(jsonObject,viewRequest);
-		this.labelService.insertHjhLabelRecord(hjhLabelInfoRequest);
-		success();
+		int flg = this.labelService.insertHjhLabelRecord(hjhLabelInfoRequest);
+		if(flg > 0 ){
+			jsonObject.put("status", SUCCESS);
+		} else {
+			jsonObject.put("status", FAIL);
+		}
 		return jsonObject;
 	}
 	

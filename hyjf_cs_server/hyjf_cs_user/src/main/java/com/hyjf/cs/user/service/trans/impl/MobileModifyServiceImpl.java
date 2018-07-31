@@ -59,7 +59,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     public boolean checkForMobileModify(String newMobile, String smsCode) {
         String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
         int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");//无效的验证码
         return true;
     }

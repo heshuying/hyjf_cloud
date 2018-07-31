@@ -1,12 +1,19 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.am.config.dao.mapper.customize.ParamNameCustomizeMapper;
+import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.auto.ParamNameExample;
 import com.hyjf.am.config.service.ParamNameService;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +23,8 @@ import java.util.List;
 public class ParamNameServiceImpl implements ParamNameService {
     @Autowired
     private ParamNameMapper paramNameMapper;
+    @Autowired
+    private ParamNameCustomizeMapper paramNameCustomizeMapper;
     /**
      * 子账户类型 查询
      * @return
@@ -28,5 +37,19 @@ public class ParamNameServiceImpl implements ParamNameService {
         cra.andDelFlagEqualTo(0);
         example.setOrderByClause(" sort ASC ");
         return paramNameMapper.selectByExample(example);
+    }
+
+    /**
+     *（条件）列表查询--其他相关字段
+     * @return
+     */
+    @Override
+    public List<ParamNameVO>  selectProjectTypeParamList(){
+        List<ParamNameVO> paramNameVOS =new ArrayList<>();
+        List<ParamName> borrowProjectTypes=  paramNameCustomizeMapper.selectProjectTypeParamList();
+        if(!CollectionUtils.isEmpty(borrowProjectTypes)){
+            BeanUtils.copyProperties(borrowProjectTypes,paramNameVOS);
+        }
+        return paramNameVOS;
     }
 }

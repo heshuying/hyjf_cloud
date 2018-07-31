@@ -5,9 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
@@ -20,6 +21,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
@@ -45,7 +47,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Autowired
 	public AmUserClient amUserClient;
-
+	@Autowired
+	public AmTradeClient amTradeClient;
 	@Autowired
 	public SystemConfig systemConfig;
 
@@ -66,7 +69,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public WebViewUserVO getUsersByToken(String token) {
-		WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 		return user;
 	}
 
@@ -155,6 +158,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 第三方用户测评结果记录
 			ThirdPartyEvaluationRequestBean bean = (ThirdPartyEvaluationRequestBean) paramBean;
 			sign =  bean.getInstCode() + bean.getMobile() + bean.getPlatform() + bean.getTimestamp();
+		} else if (BaseDefine.METHOD_SERVER_BIND_CARD_PAGE.equals(methodName)) {
+			// 页面绑卡
+			BindCardPageRequestBean bean = (BindCardPageRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getRetUrl() + bean.getForgotPwdUrl() + bean.getNotifyUrl() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -172,8 +179,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	@Override
 	public int updateCheckMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-									 Integer searchStatus, Integer updateStatus) {
-		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus);
+									 Integer searchStatus, Integer updateStatus,boolean isUpdate) {
+		int cnt = amUserClient.checkMobileCode( mobile,  verificationCode,  verificationType,  platform, searchStatus,  updateStatus,isUpdate);
 		return cnt;
 	}
 
@@ -185,6 +192,17 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	@Override
 	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
 		BankOpenAccountVO bankAccount = this.amUserClient.selectById(userId);
+		return bankAccount;
+	}
+
+	/**
+	 * 根据accountId获取开户信息
+	 * @param accountId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO getBankOpenAccountByAccount(String accountId) {
+		BankOpenAccountVO bankAccount = this.amUserClient.selectBankOpenAccountByAccountId(accountId);
 		return bankAccount;
 	}
 
@@ -226,16 +244,19 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		// 调用存管接口发送验证码
 		BankCallBean retBean = null;
 		BankCallBean bean = new BankCallBean();
-		bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);// 交易代码cardBind
-		bean.setChannel(client);// 交易渠道000001手机APP 000002网页
-		//bean.setReqType("2"); // 参照生产环境类型改为2
+		// 交易代码cardBind
+		bean.setTxCode(BankCallMethodConstant.TXCODE_SMSCODE_APPLY);
+		// 交易渠道000001手机APP 000002网页
+		bean.setChannel(client);
 		bean.setCardNo(cardNo);
 		bean.setSrvTxCode(srvTxCode);
-		bean.setMobile(mobile);// 交易渠道
+		// 交易渠道
+		bean.setMobile(mobile);
 		bean.setSmsType("1");
-		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));// 订单号
-		bean.setLogUserId(String.valueOf(userId));// 请求用户名
+		// 订单号
+		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+		// 请求用户名
+		bean.setLogUserId(String.valueOf(userId));
 
 		try {
 			retBean  = BankCallUtils.callApiBg(bean);
@@ -509,7 +530,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public WebViewUserVO setToken(WebViewUserVO webViewUserVO){
 		String token = generatorToken(webViewUserVO.getUserId(), webViewUserVO.getUsername());
 		webViewUserVO.setToken(token);
-		RedisUtils.setObjEx(RedisKey.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+		RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 		return webViewUserVO;
 	}
 
@@ -696,6 +717,21 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		String result = restTemplate.postForEntity(requestUrl,balanceRequestBean,String.class).getBody();
 		JSONObject status = JSONObject.parseObject(result);
 		return status;
+	}
+
+	@Override
+	public AccountVO getAccountByUserId(Integer userId) {
+		return amTradeClient.getAccount(userId);
+	}
+
+	/**
+	 * 获取银行错误返回码
+	 * @param retCode
+	 * @return
+	 */
+	@Override
+	public String getBankRetMsg(String retCode) {
+		return amConfigClient.getBankRetMsg(retCode);
 	}
 
 }

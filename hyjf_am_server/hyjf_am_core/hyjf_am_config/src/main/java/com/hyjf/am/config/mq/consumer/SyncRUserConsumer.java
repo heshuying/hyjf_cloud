@@ -30,7 +30,7 @@ import com.hyjf.common.constants.MQConstant;
  * @author dxj
  * @version SyncRUserConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-//@Component
+@Component
 public class SyncRUserConsumer extends Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncRUserConsumer.class);

@@ -7,7 +7,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -68,7 +68,7 @@ public class AppMyProjectController extends BaseTradeController {
             response.setStatusDesc("参数非法");
             return response;
         }
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
         Integer userId = webViewUserVO.getUserId();
         //Integer userId = Integer.valueOf(request.getParameter("userId"));
         // 构建查询条件

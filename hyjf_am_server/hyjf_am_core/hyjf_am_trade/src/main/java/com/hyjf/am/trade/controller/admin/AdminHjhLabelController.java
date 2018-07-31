@@ -141,8 +141,9 @@ public class AdminHjhLabelController {
 	 * @Desc :插入标签配置列表
 	 */
 	@RequestMapping("/insertHjhLabelRecord")
-	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
-		adminHjhLabelService.insertHjhLabelRecord(request);
+	public int insertHjhLabelRecord(@RequestBody HjhLabelInfoRequest request) {
+		int update = adminHjhLabelService.insertHjhLabelRecord(request);
+		return update;
 	}
 	
 	/**

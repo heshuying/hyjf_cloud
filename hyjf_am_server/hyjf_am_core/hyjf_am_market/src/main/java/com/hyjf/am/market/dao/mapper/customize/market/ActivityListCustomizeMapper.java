@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author yaoyong
- * @version ActivityListCustomizeMapper, v0.1 2018/7/24 17:24
+ * @version AppActivityListCustomizeMapper, v0.1 2018/7/24 17:24
  */
 public interface ActivityListCustomizeMapper {
     List<ActivityListCustomize> queryActivityListValid(ActivityListCustomize example);
