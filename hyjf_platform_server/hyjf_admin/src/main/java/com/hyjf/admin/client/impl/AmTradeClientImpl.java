@@ -1586,22 +1586,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    @Override
-    public boolean sendToMQ(BorrowFireRequest borrowFireRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_first/send_to_mq";
-        BorrowFirstCustomizeResponse response =
-                restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
-        if(response != null){
-            return response.getFlag();
-        }
-        return false;
-    }
-
-    /**
      * 借款复审总条数
      *
      * @param borrowFullRequest
