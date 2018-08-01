@@ -97,17 +97,4 @@ public class BorrowFirstController {
         response.setFlag(flag);
         return response;
     }
-
-    /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    @RequestMapping("/send_to_mq")
-    public BorrowFirstCustomizeResponse sendToMQ(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
-        BorrowFirstCustomizeResponse response = new BorrowFirstCustomizeResponse();
-        boolean flag = borrowFirstService.sendToMQ(borrowFireRequest);
-        response.setFlag(flag);
-        return response;
-    }
 }

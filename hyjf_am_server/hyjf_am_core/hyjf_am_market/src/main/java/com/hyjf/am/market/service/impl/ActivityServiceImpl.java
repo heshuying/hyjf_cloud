@@ -101,6 +101,16 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     *
+     * @return
+     */
+    @Override
+    public List<ActivityList> getActivityList() {
+        ActivityListExample example = new ActivityListExample();
+        return activityListMapper.selectByExample(example);
+    }
+
+    /**
      * 添加活动
      *
      * @param activityList

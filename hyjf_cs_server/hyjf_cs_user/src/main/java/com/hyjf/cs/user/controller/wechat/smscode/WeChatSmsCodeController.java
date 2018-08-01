@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/hyjf-wechat")
 public class WeChatSmsCodeController extends BaseUserController {
-	private static final Logger logger = LoggerFactory.getLogger(WeChatSmsCodeController.class);
 
 	@Autowired
 	private SmsCodeService sendSmsCode;
