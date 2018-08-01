@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,8 +43,6 @@ import io.swagger.annotations.ApiOperation;
 @Controller
 @RequestMapping("hyjf-api/surong/user/transpassword")
 public class TransPasswordController extends BaseUserController{
-	
-	private static final Logger logger = LoggerFactory.getLogger(TransPasswordController.class);
 	
 	public static final String REQUEST_MAPPING = "hyjf-api/surong/user/transpassword";
 	
