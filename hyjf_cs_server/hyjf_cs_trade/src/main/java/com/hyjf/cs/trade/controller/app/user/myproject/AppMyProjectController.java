@@ -46,8 +46,7 @@ public class AppMyProjectController extends BaseTradeController {
     @Autowired
     private AppMyProjectService appMyProjectService;
     /**
-     * 微信端获取首页散标详情
-     * @author zhangyk
+     * 微信端获取首页散标列表
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")

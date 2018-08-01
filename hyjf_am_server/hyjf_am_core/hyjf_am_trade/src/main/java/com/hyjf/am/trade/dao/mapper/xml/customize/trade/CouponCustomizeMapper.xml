@@ -175,7 +175,7 @@
 				t.recover_account_capital_wait AS recoverAccountCapitalWait,
 				t.recover_account_interest_wait AS recoverAccountInterestWait,
 				t.recover_account_wait AS recoverAaccountWait
-		FROM hyjf_borrow_tender_cpn t
+		FROM ht_borrow_tender_cpn t
 		LEFT JOIN ht_coupon_tender a ON a.order_id = t.nid
 		LEFT JOIN ht_coupon_user b ON a.coupon_grant_id = b.id
 		LEFT JOIN ht_coupon_config c ON c.coupon_code = b.coupon_code
@@ -203,6 +203,94 @@
 		FROM
 			ht_coupon_recover hcr
 		WHERE hcr.tender_id=#{nid}
+	</select>
+
+
+
+	<!-- app 优惠券信息 -->
+	<resultMap id="appMyPlanCouponMap" type="com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO">
+		<id column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<result column="plan_name" property="planName" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="expect_apr" property="planApr" jdbcType="VARCHAR" />
+		<result column="lock_period" property="planPeriod" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="accede_account" property="accedeAccount" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="wait_captical" property="waitCaptical" jdbcType="VARCHAR" />
+		<result column="wait_interest" property="waitInterest" jdbcType="VARCHAR" />
+		<result column="received_total" property="receivedTotal" jdbcType="VARCHAR" />
+		<result column="repay_style" property="repayStyle" jdbcType="VARCHAR" />
+		<result column="repay_method" property="repayMethod" jdbcType="VARCHAR" />
+		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+		<!-- 添加计息时间字段 -->
+		<result column="count_interest_time" property="countInterestTime" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" />
+		<result column="coupon_quota" property="couponAmount" />
+		<result column="recover_account_wait" property="recoverAccountWait" />
+		<result column="recover_account_interest_wait" property="recoverAccountInterestWait" />
+		<result column="recover_account_capital_wait" property="recoverAccountCapitalWait" />
+		<result column="real_tender_id" property="realTenderId" />
+	</resultMap>
+
+	<select id="getMyCouponPlanList" resultMap="appMyPlanCouponMap">
+
+		SELECT
+		a.plan_nid,
+		a.plan_name,
+		f.accede_order_id,
+		a.expect_apr,
+		<!-- a.lock_period, -->
+		CASE
+		WHEN a.borrow_style ='endday' THEN CONCAT(a.lock_period,'天')
+		ELSE CONCAT(a.lock_period,'个月')
+		END AS lock_period,
+		f.user_id,
+		f.accede_account,
+		f.create_time,AS add_time,
+		f.wait_captical,
+		f.wait_interest,
+		f.received_total,
+		a.borrow_style repay_style,
+		(SELECT hbs.NAME FROM ht_borrow_style hbs where hbs.nid = a.borrow_style limit 1 ) repay_method,
+		f.order_status,
+		<!-- 添加计息时间字段 -->
+		IFNULL(FROM_UNIXTIME( IF(f.count_interest_time=0,NULL,f.count_interest_time), '%Y-%m-%d' ),'--') AS count_interest_time,
+		d.coupon_type,
+		CASE d.coupon_type
+		WHEN 1 THEN
+		CONCAT(
+		FORMAT(d.coupon_quota, 2),
+		'元'
+		)
+		WHEN 2 THEN
+		CONCAT(d.coupon_quota, '%')
+		WHEN 3 THEN
+		CONCAT(
+		FORMAT(d.coupon_quota, 2),
+		'元'
+		)
+		ELSE
+		CONCAT(d.coupon_quota, '%')
+		END AS coupon_quota,
+
+		t.recover_account_wait,
+		t.recover_account_capital_wait,
+		e.real_tender_id,
+		CASE WHEN d.coupon_type = 3 THEN t.recover_account_interest_wait - t.recover_account_capital_wait
+		ELSE t.recover_account_interest_wait
+		END AS recover_account_interest_wait
+
+		FROM
+		ht_borrow_tender_cpn t
+		INNER JOIN ht_hjh_plan a ON t.borrow_nid = a.plan_nid
+		INNER JOIN ht_coupon_tender b ON b.order_id = t.nid
+		INNER JOIN ht_coupon_user c ON b.coupon_grant_id = c.id
+		INNER JOIN ht_coupon_config d ON c.coupon_code = d.coupon_code
+		LEFT JOIN ht_coupon_real_tender e ON e.coupon_tender_id = t.nid
+		LEFT JOIN ht_hjh_accede f on f.accede_order_id = e.real_tender_id
+		WHERE t.user_id= #{userId}
+		and t.nid = #{accedeOrderId}
 	</select>
 
 </mapper>

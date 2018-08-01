@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
+import com.hyjf.am.response.trade.coupon.AppCouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
@@ -10,6 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
@@ -161,6 +163,15 @@ public class CouponController extends BaseController{
     public CouponRepayResponse getCounponRecoverList(@PathVariable String nid){
         CouponRepayResponse response = new CouponRepayResponse();
         List<CurrentHoldRepayMentPlanListVO> list = couponService.getCouponRecoverList(nid);
+        response.setResultList(list);
+        return response;
+    }
+
+    @ApiOperation(value = "获取我的优惠券投资记录")
+    @GetMapping("/getAppMyPlanCouponInfo")
+    public AppCouponResponse getAppMyPlanCouponInfo(@RequestBody Map<String,Object> params){
+        AppCouponResponse response = new AppCouponResponse();
+        List<AppCouponCustomizeVO> list = couponService.getAppMyPlanCouponInfo(params);
         response.setResultList(list);
         return response;
     }
