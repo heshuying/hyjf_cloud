@@ -7,14 +7,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
+import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 import com.hyjf.am.trade.service.admin.coupon.AdminCouponUserService;
 import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -105,6 +109,56 @@ public class AdminCouponUserController extends BaseController {
         }
         response.setRtn("1");
         response.setMessage("发放失败");
+        return response;
+    }
+
+    /**
+     * 根据优惠券编码查询用户优惠券
+     * @param couponCode
+     * @return
+     */
+    @RequestMapping("/getCouponUserByCouponCode/{couponCode}")
+    public CouponUserResponse getCouponUserByCouponCode(@PathVariable String couponCode) {
+        CouponUserResponse response = new CouponUserResponse();
+        List<CouponUser> couponUserList = adminCouponUserService.getCouponUserByCouponCode(couponCode);
+        if (!CollectionUtils.isEmpty(couponUserList)) {
+            List<CouponUserVO> couponUserVOS = CommonUtils.convertBeanList(couponUserList,CouponUserVO.class);
+            response.setResultList(couponUserVOS);
+        }
+        return response;
+    }
+
+    /**
+     * 根据id查询用户优惠券
+     * @param couponUserId
+     * @return
+     */
+    @RequestMapping("/selectCouponUserById/{couponUserId}")
+    public CouponUserCustomizeResponse selectCouponUserById(@PathVariable Integer couponUserId) {
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
+        CouponUser couponUser = adminCouponUserService.selectCouponUserById(couponUserId);
+        CouponUserVO couponUserVO = new CouponUserVO();
+        if (couponUser != null) {
+            BeanUtils.copyProperties(couponUser,couponUserVO);
+            response.setCouponUser(couponUserVO);
+        }
+        return response;
+    }
+
+    /**
+     * 用户优惠券审批
+     * @param couponUserRequestBean
+     * @return
+     */
+    @PostMapping("/auditRecord")
+    public CouponUserCustomizeResponse auditRecord(@RequestBody AdminCouponUserRequestBean couponUserRequestBean) {
+        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
+        Integer count = adminCouponUserService.auditRecord(couponUserRequestBean);
+        if (count > 0) {
+            response.setCount(count);
+            response.setRtn(Response.SUCCESS);
+            response.setMessage(Response.SUCCESS_MSG);
+        }
         return response;
     }
 

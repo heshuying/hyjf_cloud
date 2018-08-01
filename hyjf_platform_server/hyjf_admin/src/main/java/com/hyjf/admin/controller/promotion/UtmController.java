@@ -27,7 +27,7 @@ import java.util.Map;
  * @author walter.limeng
  * @version UtmController, v0.1 2018/7/02 11:17
  */
-@Api(value = "渠道管理列表",description ="渠道管理列表")
+@Api(value = "渠道管理列表",tags ="渠道管理列表")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/utm")
 public class UtmController extends BaseController {

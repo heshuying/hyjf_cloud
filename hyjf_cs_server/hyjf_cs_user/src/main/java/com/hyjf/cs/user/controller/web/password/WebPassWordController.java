@@ -40,7 +40,7 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "web端-密码相关服务",description = "web端-密码相关服务")
+@Api(value = "web端-密码相关服务",tags = "web端-密码相关服务")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/password")

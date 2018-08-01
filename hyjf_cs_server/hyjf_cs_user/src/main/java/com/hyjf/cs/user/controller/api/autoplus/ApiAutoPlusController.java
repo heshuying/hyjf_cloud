@@ -35,7 +35,7 @@ import java.util.Map;
  * @version AutoPlusController, v0.1 2018/6/11 14:31
  */
 
-@Api(description = "api端-用户授权自动投资自动授权接口")
+@Api(tags = "api端-用户授权自动投资自动授权接口")
 @RestController
 @RequestMapping("/hyjf-api/user/auto")
 public class ApiAutoPlusController extends BaseUserController {

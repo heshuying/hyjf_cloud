@@ -31,7 +31,7 @@ import java.util.Map;
  * @author wangjun
  * @version borrowFirstController, v0.1 2018/7/3 9:48
  */
-@Api(value = "汇直投-借款初审接口", description = "汇直投-借款初审接口")
+@Api(value = "汇直投-借款初审接口", tags = "汇直投-借款初审接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_first")
 public class BorrowFirstController extends BaseController {

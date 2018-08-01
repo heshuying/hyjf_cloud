@@ -31,7 +31,7 @@ import java.text.ParseException;
  * web端用户解绑卡接口
  * @author hesy
  */
-@Api(value = "web端-用户解绑卡接口",description = "web端-用户解绑卡接口")
+@Api(value = "web端-用户解绑卡接口",tags = "web端-用户解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user/card")

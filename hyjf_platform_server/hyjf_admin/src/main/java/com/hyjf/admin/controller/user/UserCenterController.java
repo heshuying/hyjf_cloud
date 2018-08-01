@@ -49,7 +49,7 @@ import java.util.List;
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
 
-@Api(value = "会员中心-会员管理接口",description = "会员中心-会员管理接口")
+@Api(value = "会员中心-会员管理接口",tags = "会员中心-会员管理接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersManager")
 public class UserCenterController extends BaseController {

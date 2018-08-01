@@ -61,7 +61,7 @@ import static com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd.FAIL_MSG;
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(description = "APP端协议接口")
+@Api(tags = "APP端协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
@@ -1142,6 +1142,23 @@ public class NewAgreementController extends BaseTradeController{
     @PostMapping("/getAgreementTemplateApi")
     public AppResult getAgreementTemplateApi(@RequestParam String aliasName) {
         logger.info("*******************************获取协议模板************************************");
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        response.setResult(template);
+        if(response == null) {
+            return new AppResult(FAIL, FAIL_MSG);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AppResult(FAIL, response.getMessage());
+        }
+        return new AppResult(response.getResultList());
+    }
+
+    @ApiOperation(value = "APP端协议接口", notes = "查看协议模板接口")
+    @ResponseBody
+    @PostMapping("/getdisplayNameDynamic")
+    public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {
+        logger.info("*******************************查看协议模板接口************************************");
         AppNewAgreementResponse response = new AppNewAgreementResponse();
         AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
         response.setResult(template);

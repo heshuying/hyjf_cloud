@@ -204,7 +204,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             params.put("usercoupons", JSON.toJSONString(subBeans));
             params.put("userId", userId);
             // 请求路径
-            // TODO: 2018/7/5 给MQ发送消息，批量发送优惠券
             JSONObject result = couponCheckClient.getBatchCoupons(params);
 
             return StringUtils.equals(result.getString("status"), "0");

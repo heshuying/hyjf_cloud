@@ -34,7 +34,7 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "wechat端用户充值接口")
+@Api(tags = "wechat端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-wechat/recharge")
