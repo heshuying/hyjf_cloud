@@ -35,8 +35,6 @@ import java.util.Map;
 @RestController
 @RequestMapping(ProjectConstant.APP_REQUEST_MAPPING)
 public class AppProjectListController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(AppProjectListController.class);
-
 
     @Autowired
     private AppProjectListService appProjectListService;

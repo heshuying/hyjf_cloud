@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.xml.customize.coupon.CouponUserCustomizeMapper">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper">
 	<resultMap id="selectCouponUserMap" type="com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize">
 		<result column="id" property="id" />
 	    <result column="coupon_code" property="couponCode" />
@@ -114,10 +114,6 @@
 		CASE
 		WHEN cu.coupon_source = 1 THEN
 			cu.content
-		WHEN cu.coupon_source = 2 THEN
-			IFNULL(al.title, IFNULL(cu.content, ''))
-		WHEN cu.coupon_source = 3 THEN
-			IF(vi.vip_level=1,"欢迎礼包","升级礼包")
 		ELSE
 			IFNULL(cu.content, '')
 		END AS coupon_content,
@@ -200,12 +196,9 @@
 			'项目期限不限'
 		END project_expiration_type
 		FROM
-			hyjf_coupon_user cu
-		LEFT JOIN ht_user u ON cu.user_id = u.user_id
-		LEFT JOIN ht_user_info ui ON ui.user_id = u.user_id
+			ht_coupon_user cu
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
-		LEFT JOIN ht_activity_list al ON cu.activity_id = al.id
-		LEFT JOIN ht_vip_info vi ON ui.vip_id = vi.id
 		<include refid="Where_Clause" />
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >
@@ -300,8 +293,8 @@
 			count(1)
 		FROM
 		    ht_coupon_user cu
-		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
+		    JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		    LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
 		<include refid="Where_Clause" />
 	</select>
@@ -344,7 +337,7 @@
 	    SELECT
 			COUNT(1)
 		FROM
-			hyjf_coupon_config c LEFT JOIN ht_coupon_user u ON c.coupon_code = u.coupon_code
+			ht_coupon_config c LEFT JOIN ht_coupon_user u ON c.coupon_code = u.coupon_code
 		WHERE
 			c.id = #{couponId}
 			AND u.del_flag=0
@@ -398,7 +391,7 @@
 			cc.coupon_profit_time couponProfitTime
 		FROM
 			ht_coupon_user cu
-		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		WHERE
 			cu.id = #{couponGrantId}
 		AND cu.user_id=#{userId}
@@ -431,10 +424,10 @@
 			cc.repay_time_config repayTimeConfig,
 			cc.coupon_profit_time couponProfitTime
 		FROM
-			hyjf_borrow_tender_cpn cpn
-		INNER JOIN hyjf_coupon_tender hct ON cpn.nid = hct.order_id
+			ht_borrow_tender_cpn cpn
+		INNER JOIN ht_coupon_tender hct ON cpn.nid = hct.order_id
 		INNER JOIN ht_coupon_user cu ON hct.coupon_grant_id = cu.id
-		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		INNER JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		WHERE
 			cpn.nid = #{nid}
 		AND cu.del_flag = 0
