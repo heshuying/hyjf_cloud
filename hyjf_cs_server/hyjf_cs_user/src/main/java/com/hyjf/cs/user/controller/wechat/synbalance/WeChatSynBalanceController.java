@@ -33,7 +33,7 @@ import java.text.DecimalFormat;
  * @author wangjun
  * @version WeChatSynBalanceController, v0.1 2018/7/31 9:19
  */
-@Api(value = "wechat端我的-刷新按钮", description = "wechat端我的-刷新按钮")
+@Api(value = "wechat端我的-刷新按钮", tags = "wechat端我的-刷新按钮")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/bank/user/synbalance")
 public class WeChatSynBalanceController extends BaseUserController {

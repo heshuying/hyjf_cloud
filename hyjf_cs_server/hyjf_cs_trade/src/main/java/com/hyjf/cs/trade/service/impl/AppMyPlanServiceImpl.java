@@ -3,31 +3,37 @@ package com.hyjf.cs.trade.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
+import com.hyjf.am.response.trade.HjhRepayResponse;
+import com.hyjf.am.response.trade.HjhUserInvestListResponse;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
+import com.hyjf.am.response.trade.coupon.AppCouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
-import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.AccountBorrowVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
+import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.AppMyPlanService;
+import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,11 +41,10 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author pangchengchao
@@ -47,13 +52,11 @@ import java.util.Map;
  */
 @Service
 public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyPlanService {
-    public static final String  COUPON_CONFIG_URL = "http://AM-TRADE/am-trade/coupon/getborrowtendercpnByUserIdAndOrderId";
 
-    public static final String BORROW_ACCOUNT_URL = "http://AM-TRADE/am-trade/borrow/getBorrowAccountList";
+    private final String ILLEGAL_PARAMETER_STATUS_DESC = "请求参数非法";
+    private final String TOKEN_ISINVALID_STATUS = "Token失效，请重新登录";
 
-    public static final String BORROW_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/recoverplan/getBorrowRecoverPlanListByTenderNid";
-
-    public static final String  COUPON_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/borrow/getCounponRecoverList";
+    private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
     @Autowired
     private BaseClient baseClient;
@@ -68,378 +71,372 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         return amTradeClient.selectAppMyPlanList(params);
     }
 
-
     /**
-     * 查询我的计划详情
+     *  获取我的计划详情
      * @author zhangyk
-     * @date 2018/7/31 9:32
+     * @date 2018/8/1 10:55
      */
     @Override
-    public JSONObject getMyPlanDetail(String borrowNid, HttpServletRequest request, String userId) {
-        CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_BLANK, "计划编号");
-        String token = request.getParameter("token");
+    public MyPlanDetailResultBean getMyPlanDetail(Integer couponType, String type, String orderId, HttpServletRequest request,String userId) {
+        MyPlanDetailResultBean result = new MyPlanDetailResultBean();
+
+        logger.info("request params: orderId is: {}, couponType is: {}", orderId, couponType);
+        result.setAccedeOrderId(orderId);
         String sign = request.getParameter("sign");
-        String orderId = request.getParameter("orderId");
-        // 优惠券类型，0代表本金投资
-        String couponType = request.getParameter("couponType");
-        // 如果不为空，为承接的标的
-        String assignNid = request.getParameter("assignNid");
-
-        JSONObject jsonObject = new JSONObject();
-
-        ProjectCustomeDetailVO borrow = amTradeClient.selectProjectDetail(borrowNid);
-        jsonObject.put("projectName", borrow == null ? "" : borrow.getBorrowNid());
-        jsonObject.put("couponType", "");
-
-        /*验证用户是否登录*/
-        if (StringUtils.isBlank(userId)){
-            jsonObject.put("status", BaseResultBeanFrontEnd.FAIL);
-            jsonObject.put("statusDesc", "请登录用户");
-            jsonObject.put("projectDetail", new ArrayList<>());
-            jsonObject.put("repayPlan", new ArrayList<>());
-            jsonObject.put("transferInfo", null);
-            return jsonObject;
+        // 检查参数正确性
+        if (Validator.isNull(sign) || Validator.isNull(couponType) || Validator.isNull(type)
+                || Validator.isNull(orderId)) {
+            result.setStatus(BaseResultBeanFrontEnd.FAIL);
+            result.setStatusDesc(ILLEGAL_PARAMETER_STATUS_DESC);
+            return result;
         }
 
-        /*如果标不存在，则返回*/
-        if (borrow == null) {
-            jsonObject.put("status", BaseResultBeanFrontEnd.FAIL);
-            jsonObject.put("statusDesc", "未查到标的信息");
-            jsonObject.put("projectName", "");
-            jsonObject.put("projectDetail", new ArrayList<>());
-            jsonObject.put("repayPlan", new ArrayList<>());
-            jsonObject.put("transferInfo", null);
-            return jsonObject;
+        if (StringUtils.isBlank(userId)) {
+            result.setStatus(BaseResultBeanFrontEnd.FAIL);
+            result.setStatusDesc(TOKEN_ISINVALID_STATUS);
+            return result;
         }
-
-        // 跳转到投资服务协议
-        jsonObject.put("isCredit", false);
-        // 1. 资产信息
-        List<BorrowProjectDetailBean> detailBeansList = new ArrayList<>();
-        List<BorrowDetailBean> borrowBeansList = new ArrayList<>();
-
-
-        preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowApr() + "%");
-        if ("endday".equals(borrow.getBorrowStyle())) {
-            preckCredit(borrowBeansList, "项目期限", borrow.getBorrowPeriod() + "天");
-        } else {
-            preckCredit(borrowBeansList, "项目期限", borrow.getBorrowPeriod() + "个月");
+        Map<String, Object> params = new HashMap<>();
+        params.put("accedeOrderId", orderId);
+        params.put("userId", userId);
+        List<TenderAgreementVO> tenderAgreementVOList = amTradeClient.selectTenderAgreementByNid(orderId);
+        if(!CollectionUtils.isEmpty(tenderAgreementVOList)){
+            TenderAgreementVO tenderAgreement = tenderAgreementVOList.get(0);
+            Integer fddStatus = tenderAgreement.getStatus();
+            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+            //System.out.println("构建查询条件******************1法大大协议状态："+tenderAgreement.getStatus());
+            if(fddStatus.equals(3)){
+                result.setFddStatus("1");
+            }else {
+                //隐藏下载按钮
+                //System.out.println("构建查询条件******************2法大大协议状态：0");
+                result.setFddStatus("0");
+            }
+        }else {
+            //下载老版本协议
+            //System.out.println("构建查询条件******************3法大大协议状态：2");
+            result.setFddStatus("1");
         }
-        preckCredit(borrowBeansList, "回款方式", borrow.getRepayStyle());
+        // 真实资金投资
+        if (couponType == 0) {
+            UserHjhInvistDetailCustomizeVO customize = amTradeClient.selectUserHjhInvistDetail(params);//myPlanService.selectUserHjhInvistDetail(params);
+            if (customize == null) {
+                result.setStatus(BaseResultBeanFrontEnd.FAIL);
+                result.setStatusDesc("加入订单号不正确......");
+                return result;
+            }
+            // 1. 计划信息
+            this.copyPlanBaseInfoToResult(result, customize, type);
 
-        preck(detailBeansList, "资产信息", borrowBeansList);
+            // 2.加入信息
+            this.copyPlanCapitalInfoToResult(result, customize,type);
+            // 3. 真实资金投资优惠券信息是空
+            result.setCouponIntr(null);
 
-        // TODO: 2018/7/31  后期处理
-       /* AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrow.getBorrowNid());
-        if(riskControl!=null){
-            riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-            riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
-        }*/
-        /*jsonObject.put("riskControl", riskControl);*/
-        jsonObject.put("riskControl", "");
+            // 4.真实投资还款计划
+            /*HjhRepay hjhRepay = myPlanService.getPlanRepayment(orderId);*/
+            String url ="http://AM-TRADE/am-trade/hjhRepay/hjhRepaymentDetails/"+ orderId;
+            HjhRepayResponse repayResponse = baseClient.getExe(url,HjhRepayResponse.class);
+            HjhRepayVO hjhRepayVO = CollectionUtils.isEmpty(repayResponse.getResultList())? null : repayResponse.getResultList().get(0);
+            this.copyPlanRepaymentToResult(result, hjhRepayVO, customize);
 
-        // 区别本金投资和优惠券投资，返回值不同
-        if (!"0".equals(couponType)) {
-            Map<String,Object> params = new HashMap<>();
-            params.put("userId",userId);
-            params.put("orderId",orderId);
-            AppCouponInfoResponse response = baseClient.postExe(COUPON_CONFIG_URL,params,AppCouponInfoResponse.class);//amTradeClient.getCouponfigByUserIdAndBorrowNid(userId, orderId);
-            AppCouponInfoCustomizeVO appCouponInfoCustomize = response.getResult();
-            if (appCouponInfoCustomize != null) {
-                if(StringUtils.isNotBlank(appCouponInfoCustomize.getRealOrderId())){
-                    // 2. 投资信息 ( 有真实资金，显示投资信息 )
-                    this.setTenderInfoToResult(detailBeansList, appCouponInfoCustomize.getRealOrderId());
-                }
-                List<BorrowDetailBean> borrowBeansList2 = new ArrayList<>();
-                switch (appCouponInfoCustomize.getCouponType()) {
-                    case "1":
-                        jsonObject.put("couponType", "体验金");
-                        preckCredit(borrowBeansList2, "优惠券面额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getCouponQuota())) + "元");
-                        preckCredit(borrowBeansList2, "优惠券类型", "体验金");
-                        preckCredit(borrowBeansList2, "待收利息", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait())) + "元");
-                        break;
-                    case "2":
-                        jsonObject.put("couponType", "加息券");
-                        preckCredit(borrowBeansList2, "优惠券面额", appCouponInfoCustomize.getCouponQuota() + "%");
-                        preckCredit(borrowBeansList2, "优惠券类型", "加息券");
-                        preckCredit(borrowBeansList2, "待收利息", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait())) + "元");
-                        break;
-                    case "3":
-                        jsonObject.put("couponType", "代金券");
-                        preckCredit(borrowBeansList2, "优惠券面额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getCouponQuota())) + "元");
-                        preckCredit(borrowBeansList2, "优惠券类型", "代金券");
-                        preckCredit(borrowBeansList2, "待收利息",
-                                CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait()).subtract(
-                                        new BigDecimal(appCouponInfoCustomize.getRecoverAccountCapitalWait()))) + "元");
-                        break;
-                    default:
-                        logger.error("coupon type is error");
-                }
+            // 计划处于投资中状态
+            List<String> statusList = Arrays.asList("0", "2", "99");
+            // 投资中状态不显示持有列表
+            if (customize != null && !statusList.contains(customize.getOrderStatus())) {
+                // 5. 持有项目列表
+                String url1 = "http://AM-TRADE/am-trade/hjhDebtCredit/getUserHjhInvestList";
+                HjhUserInvestListResponse response = baseClient.postExe(url1,params,HjhUserInvestListResponse.class);
+                List<UserHjhInvistListCustomizeVO> userHjhInvistListCustomizeVOList = response.getResultList();
+                this.copyPlanHoldInvestToResult(result,userHjhInvistListCustomizeVOList);
+            }
 
-                preckCredit(borrowBeansList2, "待收本金", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountCapitalWait())) + "元");
-                preckCredit(borrowBeansList2, "待收总额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAaccountWait())) + "元");
-                preck(detailBeansList, "优惠券信息", borrowBeansList2);
+        } else { // 优惠券投资
+            String url = "http://AM-TRADE/am-trade/coupon/getAppMyPlanCouponInfo";
+            AppCouponResponse response = baseClient.postExe(url,params,AppCouponResponse.class);
+            AppCouponCustomizeVO appCouponCustomize = CollectionUtils.isEmpty(response.getResultList()) ? null :response.getResultList().get(0);
+            if (appCouponCustomize == null) {
+                result.setStatus(BaseResultBeanFrontEnd.FAIL);
+                result.setStatusDesc("优惠券加入订单号不正确......");
+                return result;
+            }
+            // 1. 计划信息
+            this.copyCouponPlanBaseToResult(result, appCouponCustomize, type);
+            // 有本金投资才显示加入信息
+            if (!org.springframework.util.StringUtils.isEmpty(appCouponCustomize.getRealTenderId())) {
+                // 2.加入信息
+                this.copyCouponPlanCapitalToResult(result, appCouponCustomize, type);
             } else {
-                logger.error("未查询到优惠券信息...");
-                preck(detailBeansList, "优惠券信息", new ArrayList<BorrowDetailBean>());
-                jsonObject.put("couponType", "体验金");
+                result.setInvestIntr(null);
             }
+            // 3.优惠券信息
+            this.copyPlanCouponInfoToResult(result, appCouponCustomize);
 
-            // 3. 优惠券回款计划
-            this.setCouponRepayPlanToResult(jsonObject, orderId);
-        } else {
-            // 这里要区别是普通投资 还是 承接债转
-            logger.info("债转编号： {}, 空代表普通投资，否则为承接债转...,投资订单号: {}", assignNid, orderId);
-            if(StringUtils.isBlank(assignNid)){
-                // 2. 投资信息(本金投资)
-                this.setTenderInfoToResult(detailBeansList, orderId);
+            // 4.优惠券投资还款计划
+            String  couponRecoverPlanUrl = "http://AM-TRADE/am-trade/borrow/getCounponRecoverList/"+ orderId;
+            CouponRepayResponse res = baseClient.getExe(couponRecoverPlanUrl,CouponRepayResponse.class);
+            List<CurrentHoldRepayMentPlanListVO> repaymentPlanList = res.getResultList();
+            this.copyPlanCouponRepaymentToResult(result, repaymentPlanList);
 
-                if(CommonUtils.isStageRepay(borrow.getBorrowStyle())){
-                    // 3.回款计划(本金投资 - 分期)
-                    this.setRepayPlanByStagesToResult(jsonObject, orderId);
-                } else {
-                    // 3.回款计划(本金投资 - 不分期)
-                    this.setRepayPlanToResult(jsonObject, orderId);
-                }
-            } else {
-               List<CreditTenderVO> list = amTradeClient.selectCreditTender(assignNid);
-                CreditTenderVO creditTender;
-               if (CollectionUtils.isEmpty(list)){
-                   creditTender = null;
-               }else {
-                   creditTender = list.get(0);
-               }
-                if (creditTender != null) {
-                    // 2. 投资信息(承接标的投资信息)
-                    this.setCreditTenderInfoToResult(detailBeansList, creditTender);
-                    // 3.回款计划(承接标的)
-                    this.setCreditRepayPlanByStagesToResult(jsonObject, orderId);
-                    // 跳转到债转协议
-                    this.setCreditUrlValue(jsonObject, creditTender);
-                }
-
-            }
-
+            // 5.优惠券投资不显示持有项目
         }
-        return null;
-    }
-
-
-
-    private void setCreditUrlValue(JSONObject result,CreditTenderVO creditTender){
-        result.put("isCredit", true);
-        // 跳债转协议需要的字段
-        // 原标nid
-        result.put("bidNid", creditTender.getBidNid());
-        // 债转标号
-        result.put("creditNid", creditTender.getCreditNid());
-        // 债转投标单号
-        result.put("creditTenderNid", creditTender.getCreditTenderNid());
-        // 认购单号
-        result.put("assignNid", creditTender.getAssignNid());
+        return  result;
     }
 
 
     /**
-     * 债转投资还款计划
-     * @param result
-     * @param
-     * @param
-     */
-    private void setCreditRepayPlanByStagesToResult(JSONObject result, String assignNid) {
-        List<CreditRepayVO> creditRepays = amTradeClient.selectCreditRepayList(Integer.valueOf(assignNid));
-        JSONArray jsonArray = new JSONArray();
-        if (!CollectionUtils.isEmpty(creditRepays)) {
-            for (CreditRepayVO creditRepay : creditRepays) {
-                JSONObject js = new JSONObject();
-                js.put("number", creditRepay.getAssignRepayPeriod());
-                js.put("account", CommonUtils.formatAmount(creditRepay.getAssignAccount()));
-                if (creditRepay.getStatus() == 0) {
-                    js.put("status", "未回款");
-                } else {
-                    js.put("status", "已回款");
-                }
-                js.put("time", GetDate.times10toStrYYYYMMDD(creditRepay.getAssignRepayNextTime()));
-                jsonArray.add(js);
-            }
-        }
-        result.put("repayPlan", jsonArray);
-    }
-
-    /**
-     * 投资信息 - 承接标
-     * @param detailBeansList
-     * @param
-     */
-    private void setCreditTenderInfoToResult(List<BorrowProjectDetailBean> detailBeansList, CreditTenderVO creditTender) {
-        // 2. 投资信息(本金投资)
-        CreditRepayVO creditRepay = amTradeClient.selectCreditRepayList(Integer.valueOf(creditTender.getAssignNid())).get(0);
-        if (creditTender != null) {
-            List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
-            preckCredit(borrowBeansList1, "投资本金", CommonUtils.formatAmount(creditTender.getAssignCapital()) + "元");
-            preckCredit(borrowBeansList1, "已收本息", CommonUtils.formatAmount(creditRepay.getAssignRepayAccount()) + "元");
-            preckCredit(borrowBeansList1, "待收本金", CommonUtils.formatAmount(creditRepay.getAssignCapital().subtract(creditRepay.getAssignRepayCapital())) + "元");
-            if (creditRepay.getStatus() != 0){//已回款
-                preckCredit(borrowBeansList1, "待收利息", "0.00元");
-            } else {
-                preckCredit(borrowBeansList1, "待收利息", CommonUtils.formatAmount(creditTender.getAssignInterest()) + "元");
-            }
-            preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(creditTender.getAddTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-            preck(detailBeansList, "投资信息", borrowBeansList1);
-        } else {
-            preck(detailBeansList, "投资信息", new ArrayList<BorrowDetailBean>());
-        }
-    }
-
-    /**
-     * 本金投资还款计划 - 不分期
-     * @param result
-     * @param
-     */
-    private void setRepayPlanToResult(JSONObject result, String orderId) {
-        BorrowRecoverVO borrowRecover = amTradeClient.selectBorrowRecoverByNid(orderId);
-        JSONArray jsonArray = new JSONArray();
-        if (borrowRecover != null) {
-            JSONObject js = new JSONObject();
-            js.put("time", GetDate.times10toStrYYYYMMDD(borrowRecover.getRecoverTime()));
-            js.put("number", "1");
-            js.put("account", CommonUtils.formatAmount(borrowRecover.getRecoverAccount()));
-            if (borrowRecover.getRecoverStatus() == 1) {
-                js.put("status", "已回款");
-            } else {
-                js.put("status", "未回款");
-            }
-            jsonArray.add(js);
-        }
-        result.put("repayPlan", jsonArray);
-    }
-
-
-    /**
-     * 本金投资还款计划 - 分期
-     * @param result
-     * @param
-     */
-    private void setRepayPlanByStagesToResult(JSONObject result, String orderId) {
-       BorrowRecoverPlanResponse response = baseClient.getExe(BORROW_RECOVER_PLAN_URL + "/" + orderId,BorrowRecoverPlanResponse.class);//projectService.selectBorrowRecoverPlanByNid(orderId);
-        List<BorrowRecoverPlanVO> recoverPlanList = response.getResultList();
-        JSONArray jsonArray = new JSONArray();
-        if (!CollectionUtils.isEmpty(recoverPlanList)) {
-            for (BorrowRecoverPlanVO plan : recoverPlanList) {
-                JSONObject js = new JSONObject();
-                js.put("time", GetDate.times10toStrYYYYMMDD(plan.getRecoverTime()));
-                js.put("number", plan.getRecoverPeriod());
-                js.put("account", CommonUtils.formatAmount(plan.getRecoverAccount()));
-                if (plan.getRecoverStatus() == 1) {
-                    js.put("status", "已回款");
-                } else {
-                    js.put("status", "未回款");
-                }
-                jsonArray.add(js);
-            }
-        }
-        result.put("repayPlan", jsonArray);
-    }
-
-
-    /**
-     * 优惠券投资还款计划
+     * 本金投资还款计划 目前只有一条 repay表存的是已回款金额，回款总额应从accede中取
      *
      * @param result
-     * @param orderId
+     * @param hjhRepay
      */
-    private void setCouponRepayPlanToResult(JSONObject result, String orderId) {
-        CouponRepayResponse response = baseClient.getExe(COUPON_RECOVER_PLAN_URL + "/" + orderId,CouponRepayResponse.class);
-        List<CurrentHoldRepayMentPlanListVO> repaymentPlanList = response.getResultList();
-        JSONArray jsonArray = new JSONArray();
+    private void copyPlanRepaymentToResult(MyPlanDetailResultBean result, HjhRepayVO hjhRepay, UserHjhInvistDetailCustomizeVO customize) {
+        if (hjhRepay != null) {
+            List<MyPlanDetailResultBean.RepayPlan> repayPlans = result.getRepayPlan();
+            MyPlanDetailResultBean.RepayPlan repayPlan = new MyPlanDetailResultBean.RepayPlan();
+            repayPlan.setTime(customize.getLastPaymentTime());
+
+            repayPlan.setAccount(DF_FOR_VIEW.format(new BigDecimal(customize.getWaitTotal()).add(new BigDecimal(customize.getReceivedTotal()))));
+            // 目前只有一期
+            repayPlan.setNumber("1");
+            // 0 -未还款 1- 部分还款 2- 已还款
+            if (hjhRepay.getRepayStatus() == 2) {
+                repayPlan.setStatus("已回款");
+            } else {
+                repayPlan.setStatus("未回款");
+            }
+
+            repayPlans.add(repayPlan);
+        }
+    }
+
+
+    /**
+     * 优惠券还款计划
+     *
+     * @param result
+     * @param repaymentPlanList
+     */
+    private void copyPlanCouponRepaymentToResult(MyPlanDetailResultBean result,
+                                                 List<CurrentHoldRepayMentPlanListVO> repaymentPlanList) {
         if (!CollectionUtils.isEmpty(repaymentPlanList)) {
+            List<MyPlanDetailResultBean.RepayPlan> repayPlans = result.getRepayPlan();
+            MyPlanDetailResultBean.RepayPlan repayPlan;
+            for (CurrentHoldRepayMentPlanListVO entity : repaymentPlanList) {
+                repayPlan = new MyPlanDetailResultBean.RepayPlan();
+                repayPlan.setTime(entity.getRecoverTime());
+                repayPlan.setAccount(entity.getRecoverAccountWait());
+                repayPlan.setNumber(entity.getRecoverPeriod());
+                repayPlan.setStatus(entity.getRecoveStatus());
+                repayPlans.add(repayPlan);
+            }
+        }
+    }
 
-            // 体验金只有一期还款，但是期数是第三期，强制改成1
-            if (repaymentPlanList.size() == 1) {
-                CurrentHoldRepayMentPlanListVO entity = repaymentPlanList.get(0);
-                JSONObject js = new JSONObject();
-                js.put("time", entity.getRecoverTime());
-                js.put("number", "1");
-                js.put("account", entity.getRecoverAccountWait());
-                js.put("status", entity.getRecoveStatus());
-                jsonArray.add(js);
-            } else {
-                for (CurrentHoldRepayMentPlanListVO entity : repaymentPlanList) {
-                    JSONObject js = new JSONObject();
-                    js.put("time", entity.getRecoverTime());
-                    js.put("number", entity.getRecoverPeriod());
-                    js.put("account", entity.getRecoverAccountWait());
-                    js.put("status", entity.getRecoveStatus());
-                    jsonArray.add(js);
+    /**
+     * 优惠券信息
+     *
+     * @param result
+     * @param appCouponCustomize
+     */
+    private void copyPlanCouponInfoToResult(MyPlanDetailResultBean result, AppCouponCustomizeVO appCouponCustomize) {
+        MyPlanDetailResultBean.CouponIntr couponIntr = result.getCouponIntr();
+        couponIntr.setCouponType(appCouponCustomize.getCouponType());
+        couponIntr.setCouponAmount(appCouponCustomize.getCouponAmount());
+        couponIntr.setInterestOnCall(appCouponCustomize.getRecoverAccountInterestWait());
+        couponIntr.setCapitalOnCall(appCouponCustomize.getRecoverAccountCapitalWait());
+        couponIntr.setCapitalInterestOnCall(appCouponCustomize.getRecoverAccountWait());
+    }
+
+
+    /**
+     * 优惠券加入信息
+     *
+     * @param result
+     * @param appCouponCustomize
+     * @param type
+     */
+    private void copyCouponPlanCapitalToResult(MyPlanDetailResultBean result, AppCouponCustomizeVO appCouponCustomize, String type) {
+        MyPlanDetailResultBean.InvestIntr investIntr = result.getInvestIntr();
+        investIntr.setAddDate(appCouponCustomize.getAddTime());
+        investIntr.setCapital(appCouponCustomize.getAccedeAccount());
+        investIntr.setCapitalInterest(appCouponCustomize.getReceivedTotal());
+        investIntr.setCapitalOnCall(appCouponCustomize.getWaitCaptical());
+        investIntr.setInterestOnCall(appCouponCustomize.getWaitInterest());
+    }
+
+
+    /**
+     * 优惠券计划信息
+     *
+     * @param result
+     * @param appCouponCustomize
+     * @param type
+     */
+    private void copyCouponPlanBaseToResult(MyPlanDetailResultBean result, AppCouponCustomizeVO appCouponCustomize,
+                                            String type) {
+        MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
+        //projectIntr.setStatus(type);
+        // 计划处于投资中状态
+        List<String> statusList = Arrays.asList("0", "2", "99", "9");
+        // 投资中状态不显示持有列表
+        if (appCouponCustomize != null && statusList.contains(appCouponCustomize.getOrderStatus())) {
+            projectIntr.setStatus("投资中");
+        } else if("7".equals(appCouponCustomize.getOrderStatus())){
+            projectIntr.setStatus("已退出");
+        } else{
+            projectIntr.setStatus("未回款");
+        }
+        projectIntr.setPlanName(appCouponCustomize.getPlanName());
+        projectIntr.setBorrowApr(appCouponCustomize.getPlanApr());
+        // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+        Date datePeriod = null;
+        if (appCouponCustomize.getCountInterestTime().equals("--")) {
+            appCouponCustomize.setPlanPeriod("— —");
+        }else {
+            Date dateAddTime;
+            try {
+                dateAddTime = smp.parse(appCouponCustomize.getCountInterestTime());
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(dateAddTime);
+                if (appCouponCustomize.getPlanPeriod().contains("天")) {
+                    String days = appCouponCustomize.getPlanPeriod().split("天")[0];
+                    int intD = Integer.parseInt(days);
+                    calendar.add(Calendar.DAY_OF_MONTH, +intD);
+                    datePeriod = calendar.getTime();
                 }
+                if (appCouponCustomize.getPlanPeriod().contains("个月")) {
+                    String days = appCouponCustomize.getPlanPeriod().split("个月")[0];
+                    int intD = Integer.parseInt(days);
+                    calendar.add(Calendar.MONTH, +intD);
+                    datePeriod = calendar.getTime();
+                }
+                if (datePeriod != null) {
+                    String endStrDate = smp.format(datePeriod);
+                    String startStrDate = appCouponCustomize.getAddTime().substring(0, 10);
+                    appCouponCustomize.setPlanPeriod(startStrDate + "~" + endStrDate);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
-        result.put("repayPlan", jsonArray);
+        // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 end
+        projectIntr.setBorrowPeriod(appCouponCustomize.getPlanPeriod());
+        projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(appCouponCustomize.getRepayStyle()));
+        projectIntr.setRepayStyle(appCouponCustomize.getRepayMethod());
+        projectIntr.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
     }
-
 
     /**
-     * 投资信息
-     * @param detailBeansList
-     * @param orderId
+     * 计划的持有项目列表
+     *
+     * @param result
+     * @param userHjhInvistBorrowList
      */
-    private void setTenderInfoToResult(List<BorrowProjectDetailBean> detailBeansList, String orderId) {
-        // 2. 投资信息(本金投资)
-        BorrowTenderRequest btRequest = new BorrowTenderRequest();
-        btRequest.setTenderNid(orderId);
-        BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(btRequest);
-        if (borrowTender != null) {
-            List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
-            preckCredit(borrowBeansList1, "投资本金", CommonUtils.formatAmount(borrowTender.getAccount()) + "元");
-            preckCredit(borrowBeansList1, "已收本息", CommonUtils.formatAmount(borrowTender.getRecoverAccountYes()) + "元");
-            String borrowNid = borrowTender.getBorrowNid();
-            BorrowAccountResponse response = baseClient.getExe(BORROW_ACCOUNT_URL + "/" +borrowNid ,BorrowAccountResponse.class);
-            List<AccountBorrowVO> list = response.getResultList();
+    private void copyPlanHoldInvestToResult(MyPlanDetailResultBean result,
+                                            List<UserHjhInvistListCustomizeVO> userHjhInvistBorrowList) {
+        if (!CollectionUtils.isEmpty(userHjhInvistBorrowList)) {
+            List<MyPlanDetailResultBean.BorrowComposition> projectIntrs = result.getBorrowComposition();
+            MyPlanDetailResultBean.BorrowComposition borrow;
+            for (UserHjhInvistListCustomizeVO entity : userHjhInvistBorrowList) {
+                borrow = new MyPlanDetailResultBean.BorrowComposition();
+                borrow.setAccount(entity.getAccount());
+                borrow.setBorrowNid(entity.getBorrowNid());
+                borrow.setTenderTime(entity.getAddTime());
+                borrow.setType(entity.getType());
+                borrow.setNid(entity.getNid());
+                projectIntrs.add(borrow);
 
-            if (CollectionUtils.isEmpty(list)) {
-                preckCredit(borrowBeansList1, "待收本金", "--");
-                preckCredit(borrowBeansList1, "待收利息", "--");
-            } else {
-                preckCredit(borrowBeansList1, "待收本金", CommonUtils.formatAmount(borrowTender.getRecoverAccountCapitalWait()) + "元");
-                preckCredit(borrowBeansList1, "待收利息", CommonUtils.formatAmount(borrowTender.getRecoverAccountInterestWait()) + "元");
             }
-
-            if (borrowTender.getAddTime() != null) {
-                preckCredit(borrowBeansList1, "投资时间", GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(borrowTender.getAddTime())));
-            } else {
-                preckCredit(borrowBeansList1, "投资时间", "");
-            }
-
-            preck(detailBeansList, "投资信息", borrowBeansList1);
-        } else {
-            preck(detailBeansList, "投资信息", new ArrayList<BorrowDetailBean>());
         }
     }
-
 
     /**
-     * 封装TenderCreditBorrowBean对象，放入list中
-     * @param borrowBeansList
-     * @param key 字段名
-     * @param val 字段值
+     * 计划信息
+     *
+     * @param result
+     * @param customize
+     * @param type
      */
-    private void preckCredit(List<BorrowDetailBean> borrowBeansList,String key, String val){
-        if(!StringUtils.isEmpty(key)){
-            BorrowDetailBean borrowBean = new BorrowDetailBean();
-            borrowBean.setId("");
-            borrowBean.setKey(key);
-            borrowBean.setVal(val);
-            borrowBeansList.add(borrowBean);
+    private void copyPlanBaseInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize,
+                                          String type) {
+        MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
+
+        // 计划处于投资中状态
+        List<String> statusList = Arrays.asList("0", "2", "99", "9");
+        // 投资中状态不显示持有列表
+        if (customize != null && statusList.contains(customize.getOrderStatus())) {
+            projectIntr.setStatus("投资中");
+        } else if("7".equals(customize.getOrderStatus())){
+            projectIntr.setStatus("已退出");
+        } else{
+            projectIntr.setStatus("未回款");
+        }
+        // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 start
+        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+        Date datePeriod = null;
+        if (customize.getCountInterestTime().equals("--")) {
+            customize.setPlanPeriod("— —");
+        }else {
+            try {
+                Date dateAddTime = smp.parse(customize.getCountInterestTime());
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(dateAddTime);
+                if (customize.getPlanPeriod().contains("天")) {
+                    String days = customize.getPlanPeriod().split("天")[0];
+                    int intD = Integer.parseInt(days);
+                    calendar.add(Calendar.DAY_OF_MONTH, +intD);
+                    datePeriod = calendar.getTime();
+                }
+                if (customize.getPlanPeriod().contains("个月")) {
+                    String days = customize.getPlanPeriod().split("个月")[0];
+                    int intD = Integer.parseInt(days);
+                    calendar.add(Calendar.MONTH, +intD);
+                    datePeriod = calendar.getTime();
+                }
+                if (datePeriod != null) {
+                    String endStrDate = smp.format(datePeriod);
+                    String startStrDate = customize.getAddTime().substring(0, 10);
+                    customize.setPlanPeriod(startStrDate + "~" + endStrDate);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        customize.getPlanPeriod();
+        projectIntr.setBorrowPeriod(customize.getPlanPeriod());
+        // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
+        projectIntr.setBorrowApr(customize.getPlanApr());
+        projectIntr.setBorrowPeriod(customize.getPlanPeriod());
+        projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(customize.getRepayStyle()));
+        projectIntr.setRepayStyle(customize.getRepayMethod());
+        projectIntr.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
+        projectIntr.setPlanName(customize.getPlanName());
+    }
+
+    /**
+     * 加入信息
+     *
+     * @param result
+     * @param customize
+     * @param type
+     */
+    private void copyPlanCapitalInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize, String type) {
+        MyPlanDetailResultBean.InvestIntr investIntr = result.getInvestIntr();
+        investIntr.setAddDate(customize.getAddTime());
+        investIntr.setCapital(DF_FOR_VIEW.format(new BigDecimal(customize.getAccedeAccount())));
+        investIntr.setCapitalInterest(customize.getReceivedTotal());
+
+        // 计划处于投资中状态
+        List<String> statusList = Arrays.asList("0", "2", "99");
+        // 投资中状态不显示持有列表
+        if (customize != null && statusList.contains(customize.getOrderStatus())) {
+            investIntr.setCapitalOnCall("--");
+            investIntr.setInterestOnCall("--");
+        }else{
+            investIntr.setCapitalOnCall(DF_FOR_VIEW.format(new BigDecimal(customize.getWaitCaptical())));
+            investIntr.setInterestOnCall(customize.getWaitInterest());
         }
     }
-
-
-    private void preck(List<BorrowProjectDetailBean> jsonObject,String keyName,List<BorrowDetailBean> msg){
-        BorrowProjectDetailBean detailBean = new BorrowProjectDetailBean();
-        detailBean.setId("");
-        detailBean.setTitle(keyName);
-        detailBean.setMsg(msg);
-        jsonObject.add(detailBean);
-    }
-
 }

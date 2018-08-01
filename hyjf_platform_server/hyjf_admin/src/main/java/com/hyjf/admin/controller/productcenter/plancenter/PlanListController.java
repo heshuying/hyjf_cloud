@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version PlanListController.java, v0.1 2018年7月6日 上午9:08:43
  */
-@Api(value = "计划列表",description = "计划列表")
+@Api(value = "计划列表",tags = "计划列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhplan")
 public class PlanListController extends BaseController{
@@ -209,8 +209,10 @@ public class PlanListController extends BaseController{
 		form.setMarginMeasures(this.getValue(String.valueOf(vo.getMarginMeasures())));
 		// 常见问题
 		form.setNormalQuestion(this.getValue(String.valueOf(vo.getNormalQuestions())));
-		//添加时间
+		// 添加时间
 		form.setAddTime(this.getValue(String.valueOf(vo.getAddTime())));
+		// 最小投资笔数
+		form.setMinInvestCounts(this.getValue(String.valueOf(vo.getMinInvestCounts())));
 	}
 	
 	private String getValue(String value) {
@@ -372,7 +374,7 @@ public class PlanListController extends BaseController{
 		// 画面校验
 		this.validatorFieldCheck(jsonObject, form, isExistRecord);
 		// 如果画面校验出错--->回info画面(添加就是空白，修改就是铺记录值) 调用info画面初始化接口
-		if (AdminValidatorFieldCheckUtil.hasValidateError(jsonObject)) {
+		if (AdminValidatorFieldCheckUtil.hasValidateError(jsonObject) || jsonObject.containsKey("errorMsg")) {
 			this.getAddPlanView(request,response,viewRequest);
 		}
 		//汇计划二期迭代最高可投金额为空设置默认值为1250000
@@ -436,10 +438,12 @@ public class PlanListController extends BaseController{
 		}
 		// 预期年化收益
 		AdminValidatorFieldCheckUtil.validateSignlessNumLength(jsonObject, "expectApr", form.getExpectApr(), 2, 2, true);
-		// 最低加入金额(只验证数字格式)
+		// 原 最低加入金额
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
-		// 投资增量
+		/*this.validateDecimal(jsonObject,"最低加入金额",form.getDebtMinInvestment(), 10);*/
+		// 原 投资增量
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtInvestmentIncrement", form.getDebtInvestmentIncrement(), 10, true);
+		/*this.validateDecimal(jsonObject,"投资增量",form.getDebtInvestmentIncrement(), 10);*/
 		// 可用券配置
 		if(StringUtils.isEmpty(form.getCouponConfig())){
 			jsonObject.put("errorMsg", "请输入可用券配置！");

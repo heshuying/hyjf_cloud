@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AllocationEngineController.java, v0.1 2018年7月3日 上午11:46:27
  */
-@Api(value = "计划专区列表",description = "计划专区列表")
+@Api(value = "计划专区列表",tags = "计划专区列表")
 @RestController
 @RequestMapping("/hyjf-admin/allocation")
 public class AllocationEngineController extends BaseController{

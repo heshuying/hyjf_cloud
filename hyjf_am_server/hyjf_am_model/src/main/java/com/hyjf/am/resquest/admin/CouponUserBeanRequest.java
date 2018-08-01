@@ -94,6 +94,16 @@ public class CouponUserBeanRequest extends Request implements Serializable {
     private String channel;
 
     /**
+     * 审核口令
+     */
+    private String couponAuditPwd;
+
+    /**
+     * 检索条件 审批状态
+     */
+    private String auditStatus;
+
+    /**
      * 检索条件 有效时间开始
      */
     private String timeStartSrch;
@@ -112,6 +122,10 @@ public class CouponUserBeanRequest extends Request implements Serializable {
      * 检索条件 添加结束时间
      */
     private String timeEndAddSrch;
+    /**
+     * 检索条件 审批备注
+     */
+    private String description;
 
     private Integer amount;
 
@@ -439,5 +453,29 @@ public class CouponUserBeanRequest extends Request implements Serializable {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public String getCouponAuditPwd() {
+        return couponAuditPwd;
+    }
+
+    public void setCouponAuditPwd(String couponAuditPwd) {
+        this.couponAuditPwd = couponAuditPwd;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
     }
 }

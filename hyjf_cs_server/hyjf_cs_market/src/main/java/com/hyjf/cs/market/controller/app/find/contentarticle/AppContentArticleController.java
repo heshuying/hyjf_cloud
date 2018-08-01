@@ -25,7 +25,7 @@ import static com.hyjf.am.response.Response.FAIL;
  * @author dangzw
  * @version AppContentArticleController, v0.1 2018/7/30 23:13
  */
-@Api(description = "APP端协议接口")
+@Api(tags = "APP端协议接口")
 @RestController
 @RequestMapping(value = "/find/contentArticle")
 

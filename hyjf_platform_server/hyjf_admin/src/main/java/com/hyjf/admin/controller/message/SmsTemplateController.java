@@ -23,7 +23,7 @@ import java.util.List;
  * @author fuqiang
  * @version SmsTemplateController, v0.1 2018/6/25 10:09
  */
-@Api(value = "短信模板", description = "短信模板")
+@Api(tags = "短信模板")
 @RestController
 @RequestMapping("/hyjf-admin/message/smsTemplate")
 public class SmsTemplateController extends BaseController {

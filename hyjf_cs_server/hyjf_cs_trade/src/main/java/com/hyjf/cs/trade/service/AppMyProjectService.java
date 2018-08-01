@@ -1,10 +1,12 @@
 package com.hyjf.cs.trade.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,4 +30,6 @@ public interface AppMyProjectService extends BaseTradeService  {
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
 
     Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
+
+    JSONObject getMyProjectDetail(String borrowNid, HttpServletRequest request, String userId) ;
 }

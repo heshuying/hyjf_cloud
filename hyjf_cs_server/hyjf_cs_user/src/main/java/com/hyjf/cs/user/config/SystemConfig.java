@@ -9,6 +9,9 @@ public class SystemConfig {
     @Value("${aop.interface.accesskey}")
     public String aopAccesskey;
 
+    @Value("${release.coupon.accesskey}")
+    public String couponAccesskey;
+
     @Value("${hyjf.api.web.url}")
     public String apiWebUrl;
 
@@ -109,7 +112,15 @@ public class SystemConfig {
     private String publickeyhjs;
     @Value("${privatekey.hjs}")
     private String privatekeyhjs;
-    
+
+    public String getCouponAccesskey() {
+        return couponAccesskey;
+    }
+
+    public void setCouponAccesskey(String couponAccesskey) {
+        this.couponAccesskey = couponAccesskey;
+    }
+
     public String getPublickeyhjs() {
 		return publickeyhjs;
 	}

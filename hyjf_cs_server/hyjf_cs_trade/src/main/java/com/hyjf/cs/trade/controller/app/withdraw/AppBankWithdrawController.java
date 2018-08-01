@@ -33,7 +33,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "app端用户提现接口",description = "app端用户提现接口")
+@Api(value = "app端用户提现接口",tags = "app端用户提现接口")
 @Controller
 @RequestMapping("/hyjf-app/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {

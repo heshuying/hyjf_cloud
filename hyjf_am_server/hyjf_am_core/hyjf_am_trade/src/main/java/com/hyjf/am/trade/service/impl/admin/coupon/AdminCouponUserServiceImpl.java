@@ -3,24 +3,38 @@
  */
 package com.hyjf.am.trade.service.impl.admin.coupon;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponOperationHistoryMapper;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponOperationHistoryWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
+import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.service.admin.coupon.AdminCouponUserService;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CreateUUID;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.netflix.discovery.converters.Auto;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +52,8 @@ public class AdminCouponUserServiceImpl implements AdminCouponUserService {
     private CouponUserMapper couponUserMapper;
     @Autowired
     private CouponOperationHistoryMapper couponOperationHistoryMapper;
+    @Autowired
+    private AppMessageProducer appMessageProducer;
 
     /**
      * 根据条件获取优惠券用户条数
@@ -130,6 +146,72 @@ public class AdminCouponUserServiceImpl implements AdminCouponUserService {
         couponUserMapper.insertSelective(couponUser);
         this.operationLog(couponUser,CustomConstants.OPERATION_CODE_INSERT,String.valueOf(request.getCreateUserId()));
         return 1;
+    }
+
+    /**
+     * 根据优惠券编码查询用户优惠券
+     * @param couponCode
+     * @return
+     */
+    @Override
+    public List<CouponUser> getCouponUserByCouponCode(String couponCode) {
+        CouponUserExample couponUserExample = new CouponUserExample();
+        couponUserExample.createCriteria().andCouponCodeEqualTo(couponCode).andDelFlagEqualTo(0);
+        List<CouponUser> couponUserList = couponUserMapper.selectByExample(couponUserExample);
+        return couponUserList;
+    }
+
+    /**
+     * 根据id查询用户优惠券
+     * @param couponUserId
+     * @return
+     */
+    @Override
+    public CouponUser selectCouponUserById(Integer couponUserId) {
+        CouponUser couponUser = couponUserMapper.selectByPrimaryKey(couponUserId);
+        return couponUser;
+    }
+
+    /**
+     * 用户优惠券审批
+     * @param couponUserRequestBean
+     * @return
+     */
+    @Override
+    public Integer auditRecord(AdminCouponUserRequestBean couponUserRequestBean) {
+        Date nowDate = GetDate.getTimestamp();
+        String loginUserId = couponUserRequestBean.getLoginUserId();
+
+        CouponConfig couponConfig = new CouponConfig();
+        BeanUtils.copyProperties(couponUserRequestBean.getCouponConfigVO(),couponConfig);
+
+        CouponUser record=new CouponUser();
+        record.setId(couponUserRequestBean.getCouponUserBeanRequest().getId());
+        record.setAuditContent(couponUserRequestBean.getCouponUserBeanRequest().getDescription());
+        if("0".equals(couponUserRequestBean.getCouponUserBeanRequest().getAuditStatus())){
+            record.setUsedFlag(CustomConstants.USER_COUPON_STATUS_UNUSED);
+
+            //推送通知消息
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("val_number", String.valueOf(1));
+            param.put("val_coupon_type", couponConfig.getCouponType() == 1 ? "体验金" : couponConfig.getCouponType() == 2 ? "加息券" : couponConfig.getCouponType() == 3 ? "代金券" : "");
+            AppMsMessage appMsMessage = new AppMsMessage(couponUserRequestBean.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_SUCCESS);
+            try {
+                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequestBean.getUserId()),
+                        JSON.toJSONBytes(appMsMessage)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
+        }else{
+            record.setUsedFlag(CustomConstants.USER_COUPON_STATUS_NOCHECKED);
+        }
+        record.setUpdateUserId(Integer.parseInt(loginUserId));
+        record.setUpdateTime(nowDate);
+        record.setAuditUser(loginUserId);
+        record.setAuditTime(GetDate.getNowTime10());
+
+        Integer count = couponUserMapper.updateByPrimaryKeySelective(record);
+        return count;
     }
 
 

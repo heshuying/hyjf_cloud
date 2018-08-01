@@ -19,7 +19,7 @@ import java.util.List;
  * @author lisheng
  * @version FindController, v0.1 2018/7/26 9:39
  */
-@Api(value = "app发现页", description = "app发现页")
+@Api(value = "app发现页", tags = "app发现页")
 @RestController
 public class FindController {
     @Autowired

@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  * @author sunss
  *
  */
-@Api(value = "web端-用户开户接口",description = "web端-用户开户接口")
+@Api(value = "web端-用户开户接口",tags = "web端-用户开户接口")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user/secure/open")

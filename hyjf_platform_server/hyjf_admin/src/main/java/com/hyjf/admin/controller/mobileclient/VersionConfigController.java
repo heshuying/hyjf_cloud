@@ -30,7 +30,7 @@ import java.util.Map;
  * @author lisheng
  * @version VersionConfigController, v0.1 2018/7/11 11:24
  */
-@Api(value = "admin移动客户端",description = "admin移动客户端")
+@Api(value = "admin移动客户端",tags = "admin移动客户端")
 @RestController
 @RequestMapping("config/versionconfig")
 public class VersionConfigController extends BaseController {

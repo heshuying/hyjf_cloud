@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentTeamController, v0.1 2018/7/11 16:25
  */
-@Api(value = "公司管理-团队介绍", description = "公司管理-团队介绍")
+@Api(value = "公司管理-团队介绍", tags = "公司管理-团队介绍")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentteam")
 public class TeamController extends BaseController {

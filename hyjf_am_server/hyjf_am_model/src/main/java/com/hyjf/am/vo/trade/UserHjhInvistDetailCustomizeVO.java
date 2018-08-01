@@ -34,6 +34,13 @@ public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializab
     private String orderStatus;
     private String repayActualTime;
     private int fddStatus;
+
+
+    // 计划待收本金
+    private String waitCaptical;
+    // 还款方式 代号
+    private String repayStyle;
+
     public int getFddStatus() {
         return fddStatus;
     }
@@ -184,5 +191,20 @@ public class UserHjhInvistDetailCustomizeVO extends BaseVO implements Serializab
 	public void setRepayActualTime(String repayActualTime) {
 		this.repayActualTime = repayActualTime;
 	}
-   
+
+    public String getWaitCaptical() {
+        return waitCaptical;
+    }
+
+    public void setWaitCaptical(String waitCaptical) {
+        this.waitCaptical = waitCaptical;
+    }
+
+    public String getRepayStyle() {
+        return repayStyle;
+    }
+
+    public void setRepayStyle(String repayStyle) {
+        this.repayStyle = repayStyle;
+    }
 }

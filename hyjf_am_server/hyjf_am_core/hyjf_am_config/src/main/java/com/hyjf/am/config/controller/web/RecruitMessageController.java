@@ -18,7 +18,7 @@ import java.util.List;
  * @author lisheng
  * @version RecruitMessageController, v0.1 2018/7/10 14:27
  */
-@Api(value = "招贤纳士")
+@Api(tags = "招贤纳士")
 @RestController
 @RequestMapping("/am-config/job")
 public class RecruitMessageController {
