@@ -22,7 +22,7 @@ public class LandingPageServiceImpl extends BaseUserServiceImpl implements Landi
     AmDataCollectClient amDataCollectClient;
 
     @Override
-    public LandingPageResulltVO userData(){
+    public LandingPageResulltVO getUserData(){
         LandingPageResulltVO landingPageResulltVO = new LandingPageResulltVO();
         //累计收益(亿元)
         BigDecimal profitSum = BigDecimal.ZERO;

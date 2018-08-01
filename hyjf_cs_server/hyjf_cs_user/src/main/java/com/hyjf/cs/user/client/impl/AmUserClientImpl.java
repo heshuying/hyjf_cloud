@@ -945,9 +945,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AccountBankVO> getAccountBankByUserId(Integer userId) {
-		String url = userService + "/accountbank/getBankCardByUserId/" + userId;
-		AccountBankResponse response = restTemplate
-				.getForEntity(url, AccountBankResponse.class).getBody();
+		String url = userService + "/accountbank/getAccountBankByUserId/" + userId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}

@@ -195,7 +195,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) +"/user/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + "/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -524,7 +524,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
             String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = systemConfig.getWebHost() + "/user/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -578,7 +578,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
             String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = systemConfig.getWebHost() + "/user/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
