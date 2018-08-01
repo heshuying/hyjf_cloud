@@ -38,7 +38,7 @@ import java.util.*;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的散标接口",description = "app端用户我的散标接口")
+@Api(value = "app端用户我的散标接口",tags = "app端用户我的散标接口")
 @Controller
 @RequestMapping("/hyjf-app/user/invest")
 public class AppMyProjectController extends BaseTradeController {

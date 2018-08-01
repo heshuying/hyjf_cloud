@@ -311,4 +311,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer countAllUser();
+
+	/**
+	 * 插入各种信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
 }

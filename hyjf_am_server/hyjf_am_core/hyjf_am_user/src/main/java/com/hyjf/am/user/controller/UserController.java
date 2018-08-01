@@ -700,4 +700,21 @@ public class UserController extends BaseController {
         response.setCount(userService.countAll());
         return response;
     }
+    /**
+     * 插入数据
+     * @auth sunpeikai
+     * @param userActionUtmRequest 插入数据参数
+     * @return
+     */
+    @PostMapping("/insertUserActionUtm")
+    public UserResponse insertUserActionUtm(@RequestBody UserActionUtmRequest userActionUtmRequest) {
+        UserResponse response = new UserResponse();
+        User user = userService.insertUserActionUtm(userActionUtmRequest);
+        if(user!=null){
+            UserVO userVO = CommonUtils.convertBean(user,UserVO.class);
+            response.setResult(userVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }

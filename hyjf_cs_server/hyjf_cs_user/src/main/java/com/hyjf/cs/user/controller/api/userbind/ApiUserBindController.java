@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
 /**
  * @author dongzeshan
  */
-@Api(value = "汇晶社查询用户信息",description = "汇晶社查询用户信息")
+@Api(value = "汇晶社查询用户信息",tags = "汇晶社查询用户信息")
 @RestController
 @RequestMapping("/api/user")
 public class ApiUserBindController extends BaseUserController {

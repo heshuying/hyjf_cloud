@@ -176,4 +176,10 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AppTenderCreditCustomizeMapper appTenderCreditCustomizeMapper;
+
+	@Autowired
+	protected BorrowRegistCustomizeMapper borrowRegistCustomizeMapper;
+
+	@Autowired
+	protected BorrowInvestCustomizeMapper borrowInvestCustomizeMapper;
 }

@@ -20,6 +20,8 @@ public class BankCardVO extends BaseVO implements Serializable {
 
     private String cardNo;
 
+    private String cardNoNotEncrypt;
+
     private Integer bankId;
 
     private String mobile;
@@ -121,6 +123,12 @@ public class BankCardVO extends BaseVO implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-    
-    
+
+	public String getCardNoNotEncrypt() {
+		return cardNoNotEncrypt;
+	}
+
+	public void setCardNoNotEncrypt(String cardNoNotEncrypt) {
+		this.cardNoNotEncrypt = cardNoNotEncrypt;
+	}
 }

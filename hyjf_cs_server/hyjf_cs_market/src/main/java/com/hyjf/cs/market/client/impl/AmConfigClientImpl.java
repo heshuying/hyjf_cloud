@@ -6,6 +6,7 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
@@ -167,8 +168,23 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
 	}
-
 	@Override
+	public List<ContentArticleVO> searchHomeNoticeList(String noticeType, int limitStart, int limitEnd) {
+		ContentArticleResponse response=restTemplate.getForObject("http://AM-CONFIG/am-config/article/find/"+noticeType+"/"+limitStart+"/"+limitEnd, ContentArticleResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
+    public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form) {
+		WechatContentArticleResponse response=restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/article/getWechatContentArticleListByType", form,
+				WechatContentArticleResponse.class);
+        return response;
+    }
+    @Override
 	public ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset) {
 		ContentArticleCustomizeResponse response = restTemplate
 				.getForObject("http://AM-CONFIG/am-config/article/getContentArticleFlip/" + params + offset, ContentArticleCustomizeResponse.class);

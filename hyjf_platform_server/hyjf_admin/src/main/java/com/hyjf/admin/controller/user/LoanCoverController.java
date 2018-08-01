@@ -46,7 +46,7 @@ import java.util.List;
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "会员中心-借款盖章用户接口", description = "会员中心-借款盖章用户接口")
+@Api(value = "会员中心-借款盖章用户接口", tags = "会员中心-借款盖章用户接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersLoancover")
 public class LoanCoverController extends BaseController {

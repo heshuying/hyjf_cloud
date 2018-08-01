@@ -67,7 +67,7 @@ import java.util.Map;
  * @author nixiaoling
  * @version AutoTenderExceptionController, v0.1 2018/7/12 10:27
  */
-@Api(value = "异常中心-汇计划投资异常",description = "异常中心-汇计划投资异常")
+@Api(value = "异常中心-汇计划投资异常",tags = "异常中心-汇计划投资异常")
 @RestController
 @RequestMapping("/hyjf-admin/autotenderexception")
 public class AutoTenderExceptionController extends BaseController {

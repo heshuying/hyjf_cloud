@@ -31,7 +31,7 @@ import java.util.List;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的计划接口",description = "app端用户我的计划接口")
+@Api(value = "app端用户我的计划接口",tags = "app端用户我的计划接口")
 @Controller
 @RequestMapping("/hyjf-app/user/plan")
 public class AppMyPlanController extends BaseTradeController {

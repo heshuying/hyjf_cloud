@@ -927,11 +927,10 @@ public interface AmTradeClient {
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
+     * @return
      */
-    AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
+    AdminResult updateBorrowRegist(BorrowRegistUpdateRequest request);
 
     /**
      * 资产来源

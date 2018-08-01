@@ -42,7 +42,7 @@ import java.util.Map;
  * @author hesy
  * @version RepayManageController, v0.1 2018/6/23 14:09
  */
-@Api(value = "web端-还款管理相关页面接口", description ="web端-还款管理相关页面接口")
+@Api(value = "web端-还款管理相关页面接口", tags ="web端-还款管理相关页面接口")
 @RestController
 @RequestMapping("/hyjf-web/repay")
 public class RepayManageController extends BaseTradeController {

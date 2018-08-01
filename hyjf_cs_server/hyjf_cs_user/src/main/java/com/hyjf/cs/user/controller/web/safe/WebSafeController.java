@@ -38,7 +38,7 @@ import java.util.Map;
  * @version SafeController, v0.1 2018/6/11 14:13
  */
 
-@Api(value = "web端-用户账户设置", description = "web端-用户账户设置")
+@Api(value = "web端-用户账户设置", tags = "web端-用户账户设置")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")

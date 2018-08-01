@@ -2,6 +2,7 @@ package com.hyjf.cs.message.client.impl;
 
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
+import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.OperationReportInfoVO;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
@@ -25,7 +26,27 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	private RestTemplate restTemplate;
 
 	@Override
-	public  List<OperationReportJobVO> getTenderCityGroupBy(Date date) {
+	public  List<OperationReportJobVO> getTenderCityGroupByUserIds(List<OperationReportJobVO> cityUserIds){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(cityUserIds);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tendercitygroupbyuserids",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public List<OperationReportJobVO> getTenderCityGroupBy(List<OperationReportJobVO> bms){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setOperationReportJobVOList(bms);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/tendercitygroupby",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public List<OperationReportJobVO> getTenderCityGroupByList(Date date){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
 		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendercitygroup",request, OperationReportJobResponse.class).getBody();
@@ -301,5 +322,10 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return null;
 	}
+	@Override
+	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+
 
 }

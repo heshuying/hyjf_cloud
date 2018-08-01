@@ -225,14 +225,14 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
             remark = "投资人自动投标签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/user/invesbgreturn";
+            bgRetUrl = systemConfig.getWebHost() + "/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             remark = "投资人自动债权转让签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/user/creditbgreturn";
+            bgRetUrl = systemConfig.getWebHost() + "/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         //1wechat 2app
@@ -414,9 +414,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String remark = "";
         String txcode = "";
         // 同步调用路径
-        String retUrl = "http://app:8080/user/bank/autoplus";
+        String retUrl = systemConfig.getAppHost()+"/hyjf-app/user/bank/autoplus";
         // 异步调用路
-        String bgRetUrl = "http://app:8080/user/bank/autoplus";
+        String bgRetUrl = systemConfig.getAppHost()+"/hyjf-app/user/bank/autoplus";
         String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
         BankCallBean bean = new BankCallBean();
         if(type==1){
@@ -464,7 +464,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Override
     public BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId) {
-        String errorPath = "http://app:8080/user/setting/authorization/result/failed";
+        String errorPath = systemConfig.getAppHost()+"/user/setting/authorization/result/failed";
         if (checkResult != null) {
             BaseMapBean baseMapBean = new BaseMapBean();
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
@@ -546,8 +546,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         amUserClient.insertUserAuthLog(hjhUserAuthLog);
     }
 
-
-    @Override
     public Map<String, String> getErrorMV(AutoPlusRequestBean payRequestBean, String status) {
         Map<String, String> result = new HashMap<>();
         BaseResultBean resultBean = new BaseResultBean();
@@ -814,26 +812,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 调用接口
         retBean = BankCallUtils.callApiBg(selectbean);
         return retBean;
-    }
-
-    @Override
-    public String getBankRetMsg(String retCode) {
-        //如果错误码不为空
-        if (StringUtils.isNotBlank(retCode)) {
-            BankReturnCodeConfigVO retCodes = this.amConfigClient.getBankReturnCodeConfig(retCode);
-            if (retCodes != null) {
-                String retMsg = retCodes.getErrorMsg();
-                if (StringUtils.isNotBlank(retMsg)) {
-                    return retMsg;
-                } else {
-                    return "请联系客服！";
-                }
-            } else {
-                return "请联系客服！";
-            }
-        } else {
-            return "操作失败！";
-        }
     }
 
     @Override

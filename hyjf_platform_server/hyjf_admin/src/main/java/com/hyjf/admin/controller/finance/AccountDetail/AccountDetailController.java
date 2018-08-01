@@ -49,7 +49,7 @@ import java.util.*;
  * @version AccountdetailController, v0.1 2018/6/29 13:38
  *          后台管理系统，资金中心->资金明细
  */
-@Api(value = "资金中心->资金明细",description = "资金中心->资金明细")
+@Api(value = "资金中心->资金明细",tags = "资金中心->资金明细")
 @RestController
 @RequestMapping("/hyjf-admin/accountDetail")
 public class AccountDetailController extends BaseController {

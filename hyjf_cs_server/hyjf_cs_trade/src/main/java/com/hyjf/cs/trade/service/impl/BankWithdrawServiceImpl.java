@@ -761,7 +761,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess";
-        String bgRetUrl = systemConfig.getWebHost()+"/hyjf-web/withdraw/userBankWithdrawBgreturn.do";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
                 + "&wifee=" + fee;//
         // 路由代码

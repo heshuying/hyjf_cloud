@@ -3,27 +3,27 @@
  */
 package com.hyjf.admin.client.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.CouponUserClient;
-import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
-import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
-import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
-import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -178,6 +178,92 @@ public class CouponUserClientImpl implements CouponUserClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 根据优惠券编码查询用户优惠券
+     * @param couponCode
+     * @return
+     */
+    @Override
+    public CouponUserResponse getCouponUserByCouponCode(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUsrByCouponCode/" + couponCode;
+        CouponUserResponse response = restTemplate.getForEntity(url,CouponUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     *根据条件查询优惠券使用详情
+     * @param paramMap
+     * @return
+     */
+    @Override
+    public CouponTenderResponse getCouponTenderDetailCustomize(Map<String,Object> paramMap) {
+        String url = "http://AM-TRADE/am-trade/coupon/tender/hztcoupontenderdetail";
+        CouponTenderResponse response = restTemplate.postForEntity(url,paramMap,CouponTenderResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询回款列表
+     * @param paramMap
+     * @return
+     */
+    @Override
+    public CouponTenderResponse getCouponRecoverCustomize(Map<String, Object> paramMap) {
+        CouponTenderResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/coupon/tender/hztcouponrecover", paramMap, CouponTenderResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户优惠券id查询用户优惠券详情
+     * @param couponUserId
+     * @return
+     */
+    @Override
+    public CouponUserCustomizeResponse selectCouponUserById(Integer couponUserId) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/selectCouponUserById/"+couponUserId;
+        CouponUserCustomizeResponse response = restTemplate.getForEntity(url,CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 用户优惠券审批
+     * @param adminCouponUserRequestBean
+     * @return
+     */
+    @Override
+    public CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/auditRecord";
+        CouponUserCustomizeResponse response = restTemplate.postForEntity(url,adminCouponUserRequestBean,CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     *批量上传发券
+     * @param params
+     * @return
+     */
+    @Override
+    public JSONObject getBatchCoupons(Map<String, String> params) {
+        String url = "http://CS-TRADE/cs-user/checkCoupon/getBatchCoupons";
+        return restTemplate.postForEntity(url,params,JSONObject.class).getBody();
     }
 
 

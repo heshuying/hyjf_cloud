@@ -26,7 +26,7 @@ import java.util.List;
  * @author jun
  * @version TradeDetailController, v0.1 2018/7/25 14:05
  */
-@Api(value = "app端交易详情",description = "app端交易详情")
+@Api(value = "app端交易详情",tags = "app端交易详情")
 @RestController
 @RequestMapping("/hyjf-app/user/trade")
 public class  AppTradeDetailController extends BaseTradeController {

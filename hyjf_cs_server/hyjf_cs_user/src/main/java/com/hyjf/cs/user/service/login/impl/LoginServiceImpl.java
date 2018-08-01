@@ -116,7 +116,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 				accountId = account.getAccount();
-				// 3. todo pangchengchao登录时自动同步线下充值记录
 				this.synBalance(accountId, systemConfig.getInstcode(), "http://CS-TRADE",
 						systemConfig.getAopAccesskey());
 			}
