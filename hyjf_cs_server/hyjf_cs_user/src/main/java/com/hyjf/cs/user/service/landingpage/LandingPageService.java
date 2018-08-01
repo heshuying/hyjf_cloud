@@ -11,5 +11,5 @@ import com.hyjf.cs.user.vo.LandingPageResulltVO;
  * @version LandingPageService, v0.1 2018/7/30 16:39
  */
 public interface LandingPageService extends BaseUserService {
-    LandingPageResulltVO userData();
+    LandingPageResulltVO getUserData();
 }

@@ -46,7 +46,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "借款初审初始化", notes = "标的备案初始化")
     @PostMapping("/init")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowFirstResponseBean> init(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
@@ -63,7 +62,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "获取借款初审列表", notes = "获取借款初审列表")
     @PostMapping("/search")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowFirstResponseBean> search(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
@@ -74,7 +72,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "已交保证金详细画面", notes = "已交保证金详细画面")
     @GetMapping("/get_bail_info/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult<BorrowBailInfoResponseBean> getBailInfo(@PathVariable String borrowNid) {
         return borrowFirstService.getBailInfo(borrowNid);
@@ -82,7 +79,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "交保证金", notes = "交保证金")
     @GetMapping("/insert_borrow_bail/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult insertBorrowBail(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
@@ -91,7 +87,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "获取发标信息", notes = "获取发标信息")
     @GetMapping("/get_borrow_fire_info/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
     public AdminResult<BorrowFireInfoResponseBean> getBorrowFireInfo(@PathVariable String borrowNid) {
         return borrowFirstService.getFireInfo(borrowNid);
@@ -99,7 +94,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "发标", notes = "发标")
     @PostMapping("/update_borrow_fire_info")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
     public AdminResult updateBorrowFireInfo(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         return borrowFirstService.updateBorrowFireInfo(borrowFirstRequestBean.getBorrowNidSrch(), borrowFirstRequestBean.getVerifyStatusSrch(), borrowFirstRequestBean.getOntime());
