@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl.coupon;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BatchSubUserCouponBean;
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.CouponUserClient;
 import com.hyjf.admin.service.coupon.CouponUserService;
 import com.hyjf.am.response.admin.AdminCouponUserCustomizeResponse;
@@ -25,8 +26,10 @@ import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
+import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang.StringUtils;
@@ -53,6 +56,8 @@ public class CouponUserServiceImpl implements CouponUserService {
     @Autowired
     private CouponUserClient couponUserClient;
 
+    @Autowired
+    private AmMarketClient amMarketClient;
 
     /**
      * 获取优惠券用户列表
@@ -62,7 +67,40 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest) {
-        return couponUserClient.searchList(couponUserBeanRequest);
+        CouponUserCustomizeResponse response = couponUserClient.searchList(couponUserBeanRequest);
+        List<CouponUserCustomizeVO> list=response.getResultList();
+        if (CollectionUtils.isNotEmpty(list)){
+            //获取活动集合
+            List<ActivityListVO> activityListVOs = amMarketClient.getActivityList();
+            //活动集合转成 <id,title>格式的map
+            Map<Integer,String> dicMap = this.convertToIdTitleMap(activityListVOs);
+            for (CouponUserCustomizeVO couponUser:list) {
+                if ("2".equals(couponUser.getCouponSource())){
+                    if (StringUtils.isNotEmpty(dicMap.get(couponUser.getActivityId()))){
+                        couponUser.setCouponContent(dicMap.get(couponUser.getActivityId()));
+                    }else{
+                        if (StringUtils.isNotEmpty(couponUser.getContent())){
+                            couponUser.setCouponContent(couponUser.getContent());
+                        }else{
+                            couponUser.setCouponContent("");
+                        }
+
+                    }
+                }
+            }
+        }
+        return response;
+    }
+
+
+    private Map<Integer,String> convertToIdTitleMap(List<ActivityListVO> activityListVOs) {
+        Map<Integer,String> result = new HashMap<Integer,String>();
+        if (CollectionUtils.isNotEmpty(activityListVOs)){
+            for (ActivityListVO obj:activityListVOs) {
+                result.put(obj.getId(),obj.getTitle());
+            }
+        }
+        return result;
     }
 
     /**
