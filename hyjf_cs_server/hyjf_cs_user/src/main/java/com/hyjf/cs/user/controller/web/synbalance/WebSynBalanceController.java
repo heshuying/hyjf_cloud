@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author zhangqingqing
  * @version SynBalanceController, v0.1 2018/7/25 14:57
  */
-@Api(value = "web端-同步余额",description = "web端-同步余额")
+@Api(value = "web端-同步余额",tags = "web端-同步余额")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/bank/synbalance")

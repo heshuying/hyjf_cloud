@@ -31,7 +31,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:09
  */
-@Api(description = "web端-用户自动投标自动债转授权")
+@Api(tags = {"web端-用户自动投标自动债转授权"})
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")

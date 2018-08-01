@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "wechat端用户资产管理接口",description = "wechat端用户资产管理接口")
+@Api(value = "wechat端用户资产管理接口",tags = "wechat端用户资产管理接口")
 @Controller
 @RequestMapping("/hyjf-wechat/wx/myproject")
 public class WechatMyProjectController extends BaseTradeController {

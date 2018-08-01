@@ -12,12 +12,12 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app_";
+    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
 
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web_";
+    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
 
     /**
      * 用户一秒内的登录次数(ip)

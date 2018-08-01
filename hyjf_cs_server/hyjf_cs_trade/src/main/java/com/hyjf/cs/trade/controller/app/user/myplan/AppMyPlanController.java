@@ -9,6 +9,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.AppMyPlanService;
 import io.swagger.annotations.Api;
@@ -17,10 +18,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -34,7 +32,7 @@ import java.util.List;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的计划接口",description = "app端用户我的计划接口")
+@Api(value = "app端用户我的计划接口",tags = "app端用户我的计划接口")
 @Controller
 @RequestMapping("/hyjf-app/user/plan")
 public class AppMyPlanController extends BaseTradeController {
@@ -54,8 +52,7 @@ public class AppMyPlanController extends BaseTradeController {
     @PostMapping(value = "/getMyPlanList", produces = "application/json; charset=utf-8")
     public MyPlanListResultBean getMyPlanList( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
         MyPlanListResultBean result = new MyPlanListResultBean();
-        result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
-        result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+        result.setStatus(CustomConstants.APP_STATUS_SUCCESS);      result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
         // 计划的状态：1为持有中，2为已退出
         String type = request.getParameter("type");
@@ -184,11 +181,10 @@ public class AppMyPlanController extends BaseTradeController {
      * @date 2018/7/30 18:27
      * 原接口：com.hyjf.app.user.credit.AppTenderCreditBorrowController.searchTenderCreditDetail()
      */
-    @ApiOperation(value = "App端:获取我的散标详情", notes = "App端:获取我的散标详情")
-    @PostMapping(value = "/{borrowId}", produces = "application/json; charset=utf-8")
-    public JSONObject getMyPlanList(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
-        JSONObject result = new JSONObject();
-        result = appMyPlanService.getMyPlanDetail(borrowId,request,userId);
+    @ApiOperation(value = "App端:获取我的计划详情", notes = "App端:获取我的计划详情")
+    @PostMapping(value = "/{orderId}", produces = "application/json; charset=utf-8")
+    public MyPlanDetailResultBean getMyPlanList(@RequestParam Integer couponType, @RequestParam String type, @PathVariable String orderId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
+        MyPlanDetailResultBean result = appMyPlanService.getMyPlanDetail(couponType,type,orderId,request,userId);
         return  result;
     }
 }

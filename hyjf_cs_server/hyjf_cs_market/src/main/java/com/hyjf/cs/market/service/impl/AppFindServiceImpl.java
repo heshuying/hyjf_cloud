@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.market.service.impl;
 
+import com.hyjf.am.response.config.WechatContentArticleResponse;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.market.client.AmConfigClient;
@@ -57,5 +59,15 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
     @Override
     public ContentArticleVO getContentArticleById(Integer contentArticleId) {
         return amConfigClient.getContentArticleById(contentArticleId);
+    }
+
+    @Override
+    public List<ContentArticleVO> searchHomeNoticeList(String noticeType, int limitStart, int limitEnd) {
+        return amConfigClient.searchHomeNoticeList(noticeType,limitStart,limitEnd);
+    }
+
+    @Override
+    public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form) {
+        return amConfigClient.searchContentArticleList(form);
     }
 }

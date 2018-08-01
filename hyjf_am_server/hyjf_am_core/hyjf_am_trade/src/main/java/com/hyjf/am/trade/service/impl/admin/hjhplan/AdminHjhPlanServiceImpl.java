@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -385,27 +386,37 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setUpdateUser(form.getUserid());
 				// 跟新汇计划表
 				count1 = this.hjhPlanMapper.updateByPrimaryKeySelective(plan);
-				if(count1 > 0){
-					//计划列表更新成功才更新引擎表
-					HjhAllocationEngineExample example1 = new HjhAllocationEngineExample(); 
-					HjhAllocationEngineExample.Criteria cra1 = example1.createCriteria();
-					cra1.andPlanNidEqualTo(planNid);
-					List<HjhAllocationEngine> resultList = this.hjhAllocationEngineMapper.selectByExample(example1);
+				
+				// 更新引擎表
+				HjhAllocationEngineExample example1 = new HjhAllocationEngineExample(); 
+				HjhAllocationEngineExample.Criteria cra1 = example1.createCriteria();
+				cra1.andPlanNidEqualTo(planNid);
+				List<HjhAllocationEngine> resultList = this.hjhAllocationEngineMapper.selectByExample(example1);
+				if(CollectionUtils.isNotEmpty(resultList)){
 					for(HjhAllocationEngine hjhAllocationEngine : resultList){
 						hjhAllocationEngine.setPlanName(form.getDebtPlanName());
 						count2 = this.hjhAllocationEngineMapper.updateByPrimaryKeySelective(hjhAllocationEngine);
 					}
-					//计划列表更新成功才更新计划专区表
-					HjhRegionExample example2 = new HjhRegionExample();
-					HjhRegionExample.Criteria cra2 = example2.createCriteria();
-					cra2.andPlanNidEqualTo(planNid);
-					List<HjhRegion> resultList2 = this.hjhRegionMapper.selectByExample(example2);
+				} else {
+					// 该计划未在引擎中添加则无需更改引擎表
+					count2 = 99;
+				}
+				
+				// 更新计划专区表
+				HjhRegionExample example2 = new HjhRegionExample();
+				HjhRegionExample.Criteria cra2 = example2.createCriteria();
+				cra2.andPlanNidEqualTo(planNid);
+				List<HjhRegion> resultList2 = this.hjhRegionMapper.selectByExample(example2);
+				if(CollectionUtils.isNotEmpty(resultList2)){
 					for(HjhRegion hjhRegion : resultList2){
 						hjhRegion.setPlanName(form.getDebtPlanName());
 						count3 = this.hjhRegionMapper.updateByPrimaryKeySelective(hjhRegion);
 					}
+				} else {
+					// 该计划未在计划专区中添加则无需更改引擎表
+					count3 = 99;
 				}
-				if(count1 > 0 && count2 > 0 && count3 >0){
+				if(count1 > 0 && count2 != 0 && count3 != 0){
 					return success;
 				} else {
 					return 0;

@@ -171,7 +171,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/isExistsRecord/{planNid}", method = RequestMethod.POST)
+    @GetMapping(value = "/isExistsRecord/{planNid}")
     public boolean isExistsRecord(@PathVariable String planNid) {
     	boolean Flag = adminHjhPlanService.isExistsRecord(planNid);
     	return Flag;
@@ -181,7 +181,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/countByPlanName/{planName}", method = RequestMethod.POST)
+    @GetMapping(value = "/countByPlanName/{planName}")
     public Integer countByPlanName(@PathVariable String planName) {
     	int Flag = adminHjhPlanService.countByPlanName(planName);
     	return Flag;
@@ -191,7 +191,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}", method = RequestMethod.POST)
+    @GetMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}")
     public Integer isLockPeriodExist(@PathVariable String lockPeriod, @PathVariable String borrowStyle, @PathVariable String isMonth) {
     	int Flag = adminHjhPlanService.isLockPeriodExist(lockPeriod,borrowStyle,isMonth);
     	return Flag;

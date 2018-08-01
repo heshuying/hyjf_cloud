@@ -10,6 +10,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -46,6 +47,7 @@ public class BorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
+    @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);

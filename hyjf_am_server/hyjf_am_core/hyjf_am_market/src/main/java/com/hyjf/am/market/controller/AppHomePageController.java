@@ -8,7 +8,6 @@ import com.hyjf.am.market.service.AppHomePageService;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,6 @@ import java.util.Map;
  * @author dangzw
  * @version AppHomePageController, v0.1 2018/7/26 10:54
  */
-@Api(value = "App", description = "App")
 @RestController
 @RequestMapping("/am-market/homepage")
 public class AppHomePageController {

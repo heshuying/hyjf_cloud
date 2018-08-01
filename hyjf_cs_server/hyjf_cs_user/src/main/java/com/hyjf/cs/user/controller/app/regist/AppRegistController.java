@@ -35,7 +35,7 @@ import java.net.URLEncoder;
  * @author zhangqingqing
  * @version RegistController, v0.1 2018/6/11 14:42
  */
-@Api(value = "app端用户注册接口",description = "app端-用户注册接口")
+@Api(value = "app端用户注册接口",tags = "app端-用户注册接口")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppRegistController extends BaseUserController {

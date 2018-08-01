@@ -22,7 +22,7 @@ import java.util.Map;
  * @author hesy
  * @version RewardController, v0.1 2018/6/23 17:14
  */
-@Api(value = "web端-奖励记录", description ="web端-奖励记录")
+@Api(value = "web端-奖励记录", tags ="web端-奖励记录")
 @RestController
 @RequestMapping("/hyjf-web/invite")
 public class RewardController {

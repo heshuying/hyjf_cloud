@@ -10,7 +10,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -75,15 +76,15 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamSendcode(Integer userId, String mobile, String cardNo) {
         // 手机号校验
         if(StringUtils.isBlank(mobile)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_MOBILE_BLANK);
+			throw new CheckException(MsgEnum.ERR_MOBILE_BLANK);
         }
         // 银行卡号校验
         if(StringUtils.isEmpty(cardNo)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
+			throw new CheckException(MsgEnum.ERR_CARD_BLANK);
         }
         // 开户校验
         if (!this.checkIsOpen(userId)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+			throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 	}
 	
@@ -98,24 +99,24 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamBindCard(BindCardVO bindCardVO, Integer userId) {
 		// 短信授权码校验
         if (StringUtils.isBlank(bindCardVO.getLastSrvAuthCode())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_CODE_BLANK);
+        	throw new CheckException(MsgEnum.ERR_AUTHORIZE_CODE_BLANK);
         }
         // 手机号校验
         if(StringUtils.isBlank(bindCardVO.getMobile())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_MOBILE_BLANK);
+        	throw new CheckException(MsgEnum.ERR_MOBILE_BLANK);
         }
         // 银行卡号校验
         if(StringUtils.isEmpty(bindCardVO.getCardNo())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
+        	throw new CheckException(MsgEnum.ERR_CARD_BLANK);
         }
         // 短信验证码校验
         if(StringUtils.isBlank(bindCardVO.getSmsCode())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_SMSCODE_BLANK);
+        	throw new CheckException(MsgEnum.ERR_SMSCODE_BLANK);
         }
 
         // 开户校验
         if (!this.checkIsOpen(userId)) {
-        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        	throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 	}
 
@@ -226,7 +227,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         // 交易成功跳转链接
         String successfulUrl = systemConfig.getFrontHost().trim();
 		// 商户后台应答地址(必须)
-		String notifyUrl = systemConfig.getWebHost().trim() + "/hyjf-web/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
+		String notifyUrl = systemConfig.getWebHost().trim() + "/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getWebHost().trim();
 
@@ -415,7 +416,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 				for (BankCardRequest bank : bankCardList) {
 					boolean isInsertFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
 					if (!isInsertFlag) {
-						throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
+						throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 					}
 				}
 			}
@@ -441,7 +442,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 		if (!isUpdateFlag) {
-			throw new ReturnMessageException(MsgEnum.ERR_CARD_SAVE);
+			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 		}
 		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), logAcq.getCardNo());
         if (retCard != null) {
@@ -555,13 +556,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	public void checkParamUnBindCard(BindCardVO bindCardVO, Integer userId) {
         // 银行卡号校验
         if(StringUtils.isEmpty(bindCardVO.getCardNo())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_BLANK);
+        	throw new CheckException(MsgEnum.ERR_CARD_BLANK);
         }
 
         // 开户校验
         BankOpenAccountVO openAccount = amUserClient.selectById(userId);
         if (openAccount == null || StringUtils.isBlank(openAccount.getAccount())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        	throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         
         // 账户余额校验
@@ -569,13 +570,13 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         BigDecimal bankBalance = this.queryBankBlance(userId, openAccount.getAccount());
         if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
 				|| ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_UNBIND_HAVE_BALANCE);
+        	throw new CheckException(MsgEnum.ERR_CARD_UNBIND_HAVE_BALANCE);
 		}
         
         // 待解绑卡校验
         BankCardVO bankCard = amUserClient.queryUserCardValid(String.valueOf(userId), bindCardVO.getCardNo());
         if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
-        	throw new ReturnMessageException(MsgEnum.ERR_CARD_NOT_EXIST);
+        	throw new CheckException(MsgEnum.ERR_CARD_NOT_EXIST);
 		}
         
 	}
@@ -640,7 +641,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 //			bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
 			boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
 			if (!isUpdateFlag) {
-				throw new ReturnMessageException(MsgEnum.ERR_CARD_DELETE);
+				throw new CheckException(MsgEnum.ERR_CARD_DELETE);
 			}
 			return isUpdateFlag;
 		}

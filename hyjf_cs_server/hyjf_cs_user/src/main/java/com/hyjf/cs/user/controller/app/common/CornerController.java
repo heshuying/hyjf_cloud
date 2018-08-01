@@ -31,7 +31,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version CornerController, v0.1 2018/7/18 11:21
  */
-@Api(description = "汇天利资金中心接口")
+@Api(tags = "汇天利资金中心接口")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
 public class CornerController extends BaseController {
@@ -228,9 +228,9 @@ public class CornerController extends BaseController {
      */
     @ApiOperation(value = "设置角标",notes = "设置角标")
     @PostMapping(value = "/setCorner")
-    public AppResult setCorner(@RequestHeader(value = "key")String key, HttpServletRequest request) {
+    public AppResult setCorner(HttpServletRequest request) {
         AppResult result = new AppResult();
-
+/*
         Map<String,String> map = new HashMap<>();
         map.put("request", "/hyjf-app/app/common/setCorner");
         // 唯一标识
@@ -271,7 +271,8 @@ public class CornerController extends BaseController {
         } catch (Exception e) {
             result.setStatusInfo(BaseResult.FAIL,"设置角标异常");
         }
-        result.setData(map);
+        result.setData(map);*/
+        result.setStatusInfo("0","设置成功");
         return result;
     }
 }

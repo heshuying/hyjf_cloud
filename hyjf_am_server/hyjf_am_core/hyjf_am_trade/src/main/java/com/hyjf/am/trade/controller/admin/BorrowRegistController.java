@@ -8,6 +8,7 @@ import com.hyjf.am.response.admin.BorrowRegistCustomizeResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
@@ -109,13 +110,11 @@ public class BorrowRegistController {
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
      * @return
      */
-    @GetMapping("/update_borrow_regist/{borrowNid}/{currUserId}/{currUserName}")
-    public Response updateBorrowRegist(@PathVariable String borrowNid, @PathVariable String currUserId, @PathVariable String currUserName) {
-        return borrowRegistService.debtRegist(borrowNid, currUserId, currUserName);
+    @PostMapping("/update_borrow_regist")
+    public Response updateBorrowRegist(@RequestBody @Valid BorrowRegistUpdateRequest request) {
+        return borrowRegistService.debtRegist(request);
     }
 }

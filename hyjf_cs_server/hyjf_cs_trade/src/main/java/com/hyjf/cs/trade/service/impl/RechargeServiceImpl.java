@@ -11,7 +11,6 @@ import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -338,7 +337,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setLogRemark("充值页面");
 		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));
 		// 充值成功后跳转的url
-		bean.setSuccessfulUrl(bean.getRetUrl()+"&isSuccess=1");
+		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1");
 		// 页面调用必须传的
 		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_DIRECT_RECHARGE_PAGE);
 		// 插入充值记录
@@ -364,7 +363,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
-		String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/recharge/bgreturn" + "?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+mobile;
 		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
 

@@ -3,8 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin.coupon;
 
+import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
+import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 
 import java.util.List;
@@ -21,4 +23,10 @@ public interface AdminCouponUserService {
     int deleteCouponUserById(int id, String remark, String userId);
 
     int insertCouponUser(CouponUserRequest request);
+
+    List<CouponUser> getCouponUserByCouponCode(String couponCode);
+
+    CouponUser selectCouponUserById(Integer couponUserId);
+
+    Integer auditRecord(AdminCouponUserRequestBean couponUserRequestBean);
 }

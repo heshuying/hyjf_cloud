@@ -5,10 +5,9 @@ package com.hyjf.cs.trade.service.impl.newagreemnet;
 
 import java.util.List;
 import java.util.Map;
-
+import com.hyjf.am.vo.app.AppNewAgreementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
@@ -58,7 +57,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	
 	/**
 	 * 查询协议表by assignNid(实际上是tenderNID)
-	 * @param nid
+	 * @param assignNid
 	 * @return
 	 */
 	@Override
@@ -69,7 +68,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 
 	/**
 	 * 查询用户详情
-	 * @param nid
+	 * @param userId
 	 * @return
 	 */
 	@Override
@@ -83,7 +82,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 
 	/**
 	 * 根据borrowNid获取标的
-	 * @param nid
+	 * @param borrowNid
 	 * @return
 	 */
 	@Override
@@ -136,7 +135,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 
 	/**
 	 * 获取债转承接信息by AssignNid
-	 * @param AssignOrderId
+	 * @param assignNid
 	 * @return
 	 */
 	@Override
@@ -150,4 +149,15 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 		List<ProtocolTemplateVO> volist = amTradeClient.getProtocolTemplateVOByDisplayName(displayName);
 		return volist;
 	}
+
+	/**
+	 * 获得协议模板图片
+	 * @param aliasName 别名
+	 * @return
+	 */
+	@Override
+	public AppNewAgreementVO setProtocolImg(String aliasName){
+		return amTradeClient.setProtocolImg(aliasName);
+	}
+
 }

@@ -4,8 +4,11 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.EventMapper;
+import com.hyjf.am.config.dao.mapper.customize.ContentEventsCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.dao.model.auto.EventExample;
+import com.hyjf.am.config.dao.model.customize.ContentEventsCustomize;
+import com.hyjf.am.config.dao.model.customize.EventsCustomize;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.common.util.GetDate;
@@ -25,6 +28,8 @@ public class EventServiceImpl implements EventService {
 	@Autowired
 	private EventMapper eventMapper;
 
+	@Autowired
+	private ContentEventsCustomizeMapper contentEventsCustomizeMapper;
 	@Override
 	public List<Event> searchAction(EventsRequest request) {
 		EventExample example = new EventExample();
@@ -62,4 +67,34 @@ public class EventServiceImpl implements EventService {
 	public void deleteById(Integer id) {
 		eventMapper.deleteByPrimaryKey(id);
 	}
+
+    @Override
+    public List<Event> getEvents(int begin, int end, int year) {
+		ContentEventsCustomize contentEventsCustomize=new ContentEventsCustomize();
+		contentEventsCustomize.setStartCreate(begin);
+		contentEventsCustomize.setEndCreate(end);
+		contentEventsCustomize.setEventYear(year);
+		return contentEventsCustomizeMapper.selectContentEvents(contentEventsCustomize);
+
+    }
+
+	@Override
+	public Event getEventsAll(int begin, int end) {
+		ContentEventsCustomize contentEventsCustomize = new ContentEventsCustomize();
+		contentEventsCustomize.setStartCreate(begin);
+		contentEventsCustomize.setEndCreate(end);
+		return contentEventsCustomizeMapper.selectZong(contentEventsCustomize);
+	}
+
+	@Override
+	public Event selectPercentage(int percentage, int begin, int end, int userId) {
+		ContentEventsCustomize contentEventsCustomize=new ContentEventsCustomize();
+		contentEventsCustomize.setEventYear(percentage);
+		contentEventsCustomize.setActTime(userId);
+		contentEventsCustomize.setStartCreate(begin);
+		contentEventsCustomize.setEndCreate(end);
+		return contentEventsCustomizeMapper.selectPercentage(contentEventsCustomize);
+
+	}
+
 }

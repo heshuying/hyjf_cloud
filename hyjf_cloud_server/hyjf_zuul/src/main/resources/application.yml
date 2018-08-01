@@ -18,7 +18,7 @@ basic:
 ignore:
   urls:
     app:
-      key: /hyjf-app/server/getBestServerAction,
+      key: /hyjf-app/server/getBestServerAction,/hyjf-app/appUser/uploadAvatarAction
 
 hyjf:
   domain:
@@ -28,3 +28,9 @@ am:
   config:
     service:
       name: http://AM-CONFIG/am-config
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2Mb
+      maxRequestSize: 2Mb

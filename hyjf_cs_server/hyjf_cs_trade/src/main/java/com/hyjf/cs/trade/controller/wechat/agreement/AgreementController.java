@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AgreementController.java, v0.1 2018年7月27日 上午10:26:08
  */
-@Api(description = "微信端协议接口")
+@Api(tags = "微信端协议接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/agreement")
 public class AgreementController extends BaseTradeController{

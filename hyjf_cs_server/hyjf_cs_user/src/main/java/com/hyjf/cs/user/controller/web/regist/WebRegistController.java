@@ -33,7 +33,7 @@ import java.util.Map;
  * @version RegistController, v0.1 2018/6/11 13:59
  */
 
-@Api(value = "web端用户注册接口",description = "web端-用户注册接口")
+@Api(value = "web端用户注册接口",tags = "web端-用户注册接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")

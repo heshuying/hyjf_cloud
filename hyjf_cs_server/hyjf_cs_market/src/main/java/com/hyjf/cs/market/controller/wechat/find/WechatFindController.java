@@ -28,7 +28,7 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "app发现页", description = "app发现页")
+@Api(value = "app发现页", tags = "app发现页")
 @RestController
 @RequestMapping("/hyjf-wechat/find")
 public class WechatFindController extends BaseMarketController {

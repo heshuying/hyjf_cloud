@@ -5,19 +5,18 @@ package com.hyjf.am.config.controller.admin.content;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Event;
+import com.hyjf.am.config.dao.model.customize.EventsCustomize;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -108,5 +107,50 @@ public class EventController extends BaseConfigController {
 		eventService.deleteById(id);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
+	}
+
+	/**
+	 * 获取公司纪事
+	 * @param begin
+	 * @param end
+	 * @param year
+	 * @return
+	 */
+	@GetMapping("/getEvents/{begin}/{end}/{year}")
+	public EventResponse getEvents(@PathVariable int begin, @PathVariable int end, @PathVariable int year){
+		EventResponse eventResponse = new EventResponse();
+		List<Event> events = eventService.getEvents(begin, end, year);
+		List<EventVO> eventsVO = CommonUtils.convertBeanList(events, EventVO.class);
+		eventResponse.setResultList(eventsVO);
+		return eventResponse;
+	}
+
+
+	/**
+	 *获取公司纪事
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	@GetMapping("/EventsAll/{begin}/{end}")
+	public EventsVO queryEventsAll(@PathVariable Integer begin,@PathVariable Integer end){
+		Event eventsAll = eventService.getEventsAll(begin, end);
+		EventsVO eventsVO = CommonUtils.convertBean(eventsAll, EventsVO.class);
+		return eventsVO;
+	}
+
+	/**
+	 * 查询投资百分比
+	 * @param percentage
+	 * @param begin
+	 * @param end
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/selectPercentage/{percentage}/{begin}/{end}/{userId}")
+	public EventsVO queryPercentage(@PathVariable int percentage,@PathVariable int begin,@PathVariable int end,@PathVariable int userId){
+		Event eventsAll = eventService.selectPercentage(percentage, begin, end, userId);
+		EventsVO eventsVO = CommonUtils.convertBean(eventsAll, EventsVO.class);
+		return eventsVO;
 	}
 }

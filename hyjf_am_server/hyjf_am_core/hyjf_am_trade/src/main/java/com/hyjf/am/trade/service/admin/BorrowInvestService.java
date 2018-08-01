@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.admin.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserInvestListCustomize;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * @author wangjun
  * @version BorrowInvestService, v0.1 2018/7/10 9:35
  */
-public interface BorrowInvestService {
+public interface BorrowInvestService extends BaseService {
     /**
      * 投资明细记录 总数COUNT
      *

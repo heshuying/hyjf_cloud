@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.admin.coupon;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 
 import java.io.Serializable;
 
@@ -12,6 +13,9 @@ import java.io.Serializable;
  * @version CouponUserCustomizeVO, v0.1 2018/7/23 15:57
  */
 public class CouponUserCustomizeVO extends BaseVO implements Serializable {
+    private CouponTenderDetailVo detail;
+    private CouponUserVO couponUser;
+
     private Integer id;
 
     private Integer couponId;
@@ -378,5 +382,21 @@ public class CouponUserCustomizeVO extends BaseVO implements Serializable {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public CouponTenderDetailVo getDetail() {
+        return detail;
+    }
+
+    public void setDetail(CouponTenderDetailVo detail) {
+        this.detail = detail;
+    }
+
+    public CouponUserVO getCouponUser() {
+        return couponUser;
+    }
+
+    public void setCouponUser(CouponUserVO couponUser) {
+        this.couponUser = couponUser;
     }
 }
