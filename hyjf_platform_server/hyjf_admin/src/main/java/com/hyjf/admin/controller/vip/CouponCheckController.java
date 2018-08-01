@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author yaoyong
  * @version CouponCheckController, v0.1 2018/7/3 15:57
  */
-@Api(value = "优惠券列表接口", tags = "优惠券列表")
+@Api(value = "优惠券列表接口", description = "优惠券列表")
 @RestController
 @RequestMapping("/coupon/checkList")
 public class CouponCheckController extends BaseController {
