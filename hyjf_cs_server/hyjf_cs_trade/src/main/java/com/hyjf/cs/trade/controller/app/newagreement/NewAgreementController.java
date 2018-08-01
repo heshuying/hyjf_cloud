@@ -1153,5 +1153,22 @@ public class NewAgreementController extends BaseTradeController{
         }
         return new AppResult(response.getResultList());
     }
+
+    @ApiOperation(value = "APP端协议接口", notes = "查看协议模板接口")
+    @ResponseBody
+    @PostMapping("/getdisplayNameDynamic")
+    public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {
+        logger.info("*******************************查看协议模板接口************************************");
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        response.setResult(template);
+        if(response == null) {
+            return new AppResult(FAIL, FAIL_MSG);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AppResult(FAIL, response.getMessage());
+        }
+        return new AppResult(response.getResultList());
+    }
     
 }
