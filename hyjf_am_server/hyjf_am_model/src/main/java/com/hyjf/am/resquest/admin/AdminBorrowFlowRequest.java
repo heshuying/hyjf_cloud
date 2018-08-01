@@ -1,17 +1,20 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.trade.hjh;
+package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * @author fuqiang
- * @version HjhAssetBorrowTypeVO, v0.1 2018/6/11 18:09
+ * @author by xiehuili on 2018/7/30.
  */
-public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
+public class AdminBorrowFlowRequest extends BasePage implements Serializable{
+
+    /**
+     * 此处为属性说明
+     */
+    private static final long serialVersionUID = 32154339572253967L;
 
     private Integer id;
 
@@ -51,17 +54,17 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
 
     private Integer updateTime;
 
-    /** 项目名称 */
-    private String projectName;
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
 
-    /** 资产来源 */
-    private String instName;
-
-    /** 产品类型名称 */
-    private String assetTypeName;
-
-    /** 状态 */
-    private String status;
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+    /** 列表list */
+//    private List<HjhAssetBorrowTypeCustomize> recordList;
 
     /** 资产来源 检索条件 */
     private String instCodeSrch;
@@ -75,7 +78,47 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
     /** 状态 检索条件 */
     private String statusSrch;
 
-    private static final long serialVersionUID = 1L;
+    private String manChargeTimeSear;
+    private List<ParamNameVO> paramNameVOS;
+    public String getInstCodeSrch() {
+        return instCodeSrch;
+    }
+
+    public void setInstCodeSrch(String instCodeSrch) {
+        this.instCodeSrch = instCodeSrch;
+    }
+
+    public String getAssetTypeSrch() {
+        return assetTypeSrch;
+    }
+
+    public void setAssetTypeSrch(String assetTypeSrch) {
+        this.assetTypeSrch = assetTypeSrch;
+    }
+
+    public String getBorrowCdSrch() {
+        return borrowCdSrch;
+    }
+
+    public void setBorrowCdSrch(String borrowCdSrch) {
+        this.borrowCdSrch = borrowCdSrch;
+    }
+
+    public String getStatusSrch() {
+        return statusSrch;
+    }
+
+    public void setStatusSrch(String statusSrch) {
+        this.statusSrch = statusSrch;
+    }
+
+    public String getManChargeTimeSear() {
+        return manChargeTimeSear;
+    }
+
+    public void setManChargeTimeSear(String manChargeTimeSear) {
+        this.manChargeTimeSear = manChargeTimeSear;
+    }
 
     public Integer getId() {
         return id;
@@ -90,7 +133,7 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
     }
 
     public void setInstCode(String instCode) {
-        this.instCode = instCode == null ? null : instCode.trim();
+        this.instCode = instCode;
     }
 
     public Integer getAssetType() {
@@ -178,7 +221,7 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
     }
 
     public void setApplicant(String applicant) {
-        this.applicant = applicant == null ? null : applicant.trim();
+        this.applicant = applicant;
     }
 
     public String getRepayOrgName() {
@@ -186,7 +229,7 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
     }
 
     public void setRepayOrgName(String repayOrgName) {
-        this.repayOrgName = repayOrgName == null ? null : repayOrgName.trim();
+        this.repayOrgName = repayOrgName;
     }
 
     public String getRemark() {
@@ -194,7 +237,7 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
     }
 
     public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+        this.remark = remark;
     }
 
     public Integer getCreateUser() {
@@ -229,92 +272,27 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    @Override
-    public String toString() {
-        return "HjhAssetBorrowTypeVO{" +
-                "id=" + id +
-                ", instCode='" + instCode + '\'' +
-                ", assetType=" + assetType +
-                ", borrowCd=" + borrowCd +
-                ", isOpen=" + isOpen +
-                ", autoAdd=" + autoAdd +
-                ", autoRecord=" + autoRecord +
-                ", autoBail=" + autoBail +
-                ", autoAudit=" + autoAudit +
-                ", autoReview=" + autoReview +
-                ", autoSendMinutes=" + autoSendMinutes +
-                ", autoReviewMinutes=" + autoReviewMinutes +
-                ", applicant='" + applicant + '\'' +
-                ", repayOrgName='" + repayOrgName + '\'' +
-                ", remark='" + remark + '\'' +
-                ", createUser=" + createUser +
-                ", createTime=" + createTime +
-                ", updateUser=" + updateUser +
-                ", updateTime=" + updateTime +
-                '}';
+    public int getLimitStart() {
+        return limitStart;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public int getLimitEnd() {
+        return limitEnd;
     }
 
-    public String getInstName() {
-        return instName;
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 
-    public void setInstName(String instName) {
-        this.instName = instName;
+    public List<ParamNameVO> getParamNameVOS() {
+        return paramNameVOS;
     }
 
-    public String getAssetTypeName() {
-        return assetTypeName;
-    }
-
-    public void setAssetTypeName(String assetTypeName) {
-        this.assetTypeName = assetTypeName;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getInstCodeSrch() {
-        return instCodeSrch;
-    }
-
-    public void setInstCodeSrch(String instCodeSrch) {
-        this.instCodeSrch = instCodeSrch;
-    }
-
-    public String getAssetTypeSrch() {
-        return assetTypeSrch;
-    }
-
-    public void setAssetTypeSrch(String assetTypeSrch) {
-        this.assetTypeSrch = assetTypeSrch;
-    }
-
-    public String getBorrowCdSrch() {
-        return borrowCdSrch;
-    }
-
-    public void setBorrowCdSrch(String borrowCdSrch) {
-        this.borrowCdSrch = borrowCdSrch;
-    }
-
-    public String getStatusSrch() {
-        return statusSrch;
-    }
-
-    public void setStatusSrch(String statusSrch) {
-        this.statusSrch = statusSrch;
+    public void setParamNameVOS(List<ParamNameVO> paramNameVOS) {
+        this.paramNameVOS = paramNameVOS;
     }
 }

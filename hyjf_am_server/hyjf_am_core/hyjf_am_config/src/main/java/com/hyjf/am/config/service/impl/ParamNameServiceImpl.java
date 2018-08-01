@@ -38,7 +38,13 @@ public class ParamNameServiceImpl implements ParamNameService {
         example.setOrderByClause(" sort ASC ");
         return paramNameMapper.selectByExample(example);
     }
-
+    @Override
+    public List<ParamName> getNameCd(String code){
+        ParamNameExample example = new ParamNameExample();
+        ParamNameExample.Criteria cra = example.createCriteria();
+        cra.andNameClassEqualTo(code);
+        return paramNameMapper.selectByExample(example);
+    }
     /**
      *（条件）列表查询--其他相关字段
      * @return

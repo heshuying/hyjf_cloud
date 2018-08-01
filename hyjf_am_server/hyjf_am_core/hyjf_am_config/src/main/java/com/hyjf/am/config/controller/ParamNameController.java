@@ -28,6 +28,13 @@ public class ParamNameController extends BaseConfigController {
         return paramNameService.getParamNameList(code);
     }
     /**
+     * @return
+     */
+    @RequestMapping("/getNameCd/{code}")
+    public List<ParamName> getNameCd(@PathVariable String code){
+        return paramNameService.getNameCd(code);
+    }
+    /**
      * （条件）列表查询--其他相关字段
      * @return
      */
