@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper">
-	<resultMap id="selectCouponUserMap" type="com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.xml.customize.coupon.CouponUserCustomizeMapper">
+	<resultMap id="selectCouponUserMap" type="com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper">
 		<result column="id" property="id" />
 	    <result column="coupon_code" property="couponCode" />
 	    <result column="coupon_user_code" property="couponUserCode" />
@@ -200,12 +200,12 @@
 			'项目期限不限'
 		END project_expiration_type
 		FROM
-			hyjf_coupon_user cu
-		LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id 
-		LEFT JOIN huiyingdai_users_info ui ON ui.user_id = u.user_id
-		JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
-		LEFT JOIN huiyingdai_activity_list al ON cu.activity_id = al.id
-		LEFT JOIN hyjf_vip_info vi ON ui.vip_id = vi.id
+			ht_coupon_user cu
+		LEFT JOIN ht_user u ON cu.user_id = u.user_id
+		LEFT JOIN ht_user_info ui ON ui.user_id = u.user_id
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		LEFT JOIN ht_activity_list al ON cu.activity_id = al.id
+		LEFT JOIN ht_vip_info vi ON ui.vip_id = vi.id
 		<include refid="Where_Clause" />
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >
@@ -218,228 +218,228 @@
 			count(cu.id)
 		FROM
 			ht_coupon_user cu
-		LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		LEFT JOIN ht_user u ON cu.user_id = u.user_id
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
 		<include refid="Where_Clause" />
 	</select>
 
-	<resultMap id="selectCouponUserMapForApp" type="com.hyjf.am.trade.dao.model.customize.trade.CouponUserForAppCustomize">
-		<result column="id" property="id" />
-	    <result column="coupon_type" property="couponType" />
-	    <result column="coupon_type_origin" property="couponTypeOrigin" />
-	    <result column="coupon_name" property="couponName" />
-	    <result column="coupon_quota" property="couponQuota" />
-	    <result column="coupon_quota_origin" property="couponQuotaOrigin" />
-	    <result column="end_time" property="endTime" />
-	    <result column="time" property="time" />
-	    <result column="tender_quota" property="tenderQuota" />
-	    <result column="detail_url" property="detailUrl" />
-	    <result column="coupon_status" property="couponStatus" />
-	    <result column="project_type" property="projectType" />
-	    <result column="coupon_system" property="operationPlatform" />
-	    <result column="tender_quota_origin" property="tenderQuotaOrigin" />
-	    <result column="project_expiration_length" property="projectExpirationLength" />
-	    <result column="tender_quota_min" property="tenderQuotaMin" />
-	    <result column="tender_quota_max" property="tenderQuotaMax" />
-	    <result column="tender_quota_value" property="tenderQuotaValue" />
-	    <result column="project_expiration_type" property="projectExpirationType" />
-	    <result column="project_expiration_length_max" property="projectExpirationLengthMax" />
-	    <result column="project_expiration_length_min" property="projectExpirationLengthMin" />
-	    <result column="tender_quota_type" property="tenderQuotaType" />
-	</resultMap>
+	<!--<resultMap id="selectCouponUserMapForApp" type="com.hyjf.am.trade.dao.model.customize.trade.CouponUserForAppCustomize">-->
+		<!--<result column="id" property="id" />-->
+	    <!--<result column="coupon_type" property="couponType" />-->
+	    <!--<result column="coupon_type_origin" property="couponTypeOrigin" />-->
+	    <!--<result column="coupon_name" property="couponName" />-->
+	    <!--<result column="coupon_quota" property="couponQuota" />-->
+	    <!--<result column="coupon_quota_origin" property="couponQuotaOrigin" />-->
+	    <!--<result column="end_time" property="endTime" />-->
+	    <!--<result column="time" property="time" />-->
+	    <!--<result column="tender_quota" property="tenderQuota" />-->
+	    <!--<result column="detail_url" property="detailUrl" />-->
+	    <!--<result column="coupon_status" property="couponStatus" />-->
+	    <!--<result column="project_type" property="projectType" />-->
+	    <!--<result column="coupon_system" property="operationPlatform" />-->
+	    <!--<result column="tender_quota_origin" property="tenderQuotaOrigin" />-->
+	    <!--<result column="project_expiration_length" property="projectExpirationLength" />-->
+	    <!--<result column="tender_quota_min" property="tenderQuotaMin" />-->
+	    <!--<result column="tender_quota_max" property="tenderQuotaMax" />-->
+	    <!--<result column="tender_quota_value" property="tenderQuotaValue" />-->
+	    <!--<result column="project_expiration_type" property="projectExpirationType" />-->
+	    <!--<result column="project_expiration_length_max" property="projectExpirationLengthMax" />-->
+	    <!--<result column="project_expiration_length_min" property="projectExpirationLengthMin" />-->
+	    <!--<result column="tender_quota_type" property="tenderQuotaType" />-->
+	<!--</resultMap>-->
 
-	<select id="selectCouponUserListForApp" resultMap="selectCouponUserMapForApp" parameterType="java.util.Map">
-		SELECT
-			cu.id,cc.coupon_name,CASE cc.coupon_type WHEN 1 THEN '体验金' WHEN 2 THEN '加息券' WHEN 3 THEN '代金券' ELSE '' END AS coupon_type, cc.coupon_type AS coupon_type_origin,
-			CASE cc.coupon_type WHEN 2 THEN CONCAT(cc.coupon_quota,'%')  ELSE FORMAT(cc.coupon_quota, 0) END AS coupon_quota,cc.coupon_quota AS coupon_quota_origin,
-			CONCAT(FROM_UNIXTIME(cu.add_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS end_time, cc.project_type as project_type,cc.coupon_system as coupon_system,
-			cc.tender_quota as tender_quota_origin,cc.project_expiration_length as project_expiration_length,cc.tender_quota_min as tender_quota_min,cc.tender_quota_max as tender_quota_max,
-			cc.project_expiration_type as project_expiration_type,cc.project_expiration_length_min as project_expiration_length_min,
-			cc.project_expiration_length_max as project_expiration_length_max,cc.tender_quota_type as tender_quota_type,
-			CONCAT(FROM_UNIXTIME(cu.add_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS time,
-			CASE
-			WHEN cc.tender_quota_type = 0 THEN
-				'金额不限'
-			WHEN cc.tender_quota_type = 1 THEN
-				CONCAT(
-					cc.tender_quota_min,
-					'元~',
-					cc.tender_quota_max,
-					'元可用'
-				)
-			WHEN cc.tender_quota_type = 2 THEN
-				CONCAT(
-					'满',
-					cc.tender_quota,
-					'元可用'
-				)
-			WHEN cc.tender_quota_type = 3 THEN
-				CONCAT(
-					cc.tender_quota,
-					'元（含）内可用'
-				)
-			ELSE
-				'不限'
-			END tender_quota,
-			cc.tender_quota as tender_quota_value,
-			CONCAT(#{host},REPLACE('<![CDATA[&id=]]>',' ', ''),cu.id) AS detail_url,
-			#{usedFlag} AS coupon_status
-		FROM
-		    ht_coupon_user cu
-		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
-		<include refid="Where_Clause" />
-		 ORDER BY cu.end_time ,cu.add_time, cu.coupon_code
-		<if test="limitStart >= 0" >
-	      LIMIT #{limitStart} , #{limitEnd}
-	    </if>
-	</select>
-    <select id="countCouponUserForApp" resultType="java.lang.Integer" parameterType="java.util.Map">
-	    SELECT
-			count(1)
-		FROM
-		    ht_coupon_user cu
-		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
-		<include refid="Where_Clause" />
-	</select>
+	<!--<select id="selectCouponUserListForApp" resultMap="selectCouponUserMapForApp" parameterType="java.util.Map">-->
+		<!--SELECT-->
+			<!--cu.id,cc.coupon_name,CASE cc.coupon_type WHEN 1 THEN '体验金' WHEN 2 THEN '加息券' WHEN 3 THEN '代金券' ELSE '' END AS coupon_type, cc.coupon_type AS coupon_type_origin,-->
+			<!--CASE cc.coupon_type WHEN 2 THEN CONCAT(cc.coupon_quota,'%')  ELSE FORMAT(cc.coupon_quota, 0) END AS coupon_quota,cc.coupon_quota AS coupon_quota_origin,-->
+			<!--CONCAT(FROM_UNIXTIME(cu.add_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS end_time, cc.project_type as project_type,cc.coupon_system as coupon_system,-->
+			<!--cc.tender_quota as tender_quota_origin,cc.project_expiration_length as project_expiration_length,cc.tender_quota_min as tender_quota_min,cc.tender_quota_max as tender_quota_max,-->
+			<!--cc.project_expiration_type as project_expiration_type,cc.project_expiration_length_min as project_expiration_length_min,-->
+			<!--cc.project_expiration_length_max as project_expiration_length_max,cc.tender_quota_type as tender_quota_type,-->
+			<!--CONCAT(FROM_UNIXTIME(cu.add_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS time,-->
+			<!--CASE-->
+			<!--WHEN cc.tender_quota_type = 0 THEN-->
+				<!--'金额不限'-->
+			<!--WHEN cc.tender_quota_type = 1 THEN-->
+				<!--CONCAT(-->
+					<!--cc.tender_quota_min,-->
+					<!--'元~',-->
+					<!--cc.tender_quota_max,-->
+					<!--'元可用'-->
+				<!--)-->
+			<!--WHEN cc.tender_quota_type = 2 THEN-->
+				<!--CONCAT(-->
+					<!--'满',-->
+					<!--cc.tender_quota,-->
+					<!--'元可用'-->
+				<!--)-->
+			<!--WHEN cc.tender_quota_type = 3 THEN-->
+				<!--CONCAT(-->
+					<!--cc.tender_quota,-->
+					<!--'元（含）内可用'-->
+				<!--)-->
+			<!--ELSE-->
+				<!--'不限'-->
+			<!--END tender_quota,-->
+			<!--cc.tender_quota as tender_quota_value,-->
+			<!--CONCAT(#{host},REPLACE('<![CDATA[&id=]]>',' ', ''),cu.id) AS detail_url,-->
+			<!--#{usedFlag} AS coupon_status-->
+		<!--FROM-->
+		    <!--ht_coupon_user cu-->
+		    <!--JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
+		    <!--LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id-->
+		    <!--LEFT join huiyingdai_activity_list al on cu.activity_id = al.id-->
+		<!--<include refid="Where_Clause" />-->
+		 <!--ORDER BY cu.end_time ,cu.add_time, cu.coupon_code-->
+		<!--<if test="limitStart >= 0" >-->
+	      <!--LIMIT #{limitStart} , #{limitEnd}-->
+	    <!--</if>-->
+	<!--</select>-->
+    <!--<select id="countCouponUserForApp" resultType="java.lang.Integer" parameterType="java.util.Map">-->
+	    <!--SELECT-->
+			<!--count(1)-->
+		<!--FROM-->
+		    <!--ht_coupon_user cu-->
+		    <!--JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
+		    <!--LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id-->
+		    <!--LEFT join huiyingdai_activity_list al on cu.activity_id = al.id-->
+		<!--<include refid="Where_Clause" />-->
+	<!--</select>-->
 
-	<select id="countCouponValid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-	    SELECT
-			count(1)
-		FROM
-		    ht_coupon_user cu
-		WHERE
-		    cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0
-	</select>
+	<!--<select id="countCouponValid" resultType="java.lang.Integer" parameterType="java.lang.Integer">-->
+	    <!--SELECT-->
+			<!--count(1)-->
+		<!--FROM-->
+		    <!--ht_coupon_user cu-->
+		<!--WHERE-->
+		    <!--cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0-->
+	<!--</select>-->
+	<!---->
+	<!--<select id="selectLatestCouponValidList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">-->
+	    <!--SELECT-->
+			<!--id, coupon_code, user_id, activity_id, used_flag, end_time, content, audit_content, -->
+		    <!--delete_content, audit_user, audit_time, create_time, create_user_id, update_time, update_user_id,-->
+		    <!--del_flag-->
+		<!--FROM-->
+		    <!--ht_coupon_user cu-->
+		<!--WHERE-->
+		    <!--cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0-->
+		<!--ORDER BY cu.add_time desc-->
+	<!--</select>-->
+	<!---->
+	<!--<select id="selectLatestCouponValidUNReadList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">-->
+	    <!--SELECT-->
+			<!--id, coupon_code, user_id, activity_id, used_flag, end_time, content, audit_content, -->
+		    <!--delete_content, audit_user, audit_time, create_time, create_user_id, update_time, update_user_id,-->
+		    <!--del_flag-->
+		<!--FROM-->
+		    <!--ht_coupon_user cu-->
+		<!--WHERE-->
+		    <!--cu.user_id = #{userId} AND cu.used_flag = 0 AND (cu.read_flag = 0 OR cu.read_flag IS NULL) AND cu.del_flag = 0-->
+		<!--ORDER BY cu.create_time desc-->
+	<!--</select>-->
+	<!---->
+	<!---->
+	<!--<select id="getCouponUsedCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">-->
+	    <!--SELECT-->
+			<!--COUNT(1)-->
+		<!--FROM-->
+			<!--hyjf_coupon_config c LEFT JOIN ht_coupon_user u ON c.coupon_code = u.coupon_code-->
+		<!--WHERE-->
+			<!--c.id = #{couponId}-->
+			<!--AND u.del_flag=0-->
+	<!--</select>-->
 	
-	<select id="selectLatestCouponValidList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">
-	    SELECT
-			id, coupon_code, user_id, activity_id, used_flag, end_time, content, audit_content, 
-		    delete_content, audit_user, audit_time, create_time, create_user_id, update_time, update_user_id,
-		    del_flag
-		FROM
-		    ht_coupon_user cu
-		WHERE
-		    cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0
-		ORDER BY cu.add_time desc
-	</select>
-	
-	<select id="selectLatestCouponValidUNReadList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">
-	    SELECT
-			id, coupon_code, user_id, activity_id, used_flag, end_time, content, audit_content, 
-		    delete_content, audit_user, audit_time, create_time, create_user_id, update_time, update_user_id,
-		    del_flag
-		FROM
-		    ht_coupon_user cu
-		WHERE
-		    cu.user_id = #{userId} AND cu.used_flag = 0 AND (cu.read_flag = 0 OR cu.read_flag IS NULL) AND cu.del_flag = 0
-		ORDER BY cu.create_time desc
-	</select>
-	
-	
-	<select id="getCouponUsedCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
-	    SELECT
-			COUNT(1)
-		FROM
-			hyjf_coupon_config c LEFT JOIN ht_coupon_user u ON c.coupon_code = u.coupon_code
-		WHERE
-			c.id = #{couponId}
-			AND u.del_flag=0
-	</select>
-	
-	<resultMap id="couponConfigCustomize2" type="com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomizeV2">
-	    <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
-	    <result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
-	    <result column="coupon_type" property="couponType" jdbcType="INTEGER" />
-	    <result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />
-	    <result column="coupon_system" property="couponSystem" jdbcType="INTEGER" />
-	    <result column="project_expiration_type" property="projectExpirationType" jdbcType="INTEGER" />
-	    <result column="project_expiration_length" property="projectExpirationLength" jdbcType="INTEGER" />
-	    <result column="project_expiration_length_min" property="projectExpirationLengthMin" jdbcType="INTEGER" />
-	    <result column="project_expiration_length_max" property="projectExpirationLengthMax" jdbcType="INTEGER" />
-	    <result column="project_type" property="projectType" jdbcType="VARCHAR" />
-	    <result column="tender_quota_type" property="tenderQuotaType" jdbcType="INTEGER" />
-	    <result column="tender_quota" property="tenderQuota" jdbcType="INTEGER" />
-	    <result column="tender_quota_min" property="tenderQuotaMin" jdbcType="INTEGER" />
-	    <result column="tender_quota_max" property="tenderQuotaMax" jdbcType="INTEGER" />
-	    <result column="end_time" property="endTime" jdbcType="INTEGER" />
-	    <result column="used_flag" property="usedFlag" jdbcType="INTEGER" />
-	    <result column="update_time" property="userUpdateTime" jdbcType="INTEGER" />
-	    <result column="add_flg" property="addFlg" jdbcType="INTEGER" />
-    	<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
-	    <result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />
-	    <result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />
-	</resultMap>
-	<select id="selectCouponConfigByGrantId" resultMap="couponConfigCustomize2" parameterType="java.util.Map">
-	    SELECT
-			cc.coupon_code,
-			cc.coupon_type,
-			cc.coupon_system,
-			cc.coupon_quota,
-			cc.project_expiration_type,
-			cc.project_expiration_length,
-			cc.project_expiration_length_min,
-			cc.project_expiration_length_max,
-			cc.project_type,
-			cc.tender_quota_type,
-			cc.tender_quota,
-			cc.tender_quota_min,
-			cc.tender_quota_max,
-			cu.coupon_user_code,
-			cu.end_time,
-			cu.used_flag,
-			cu.update_time,
-			cc.add_flg add_flg,
-			cc.coupon_profit_time coupon_profit_time,
-			cc.repay_time_config repayTimeConfig,
-			cc.coupon_profit_time couponProfitTime
-		FROM
-			ht_coupon_user cu
-		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		WHERE
-			cu.id = #{couponGrantId}
-		AND cu.user_id=#{userId}
-		AND cu.del_flag = 0
-		AND cc.del_flg = 0
-	</select>
-	
-	
-	<select id="selectCouponConfigByNid" resultMap="couponConfigCustomize2" parameterType="java.util.Map">
-	    SELECT
-			cc.coupon_code,
-			cc.coupon_type,
-			cc.coupon_system,
-			cc.coupon_quota,
-			cc.project_expiration_type,
-			cc.project_expiration_length,
-			cc.project_expiration_length_min,
-			cc.project_expiration_length_max,
-			cc.project_type,
-			cc.tender_quota_type,
-			cc.tender_quota,
-			cc.tender_quota_min,
-			cc.tender_quota_max,
-			cu.coupon_user_code,
-			cu.end_time,
-			cu.used_flag,
-			cu.update_time,
-			cc.add_flg add_flg,
-			cc.coupon_profit_time coupon_profit_time,
-			cc.repay_time_config repayTimeConfig,
-			cc.coupon_profit_time couponProfitTime
-		FROM
-			hyjf_borrow_tender_cpn cpn
-		INNER JOIN hyjf_coupon_tender hct ON cpn.nid = hct.order_id
-		INNER JOIN ht_coupon_user cu ON hct.coupon_grant_id = cu.id
-		INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		WHERE
-			cpn.nid = #{nid}
-		AND cu.del_flag = 0
-		AND cc.del_flg = 0
-	</select>
+	<!--<resultMap id="couponConfigCustomize2" type="com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomizeV2">-->
+	    <!--<result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />-->
+	    <!--<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />-->
+	    <!--<result column="coupon_type" property="couponType" jdbcType="INTEGER" />-->
+	    <!--<result column="coupon_quota" property="couponQuota" jdbcType="DECIMAL" />-->
+	    <!--<result column="coupon_system" property="couponSystem" jdbcType="INTEGER" />-->
+	    <!--<result column="project_expiration_type" property="projectExpirationType" jdbcType="INTEGER" />-->
+	    <!--<result column="project_expiration_length" property="projectExpirationLength" jdbcType="INTEGER" />-->
+	    <!--<result column="project_expiration_length_min" property="projectExpirationLengthMin" jdbcType="INTEGER" />-->
+	    <!--<result column="project_expiration_length_max" property="projectExpirationLengthMax" jdbcType="INTEGER" />-->
+	    <!--<result column="project_type" property="projectType" jdbcType="VARCHAR" />-->
+	    <!--<result column="tender_quota_type" property="tenderQuotaType" jdbcType="INTEGER" />-->
+	    <!--<result column="tender_quota" property="tenderQuota" jdbcType="INTEGER" />-->
+	    <!--<result column="tender_quota_min" property="tenderQuotaMin" jdbcType="INTEGER" />-->
+	    <!--<result column="tender_quota_max" property="tenderQuotaMax" jdbcType="INTEGER" />-->
+	    <!--<result column="end_time" property="endTime" jdbcType="INTEGER" />-->
+	    <!--<result column="used_flag" property="usedFlag" jdbcType="INTEGER" />-->
+	    <!--<result column="update_time" property="userUpdateTime" jdbcType="INTEGER" />-->
+	    <!--<result column="add_flg" property="addFlg" jdbcType="INTEGER" />-->
+    	<!--<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />-->
+	    <!--<result column="repay_time_config" property="repayTimeConfig" jdbcType="INTEGER" />-->
+	    <!--<result column="coupon_profit_time" property="couponProfitTime" jdbcType="INTEGER" />-->
+	<!--</resultMap>-->
+	<!--<select id="selectCouponConfigByGrantId" resultMap="couponConfigCustomize2" parameterType="java.util.Map">-->
+	    <!--SELECT-->
+			<!--cc.coupon_code,-->
+			<!--cc.coupon_type,-->
+			<!--cc.coupon_system,-->
+			<!--cc.coupon_quota,-->
+			<!--cc.project_expiration_type,-->
+			<!--cc.project_expiration_length,-->
+			<!--cc.project_expiration_length_min,-->
+			<!--cc.project_expiration_length_max,-->
+			<!--cc.project_type,-->
+			<!--cc.tender_quota_type,-->
+			<!--cc.tender_quota,-->
+			<!--cc.tender_quota_min,-->
+			<!--cc.tender_quota_max,-->
+			<!--cu.coupon_user_code,-->
+			<!--cu.end_time,-->
+			<!--cu.used_flag,-->
+			<!--cu.update_time,-->
+			<!--cc.add_flg add_flg,-->
+			<!--cc.coupon_profit_time coupon_profit_time,-->
+			<!--cc.repay_time_config repayTimeConfig,-->
+			<!--cc.coupon_profit_time couponProfitTime-->
+		<!--FROM-->
+			<!--ht_coupon_user cu-->
+		<!--INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
+		<!--WHERE-->
+			<!--cu.id = #{couponGrantId}-->
+		<!--AND cu.user_id=#{userId}-->
+		<!--AND cu.del_flag = 0-->
+		<!--AND cc.del_flg = 0-->
+	<!--</select>-->
+	<!---->
+	<!---->
+	<!--<select id="selectCouponConfigByNid" resultMap="couponConfigCustomize2" parameterType="java.util.Map">-->
+	    <!--SELECT-->
+			<!--cc.coupon_code,-->
+			<!--cc.coupon_type,-->
+			<!--cc.coupon_system,-->
+			<!--cc.coupon_quota,-->
+			<!--cc.project_expiration_type,-->
+			<!--cc.project_expiration_length,-->
+			<!--cc.project_expiration_length_min,-->
+			<!--cc.project_expiration_length_max,-->
+			<!--cc.project_type,-->
+			<!--cc.tender_quota_type,-->
+			<!--cc.tender_quota,-->
+			<!--cc.tender_quota_min,-->
+			<!--cc.tender_quota_max,-->
+			<!--cu.coupon_user_code,-->
+			<!--cu.end_time,-->
+			<!--cu.used_flag,-->
+			<!--cu.update_time,-->
+			<!--cc.add_flg add_flg,-->
+			<!--cc.coupon_profit_time coupon_profit_time,-->
+			<!--cc.repay_time_config repayTimeConfig,-->
+			<!--cc.coupon_profit_time couponProfitTime-->
+		<!--FROM-->
+			<!--hyjf_borrow_tender_cpn cpn-->
+		<!--INNER JOIN hyjf_coupon_tender hct ON cpn.nid = hct.order_id-->
+		<!--INNER JOIN ht_coupon_user cu ON hct.coupon_grant_id = cu.id-->
+		<!--INNER JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code-->
+		<!--WHERE-->
+			<!--cpn.nid = #{nid}-->
+		<!--AND cu.del_flag = 0-->
+		<!--AND cc.del_flg = 0-->
+	<!--</select>-->
 	
 	
 </mapper>
