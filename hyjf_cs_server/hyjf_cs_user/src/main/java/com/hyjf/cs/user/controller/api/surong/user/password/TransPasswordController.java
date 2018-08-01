@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version TransPasswordController.java, v0.1 2018年7月19日 上午9:17:39
  */
-@Api(value = "融东风密码设置接口")
+@Api(value = "融东风密码设置接口",tags = "融东风密码设置接口")
 @Controller
 @RequestMapping("hyjf-api/surong/user/transpassword")
 public class TransPasswordController extends BaseUserController{
