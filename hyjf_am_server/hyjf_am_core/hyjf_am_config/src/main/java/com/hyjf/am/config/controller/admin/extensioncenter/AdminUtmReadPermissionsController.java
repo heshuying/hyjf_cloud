@@ -37,7 +37,7 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	 * @return
 	 */
 
-	@ApiOperation(value = "渠道帐号管理", notes = "渠道帐号管理列表")
+	@ApiOperation(value = "渠道帐号管理列表", notes = "渠道帐号管理列表")
 	@PostMapping("/searchaction")
 	public AdminUtmReadPermissionsResponse searchAction(@RequestBody AdminUtmReadPermissionsRequest request) {
 		logger.info("渠道帐号管理查询开始......");
@@ -51,7 +51,7 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "渠道帐号管理", notes = "渠道帐号管理插入")
+	@ApiOperation(value = "渠道帐号管理插入", notes = "渠道帐号管理插入")
 	@PostMapping("/insert")
 	public AdminUtmReadPermissionsResponse insertAction(@RequestBody AdminUtmReadPermissionsRequest request) {
 		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
@@ -66,7 +66,7 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "渠道帐号管理", notes = "渠道帐号管理更新")
+	@ApiOperation(value = "渠道帐号管理更新", notes = "渠道帐号管理更新")
 	@PostMapping("/update")
 	public AdminUtmReadPermissionsResponse updateAction(@RequestBody AdminUtmReadPermissionsRequest request) {
 		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
@@ -82,7 +82,7 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	 * @param id
 	 * @return
 	 */
-	@ApiOperation(value = "渠道帐号管理", notes = "渠道帐号管理删除")
+	@ApiOperation(value = "渠道帐号管理删除", notes = "渠道帐号管理删除")
 	@RequestMapping("/delete/{id}")
 	public AdminUtmReadPermissionsResponse delete(@PathVariable Integer id) {
 		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
@@ -99,7 +99,7 @@ public class AdminUtmReadPermissionsController extends BaseConfigController {
 	 * @Param userId
 	 * @return
 	 */
-	@ApiOperation(value = "渠道帐号管理", notes = "根据用户Id查询渠道账号管理")
+	@ApiOperation(value = "根据用户Id查询渠道账号管理", notes = "根据用户Id查询渠道账号管理")
 	@RequestMapping("/getadminutmreadpermissions/{userId}")
 	public AdminUtmReadPermissionsResponse selectAdminUtmReadPermissions(@PathVariable Integer userId) {
 		AdminUtmReadPermissionsResponse response = new AdminUtmReadPermissionsResponse();
