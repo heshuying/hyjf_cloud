@@ -6,6 +6,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -75,6 +76,7 @@ public class WebRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/page")
+	@RequestLimit(seconds=3)
 	public WebResult<Object> recharge(@RequestHeader(value = "token") String token,HttpServletRequest request,@RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
