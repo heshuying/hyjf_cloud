@@ -337,7 +337,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setLogRemark("充值页面");
 		bean.setLogClient(Integer.parseInt(rechargeBean.getPlatform()));
 		// 充值成功后跳转的url
-		bean.setSuccessfulUrl(bean.getSuccessfulUrl()+"&isSuccess=1");
+		bean.setSuccessfulUrl(rechargeBean.getSuccessfulUrl()+"&isSuccess=1");
 		// 页面调用必须传的
 		bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_DIRECT_RECHARGE_PAGE);
 		// 插入充值记录
