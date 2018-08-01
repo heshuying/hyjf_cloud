@@ -52,7 +52,7 @@ public class UserWithdrawController extends BaseUserController {
         try {
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            ret.put("request", UserWithdrawDefine.GET_BANKCARD_REQUEST);
+            ret.put("request","/hyjf-app/bank/user/withdraw/getBankCardAction");
             // 取得用户iD
             Integer userId = SecretUtil.getUserId(sign);
             // 取得银行卡信息
@@ -107,7 +107,7 @@ public class UserWithdrawController extends BaseUserController {
         // getcash 提现金额
         String getcash = request.getParameter("getcash");
         // 提现规则静态页面的url
-        ret.put("url", systemConfig.getAppHost() + request.getContextPath() + UserWithdrawDefine.REQUEST_MAPPING + ClientConstants.GET_WITHDRAW_RULE_MAPPING);
+        ret.put("url", systemConfig.getAppHost() + request.getContextPath() + "/hyjf-app/user/withdraw" + ClientConstants.GET_WITHDRAW_RULE_MAPPING);
         ret =  userWithdrawService.getCashInfo(userId,ret,version,bankCode,getcash);
         return ret;
     }

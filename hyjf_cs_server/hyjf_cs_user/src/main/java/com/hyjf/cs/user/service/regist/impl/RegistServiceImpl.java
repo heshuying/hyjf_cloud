@@ -24,10 +24,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -44,6 +41,8 @@ import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.soa.apiweb.CommonParamBean;
+import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +53,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -501,6 +501,44 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         request.setUtm_source(utm_source);
         return amUserClient.insertUserActionUtm(request);
     }
+
+    /**
+     * 登录操作
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateLoginInAction(String userName, String password, String ipAddr) {
+        String codeSalt = "";
+        String passwordDb = "";
+        Integer userId = null;
+
+        UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
+
+        if (userVO == null) {
+            return -1;
+        } else {
+            userId = userVO.getUserId();
+            codeSalt = userVO.getSalt();
+            passwordDb = userVO.getPassword();
+            if (userVO.getStatus() == 1) {
+                return -4;
+            }
+        }
+
+        // 验证用的password
+        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+        // 密码正确时
+        if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
+            // 更新登录信息
+            amUserClient.updateLoginUser(userId,ipAddr);
+            return userId;
+        } else {
+            return -3;
+        }
+    }
+
     /**
      * 注册保存账户表
      *
