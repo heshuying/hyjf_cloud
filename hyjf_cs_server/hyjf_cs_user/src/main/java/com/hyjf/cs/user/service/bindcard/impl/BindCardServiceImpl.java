@@ -11,7 +11,6 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -223,9 +222,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public Map<String,Object> callBankBindCardPage(WebViewUserVO user, String userIp, String urlstatus) throws Exception {
         // 回调路径
-        String retUrl = systemConfig.getFrontHost().trim();
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
         // 交易成功跳转链接
-        String successfulUrl = systemConfig.getFrontHost().trim();
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
 		// 商户后台应答地址(必须)
 		String notifyUrl = systemConfig.getWebHost().trim() + "/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
