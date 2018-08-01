@@ -23,7 +23,7 @@ import java.util.List;
  * @Date: 2018/7/20 15:08
  * @Description: CategoryController
  */
-@Api(value = "admin内容中心-帮助中心" ,description ="内容中心-帮助中心")
+@Api(value = "admin内容中心-帮助中心" ,tags ="内容中心-帮助中心")
 @RestController
 @RequestMapping("/hyjf-admin/content/help")
 public class CategoryController extends BaseController {
