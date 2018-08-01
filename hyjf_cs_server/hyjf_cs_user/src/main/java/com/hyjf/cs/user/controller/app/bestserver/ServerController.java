@@ -31,7 +31,7 @@ import java.util.Date;
  * @version ServerController, v0.1 2018/4/25 19:21
  */
 @RestController
-@Api(description = "app端-最优服务器")
+@Api(tags = "app端-最优服务器")
 @RequestMapping("/hyjf-app/server")
 public class ServerController extends BaseUserController {
 	private Logger logger = LoggerFactory.getLogger(ServerController.class);

@@ -95,8 +95,6 @@ public class WithdrawController extends BaseController {
                 ret.put("total", moneyFormat.format(account.getBankBalance()));// 可提现金额
             }
         }
-        // 银行类型
-        String bankType = "";
         // 银联行号
         String openBankCode = "";
         // 路由代码
@@ -112,7 +110,6 @@ public class WithdrawController extends BaseController {
                 BankCardVO bankCard = banks.get(j);
                 BankCardBean bankCardBean = new BankCardBean();
                 openBankCode = bankCard.getPayAllianceCode();// 银联行号
-                bankType = String.valueOf(bankCard.getBankId()); // 银行类型
                 bankCardBean.setIsDefault("2");// 快捷卡
                 bankCardBean.setBankCode(bankCard.getBank());// 银行代号?需要工具类
                 bankCardBean.setBank(bankCard.getBank());// 银行名称

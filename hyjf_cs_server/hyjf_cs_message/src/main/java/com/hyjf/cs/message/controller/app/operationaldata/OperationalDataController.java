@@ -9,6 +9,8 @@ import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.mongo.mc.OperationMongDao;
 import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +30,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author xiasq
- * @version OperationalDataController, v0.1 2018/1/16 17:39
+ * @author tanyy
+ * @version OperationalDataController, v0.1 2018/8/6 17:39
  */
-
+@Api(value = "app运营数据",description ="app运营数据")
 @RestController
-@RequestMapping("/find/operationalData")
+@RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {
 	
 	private Logger _log = LoggerFactory.getLogger(OperationalDataController.class);
@@ -50,6 +52,7 @@ public class OperationalDataController {
 	 * 
 	 * @return
 	 */
+	@ApiOperation(value = "app运营数据第一页面接口数据获取", notes = "app运营数据第一页面接口数据获取")
 	@RequestMapping("/getPlatformRealTimeData")
 	@ResponseBody
 	public JSONObject getPlatformRealTimeData() {
@@ -122,6 +125,7 @@ public class OperationalDataController {
 	 * 
 	 * @return
 	 */
+	@ApiOperation(value = "app运营数据第二页面和第三页面数据统计", notes = "app运营数据第二页面和第三页面数据统计")
 	@RequestMapping("/getLoanInvestData")
 	@ResponseBody
 	public JSONObject getLoanInvestData() {
@@ -191,6 +195,7 @@ public class OperationalDataController {
 	 * 
 	 * @return
 	 */
+	@ApiOperation(value = "app运营数据第四页面数据统计", notes = "app运营数据第四页面数据统计")
 	@RequestMapping("/getInvestorRegionData")
 	@ResponseBody
 	public JSONObject getInvestorRegionData() {
@@ -223,6 +228,8 @@ public class OperationalDataController {
 	 * 
 	 * @return
 	 */
+
+	@ApiOperation(value = "app运营数据第五页面数据统计", notes = "app运营数据第五页面数据统计")
 	@RequestMapping("/getInvestorSexAgeData")
 	@ResponseBody
 	public JSONObject getSexAgeData() {

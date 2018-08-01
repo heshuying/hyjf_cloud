@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author wangc
  */
-@Api(value = "密码相关服务",description = "weChat端-密码相关服务")
+@Api(value = "密码相关服务",tags = "weChat端-密码相关服务")
 @RestController
 @RequestMapping("/hyjf-wechat")
 public class WeChatPassWordController {

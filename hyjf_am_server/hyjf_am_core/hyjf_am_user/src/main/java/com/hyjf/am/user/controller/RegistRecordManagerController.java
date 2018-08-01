@@ -5,15 +5,15 @@ package com.hyjf.am.user.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.model.customize.*;
+import com.hyjf.am.response.user.RegistRecordResponse;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 import com.hyjf.am.user.service.RegistRecordManagerService;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.RegistRecordVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -95,8 +95,16 @@ public class RegistRecordManagerController extends BaseController{
      */
     private Map<String, Object> paramSet(RegistRcordRequest userRequest) {
         Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("regTimeStart", userRequest.getRegTimeStart());
-        mapParam.put("regTimeEnd", userRequest.getRegTimeEnd());
+        String startDate="";
+        String endtDate="";
+        if(StringUtils.isNotBlank(userRequest.getRegTimeStart())){
+            startDate = userRequest.getRegTimeStart()+" 00:00:00";
+        }
+        if(StringUtils.isNotBlank(userRequest.getRegTimeStart())){
+            endtDate = userRequest.getRegTimeEnd()+" 23:59:59";
+        }
+        mapParam.put("regTimeStart",startDate );
+        mapParam.put("regTimeEnd", endtDate);
         mapParam.put("userName", userRequest.getUserName());
         mapParam.put("mobile", userRequest.getMobile());
         mapParam.put("recommendName", userRequest.getRecommendName());

@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
+import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
@@ -108,4 +109,12 @@ public interface CouponService {
      * @date 2018/7/31 13:52
      */
     List<CurrentHoldRepayMentPlanListVO> getCouponRecoverList(String nid);
+
+
+    /**
+     * 获取我的优惠券投资记录
+     * @author zhangyk
+     * @date 2018/8/1 14:30
+     */
+    List<AppCouponCustomizeVO> getAppMyPlanCouponInfo(Map<String,Object> params);
 }

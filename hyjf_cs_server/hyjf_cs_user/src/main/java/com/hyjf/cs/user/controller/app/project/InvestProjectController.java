@@ -10,15 +10,45 @@
  */
 package com.hyjf.cs.user.controller.app.project;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
-import com.hyjf.am.vo.app.*;
+import com.hyjf.am.vo.app.AppProjectContractDetailCustomizeVO;
+import com.hyjf.am.vo.app.AppProjectContractRecoverPlanCustomizeVO;
+import com.hyjf.am.vo.app.AppProjectDetailCustomizeVO;
+import com.hyjf.am.vo.app.AppRepayDetailCustomizeVO;
+import com.hyjf.am.vo.app.AppRepayListCustomizeVO;
+import com.hyjf.am.vo.app.AppRepayPlanListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditRepayPlanListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.assetmanage.*;
+import com.hyjf.am.vo.trade.assetmanage.AppAlreadyRepayListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.AppTenderCreditRecordListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
+import com.hyjf.am.vo.trade.assetmanage.MyProjectVo;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
@@ -35,25 +65,10 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.myproject.MyInvestProjectService;
+
 import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.*;
-
-@Api(value = "app端我的资产",description = "app端我的资产")
+@Api(value = "app端我的资产",tags = "app端我的资产")
 @Controller
 @RequestMapping(value = "/user/invest")
 public class InvestProjectController extends BaseUserController {

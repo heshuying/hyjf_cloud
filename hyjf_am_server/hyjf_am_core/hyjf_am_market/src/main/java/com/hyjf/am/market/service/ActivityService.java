@@ -84,4 +84,6 @@ public interface ActivityService {
      * @return
      */
     public List<ActivityList> getActivity(int day);
+
+    List<ActivityList> getActivityList();
 }

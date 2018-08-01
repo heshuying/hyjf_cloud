@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version EventController, v0.1 2018/7/11 17:20
  */
-@Api(value = "公司管理-公司记事", description = "公司管理-公司记事")
+@Api(value = "公司管理-公司记事", tags = "公司管理-公司记事")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentevent")
 public class EventController extends BaseController {

@@ -40,6 +40,19 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
+
+    @GetMapping("/getActivityList")
+    public ActivityListResponse getActivityList(){
+        ActivityListResponse response = new ActivityListResponse();
+        List<ActivityList> list=activityService.getActivityList();
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,ActivityListVO.class));
+        }
+        return response;
+    }
+
+
+
     @PostMapping("/selectActivityList")
     public ActivityListResponse selectActivityList(@RequestBody @Valid ActivityListRequest activityListRequest){
         ActivityListResponse response = new ActivityListResponse();

@@ -3,20 +3,21 @@
  */
 package com.hyjf.admin.controller.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
-import org.apache.commons.lang3.StringUtils;
+import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.GetDate;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,16 +25,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.service.ActivityListService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.GetDate;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
@@ -45,6 +42,9 @@ import io.swagger.annotations.ApiOperation;
 public class ActivityListController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ActivityListController.class);
 
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "activitylist";
+
     @Value("${http://cdn.huiyingdai.com/}")
     private String fileDomainUrl;
 
@@ -53,6 +53,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "页面初始化")
     @PostMapping("/activityListInit")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject activityListInit() {
         JSONObject jsonObject = new JSONObject();
         logger.info("上传文件url:{}", fileDomainUrl);
@@ -61,7 +62,9 @@ public class ActivityListController extends BaseController {
         return jsonObject;
     }
 
+    @ApiOperation(value = "活动列表",notes = "查询列表")
     @PostMapping("/activityRecordList")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<ActivityListVO>> selectActivityList(HttpServletRequest request, ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.getRecordList(activityListRequest);
         List<ActivityListVO> forBack = forBack(response);
@@ -122,6 +125,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "添加活动配置")
     @PostMapping("/insertAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertAction(@RequestBody ActivityListRequest request) {
         //1代表插入成功， 0为失败
         ActivityListResponse response = activityListService.insertRecord(request);
@@ -136,6 +140,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "获取活动修改初始信息")
     @RequestMapping("/initUpdateActivity/{id}")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<ActivityListVO> initUpdateActivity(@RequestParam Integer id) {
         ActivityListRequest activityListRequest = new ActivityListRequest();
         activityListRequest.setId(id);
@@ -152,6 +157,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "修改活动信息")
     @PostMapping("/updateAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateActivity(@RequestBody ActivityListRequest activityListRequest) {
         ActivityListResponse response = activityListService.updateActivity(activityListRequest);
         if (response == null) {
@@ -165,6 +171,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "资料上传")
     @PostMapping("/uploadFile")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject uploadFile(HttpServletRequest request, HttpServletResponse response) {
         JSONObject jsonObject = new JSONObject();
         String file = null;
@@ -180,6 +187,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动列表", notes = "删除配置信息")
     @RequestMapping("/deleteAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteRecordAction(@RequestParam int id) {
         ActivityListRequest request = new ActivityListRequest();
         request.setId(id);

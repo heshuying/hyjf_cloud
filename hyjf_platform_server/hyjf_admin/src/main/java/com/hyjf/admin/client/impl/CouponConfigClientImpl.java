@@ -127,6 +127,11 @@ public class CouponConfigClientImpl implements CouponConfigClient {
         return null;
     }
 
+    /**
+     * 根据优惠券编号查询
+     * @param cur
+     * @return
+     */
     @Override
     public CouponUserResponse getIssueNumber(CouponUserRequest cur) {
         String url = "http://AM-TRADE/am-trade/couponUser/getIssueNumber";

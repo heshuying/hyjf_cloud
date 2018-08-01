@@ -31,12 +31,10 @@ import java.util.Map;
  *
  * @author zhangyk
  */
-@Api(description = "APP端项目列表")
+@Api(tags = "APP端项目列表")
 @RestController
 @RequestMapping(ProjectConstant.APP_REQUEST_MAPPING)
 public class AppProjectListController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(AppProjectListController.class);
-
 
     @Autowired
     private AppProjectListService appProjectListService;
