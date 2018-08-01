@@ -27,6 +27,7 @@
 	    <result column="detail_url" property="detailUrl" />
 	    <result column="channel" property="channel" />
 	    <result column="attribute" property="attribute" />
+        <result column="activity_id" property="activityId"/>
 	</resultMap>
 	<sql id="Where_Clause">
 		<where>
@@ -194,7 +195,8 @@
 			)
 		ELSE
 			'项目期限不限'
-		END project_expiration_type
+		END project_expiration_type,
+        cu.activity_id
 		FROM
 			ht_coupon_user cu
 		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
@@ -279,9 +281,8 @@
 			#{usedFlag} AS coupon_status
 		FROM
 		    ht_coupon_user cu
-		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
+		    JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		    LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		<include refid="Where_Clause" />
 		 ORDER BY cu.end_time ,cu.add_time, cu.coupon_code
 		<if test="limitStart >= 0" >
@@ -295,7 +296,6 @@
 		    ht_coupon_user cu
 		    JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		    LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
-		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
 		<include refid="Where_Clause" />
 	</select>
 
