@@ -37,7 +37,7 @@ import java.util.List;
  * @author fuqiang
  * @version ProtocolsController, v0.1 2018/7/10 16:03
  */
-@Api(value = "协议管理", description = "协议管理")
+@Api(value = "协议管理", tags = "协议管理")
 @RestController
 @RequestMapping("/hyjf-admin/protocols")
 public class ProtocolsController extends BaseController {

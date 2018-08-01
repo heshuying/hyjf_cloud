@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version SmsLogController, v0.1 2018/6/23 15:09
  */
-@Api(value = "短信统计", description = "短信统计")
+@Api(value = "短信统计", tags = "短信统计")
 @RestController
 @RequestMapping("/hyjf-admin/message/smsLog")
 public class SmsLogController extends BaseController {

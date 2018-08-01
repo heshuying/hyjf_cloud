@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangqingqing
  * @version LoginController, v0.1 2018/6/11 14:33
  */
-@Api(value = "weChat端用户登录接口", description = "weChat端-用户登录接口")
+@Api(value = "weChat端用户登录接口", tags = "weChat端-用户登录接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/login")
 public class WeChatLoginController extends BaseUserController {

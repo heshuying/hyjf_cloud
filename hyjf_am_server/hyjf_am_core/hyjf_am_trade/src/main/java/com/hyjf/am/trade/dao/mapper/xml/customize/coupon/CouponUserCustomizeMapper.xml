@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.xml.customize.coupon.CouponUserCustomizeMapper">
 	<resultMap id="selectCouponUserMap" type="com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize">
 		<result column="id" property="id" />
 	    <result column="coupon_code" property="couponCode" />
@@ -201,11 +201,11 @@
 		END project_expiration_type
 		FROM
 			hyjf_coupon_user cu
-		LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id 
-		LEFT JOIN huiyingdai_users_info ui ON ui.user_id = u.user_id
-		JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
-		LEFT JOIN huiyingdai_activity_list al ON cu.activity_id = al.id
-		LEFT JOIN hyjf_vip_info vi ON ui.vip_id = vi.id
+		LEFT JOIN ht_user u ON cu.user_id = u.user_id
+		LEFT JOIN ht_user_info ui ON ui.user_id = u.user_id
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		LEFT JOIN ht_activity_list al ON cu.activity_id = al.id
+		LEFT JOIN ht_vip_info vi ON ui.vip_id = vi.id
 		<include refid="Where_Clause" />
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >
@@ -218,8 +218,8 @@
 			count(cu.id)
 		FROM
 			ht_coupon_user cu
-		LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		LEFT JOIN ht_user u ON cu.user_id = u.user_id
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
 		<include refid="Where_Clause" />
 	</select>
 

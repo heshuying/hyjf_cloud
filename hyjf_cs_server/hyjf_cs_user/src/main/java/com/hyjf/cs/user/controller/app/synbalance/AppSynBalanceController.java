@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: zhangqingqing
  * @version: SynBalanceController, v0.1 2018/7/30 13:46
  */
-@Api(value = "app端-同步余额",description = "app端-同步余额")
+@Api(value = "app端-同步余额",tags = "app端-同步余额")
 @RestController
 @RequestMapping("/hyjf-app/bank/user/synbalance")
 public class AppSynBalanceController extends BaseUserController {

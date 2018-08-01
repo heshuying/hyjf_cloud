@@ -26,7 +26,7 @@ import java.net.URLEncoder;
  * @author hesy
  * @version AppDeleteCardController, v0.1 2018/7/19 9:38
  */
-@Api(value = "app端-解绑银行卡",description = "app端-解绑银行卡")
+@Api(value = "app端-解绑银行卡",tags = "app端-解绑银行卡")
 @RestController
 @RequestMapping("/hyjf-app/bank/app/deleteCard")
 public class AppDeleteCardController extends BaseUserController {

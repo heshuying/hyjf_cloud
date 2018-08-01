@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentPartnerController, v0.1 2018/7/12 9:52
  */
-@Api(value = "公司管理-合作伙伴", description = "公司管理-合作伙伴")
+@Api(value = "公司管理-合作伙伴", tags = "公司管理-合作伙伴")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentpartner")
 public class ContentPartnerController extends BaseController {

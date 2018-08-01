@@ -43,7 +43,7 @@ import java.util.Map;
  * @author wangjun
  * @version BorrowInvestController, v0.1 2018/7/10 9:06
  */
-@Api(value = "汇直投-投资明细接口", description = "汇直投-投资明细接口")
+@Api(value = "汇直投-投资明细接口", tags = "汇直投-投资明细接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_invest")
 public class BorrowInvestController extends BaseController {

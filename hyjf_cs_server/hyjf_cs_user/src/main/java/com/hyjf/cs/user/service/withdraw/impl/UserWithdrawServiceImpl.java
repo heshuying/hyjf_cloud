@@ -17,7 +17,6 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.app.withdraw.UserWithdrawDefine;
 import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
@@ -242,7 +241,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
 
         ret.put("status", "0");
         ret.put("statusDesc", "成功");
-        ret.put("request", UserWithdrawDefine.REQUEST_HOME+UserWithdrawDefine.REQUEST_MAPPING+ ClientConstants.GET_WITHDRAW_INFO_MAPPING);
+        ret.put("request", "/hyjf-app/user/withdraw" + ClientConstants.GET_WITHDRAW_INFO_MAPPING);
         return ret;
     }
 }

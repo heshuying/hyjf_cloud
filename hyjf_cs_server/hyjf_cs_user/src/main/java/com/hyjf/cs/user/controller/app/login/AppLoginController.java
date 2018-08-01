@@ -27,8 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +37,7 @@ import java.io.File;
  * @version LoginController, v0.1 2018/6/11 14:43
  */
 
-@Api(value = "app端用户登录接口",description = "app端-用户登录接口")
+@Api(value = "app端用户登录接口",tags = "app端-用户登录接口")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppLoginController extends BaseUserController {
@@ -249,8 +247,8 @@ public class AppLoginController extends BaseUserController {
     /**
      * 上传头像 - 使用form-data提交方式的类似这个方法处理，网关有特殊处理
      *
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @param
      * @return
      */

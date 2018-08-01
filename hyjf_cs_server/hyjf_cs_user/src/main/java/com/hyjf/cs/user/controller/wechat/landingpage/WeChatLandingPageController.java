@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangjun
  * @version LandingPageController, v0.1 2018/7/30 11:58
  */
-@Api(value = "wechat端着陆页用户信息接口",description = "wechat端着陆页用户信息接口")
+@Api(value = "wechat端着陆页用户信息接口",tags = "wechat端着陆页用户信息接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/landingPage")
 public class WeChatLandingPageController extends BaseController {

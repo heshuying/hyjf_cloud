@@ -34,7 +34,7 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "app端用户充值接口")
+@Api(tags = "app端用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-app/recharge")

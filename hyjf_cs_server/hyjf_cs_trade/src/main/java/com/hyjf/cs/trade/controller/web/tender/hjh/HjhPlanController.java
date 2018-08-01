@@ -9,6 +9,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -30,7 +31,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(value = "Web端加入计划")
+@Api(tags = "Web端加入计划")
 @RestController
 @RequestMapping("/hyjf-web/tender/hjh")
 public class HjhPlanController extends BaseTradeController {
@@ -41,6 +42,7 @@ public class HjhPlanController extends BaseTradeController {
 
     @ApiOperation(value = "web端加入计划", notes = "web端加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
+    @RequestLimit(seconds=3)
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);

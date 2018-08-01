@@ -72,6 +72,13 @@ public class UserHjhInvistDetailCustomize implements Serializable {
 
     /**法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功*/
     private int fddStatus;
+
+
+    // 计划待收本金
+    private String waitCaptical;
+    // 还款方式 代号
+    private String repayStyle;
+
     
     
     public int getFddStatus() {
@@ -231,5 +238,20 @@ public class UserHjhInvistDetailCustomize implements Serializable {
 	public void setRepayActualTime(String repayActualTime) {
 		this.repayActualTime = repayActualTime;
 	}
-    
+
+    public String getWaitCaptical() {
+        return waitCaptical;
+    }
+
+    public void setWaitCaptical(String waitCaptical) {
+        this.waitCaptical = waitCaptical;
+    }
+
+    public String getRepayStyle() {
+        return repayStyle;
+    }
+
+    public void setRepayStyle(String repayStyle) {
+        this.repayStyle = repayStyle;
+    }
 }

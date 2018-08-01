@@ -20,7 +20,7 @@ import java.math.BigDecimal;
  * @author fq
  * @version WechatSecurityController, v0.1 2018/7/20 15:01
  */
-@Api(value = "安全保障数据", description = "安全保障数据")
+@Api(value = "安全保障数据", tags = "安全保障数据")
 @RestController
 @RequestMapping("/hyjf-wechat/find")
 public class WechatSecurityController extends BaseController {

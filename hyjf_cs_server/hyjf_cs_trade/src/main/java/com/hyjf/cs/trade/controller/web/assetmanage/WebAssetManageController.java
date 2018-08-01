@@ -24,7 +24,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version WebAssetManageController, v0.1 2018/6/20 17:19
  */
-@Api(value = "Web资产管理页面")
+@Api(tags = "Web资产管理页面")
 @RestController
 @RequestMapping("/hyjf-web/assetmanage")
 public class WebAssetManageController extends BaseTradeController {

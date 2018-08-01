@@ -43,7 +43,7 @@ import java.util.Map;
  * @author
  *
  */
-@Api(value = "安融反欺诈",description = "安融反欺诈")
+@Api(value = "安融反欺诈",tags = "安融反欺诈")
 @RestController
 @RequestMapping("/hyjf-admin/msp")
 public class MspApplyController extends BaseController {

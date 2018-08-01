@@ -39,7 +39,7 @@ import java.util.Map;
  * @author fuqiang
  * @version AboutUsController, v0.1 2018/7/9 9:40
  */
-@Api(value = "信息披露", description = "信息披露")
+@Api(value = "信息披露", tags = "信息披露")
 @RestController
 @RequestMapping("/web/cs-market/aboutus")
 public class AboutUsController extends BaseController {

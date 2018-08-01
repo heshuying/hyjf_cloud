@@ -1,20 +1,5 @@
 package com.hyjf.admin.controller.vip.coupon;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -27,15 +12,27 @@ import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author walter.limeng
  * @version UtmController, v0.1 2018/7/03 16:17
  */
-@Api(value = "VIP管理汇计划列表",description ="VIP管理汇计划列表")
+@Api(value = "VIP管理汇计划列表",tags ="VIP管理汇计划列表")
 @RestController
 @RequestMapping("/hyjf-admin/coupon/tender/hjh")
 public class CouponTenderHjhController extends BaseController {

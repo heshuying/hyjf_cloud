@@ -31,7 +31,7 @@ import java.util.Map;
  * @version BorrowRegistController, v0.1 2018/6/29 11:18
  */
 
-@Api(value = "汇直投-标的备案接口", description = "汇直投-标的备案接口")
+@Api(value = "汇直投-标的备案接口", tags = "汇直投-标的备案接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_regist")
 public class BorrowRegistController extends BaseController {

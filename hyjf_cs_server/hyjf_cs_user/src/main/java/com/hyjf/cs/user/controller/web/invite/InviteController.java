@@ -23,7 +23,7 @@ import java.util.Map;
  * @author hesy
  * @version InviteController, v0.1 2018/6/23 17:14
  */
-@Api(value = "web端-邀请记录",description = "web端-邀请记录")
+@Api(value = "web端-邀请记录",tags = "web端-邀请记录")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/invite")

@@ -53,7 +53,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
-@Api(value = "app端我的资产",description = "app端我的资产")
+@Api(value = "app端我的资产",tags = "app端我的资产")
 @Controller
 @RequestMapping(value = "/user/invest")
 public class InvestProjectController extends BaseUserController {

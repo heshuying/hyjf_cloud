@@ -36,7 +36,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version MobileModifyController, v0.1 2018/6/14 16:46
  */
-@Api(value = "web端-修改手机号",description = "web端-修改手机号")
+@Api(value = "web端-修改手机号",tags = "web端-修改手机号")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")

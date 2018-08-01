@@ -26,7 +26,7 @@ import javax.validation.Valid;
  * @author wangjun
  * @version BorrowFullController, v0.1 2018/7/6 9:31
  */
-@Api(value = "汇直投-借款复审接口", description = "汇直投-借款复审接口")
+@Api(value = "汇直投-借款复审接口", tags = "汇直投-借款复审接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_full")
 public class BorrowFullController extends BaseController {
