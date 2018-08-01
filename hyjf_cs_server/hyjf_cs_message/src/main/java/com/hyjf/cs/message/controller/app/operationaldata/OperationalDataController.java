@@ -28,12 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author xiasq
- * @version OperationalDataController, v0.1 2018/1/16 17:39
+ * @author tanyy
+ * @version OperationalDataController, v0.1 2018/8/6 17:39
  */
 
 @RestController
-@RequestMapping("/find/operationalData")
+@RequestMapping("/hyjf-app/find/operationalData")
 public class OperationalDataController {
 	
 	private Logger _log = LoggerFactory.getLogger(OperationalDataController.class);
