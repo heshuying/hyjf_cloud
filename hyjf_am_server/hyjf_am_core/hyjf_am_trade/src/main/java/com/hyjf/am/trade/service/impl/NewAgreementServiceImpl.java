@@ -14,6 +14,8 @@ import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
  * @author dangzw
  * @version NewAgreementServiceImpl, v0.1 2018/7/31 17:44
  */
+@Service
 public class NewAgreementServiceImpl implements NewAgreementService {
 
     @Autowired
