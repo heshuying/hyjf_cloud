@@ -7,6 +7,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
@@ -69,6 +70,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
+    @RequestLimit(seconds=3)
     public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "token", required = true) String token,
                                                @RequestBody @Valid BankWithdrawVO bankWithdrawVO , HttpServletRequest request) {
         logger.info("web端提现接口, token is :{}", JSONObject.toJSONString(token));
