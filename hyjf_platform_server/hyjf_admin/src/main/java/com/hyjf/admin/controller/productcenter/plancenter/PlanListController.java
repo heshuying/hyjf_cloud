@@ -146,14 +146,17 @@ public class PlanListController extends BaseController{
     	// 将画面请求request赋值给原子层 request
     	BeanUtils.copyProperties(viewRequest, form);
 		String planNid = form.getDebtPlanNid();
+		if (StringUtils.isNotBlank(planNid) && planNid.length() < 3
+				&& !"HJH".equals(planNid.substring(0, 3))) {
+			jsonObject.put("error", "计划编号必须以HJH开头");
+		}
 		if (StringUtils.isNotEmpty(planNid)) {
 			List<HjhPlanDetailVO> planList = this.planListService.getHjhPlanDetailByPlanNid(form);
-			/*List<HjhPlanVO> planList = this.allocationEngineService.getHjhPlanByPlanNid(planNid);*/
 			if (planList != null && planList.size() != 0) {
-				// 说明通过计划编号在DB查到一条记录，那个可以将这条记录返回
-				// 根据前台传入的计划编号查询出一个计划，然后把计划的内容拼装在form bean 中返回给前台展示
-				this.getPlanInfo(form);
-				jsonObject.put("content", viewRequest);
+				HjhPlanDetailVO vo = planList.get(0);
+				// 将vo组装到form中
+				this.getPlanCommonFiled(form,vo);
+				jsonObject.put("content", form);
 				jsonObject.put("status", SUCCESS);
 			} else {
 				// 如果没有查到记录，说明需要修改的这个 计划编号 在DB没有查到记录
@@ -161,29 +164,9 @@ public class PlanListController extends BaseController{
 				jsonObject.put("status", FAIL);
 			}
 		}
-		if (StringUtils.isNotBlank(planNid) && planNid.length() < 3
-				&& !"HJH".equals(planNid.substring(0, 3))) {
-			jsonObject.put("error", "计划编号必须以HJH开头");
-		}
 		return jsonObject;
 	}
-	
-	/**
-	 * 查询和拼装
-	 *
-	 * @param request
-	 * @return 
-	 */
-	private void getPlanInfo(PlanListRequest form){  //原PlanListBean = PlanListRequest
-		// planNid非空 前面已经校验
-		List<HjhPlanDetailVO> planList = this.planListService.getHjhPlanDetailByPlanNid(form);
-		HjhPlanDetailVO vo = planList.get(0);
-		if (vo != null) {
-			// 将查询的结果铺装到返回实体中
-			this.getPlanCommonFiled(form, vo); // planListBean, hjhPlanWithBLOBs
-		}	
-	}
-	
+
 	/**
 	 * 将查询的结果铺装到返回实体中
 	 * 
@@ -430,7 +413,7 @@ public class PlanListController extends BaseController{
 			String planName = form.getDebtPlanName();
 			int count = this.planListService.countByPlanName(planName);
 			if (count > 0) {
-				AdminValidatorFieldCheckUtil.validateSpecialError(jsonObject, "debtPlanName", "repeat");
+				jsonObject.put("errorMsg", "计划编号重复！");
 			}
 		}
 		// 计划期限+还款方式
@@ -444,26 +427,34 @@ public class PlanListController extends BaseController{
 			}
 			if (lockPeriodCount > 0) {
 				AdminValidatorFieldCheckUtil.validateSpecialError(jsonObject, "lockPeriod", "repeat");
+				jsonObject.put("errorMsg", "计划期限和还款方式对应的计划已存在！");
 			}
 		}
 		// 还款方式
-		AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "borrowStyle", form.getBorrowStyle());
+		if(StringUtils.isEmpty(form.getBorrowStyle())){
+			jsonObject.put("errorMsg", "请输入还款方式！");
+		}
 		// 预期年化收益
 		AdminValidatorFieldCheckUtil.validateSignlessNumLength(jsonObject, "expectApr", form.getExpectApr(), 2, 2, true);
 		// 最低加入金额(只验证数字格式)
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
-		// 最高加入金额(只验证数字格式)
-		/*AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMaxInvestment", form.getDebtMaxInvestment(), 10, true);*/
 		// 投资增量
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtInvestmentIncrement", form.getDebtInvestmentIncrement(), 10, true);
 		// 可用券配置
-		AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "couponConfig", form.getCouponConfig());
+		if(StringUtils.isEmpty(form.getCouponConfig())){
+			jsonObject.put("errorMsg", "请输入可用券配置！");
+		}
 		// 投资状态
-		AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "debtPlanStatus", form.getDebtPlanStatus());
+		if(StringUtils.isEmpty(form.getDebtPlanStatus())){
+			jsonObject.put("errorMsg", "请输入投资状态！");
+		}
 		// 计划介绍
-		AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "planConcept", form.getPlanConcept());
+		if(StringUtils.isEmpty(form.getPlanConcept())){
+			jsonObject.put("errorMsg", "请输入计划介绍！");
+		}
 		// 常见问题
-		AdminValidatorFieldCheckUtil.validateRequired(jsonObject, "normalQuestion", form.getNormalQuestion());
-	}
-	
+		if(StringUtils.isEmpty(form.getNormalQuestion())){
+			jsonObject.put("errorMsg", "请输入常见问题！");
+		}
+	}	
 }

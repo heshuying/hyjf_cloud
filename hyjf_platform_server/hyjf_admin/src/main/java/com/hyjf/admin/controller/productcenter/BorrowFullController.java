@@ -38,7 +38,6 @@ public class BorrowFullController extends BaseController {
 
     @ApiOperation(value = "借款复审初始化/获取列表共用接口", notes = "借款复审初始化/获取列表共用接口")
     @PostMapping("/search")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowFullResponseBean> getBorrowFullList(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
@@ -49,7 +48,6 @@ public class BorrowFullController extends BaseController {
 
     @ApiOperation(value = "借款复审详细信息", notes = "借款复审详细信息")
     @PostMapping("/get_full_info")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
     public AdminResult<BorrowFullInfoResponseBean> getFullInfo(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
@@ -59,7 +57,6 @@ public class BorrowFullController extends BaseController {
 
     @ApiOperation(value = "复审提交", notes = "复审提交")
     @PostMapping("/update_borrow_full")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
     public AdminResult updateBorrowFull(HttpServletRequest request, @RequestBody @Valid BorrowFullRequestBean borrowFullRequestBean) {
         AdminSystemVO currUser = getUser(request);
@@ -72,7 +69,6 @@ public class BorrowFullController extends BaseController {
 
     @ApiOperation(value = "流标", notes = "流标")
     @GetMapping("/update_borrow_over/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
     public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);

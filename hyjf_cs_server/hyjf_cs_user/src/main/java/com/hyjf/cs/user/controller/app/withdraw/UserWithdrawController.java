@@ -79,6 +79,7 @@ public class UserWithdrawController extends BaseUserController {
             }
             ret.put("banks", bankcards);
         } catch (Exception e) {
+            e.printStackTrace();
             ret.put("status", "1");
             ret.put("statusDesc", "获取我的银行卡发生错误");
         }

@@ -546,8 +546,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         amUserClient.insertUserAuthLog(hjhUserAuthLog);
     }
 
-
-    @Override
     public Map<String, String> getErrorMV(AutoPlusRequestBean payRequestBean, String status) {
         Map<String, String> result = new HashMap<>();
         BaseResultBean resultBean = new BaseResultBean();
@@ -814,26 +812,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 调用接口
         retBean = BankCallUtils.callApiBg(selectbean);
         return retBean;
-    }
-
-    @Override
-    public String getBankRetMsg(String retCode) {
-        //如果错误码不为空
-        if (StringUtils.isNotBlank(retCode)) {
-            BankReturnCodeConfigVO retCodes = this.amConfigClient.getBankReturnCodeConfig(retCode);
-            if (retCodes != null) {
-                String retMsg = retCodes.getErrorMsg();
-                if (StringUtils.isNotBlank(retMsg)) {
-                    return retMsg;
-                } else {
-                    return "请联系客服！";
-                }
-            } else {
-                return "请联系客服！";
-            }
-        } else {
-            return "操作失败！";
-        }
     }
 
     @Override
