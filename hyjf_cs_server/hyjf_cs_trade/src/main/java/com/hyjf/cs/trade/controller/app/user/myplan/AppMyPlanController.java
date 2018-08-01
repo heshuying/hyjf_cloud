@@ -9,6 +9,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.AppMyPlanService;
 import io.swagger.annotations.Api;
@@ -182,8 +183,8 @@ public class AppMyPlanController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的计划详情", notes = "App端:获取我的计划详情")
     @PostMapping(value = "/{orderId}", produces = "application/json; charset=utf-8")
-    public JSONObject getMyPlanList(@RequestParam Integer couponType, @RequestParam String type, @PathVariable String orderId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
-        JSONObject result = appMyPlanService.getMyPlanDetail(couponType,type,orderId,request,userId);
+    public MyPlanDetailResultBean getMyPlanList(@RequestParam Integer couponType, @RequestParam String type, @PathVariable String orderId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
+        MyPlanDetailResultBean result = appMyPlanService.getMyPlanDetail(couponType,type,orderId,request,userId);
         return  result;
     }
 }
