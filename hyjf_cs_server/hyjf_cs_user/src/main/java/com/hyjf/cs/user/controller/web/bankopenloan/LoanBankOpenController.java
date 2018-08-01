@@ -36,7 +36,7 @@ import java.util.Map;
  * @author sunss
  *
  */
-@Api(value = "web端-借款人开户",description = "web端-借款人开户")
+@Api(value = "web端-借款人开户",tags = "web端-借款人开户")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user/secure/loanbankopen")

@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentLinksController, v0.1 2018/7/13 10:39
  */
-@Api(value = "内容中心-友情链接", description = "内容中心-友情链接")
+@Api(value = "内容中心-友情链接", tags = "内容中心-友情链接")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentlink")
 public class ContentLinksController extends BaseController {

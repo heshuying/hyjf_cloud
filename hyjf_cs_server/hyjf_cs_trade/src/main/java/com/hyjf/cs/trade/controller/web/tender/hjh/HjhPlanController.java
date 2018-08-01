@@ -30,7 +30,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(value = "Web端加入计划")
+@Api(tags = "Web端加入计划")
 @RestController
 @RequestMapping("/hyjf-web/tender/hjh")
 public class HjhPlanController extends BaseTradeController {

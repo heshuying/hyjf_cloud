@@ -3,20 +3,19 @@
  */
 package com.hyjf.admin.controller.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ActivityListService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
-import org.apache.commons.lang3.StringUtils;
+import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.GetDate;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,22 +23,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.service.ActivityListService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.market.ActivityListRequest;
-import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.GetDate;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
  * @version ActivityListController, v0.1 2018/6/26 16:13
  */
-@Api(value = "活动列表接口", description = "活动列表")
+@Api(value = "活动列表接口", tags = "活动列表")
 @RestController
 @RequestMapping("/hyjf-admin/activity")
 public class ActivityListController extends BaseController {

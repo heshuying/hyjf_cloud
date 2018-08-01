@@ -18,12 +18,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -33,7 +31,7 @@ import java.util.*;
  * @author lisheng
  * @version WeeklyController, v0.1 2018/7/27 14:25
  */
-@Api(value = "上周周报", description = "上周周报")
+@Api(value = "上周周报", tags = "上周周报")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/weekly")
 public class WeeklyController {

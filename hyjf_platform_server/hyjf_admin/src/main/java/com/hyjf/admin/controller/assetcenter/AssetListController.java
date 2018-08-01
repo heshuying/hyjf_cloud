@@ -42,7 +42,7 @@ import java.util.*;
  * @author libin
  * @version AssetListController, v0.1 2018/6/27 15:16
  */
-@Api(value = "资产列表",description = "资产列表")
+@Api(value = "资产列表",tags = "资产列表")
 @RestController
 @RequestMapping("/hyjf-admin/assetcenter")
 public class AssetListController extends BaseController {

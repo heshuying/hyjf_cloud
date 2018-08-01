@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2018/7/26 16:29
  * @Description: ShareNewsController
  */
-@Api(value = "app分享信息", description = "ap分享信息")
+@Api(value = "app分享信息", tags = "ap分享信息")
 @RestController
 @RequestMapping("/hyjf-app/shareNews")
 public class ShareNewsController extends BaseMarketController {

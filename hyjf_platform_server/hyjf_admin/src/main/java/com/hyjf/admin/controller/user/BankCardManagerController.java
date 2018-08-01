@@ -51,7 +51,7 @@ import java.util.Map;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-銀行卡管理",description = "会员中心-銀行卡管理")
+@Api(value = "会员中心-銀行卡管理",tags = "会员中心-銀行卡管理")
 @RestController
 @RequestMapping("/hyjf-admin/bankcardManager")
 public class BankCardManagerController extends BaseController {

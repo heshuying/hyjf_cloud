@@ -31,7 +31,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version CornerController, v0.1 2018/7/18 11:21
  */
-@Api(description = "汇天利资金中心接口")
+@Api(tags = "汇天利资金中心接口")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
 public class CornerController extends BaseController {

@@ -42,7 +42,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version WebsiteController, v0.1 2018/7/6 9:43
  */
-@Api(value = "网站收支", description ="网站收支")
+@Api(value = "网站收支", tags ="网站收支")
 @RestController
 @RequestMapping("/hyjf-admin/finance/web")
 public class WebsiteController extends BaseController {

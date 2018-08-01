@@ -29,7 +29,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: UserWithdrawController, v0.1 2018/7/23 15:10
  */
-@Api(value = "app端-获取我的银行卡",description = "app端-获取我的银行卡")
+@Api(value = "app端-获取我的银行卡",tags = "app端-获取我的银行卡")
 @RestController
 @RequestMapping("/hyjf-app")
 public class UserWithdrawController extends BaseUserController {

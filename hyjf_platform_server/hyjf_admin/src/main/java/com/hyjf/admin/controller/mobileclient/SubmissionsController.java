@@ -48,7 +48,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
-@Api(value = "admin移动客户端",description = "admin移动客户端")
+@Api(value = "admin移动客户端",tags = "admin移动客户端")
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionsController extends BaseController {

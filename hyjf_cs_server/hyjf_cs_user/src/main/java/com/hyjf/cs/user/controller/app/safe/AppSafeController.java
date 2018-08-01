@@ -25,7 +25,7 @@ import java.util.Map;
  * @version AppUserController, v0.1 2018/6/11 14:51
  */
 
-@Api(value = "app端用户账户设置",description = "app端-用户账户设置")
+@Api(value = "app端用户账户设置",tags = "app端-用户账户设置")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSafeController extends BaseUserController {

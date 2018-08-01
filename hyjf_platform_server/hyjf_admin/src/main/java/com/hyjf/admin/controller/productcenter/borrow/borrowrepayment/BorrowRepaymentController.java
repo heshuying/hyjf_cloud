@@ -48,7 +48,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BorrowRecoverController, v0.1 2018/7/2 10:13
  */
-@Api(value = "产品中心-汇直投-还款信息",description="产品中心-汇直投-还款信息")
+@Api(value = "产品中心-汇直投-还款信息",tags ="产品中心-汇直投-还款信息")
 @RestController
 @RequestMapping("/borrow/borrowrepayment")
 public class BorrowRepaymentController extends BaseController {

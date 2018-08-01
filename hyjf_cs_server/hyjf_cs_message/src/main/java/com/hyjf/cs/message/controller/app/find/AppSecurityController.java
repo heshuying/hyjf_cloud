@@ -20,7 +20,7 @@ import java.math.BigDecimal;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 14:44
  */
-@Api(value = "安全保障数据", description = "安全保障数据")
+@Api(value = "安全保障数据", tags = "安全保障数据")
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppSecurityController extends BaseController {

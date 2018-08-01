@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version PlanListController.java, v0.1 2018年7月6日 上午9:08:43
  */
-@Api(value = "计划列表",description = "计划列表")
+@Api(value = "计划列表",tags = "计划列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhplan")
 public class PlanListController extends BaseController{

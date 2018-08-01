@@ -69,7 +69,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version HjhCreditTenderController.java, v0.1 2018年7月11日 下午2:18:37
  */
-@Api(value = "汇计划承接记录列表",description = "汇计划承接记录列表")
+@Api(value = "汇计划承接记录列表",tags = "汇计划承接记录列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcredittender")
 public class HjhCreditTenderController extends BaseController{

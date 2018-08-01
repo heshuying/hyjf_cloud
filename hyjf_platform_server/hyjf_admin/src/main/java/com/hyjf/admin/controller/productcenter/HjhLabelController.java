@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version HjhLabelController.java, v0.1 2018年6月30日 上午9:14:22
  */
-@Api(value = "标签配置列表",description = "标签配置列表")
+@Api(value = "标签配置列表",tags = "标签配置列表")
 @RestController
 @RequestMapping("/hyjf-admin/label")
 public class HjhLabelController extends BaseController{

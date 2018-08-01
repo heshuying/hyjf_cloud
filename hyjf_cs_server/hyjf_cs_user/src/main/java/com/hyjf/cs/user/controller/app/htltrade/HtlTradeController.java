@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Api(value = "app端-获取我的账单(汇天利)",description = "app端-获取我的账单(汇天利)")
+@Api(value = "app端-获取我的账单(汇天利)",tags = "app端-获取我的账单(汇天利)")
 @RestController
 @RequestMapping(value = "/hyjf-app/htl")
 public class HtlTradeController extends BaseController {
