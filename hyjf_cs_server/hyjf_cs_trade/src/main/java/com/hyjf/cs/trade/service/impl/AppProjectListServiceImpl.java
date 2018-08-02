@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
@@ -1680,6 +1682,65 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
         }
 
+    }
+
+    /**
+     * app端债转承接记录
+     * @param transferId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public BaseResultBeanFrontEnd investRecord(String transferId, Integer currentPage, Integer pageSize) {
+        TransferInvestRecordResultBean result = new TransferInvestRecordResultBean();
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("creditNid", transferId);
+            int recordTotal = amTradeClient.countTenderCreditInvestRecordTotal(params);
+            if (recordTotal > 0) { // 查询相应的汇直投列表数据
+                int limit = pageSize;
+                int page = currentPage;
+                int offSet = (page - 1) * limit;
+                if (offSet == 0 || offSet > 0) {
+                    params.put("limitStart", offSet);
+                }
+                if (limit > 0) {
+                    params.put("limitEnd", limit);
+                }
+                List<AppTenderCreditInvestListCustomizeVO> recordList = amTradeClient.searchTenderCreditInvestList(params);
+                //获取债转投资人次和已债转金额
+                List<BorrowCreditVO> creditList = amTradeClient.selectBorrowCreditByNid(transferId);
+                if (creditList != null && creditList.size() == 1) {
+                    BorrowCreditVO credit = creditList.get(0);
+                    result.setUserCount(String.valueOf(credit.getAssignNum()));
+                    result.setAccount(CommonUtils.formatAmount(credit.getCreditCapitalAssigned()));
+                }else{
+                    result.setAccount("0");
+                    result.setUserCount("0");
+                }
+                //判断是否最后一页
+                if(recordTotal<=page*limit){
+                    result.setIsEnd(true);
+                }else{
+                    result.setIsEnd(false);
+                }
+                result.setIsEnd(true);
+                result.setList(recordList);
+            } else {
+                result.setAccount("0");
+                result.setUserCount("0");
+                result.setIsEnd(true);
+                result.setList(new ArrayList<AppTenderCreditInvestListCustomizeVO>());
+            }
+            result.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+            result.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+        } catch (Exception e) {
+            result.setStatus(BaseResultBeanFrontEnd.FAIL);
+            result.setStatusDesc(BaseResultBeanFrontEnd.FAIL_MSG);
+        }
+
+        return result;
     }
 
     /**

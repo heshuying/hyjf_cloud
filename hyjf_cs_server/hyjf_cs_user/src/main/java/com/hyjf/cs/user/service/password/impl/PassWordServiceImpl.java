@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.password.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -32,7 +33,6 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
