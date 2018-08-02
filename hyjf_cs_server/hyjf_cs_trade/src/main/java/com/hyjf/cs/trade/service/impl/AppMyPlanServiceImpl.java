@@ -1,11 +1,13 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.trade.HjhUserInvestListResponse;
 import com.hyjf.am.response.trade.coupon.AppCouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
@@ -15,8 +17,8 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.AppMyPlanService;
+import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

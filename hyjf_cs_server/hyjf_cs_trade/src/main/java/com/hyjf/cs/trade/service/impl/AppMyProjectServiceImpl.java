@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
 import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
