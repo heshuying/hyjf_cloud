@@ -77,8 +77,14 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null==userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
-            return result;
+        if(null==userVO){
+            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_EXISTS);
+        }
+        if(0==userVO.getIsSetPassword()){
+            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        }
+        if(0==userVO.getBankOpenAccount()){
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);

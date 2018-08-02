@@ -41,11 +41,11 @@ public class UserEntryServiceImpl extends BaseServiceImpl implements UserEntrySe
                 // 删除相应的用户的推荐人
                 this.deleteReferrer(users.get(0).getUserId());
             } catch (Exception e) {
-                logger.error("员工入职信息更新失败, ID:" + userId, e);
+                logger.error("员工入职信息更新失败, CRM_ID:" + userId, e);
                 throw e;
             }
         } else {
-            logger.error("查询用户信息失败，员工入职信息更新失败, ID:" + userId);
+            logger.error("员工入职--查询用户信息失败, CRM_ID:" + userId);
         }
     }
 

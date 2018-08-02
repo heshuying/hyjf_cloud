@@ -37,11 +37,11 @@ public class UserLeaveServiceImpl extends BaseServiceImpl implements UserLeaveSe
                 // 修改 离职人员作为推荐人的情况，被推荐人属性变为‘无主单’
                 this.updateSpreadAttribute(users.get(0).getUserId());
             } catch (Exception e) {
-                logger.error("员工离职职信息更新失败, ID:" + userId, e);
+                logger.error("员工离职信息更新失败, CRM_ID:" + userId, e);
                 throw e;
             }
         } else {
-            logger.error("查询用户信息失败，员工离职信息更新失败, ID:" + userId);
+            logger.error("员工离职--查询用户信息失败, CRM_ID:" + userId);
         }
     }
 
