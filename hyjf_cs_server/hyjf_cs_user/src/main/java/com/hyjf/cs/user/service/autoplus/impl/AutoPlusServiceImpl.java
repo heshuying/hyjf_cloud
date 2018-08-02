@@ -88,6 +88,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         this.insertUserAuthLog(user, bean, client, type);
         Map<String, Object> map = new HashMap<>();
         try {
+            //调用pay接口
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             e.printStackTrace();

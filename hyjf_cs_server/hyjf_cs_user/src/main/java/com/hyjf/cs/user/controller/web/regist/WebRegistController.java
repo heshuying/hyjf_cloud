@@ -15,6 +15,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -58,6 +59,9 @@ public class WebRegistController extends BaseUserController {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);
+        String password = registerRequest.getPassword();
+        password = RSAJSPUtil.rsaToPassword(password);
+        registerRequest.setPassword(password);
         registService.checkParam(registerRequest);
         WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
