@@ -3018,8 +3018,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<RepayListCustomizeVO> repayList(RepayListRequest requestBean) {
-        RepayListResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/repay/repaylist",
+        RepayListResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/repay/repaylist",requestBean,
                 RepayListResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -3034,8 +3034,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean) {
-        RepayListResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/repay/orgrepaylist",
+        RepayListResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/repay/orgrepaylist",requestBean,
                 RepayListResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -3050,8 +3050,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean) {
-        RepayListResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/repay/orgrepayedlist",
+        RepayListResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/repay/orgrepayedlist",requestBean,
                 RepayListResponse.class).getBody();
         if (response != null) {
             return response.getResultList();

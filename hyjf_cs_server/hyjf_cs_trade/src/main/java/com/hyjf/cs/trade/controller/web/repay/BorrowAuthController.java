@@ -54,6 +54,8 @@ public class BorrowAuthController extends BaseTradeController {
         page.setTotal(count);
 
         try {
+            requestBean.setLimitStart(page.getOffset());
+            requestBean.setLimitEnd(page.getLimit());
             List<BorrowAuthCustomizeVO> resultList = borrowAuthService.selectAuthList(requestBean);
             result.setData(resultList);
         } catch (Exception e) {
@@ -87,6 +89,8 @@ public class BorrowAuthController extends BaseTradeController {
         page.setTotal(count);
 
         try {
+            requestBean.setLimitStart(page.getOffset());
+            requestBean.setLimitEnd(page.getLimit());
             List<BorrowAuthCustomizeVO> resultList = borrowAuthService.selectAuthedList(requestBean);
             result.setData(resultList);
         } catch (Exception e) {
