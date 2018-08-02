@@ -88,7 +88,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean) {
-        return amTradeClient.repayList(requestBean);
+        List<RepayListCustomizeVO> resultList =  amTradeClient.repayList(requestBean);
+        if(resultList == null){
+            return new ArrayList<RepayListCustomizeVO>();
+        }
+        return resultList;
     }
 
     /**
@@ -99,7 +103,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean) {
-        return amTradeClient.orgRepayList(requestBean);
+        List<RepayListCustomizeVO> resultList = amTradeClient.orgRepayList(requestBean);
+        if(resultList == null){
+            return new ArrayList<RepayListCustomizeVO>();
+        }
+        return resultList;
     }
 
     /**
@@ -110,7 +118,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean) {
-        return amTradeClient.orgRepayedList(requestBean);
+        List<RepayListCustomizeVO> resultList = amTradeClient.orgRepayedList(requestBean);
+        if(resultList == null){
+            return new ArrayList<RepayListCustomizeVO>();
+        }
+        return resultList;
     }
 
     /**
