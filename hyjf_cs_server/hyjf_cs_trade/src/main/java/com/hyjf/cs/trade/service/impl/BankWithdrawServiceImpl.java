@@ -928,7 +928,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.put("balance", accountWithdraw.getCredited()==null?"0":accountWithdraw.getCredited().toString());
             result.put("fee", accountWithdraw.getFee());
             result.put("orderId", logOrderId);
-            if(accountWithdraw.getStatus().equals("2")){
+            if("2".equals(accountWithdraw.getStatus())){
                 result.put("status", "0");
             }
         }

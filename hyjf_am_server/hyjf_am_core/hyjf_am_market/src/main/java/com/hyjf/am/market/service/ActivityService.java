@@ -58,7 +58,7 @@ public interface ActivityService {
      * @param request
      * @return
      */
-    List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int i, int i1);
+    List<ActivityListCustomize> selectRecordListValid(ActivityListCustomize request, int i, int i1);
 
     /**
      * @Author walter.limeng

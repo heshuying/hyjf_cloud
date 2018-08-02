@@ -173,7 +173,7 @@ public class BankSettingController extends BaseController {
             if (bankSettingRequestBean.getId() != null) {
                 Boolean hasnot = true;
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getId() == request.getId()) {
+                    if (list.get(i).getId().equals(request.getId())) {
                         hasnot = false;
                         break;
                     }

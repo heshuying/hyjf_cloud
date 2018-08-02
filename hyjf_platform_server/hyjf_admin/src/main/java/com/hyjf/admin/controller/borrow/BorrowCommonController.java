@@ -330,7 +330,7 @@ public class BorrowCommonController extends BaseController {
 
 		while (itr.hasNext()) {
 			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(new Date().getTime());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
 			String originalFilename = multipartFile.getOriginalFilename();
 			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
@@ -412,7 +412,7 @@ public class BorrowCommonController extends BaseController {
 
 		while (itr.hasNext()) {
 			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(new Date().getTime());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
 			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
 			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(multipartFile.getInputStream());
@@ -533,7 +533,7 @@ public class BorrowCommonController extends BaseController {
 
 		while (itr.hasNext()) {
 			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(new Date().getTime());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
 			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
 			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(multipartFile.getInputStream());
@@ -638,7 +638,7 @@ public class BorrowCommonController extends BaseController {
 
 		while (itr.hasNext()) {
 			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(new Date().getTime());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
 			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
 			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(multipartFile.getInputStream());
@@ -697,7 +697,7 @@ public class BorrowCommonController extends BaseController {
 
 		while (itr.hasNext()) {
 			multipartFile = multipartRequest.getFile(itr.next());
-			String fileRealName = String.valueOf(new Date().getTime());
+			String fileRealName = String.valueOf(System.currentTimeMillis());
 			fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
 			HSSFWorkbook hssfWorkbook = new HSSFWorkbook(multipartFile.getInputStream());

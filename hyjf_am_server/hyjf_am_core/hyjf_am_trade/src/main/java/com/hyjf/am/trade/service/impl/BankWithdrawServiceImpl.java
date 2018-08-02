@@ -237,6 +237,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
      * @param userId
      * @return
      */
+    @Override
     public Account getAccount(Integer userId) {
         AccountExample example = new AccountExample();
         AccountExample.Criteria cra = example.createCriteria();

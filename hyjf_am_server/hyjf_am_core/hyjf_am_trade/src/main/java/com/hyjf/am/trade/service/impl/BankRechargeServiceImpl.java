@@ -281,6 +281,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
      * @param userId
      * @return
      */
+    @Override
     public Account getAccount(Integer userId) {
         AccountExample example = new AccountExample();
         AccountExample.Criteria cra = example.createCriteria();

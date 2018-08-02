@@ -509,7 +509,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 	 * @param borrowCustomize
 	 * @return
 	 */
-	public Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+	@Override
+    public Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
 		return this.borrowCustomizeMapper.countBorrow(borrowCommonCustomizeVO);
 	}
 
@@ -520,7 +521,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 	 * 
 	 * @return
 	 */
-	public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+	@Override
+    public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
 		return this.borrowCustomizeMapper.selectBorrowList(borrowCommonCustomizeVO);
 	}
 

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.cs.trade.mq.producer.CouponLoansHjhMessageProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -117,6 +118,9 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
 
     @Autowired
     SmsProducer smsProducer;
+
+    @Autowired
+    private CouponLoansHjhMessageProducer couponLoansHjhMessageProducer;
 
     @Override
     public void updateLockRepayInfo(String accedeOrderId) {
@@ -967,7 +971,7 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
     }
 
     /**
-     * 优惠券放款
+     * 汇计划优惠券放款
      * @param hjhAccede
      */
     private void couponLoan(HjhAccedeVO hjhAccede) {
@@ -976,7 +980,12 @@ public class BatchHjhBorrowRepayServiceImpl extends BaseTradeServiceImpl impleme
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
-        // TODO 发送MQ消息到优惠券放款队列
+        //  发送MQ消息到优惠券放款队列
+        try{
+            couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), com.alibaba.fastjson.JSONObject.toJSONBytes(params)));
+        }catch (Exception e){
+            logger.error("发送MQ消息到优惠券放款队列异常！",e);
+        }
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
         // add by cwyang 优惠券放款请求加入到消息队列 end
     }

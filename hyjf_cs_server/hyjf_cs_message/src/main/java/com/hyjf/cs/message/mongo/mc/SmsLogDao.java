@@ -32,7 +32,8 @@ public class SmsLogDao extends BaseMongoDao<SmsLog> {
 	 *
 	 * @return
 	 */
-	public List<SmsLog> find(Query query) {
+	@Override
+    public List<SmsLog> find(Query query) {
 		return mongoTemplate.find(query, SmsLog.class);
 	}
 }

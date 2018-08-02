@@ -295,7 +295,7 @@ public class AppLoginController extends BaseUserController {
 
                 // 上传至服务器
                 String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
-                if (!returnMessage.equals("上传文件成功！")) {
+                if (!"上传文件成功！".equals(returnMessage)) {
                     ret.put("status", "1");
                     ret.put("statusDesc", returnMessage);
                     return ret;

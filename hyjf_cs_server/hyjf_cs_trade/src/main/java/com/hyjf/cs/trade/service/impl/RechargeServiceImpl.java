@@ -145,6 +145,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String seqNo = bean.getSeqNo();
 		// 电子账户
 		String accountId = bean.getAccountId();
+        logger.info("errorMsg:" + errorMsg +"    bean.getRetCode():"+bean.getRetCode());
 		// 充值成功
 		if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
 			// 查询充值记录
