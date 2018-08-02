@@ -787,9 +787,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
         String code = "";
 
-        if (type.equals("0")) {// 未注册
+        if ("0".equals(type)) {// 未注册
             code = "wechat_regist_888";
-        } else if (type.equals("1")) {
+        } else if ("1".equals(type)) {
             code = "wechat_open_888";
         }
         request.setCode(code);

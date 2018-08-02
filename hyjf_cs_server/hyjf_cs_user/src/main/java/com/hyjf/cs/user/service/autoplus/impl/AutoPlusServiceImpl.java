@@ -4,8 +4,8 @@
 package com.hyjf.cs.user.service.autoplus.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -24,7 +24,6 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
@@ -219,8 +218,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String txcode = "";
         BankCallBean bean = new BankCallBean(users.getUserId(), txcode, client);
         // 同步地址 跳转到前端页面
-        String retUrl = systemConfig.getFrontHost() + "/open/openError" + "?logOrdId=" + bean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() + "/open/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(client)) + "/open/openError" + "?logOrdId=" + bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(client)) + "/open/openSuccess";
         // 异步调用路
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {

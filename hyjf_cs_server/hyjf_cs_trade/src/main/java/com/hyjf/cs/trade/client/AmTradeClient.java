@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -1493,4 +1494,25 @@ public interface AmTradeClient {
      * @return
      */
     AppNewAgreementVO setProtocolImg(String aliasName);
+
+    /**
+     * APP端债转记录数
+     * @param params
+     * @return
+     */
+    int countTenderCreditInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * 获取债转承接记录列表
+     * @param params
+     * @return
+     */
+    List<AppTenderCreditInvestListCustomizeVO> searchTenderCreditInvestList(Map<String,Object> params);
+
+    /**
+     * 获取债转投资人次和已债转金额
+     * @param transferId
+     * @return
+     */
+    List<BorrowCreditVO> selectBorrowCreditByNid(String transferId);
 }

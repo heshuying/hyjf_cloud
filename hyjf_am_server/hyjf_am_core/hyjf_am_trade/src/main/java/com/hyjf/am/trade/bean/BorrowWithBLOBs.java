@@ -352,10 +352,12 @@ public class BorrowWithBLOBs extends Borrow implements Serializable {
         this.infoId = infoId;
     }
 
+    @Override
     public String getBorrowNid() {
         return borrowNid;
     }
 
+    @Override
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
@@ -384,18 +386,22 @@ public class BorrowWithBLOBs extends Borrow implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
+    @Override
     public Integer getUserId() {
         return userId;
     }
 
+    @Override
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    @Override
     public String getBorrowUserName() {
         return borrowUserName;
     }
 
+    @Override
     public void setBorrowUserName(String borrowUserName) {
         this.borrowUserName = borrowUserName == null ? null : borrowUserName.trim();
     }
@@ -448,10 +454,12 @@ public class BorrowWithBLOBs extends Borrow implements Serializable {
         this.borrowUse = borrowUse == null ? null : borrowUse.trim();
     }
 
+    @Override
     public Integer getBorrowValidTime() {
         return borrowValidTime;
     }
 
+    @Override
     public void setBorrowValidTime(Integer borrowValidTime) {
         this.borrowValidTime = borrowValidTime;
     }
@@ -930,26 +938,32 @@ public class BorrowWithBLOBs extends Borrow implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
+    @Override
     public String getCreateUserName() {
         return createUserName;
     }
 
+    @Override
     public void setCreateUserName(String createUserName) {
         this.createUserName = createUserName == null ? null : createUserName.trim();
     }
 
+    @Override
     public String getAddIp() {
         return addIp;
     }
 
+    @Override
     public void setAddIp(String addIp) {
         this.addIp = addIp == null ? null : addIp.trim();
     }
 
+    @Override
     public Date getCreateTime() {
         return createTime;
     }
 
+    @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }

@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -126,8 +125,8 @@ public class WebAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping(value = "/creditbgreturn", produces = "application/json; charset=utf-8")
-    public String userCreditBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/creditbgreturn")
+    public String userCreditBgreturn( BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -138,14 +137,14 @@ public class WebAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
-    @PostMapping(value = "/invesbgreturn", produces = "application/json; charset=utf-8")
-    public String userInvesAuthBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/invesbgreturn")
+    public String userInvesAuthBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_1);
         return result;
     }
 
     @ApiOperation(value = "授权状态接口", notes = "授权状态接口")
-    @PostMapping(value = "/userAutoStatus", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/userAutoStatus")
     public WebResult<Object> userAutoStatus(@RequestHeader(value = "token") String token){
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = autoPlusService.getUsers(token);

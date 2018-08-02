@@ -60,7 +60,7 @@ import java.util.Map;
  * @version CouponUserController, v0.1 2018/7/23 15:23
  * 优惠券用户列表
  */
-@Api(value = "优惠券用户列表", description = "优惠券用户列表")
+@Api(value = "优惠券用户列表", tags = "优惠券用户列表")
 @RestController
 @RequestMapping("/hyjf-admin/couponUser")
 public class CouponUserController extends BaseController {
@@ -129,7 +129,10 @@ public class CouponUserController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_ADD)
     public AdminResult distributeAction(CouponUserBeanRequest couponUserBeanRequest, HttpServletRequest request) {
         AdminSystemVO user = getUser(request);
-        String loginUserId = user.getId();
+        String loginUserId = null;
+        if (user != null) {
+            loginUserId = user.getId();
+        }
         //校验请求参数
         JSONObject json = new JSONObject();
         json = this.validatorFieldCheck(json, couponUserBeanRequest);
@@ -201,17 +204,17 @@ public class CouponUserController extends BaseController {
         if (StringUtils.isEmpty(userName)) {
             String message = "用户名不能为空";
             response.setMessage(message);
-            return new AdminResult<>(response.getMessage());
+            return new AdminResult<>(FAIL,FAIL_DESC);
         }
         UserResponse userResponse = couponUserService.getUser(userName);
         if (userResponse.getResult() == null) {
             String message = "用户名不存在";
             response.setMessage(message);
-            return new AdminResult<>(response.getMessage());
+            return new AdminResult<>(FAIL,FAIL_DESC);
         } else if (userResponse.getResult().getStatus() != null && userResponse.getResult().getStatus() == 1) {
             String message = "用户已锁定";
             response.setMessage(message);
-            return new AdminResult<>(response.getMessage());
+            return new AdminResult<>(FAIL,FAIL_DESC);
         }
         response.setRtn(Response.SUCCESS);
         response.setMessage(Response.SUCCESS_MSG);
@@ -644,7 +647,7 @@ public class CouponUserController extends BaseController {
                         cell.setCellValue(couponUser.getUsername());
                     }
                     else if (celLength == 4) {
-                        cell.setCellValue(couponUser.getAttribute() == null ? "" : couponUser.getAttribute().equals("0") ? "无主单" : couponUser.getAttribute().equals("1") ? "有主单" : couponUser.getAttribute().equals("2") ? "线下员工" : "线上员工");
+                        cell.setCellValue(couponUser.getAttribute() == null ? "" : "0".equals(couponUser.getAttribute()) ? "无主单" : "1".equals(couponUser.getAttribute()) ? "有主单" : "2".equals(couponUser.getAttribute()) ? "线下员工" : "线上员工");
                     }
                     else if(celLength == 5) {
                         cell.setCellValue(couponUser.getChannel());

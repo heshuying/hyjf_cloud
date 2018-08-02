@@ -209,9 +209,11 @@ public class ActivityController {
      * @return
      */
     @PostMapping("/selectRecordListValid")
-    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListRequest request) {
+    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
         ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
-        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(request,-1,-1);
+        ActivityListCustomize activityListCustomize = new ActivityListCustomize();
+        BeanUtils.copyProperties(request,activityListCustomize);
+        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(activityListCustomize,-1,-1);
         if (!CollectionUtils.isEmpty(recordList)) {
             List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
             response.setResultList(activityListCustomizeVOS);

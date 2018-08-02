@@ -355,27 +355,33 @@ public class WithdrawCustomize extends AccountWithdraw implements Serializable {
 		this.roleid = roleid;
 	}
 
-	public Integer getBankFlag() {
+	@Override
+    public Integer getBankFlag() {
 		return bankFlag;
 	}
 
-	public void setBankFlag(Integer bankFlag) {
+	@Override
+    public void setBankFlag(Integer bankFlag) {
 		this.bankFlag = bankFlag;
 	}
 
-	public String getAccountId() {
+	@Override
+    public String getAccountId() {
 		return accountId;
 	}
 
-	public void setAccountId(String accountId) {
+	@Override
+    public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
 
-	public Integer getSeqNo() {
+	@Override
+    public Integer getSeqNo() {
 		return seqNo;
 	}
 
-	public void setSeqNo(Integer seqNo) {
+	@Override
+    public void setSeqNo(Integer seqNo) {
 		this.seqNo = seqNo;
 	}
 

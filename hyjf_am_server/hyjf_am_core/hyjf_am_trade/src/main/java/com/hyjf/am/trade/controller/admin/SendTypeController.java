@@ -78,16 +78,12 @@ public class SendTypeController {
     @RequestMapping("/insert")
     public BorrowSendTypeResponse insertSendType(@RequestBody BorrowSendTypeRequest req) {
         BorrowSendTypeResponse resp = new BorrowSendTypeResponse();
-        try{
-            // 插入
-            int cot = this.sendTypeService.insertSendType(req);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 插入
+        int cot = this.sendTypeService.insertSendType(req);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }
@@ -98,16 +94,12 @@ public class SendTypeController {
     @RequestMapping("/update")
     public BorrowSendTypeResponse updateSendType(@RequestBody BorrowSendTypeRequest req) {
         BorrowSendTypeResponse resp = new BorrowSendTypeResponse();
-        try{
-            // 插入
-            int cot = this.sendTypeService.updateSendType(req);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 插入
+        int cot = this.sendTypeService.updateSendType(req);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }
@@ -118,16 +110,12 @@ public class SendTypeController {
     @RequestMapping("/delete/{sendCd}")
     public BorrowSendTypeResponse deleteSendType(@PathVariable String sendCd) {
         BorrowSendTypeResponse resp = new BorrowSendTypeResponse();
-        try{
-            // 插入
-            int cot = this.sendTypeService.deleteSendType(sendCd);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 插入
+        int cot = this.sendTypeService.deleteSendType(sendCd);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }

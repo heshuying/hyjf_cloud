@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.wechat.regist;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -17,6 +18,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.bean.RegistLandingPageCommitRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.wechat.login.LoginResultBean;
@@ -24,13 +26,10 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
-import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
-import com.hyjf.soa.apiweb.CommonParamBean;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +37,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +44,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static com.hyjf.common.constants.CommonConstant.*;
 /**
  * @author zhangqingqing
@@ -214,11 +212,11 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ApiOperation(value = "注册着陆页提交",notes = "注册着陆页提交")
     @PostMapping(value = "/registLandingPageCommitAction", produces = "application/json; charset=utf-8")
-    public JSONObject registLandingPageCommitAction(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject registLandingPageCommitAction(HttpServletRequest request, HttpServletResponse response, @RequestBody RegistLandingPageCommitRequestBean bean) {
 
         JSONObject ret = new JSONObject();
         // 手机号
-        String mobile = request.getParameter("mobile");
+        String mobile = bean.getMobile();
         logger.info("当前注册手机号: {}", mobile);
         if (Validator.isNull(mobile)) {
             ret.put("status", "99");
@@ -239,7 +237,7 @@ public class WeChatRegistController extends BaseUserController {
         }
 
         // 登录密码校验
-        String password = request.getParameter("password");
+        String password = bean.getPassword();
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         if (Validator.isNull(password)) {
@@ -280,13 +278,13 @@ public class WeChatRegistController extends BaseUserController {
         }
 
         //验证图片验证码
-        JSONObject captchaCheckResult =this.checkcaptchajson(request, response);
+        JSONObject captchaCheckResult =this.checkcaptchajson(request, bean.getNewRegVerifyCode());
         if(!"000".equals(captchaCheckResult.get("status"))) {
             //不等于000 代表校验不通过
             return captchaCheckResult;
         }
         //验证短信验证码
-        JSONObject verificationCodeCheckResult=this.validateVerificationCodeAction(request, response);
+        JSONObject verificationCodeCheckResult=this.validateVerificationCodeAction(bean, response);
         if(!"000".equals(verificationCodeCheckResult.get("status"))) {
             //不等于000 代表校验不通过
             return verificationCodeCheckResult;
@@ -294,22 +292,22 @@ public class WeChatRegistController extends BaseUserController {
 
         String verificationType = PARAM_TPL_ZHUCE;
         // 参数含义?
-        int cnt = registService.updateCheckMobileCode(mobile, request.getParameter("verificationCode"), verificationType,CLIENT_WECHAT, CKCODE_YIYAN, CKCODE_USED,true);
+        int cnt = registService.updateCheckMobileCode(mobile, bean.getVerificationCode(), verificationType,CLIENT_WECHAT, CKCODE_YIYAN, CKCODE_USED,true);
         if (cnt == 0) {
             ret.put("status", "99");
             ret.put("statusDesc", "验证码无效!");
             return ret;
         }
         //推荐人userId
-        String refferUserId=request.getParameter("refferUserId");
+        String refferUserId=bean.getRefferUserId();
         UserVO user = new UserVO();
-        logger.info("utmId: {}", request.getParameter("utmId"));
-        logger.info("refferUserId: {}", request.getParameter("refferUserId"));
-        logger.info("utmSource: {}", request.getParameter("utmSource"));
-        logger.info("verificationCode: {}", request.getParameter("verificationCode"));
+        logger.info("utmId: {}", bean.getUtmId());
+        logger.info("refferUserId: {}", refferUserId);
+        logger.info("utmSource: {}", bean.getUtmSource());
+        logger.info("verificationCode: {}", bean.getVerificationCode());
 
-        user =  registService.insertUserActionUtm(mobile, password,request.getParameter("verificationCode"), refferUserId, CustomUtil.getIpAddr(request),
-                CustomConstants.CLIENT_WECHAT,request.getParameter("utmId"),request.getParameter("utmSource"));
+        user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
+                CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());
         //int userId = registService.insertUserActionUtm(mobile, password,request.getParameter("verificationCode"), refferUserId, CustomUtil.getIpAddr(request),CustomConstants.CLIENT_WECHAT,request.getParameter("utmId"),request.getParameter("utmSource"));
         Integer userId = user.getUserId();
         try {
@@ -422,23 +420,23 @@ public class WeChatRegistController extends BaseUserController {
     /**
      * 验证验证码
      *
-     * @param request
+     * @param bean 请求参数
      * @param response
      * @return
      */
     @ApiOperation(value = "验证验证码",notes = "验证验证码")
     @PostMapping(value = "/validateVerificationCodeAction")
-    public JSONObject validateVerificationCodeAction(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject validateVerificationCodeAction(RegistLandingPageCommitRequestBean bean, HttpServletResponse response) {
 
         JSONObject ret = new JSONObject();
         ret.put("request","/hyjf-wechat/userRegist/validateVerificationCodeAction");
 
         // 验证方式
-        String verificationType = request.getParameter("verificationType");
+        String verificationType = bean.getVerificationType();
         // 验证码
-        String verificationCode = request.getParameter("verificationCode");
+        String verificationCode = bean.getVerificationCode();
         // 手机号
-        String mobile = request.getParameter("mobile");
+        String mobile = bean.getMobile();
 
         if (Validator.isNull(verificationType)) {
             ret.put("status", "99");
@@ -493,15 +491,15 @@ public class WeChatRegistController extends BaseUserController {
      * @param
      * @return
      */
-    private JSONObject checkcaptchajson(HttpServletRequest request, HttpServletResponse response) {
+    private JSONObject checkcaptchajson(HttpServletRequest request,String newRegVerifyCode) {
         RandomValidateCode randomValidateCode = new RandomValidateCode();
         JSONObject ret = new JSONObject();
-        if(Validator.isNull(request.getParameter("newRegVerifyCode"))) {
+        if(Validator.isNull(newRegVerifyCode)) {
             ret.put("status", "99");
             ret.put("statusDesc", "图形验证码为空!");
             return ret;
         }
-        if (randomValidateCode.checkRandomCode(request, request.getParameter("newRegVerifyCode"))) {
+        if (randomValidateCode.checkRandomCode(request, newRegVerifyCode)) {
             ret.put("status", "000");
             ret.put("statusDesc", "图形验证码验证成功");
             return ret;

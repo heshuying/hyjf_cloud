@@ -4,12 +4,13 @@
 package com.hyjf.cs.user.service.login.impl;
 
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
@@ -590,7 +591,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				result.setBankCardCount(list.size() + "");
 				for (AccountBankVO accountBank : list) {
 					Boolean hasQuick = false;
-					if (accountBank.getCardType().equals("2")) {
+					if ("2".equals(accountBank.getCardType())) {
 						hasQuick = true;
 						result.setIsBindQuickPayment(CustomConstants.FLAG_BINDQUICKPAYMENT_YES);
 					}
@@ -705,7 +706,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 		}
 		// 我的账户更新标识(0未更新，1已更新)
-		if (result.getReadFlag().equals("0")) {
+		if ("0".equals(result.getReadFlag())) {
 			result.setIsUpdate("0");
 		} else {
 			result.setIsUpdate("1");

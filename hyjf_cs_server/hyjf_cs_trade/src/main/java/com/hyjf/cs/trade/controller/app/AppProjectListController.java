@@ -4,12 +4,17 @@
 package com.hyjf.cs.trade.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
 import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
+import com.hyjf.cs.trade.bean.TransferInvestRecordResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -24,6 +29,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +79,7 @@ public class AppProjectListController extends BaseTradeController {
     /**
      * app端获取散标投资记录
      * add by jijun 20180726
+     * 原接口:com.hyjf.app.project.BorrowProjectController.searchProjectInvestList()
      */
     @ApiOperation(value = "APP端散标投资记录", notes = "APP端散标投资记录")
     @PostMapping(value = "/{borrowId}/investRecord", produces = "application/json; charset=utf-8")
@@ -131,6 +140,20 @@ public class AppProjectListController extends BaseTradeController {
 
 
     /**
+     * app端债转承接记录
+     *  com.hyjf.app.user.transfer.AppTransferController.investRecord()
+     */
+    @ApiOperation(value="APP端债转承接记录",notes="APP端债转承接记录")
+    @PostMapping(value = "/{transferId}/investRecord", produces = "application/json; charset=utf-8")
+    public BaseResultBeanFrontEnd investRecord(@PathVariable("transferId") String transferId, Integer currentPage, Integer pageSize) {
+        return appProjectListService.investRecord(transferId,currentPage,pageSize);
+    }
+
+
+
+
+
+    /**
      * app端计划列表数据
      * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
@@ -166,6 +189,7 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端计划标的组成
+     * com.hyjf.app.hjhplan.HjhPlanController.searchHjhPlanBorrow()
      */
     @ApiOperation(value = "APP端计划标的组成", notes = "APP端计划标的组成")
     @RequestMapping(value = "/{planId}/borrowComposition",produces = "application/json; charset=utf-8")
@@ -179,6 +203,7 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app 端汇计划的加入记录
+     * com.hyjf.wechat.controller.hjh.WxHjhPlanController.searchHjhPlanAccede()
      */
     @ApiOperation(value = "APP端汇计划加入记录", notes = "APP端汇计划加入记录")
     @RequestMapping(value = "/{planId}/investRecord",produces = "application/json; charset=utf-8")

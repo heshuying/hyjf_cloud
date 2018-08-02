@@ -23,6 +23,8 @@ public class BorrowSendTypeVO extends BaseVO implements Serializable {
 
     private Date updateTime;
 
+    private String modifyFlag;
+
     private static final long serialVersionUID = 1L;
 
     public String getSendCd() {
@@ -81,4 +83,11 @@ public class BorrowSendTypeVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getModifyFlag() {
+        return modifyFlag;
+    }
+
+    public void setModifyFlag(String modifyFlag) {
+        this.modifyFlag = modifyFlag;
+    }
 }

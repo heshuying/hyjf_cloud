@@ -249,7 +249,7 @@ public class AssetListController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "资产列表";
 		// 文件名称
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 封装查询条件
 		AssetListRequest form = new AssetListRequest();
 		// 初始化查询列表

@@ -73,7 +73,7 @@ public class TransPasswordController extends BaseUserController{
     /**
      * 设置交易密码(参照原代码继续返回 ModelAndView 而不是微服务的 jason )
      * @param request
-     * @param form
+     * @param
      * @return
      */
     @ApiOperation(value = "融东风密码设置接口", notes = "融东风用户设置交易密码")

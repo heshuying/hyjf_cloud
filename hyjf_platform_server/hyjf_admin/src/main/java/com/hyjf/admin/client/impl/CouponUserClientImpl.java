@@ -91,7 +91,7 @@ public class CouponUserClientImpl implements CouponUserClient {
      * @return
      */
     @Override
-    public List<ActivityListCustomizeVO> getActivityList(ActivityListRequest request) {
+    public List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request) {
         String url = "http://AM-MARKET/am-market/activity/selectRecordListValid";
         ActivityListCustomizeResponse response = restTemplate.postForEntity(url, request, ActivityListCustomizeResponse.class).getBody();
         if (response != null) {

@@ -258,7 +258,7 @@ public class BankCardManagerController extends BaseController {
         // 表格sheet名称
         String sheetName = "银行卡管理";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 封装查询条件
         BankCardManagerRequest requestBank = new BankCardManagerRequest();
         BeanUtils.copyProperties(bankCardManagerRequestBean, requestBank);
@@ -414,7 +414,7 @@ public class BankCardManagerController extends BaseController {
         // 表格sheet名称
         String sheetName = "用户银行卡操作记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 封装查询条件
         BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
         BeanUtils.copyProperties(bankCardLogRequestBean, bankCardLogRequest);

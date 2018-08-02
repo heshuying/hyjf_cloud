@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.app.autoplus;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -17,7 +18,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 /**
  * @author zhangqingqing
@@ -391,7 +390,7 @@ public class APPAutoPlusController extends BaseUserController {
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
     @ResponseBody
     @PostMapping(value = "/userAuthInvesBgreturn")
-    public String userAuthInvesBgreturn(@RequestBody @Valid BankCallBean bean) {
+    public String userAuthInvesBgreturn(BankCallBean bean) {
 
         String result = autoPlusService.userBgreturn(bean,BankCallConstant.QUERY_TYPE_1);
         return result;

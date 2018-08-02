@@ -234,10 +234,10 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
         cra.andBorrowCdEqualTo(record.getBorrowCd());
-        if(record.getInterestCoupon()==null||record.getInterestCoupon().equals("")){
+        if(record.getInterestCoupon()==null|| "".equals(record.getInterestCoupon())){
             record.setInterestCoupon(0);
         }
-        if(record.getTasteMoney()==null||record.getTasteMoney().equals("")){
+        if(record.getTasteMoney()==null|| "".equals(record.getTasteMoney())){
             record.setTasteMoney(0);
         }
         this.borrowProjectTypeMapper.updateByExampleSelective(record, example);

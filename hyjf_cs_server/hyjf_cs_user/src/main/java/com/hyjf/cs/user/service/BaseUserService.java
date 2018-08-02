@@ -137,7 +137,7 @@ public interface BaseUserService extends BaseService{
 	 */
 	UserInfoVO getUserInfo(int userId);
 
-    WebViewUserVO updateToken(WebViewUserVO webViewUserVO);
+    WebViewUserVO updateToken(String token,WebViewUserVO webViewUserVO);
 
     /**
 	 * 登录

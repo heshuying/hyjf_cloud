@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version CouponJXController, v0.1 2018/7/18 18:18
  */
-@Api(value = "数据中心-加息券", description = "数据中心-加息券")
+@Api(value = "数据中心-加息券", tags = "数据中心-加息券")
 @RestController
 @RequestMapping("/hyjf-admin/datacenter/couponJX")
 public class CouponJXController extends BaseController {

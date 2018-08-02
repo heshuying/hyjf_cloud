@@ -10,18 +10,12 @@ import java.util.List;
  * @author by xiehuili on 2018/8/1.
  */
 public class BorrowSendTypeResponse  extends Response<BorrowSendTypeVO> {
-    private String modifyFlag;
+
     private int count;
 //    获取数据字典表的下拉列表
     private List<ParamNameVO> enddayMonthList;
     //重定向url
     private String redirectUrl;
-    public String getModifyFlag() {
-        return modifyFlag;
-    }
-    public void setModifyFlag(String modifyFlag) {
-        this.modifyFlag = modifyFlag;
-    }
 
     public int getCount() {
         return count;

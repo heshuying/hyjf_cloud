@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
@@ -41,6 +43,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayPlanService;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -127,7 +130,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app端查询散标投资列表原子层List异常");
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }else {
-                result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                //result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
@@ -1681,6 +1685,65 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     }
 
     /**
+     * app端债转承接记录
+     * @param transferId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public BaseResultBeanFrontEnd investRecord(String transferId, Integer currentPage, Integer pageSize) {
+        TransferInvestRecordResultBean result = new TransferInvestRecordResultBean();
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("creditNid", transferId);
+            int recordTotal = amTradeClient.countTenderCreditInvestRecordTotal(params);
+            if (recordTotal > 0) { // 查询相应的汇直投列表数据
+                int limit = pageSize;
+                int page = currentPage;
+                int offSet = (page - 1) * limit;
+                if (offSet == 0 || offSet > 0) {
+                    params.put("limitStart", offSet);
+                }
+                if (limit > 0) {
+                    params.put("limitEnd", limit);
+                }
+                List<AppTenderCreditInvestListCustomizeVO> recordList = amTradeClient.searchTenderCreditInvestList(params);
+                //获取债转投资人次和已债转金额
+                List<BorrowCreditVO> creditList = amTradeClient.selectBorrowCreditByNid(transferId);
+                if (creditList != null && creditList.size() == 1) {
+                    BorrowCreditVO credit = creditList.get(0);
+                    result.setUserCount(String.valueOf(credit.getAssignNum()));
+                    result.setAccount(CommonUtils.formatAmount(credit.getCreditCapitalAssigned()));
+                }else{
+                    result.setAccount("0");
+                    result.setUserCount("0");
+                }
+                //判断是否最后一页
+                if(recordTotal<=page*limit){
+                    result.setIsEnd(true);
+                }else{
+                    result.setIsEnd(false);
+                }
+                result.setIsEnd(true);
+                result.setList(recordList);
+            } else {
+                result.setAccount("0");
+                result.setUserCount("0");
+                result.setIsEnd(true);
+                result.setList(new ArrayList<AppTenderCreditInvestListCustomizeVO>());
+            }
+            result.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+            result.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+        } catch (Exception e) {
+            result.setStatus(BaseResultBeanFrontEnd.FAIL);
+            result.setStatusDesc(BaseResultBeanFrontEnd.FAIL_MSG);
+        }
+
+        return result;
+    }
+
+    /**
      * 根据planNid获取计划加入金额
      * @param params
      * @return
@@ -1854,6 +1917,56 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         resultMap.put(ProjectConstant.RES_PROJECT_INFO, projectInfo);
         resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
+    }
+
+
+    /**
+     * 适应客户端数据返回
+     * @param list
+     * @return
+     */
+    private List<AppProjectListCsVO> convertToAppProjectType(List<AppProjectListCustomizeVO> list) {
+        List<AppProjectListCsVO> appProjectTypes = new ArrayList<>();
+        for(AppProjectListCustomizeVO listCustomize : list){
+            AppProjectListCsVO appProjectType = new AppProjectListCsVO();
+            appProjectType.setBorrowNid(listCustomize.getBorrowNid());
+            appProjectType.setBorrowName(listCustomize.getBorrowNid());
+            appProjectType.setBorrowDesc(listCustomize.getBorrowDesc());
+            appProjectType.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            appProjectType.setBorrowTheFirstDesc("历史年回报率");
+            appProjectType.setBorrowTheSecond(listCustomize.getBorrowPeriod());
+            appProjectType.setBorrowTheSecondDesc("项目期限");
+            String status = listCustomize.getStatus();
+            String borrowAccountWait = listCustomize.getBorrowAccountWait();
+            if (status.equals("10")){
+
+                appProjectType.setStatusName(listCustomize.getOnTime());
+                //可投金额
+                borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
+                appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait)?"":"剩余" + borrowAccountWait);
+            }else if(status.equals("11")){
+                appProjectType.setStatusName("立即投资");
+                //可投金额
+                borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
+                appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait)?"":"剩余" + borrowAccountWait);
+            }else if (status.equals("12")){
+                appProjectType.setStatusName("复审中");
+            }else if (status.equals("13")){
+                appProjectType.setStatusName("还款中");
+            }else if (status.equals("14")){
+                appProjectType.setStatusName("已还款");
+            }
+            appProjectType.setBorrowUrl(systemConfig.getWebHost() + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
+            appProjectType.setStatus(listCustomize.getStatus());
+            appProjectType.setOnTime(listCustomize.getOnTime());
+
+            appProjectType.setMark("");
+            appProjectType.setBorrowType(listCustomize.getBorrowType());
+            // 应客户端要求，返回空串
+            CommonUtils.convertNullToEmptyString(appProjectType);
+            appProjectTypes.add(appProjectType);
+        }
+        return appProjectTypes;
     }
 
 

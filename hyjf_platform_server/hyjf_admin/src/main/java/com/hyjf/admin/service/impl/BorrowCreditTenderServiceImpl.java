@@ -359,17 +359,17 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
                     }
                     // 客户端
                     else if (celLength == 12) {
-                        if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("0")) {
+                        if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "0".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("pc");
-                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("1")) {
+                        }else if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "1".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("微信");
-                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("2")) {
+                        }else if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "2".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("android");
-                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("3")) {
+                        }else if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "3".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("ios");
                         }
                     }

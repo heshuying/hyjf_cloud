@@ -35,6 +35,7 @@ public class SubmissionsServiceImpl implements SubmissionsService {
      *
      * @return
      */
+    @Override
     public List<ParamName> getParamNameList(String nameClass) {
         ParamNameExample example = new ParamNameExample();
         ParamNameExample.Criteria cra = example.createCriteria();
