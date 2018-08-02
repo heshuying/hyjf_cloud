@@ -41,6 +41,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.AppProjectListService;
 import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.RepayPlanService;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -127,7 +128,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app端查询散标投资列表原子层List异常");
                 throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
             }else {
-                result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                //result = CommonUtils.convertBeanList(list, AppProjectListCsVO.class);
+                result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
@@ -1854,6 +1856,56 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         resultMap.put(ProjectConstant.RES_PROJECT_INFO, projectInfo);
         resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
+    }
+
+
+    /**
+     * 适应客户端数据返回
+     * @param list
+     * @return
+     */
+    private List<AppProjectListCsVO> convertToAppProjectType(List<AppProjectListCustomizeVO> list) {
+        List<AppProjectListCsVO> appProjectTypes = new ArrayList<>();
+        for(AppProjectListCustomizeVO listCustomize : list){
+            AppProjectListCsVO appProjectType = new AppProjectListCsVO();
+            appProjectType.setBorrowNid(listCustomize.getBorrowNid());
+            appProjectType.setBorrowName(listCustomize.getBorrowNid());
+            appProjectType.setBorrowDesc(listCustomize.getBorrowDesc());
+            appProjectType.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            appProjectType.setBorrowTheFirstDesc("历史年回报率");
+            appProjectType.setBorrowTheSecond(listCustomize.getBorrowPeriod());
+            appProjectType.setBorrowTheSecondDesc("项目期限");
+            String status = listCustomize.getStatus();
+            String borrowAccountWait = listCustomize.getBorrowAccountWait();
+            if (status.equals("10")){
+
+                appProjectType.setStatusName(listCustomize.getOnTime());
+                //可投金额
+                borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
+                appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait)?"":"剩余" + borrowAccountWait);
+            }else if(status.equals("11")){
+                appProjectType.setStatusName("立即投资");
+                //可投金额
+                borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
+                appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait)?"":"剩余" + borrowAccountWait);
+            }else if (status.equals("12")){
+                appProjectType.setStatusName("复审中");
+            }else if (status.equals("13")){
+                appProjectType.setStatusName("还款中");
+            }else if (status.equals("14")){
+                appProjectType.setStatusName("已还款");
+            }
+            appProjectType.setBorrowUrl(systemConfig.getWebHost() + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
+            appProjectType.setStatus(listCustomize.getStatus());
+            appProjectType.setOnTime(listCustomize.getOnTime());
+
+            appProjectType.setMark("");
+            appProjectType.setBorrowType(listCustomize.getBorrowType());
+            // 应客户端要求，返回空串
+            CommonUtils.convertNullToEmptyString(appProjectType);
+            appProjectTypes.add(appProjectType);
+        }
+        return appProjectTypes;
     }
 
 
