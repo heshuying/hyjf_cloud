@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * @author fuqiang
- * @version OperationReportEntity, v0.1 2018/7/18 11:32
+ * @author tanyy
+ * @version OperationReportEntity, v0.1 2018/8/1 11:32
  */
 @Document(collection = "t_operation_report")
 public class OperationReportEntity {
