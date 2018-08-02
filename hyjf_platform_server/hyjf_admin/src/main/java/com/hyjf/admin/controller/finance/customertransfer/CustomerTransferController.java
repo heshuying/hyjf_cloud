@@ -234,9 +234,7 @@ public class CustomerTransferController extends BaseController {
      * @param map 包含transferId 转账记录id
      * @return
      */
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String"),
-    })
+    @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String")
     @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
     public AdminResult transferSendMail(@RequestBody Map map){
