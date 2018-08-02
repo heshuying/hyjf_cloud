@@ -1,18 +1,19 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.BorrowProjectTypeClient;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,8 +40,14 @@ public class BorrowProjectTypeClientImpl implements BorrowProjectTypeClient {
      */
     @Override
     public List<ParamNameVO>  selectProjectTypeParamList(){
-        return restTemplate.postForEntity("http://AM-CONFIG/am-config/accountconfig/selectProjectTypeParamList",null, List.class)
+        List<ParamNameVO> paramNameVOS =new ArrayList<>();
+        ParamNameResponse amResponse =restTemplate.postForEntity("http://AM-CONFIG/am-config/accountconfig/selectProjectTypeParamList",null, ParamNameResponse.class)
                 .getBody();
+        if(Response.isSuccess(amResponse)){
+            paramNameVOS=amResponse.getResultList();
+            return paramNameVOS;
+        }
+        return null;
     }
     /**
      * 查询项目类型 详情
@@ -96,9 +103,14 @@ public class BorrowProjectTypeClientImpl implements BorrowProjectTypeClient {
      */
     @Override
     public List<ParamNameVO> getParamNameList(String nameClass){
-        List<ParamName> paramNameS = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getParamNameList/"+nameClass, List.class)
+        List<ParamNameVO> paramNameVOS =new ArrayList<>();
+        ParamNameResponse response = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getParamNameList/"+nameClass, ParamNameResponse.class)
                 .getBody();
-        List<ParamNameVO> paramNameVOS = CommonUtils.convertBeanList(paramNameS,ParamNameVO.class);
+        if(!Response.isSuccess(response)){
+            paramNameVOS=null;
+            return paramNameVOS;
+        }
+        paramNameVOS = response.getResultList();
         return paramNameVOS;
     }
     /**

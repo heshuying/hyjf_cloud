@@ -15,7 +15,7 @@ public interface HjhAssetBorrowTypeCustomizeMapper {
      * @param hjhAssetBorrowTypeCustomize
      * @return
      */
-    public int countRecord(HjhAssetBorrowtype hjhAssetBorrowTypeCustomize);
+    public int countRecord(AdminBorrowFlowRequest hjhAssetBorrowTypeCustomize);
 
     /**
      *

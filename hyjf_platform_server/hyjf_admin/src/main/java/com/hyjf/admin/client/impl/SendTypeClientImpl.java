@@ -1,13 +1,12 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.SendTypeClient;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowSendTypeResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.resquest.admin.BorrowSendTypeRequest;
 import com.hyjf.am.vo.admin.BorrowSendTypeVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -60,9 +59,10 @@ public class SendTypeClientImpl implements SendTypeClient {
     public List<ParamNameVO> getParamNameList(String code){
         List<ParamNameVO> paramNameVOS = new ArrayList<>();
         String url = "http://AM-CONFIG/am-config/accountconfig/getParamNameList/"+code;
-        List<ParamName> paramNames = restTemplate.getForEntity(url,List.class).getBody();
-        if (!CollectionUtils.isEmpty(paramNames)) {
-            paramNameVOS= CommonUtils.convertBeanList(paramNames,ParamNameVO.class);
+        ParamNameResponse response =restTemplate.getForEntity(url,ParamNameResponse.class).getBody();
+        List<ParamNameVO> paramNames = new ArrayList<>();
+        if (Response.isSuccess(response)) {
+            paramNames= response.getResultList();
             return paramNameVOS;
         }
         return null;

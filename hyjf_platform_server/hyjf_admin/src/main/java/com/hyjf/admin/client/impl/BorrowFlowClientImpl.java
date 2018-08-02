@@ -1,19 +1,20 @@
 package com.hyjf.admin.client.impl;
 
 import com.hyjf.admin.client.BorrowFlowClient;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
+import org.apache.commons.collections.CollectionUtils;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,19 +42,18 @@ public class BorrowFlowClientImpl implements BorrowFlowClient {
      */
     @Override
     public List<HjhInstConfigVO> hjhInstConfigList(String instCode){
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList/"+instCode,List.class)
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList",List.class)
                 .getBody();
     }
 
     /**
      * 根据表的类型,期数,项目类型检索管理费件数
-     * @author liubin
      * @param instCode assetType
      * @return
      */
     @Override
     public int countRecordByPK(String instCode, Integer assetType){
-        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/hjhInstConfigList/"+instCode+"/"+assetType,int.class)
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/config/borrowflow/countRecordByPK/"+instCode+"/"+assetType,int.class)
                 .getBody();
     }
     /**
@@ -73,14 +73,30 @@ public class BorrowFlowClientImpl implements BorrowFlowClient {
      */
     @Override
     public AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest){
-        List<ParamName> paramNameS = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/"+"FLOW_STATUS", List.class)
+        List<HjhAssetBorrowTypeVO>  hjhAssetBorrowType=new ArrayList<>();
+        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/"+"FLOW_STATUS", ParamNameResponse.class)
                 .getBody();
-        List<ParamNameVO> paramNameVOS = CommonUtils.convertBeanList(paramNameS,ParamNameVO.class);
-        if( !CollectionUtils.isEmpty(paramNameVOS)){
-            adminRequest.setParamNameVOS(paramNameVOS);
+        AdminBorrowFlowResponse response= restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList",adminRequest,AdminBorrowFlowResponse.class)
+                .getBody();
+        if( Response.isSuccess(amResponse)&& Response.isSuccess(response)){
+            List<ParamNameVO>  paramNameS =amResponse.getResultList();
+            List<HjhAssetBorrowTypeVO>  hjhAssetBorrowTypeVOS =response.getResultList();
+            if( !CollectionUtils.isEmpty(hjhAssetBorrowTypeVOS)&&!CollectionUtils.isEmpty(paramNameS)){
+                for(int i=0;i<paramNameS.size();i++){
+                    for(int j=0;j<hjhAssetBorrowTypeVOS.size();j++){
+                        if(paramNameS.get(i).getNameCd().equals(String.valueOf(hjhAssetBorrowTypeVOS.get(j).getIsOpen()))){
+                            hjhAssetBorrowTypeVOS.get(j).setStatus(paramNameS.get(i).getName());
+                            hjhAssetBorrowType.add(hjhAssetBorrowTypeVOS.get(j));
+                        }
+                    }
+                }
+            }
+            response.setResultList(hjhAssetBorrowType);
+            return response;
+        }else{
+            response.setRtn(Response.FAIL);
         }
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList",adminRequest,AdminBorrowFlowResponse.class)
-                .getBody();
+        return response;
     }
     /**
      * 详情
