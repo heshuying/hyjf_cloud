@@ -172,6 +172,14 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowTenderInfoCustomizeMapper borrowTenderInfoCustomizeMapper;
 
 	@Autowired
+	protected HjhPlanCapitalCustomizeMapper hjhPlanCapitalCustomizeMapper;
+
+	@Autowired
+	protected HjhAccountBalanceCustomizeMapper hjhAccountBalanceCustomizeMapper;
+
+
+
+	@Autowired
 	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 
 	@Autowired

@@ -25,7 +25,6 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/batch/tender")
 public class AutoTenderController extends BaseTradeController {
-    private static final Logger logger = LoggerFactory.getLogger(AutoTenderController.class);
     @Autowired
     private AutoTenderService autoTenderService;
 

@@ -32,11 +32,12 @@ public class HjhPlanCapitalController {
     //复投原始标的列表(通过planNid)
     @RequestMapping(value = "/hjhPlanCapitalReinvestInfo", method = RequestMethod.POST)
     public HjhPlanCapitalResponse hjhPlanCapitalReinvestInfo(HjhReInvestDetailRequest request){
-        HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
-
-        List<HjhPlanCapitalCustomizeVO> responseList = hjhPlanCapitalService.getReinvestInfo(request);
-        response.setResultList(responseList);
-        return response;
+//        HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
+//
+//        List<HjhPlanCapitalCustomizeVO> responseList = hjhPlanCapitalService.getReinvestInfo(request);
+//        response.setResultList(responseList);
+//        return response;
+        return null;
     }
 
     //复投承接债权(通过planNid)
