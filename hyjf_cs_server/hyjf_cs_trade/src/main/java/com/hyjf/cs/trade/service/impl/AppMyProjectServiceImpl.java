@@ -26,7 +26,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.service.BaseClient;
-import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
 import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
 import com.hyjf.cs.trade.service.AppMyProjectService;

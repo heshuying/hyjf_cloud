@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -87,4 +88,13 @@ public interface AppProjectListService extends BaseTradeService{
      * @param pageSize
      */
     void getHjhPlanAccede(HjhPlanAccedeResultBean result, String planId, int currentPage, int pageSize);
+
+    /**
+     * app端债转承接记录
+     * @param transferId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    BaseResultBeanFrontEnd investRecord(String transferId, Integer currentPage, Integer pageSize);
 }

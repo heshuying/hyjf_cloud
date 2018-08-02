@@ -3,34 +3,13 @@
  */
 package com.hyjf.cs.trade.controller.app.newagreement;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppNewAgreementResponse;
-import com.hyjf.am.vo.app.AppNewAgreementVO;
-import com.hyjf.cs.common.bean.result.AppResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.ProtocolTemplateVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.app.AppNewAgreementVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
@@ -44,7 +23,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.calculate.CalculatesUtil;
-import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.bean.newagreement.NewCreditAssignedBean;
@@ -54,8 +33,20 @@ import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import static com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd.FAIL;
-import static com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd.FAIL_MSG;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin
@@ -163,7 +154,7 @@ public class NewAgreementController extends BaseTradeController{
             }
         } catch (Exception e) {
         	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
-            newAgreementResultBean.setStatus(FAIL);
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
             newAgreementResultBean.setStatusDesc("系统异常");
             newAgreementResultBean.setInfo(jsonObject);
         }
@@ -253,7 +244,7 @@ public class NewAgreementController extends BaseTradeController{
 	        }
         } catch (Exception e) {
         	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
-            newAgreementResultBean.setStatus(FAIL);
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
             newAgreementResultBean.setStatusDesc("系统异常");
             newAgreementResultBean.setInfo(jsonObject);
         }
@@ -471,7 +462,7 @@ public class NewAgreementController extends BaseTradeController{
                     }
                 } catch (Exception e) {
                 	logger.info(this.getClass().getName(), "userCreditContract", "系统异常");
-                    newAgreementResultBean.setStatus(FAIL);
+                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
                     newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.FAIL_MSG);
                     newAgreementResultBean.setInfo(jsonObject);
                 }
@@ -481,7 +472,7 @@ public class NewAgreementController extends BaseTradeController{
             
         } catch (Exception e) {
         	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
-            newAgreementResultBean.setStatus(FAIL);
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
             newAgreementResultBean.setStatusDesc("系统异常");
             newAgreementResultBean.setInfo(jsonObject);
         }
@@ -525,7 +516,7 @@ public class NewAgreementController extends BaseTradeController{
             newAgreementResultBean.setInfo(jsonObject);
         } catch (Exception e) {
         	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
-            newAgreementResultBean.setStatus(FAIL);
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
             newAgreementResultBean.setStatusDesc("系统异常");
             newAgreementResultBean.setInfo(jsonObject);
         }
@@ -556,7 +547,7 @@ public class NewAgreementController extends BaseTradeController{
            userId = SecretUtil.getUserId(sign);
        } catch (Exception e) {
     	   logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
-           newAgreementResultBean.setStatus(FAIL);
+           newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
            newAgreementResultBean.setStatusDesc("系统异常");
            return newAgreementResultBean;
        }
@@ -1146,10 +1137,10 @@ public class NewAgreementController extends BaseTradeController{
         AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
         response.setResult(template);
         if(response == null) {
-            return new AppResult(FAIL, FAIL_MSG);
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, BaseResultBeanFrontEnd.FAIL_MSG);
         }
         if (!Response.isSuccess(response)) {
-            return new AppResult(FAIL, response.getMessage());
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
         }
         return new AppResult(response.getResultList());
     }
@@ -1163,10 +1154,10 @@ public class NewAgreementController extends BaseTradeController{
         AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
         response.setResult(template);
         if(response == null) {
-            return new AppResult(FAIL, FAIL_MSG);
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, BaseResultBeanFrontEnd.FAIL_MSG);
         }
         if (!Response.isSuccess(response)) {
-            return new AppResult(FAIL, response.getMessage());
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
         }
         return new AppResult(response.getResultList());
     }
