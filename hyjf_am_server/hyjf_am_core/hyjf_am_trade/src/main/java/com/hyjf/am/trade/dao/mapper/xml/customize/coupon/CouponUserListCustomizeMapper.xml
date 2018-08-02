@@ -71,7 +71,7 @@
 		ELSE
 			cc.coupon_quota
 		END AS coupon_quota,
-		 FROM_UNIXTIME(cu.add_time, '%Y.%m.%d') AS add_time,
+		 FROM_UNIXTIME(cu.create_time, '%Y.%m.%d') AS add_time,
 	     FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
 		 cc.coupon_system coupon_system,
 		 cc.project_type project_type,
@@ -132,8 +132,8 @@
 		ELSE
 			'不限'
 		END project_expiration_type,
-		FROM_UNIXTIME(ct.add_time, '%Y-%m-%d') used_time_day,
-		FROM_UNIXTIME(ct.add_time, '%H:%i') used_time_hour,
+		FROM_UNIXTIME(ct.create_time, '%Y-%m-%d') used_time_day,
+		FROM_UNIXTIME(ct.create_time, '%H:%i') used_time_hour,
 		bt.borrow_nid project_nid,
 		FROM_UNIXTIME(bt.addtime, '%Y-%m-%d') tender_time_day,
 		FROM_UNIXTIME(bt.addtime, '%H:%i:%s') tender_time_hour,
