@@ -115,9 +115,9 @@ public class WebRechargeController extends BaseTradeController{
 		UserVO user = this.userRechargeService.getUsers(userId);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
-		params.put("mobile",bean.getMobile());
+		params.put("mobile",phone);
+        JSONObject msg = this.userRechargeService.handleRechargeInfo(bean, params);
 		if (user!=null&&bean != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
-			JSONObject msg = this.userRechargeService.handleRechargeInfo(bean, params);
 			// 充值成功
 			if (msg != null && "0".equals(msg.get("error"))) {
 				logger.info("充值成功,手机号:[" + bean.getMobile() + "],用户ID:[" + userId + "],充值金额:[" + bean.getTxAmount() + "]");
@@ -145,9 +145,9 @@ public class WebRechargeController extends BaseTradeController{
 	@ApiOperation(value = "web端查询充值失败原因", notes = "web端查询充值失败原因")
 	@PostMapping("/seachFiledMess")
 	@ResponseBody
-	public WebResult<Object> seachUserBankRechargeErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
-		logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);
-		WebResult<Object> result = userRechargeService.seachUserBankRechargeErrorMessgae(logOrdId);
+	public WebResult<Object> seachUserBankRechargeErrorMessgae(@RequestBody @Valid BankRechargeVO bankRechargeVO) {
+		logger.info("查询提现失败原因start,logOrdId:{}", bankRechargeVO.getLogOrdId());
+		WebResult<Object> result = userRechargeService.seachUserBankRechargeErrorMessgae(bankRechargeVO.getLogOrdId());
 		return result;
 	}
 }

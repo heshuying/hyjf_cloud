@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * @author yaoy
- * @version CouponRepaySerivce, v0.1 2018/6/21 18:11
+ * @version CouponRepayService, v0.1 2018/6/21 18:11
  */
-public interface CouponRepaySerivce {
+public interface CouponRepayService {
     /**
      * 统计加息券每日待收收益
      *

@@ -21,7 +21,6 @@ import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
-import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -123,9 +122,11 @@ public class CouponUserServiceImpl implements CouponUserService {
     public AdminCouponUserCustomizeResponse getRecordList(CouponConfigRequest request) {
         AdminCouponUserCustomizeResponse response = new AdminCouponUserCustomizeResponse();
         List<CouponConfigCustomizeVO> adminCouponUserCustomizeVOS = couponUserClient.getCouponConfig(request);
-        List<ActivityListCustomizeVO> activityListCustomizeVOS = couponUserClient.getActivityList(new ActivityListRequest());
-        response.getResult().setCouponConfigCustomizeVOS(adminCouponUserCustomizeVOS);
-        response.getResult().setActivityListCustomizeVOS(activityListCustomizeVOS);
+        List<ActivityListCustomizeVO> activityListCustomizeVOS = couponUserClient.getActivityList(new ActivityListCustomizeVO());
+        if (!CollectionUtils.isEmpty(adminCouponUserCustomizeVOS) && !CollectionUtils.isEmpty(activityListCustomizeVOS)) {
+            response.getResult().setCouponConfigCustomizeVOS(adminCouponUserCustomizeVOS);
+            response.getResult().setActivityListCustomizeVOS(activityListCustomizeVOS);
+        }
         return response;
     }
 

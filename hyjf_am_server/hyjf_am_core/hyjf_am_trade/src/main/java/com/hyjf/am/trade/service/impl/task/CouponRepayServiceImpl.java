@@ -7,8 +7,7 @@ import com.hyjf.am.trade.dao.mapper.customize.trade.BatchCouponTimeoutCustomizeM
 import com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
-import com.hyjf.am.trade.service.task.CouponRepaySerivce;
-import org.apache.commons.collections.map.HashedMap;
+import com.hyjf.am.trade.service.task.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +18,10 @@ import java.util.Map;
 
 /**
  * @author yaoy
- * @version CouponRepaySerivceImpl, v0.1 2018/6/21 18:14
+ * @version CouponRepayServiceImpl, v0.1 2018/6/21 18:14
  */
 @Service
-public class CouponRepaySerivceImpl implements CouponRepaySerivce {
+public class CouponRepayServiceImpl implements CouponRepayService {
 
     @Autowired
     private CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;

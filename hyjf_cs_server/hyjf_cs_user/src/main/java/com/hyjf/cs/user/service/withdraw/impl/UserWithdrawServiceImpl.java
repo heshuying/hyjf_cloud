@@ -122,7 +122,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
             List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
             for (int j = 0; j < array.size(); j++) {
                 JSONObject obj = array.getJSONObject(j);
-                if (!obj.getString("RealFlag").equals("R")) {
+                if (!"R".equals(obj.getString("RealFlag"))) {
                     // 只有实名卡才入库
                     continue;
                 }
@@ -130,11 +130,11 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                 BankCardBean bankCardBean = new BankCardBean();
                 // 普通卡
                 bankCardBean.setIsDefault("0");
-                if (obj.getString("IsDefault").equals("Y")) {
+                if ("Y".equals(obj.getString("IsDefault"))) {
                     // 默认卡
                     bankCardBean.setIsDefault("1");
                 }
-                if (obj.getString("ExpressFlag").equals("Y")) {
+                if ("Y".equals(obj.getString("ExpressFlag"))) {
                     // 快捷卡
                     bankCardBean.setIsDefault("2");
                 }
@@ -151,7 +151,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                     bankSetUp = bankConfig;
                 } else {
                     // 如果没有传银行卡code，则判断是默认银行卡或快捷卡记录银行设置
-                    if (obj.getString("IsDefault").equals("Y") || obj.getString("ExpressFlag").equals("Y")) {
+                    if ("Y".equals(obj.getString("IsDefault")) || "Y".equals(obj.getString("ExpressFlag"))) {
                         bankSetUp = bankConfig;
                     }
                 }

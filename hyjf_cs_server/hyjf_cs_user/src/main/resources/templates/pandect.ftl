@@ -3,7 +3,7 @@
   "status": "${datas.status!''}",
   "statusDesc": "${datas.statusDesc!''}",
   "data": {
-        "isVip":"${(datas.data.isVip)?string('true', 'false')}",
+        "isVip":${(datas.data.isVip)?string('true', 'false')},
         "vipName":"${(datas.data.vipName)!''}",
         "couponValidCount":"${(datas.data.couponValidCount)!''}",
         "bankOpenAccount": {
@@ -19,7 +19,7 @@
                     <#assign webViewUser = datas.data.webViewUser >
                 </#if>
                 "email": "${(webViewUser.email)!''}",
-                "bankOpenAccount": "${(webViewUser.bankOpenAccount)!''}",
+                "bankOpenAccount": ${(webViewUser.bankOpenAccount)!'0'},
                 "chinapnrUsrid":"${(webViewUser.chinapnrUsrid)!''}"
         },
         "user": {
@@ -33,17 +33,17 @@
                     <#if datas.data.account??>
                         <#assign account = datas.data.account >
                     </#if>
-                  "balance": "${(account.balance)!''}",
-                  "planAccountWait": "${(account.planAccountWait)!''}",
-                  "planCapitalWait": "${(account.planCapitalWait)!''}",
-                  "planInterestWait": "${(account.planInterestWait)!''}",
-                  "bankTotal": "${(account.bankTotal)!''}",
-                  "bankBalance": "${(account.bankBalance)!''}",
-                  "bankFrost": "${(account.bankFrost)!''}",
-                  "bankInterestSum": "${(account.bankInterestSum)!''}",
-                  "bankAwait": "${(account.bankAwait)!''}",
-                  "bankAwaitCapital": "${(account.bankAwaitCapital)!''}",
-                  "bankAwaitInterest": "${(account.bankAwaitInterest)!''}"
+                  "balance": ${(account.balance)?c!''},
+                  "planAccountWait": ${(account.planAccountWait)?c!'0'},
+                  "planCapitalWait": ${(account.planCapitalWait)?c!'0'},
+                  "planInterestWait": ${(account.planInterestWait)?c!'0'},
+                  "bankTotal": ${(account.bankTotal)?c!'0'},
+                  "bankBalance": ${(account.bankBalance)?c!'0'},
+                  "bankFrost": ${(account.bankFrost)?c!'0'},
+                  "bankInterestSum": ${(account.bankInterestSum)?c!'0'},
+                  "bankAwait": ${(account.bankAwait)?c!'0'},
+                  "bankAwaitCapital": ${(account.bankAwaitCapital)?c!'0'},
+                  "bankAwaitInterest": ${(account.bankAwaitInterest)?c!'0'}
         },
         "userName": "${datas.data.userName!''}",
         "recoverLatestList": [

@@ -92,7 +92,7 @@ public class RegistRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "注册记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 需要输出的结果列表
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();

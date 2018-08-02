@@ -53,7 +53,8 @@ public class ApiUserPostBean  extends BaseBean {
 	 * @return the retUrl
 	 */
 	
-	public String getRetUrl() {
+	@Override
+    public String getRetUrl() {
 		return retUrl;
 	}
 
@@ -61,7 +62,8 @@ public class ApiUserPostBean  extends BaseBean {
 	 * @param retUrl the retUrl to set
 	 */
 	
-	public void setRetUrl(String retUrl) {
+	@Override
+    public void setRetUrl(String retUrl) {
 		this.retUrl = retUrl;
 	}
 

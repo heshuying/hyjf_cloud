@@ -93,10 +93,10 @@ public class AppBorrowImageController {
     @PostMapping("/insertAction")
     public AppBorrowImageResponse insertAction(@RequestBody AppBorrowImageRequest form) throws Exception {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
-        if (form.getPageType()!=null&&!form.getPageType().equals("")
-                &&form.getPageType().equals("0")) {
+        if (form.getPageType()!=null&&!"".equals(form.getPageType())
+                && "0".equals(form.getPageType())) {
             if (form.getJumpName()!=null&&form.getJumpName().contains(",")) {
-                if (form.getJumpName().split(",")[0]==null||form.getJumpName().split(",")[0].equals("")) {
+                if (form.getJumpName().split(",")[0]==null|| "".equals(form.getJumpName().split(",")[0])) {
                     form.setJumpName(form.getJumpName().split(",")[form.getJumpName().split(",").length-1]);
                 }else {
                     form.setJumpName(form.getJumpName().split(",")[0]);
@@ -136,10 +136,10 @@ public class AppBorrowImageController {
     @PostMapping("/updateAction")
     public AppBorrowImageResponse updateAction(@RequestBody AppBorrowImageRequest form) throws Exception {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
-        if (form.getPageType() != null && !form.getPageType().equals("")
-                && form.getPageType().equals("0")) {
+        if (form.getPageType() != null && !"".equals(form.getPageType())
+                && "0".equals(form.getPageType())) {
             if (form.getJumpName() != null && form.getJumpName().contains(",")) {
-                if (form.getJumpName().split(",")[0] == null || form.getJumpName().split(",")[0].equals("")) {
+                if (form.getJumpName().split(",")[0] == null || "".equals(form.getJumpName().split(",")[0])) {
                     form.setJumpName(form.getJumpName().split(",")[form.getJumpName().split(",").length - 1]);
                 } else {
                     form.setJumpName(form.getJumpName().split(",")[0]);
