@@ -115,7 +115,7 @@ public class WebRechargeController extends BaseTradeController{
 		UserVO user = this.userRechargeService.getUsers(userId);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("ip", bean.getUserIP());
-		params.put("mobile",bean.getMobile());
+		params.put("mobile",phone);
 		if (user!=null&&bean != null && BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))) {
 			JSONObject msg = this.userRechargeService.handleRechargeInfo(bean, params);
 			// 充值成功
