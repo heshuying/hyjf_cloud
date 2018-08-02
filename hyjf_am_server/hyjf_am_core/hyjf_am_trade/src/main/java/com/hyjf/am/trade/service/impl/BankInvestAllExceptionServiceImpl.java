@@ -378,7 +378,8 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
      * @param borrowNid
      * @return
      */
-	public BorrowInfo getBorrowInfoByNid(String borrowNid) {
+	@Override
+    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);

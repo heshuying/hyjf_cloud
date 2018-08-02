@@ -136,7 +136,7 @@ public class ApiUserBindController extends BaseUserController {
 		 user.setPassword(apiUserPostBean.getLoginPassword());
 		// 登陆
 		 WebResult<WebViewUserVO> login = loginController.login( user,request);
-        if (!login.getStatus().equals("000")) {
+        if (!"000".equals(login.getStatus())) {
             // 登陆失败，返回失败信息
             return jsonObj;
         }

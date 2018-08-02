@@ -784,11 +784,11 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 List<UserUpdateParamCustomize> userUpdateParamList = userLeaveCustomizeMapper.queryUserAndDepartment(userInfo.getUserId());
                 if (userUpdateParamList != null && userUpdateParamList.size() > 0) {
                     if (userUpdateParamList.get(0).getCuttype() != null) {
-                        if (userUpdateParamList.get(0).getCuttype().equals("1")) {
+                        if ("1".equals(userUpdateParamList.get(0).getCuttype())) {
                             // 线上
                             userInfo.setAttribute(3);
                         }
-                        if (userUpdateParamList.get(0).getCuttype().equals("2")) {
+                        if ("2".equals(userUpdateParamList.get(0).getCuttype())) {
                             // 线下
                             userInfo.setAttribute(2);
                         }

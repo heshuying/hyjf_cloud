@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -173,7 +172,7 @@ public class LoanCoverController extends BaseController {
         }
         // 表格sheet名称
         String sheetName = "借款盖章用户查询";
-        String fileName = URLEncoder.encode(sheetName)+ StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8)+ StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]{"序号", "手机号", "名称", "证件号", "用户类型", "邮箱", "客户编号", "状态", "状态码", "添加时间", "申请时间"};
         // 声明一个工作薄

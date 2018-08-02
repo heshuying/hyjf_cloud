@@ -57,9 +57,9 @@ public class HomePageController extends BaseMarketController {
             ads.put("limitEnd", 1);
             ads.put("host", "file.domain.url");
             ads.put("code", "startpage");
-            if (platform.equals("2")) {
+            if ("2".equals(platform)) {
                 ads.put("platformType","1");
-            } else if (platform.equals("3")) {
+            } else if ("3".equals(platform)) {
                 ads.put("platformType","2");
             }
             List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);

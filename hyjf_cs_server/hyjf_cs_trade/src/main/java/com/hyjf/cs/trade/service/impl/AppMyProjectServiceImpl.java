@@ -67,8 +67,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
     public boolean isAllowChannelAttorn(Integer userId) {
         // 根据userId获取用户注册推广渠道
         UtmPlatVO utmPlat = amUserClient.selectUtmPlatByUserId(userId);
-        if (utmPlat != null && utmPlat.getAttornFlag() == 0)
+        if (utmPlat != null && utmPlat.getAttornFlag() == 0) {
             return false;
+        }
         return true;
     }
 

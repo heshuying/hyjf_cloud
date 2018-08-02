@@ -252,7 +252,7 @@ public class AllocationEngineController extends BaseController{
 	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划专区";
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","计划编号", "计划名称","添加时间", "状态" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -364,7 +364,7 @@ public class AllocationEngineController extends BaseController{
 	public void exportPlanConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划配置";
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","标签编号", "标签名称","添加时间", "状态","排序" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();

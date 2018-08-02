@@ -14,18 +14,22 @@ public class BindCardPageRequestBean extends BaseBean{
     
     private String notifyUrl;
 
+    @Override
     public String getRetUrl() {
         return retUrl;
     }
 
+    @Override
     public void setRetUrl(String retUrl) {
         this.retUrl = retUrl;
     }
 
+    @Override
     public String getForgotPwdUrl() {
         return forgotPwdUrl;
     }
 
+    @Override
     public void setForgotPwdUrl(String forgotPwdUrl) {
         this.forgotPwdUrl = forgotPwdUrl;
     }

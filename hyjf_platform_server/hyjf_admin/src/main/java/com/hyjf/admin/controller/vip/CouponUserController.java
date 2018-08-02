@@ -647,7 +647,7 @@ public class CouponUserController extends BaseController {
                         cell.setCellValue(couponUser.getUsername());
                     }
                     else if (celLength == 4) {
-                        cell.setCellValue(couponUser.getAttribute() == null ? "" : couponUser.getAttribute().equals("0") ? "无主单" : couponUser.getAttribute().equals("1") ? "有主单" : couponUser.getAttribute().equals("2") ? "线下员工" : "线上员工");
+                        cell.setCellValue(couponUser.getAttribute() == null ? "" : "0".equals(couponUser.getAttribute()) ? "无主单" : "1".equals(couponUser.getAttribute()) ? "有主单" : "2".equals(couponUser.getAttribute()) ? "线下员工" : "线上员工");
                     }
                     else if(celLength == 5) {
                         cell.setCellValue(couponUser.getChannel());

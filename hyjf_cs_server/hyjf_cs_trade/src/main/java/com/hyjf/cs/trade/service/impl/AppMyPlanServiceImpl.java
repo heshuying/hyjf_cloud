@@ -292,7 +292,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
-        if (appCouponCustomize.getCountInterestTime().equals("--")) {
+        if ("--".equals(appCouponCustomize.getCountInterestTime())) {
             appCouponCustomize.setPlanPeriod("— —");
         }else {
             Date dateAddTime;
@@ -376,7 +376,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 start
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
-        if (customize.getCountInterestTime().equals("--")) {
+        if ("--".equals(customize.getCountInterestTime())) {
             customize.setPlanPeriod("— —");
         }else {
             try {
