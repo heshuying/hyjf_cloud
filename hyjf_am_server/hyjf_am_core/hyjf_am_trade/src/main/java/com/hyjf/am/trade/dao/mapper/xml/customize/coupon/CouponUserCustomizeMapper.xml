@@ -60,10 +60,10 @@
 				AND cu.end_time <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 			<if test="timeStartAddSrch != null and timeStartAddSrch != ''">
-				AND cu.add_time <![CDATA[>=]]> #{timeStartAddSrch}
+				AND cu.create_time <![CDATA[>=]]> #{timeStartAddSrch}
 			</if>
 			<if test="timeEndAddSrch != null and timeEndAddSrch != ''">
-				AND cu.add_time <![CDATA[<=]]> #{timeEndAddSrch}
+				AND cu.create_time <![CDATA[<=]]> #{timeEndAddSrch}
 			</if>
 		</where>
 	</sql>
@@ -136,7 +136,7 @@
 			'已失效'
 		END used_flag_View,
 		 FROM_UNIXTIME(
-			cu.add_time,
+			cu.create_time,
 			'%Y-%m-%d %H:%i:%S'
 		) AS add_time,
 		 cc.coupon_system AS coupon_system,
@@ -200,7 +200,7 @@
 		FROM
 			ht_coupon_user cu
 		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
-		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
 		<include refid="Where_Clause" />
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >
@@ -214,7 +214,7 @@
 		FROM
 			ht_coupon_user cu
 		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
-		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
 		<include refid="Where_Clause" />
 	</select>
 
@@ -247,11 +247,11 @@
 		SELECT
 			cu.id,cc.coupon_name,CASE cc.coupon_type WHEN 1 THEN '体验金' WHEN 2 THEN '加息券' WHEN 3 THEN '代金券' ELSE '' END AS coupon_type, cc.coupon_type AS coupon_type_origin,
 			CASE cc.coupon_type WHEN 2 THEN CONCAT(cc.coupon_quota,'%')  ELSE FORMAT(cc.coupon_quota, 0) END AS coupon_quota,cc.coupon_quota AS coupon_quota_origin,
-			CONCAT(FROM_UNIXTIME(cu.add_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS end_time, cc.project_type as project_type,cc.coupon_system as coupon_system,
+			CONCAT(FROM_UNIXTIME(cu.create_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS end_time, cc.project_type as project_type,cc.coupon_system as coupon_system,
 			cc.tender_quota as tender_quota_origin,cc.project_expiration_length as project_expiration_length,cc.tender_quota_min as tender_quota_min,cc.tender_quota_max as tender_quota_max,
 			cc.project_expiration_type as project_expiration_type,cc.project_expiration_length_min as project_expiration_length_min,
 			cc.project_expiration_length_max as project_expiration_length_max,cc.tender_quota_type as tender_quota_type,
-			CONCAT(FROM_UNIXTIME(cu.add_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS time,
+			CONCAT(FROM_UNIXTIME(cu.create_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS time,
 			CASE
 			WHEN cc.tender_quota_type = 0 THEN
 				'金额不限'
@@ -284,7 +284,7 @@
 		    JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
 		    LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		<include refid="Where_Clause" />
-		 ORDER BY cu.end_time ,cu.add_time, cu.coupon_code
+		 ORDER BY cu.end_time ,cu.create_time, cu.coupon_code
 		<if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitEnd}
 	    </if>
@@ -317,7 +317,7 @@
 		    ht_coupon_user cu
 		WHERE
 		    cu.user_id = #{userId} AND cu.used_flag = 0 AND cu.del_flag = 0
-		ORDER BY cu.add_time desc
+		ORDER BY cu.create_time desc
 	</select>
 	
 	<select id="selectLatestCouponValidUNReadList" resultMap="selectCouponUserMap" parameterType="java.lang.Integer">
@@ -396,7 +396,7 @@
 			cu.id = #{couponGrantId}
 		AND cu.user_id=#{userId}
 		AND cu.del_flag = 0
-		AND cc.del_flg = 0
+		AND cc.del_flag = 0
 	</select>
 	
 	
@@ -431,7 +431,7 @@
 		WHERE
 			cpn.nid = #{nid}
 		AND cu.del_flag = 0
-		AND cc.del_flg = 0
+		AND cc.del_flag = 0
 	</select>
 	
 	
