@@ -33,7 +33,7 @@ public interface CouponUserClient {
 
     List<CouponConfigCustomizeVO> getCouponConfig(CouponConfigRequest request);
 
-    List<ActivityListCustomizeVO> getActivityList(ActivityListRequest request);
+    List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request);
 
     UserResponse getUserByUserName(String userName);
 

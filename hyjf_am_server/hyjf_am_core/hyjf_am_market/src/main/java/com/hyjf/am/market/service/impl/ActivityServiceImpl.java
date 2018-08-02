@@ -163,7 +163,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return
      */
     @Override
-    public List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int limitStart, int limitEnd) {
+    public List<ActivityListCustomize> selectRecordListValid(ActivityListCustomize request, int limitStart, int limitEnd) {
         ActivityListCustomize example = new ActivityListCustomize();
         if (limitStart != -1) {
             example.setLimitStart(limitStart);
