@@ -18,8 +18,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * @author fuqiang
- * @version OperationMongoGroupEntity, v0.1 2018/7/18 9:45
+ * @author tanyy
+ * @version OperationMongoGroupEntity, v0.1 2018/8/1 9:45
  */
 @Document(collection = "t_operation_report_group")
 public class OperationMongoGroupEntity implements Serializable {
