@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,12 +39,10 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version TransPasswordController.java, v0.1 2018年7月19日 上午9:17:39
  */
-@Api(value = "融东风密码设置接口")
+@Api(value = "融东风密码设置接口",tags = "融东风密码设置接口")
 @Controller
 @RequestMapping("hyjf-api/surong/user/transpassword")
 public class TransPasswordController extends BaseUserController{
-	
-	private static final Logger logger = LoggerFactory.getLogger(TransPasswordController.class);
 	
 	public static final String REQUEST_MAPPING = "hyjf-api/surong/user/transpassword";
 	
@@ -77,7 +73,7 @@ public class TransPasswordController extends BaseUserController{
     /**
      * 设置交易密码(参照原代码继续返回 ModelAndView 而不是微服务的 jason )
      * @param request
-     * @param form
+     * @param
      * @return
      */
     @ApiOperation(value = "融东风密码设置接口", notes = "融东风用户设置交易密码")

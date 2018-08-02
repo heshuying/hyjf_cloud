@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.mybatis.mapper.customize.web.CouponUserListCustomizeMapper">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserListCustomizeMapper">
 	<sql id="Where_Clause">
 		<where>
 		    cu.del_flag = 0
@@ -30,7 +30,6 @@
 	    <result column="used_time_day" property="usedTimeDay" />
 	    <result column="used_time_hour" property="usedTimeHour" />
 	    <result column="project_nid" property="projectNid" />
-	    
 	    <result column="tender_time_day" property="tenderTimeDay" />
 	    <result column="tender_time_hour" property="tenderTimeHour" />
 	    <result column="account" property="account" />
@@ -46,8 +45,7 @@
 		<result column="expect_apr" property="expectApr" />
 		<result column="debt_plan_status" property="debtPlanStatus" />
 		<result column="used_flag" property="usedFlag" />
-		
-	     
+		<result column="activity_id" property="activityId"/>
 	</resultMap>
 
 	<select id="selectCouponUserList" resultMap="selectCouponUserMap" parameterType="java.util.Map">
@@ -77,16 +75,7 @@
 	     FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
 		 cc.coupon_system coupon_system,
 		 cc.project_type project_type,
-		 CASE
-		WHEN cu.coupon_source = 1 THEN
-			IFNULL(al.title, cu.content)
-		WHEN cu.coupon_source = 2 THEN
-			IFNULL(al.title, '活动发放')
-		WHEN cu.coupon_source = 3 THEN
-			'会员礼包'
-		ELSE
-			''
-		END coupon_from,
+		cu.coupon_source coupon_from,
 		CASE
 		WHEN cc.tender_quota_type = 0 THEN
 			'不限'
@@ -169,17 +158,17 @@
 		hdp.debt_lock_period,
 		CONCAT(hdp.expect_apr, '%') AS expect_apr,
 		hdp.debt_plan_status,
-		cu.used_flag used_flag
+		cu.used_flag used_flag,
+        cu.activity_id
 		FROM
-			hyjf_coupon_user cu
-		JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		LEFT JOIN huiyingdai_activity_list al ON cu.activity_id = al.id	
-		LEFT JOIN hyjf_coupon_tender ct ON ct.coupon_grant_id = cu.id 
-	    LEFT JOIN hyjf_borrow_tender_cpn bt ON bt.nid = ct.order_id
-	    LEFT JOIN hyjf_coupon_recover cr ON cr.tender_id = bt.nid AND cr.current_recover_flg = 1
-	    LEFT JOIN huiyingdai_borrow hb ON hb.borrow_nid = bt.borrow_nid
-	    LEFT JOIN hyjf_debt_plan hdp ON bt.borrow_nid = hdp.debt_plan_nid
+			ht_coupon_user cu
+		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
+		LEFT JOIN ht_coupon_tender ct ON ct.coupon_grant_id = cu.id
+	    LEFT JOIN ht_borrow_tender_cpn bt ON bt.nid = ct.order_id
+	    LEFT JOIN ht_coupon_recover cr ON cr.tender_id = bt.nid AND cr.current_recover_flg = 1
+	    LEFT JOIN ht_borrow hb ON hb.borrow_nid = bt.borrow_nid
+	    LEFT JOIN ht_debt_plan hdp ON bt.borrow_nid = hdp.debt_plan_nid
 		<include refid="Where_Clause" />
 		 ORDER BY cu.update_time DESC, cu.coupon_code ASC
 		<if test="limitStart >= 0" >
@@ -190,10 +179,9 @@
 	    SELECT
 			count(1)
 		FROM
-		    hyjf_coupon_user cu 
-		    JOIN hyjf_coupon_config cc ON cu.coupon_code = cc.coupon_code
-		    LEFT JOIN huiyingdai_users u ON cu.user_id = u.user_id
-		    LEFT join huiyingdai_activity_list al on cu.activity_id = al.id
+		    ht_coupon_user cu
+		    JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code
+		    LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 

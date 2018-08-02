@@ -725,13 +725,6 @@ public interface AmTradeClient {
     boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
 
     /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    boolean sendToMQ(BorrowFireRequest borrowFireRequest);
-
-    /**
      * 借款复审总条数
      *
      * @param borrowFullRequest

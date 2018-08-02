@@ -60,7 +60,7 @@ import java.util.Map;
  * @version CouponUserController, v0.1 2018/7/23 15:23
  * 优惠券用户列表
  */
-@Api(value = "优惠券用户列表", description = "优惠券用户列表")
+@Api(value = "优惠券用户列表", tags = "优惠券用户列表")
 @RestController
 @RequestMapping("/hyjf-admin/couponUser")
 public class CouponUserController extends BaseController {
