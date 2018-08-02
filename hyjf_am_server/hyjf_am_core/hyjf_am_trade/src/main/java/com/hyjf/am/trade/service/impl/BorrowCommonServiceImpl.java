@@ -174,7 +174,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					String borrowNid = "";
 					// 拿取实际的项目编号
 					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
-					if((projectType.equals("15")) || (projectType.equals("16")) || (projectType.equals("19"))){
+					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
 						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
 							List<Object> result = null;
 							Transaction tx = jedis.multi();
@@ -196,7 +196,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								jedis.unwatch();
 							} else {
 								String ret = (String) result.get(0);
-								if (ret != null && ret.equals("OK")) {
+								if (ret != null && "OK".equals(ret)) {
 									if (i == 0) {
 										borrowPreNid = borrowPreNidNew;
 									}
@@ -229,7 +229,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								jedis.unwatch();
 							} else {
 								String ret = (String) result.get(0);
-								if (ret != null && ret.equals("OK")) {
+								if (ret != null && "OK".equals(ret)) {
 									if (i == 0) {
 										borrowPreNid = borrowPreNidNew;
 									}
@@ -318,7 +318,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //		cra1.andStatusEqualTo(0);
 		List<RUser> userList1 = this.rUserMapper.selectByExample(example1);
 		borrow.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
-		if(borrowBean.getEntrustedFlg().equals("1")){
+		if("1".equals(borrowBean.getEntrustedFlg())){
 			borrow.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
 			borrow.setEntrustedUserId(userList1.get(0).getUserId());
 		}
@@ -783,7 +783,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// new added 插入是否调用引擎字段 default 0
 		borrow.setIsEngineUsed(Integer.valueOf(borrowBean.getIsEngineUsed()));
 
-		if(borrowBean.getIsEngineUsed().equalsIgnoreCase("0")){//如果不使用引擎(非计划)，则web端显示
+		if("0".equalsIgnoreCase(borrowBean.getIsEngineUsed())){//如果不使用引擎(非计划)，则web端显示
 			//是否展示(隐藏测试标用:0:显示,1:不显示)
 			borrow.setIsShow(0);
 		} else {
@@ -928,7 +928,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //			cra1.andStatusEqualTo(0);
 //			List<Users> userList1 = this.usersMapper.selectByExample(example1);
 			borrow.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
-			if(borrowBean.getEntrustedFlg().equals("1")){
+			if("1".equals(borrowBean.getEntrustedFlg())){
 				borrow.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
 				borrow.setEntrustedUserId(this.getRUser(borrowBean.getEntrustedUsername().trim()).getUserId());
 			} else {
@@ -5914,7 +5914,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 *
 	 * @return
 	 */
-	public String getBorrowConfig(String configCd) {
+	@Override
+    public String getBorrowConfig(String configCd) {
 		BorrowConfig borrowConfig = this.borrowConfigMapper.selectByPrimaryKey(configCd);
 		return borrowConfig.getConfigValue();
 	}

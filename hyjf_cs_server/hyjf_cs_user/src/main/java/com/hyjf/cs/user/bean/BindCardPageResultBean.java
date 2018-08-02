@@ -9,10 +9,12 @@ public class BindCardPageResultBean extends BaseMapBean {
     
     private String callBackAction;
 
+    @Override
     public String getCallBackAction() {
         return callBackAction;
     }
 
+    @Override
     public void setCallBackAction(String callBackAction) {
         this.callBackAction = callBackAction;
     }

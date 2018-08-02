@@ -725,13 +725,6 @@ public interface AmTradeClient {
     boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
 
     /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    boolean sendToMQ(BorrowFireRequest borrowFireRequest);
-
-    /**
      * 借款复审总条数
      *
      * @param borrowFullRequest
@@ -927,11 +920,10 @@ public interface AmTradeClient {
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
+     * @return
      */
-    AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
+    AdminResult updateBorrowRegist(BorrowRegistUpdateRequest request);
 
     /**
      * 资产来源

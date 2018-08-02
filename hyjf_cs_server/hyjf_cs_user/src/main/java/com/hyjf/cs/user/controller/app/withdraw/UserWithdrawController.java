@@ -29,7 +29,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: UserWithdrawController, v0.1 2018/7/23 15:10
  */
-@Api(value = "app端-获取我的银行卡",description = "app端-获取我的银行卡")
+@Api(value = "app端-获取我的银行卡",tags = "app端-获取我的银行卡")
 @RestController
 @RequestMapping("/hyjf-app")
 public class UserWithdrawController extends BaseUserController {
@@ -52,7 +52,7 @@ public class UserWithdrawController extends BaseUserController {
         try {
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            ret.put("request", UserWithdrawDefine.GET_BANKCARD_REQUEST);
+            ret.put("request","/hyjf-app/bank/user/withdraw/getBankCardAction");
             // 取得用户iD
             Integer userId = SecretUtil.getUserId(sign);
             // 取得银行卡信息
@@ -79,6 +79,7 @@ public class UserWithdrawController extends BaseUserController {
             }
             ret.put("banks", bankcards);
         } catch (Exception e) {
+            e.printStackTrace();
             ret.put("status", "1");
             ret.put("statusDesc", "获取我的银行卡发生错误");
         }
@@ -106,7 +107,7 @@ public class UserWithdrawController extends BaseUserController {
         // getcash 提现金额
         String getcash = request.getParameter("getcash");
         // 提现规则静态页面的url
-        ret.put("url", systemConfig.getAppHost() + request.getContextPath() + UserWithdrawDefine.REQUEST_MAPPING + ClientConstants.GET_WITHDRAW_RULE_MAPPING);
+        ret.put("url", systemConfig.getAppHost() + request.getContextPath() + "/hyjf-app/user/withdraw" + ClientConstants.GET_WITHDRAW_RULE_MAPPING);
         ret =  userWithdrawService.getCashInfo(userId,ret,version,bankCode,getcash);
         return ret;
     }

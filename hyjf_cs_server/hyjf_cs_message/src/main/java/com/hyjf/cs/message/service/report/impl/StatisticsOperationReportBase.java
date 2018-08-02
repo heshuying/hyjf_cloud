@@ -2,9 +2,11 @@ package com.hyjf.cs.message.service.report.impl;/*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 
+import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
 import com.hyjf.cs.message.bean.mc.UserOperationReportEntity;
@@ -14,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -694,8 +697,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public OperationReportJobVO getUserAgeAndArea(Integer userId) {
+        IdCardCustomize idcard = new IdCardCustomize();
         OperationReportJobVO vo =  operationReportJobClient.getUserAgeAndArea(userId);
-        //todo ht_idcard
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(vo.getTitle())) {
+            idcard.setBm(vo.getTitle().substring(0, 6));
+            vo.setTitle(operationReportJobClient.getIdCardCustomize(idcard).getArea());
+        }
         return vo;
     }
 

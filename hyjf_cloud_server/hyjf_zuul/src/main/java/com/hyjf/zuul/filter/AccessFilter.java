@@ -193,7 +193,7 @@ public class AccessFilter extends ZuulFilter {
 		if (StringUtils.isBlank(token) && isNecessary) {
 			logger.error("token is empty...");
 			// 不对其进行路由
-			this.buildErrorRequestContext(ctx, 400, "token is empty!");
+			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
 			return ctx;
 		}
 		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
@@ -201,7 +201,7 @@ public class AccessFilter extends ZuulFilter {
 			if (isNecessary) {
 				logger.error("user is not exist...");
 				// 不对其进行路由
-				this.buildErrorRequestContext(ctx, 400, "user is not exist!");
+				this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
 				return ctx;
 			} else {
 				return ctx;

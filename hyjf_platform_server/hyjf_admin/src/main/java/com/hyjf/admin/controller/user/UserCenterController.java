@@ -20,10 +20,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +46,7 @@ import java.util.List;
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
 
-@Api(value = "会员中心-会员管理接口",description = "会员中心-会员管理接口")
+@Api(value = "会员中心-会员管理接口",tags = "会员中心-会员管理接口")
 @RestController
 @RequestMapping("/hyjf-admin/usersManager")
 public class UserCenterController extends BaseController {
@@ -374,7 +371,7 @@ public class UserCenterController extends BaseController {
         // 表格sheet名称
         String sheetName = "会员列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
         String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户来源", "用户名", "姓名", "性别", "年龄", "生日","身份证号", "户籍所在地", "手机号码", "会员类型", "用户角色", "用户属性", "推荐人", "51老用户", "用户状态","银行开户状态","银行开户时间","汇付开户状态", "注册平台", "注册时间", "注册所在地" };
         // 声明一个工作薄
@@ -534,7 +531,7 @@ public class UserCenterController extends BaseController {
             int intUserId = Integer.parseInt(userId);
             CompanyInfoSearchResponseBean companyInfoSearchResponseBean = userCenterService.queryCompanyInfoByAccoutnId(intUserId, accountId);
             CompanyInfoCompanyInfoVO companyInfoCompanyInfoVO = new CompanyInfoCompanyInfoVO();
-            if(null!=companyInfoSearchResponseBean&&companyInfoSearchResponseBean.getReturnCode().equals("00")){
+            if(null!=companyInfoSearchResponseBean&& "00".equals(companyInfoSearchResponseBean.getReturnCode())){
                 //代表成功
                 CompanyInfoVO infoVO = companyInfoSearchResponseBean.getCompanyInfoVO();
                 if(null==infoVO){
@@ -547,7 +544,7 @@ public class UserCenterController extends BaseController {
                 searchCompanyInfoResponseBean.setIsOpenAccount(bankFlag);
                 return new AdminResult<SearchCompanyInfoResponseBean>(searchCompanyInfoResponseBean);
             }
-            if(null!=companyInfoSearchResponseBean&&companyInfoSearchResponseBean.getReturnCode().equals("99")){
+            if(null!=companyInfoSearchResponseBean&& "99".equals(companyInfoSearchResponseBean.getReturnCode())){
                 return new AdminResult<>(FAIL, companyInfoSearchResponseBean.getReturnMsg());
             }
         }

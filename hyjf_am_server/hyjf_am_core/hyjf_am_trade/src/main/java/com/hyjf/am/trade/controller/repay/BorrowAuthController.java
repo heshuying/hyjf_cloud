@@ -34,12 +34,8 @@ public class BorrowAuthController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/count_auth")
-    public BorrowAuthResponse selectAuthCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
-        BorrowAuthResponse responseBean = new BorrowAuthResponse();
-        List<BorrowAuthCustomizeVO> resultList = borrowAuthService.searchBorrowNeedAuthList(requestBean);
-        responseBean.setResultList(resultList);
-
-        return responseBean;
+    public Integer selectAuthCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
+        return borrowAuthService.countBorrowNeedAuthRecordTotal(requestBean);
     }
 
     /**
@@ -64,12 +60,8 @@ public class BorrowAuthController extends BaseController {
      * @date: 2018/7/6
      */
     @RequestMapping(value = "/count_authed")
-    public BorrowAuthResponse selectAuthedCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
-        BorrowAuthResponse responseBean = new BorrowAuthResponse();
-        List<BorrowAuthCustomizeVO> resultList = borrowAuthService.searchBorrowAuthedList(requestBean);
-        responseBean.setResultList(resultList);
-
-        return responseBean;
+    public Integer selectAuthedCount(@RequestBody @Valid BorrowAuthRequest requestBean) {
+        return borrowAuthService.countBorrowAuthedRecordTotal(requestBean);
     }
 
     /**

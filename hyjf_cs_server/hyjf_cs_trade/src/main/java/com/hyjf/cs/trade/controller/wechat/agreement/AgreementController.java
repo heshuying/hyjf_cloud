@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AgreementController.java, v0.1 2018年7月27日 上午10:26:08
  */
-@Api(description = "微信端协议接口")
+@Api(tags = "微信端协议接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/agreement")
 public class AgreementController extends BaseTradeController{
@@ -51,13 +51,13 @@ public class AgreementController extends BaseTradeController{
     @PostMapping("/goDetail")
     public ModelAndView goDetail(String pageType) {
         ModelAndView modeAndView = null;
-        if (pageType.equals("wx_hjh_contract")) {
+        if ("wx_hjh_contract".equals(pageType)) {
             // 微信 投资风险确认书H5
             modeAndView = new ModelAndView("invest/app_contract");
-        } else if (pageType.equals("wx_hjh_serve")) {
+        } else if ("wx_hjh_serve".equals(pageType)) {
             // 投资服务协议
             modeAndView = new ModelAndView("invest/type-new-hjhxieyi");
-        } else if (pageType.equals("wx_hjh_invest")) {
+        } else if ("wx_hjh_invest".equals(pageType)) {
             // 居间服务协议
             modeAndView = new ModelAndView("invest/type-invest");
         }

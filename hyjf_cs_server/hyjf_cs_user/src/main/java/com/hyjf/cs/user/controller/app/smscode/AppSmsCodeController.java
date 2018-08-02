@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "app端验证码",description = "app端-验证码")
+@Api(value = "app端验证码",tags = "app端-验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {

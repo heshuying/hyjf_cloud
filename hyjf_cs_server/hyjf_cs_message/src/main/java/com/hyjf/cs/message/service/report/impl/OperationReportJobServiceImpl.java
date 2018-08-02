@@ -115,7 +115,20 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         oegroup.setStatisticsMonth(transferDateToInt(cal, sdf));
 
         // 投资人按照地域分布
-        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupBy(getLastDay(cal));
+        //查询出所有符合条件用户
+        List<OperationReportJobVO> cityUserIds = operationReportJobClient.getTenderCityGroupByList(getLastDay(cal));
+        //查询出所有符合条件用户的身份证号地址
+        List<OperationReportJobVO> cityBms = operationReportJobClient.getTenderCityGroupByUserIds(cityUserIds);
+        //分组
+        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupBy(cityBms);
+        for (int i=0;i<cityGroup.size();i++){
+            OperationReportJobVO city = cityGroup.get(i);
+            for (int j=0;j<cityBms.size();j++){
+                if(cityBms.get(j).getTitle().equals(city.getCitycode())){
+                    city.setCount(cityBms.get(j).getCount());
+                }
+            }
+        }
         Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
         oegroup.setInvestorRegionMap(cityMap);
 

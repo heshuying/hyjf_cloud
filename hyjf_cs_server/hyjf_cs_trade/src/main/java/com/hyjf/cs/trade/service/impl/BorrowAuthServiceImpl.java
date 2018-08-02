@@ -1,12 +1,5 @@
 package com.hyjf.cs.trade.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
@@ -18,6 +11,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.TradeConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AmBorrowClient;
@@ -27,6 +21,12 @@ import com.hyjf.cs.trade.service.BorrowAuthService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 借款人受托支付授权
@@ -114,11 +114,11 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
     @Override
     public Map<String,Object> callTrusteePay(String borrowNid, WebViewUserVO user) throws Exception {
         // 回调路径
-        String retUrl = systemConfig.getFrontHost().trim() + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim() + BankCallConstant.PARAM_PRODUCTID + "=" + borrowNid;
         // 商户后台应答地址(必须)
         String bgRetUrl = systemConfig.getWebHost().trim() + "/web/borrowauth/auth_bgrturn";
         // 交易成功跳转链接
-        String successfulUrl = systemConfig.getFrontHost().trim();
+        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)).trim();
 
         BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
         STZHWhiteListVO whiteListVO = amTradeClient.getStzhWhiteListVO(user.getUserId(), borrow.getEntrustedUserId());

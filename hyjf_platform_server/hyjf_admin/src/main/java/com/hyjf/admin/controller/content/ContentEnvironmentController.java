@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentEnvironmentController, v0.1 2018/7/11 11:13
  */
-@Api(value = "内容管理-办公环境", description = "内容管理-办公环境")
+@Api(value = "内容管理-办公环境", tags = "内容管理-办公环境")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentenvironment")
 public class ContentEnvironmentController extends BaseController {

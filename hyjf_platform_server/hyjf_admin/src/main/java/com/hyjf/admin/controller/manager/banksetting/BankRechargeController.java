@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/19.
  */
-@Api(value = "配置中心银行配置 快捷充值限额",description ="配置中心银行配置 快捷充值限额")
+@Api(value = "配置中心银行配置 快捷充值限额",tags ="配置中心银行配置 快捷充值限额")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankrecharge")
 public class BankRechargeController extends BaseController {
@@ -206,7 +206,7 @@ public class BankRechargeController extends BaseController {
                     }
                     else if (celLength == 1) {
                         bank: for(int j = 0;j < bankList.size();j++){
-                            if(pInfo.getBankId() == bankList.get(j).getId()){
+                            if(pInfo.getBankId().equals(bankList.get(j).getId())){
                                 cell.setCellValue(bankList.get(j).getName());
                                 break bank;
                             }

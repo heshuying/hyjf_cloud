@@ -945,9 +945,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AccountBankVO> getAccountBankByUserId(Integer userId) {
-		String url = userService + "/accountbank/getBankCardByUserId/" + userId;
-		AccountBankResponse response = restTemplate
-				.getForEntity(url, AccountBankResponse.class).getBody();
+		String url = userService + "/accountbank/getAccountBankByUserId/" + userId;
+		AccountBankResponse response = restTemplate.getForEntity(url, AccountBankResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}
@@ -1023,5 +1022,20 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return response.getCount();
+	}
+	/**
+	 * 插入各种信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest) {
+		String url = userService + "/user/insertUserActionUtm";
+		UserResponse response = restTemplate.postForEntity(url,userActionUtmRequest,UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

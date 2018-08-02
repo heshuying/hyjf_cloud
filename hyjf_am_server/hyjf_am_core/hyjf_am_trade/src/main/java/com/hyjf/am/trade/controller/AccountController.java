@@ -37,7 +37,7 @@ public class AccountController extends BaseController {
      * @return
      */
     @GetMapping("/getAccountByUserId/{borrowUserId}")
-    public AccountResponse getAccountByUserId(Integer borrowUserId) {
+    public AccountResponse getAccountByUserId(@PathVariable Integer borrowUserId) {
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(borrowUserId);
         if (account != null) {

@@ -1,5 +1,13 @@
 package com.hyjf.cs.message.client.impl;
 
+import java.util.List;
+
+import com.hyjf.am.vo.market.EventsVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.vo.config.*;
@@ -130,6 +138,33 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
+	@Override
+	public EventsVO getEventsAll(int begin, int end){
+		EventsVO response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/EventsAll/" + begin+"/"+end,
+						EventsVO.class)
+				.getBody();
+		return response;
+	}
+
+	@Override
+	public EventResponse getEvents(int userId,int begin, int end) {
+		EventResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/getEvents/"+userId+"/" + begin+"/"+end,
+						EventResponse.class)
+				.getBody();
+		return response;
+	}
+
+
+	@Override
+	public EventsVO selectPercentage(int percentage, int begin, int end, int userId) {
+		EventsVO response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/selectPercentage/"+percentage+"/" + begin+"/"+end+"/"+userId,
+						EventsVO.class)
+				.getBody();
+		return response;
+	}
 	@Override
 	public int updateAppNewsConfig(UserVO users) {
 		return restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, int.class).getBody();

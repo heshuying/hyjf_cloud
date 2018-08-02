@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author dongzeshan
  */
-@Api(value = "CA认证记录",description = "CA认证记录")
+@Api(value = "CA认证记录",tags = "CA认证记录")
 @RestController
 @RequestMapping("/hyjf-admin/certificate")
 public class CertificateAuthorityExceptionController extends BaseController {

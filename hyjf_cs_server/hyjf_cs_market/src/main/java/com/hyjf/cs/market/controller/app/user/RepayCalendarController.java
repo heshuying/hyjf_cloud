@@ -22,7 +22,7 @@ import java.util.*;
  * @author dangzw
  * @version RepayCalendarController, v0.1 2018/7/27 11:30
  */
-@Api(value = "app", description = "app")
+@Api(value = "app", tags = "app")
 @RestController
 @RequestMapping("/hyjf-app/user")
 public class RepayCalendarController extends BaseMarketController {

@@ -5,10 +5,7 @@ import com.hyjf.am.trade.dao.mapper.customize.trade.CouponCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
 import com.hyjf.am.trade.service.CouponService;
-import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
-import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import org.apache.commons.collections.map.HashedMap;
@@ -196,5 +193,11 @@ public class CouponServiceImpl implements CouponService {
 	@Override
 	public List<CurrentHoldRepayMentPlanListVO> getCouponRecoverList(String nid) {
 		return couponCustomizeMapper.couponRepaymentPlanList(nid);
+	}
+
+
+	@Override
+	public List<AppCouponCustomizeVO> getAppMyPlanCouponInfo(Map<String, Object> params) {
+		return couponCustomizeMapper.getMyCouponPlanList(params);
 	}
 }

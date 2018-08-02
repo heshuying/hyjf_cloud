@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiOperation;
  * @package
  * @date 2018/6/27
  */
-@Api(value = "操作日志",description ="操作日志")
+@Api(value = "操作日志",tags ="操作日志")
 @RestController
 @RequestMapping("/hyjf-admin/changelog")
 public class ChangeLogController extends BaseController {
@@ -172,7 +172,7 @@ public class ChangeLogController extends BaseController {
                     }
                     // 用户属性
                     else if (celLength == 5) {
-                        cell.setCellValue(changeLog.getAttribute()==null?"":changeLog.getAttribute().equals("0")?"无主单":changeLog.getAttribute().equals("1")?"有主单":changeLog.getAttribute().equals("2")?"线下员工":"线上员工");
+                        cell.setCellValue(changeLog.getAttribute()==null?"": "0".equals(changeLog.getAttribute()) ?"无主单": "1".equals(changeLog.getAttribute()) ?"有主单": "2".equals(changeLog.getAttribute()) ?"线下员工":"线上员工");
                     }
                     // 推荐人
                     else if (celLength == 6) {

@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * @author sunss
  */
-@Api(value = "app端用户开户",description = "app端-用户开户")
+@Api(value = "app端用户开户",tags = "app端-用户开户")
 @Controller
 @RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {

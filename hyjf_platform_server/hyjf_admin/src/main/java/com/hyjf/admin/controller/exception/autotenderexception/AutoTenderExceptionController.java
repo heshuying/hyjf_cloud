@@ -1,9 +1,8 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.controller.exception.autoTenderException;
+package com.hyjf.admin.controller.exception.autotenderexception;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.beans.request.AutoTenderExceptionRequestBean;
 import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.TenderExceptionSolveRequestBean;
@@ -24,25 +23,12 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
-import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
 import com.hyjf.am.vo.admin.AdminPlanAccedeListCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.common.bean.RedisBorrow;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -56,18 +42,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nixiaoling
  * @version AutoTenderExceptionController, v0.1 2018/7/12 10:27
  */
-@Api(value = "异常中心-汇计划投资异常",description = "异常中心-汇计划投资异常")
+@Api(value = "异常中心-汇计划投资异常",tags = "异常中心-汇计划投资异常")
 @RestController
 @RequestMapping("/hyjf-admin/autotenderexception")
 public class AutoTenderExceptionController extends BaseController {
@@ -155,7 +139,7 @@ public class AutoTenderExceptionController extends BaseController {
         autoTenderExceptionRequest.setLimitFlg(true);
         // 表格sheet名称
         String sheetName = "加入明细";
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         AutoTenderExceptionResponse autoTenderExceptionResponse = autoTenderExceptionService.selectAccedeRecordList(autoTenderExceptionRequest);
         List<AdminPlanAccedeListCustomizeVO> resultList  = new ArrayList<AdminPlanAccedeListCustomizeVO>();
         if(null!=autoTenderExceptionResponse){

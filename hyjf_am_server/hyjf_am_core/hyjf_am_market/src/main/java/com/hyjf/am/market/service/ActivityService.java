@@ -58,7 +58,7 @@ public interface ActivityService {
      * @param request
      * @return
      */
-    List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int i, int i1);
+    List<ActivityListCustomize> selectRecordListValid(ActivityListCustomize request, int i, int i1);
 
     /**
      * @Author walter.limeng
@@ -79,4 +79,11 @@ public interface ActivityService {
      * @return
      */
     List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest);
+    /**
+     * 根据日期条件查询活动列表
+     * @return
+     */
+    public List<ActivityList> getActivity(int day);
+
+    List<ActivityList> getActivityList();
 }

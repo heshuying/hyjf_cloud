@@ -28,7 +28,7 @@ import java.util.List;
  * @author libin
  * @version AdminAllocationEngineController.java, v0.1 2018年7月3日 下午1:31:17
  */
-@Api(value = "标的分配引擎-计划专区列表",description = "标的分配引擎-计划专区列表")
+@Api(value = "标的分配引擎-计划专区列表",tags = "标的分配引擎-计划专区列表")
 @RestController
 @RequestMapping("/am-trade/allocation")
 public class AdminAllocationEngineController {

@@ -37,7 +37,7 @@ import java.util.List;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-注册记录",description = "会员中心-注册记录")
+@Api(value = "会员中心-注册记录",tags = "会员中心-注册记录")
 @RestController
 @RequestMapping("/hyjf-admin/registRecord")
 public class RegistRecordController extends BaseController {
@@ -92,7 +92,7 @@ public class RegistRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "注册记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 需要输出的结果列表
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();

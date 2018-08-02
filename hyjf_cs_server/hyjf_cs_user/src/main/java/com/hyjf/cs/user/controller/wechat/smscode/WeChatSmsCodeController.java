@@ -29,11 +29,10 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "weChat验证码",description = "weChat端-验证码")
+@Api(value = "weChat验证码",tags = "weChat端-验证码")
 @RestController
 @RequestMapping("/hyjf-wechat")
 public class WeChatSmsCodeController extends BaseUserController {
-	private static final Logger logger = LoggerFactory.getLogger(WeChatSmsCodeController.class);
 
 	@Autowired
 	private SmsCodeService sendSmsCode;

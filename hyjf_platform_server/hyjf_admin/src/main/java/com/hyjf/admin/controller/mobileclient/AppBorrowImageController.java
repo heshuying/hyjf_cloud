@@ -20,12 +20,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -34,7 +31,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
-@Api(value = "admin移动客户端",description = "admin移动客户端")
+@Api(value = "admin移动客户端",tags = "admin移动客户端")
 @RestController
 @RequestMapping("app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
@@ -150,7 +147,7 @@ public class AppBorrowImageController extends BaseController {
 
         while (itr.hasNext()) {
             multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
+            String fileRealName = String.valueOf(System.currentTimeMillis());
             String originalFilename = multipartFile.getOriginalFilename();
             fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 

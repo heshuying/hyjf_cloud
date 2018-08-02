@@ -24,9 +24,9 @@ public class OperationReportJobServiceImpl implements OperationReportJobService 
 	@Resource
 	OperationReportInfoJobCustomizeMapper operationReportInfoJobCustomizeMapper;
 	@Override
-	public  List<OperationReportJobVO> getTenderCityGroupBy(OperationReportJobRequest request){
+	public  List<OperationReportJobVO> getTenderCityGroupByList(OperationReportJobRequest request){
 
-		return operationReportCustomizeMapper.getTenderCityGroupBy(request.getDate());
+		return operationReportInfoJobCustomizeMapper.getTenderCityGroupByList(request.getDate());
 	}
 	@Override
 	public  List<OperationReportJobVO> getTenderSexGroupByList(OperationReportJobRequest request){

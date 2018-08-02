@@ -6,7 +6,7 @@ import java.util.List;
 public class QuestionCustomize implements Serializable {
     private Integer id;
 
-    private String type;
+    private String typeString;
 
     private String question;
     
@@ -24,12 +24,12 @@ public class QuestionCustomize implements Serializable {
     }
 
 
-    public String getType() {
-        return type;
+    public String getTypeString() {
+        return typeString;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeString(String typeString) {
+        this.typeString = typeString;
     }
 
     public String getQuestion() {

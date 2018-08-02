@@ -86,6 +86,19 @@ public class CouponUserListCustomizeVO extends BaseVO implements Serializable {
     //优惠券使用标识 0：未使用，1：已使用，2：审核不通过，3：待审核，4：已失效
     private Integer usedFlag;
 
+    private Integer activityId;
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
+    }
 
     public Integer getId() {
         return id;

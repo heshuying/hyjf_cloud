@@ -3,34 +3,6 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
-import java.io.File;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
-import com.hyjf.am.vo.message.MailMessage;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccedeListViewRequest;
@@ -50,12 +22,13 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
-/*import com.hyjf.admin.utils.PdfGenerator;*/
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
+import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
+import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
@@ -76,13 +49,32 @@ import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.File;
+import java.net.URLEncoder;
+import java.util.*;
+
+/*import com.hyjf.admin.utils.PdfGenerator;*/
 /**
  * @author libin
  * @version AccedeListController.java, v0.1 2018年7月7日 下午3:00:56
  */
-@Api(value = "汇计划加入明细列表",description = "汇计划加入明细列表")
+@Api(value = "汇计划加入明细列表",tags = "汇计划加入明细列表")
 @RestController
 @RequestMapping("/hyjf-admin/joinplan")
 public class AccedeListController extends BaseController{

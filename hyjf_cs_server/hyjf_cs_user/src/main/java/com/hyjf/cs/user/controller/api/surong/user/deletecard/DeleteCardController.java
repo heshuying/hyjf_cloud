@@ -34,7 +34,7 @@ import java.math.BigDecimal;
  * @author pangchengchao
  * @version DeleteCardController, v0.1 2018/7/26 16:56
  */
-@Api(value = "api端-融东风解绑银行卡接口",description = "api端-融东风解绑银行卡接口")
+@Api(value = "api端-融东风解绑银行卡接口",tags = "api端-融东风解绑银行卡接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/surong/deletecard")

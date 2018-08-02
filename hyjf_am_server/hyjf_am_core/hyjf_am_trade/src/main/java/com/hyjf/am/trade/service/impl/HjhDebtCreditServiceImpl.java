@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
@@ -16,6 +17,7 @@ import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,9 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
 
     @Autowired
     private HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
+
+    @Autowired
+    private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
 
     /**
      * 判断是否存在债转未承接的项目
@@ -165,4 +170,10 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         }
 		return null;
 	}
+
+
+    @Override
+    public List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getUserHjhInvestList(params);
+    }
 }

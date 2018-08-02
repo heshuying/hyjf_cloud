@@ -3,7 +3,9 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
@@ -124,4 +126,19 @@ public interface AmConfigClient {
      * @return ShareNewsBeanVO
      */
     ShareNewsBeanVO queryShareNews();
+    /**
+     * 用于展示发布的信息
+     * @param noticeType
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    public List<ContentArticleVO> searchHomeNoticeList(String noticeType,int limitStart, int limitEnd) ;
+
+    /**
+     * 根据文章类型获取文章列表
+     * @param form
+     * @return
+     */
+    public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form);
 }

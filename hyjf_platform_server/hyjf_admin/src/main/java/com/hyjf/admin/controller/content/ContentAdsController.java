@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yinhui
  * Created by yinhui on 2018/7/19.
  */
-@Api(value = "内容中心-广告管理", description = "内容中心-广告管理")
+@Api(value = "内容中心-广告管理", tags = "内容中心-广告管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentads")
 public class ContentAdsController extends BaseController {
