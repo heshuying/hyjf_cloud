@@ -939,7 +939,6 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int insertAccountWithdrawLog(AccountWithdrawVO record) {
-        restTemplate.put(urlBase +"",record);
         Integer response = restTemplate
                 .postForEntity(urlBase +"accountWithdraw/insertAccountWithdrawLog",record, Integer.class).getBody();
         if (response != null) {
