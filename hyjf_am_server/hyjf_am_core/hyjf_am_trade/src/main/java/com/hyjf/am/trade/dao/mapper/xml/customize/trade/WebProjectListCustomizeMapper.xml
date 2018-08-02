@@ -1102,7 +1102,7 @@
         </if>
     </select>
 
-    <!--app债转list-->
+    <!--app计划list-->
     <select id="searchAppPlanList" resultMap="HjhPlanMap" parameterType="Map">
         SELECT
         t.*
