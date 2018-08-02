@@ -32,8 +32,7 @@
          "account": {
                     <#if datas.data.account??>
                         <#assign account = datas.data.account >
-                    </#if>
-                  "balance": ${(account.balance)?c!''},
+                     "balance": ${(account.balance)!'0'},
                   "planAccountWait": ${(account.planAccountWait)?c!'0'},
                   "planCapitalWait": ${(account.planCapitalWait)?c!'0'},
                   "planInterestWait": ${(account.planInterestWait)?c!'0'},
@@ -44,6 +43,20 @@
                   "bankAwait": ${(account.bankAwait)?c!'0'},
                   "bankAwaitCapital": ${(account.bankAwaitCapital)?c!'0'},
                   "bankAwaitInterest": ${(account.bankAwaitInterest)?c!'0'}
+                    <#else >
+                    "balance":0,
+                  "planAccountWait":0,
+                  "planCapitalWait":0,
+                  "planInterestWait":0,
+                  "bankTotal":0,
+                  "bankBalance":0,
+                  "bankFrost":0,
+                  "bankInterestSum":0,
+                  "bankAwait":0,
+                  "bankAwaitCapital":0,
+                  "bankAwaitInterest":0
+                   </#if>
+
         },
         "userName": "${datas.data.userName!''}",
         "recoverLatestList": [
