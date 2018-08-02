@@ -62,11 +62,9 @@ public class UserEntryConsumer extends Consumer {
             }
 
             // --> 消息转换
-            String msgBody = new String(msg.getBody());
-            logger.info("【更新入职员工信息(CRM)】接收到的消息：" + msgBody);
+            String userId = new String(msg.getBody());
+            logger.info("【更新入职员工信息(CRM)】接收到的userId：" + userId);
 
-            JSONObject json = JSONObject.parseObject(msgBody);
-            String userId = json.getString("userId");
             //用户ID为空时，不再重发
             if (StringUtils.isBlank(userId)) {
                 logger.error("【更新入职员工信息(CRM)】接收到的userId为null");
