@@ -1,18 +1,8 @@
 package com.hyjf.am.trade.service.impl;
 
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
 import com.hyjf.am.trade.dao.model.auto.ROaUsers;
-import com.hyjf.am.trade.service.AccountListService;
-import com.hyjf.am.trade.service.ROaUserService;
-import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import org.springframework.beans.BeanUtils;
+import com.hyjf.am.trade.service.CrmUserService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * @Description crm oa user 表同步
@@ -20,7 +10,7 @@ import java.util.List;
  * @Date 2018/7/26 13:52
  */
 @Service
-public class ROaUserServiceImpl extends BaseServiceImpl implements ROaUserService {
+public class CrmUserServiceImpl extends BaseServiceImpl implements CrmUserService {
 
 
 	/**

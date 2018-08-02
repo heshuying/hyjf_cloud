@@ -1,14 +1,16 @@
-package com.hyjf.am.user.service.front.crm;
+package com.hyjf.am.trade.service;
 
+import com.hyjf.am.trade.dao.model.auto.AccountTrade;
+import com.hyjf.am.trade.dao.model.auto.ROaUsers;
 
-import com.hyjf.am.user.dao.model.auto.ROaUsers;
+import java.util.List;
 
 /**
  * @Description crm user表操作
  * @Author sunss
  * @Date 2018/7/26 11:50
  */
-public interface ROaUserService {
+public interface CrmUserService {
     /**
      * 修改
      * @param users
