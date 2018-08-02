@@ -75,11 +75,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         List<BorrowFirstCustomize> list = borrowFirstCustomizeMapper.selectBorrowFirstList(borrowFirstRequest);
         if (!CollectionUtils.isEmpty(list)) {
             Map<String, String> map = CacheUtil.getParamNameMap("VERIFY_STATUS");
-            if (!CollectionUtils.isEmpty(map)) {
-                for (BorrowFirstCustomize borrowFirstCustomize : list) {
-                    borrowFirstCustomize.setVerifyStatusName(map.getOrDefault(borrowFirstCustomize.getVerifyStatus(), null));
-                }
-            }
+            list.forEach((borrowFirstCustomize) -> borrowFirstCustomize.setVerifyStatusName(map.getOrDefault(borrowFirstCustomize.getVerifyStatus(), null)));
         }
         return list;
     }
@@ -143,11 +139,6 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         return false;
     }
 
-    public String getBorrowConfig(String configCd) {
-        BorrowConfig borrowConfig = borrowConfigMapper.selectByPrimaryKey(configCd);
-        return borrowConfig.getConfigValue();
-    }
-
     /**
      * 更新-发标
      *
@@ -195,6 +186,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 根据此标的是否跑引擎操作redis ：0未使用 1使用
                     if (borrow.getIsEngineUsed() == 0) {
                         // borrowNid，借款的borrowNid,account借款总额
+                        // todo redis key不正确
                         RedisUtils.set(borrow.getBorrowNid(), borrow.getAccount().toString());
                     }
                 }
@@ -206,8 +198,8 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 Borrow updateBorrow = new Borrow();
                 BeanUtils.copyProperties(borrow, updateBorrow);
                 int updateCount = this.borrowMapper.updateByExampleSelective(updateBorrow, borrowExample);
-                if(updateCount > 0){
-                    // 删写redis的定时发标时间
+                if (updateCount > 0) {
+                    // 更新redis的定时发标时间
                     changeOntimeOfRedis(borrow);
                     return true;
                 }
@@ -217,6 +209,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
     }
 
     private void changeOntimeOfRedis(BorrowVO borrow) {
+        //todo 此处rediskey不正确，需要修改，已在文件中添加
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
             RedisUtils.set(borrow.getBorrowNid() + CustomConstants.UNDERLINE +
@@ -225,27 +218,5 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             //非定时发标 删redis
             RedisUtils.del(borrow.getBorrowNid() + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME);
         }
-    }
-
-    /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    @Override
-    public boolean sendToMQ(BorrowFireRequest borrowFireRequest) {
-        BorrowVO borrow = borrowFireRequest.getBorrowVO();
-        if (borrow != null) {
-            try {
-                JSONObject params = new JSONObject();
-                params.put("borrowNid", borrow.getBorrowNid());
-                borrowFirstProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
-                return true;
-            } catch (MQException e) {
-                logger.error(borrow.getBorrowNid() + "----发送【关联计划】MQ失败...");
-                return false;
-            }
-        }
-        return false;
     }
 }

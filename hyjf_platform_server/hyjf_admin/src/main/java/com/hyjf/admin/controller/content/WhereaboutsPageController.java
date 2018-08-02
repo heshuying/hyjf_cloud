@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * @author tanyy
  * @version WhereaboutsPageController, v0.1 2018/7/20 10:35
  */
-@Api(value = "移动端着陆页管理",description ="移动端着陆页管理")
+@Api(value = "移动端着陆页管理",tags ="移动端着陆页管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/whereaboutspage")
 public class WhereaboutsPageController extends BaseController {

@@ -308,7 +308,8 @@ public class BankCallController extends BaseController {
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
         String bgData = request.getParameter("bgData");
         logger.info("接收异步返回的消息开始,订单号:【" + bean.getLogOrderId() + "】,用户ID:【" + bean.getLogUserId() + "】.");
-        logger.debug("消息内容=【" + bgData + "】");
+        logger.info("消息内容=【" + bean + "】");
+        logger.info("消息内容=【" + bgData + "】");
 
         Map<String, String> mapParam;
         try {

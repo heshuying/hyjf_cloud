@@ -201,15 +201,6 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             return new AdminResult(BaseResult.FAIL,"数据更新失败");
         }
 
-        if (borrowVO.getIsEngineUsed().equals(1) && Integer.valueOf(verifyStatus) == 4) {
-            // 成功后到关联计划队列
-            boolean sendFlag = amTradeClient.sendToMQ(borrowFireRequest);
-            if(!sendFlag){
-                return new AdminResult(BaseResult.FAIL,"发送MQ失败");
-            }
-            logger.info(borrowNid + "--已发送至MQ");
-        }
-
         return new AdminResult();
     }
 

@@ -141,17 +141,9 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             String orderDate = GetOrderIdUtils.getOrderDate();
             // 调用开户接口
             BankCallBean debtRegistBean = new BankCallBean();
-            // 接口版本号 共同参数删除
-//            debtRegistBean.setVersion(BankCallConstant.VERSION_10);
+            // 调用银行接口部分共同参数删除
             // 消息类型(用户开户)
             debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);
-            // 机构代码 共同参数删除
-//            debtRegistBean.setInstCode(instCode);
-//            debtRegistBean.setBankCode(bankCode);
-//            debtRegistBean.setTxDate(txDate);
-//            debtRegistBean.setTxTime(txTime);
-//            debtRegistBean.setSeqNo(seqNo);
-//            debtRegistBean.setChannel(channel);
             // 借款人电子账号
             debtRegistBean.setAccountId(request.getAccountId());
             // 标的表id
@@ -221,6 +213,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                         }
                     }
                 } else {
+                    // 调用银行接口失败
                     this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
                     String message = registResult.getRetMsg();
                     result.setRtn(Response.FAIL);
@@ -239,6 +232,12 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         return result;
     }
 
+    /**
+     * 受托白名单查询
+     * @param instCode
+     * @param entrustedAccountId
+     * @return
+     */
     private StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
         StzhWhiteListExample example = new StzhWhiteListExample();
         StzhWhiteListExample.Criteria crt = example.createCriteria();

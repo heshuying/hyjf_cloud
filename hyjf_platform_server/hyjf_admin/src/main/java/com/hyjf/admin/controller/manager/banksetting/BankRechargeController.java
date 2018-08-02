@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/19.
  */
-@Api(value = "配置中心银行配置 快捷充值限额",description ="配置中心银行配置 快捷充值限额")
+@Api(value = "配置中心银行配置 快捷充值限额",tags ="配置中心银行配置 快捷充值限额")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankrecharge")
 public class BankRechargeController extends BaseController {
