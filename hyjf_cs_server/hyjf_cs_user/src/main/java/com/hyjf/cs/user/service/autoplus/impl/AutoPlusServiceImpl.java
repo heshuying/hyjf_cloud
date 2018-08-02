@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.autoplus.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthLogVO;
@@ -23,7 +24,6 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;

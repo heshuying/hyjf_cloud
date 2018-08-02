@@ -136,7 +136,7 @@ public class AppVersionServiceImpl implements AppVersionService {
             cri.andIsUpdateEqualTo(isupdate);
         }
 
-        if(versionStr!=null&&!versionStr.equals("null")&&!versionStr.equals("")){
+        if(versionStr!=null&&!"null".equals(versionStr) &&!"".equals(versionStr)){
             cri.andVersionEqualTo(versionStr);
         }
         example.setOrderByClause(" id desc ");

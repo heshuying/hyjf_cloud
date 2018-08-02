@@ -5,9 +5,11 @@ package com.hyjf.cs.trade.vo;
  * @version BankWithdrawVO, v0.1 2018/7/30 19:16
  */
 public class BankWithdrawVO {
-
+    // 提现银行卡号
     private String widCard;
+    // 交易金额
     private String withdrawmoney;
+    // 银联行号
     private String payAllianceCode;
 
     public String getWidCard() {

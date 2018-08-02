@@ -47,8 +47,8 @@ public class AppContentArticleController extends BaseMarketController {
     public AppResult getContentArticleById(@PathVariable("contentArticleId") Integer contentArticleId, @PathVariable("type") Integer type) {
         logger.info("*******************************协议列表内容的获取************************************");
         AppContentArticleResponse response = new AppContentArticleResponse();
-        response.setRtn(response.SUCCESS);
-        response.setMessage(response.SUCCESS_MSG);
+        response.setRtn(AppContentArticleResponse.SUCCESS);
+        response.setMessage(AppContentArticleResponse.SUCCESS_MSG);
         response.setTopTitle(getTopTitle(type));
         try {
             // 根据id返回文章详情
@@ -62,7 +62,7 @@ public class AppContentArticleController extends BaseMarketController {
             }
         } catch (Exception e) {
             response.setRtn(FAIL);
-            response.setMessage(response.FAIL_MSG);
+            response.setMessage(AppContentArticleResponse.FAIL_MSG);
         }
         if(response == null) {
             return new AppResult<>(FAIL, FAIL_DESC);

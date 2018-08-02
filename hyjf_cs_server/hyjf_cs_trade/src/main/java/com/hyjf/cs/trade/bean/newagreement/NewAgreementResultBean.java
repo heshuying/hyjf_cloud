@@ -3,15 +3,15 @@
  */
 package com.hyjf.cs.trade.bean.newagreement;
 
-import java.util.List;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 
-import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
+import java.util.List;
 
 /**
  * @author libin
  * @version NewAgreementResultBean.java, v0.1 2018年7月25日 下午2:36:44
  */
-public class NewAgreementResultBean extends BaseResultBeanFrontEnd{
+public class NewAgreementResultBean extends BaseResultBeanFrontEnd {
 
 	/**
 	 * serialVersionUID

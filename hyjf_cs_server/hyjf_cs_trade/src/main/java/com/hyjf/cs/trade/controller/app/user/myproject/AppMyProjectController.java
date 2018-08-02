@@ -144,8 +144,9 @@ public class AppMyProjectController extends BaseTradeController {
             List<CurrentHoldObligatoryRightListCustomizeVO> customizes, HttpServletRequest request, Integer userId) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(customizes))
+        if (CollectionUtils.isEmpty(customizes)) {
             return vos;
+        }
         String investStatusDesc = "";
         for (CurrentHoldObligatoryRightListCustomizeVO entity : customizes) {
             vo = new MyProjectVo();
@@ -223,8 +224,9 @@ public class AppMyProjectController extends BaseTradeController {
             List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayListCustomizes, HttpServletRequest request) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes))
+        if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes)) {
             return vos;
+        }
         for (AppAlreadyRepayListCustomizeVO entity : appAlreadyRepayListCustomizes) {
             vo = new MyProjectVo();
             BeanUtils.copyProperties(entity, vo);
@@ -263,8 +265,9 @@ public class AppMyProjectController extends BaseTradeController {
                                                       HttpServletRequest request) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(projectList))
+        if (CollectionUtils.isEmpty(projectList)) {
             return vos;
+        }
         for (AppTenderCreditRecordListCustomizeVO customize : projectList) {
             vo = new MyProjectVo();
             vo.setBorrowTheFirst(customize.getCreditCapital() + "元");
@@ -297,8 +300,9 @@ public class AppMyProjectController extends BaseTradeController {
      * @return
      */
     private String concatInvestDetailUrl(String borrowNid, String orderId, String type, String couponType, String assignNid, String investStatusDesc) {
-        if (StringUtils.isEmpty(couponType))
+        if (StringUtils.isEmpty(couponType)) {
             couponType = "0";
+        }
         String url = "" + "/" + borrowNid + "?orderId=" + orderId + "&type=" + type
                 + "&couponType=" + couponType + "&assignNid=" + assignNid +"&investStatusDesc=" + investStatusDesc;
         return url;

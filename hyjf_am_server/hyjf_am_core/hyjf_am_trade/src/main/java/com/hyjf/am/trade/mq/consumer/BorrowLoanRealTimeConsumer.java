@@ -119,7 +119,7 @@ public class BorrowLoanRealTimeConsumer extends Consumer {
 				borrowApicron = realTimeBorrowLoanService.selApiCronByPrimaryKey(borrowApicron.getId());
 				
 				// 如果放款状态为请求中
-				if (borrowApicron.getStatus() == CustomConstants.BANK_BATCH_STATUS_SENDING) {
+				if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDING)) {
 					// 发送放款
 					BankCallBean requestLoanBean = realTimeBorrowLoanService.requestLoans(borrowApicron);
 					if (requestLoanBean == null) {

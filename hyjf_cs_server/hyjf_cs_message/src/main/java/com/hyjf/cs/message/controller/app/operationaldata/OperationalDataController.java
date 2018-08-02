@@ -207,6 +207,11 @@ public class OperationalDataController {
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
 			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			if(oe==null){
+				result.put("status", "999");
+				result.put("statusDesc", "暂无任何数据");
+				return result;
+			}
 			// 获取投资人区域信息
 			Map<Integer, String> cityMap = oe.getInvestorRegionMap();
 			List<SubEntity> list = oe.orgnizeData(cityMap);
@@ -243,9 +248,13 @@ public class OperationalDataController {
 			query.limit(1);
 			query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
 			OperationMongoGroupEntity oe = operationMongoGroupDao.findOne(query);
+			if(oe==null){
+				result.put("status", "999");
+				result.put("statusDesc", "暂无任何数据");
+				return result;
+			}
 			// 投资人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
-
 			int maleCount = sexMap.get(OperationMongoGroupEntity.MALE);
 			int femaleCount = sexMap.get(OperationMongoGroupEntity.FEMALE);
 			float malePer = (float) maleCount * 100 / (maleCount + femaleCount);

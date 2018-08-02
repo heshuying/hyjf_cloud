@@ -447,7 +447,8 @@ public interface BorrowCommonService extends BaseService {
 	 *
 	 * @return
 	 */
-	public String getBorrowConfig(String configCd);
+	@Override
+    public String getBorrowConfig(String configCd);
 	/**
 	 * 根据资金来源查询产品类型
 	 * @param string

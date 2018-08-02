@@ -13,7 +13,6 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankOpenRecordService;
-import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
@@ -116,7 +115,7 @@ public class BankOpenRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "开户记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
         accountRecordRequest.setLimitFlg(true);
@@ -206,7 +205,7 @@ public class BankOpenRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "江西银行开户记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=new ArrayList<BankOpenAccountRecordVO>();
         BankAccountRecordResponse bankAccountRecordResponse=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);

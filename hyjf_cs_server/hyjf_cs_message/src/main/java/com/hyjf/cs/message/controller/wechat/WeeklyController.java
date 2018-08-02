@@ -196,7 +196,7 @@ public class WeeklyController {
         }else {
             resultBean.setYouhuiquan(0);
         }
-        resultBean.setHuodong(weeklyService.getActivity((int) (new Date().getTime()/1000)));
+        resultBean.setHuodong(weeklyService.getActivity((int) (System.currentTimeMillis()/1000)));
         resultBean.setJishi(weeklyService.getEvents(date1,date2,Integer.valueOf(date.get("year"))));
 
         return resultBean;

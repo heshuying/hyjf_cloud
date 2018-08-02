@@ -206,7 +206,7 @@ public class BankRechargeController extends BaseController {
                     }
                     else if (celLength == 1) {
                         bank: for(int j = 0;j < bankList.size();j++){
-                            if(pInfo.getBankId() == bankList.get(j).getId()){
+                            if(pInfo.getBankId().equals(bankList.get(j).getId())){
                                 cell.setCellValue(bankList.get(j).getName());
                                 break bank;
                             }

@@ -116,7 +116,7 @@ public class InvestProjectController extends BaseUserController {
 		String resultStr = investProjectService.getRepayData(String.valueOf(userId), host, hostContact,
 				String.valueOf(form.getPage()), String.valueOf(form.getPageSize()));
 		JSONObject resultJson = JSONObject.parseObject(resultStr);
-		if (resultJson.getString("status").equals("0")) {
+		if ("0".equals(resultJson.getString("status"))) {
 			info.put("projectList", resultJson.get("data"));
 			info.put("projectTotal", resultJson.get("projectTotal"));
 		} else {
@@ -167,7 +167,7 @@ public class InvestProjectController extends BaseUserController {
 		String resultStr = investProjectService.getInvestingData(String.valueOf(userId), host,
 				String.valueOf(form.getPage()), String.valueOf(form.getPageSize()));
 		JSONObject resultJson = JSONObject.parseObject(resultStr);
-		if (resultJson.getString("status").equals("0")) {
+		if ("0".equals(resultJson.getString("status"))) {
 			info.put("projectList", resultJson.get("data"));
 			info.put("projectTotal", resultJson.get("projectTotal"));
 		} else {
@@ -217,7 +217,7 @@ public class InvestProjectController extends BaseUserController {
 		String resultStr = investProjectService.getRepayedData(String.valueOf(userId), host,
 				String.valueOf(form.getPage()), String.valueOf(form.getPageSize()));
 		JSONObject resultJson = JSONObject.parseObject(resultStr);
-		if (resultJson.getString("status").equals("0")) {
+		if ("0".equals(resultJson.getString("status"))) {
 			info.put("projectList", resultJson.get("data"));
 			info.put("projectTotal", resultJson.get("projectTotal"));
 		} else {
@@ -256,7 +256,7 @@ public class InvestProjectController extends BaseUserController {
 		}
 
 		CouponConfigVO couponConfig = null;
-		if (isCouponTender.equals("1")) {
+		if ("1".equals(isCouponTender)) {
 			couponConfig = investProjectService.getCouponConfigByOrderId(form.getOrderId());
 		}
 
@@ -291,7 +291,7 @@ public class InvestProjectController extends BaseUserController {
 						+ InvestProjectDefine.REQUEST_MAPPING + InvestProjectDefine.REPAY_PLAN_LIST_ACTION);
 				return info;
 			} else {
-				if (isCouponTender.equals("1")) {
+				if ("1".equals(isCouponTender)) {
 				    if(couponConfig == null){
 				        info.put("repayStyle", borrowStyle.getName());
 				    }else if(couponConfig.getCouponType() == 1){
@@ -303,7 +303,7 @@ public class InvestProjectController extends BaseUserController {
 				// modify by hesy 优惠券相关 start
 				if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyleStr)
 						|| CustomConstants.BORROW_STYLE_END.equals(borrowStyleStr)) {
-					if (isCouponTender.equals("1")) {
+					if ("1".equals(isCouponTender)) {
 						// 优惠券投资回款计划
 						createCouponRepayRecoverListPage(info, form);
 					} else {
@@ -311,7 +311,7 @@ public class InvestProjectController extends BaseUserController {
 						createRepayRecoverListPage(info, form);
 					}
 				} else {
-					if (isCouponTender.equals("1")) {
+					if ("1".equals(isCouponTender)) {
 						// 优惠券投资回款计划
 						createCouponRepayRecoverListPage(info, form);
 					} else {
@@ -468,11 +468,11 @@ public class InvestProjectController extends BaseUserController {
 		params.setUserId(userId.toString());
 
 		AppProjectContractDetailCustomizeVO borrow = this.investProjectService.selectProjectContractDetail(params);
-		if (borrow.getProjectType().equals("HXF")) {// 如果项目为汇消费项目
+		if ("HXF".equals(borrow.getProjectType())) {// 如果项目为汇消费项目
 			modelAndView = new ModelAndView(InvestProjectDefine.PROJECT_HXF_CONTRACT_PTAH);
-		} else if (borrow.getProjectType().equals("RTB")) {
+		} else if ("RTB".equals(borrow.getProjectType())) {
 			AppProjectDetailCustomizeVO borrow1 = this.investProjectService.selectProjectDetail(form.getBorrowNid());
-			if (borrow != null && borrow1.getBorrowPublisher() != null && borrow1.getBorrowPublisher().equals("中商储")) {
+			if (borrow != null && borrow1.getBorrowPublisher() != null && "中商储".equals(borrow1.getBorrowPublisher())) {
 				modelAndView = new ModelAndView(InvestProjectDefine.PROJECT_RTB_CONTRACT_ZSC_PTAH);
 			} else {
 				modelAndView = new ModelAndView(InvestProjectDefine.PROJECT_RTB_CONTRACT_PTAH);
@@ -760,7 +760,7 @@ public class InvestProjectController extends BaseUserController {
 					String borrowStyle = appInvestDetailCustomize.getBorrowStyle();
 					// 收益率
 					BigDecimal borrowApr = BigDecimal.ZERO;
-					if (form.getInvestType() != null && form.getInvestType().equals("3")) {
+					if (form.getInvestType() != null && "3".equals(form.getInvestType())) {
 						borrowApr = appInvestDetailCustomize.getBorrowExtraYield();
 					} else {
 						// 收益率
@@ -848,7 +848,7 @@ public class InvestProjectController extends BaseUserController {
 				String borrowStyle = appCouponRepayDetailCustomize.getBorrowStyle();
 				// 收益率
 				BigDecimal borrowApr = null;
-				if (!appCouponRepayDetailCustomize.getCouponType().equals("2")) {
+				if (!"2".equals(appCouponRepayDetailCustomize.getCouponType())) {
 					borrowApr = new BigDecimal(appCouponRepayDetailCustomize.getBorrowApr());
 				} else {
 					borrowApr = new BigDecimal(appCouponRepayDetailCustomize.getCouponQuota());
@@ -897,7 +897,7 @@ public class InvestProjectController extends BaseUserController {
 					break;
 				}
 
-				if (appCouponRepayDetailCustomize.getCouponType().equals("1")) {
+				if ("1".equals(appCouponRepayDetailCustomize.getCouponType())) {
 					earnings = DuePrincipalAndInterestUtils.getDayInterestExperience(
 							appCouponRepayDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 							Integer.parseInt(appCouponRepayDetailCustomize.getCouponProfitTime()));
@@ -987,8 +987,9 @@ public class InvestProjectController extends BaseUserController {
 			List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayListCustomizes, HttpServletRequest request) {
 		List<MyProjectVo> vos = new ArrayList<>();
 		MyProjectVo vo = null;
-		if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes))
-			return vos;
+		if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes)) {
+            return vos;
+        }
 		for (AppAlreadyRepayListCustomizeVO entity : appAlreadyRepayListCustomizes) {
 			vo = new MyProjectVo();
 			BeanUtils.copyProperties(entity, vo);
@@ -1027,8 +1028,9 @@ public class InvestProjectController extends BaseUserController {
 			List<CurrentHoldObligatoryRightListCustomizeVO> customizes, HttpServletRequest request, Integer userId) {
 		List<MyProjectVo> vos = new ArrayList<>();
 		MyProjectVo vo = null;
-		if (CollectionUtils.isEmpty(customizes))
+		if (CollectionUtils.isEmpty(customizes)) {
 			return vos;
+		}
 		String investStatusDesc = "";
 		for (CurrentHoldObligatoryRightListCustomizeVO entity : customizes) {
 			vo = new MyProjectVo();
@@ -1136,8 +1138,9 @@ public class InvestProjectController extends BaseUserController {
 	 * @return
 	 */
 	private String concatInvestDetailUrl(String borrowNid, String orderId, String type, String couponType, String assignNid, String investStatusDesc) {
-		if (StringUtils.isEmpty(couponType))
+		if (StringUtils.isEmpty(couponType)) {
 			couponType = "0";
+		}
 		String url = InvestProjectDefine.MY_BORROW_PAGE_URL + "/" + borrowNid + "?orderId=" + orderId + "&type=" + type
 				+ "&couponType=" + couponType + "&assignNid=" + assignNid +"&investStatusDesc=" + investStatusDesc;
 		return url;
@@ -1153,8 +1156,9 @@ public class InvestProjectController extends BaseUserController {
 			HttpServletRequest request) {
 		List<MyProjectVo> vos = new ArrayList<>();
 		MyProjectVo vo = null;
-		if (CollectionUtils.isEmpty(projectList))
+		if (CollectionUtils.isEmpty(projectList)) {
 			return vos;
+		}
 		for (AppTenderCreditRecordListCustomizeVO customize : projectList) {
 			vo = new MyProjectVo();
 			vo.setBorrowTheFirst(customize.getCreditCapital() + "元");

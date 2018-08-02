@@ -114,8 +114,9 @@ public class AppMyPlanController extends BaseTradeController {
         List<MyPlanListResultBean.ProjectList> projectList = new ArrayList<>();
         MyPlanListResultBean.ProjectList project;
 
-        if (CollectionUtils.isEmpty(customizeProjectList))
+        if (CollectionUtils.isEmpty(customizeProjectList)) {
             return projectList;
+        }
 
         for (AppMyPlanCustomizeVO entity : customizeProjectList) {
             project = new MyPlanListResultBean.ProjectList();

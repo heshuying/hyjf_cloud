@@ -77,9 +77,6 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null==userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
-            return result;
-        }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),

@@ -88,7 +88,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         String userName = null;
         String password = null;
         String borrowNid = autoReqRepayBorrow.getBorrowNid();
-        if (autoReqRepayBorrow.getRepayerType().equals("1")) {
+        if ("1".equals(autoReqRepayBorrow.getRepayerType())) {
             // 担保机构还款
             userId = autoReqRepayBorrow.getRepayOrgUserId();
             userName = autoReqRepayBorrow.getRepayOrgUsername();
