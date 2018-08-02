@@ -16,7 +16,7 @@
 				AND hydb.entrusted_flg = #{entrusted_flg,jdbcType=INTEGER}
 			</if>
 			<if test="startDate != null and startDate != ''">
-				AND hydb.addtime  between #{startDate,jdbcType=INTEGER} and #{endDate,jdbcType=INTEGER}
+				AND hydb.create_time  between #{startDate,jdbcType=INTEGER} and #{endDate,jdbcType=INTEGER}
 			</if>
 		</where>
 	</sql>
@@ -66,12 +66,12 @@
 	<select id="searchBorrowNeedAuthList" resultMap="borrowListMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
-		hydb.`name` AS borrow_name,
+		hbi.`name` AS borrow_name,
 		hydbs.`name` AS borrow_style,
 		hydb.borrow_apr,
 		CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period, '天') ELSE CONCAT(hydb.borrow_period, '个月') END borrow_period,
 		hydb.account AS borrow_account,
-		FROM_UNIXTIME( hydb.addtime, '%Y-%m-%d %H:%i:%s' ) AS add_time,
+		hydb.create_time AS add_time,
 		hydb.repay_account_all AS repay_account_all,
 		hydb.entrusted_user_name AS entrusted_user_name,
 		CASE
@@ -82,11 +82,12 @@
 		hydbu.truename AS entrusted_rel_name
 		FROM
 		ht_borrow hydb
+		left join ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		LEFT JOIN ht_users_info hydbu ON hydb.entrusted_user_id = hydbu.user_id
+		LEFT JOIN ht_r_user hydbu ON hydb.entrusted_user_id = hydbu.user_id
 		<include refid="Where_Clause" />
 		ORDER BY
-		hydb.addtime asc
+		hydb.id asc
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
@@ -107,12 +108,12 @@
 	<select id="searchBorrowAuthedList" resultMap="borrowListMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
-		hydb.`name` AS borrow_name,
+		hbi.`name` AS borrow_name,
 		hydbs.`name` AS borrow_style,
 		hydb.borrow_apr,
 		CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period, '天') ELSE CONCAT(hydb.borrow_period, '个月') END borrow_period,
 		hydb.account AS borrow_account,
-		FROM_UNIXTIME( hydb.addtime, '%Y-%m-%d %H:%i:%s' ) AS add_time,
+		hydb.create_time AS add_time,
 		hydb.repay_account_all AS repay_account_all,
 		hydb.entrusted_user_name AS entrusted_user_name,
 		CASE
@@ -123,8 +124,9 @@
 		hydbu.truename AS entrusted_rel_name
 		FROM
 		ht_borrow hydb
+		left join ht_borrow_info hbi on hydb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
-		LEFT JOIN ht_users_info hydbu ON hydb.entrusted_user_id = hydbu.user_id
+		LEFT JOIN ht_r_user hydbu ON hydb.entrusted_user_id = hydbu.user_id
 		<include refid="Where_Clause_authed" />
 		ORDER BY
 		hydb.trustee_pay_time desc
