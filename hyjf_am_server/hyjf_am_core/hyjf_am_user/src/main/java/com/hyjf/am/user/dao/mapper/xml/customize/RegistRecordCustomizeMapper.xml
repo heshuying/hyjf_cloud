@@ -19,7 +19,7 @@
         hydur.username AS recommend_name,
         hydutm.utm_source AS utm_source,
         hydu.reg_esb AS regist_plat,
-        hydu.reg_time AS reg_time,
+        date_format(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
         ht_user hydu

@@ -60,9 +60,9 @@ public class RegistRecordManagerController extends BaseController{
             intStart = 0;
             intEnd = 0;
         }
-        List<RegistRecordCustomize> registRecordCustomizeList = registRecordService.selectRegistList(mapParam,intStart,intEnd);
         response.setCount(registCount);
         if(registCount>0){
+            List<RegistRecordCustomize> registRecordCustomizeList = registRecordService.selectRegistList(mapParam,intStart,intEnd);
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<RegistRecordVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, RegistRecordVO.class);
                 response.setResultList(userVoList);

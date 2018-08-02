@@ -61,7 +61,7 @@
         hydu.reg_esb AS regist_plat,
         hydu.user_type AS user_type,
         hydur.username AS recommend_name,
-        FROM_UNIXTIME(
+        date_format(
         hydu.reg_time,
         '%Y-%m-%d %H:%i:%s'
         ) AS reg_time,
@@ -193,7 +193,7 @@
                 hydu.reg_esb AS regist_plat,
                 hydu.user_type AS user_type,
                 hydur.username AS recommend_name,
-                FROM_UNIXTIME(
+                date_format(
                 hydu.reg_time,
                 '%Y-%m-%d %H:%i:%s'
                 ) AS reg_time,
@@ -294,11 +294,11 @@
         hydu.reg_esb AS regist_plat,
         hydu.account_esb AS open_account_plat,
         hydu.reg_ip AS regist_ip,
-        from_unixtime(
+        date_format(
         hydu.reg_time,
         '%Y-%m-%d %H:%i:%s'
         ) AS regist_time,
-        from_unixtime(
+        date_format(
         hydac.create_time,
         '%Y-%m-%d %H:%i:%s'
         ) AS open_account_time,

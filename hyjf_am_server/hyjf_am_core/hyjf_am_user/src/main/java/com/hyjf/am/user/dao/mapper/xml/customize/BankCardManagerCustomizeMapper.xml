@@ -80,10 +80,10 @@
                 </if>
             </if>
             <if test="addTimeStart != null and addTimeStart !='' ">
-                AND FROM_UNIXTIME( hyduab.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addTimeStart}
+                AND date_format(hyduab.create_time,'%Y-%c-%d') <![CDATA[>=]]> #{addTimeStart,jdbcType=VARCHAR}
             </if>
             <if test="addTimeEnd != null and addTimeEnd !='' ">
-                AND FROM_UNIXTIME( hyduab.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addTimeEnd}
+                AND date_format(hyduab.create_time,'%Y-%c-%d') <![CDATA[<=]]> #{addTimeEnd,jdbcType=VARCHAR}
             </if>
         </where>
     </sql>
@@ -141,10 +141,10 @@
                 AND hydui.truename LIKE CONCAT('%', #{realName}, '%')
             </if>
             <if test="addTimeStart != null and addTimeStart !='' ">
-                AND date_format(hbc.create_time,'%Y-%m-%d') <![CDATA[>=]]> #{addTimeStart,jdbcType=VARCHAR}
+                AND date_format(hbc.create_time,'%Y-%c-%d') <![CDATA[>=]]> #{addTimeStart,jdbcType=VARCHAR}
             </if>
             <if test="addTimeEnd != null and addTimeEnd !='' ">
-                AND date_format(hbc.create_time,'%Y-%m-%d') <![CDATA[<=]]> #{addTimeEnd,jdbcType=VARCHAR}
+                AND date_format(hbc.create_time,'%Y-%c-%d') <![CDATA[<=]]> #{addTimeEnd,jdbcType=VARCHAR}
             </if>
         </where>
     </sql>

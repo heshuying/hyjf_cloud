@@ -73,12 +73,12 @@ public class LoanCoverUserManagerController extends BaseController{
         int limitStart = paginator.getOffset();
         int limitEnd =  paginator.getLimit();
         if(request.isLimitFlg()){
-            limitEnd = 0;
-            limitStart = 0;
+            limitEnd = -1;
+            limitStart = -1;
         }
-        List<LoanSubjectCertificateAuthority> registRecordCustomizeList = loanCoverUserManagerService.getRecordList(request,limitStart,limitEnd,dateStart,dateEnd);
         response.setCount(registCount);
         if(registCount>0){
+            List<LoanSubjectCertificateAuthority> registRecordCustomizeList =  loanCoverUserManagerService.getRecordList(request,limitStart,limitEnd,dateStart,dateEnd);
             if (!CollectionUtils.isEmpty(registRecordCustomizeList)) {
                 List<LoanCoverUserVO> userVoList = CommonUtils.convertBeanList(registRecordCustomizeList, LoanCoverUserVO.class);
                 response.setResultList(userVoList);
@@ -167,8 +167,8 @@ public class LoanCoverUserManagerController extends BaseController{
     }
     /**
      * 根据证件号码和姓名查找用户CA认证记录表
-     * @param strIdNo
-     * @param tureName
+     * @param idNo
+     * @param name
      * @return
      */
     @RequestMapping("/isCAIdNoCheck/{idNo}/{name}")

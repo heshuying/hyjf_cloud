@@ -59,9 +59,9 @@ public class EvaluationManagerController extends BaseController{
         if(request.getPageSize()==0){
             paginator = new Paginator(request.getCurrPage(), usesrCount);
         }
-        List<EvalationResultCustomize> userManagerCustomizeList = evaluationManagerService.selectUserEvalationResultList(mapParam,paginator.getOffset(), paginator.getLimit());
         response.setCount(usesrCount);
         if(usesrCount>0){
+            List<EvalationResultCustomize> userManagerCustomizeList = evaluationManagerService.selectUserEvalationResultList(mapParam,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<EvalationVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, EvalationVO.class);
                 response.setResultList(userVoList);

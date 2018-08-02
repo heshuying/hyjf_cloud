@@ -24,6 +24,8 @@ public class AccountRecordRequestBean extends BasePage {
 	private String openTimeStart;
 	@ApiModelProperty(value = "开户时间(结束)")
 	private String openTimeEnd;
+	@ApiModelProperty(value = "手机号")
+	private String mobile;
 	public String getAccount() {
 		return account;
 	}
@@ -88,4 +90,11 @@ public class AccountRecordRequestBean extends BasePage {
 		this.openTimeEnd = openTimeEnd;
 	}
 
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 }

@@ -60,9 +60,9 @@ public class BankOpenRecordManagerController extends BaseController{
             limitEnd = 0;
             limitStart = 0;
         }
-        List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(mapParam,limitStart,limitEnd);
         response.setCount(countBankRecordTotal);
         if (countBankRecordTotal > 0) {
+            List<BankOpenAccountRecordCustomize> bankOpenAccountRecordCustomizeList = bankOpenRecordService.selectBankAccountList(mapParam,limitStart,limitEnd);
             if (!CollectionUtils.isEmpty(bankOpenAccountRecordCustomizeList)) {
                 List<BankOpenAccountRecordVO> userBankRecord = CommonUtils.convertBeanList(bankOpenAccountRecordCustomizeList, BankOpenAccountRecordVO.class);
                 response.setResultList(userBankRecord);
@@ -85,9 +85,9 @@ public class BankOpenRecordManagerController extends BaseController{
         Map<String,Object> mapParam = setAccountRecordRequest(request);
         int countRecordTotal = bankOpenRecordService.countRecordTotal(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), countRecordTotal,request.getPageSize());
-        List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
         response.setCount(countRecordTotal);
         if (countRecordTotal > 0) {
+            List<BankOpenAccountRecordCustomize> accountList = bankOpenRecordService.selectAccountList(mapParam,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(accountList)) {
                 List<BankOpenAccountRecordVO> bankOpenAccountRecordList = CommonUtils.convertBeanList(accountList, BankOpenAccountRecordVO.class);
                 response.setResultList(bankOpenAccountRecordList);
@@ -107,6 +107,7 @@ public class BankOpenRecordManagerController extends BaseController{
         mapRaram.put("userName",request.getUserName());
         mapRaram.put("userProperty",request.getUserProperty());
         mapRaram.put("idCard",request.getIdCard());
+        mapRaram.put("account",request.getAccount());
         mapRaram.put("realName",request.getRealName());
         mapRaram.put("openTimeStart",request.getOpenTimeStart());
         mapRaram.put("openTimeEnd",request.getOpenTimeEnd());

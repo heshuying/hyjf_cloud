@@ -44,23 +44,19 @@
         <where>
             hydu.bank_open_account = 1
             <if test="userName != null and userName !='' ">
-                AND hydu.username LIKE CONCAT('%',
-                #{userName,jdbcType=VARCHAR}, '%')
+                AND hydu.username LIKE CONCAT(#{userName,jdbcType=VARCHAR}, '%')
             </if>
             <if test="mobile != null and mobile !='' ">
-                AND hydu.mobile LIKE CONCAT('%',
-                #{mobile,jdbcType=VARCHAR}, '%')
+                AND hydu.mobile LIKE CONCAT(#{mobile,jdbcType=VARCHAR}, '%')
             </if>
             <if test="customerAccount != null and customerAccount !='' ">
                 AND hboa.account = #{customerAccount,jdbcType=VARCHAR}
             </if>
             <if test="idCard != null and idCard !='' ">
-                AND hydui.idcard LIKE CONCAT('%',
-                #{idCard,jdbcType=VARCHAR}, '%')
+                AND hydui.idcard LIKE CONCAT(#{idCard,jdbcType=VARCHAR}, '%')
             </if>
             <if test="realName != null and realName !='' ">
-                AND hydui.truename LIKE CONCAT('%',
-                #{realName,jdbcType=VARCHAR}, '%')
+                AND hydui.truename LIKE CONCAT(#{realName,jdbcType=VARCHAR}, '%')
             </if>
             <if test="openAccountPlat != null and openAccountPlat !='' ">
                 AND hydu.bank_account_esb =
@@ -103,7 +99,6 @@
         <result column="sex" property="sex"  jdbcType="VARCHAR" />
         <result column="birthday" property="birthday"  jdbcType="VARCHAR" />
         <result column="regist_area" property="registArea"  jdbcType="VARCHAR" />
-        <result column="idcard" property="idcard"  jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectAccountList" resultMap="AccountListPOMap" parameterType="Map">
         SELECT
@@ -114,14 +109,13 @@
         h.attribute,
         h.birthday,
         h.sex,
-        h.idcard,
         concat( province,city,area) as regist_area,
         h.attribute AS user_property,
         h.open_account AS account_status_name,
         h.chinapnr_usrid AS account,
         h.chinapnr_usrcustid AS customer_account,
         h.account_esb AS open_account_plat,
-        FROM_UNIXTIME( h.create_time, '%Y-%m-%d %H:%i:%s' ) AS open_time
+        date_format( h.create_time, '%Y-%m-%d %H:%i:%s' ) AS open_time
         FROM
         (SELECT
         hydu.user_id,

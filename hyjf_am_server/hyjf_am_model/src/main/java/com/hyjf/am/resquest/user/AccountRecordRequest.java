@@ -15,6 +15,7 @@ public class AccountRecordRequest extends BasePage {
 	private String realName;
 	private String openTimeStart;
 	private String openTimeEnd;
+	private String mobile;
 	//默认为true ,获取全部数据，为false时，获取部分数据
 	private boolean limitFlg = false;
 	public String getAccount() {
@@ -87,5 +88,13 @@ public class AccountRecordRequest extends BasePage {
 
 	public void setLimitFlg(boolean limitFlg) {
 		this.limitFlg = limitFlg;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 }

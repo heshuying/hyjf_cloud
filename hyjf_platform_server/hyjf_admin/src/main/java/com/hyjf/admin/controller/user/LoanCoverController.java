@@ -151,7 +151,11 @@ public class LoanCoverController extends BaseController {
     @PostMapping(value = "/updateLoancover")
     @ResponseBody
     public AdminResult updateLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
-        return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean);
+        //获取登录用户Id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        int loginUserId = Integer.parseInt(adminSystemVO.getId());
+        String loginUserName = adminSystemVO.getUsername();
+        return loanCoverService.updateLoanCoverUser(loanCoverUserRequestBean,loginUserId,loginUserName);
     }
 
     /*  *

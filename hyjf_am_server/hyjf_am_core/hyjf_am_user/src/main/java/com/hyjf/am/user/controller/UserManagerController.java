@@ -70,9 +70,9 @@ public class UserManagerController extends BaseController{
             limitEnd = 0;
             limitStart = 0;
         }
-        List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,limitStart,limitEnd);
         response.setCount(usesrCount);
         if(usesrCount>0){
+            List<UserManagerCustomize> userManagerCustomizeList = userManagerService.selectUserMemberList(mapParam,limitStart,limitEnd);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<UserManagerVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, UserManagerVO.class);
                 response.setResultList(userVoList);
@@ -648,7 +648,8 @@ public class UserManagerController extends BaseController{
     }
     /**
      * 根据绑定信息取得用户id
-     * @param bindUniqueId
+     * @param userId
+     * @param bindPlatformId
      * @return
      */
     @RequestMapping("/getBindUniqueIdByUserId/{userId}/{bindPlatformId}")
