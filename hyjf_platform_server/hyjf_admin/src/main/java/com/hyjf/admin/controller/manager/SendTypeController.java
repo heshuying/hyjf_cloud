@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @author by xiehuili on 2018/8/1.
  */
-@Api(value = "配置中心借款项目配置--流程配置",description ="流程配置--发标/复审")
+@Api(value = "配置中心借款项目配置--发标/复审",description ="流程配置--发标/复审")
 @RestController
 @RequestMapping("/hyjf-admin/config/sendtype")
 public class SendTypeController extends BaseController {
@@ -52,20 +52,18 @@ public class SendTypeController extends BaseController {
     @ApiOperation(value = "流程配置", notes = "查询发标/复审详情")
     @RequestMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public BorrowSendTypeResponse borrowSendInfo(@RequestBody BorrowSendTypeRequest adminRequest) {
-        BorrowSendTypeResponse resList= null;
+    public AdminResult borrowSendInfo(@RequestBody BorrowSendTypeRequest adminRequest) {
+        BorrowSendTypeResponse resList= new BorrowSendTypeResponse();
         if (StringUtils.isNotEmpty(adminRequest.getSendCd())) {
             BorrowSendTypeVO borrowSendTypeVO = sendTypeService.getBorrowSendInfo(adminRequest.getSendCd());
             if(borrowSendTypeVO != null){
+                borrowSendTypeVO.setModifyFlag("M");
                 resList.setResult(borrowSendTypeVO);
-                resList.setModifyFlag("M");
-                return resList;
+                return new AdminResult<BorrowSendTypeVO>(resList.getResult()) ;
             }
-            resList.setModifyFlag("A");
-            return resList;
+            return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在");
         }
-        resList.setModifyFlag("A");
-       return resList;
+        return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在");
     }
     @ApiOperation(value = "流程配置", notes = "添加 发标/复审")
     @PostMapping("/insertAction")
@@ -91,6 +89,7 @@ public class SendTypeController extends BaseController {
         BorrowSendTypeResponse res =this.sendTypeService.insertBorrowSend(adminRequest);
         if (!Response.isSuccess(res)) {
             response.setRtn(Response.FAIL);
+            return response;
         }
         response.setRtn(Response.SUCCESS);
         return response;
@@ -113,6 +112,7 @@ public class SendTypeController extends BaseController {
         BorrowSendTypeResponse res =this.sendTypeService.updateBorrowSend(adminRequest);
         if (!Response.isSuccess(res)) {
             response.setRtn(Response.FAIL);
+            return response;
         }
         response.setRtn(Response.SUCCESS);
         return response;
@@ -128,6 +128,7 @@ public class SendTypeController extends BaseController {
         if (Response.isSuccess(response)) {
             response.setRedirectUrl("redirect:/config/sendtype/init" );
             response.setRtn(Response.SUCCESS);
+            return response;
         }
         response.setRtn(Response.FAIL);
         return response;
