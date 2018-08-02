@@ -20,7 +20,7 @@ import java.util.Properties;
  * @date 2018/8/2 15:18
  */
 @Intercepts({@Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
-@Component("syncRuserInterceptor")
+@Component("syncAccountInterceptor")
 public class SyncAccountInterceptor implements Interceptor {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
