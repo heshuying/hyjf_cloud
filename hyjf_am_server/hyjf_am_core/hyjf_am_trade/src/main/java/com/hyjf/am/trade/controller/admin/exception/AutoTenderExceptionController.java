@@ -58,9 +58,9 @@ public class AutoTenderExceptionController  extends BaseController {
             mapParam.put("limitStart", 0);
             mapParam.put("limitEnd", 0);
         }
-        List<AdminPlanAccedeListCustomize> userManagerCustomizeList = autoTenderExceptionService.selectAccedeRecordList(mapParam);
         response.setCount(intCountAccede);
         if (intCountAccede > 0) {
+            List<AdminPlanAccedeListCustomize> userManagerCustomizeList = autoTenderExceptionService.selectAccedeRecordList(mapParam);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AdminPlanAccedeListCustomizeVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AdminPlanAccedeListCustomizeVO.class);
                 response.setResultList(userVoList);
