@@ -38,7 +38,7 @@ public class ApiOrganizationStructureServiceImpl extends BaseUserServiceImpl imp
     @Override
     public List<OrganizationStructureVO> queryInfo(OrganizationStructureRequestBean bean) {
         //校验参数
-        CheckUtil.check(Validator.isNotNull(bean.getInstCode()),MsgEnum.ERR_PARAM);
+        CheckUtil.check(Validator.isNotNull(bean.getInstCode()),MsgEnum.STATUS_CE000001);
         //校验签名
         CheckUtil.check(this.verifyRequestSign(bean,BaseDefine.ORGANIZATION_LIST),MsgEnum.ERR_SIGN);
         // 获取信息

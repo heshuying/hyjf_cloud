@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "预注册用户",tags ="预注册用户")
 @RestController
-@RequestMapping("/preregist")
+@RequestMapping("/hyjf-admin/preregist")
 public class PreregistController extends BaseController {
 	//权限名称
 	private static final String PERMISSIONS = "preregist";
@@ -55,12 +55,6 @@ public class PreregistController extends BaseController {
 	public AdminResult<ListResult<AdminPreRegistListVO>> init(HttpServletRequest request,
 			@RequestBody PreRegistRequestBean adminPreRegistListRequest) {
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
-//		aprlr.setMobile(adminPreRegistListRequest.getMobile());
-//		aprlr.setReferrer(adminPreRegistListRequest.getReferrer());
-//		aprlr.setSource(adminPreRegistListRequest.getReferrer());
-//		aprlr.setRegistFlag(adminPreRegistListRequest.getRegistFlag());
-//		aprlr.setCurrPage(adminPreRegistListRequest.getCurrPage());
-//		aprlr.setPageSize(adminPreRegistListRequest.getPageSize());
 		
 		 //可以直接使用
 		 BeanUtils.copyProperties(adminPreRegistListRequest, aprlr);

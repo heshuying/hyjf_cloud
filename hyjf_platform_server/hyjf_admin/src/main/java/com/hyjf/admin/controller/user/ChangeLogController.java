@@ -56,7 +56,6 @@ public class ChangeLogController extends BaseController {
 	 * 权限维护画面初始化
 	 *
 	 * @param request
-	 * @param form
 	 * @return
 	 */
 	@ApiOperation(value = "查询操作日志", notes = "查询操作日志")
@@ -69,7 +68,6 @@ public class ChangeLogController extends BaseController {
 		clr.setRealName(map.get("realName"));
 		clr.setMobile(map.get("mobile"));
 		clr.setRecommendUser(map.get("recommendUser"));
-		//clr.setPageSize(Integer.valueOf(map.get("pageSize")) );
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
 		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
@@ -101,7 +99,6 @@ public class ChangeLogController extends BaseController {
 		clr.setRealName(map.get("realName"));
 		clr.setMobile(map.get("mobile"));
 		clr.setRecommendUser(map.get("recommendUser"));
-		//clr.setPageSize(Integer.valueOf(map.get("pageSize")) );
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
 		clr.setCurrPage(-1);
@@ -172,7 +169,7 @@ public class ChangeLogController extends BaseController {
                     }
                     // 用户属性
                     else if (celLength == 5) {
-                        cell.setCellValue(changeLog.getAttribute()==null?"":changeLog.getAttribute().equals("0")?"无主单":changeLog.getAttribute().equals("1")?"有主单":changeLog.getAttribute().equals("2")?"线下员工":"线上员工");
+                        cell.setCellValue(changeLog.getAttribute()==null?"": "0".equals(changeLog.getAttribute()) ?"无主单": "1".equals(changeLog.getAttribute()) ?"有主单": "2".equals(changeLog.getAttribute()) ?"线下员工":"线上员工");
                     }
                     // 推荐人
                     else if (celLength == 6) {

@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.bean.app;
 
 
-import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 
 import java.util.ArrayList;
 import java.util.List;

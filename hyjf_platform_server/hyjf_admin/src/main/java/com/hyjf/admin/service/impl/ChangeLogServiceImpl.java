@@ -17,5 +17,4 @@ public class ChangeLogServiceImpl  implements ChangeLogService{
 		return changeLogClient.getChangeLogList(clr);
 	}
 
-
 }
