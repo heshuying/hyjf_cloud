@@ -213,7 +213,7 @@
 			count(cu.id)
 		FROM
 			ht_coupon_user cu
-		LEFT JOIN ht_user u ON cu.user_id = u.user_id
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flg = 0
 		<include refid="Where_Clause" />
 	</select>
