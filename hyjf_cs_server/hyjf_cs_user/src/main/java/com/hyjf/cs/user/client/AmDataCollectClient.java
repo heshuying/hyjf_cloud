@@ -20,4 +20,11 @@ public interface AmDataCollectClient {
      * @return
      */
     BigDecimal selectInterestSum();
+
+    /**
+     * 根据ordId获取retCode
+     * @param logOrdId
+     * @return
+     */
+    String getRetCode(String logOrdId);
 }
