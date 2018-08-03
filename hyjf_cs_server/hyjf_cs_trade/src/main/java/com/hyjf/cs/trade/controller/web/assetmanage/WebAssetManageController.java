@@ -7,7 +7,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AssetManageService;
+import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;

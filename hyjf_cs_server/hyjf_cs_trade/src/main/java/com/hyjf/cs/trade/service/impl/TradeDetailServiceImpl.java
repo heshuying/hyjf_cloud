@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Service
 public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements TradeDetailService {
-    private static final Logger logger = LoggerFactory.getLogger(AssetManageServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TradeDetailServiceImpl.class);
     @Override
     public List<AccountTradeVO> selectTradeTypes() {
         return amTradeClient.selectTradeTypes();

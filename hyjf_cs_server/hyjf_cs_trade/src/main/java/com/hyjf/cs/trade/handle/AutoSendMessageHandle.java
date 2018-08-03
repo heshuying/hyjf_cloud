@@ -10,7 +10,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
-import com.hyjf.cs.trade.service.AutoSendService;
+import com.hyjf.cs.trade.service.handle.AutoSendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
