@@ -213,7 +213,14 @@ public class RepayManageController extends BaseTradeController {
         Map<String,Object> resultMap = new HashMap<String,Object>();
         ProjectBean projectBean = new ProjectBean();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
-
+        String borrowNid = request.getParameter("borrowNid");
+        if(StringUtils.isBlank(borrowNid)){
+            logger.info("请求参数borrowNid为空");
+            result.setStatus(WebResult.FAIL);
+            result.setStatusDesc("请求参数borrowNid为空");
+            return result;
+        }
+        projectBean.setBorrowNid(borrowNid);
         if(userVO != null){
             projectBean.setUserId(userVO.getUserId().toString());
             projectBean.setUsername(userVO.getUsername());

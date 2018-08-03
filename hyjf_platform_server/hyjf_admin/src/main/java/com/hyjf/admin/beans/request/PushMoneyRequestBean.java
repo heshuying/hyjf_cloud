@@ -4,124 +4,154 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * @author fuqiang
- * @version PushMoneyRequestBean, v0.1 2018/7/10 11:06
+ * @author zdj
+ * @version PushMoneyRequestBean.java, v0.1 2018年7月13日 下午3:11:08
  */
-public class PushMoneyRequestBean extends BaseRequest implements Serializable {
-    private Integer id;
+public class PushMoneyRequestBean extends BaseRequest implements Serializable{
 
-    private String type;
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 排序
+	 */
+	private String sort;
+	/**
+	 * 排序列
+	 */
+	private String col;
 
-    private Integer projectType;
+	public int limit;
+	@ApiModelProperty(value = "检索条件-项目编号")
+	private String borrowNid;
 
-    private Integer rewardSend;
+	@ApiModelProperty(value = "检索条件-项目标题")
+	private String borrowName;
 
-    private String dayTender;
+	@ApiModelProperty(value = "检索条件-项目还款方式  = endday 天   !=endday 个月")
+	private String borrowStyle;
 
-    private String monthTender;
+	@ApiModelProperty(value = "检索条件- 融资期限")
+	private String borrowPeriod;
 
-    private Integer createBy;
+	@ApiModelProperty(value = "检索条件- 融资金额")
+	private String account;
 
-    private Integer updateBy;
+	@ApiModelProperty(value = "检索条件-提成总额")
+	private String commission;
 
-    private Date createTime;
+	@ApiModelProperty(value = "检索条件-放款开始时间")
+	private String recoverLastTimeStart;
 
-    private Date updateTime;
+	@ApiModelProperty(value = "检索条件-放款结束时间")
+	private String recoverLastTimeEnd;
 
-    private String remark;
+	@ApiModelProperty(value = "检索条件-项目类型")
+	private int projectType;
 
-    private static final long serialVersionUID = 1L;
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public String getSort() {
+		return sort;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getCol() {
+		return col;
+	}
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+	public void setCol(String col) {
+		this.col = col;
+	}
 
-    public Integer getProjectType() {
-        return projectType;
-    }
+	public int getLimit() {
+		return limit;
+	}
 
-    public void setProjectType(Integer projectType) {
-        this.projectType = projectType;
-    }
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
 
-    public Integer getRewardSend() {
-        return rewardSend;
-    }
+	public String getBorrowNid() {
+		return borrowNid;
+	}
 
-    public void setRewardSend(Integer rewardSend) {
-        this.rewardSend = rewardSend;
-    }
+	public void setBorrowNid(String borrowNid) {
+		this.borrowNid = borrowNid;
+	}
 
-    public String getDayTender() {
-        return dayTender;
-    }
+	public String getBorrowName() {
+		return borrowName;
+	}
 
-    public void setDayTender(String dayTender) {
-        this.dayTender = dayTender == null ? null : dayTender.trim();
-    }
+	public void setBorrowName(String borrowName) {
+		this.borrowName = borrowName;
+	}
 
-    public String getMonthTender() {
-        return monthTender;
-    }
+	public String getBorrowStyle() {
+		return borrowStyle;
+	}
 
-    public void setMonthTender(String monthTender) {
-        this.monthTender = monthTender == null ? null : monthTender.trim();
-    }
+	public void setBorrowStyle(String borrowStyle) {
+		this.borrowStyle = borrowStyle;
+	}
 
-    public Integer getCreateBy() {
-        return createBy;
-    }
+	public String getBorrowPeriod() {
+		return borrowPeriod;
+	}
 
-    public void setCreateBy(Integer createBy) {
-        this.createBy = createBy;
-    }
+	public void setBorrowPeriod(String borrowPeriod) {
+		this.borrowPeriod = borrowPeriod;
+	}
 
-    public Integer getUpdateBy() {
-        return updateBy;
-    }
+	public String getAccount() {
+		return account;
+	}
 
-    public void setUpdateBy(Integer updateBy) {
-        this.updateBy = updateBy;
-    }
+	public void setAccount(String account) {
+		this.account = account;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public String getCommission() {
+		return commission;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setCommission(String commission) {
+		this.commission = commission;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public String getRecoverLastTimeStart() {
+		return recoverLastTimeStart;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setRecoverLastTimeStart(String recoverLastTimeStart) {
+		this.recoverLastTimeStart = recoverLastTimeStart;
+	}
 
-    public String getRemark() {
-        return remark;
-    }
+	public String getRecoverLastTimeEnd() {
+		return recoverLastTimeEnd;
+	}
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
+	public void setRecoverLastTimeEnd(String recoverLastTimeEnd) {
+		this.recoverLastTimeEnd = recoverLastTimeEnd;
+	}
+
+	public int getProjectType() {
+		return projectType;
+	}
+
+	public void setProjectType(int projectType) {
+		this.projectType = projectType;
+	}
 }
