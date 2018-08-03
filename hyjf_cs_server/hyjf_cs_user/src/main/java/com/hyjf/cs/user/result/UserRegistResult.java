@@ -1,7 +1,7 @@
 /*
  * Copyright(c) 2012-2016 JD Pharma.Ltd. All Rights Reserved.
  */
-package com.hyjf.cs.user.controller.wechat.regist;
+package com.hyjf.cs.user.result;
 
 import com.hyjf.cs.user.result.BaseResultBean;
 
@@ -13,7 +13,7 @@ import com.hyjf.cs.user.result.BaseResultBean;
  * @see中午12:41
  * @since hyjf 1.0 2018年02月27日
  */
-public class UserRegistResultVO extends BaseResultBean {
+public class UserRegistResult extends BaseResultBean {
 
 	/**
 	 * 
@@ -27,14 +27,14 @@ public class UserRegistResultVO extends BaseResultBean {
 	//登录完成后的sign值
 	private String sign;
 
-	public UserRegistResultVO() {
+	public UserRegistResult() {
 	}
 
-	public UserRegistResultVO(String request) {
+	public UserRegistResult(String request) {
 		super(request);
 	}
 
-	public UserRegistResultVO(String status, String statusDesc) {
+	public UserRegistResult(String status, String statusDesc) {
 		super(status, statusDesc);
 	}
 
