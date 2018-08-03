@@ -1,10 +1,10 @@
-package com.hyjf.cs.trade.controller.web;
+package com.hyjf.cs.trade.controller.web.reward;
 
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
-import com.hyjf.cs.trade.service.RewardService;
+import com.hyjf.cs.trade.service.reward.RewardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.impl.wdzj;
+package com.hyjf.cs.trade.service.wdzj.impl;
 
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;

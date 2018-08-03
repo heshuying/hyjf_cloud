@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.impl.coupon;
+package com.hyjf.cs.trade.service.coupon.impl;
 
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;

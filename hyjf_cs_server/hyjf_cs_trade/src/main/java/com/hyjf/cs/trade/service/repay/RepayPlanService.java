@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service;
+package com.hyjf.cs.trade.service.repay;
 
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
 

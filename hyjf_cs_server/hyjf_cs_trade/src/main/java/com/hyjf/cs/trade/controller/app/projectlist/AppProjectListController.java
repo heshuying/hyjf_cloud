@@ -1,38 +1,27 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.controller.app;
+package com.hyjf.cs.trade.controller.app.projectlist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.app.AppProjectInvestBeanRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
-import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
 import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
-import com.hyjf.cs.trade.bean.TransferInvestRecordResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AppProjectListService;
+import com.hyjf.cs.trade.service.projectlist.AppProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 移动端项目列表

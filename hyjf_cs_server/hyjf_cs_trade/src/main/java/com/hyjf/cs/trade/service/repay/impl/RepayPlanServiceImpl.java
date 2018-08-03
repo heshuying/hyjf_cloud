@@ -1,7 +1,5 @@
-package com.hyjf.cs.trade.service.impl;
+package com.hyjf.cs.trade.service.repay.impl;
 
-import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.CalculatesUtil;
@@ -9,8 +7,7 @@ import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BorrowRepayPlanCsVO;
 import com.hyjf.cs.trade.client.BorrowClient;
-import com.hyjf.cs.trade.client.WebProjectListClient;
-import com.hyjf.cs.trade.service.RepayPlanService;
+import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

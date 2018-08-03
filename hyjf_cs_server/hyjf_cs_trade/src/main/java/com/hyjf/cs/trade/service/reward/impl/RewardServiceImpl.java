@@ -1,8 +1,9 @@
-package com.hyjf.cs.trade.service.impl;
+package com.hyjf.cs.trade.service.reward.impl;
 
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
-import com.hyjf.cs.trade.service.RewardService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.reward.RewardService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 

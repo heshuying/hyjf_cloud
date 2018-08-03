@@ -51,7 +51,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.trade.service.RepayPlanService;
+import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 

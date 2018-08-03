@@ -1,19 +1,20 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service;
+package com.hyjf.cs.trade.service.handle;
 
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
+import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
  * @author fuqiang
  * @version ApiAssetPushService, v0.1 2018/6/11 18:06
  */
-public interface ApiAssetPushService extends BaseTradeService{
+public interface ApiAssetPushService extends BaseTradeService {
 
     /**
      * 发送消息

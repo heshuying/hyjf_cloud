@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service;
+package com.hyjf.cs.trade.service.projectlist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 
 import com.hyjf.cs.trade.bean.HjhPlanAccedeResultBean;
 import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
+import com.hyjf.cs.trade.service.BaseTradeService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  *
  */
-public interface AppProjectListService extends BaseTradeService{
+public interface AppProjectListService extends BaseTradeService {
 
     /**
      * 获取移动端散标投资列表
