@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.message.controller;
 
-import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
@@ -34,10 +33,10 @@ public class OperationReportJobController extends BaseController {
 	@RequestMapping("/countOperationReport")
 	public void countOperationReport() {
 		logger.info("开始 从数据库获取运营报告的数据...");
-		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
-		if(!flag){
-			return;
-		}
+//		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
+//		if(!flag){
+//			return;
+//		}
 		Calendar cal = Calendar.getInstance();
 
 		try {
