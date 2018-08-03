@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/13.
  */
-@Api(value = "配置中心平台账户配置")
+@Api(value = "配置中心平台账户配置",tags ="配置中心平台账户配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountbalance")
 public class AccountBalanceMonitoringController extends BaseController {
@@ -136,8 +136,8 @@ public class AccountBalanceMonitoringController extends BaseController {
                         newRecord.getBalanceLowerLimit() == null ? new Long(0) : newRecord.getBalanceLowerLimit();
                 // 数据没有变更的情况
                 if (oldData.equals(newData)
-                        && oldRecord.getAutoTransferInto() == newRecord.getAutoTransferInto()
-                        && oldRecord.getAutoTransferOut() == newRecord.getAutoTransferOut()
+                        && oldRecord.getAutoTransferInto().equals(newRecord.getAutoTransferInto())
+                        && oldRecord.getAutoTransferOut().equals(newRecord.getAutoTransferOut())
                         && (oldRecord.getTransferIntoRatio() == null ? 0 : oldRecord.getTransferIntoRatio()) == (newRecord
                         .getTransferIntoRatio() == null ? 0 : newRecord.getTransferIntoRatio())) {
                     newRecord.setUpdateFlg(false);

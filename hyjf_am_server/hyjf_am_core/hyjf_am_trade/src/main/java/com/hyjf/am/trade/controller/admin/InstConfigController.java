@@ -223,7 +223,7 @@ public class InstConfigController {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     break;
                 } else {
@@ -262,7 +262,7 @@ public class InstConfigController {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     result = true;
                     break;

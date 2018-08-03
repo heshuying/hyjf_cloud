@@ -17,7 +17,6 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.app.withdraw.UserWithdrawDefine;
 import com.hyjf.cs.user.service.withdraw.UserWithdrawService;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
@@ -123,7 +122,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
             List<BankCardBean> bankcards = new ArrayList<BankCardBean>();
             for (int j = 0; j < array.size(); j++) {
                 JSONObject obj = array.getJSONObject(j);
-                if (!obj.getString("RealFlag").equals("R")) {
+                if (!"R".equals(obj.getString("RealFlag"))) {
                     // 只有实名卡才入库
                     continue;
                 }
@@ -131,11 +130,11 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                 BankCardBean bankCardBean = new BankCardBean();
                 // 普通卡
                 bankCardBean.setIsDefault("0");
-                if (obj.getString("IsDefault").equals("Y")) {
+                if ("Y".equals(obj.getString("IsDefault"))) {
                     // 默认卡
                     bankCardBean.setIsDefault("1");
                 }
-                if (obj.getString("ExpressFlag").equals("Y")) {
+                if ("Y".equals(obj.getString("ExpressFlag"))) {
                     // 快捷卡
                     bankCardBean.setIsDefault("2");
                 }
@@ -152,7 +151,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                     bankSetUp = bankConfig;
                 } else {
                     // 如果没有传银行卡code，则判断是默认银行卡或快捷卡记录银行设置
-                    if (obj.getString("IsDefault").equals("Y") || obj.getString("ExpressFlag").equals("Y")) {
+                    if ("Y".equals(obj.getString("IsDefault")) || "Y".equals(obj.getString("ExpressFlag"))) {
                         bankSetUp = bankConfig;
                     }
                 }
@@ -242,7 +241,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
 
         ret.put("status", "0");
         ret.put("statusDesc", "成功");
-        ret.put("request", UserWithdrawDefine.REQUEST_HOME+UserWithdrawDefine.REQUEST_MAPPING+ ClientConstants.GET_WITHDRAW_INFO_MAPPING);
+        ret.put("request", "/hyjf-app/user/withdraw" + ClientConstants.GET_WITHDRAW_INFO_MAPPING);
         return ret;
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author dangzw
  * @version HomePageController, v0.1 2018/7/26 10:15
  */
-@Api(value = "app", description = "app")
+@Api(tags = "app起始页信息获取")
 @RestController
 @RequestMapping("/hyjf-app/homepage")
 public class HomePageController extends BaseMarketController {
@@ -58,9 +57,9 @@ public class HomePageController extends BaseMarketController {
             ads.put("limitEnd", 1);
             ads.put("host", "file.domain.url");
             ads.put("code", "startpage");
-            if (platform.equals("2")) {
+            if ("2".equals(platform)) {
                 ads.put("platformType","1");
-            } else if (platform.equals("3")) {
+            } else if ("3".equals(platform)) {
                 ads.put("platformType","2");
             }
             List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);

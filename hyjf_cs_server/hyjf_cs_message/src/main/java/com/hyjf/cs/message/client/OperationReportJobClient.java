@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.client;
 
+import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.OperationReportInfoVO;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
@@ -17,9 +18,22 @@ public interface OperationReportJobClient {
     /**
      * 按照省份统计投资人的分布  上个月的最后一天
      *
-     * @param date
+     * @param cityUserIds
      */
-    List<OperationReportJobVO> getTenderCityGroupBy(Date date);
+    List<OperationReportJobVO> getTenderCityGroupByUserIds(List<OperationReportJobVO> cityUserIds);
+
+    /**
+     * 按照省份统计投资人的分布  上个月的最后一天
+     *
+     * @param bms
+     */
+    List<OperationReportJobVO> getTenderCityGroupBy(List<OperationReportJobVO> bms);
+
+    /**
+     * 按照省份统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO> getTenderCityGroupByList(Date date);
 
     /**
      * 按照性别统计投资人的分布
@@ -32,6 +46,7 @@ public interface OperationReportJobClient {
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
+
 
     /**
      *投资人按照年龄分布 返回符合条件所有用户
@@ -237,4 +252,14 @@ public interface OperationReportJobClient {
      * @return
      */
     OperationReportJobVO getUserAgeAndArea(Integer userId);
+
+    /**
+     * @Author walter.tanyy
+     * @user walter.tanyy
+     * @Description  根据条件查询身份证地区
+     * @Date 2018/7/31 16:37
+     * @Param idCardCustomize
+     * @return
+     */
+    IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
 }

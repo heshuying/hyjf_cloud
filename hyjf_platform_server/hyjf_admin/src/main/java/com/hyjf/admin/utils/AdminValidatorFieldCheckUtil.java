@@ -229,14 +229,25 @@ public class AdminValidatorFieldCheckUtil {
 	/**
 	 * 判断是否有错误
 	 *
-	 * @param mav
+	 * @param jsonObject
 	 * @return
 	 */
 	public static boolean hasValidateError(JSONObject jsonObject) {
 		return !CustomErrors.isEmpty(jsonObject);
 	}
-	
-	
+
+	/**
+	 * 排他check
+	 * @param jsonObject
+	 * @param itemname
+	 * @param beforeUpdatetime
+	 * @param currentUpdatetime
+	 */
+	public static void validateSynOperation(JSONObject jsonObject, String itemname, int beforeUpdatetime,int currentUpdatetime){
+		if(beforeUpdatetime != currentUpdatetime){
+			CustomErrors.add(jsonObject, itemname, SYN_OPERATION, getErrorMessage(SYN_OPERATION));
+		}
+	}
 	
 	
 

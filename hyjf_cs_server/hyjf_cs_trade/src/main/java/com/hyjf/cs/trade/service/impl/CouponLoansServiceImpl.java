@@ -127,7 +127,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         String borrowStyle = hjhPlan.getBorrowStyle();
 
         //汇计划只支持按天和按月
-        if(!borrowStyle.equals("endday")){
+        if(!"endday".equals(borrowStyle)){
             borrowStyle = "end";
         }
         // 年利率

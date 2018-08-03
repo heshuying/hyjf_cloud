@@ -49,9 +49,11 @@ public class BindCardPageBean extends BaseBean {
 	public void setIdNo(String idNo) {
 		this.idNo = idNo;
 	}
-	public Integer getUserId() {
+	@Override
+    public Integer getUserId() {
 		return userId;
 	}
+	@Override
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
@@ -61,9 +63,11 @@ public class BindCardPageBean extends BaseBean {
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
 	public String getAccountId() {
 		return accountId;
 	}
+	@Override
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
@@ -73,15 +77,19 @@ public class BindCardPageBean extends BaseBean {
 	public void setUserIP(String userIP) {
 		this.userIP = userIP;
 	}
+	@Override
 	public String getChannel() {
 		return channel;
 	}
+	@Override
 	public void setChannel(String channel) {
 		this.channel = channel;
 	}
+	@Override
 	public String getRetUrl() {
 		return retUrl;
 	}
+	@Override
 	public void setRetUrl(String retUrl) {
 		this.retUrl = retUrl;
 	}
@@ -97,9 +105,11 @@ public class BindCardPageBean extends BaseBean {
 	public void setSuccessfulUrl(String successfulUrl) {
 		this.successfulUrl = successfulUrl;
 	}
+	@Override
 	public String getPlatform() {
 		return platform;
 	}
+	@Override
 	public void setPlatform(String platform) {
 		this.platform = platform;
 	}

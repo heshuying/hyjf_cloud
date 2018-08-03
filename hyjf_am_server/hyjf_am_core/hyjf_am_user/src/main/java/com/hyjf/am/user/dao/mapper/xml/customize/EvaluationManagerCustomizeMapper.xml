@@ -4,13 +4,13 @@
     <sql id="Where_Clause">
         <where>
             <if test="userName != null and userName !=''">
-                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+                AND hydu.username LIKE CONCAT(#{userName}, '%')
             </if>
             <if test="realName != null and realName != ''">
-                AND hydui.truename LIKE CONCAT('%', #{realName}, '%')
+                AND hydui.truename LIKE CONCAT( #{realName}, '%')
             </if>
             <if test="mobile != null and mobile != ''">
-                AND hydu.mobile LIKE CONCAT('%', #{mobile}, '%')
+                AND hydu.mobile LIKE CONCAT(#{mobile}, '%')
             </if>
             <if test="userProperty != null and userProperty != ''">
                 AND pna.name_cd= #{userProperty,jdbcType=INTEGER}
@@ -73,9 +73,9 @@
         hydu.bank_open_account AS account_status,
         huer.eval_type as evaluation_type,
         huer.score_count evaluation_score,
-        DATE_FORMAT(huer.create_time, '%Y-%m-%d %H:%i:%S') createtime,
-        DATE_FORMAT(huer.lasttime, '%Y-%m-%d %H:%i:%S') lasttime,
-        DATE_FORMAT(hydu.evaluation_expired_time, '%Y-%m-%d %H:%i:%S') as evalationTime
+        date_format(huer.create_time, '%Y-%c-%d %h:%i:%s') createtime,
+        date_format(huer.lasttime, '%Y-%c-%d %h:%i:%s') lasttime,
+        date_format(hydu.evaluation_expired_time, '%Y-%c-%d %h:%i:%s') as evalationTime
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id

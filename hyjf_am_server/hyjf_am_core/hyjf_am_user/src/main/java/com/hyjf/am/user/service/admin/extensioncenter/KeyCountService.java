@@ -82,4 +82,11 @@ public interface KeyCountService  {
 	 * @param request 上个月的最后一天
 	 */
 	List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request);
+
+	/**
+	 * 按照省份统计投资人的分布  上个月的最后一天
+	 *
+	 * @param cityUserIds
+	 */
+	List<OperationReportJobVO> getTenderCityGroupByUserIds(List<OperationReportJobVO> cityUserIds);
 }

@@ -293,7 +293,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 				}
 			}else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0) ||
 					(hjhLabel.getLabelTermStart()!=null && hjhLabel.getLabelTermStart().intValue()>0)) {
-				if(borrow.getBorrowPeriod() == hjhLabel.getLabelTermStart() || borrow.getBorrowPeriod() == hjhLabel.getLabelTermEnd()){
+				if(borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermStart()) || borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())){
 //					score = score+1;
 				}else{
 					continue;

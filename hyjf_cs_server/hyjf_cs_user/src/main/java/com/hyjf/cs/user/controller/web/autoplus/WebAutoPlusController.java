@@ -24,14 +24,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:09
  */
-@Api(description = "web端-用户自动投标自动债转授权")
+@Api(tags = {"web端-用户自动投标自动债转授权"})
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")
@@ -52,12 +51,16 @@ public class WebAutoPlusController extends BaseUserController {
         logger.info("Web端授权发送短信验证码, param :{}", param);
         WebResult<Object> result = new WebResult<Object>();
         CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
+        //获取用户信息
         UserVO user = autoPlusService.getUsersById(userId);
+        //0授权自动投标；1授权自动债转 发送短信
         String userAutoType = param.get("userAutoType");
+        //参数检查
         String srvTxCode = autoPlusService.checkSmsParam(user,userAutoType);
         // 请求银行接口
         BankCallBean bankBean = null;
         try {
+            //调用银行发送短信接口
             bankBean = autoPlusService.callSendCode(userId,user.getMobile(),srvTxCode, ClientConstants.CHANNEL_PC,null);
         } catch (Exception e) {
             logger.error("请求验证码接口发生异常", e);
@@ -73,36 +76,36 @@ public class WebAutoPlusController extends BaseUserController {
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :用户授权自动投资
-     * @Param: * @param token
+     * 用户授权自动投资
+     * @param userId
      * @param authorizedVO
-     * @Date: 16:43 2018/5/30
-     * @Return: ModelAndView
+     * @return
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping(value = "/userAuthInves" , produces = "application/json; charset=utf-8")
     public  WebResult<Object> userAuthInves(@RequestHeader(value = "userId") Integer userId, @RequestBody AuthorizedVO authorizedVO) {
         WebResult<Object> result = new WebResult<Object>();
+        //前导业务授权码
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
+        //短信
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
         CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
+        //获取用户信息
         UserVO user = this.autoPlusService.getUsersById(userId);
         //检查用户信息
        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
+       //授权
         Map<String,Object> map = autoPlusService.userCreditAuthInves(user, ClientConstants.WEB_CLIENT, ClientConstants.QUERY_TYPE_1, ClientConstants.CHANNEL_PC, lastSrvAuthCode, smsCode);
         result.setData(map);
         return result;
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :用户授权自动债转
-     * @Param: * @param token
+     * 用户授权自动债转
+     * @param userId
      * @param authorizedVO
-     * @Date: 16:42 2018/5/30
-     * @Return: ModelAndView
+     * @return
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping(value = "/creditUserAuthInves", produces = "application/json; charset=utf-8")
@@ -126,8 +129,8 @@ public class WebAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动债转异步回调", notes = "用户授权自动债转异步回调")
-    @PostMapping(value = "/creditbgreturn", produces = "application/json; charset=utf-8")
-    public String userCreditBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/creditbgreturn")
+    public String userCreditBgreturn( BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_2);
         return result;
     }
@@ -138,14 +141,14 @@ public class WebAutoPlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
-    @PostMapping(value = "/invesbgreturn", produces = "application/json; charset=utf-8")
-    public String userInvesAuthBgreturn(@RequestBody @Valid BankCallBean bean) {
+    @PostMapping(value = "/invesbgreturn")
+    public String userInvesAuthBgreturn(BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_1);
         return result;
     }
 
     @ApiOperation(value = "授权状态接口", notes = "授权状态接口")
-    @PostMapping(value = "/userAutoStatus", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/userAutoStatus")
     public WebResult<Object> userAutoStatus(@RequestHeader(value = "token") String token){
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = autoPlusService.getUsers(token);

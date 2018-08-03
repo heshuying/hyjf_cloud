@@ -36,7 +36,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version MobileModifyController, v0.1 2018/6/14 16:46
  */
-@Api(value = "web端-修改手机号",description = "web端-修改手机号")
+@Api(value = "web端-修改手机号",tags = "web端-修改手机号")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")
@@ -53,9 +53,10 @@ public class MobileModifyController extends BaseUserController {
     @ApiOperation(value = "手机号码修改（未开户）", notes = "手机号码修改（未开户）")
     @ApiImplicitParam(name = "paraMap",value = "{newMobile: string,smsCode: string}", dataType = "Map")
     @PostMapping(value = "/mobileModify", produces = "application/json; charset=utf-8")
-    public WebResult<WebViewUserVO> mobileModify(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> paraMap) {
+    public WebResult<WebViewUserVO> mobileModify(@RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         logger.info("用户手机号码修改, paraMap :{}",paraMap);
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
+        String token = request.getHeader("token");
 
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
         boolean checkRet = mobileModifyService.checkForMobileModify(paraMap.get("newMobile"), paraMap.get("smsCode"));
@@ -67,7 +68,7 @@ public class MobileModifyController extends BaseUserController {
 
             WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = mobileModifyService.setToken(webUser);
+                webUser = mobileModifyService.updateToken(token,webUser);
                 result.setData(webUser);
             }
         }
@@ -98,10 +99,10 @@ public class MobileModifyController extends BaseUserController {
             try {
 				bankBean = mobileModifyService.callMobileModify(user.getUserId(), paraMap.get("newMobile"), paraMap.get("smsCode"), paraMap.get("srvAuthCode"));
 			} catch (Exception e) {
-				result.setStatus(WebResult.ERROR);
-	            result.setStatusDesc(WebResult.ERROR_DESC);
-	            logger.error("请求手机号码修改接口失败", e);
-			}
+                result.setStatus(WebResult.ERROR);
+                result.setStatusDesc(WebResult.ERROR_DESC);
+                logger.error("请求手机号码修改接口失败", e);
+            }
             
             if (bankBean == null) {
     			result.setStatus(WebResult.FAIL);
@@ -124,7 +125,7 @@ public class MobileModifyController extends BaseUserController {
 
             WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = mobileModifyService.setToken(webUser);
+                webUser = mobileModifyService.updateToken(token,webUser);
                 result.setData(webUser);
             }
         }

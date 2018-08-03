@@ -26,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/accountexception")
-@Api(value = "异常中心-汇付对账",description = "异常中心-汇付对账")
+@Api(value = "异常中心-汇付对账",tags = "异常中心-汇付对账")
 public class AccountExceptionController extends BaseController {
 
     @Autowired

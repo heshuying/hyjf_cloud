@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api(value = "产品中心-汇转让-承接信息" , description = "产品中心-汇转让-承接信息")
+@Api(value = "产品中心-汇转让-承接信息" , tags = "产品中心-汇转让-承接信息")
 @RestController
 @RequestMapping("/borrow/creditTender")
 public class AdminBorrowCreditTenderController {

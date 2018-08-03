@@ -21,7 +21,7 @@ import java.util.List;
  * @author liubin
  * @version AutoTenderController, v0.1 2018/6/28 13:59
  */
-@Api(value = "自动投资Batch接口")
+@Api(tags = "自动投资Batch接口")
 @Controller
 @RequestMapping(value = "/batch/tender")
 public class AutoTenderController extends BaseTradeController {

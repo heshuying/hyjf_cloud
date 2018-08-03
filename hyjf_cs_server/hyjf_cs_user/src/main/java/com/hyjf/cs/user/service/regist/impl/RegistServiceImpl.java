@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -23,10 +24,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -43,6 +41,8 @@ import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.cs.user.vo.RegisterVO;
+import com.hyjf.soa.apiweb.CommonParamBean;
+import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +53,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -300,7 +301,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
 
         // 3. 注册成功用户保存账户表
-        sendMqToSaveAccount(userVO.getUserId());
+        sendMqToSaveAccount(userVO.getUserId(),userVO.getUsername());
         return userVO;
     }
 
@@ -314,7 +315,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         UserVO userVO = amUserClient.surongRegister(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 注册成功用户保存账户表
-        sendMqToSaveAccount(userVO.getUserId());
+        sendMqToSaveAccount(userVO.getUserId(),userVO.getUsername());
         return userVO;
     }
 
@@ -332,7 +333,7 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
 
         // 2. 注册成功用户保存账户表
-        sendMqToSaveAccount(webViewUserVO.getUserId());
+        sendMqToSaveAccount(webViewUserVO.getUserId(),webViewUserVO.getUsername());
 
         // 3. 注册送188元新手红包
         // 活动有效期校验
@@ -484,6 +485,59 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         }
         return vo;
     }
+    /**
+     * 保存用户信息
+     */
+    @Override
+    public UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source) {
+        UserActionUtmRequest request = new UserActionUtmRequest();
+        request.setMobile(mobile);
+        request.setPassword(password);
+        request.setVerificationCode(verificationCode);
+        request.setReffer(reffer);
+        request.setLoginIp(loginIp);
+        request.setPlatform(platform);
+        request.setUtm_id(utm_id);
+        request.setUtm_source(utm_source);
+        return amUserClient.insertUserActionUtm(request);
+    }
+
+    /**
+     * 登录操作
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateLoginInAction(String userName, String password, String ipAddr) {
+        String codeSalt = "";
+        String passwordDb = "";
+        Integer userId = null;
+
+        UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
+
+        if (userVO == null) {
+            return -1;
+        } else {
+            userId = userVO.getUserId();
+            codeSalt = userVO.getSalt();
+            passwordDb = userVO.getPassword();
+            if (userVO.getStatus() == 1) {
+                return -4;
+            }
+        }
+
+        // 验证用的password
+        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+        // 密码正确时
+        if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
+            // 更新登录信息
+            amUserClient.updateLoginUser(userId,ipAddr);
+            return userId;
+        } else {
+            return -3;
+        }
+    }
 
     /**
      * 注册保存账户表
@@ -491,10 +545,13 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
      * @param userId
      * @throws MQException
      */
-    private void sendMqToSaveAccount(int userId) {
+    private void sendMqToSaveAccount(int userId,String userName) {
         AccountVO account = new AccountVO();
         account.setUserId(userId);
+        account.setUserName(userName);
         // 银行存管相关
+        account.setPlanAccedeBalance(BigDecimal.ZERO);
+        account.setPlanAccedeFrost(BigDecimal.ZERO);
         account.setBankBalance(BigDecimal.ZERO);
         account.setBankBalanceCash(BigDecimal.ZERO);
         account.setBankFrost(BigDecimal.ZERO);
@@ -512,19 +569,12 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         account.setBankAwaitOrg(BigDecimal.ZERO);
         // 汇付相关
         account.setTotal(BigDecimal.ZERO);
-        account.setIncome(BigDecimal.ZERO);
-        account.setExpend(BigDecimal.ZERO);
         account.setBalance(BigDecimal.ZERO);
         account.setBalanceCash(BigDecimal.ZERO);
         account.setBalanceFrost(BigDecimal.ZERO);
         account.setFrost(BigDecimal.ZERO);
         account.setAwait(BigDecimal.ZERO);
         account.setRepay(BigDecimal.ZERO);
-        account.setFrostCash(BigDecimal.ZERO);
-        account.setRecMoney(BigDecimal.ZERO);
-        account.setFee(BigDecimal.ZERO);
-        account.setInMoney(BigDecimal.ZERO);
-        account.setInMoneyFlag(0);
         account.setPlanAccedeTotal(BigDecimal.ZERO);
         account.setPlanBalance(BigDecimal.ZERO);
         account.setPlanFrost(BigDecimal.ZERO);
@@ -532,12 +582,11 @@ public class RegistServiceImpl extends BaseUserServiceImpl implements RegistServ
         account.setPlanCapitalWait(BigDecimal.ZERO);
         account.setPlanInterestWait(BigDecimal.ZERO);
         account.setPlanRepayInterest(BigDecimal.ZERO);
-        account.setVersion(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            logger.info("发送短信开始");
+            logger.info("发送mq开始");
             accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(account)));
-            logger.info("发送短信结束");
+            logger.info("发送mq结束");
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");

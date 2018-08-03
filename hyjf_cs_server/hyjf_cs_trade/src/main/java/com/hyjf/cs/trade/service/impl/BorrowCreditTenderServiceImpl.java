@@ -23,6 +23,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
@@ -1258,8 +1259,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 忘记密码的跳转URL
         bean.setForgotPwdUrl(systemConfig.getForgetpassword());
         // TODO: 2018/7/4  前端提供地址
-        String retUrl = systemConfig.getFrontHost() + "/user/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/user/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openError"+"?logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/openSuccess";
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/web/tender/credit/bgReturn";
         bean.setRetUrl(retUrl);

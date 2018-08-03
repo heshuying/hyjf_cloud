@@ -9,6 +9,7 @@ import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -57,4 +58,6 @@ public interface AssetManageService  extends BaseService {
     int countAppMyPlan(AssetManageBeanRequest request);
 
     List<AppAlreadyRepayListCustomize> selectAlreadyRepayList(AssetManageBeanRequest request);
+
+    List<AppTenderToCreditListCustomize> selectTenderToCreditList(Map<String,Object> params);
 }

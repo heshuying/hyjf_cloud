@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin;
 
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface HjhPlanCapitalService {
 
-    List<HjhPlanCapitalVO> getReinvestInfo(HjhReInvestDetailRequest request);
+    List<HjhPlanCapitalCustomizeVO> getReinvestInfo(HjhReInvestDetailRequest request);
 
 }

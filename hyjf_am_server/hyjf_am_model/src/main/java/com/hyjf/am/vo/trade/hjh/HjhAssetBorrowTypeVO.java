@@ -51,6 +51,30 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
 
     private Integer updateTime;
 
+    /** 项目名称 */
+    private String projectName;
+
+    /** 资产来源 */
+    private String instName;
+
+    /** 产品类型名称 */
+    private String assetTypeName;
+
+    /** 状态 */
+    private String status;
+
+    /** 资产来源 检索条件 */
+    private String instCodeSrch;
+
+    /** 产品类型 检索条件 */
+    private String assetTypeSrch;
+
+    /** 项目类型 */
+    private String borrowCdSrch;
+
+    /** 状态 检索条件 */
+    private String statusSrch;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -228,5 +252,69 @@ public class HjhAssetBorrowTypeVO extends BaseVO implements Serializable {
                 ", updateUser=" + updateUser +
                 ", updateTime=" + updateTime +
                 '}';
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getInstName() {
+        return instName;
+    }
+
+    public void setInstName(String instName) {
+        this.instName = instName;
+    }
+
+    public String getAssetTypeName() {
+        return assetTypeName;
+    }
+
+    public void setAssetTypeName(String assetTypeName) {
+        this.assetTypeName = assetTypeName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getInstCodeSrch() {
+        return instCodeSrch;
+    }
+
+    public void setInstCodeSrch(String instCodeSrch) {
+        this.instCodeSrch = instCodeSrch;
+    }
+
+    public String getAssetTypeSrch() {
+        return assetTypeSrch;
+    }
+
+    public void setAssetTypeSrch(String assetTypeSrch) {
+        this.assetTypeSrch = assetTypeSrch;
+    }
+
+    public String getBorrowCdSrch() {
+        return borrowCdSrch;
+    }
+
+    public void setBorrowCdSrch(String borrowCdSrch) {
+        this.borrowCdSrch = borrowCdSrch;
+    }
+
+    public String getStatusSrch() {
+        return statusSrch;
+    }
+
+    public void setStatusSrch(String statusSrch) {
+        this.statusSrch = statusSrch;
     }
 }

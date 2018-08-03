@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
@@ -52,10 +53,8 @@ public interface BorrowRegistService extends BaseService {
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
      * @return
      */
-    Response debtRegist(String borrowNid, String currUserId, String currUserName);
+    Response debtRegist(BorrowRegistUpdateRequest request);
 }

@@ -95,7 +95,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
                 }
             }else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0) ||
                     (hjhLabel.getLabelTermStart()!=null && hjhLabel.getLabelTermStart().intValue()>0)) {
-                if(borrow.getBorrowPeriod() == hjhLabel.getLabelTermStart() || borrow.getBorrowPeriod() == hjhLabel.getLabelTermEnd()){
+                if(borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermStart()) || borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())){
 //					score = score+1;
                 }else{
                     continue;
@@ -338,7 +338,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
                 }
             }else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0) ||
                     (hjhLabel.getLabelTermStart()!=null && hjhLabel.getLabelTermStart().intValue()>0)) {
-                if(credit.getBorrowPeriod() == hjhLabel.getLabelTermStart() || credit.getBorrowPeriod() == hjhLabel.getLabelTermEnd()){
+                if(credit.getBorrowPeriod().equals(hjhLabel.getLabelTermStart()) || credit.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())){
 //					score = score+1;
                 }else{
                     continue;
@@ -423,7 +423,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
                 }
             }else if ((hjhLabel.getRemainingDaysEnd() != null && hjhLabel.getRemainingDaysEnd().intValue()>=0) ||
                     (hjhLabel.getRemainingDaysStart()!=null && hjhLabel.getRemainingDaysStart().intValue()>=0)) {
-                if(credit.getRemainDays() != null && credit.getRemainDays() == hjhLabel.getRemainingDaysStart() || credit.getRemainDays() == hjhLabel.getRemainingDaysEnd()){
+                if(credit.getRemainDays() != null && credit.getRemainDays().equals(hjhLabel.getRemainingDaysStart()) || credit.getRemainDays().equals(hjhLabel.getRemainingDaysEnd())){
                     ;
                 }else{
                     continue;
@@ -504,7 +504,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     result = true;
                     break;
@@ -544,7 +544,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     break;
                 } else {

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.IdCardCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.customize.IdCardCustomize" >
+		<id column="bm" property="bm" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="cityResultMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
+		<id column="citycode" property="citycode" jdbcType="INTEGER" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="cityname" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="getIdCardCustomize" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.customize.IdCardCustomize">
+		SELECT * FROM ht_idcard where 1=1
+		<if test="bm != null and bm != ''">
+			and bm = #{bm}
+		</if>
+		<if test="area != null and area != ''">
+			AND area = #{area}
+		</if>
+	</select>
+
+	<!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+	<select  id="getTenderCityGroupBy" resultMap="cityResultMap"  parameterType="java.util.List">
+		SELECT
+		LEFT(bm, 2) AS citycode, LEFT(area, 3) AS cityname
+		FROM
+		ht_idcard
+		where  bm is NOT NULL
+		AND bm IN
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+			#{item.title}
+		</foreach>
+		GROUP BY LEFT(bm, 2)
+	</select>
+</mapper>

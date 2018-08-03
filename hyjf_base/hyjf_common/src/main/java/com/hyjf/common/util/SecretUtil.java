@@ -406,7 +406,7 @@ public class SecretUtil {
         if(StringUtils.isEmpty(value)){
             return ;
         }
-        RedisUtils.expire(sign,RedisUtils.signExpireTime);
+        RedisUtils.expire(RedisConstants.SIGN+sign,RedisUtils.signExpireTime);
     }
     
     /**

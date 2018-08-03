@@ -35,9 +35,6 @@
 			<if test="userName != null and userName !='' ">
 				AND hup.user_name LIKE CONCAT( #{userName}, '%')
 			</if>
-			<if test="yesterdayBeginTime != null and yesterdayEndTime !=null ">
-				AND hup.LAST_LOGIN_TIME BETWEEN #{yesterdayBeginTime} AND #{yesterdayEndTime}
-			</if>
 		</where>
 	</sql>
 	<!-- 查询用户画像记录数 -->

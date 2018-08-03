@@ -23,7 +23,7 @@ import io.swagger.annotations.Api;
  * @author fq
  * @version AppNewsConfigController, v0.1 2018/7/25 15:25
  */
-@Api(value = "开关闭推送服务", description = "开关闭推送服务")
+@Api(value = "开关闭推送服务", tags = "开关闭推送服务")
 @RequestMapping("/hyjf-app/news/config")
 public class AppNewsConfigController extends BaseController {
 	@Autowired

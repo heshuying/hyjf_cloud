@@ -21,7 +21,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.*;
@@ -208,8 +207,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
-        String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + orderId;
-        String successUrl = systemConfig.getFrontHost() + "/user/openSuccess?logOrdId="+orderId;
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openError" + "?logOrdId=" + orderId;
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/openSuccess?logOrdId="+orderId;
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "/web/secure/open/bgReturn?couponGrantId=" + cuc.getId();
         //忘记密码url

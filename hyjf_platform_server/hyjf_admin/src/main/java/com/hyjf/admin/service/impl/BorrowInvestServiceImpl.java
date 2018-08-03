@@ -556,7 +556,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     }
                     String pdfUrl = "";
                     // 融通宝协议
-                    if (recordList.get(0).getProjectType().equals("13")) {
+                    if ("13".equals(recordList.get(0).getProjectType())) {
                         UserInfoVO userinfo = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                         if (tzList != null && tzList.size() > 0) {
                             contents.put("investDeatil", tzList.get(0));
@@ -570,7 +570,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         contents.put("projectType", recordList.get(0).getProjectType());
                         String fileType = CustomConstants.RTB_TENDER_CONTRACT;
                         if (recordList.get(0) != null && recordList.get(0).getBorrowPublisher() != null
-                                && recordList.get(0).getBorrowPublisher().equals("中商储")) {
+                                && "中商储".equals(recordList.get(0).getBorrowPublisher())) {
                             fileType = CustomConstants.RTB_TENDER_CONTRACT_ZSC;
                         }
                         if (recordList.get(0) != null) {

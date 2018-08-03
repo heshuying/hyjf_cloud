@@ -137,6 +137,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         BankCardVO bankCard = new BankCardVO();
         if(bankCards!=null&&!bankCards.isEmpty()) {
             bankCard = bankCards.get(0);
+            bankCard.setCardNoNotEncrypt(bankCard.getCardNo());
             bankCard.setCardNo(BankCardUtil.getCardNo(bankCard.getCardNo()));
         }
         resultMap.put("bankCard", bankCard);

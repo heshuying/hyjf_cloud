@@ -10,8 +10,8 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.SimpleResultBean;
+import com.hyjf.cs.user.bean.WXBaseResultBean;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
 import io.swagger.annotations.Api;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version WeChatEvaluationController, v0.1 2018/7/3 19:24
  */
-@Api(value = "weChat端风险测评接口",description = "weChat端风险测评接口")
+@Api(value = "weChat端风险测评接口",tags = "weChat端风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/financiaadvisor")
@@ -38,7 +38,7 @@ public class WeChatEvaluationController {
 
     @ApiOperation(value = "查询测评结果", notes = "查询测评结果")
     @GetMapping(value = "/queryevaluation.do")
-    public BaseResultBean queryEvaluationResult(@RequestHeader(value = "userId") Integer userId) {
+    public WXBaseResultBean queryEvaluationResult(@RequestHeader(value = "userId") Integer userId) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //测评结果
@@ -55,7 +55,7 @@ public class WeChatEvaluationController {
 
     @ApiOperation(value = "用户测评",notes = "用户测评")
     @GetMapping(value = "/queryquestion.do")
-    public BaseResultBean queryQuestions(@RequestHeader(value = "userId") Integer userId) {
+    public WXBaseResultBean queryQuestions(@RequestHeader(value = "userId") Integer userId) {
         SimpleResultBean<List<QuestionCustomizeVO>> resultBean = new SimpleResultBean<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(userId);
@@ -76,7 +76,7 @@ public class WeChatEvaluationController {
 
     @ApiOperation(value = "计算测评结果",notes = "计算测评结果")
     @PostMapping(value = "/sumitResult.do", produces = "application/json; charset=utf-8")
-    public BaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
+    public WXBaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //答案 "13_48,14_52"

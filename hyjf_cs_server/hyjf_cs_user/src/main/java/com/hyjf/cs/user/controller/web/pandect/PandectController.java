@@ -27,7 +27,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version PandectController, v0.1 2018/6/21 14:31
  */
-@Api(value = "web端账户总览",description = "web端-账户总览")
+@Api(value = "web端账户总览",tags = "web端-账户总览")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user")
@@ -52,6 +52,7 @@ public class PandectController {
             JSONObject map = pandectService.pandect(user);
             result.setData(map);
             model.addAttribute("datas",result);
+            logger.info("pandect:"+result);
         return "pandect";
     }
 }

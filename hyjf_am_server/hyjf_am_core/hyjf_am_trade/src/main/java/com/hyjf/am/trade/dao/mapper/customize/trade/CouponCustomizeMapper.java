@@ -1,9 +1,10 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
-import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
+import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
+import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
+import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,25 @@ public interface CouponCustomizeMapper {
      * @return
      */
     BorrowTenderCpn getCouponTenderByTender(Map<String,Object> paraMap);
+
+    /**
+     * 根据userId和orderId获取优惠券投资信息
+     * @author zhangyk
+     * @date 2018/7/31 13:55
+     */
+    AppCouponInfoCustomizeVO getCouponTenderListByUserIdAndOrderId(Map<String,Object> paraMap);
+
+    /**
+     * 根据nid获取优惠券还款列表
+     * @author zhangyk
+     * @date 2018/7/31 14:31
+     */
+    List<CurrentHoldRepayMentPlanListVO> couponRepaymentPlanList(String nid);
+
+    /**
+     * 获取优惠券投资记录
+     * @author zhangyk
+     * @date 2018/8/1 14:32
+     */
+    List<AppCouponCustomizeVO> getMyCouponPlanList(Map<String,Object> paraMap);
 }

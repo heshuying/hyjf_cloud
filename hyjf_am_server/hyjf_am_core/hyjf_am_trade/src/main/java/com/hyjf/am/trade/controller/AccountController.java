@@ -31,8 +31,13 @@ public class AccountController extends BaseController {
     @Autowired
     private AccountService accountService;
 
+    /**
+     * 根据用户id查询账户信息
+     * @param borrowUserId
+     * @return
+     */
     @GetMapping("/getAccountByUserId/{borrowUserId}")
-    public AccountResponse getAccountByUserId(Integer borrowUserId) {
+    public AccountResponse getAccountByUserId(@PathVariable Integer borrowUserId) {
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(borrowUserId);
         if (account != null) {

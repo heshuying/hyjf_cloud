@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author zhangqingqing
  * @version MerchantAccountController, v0.1 2018/7/5 10:01
  */
-@Api(value = "商户子账户信息")
+@Api(value = "商户子账户信息",tags ="商户子账户信息")
 @RestController
 @RequestMapping("/hyjf-admin/merchant/account")
 public class MerchantAccountController extends BaseController {

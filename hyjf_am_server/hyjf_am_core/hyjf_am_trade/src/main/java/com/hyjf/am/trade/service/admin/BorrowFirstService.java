@@ -52,11 +52,4 @@ public interface BorrowFirstService {
      * @param borrowFireRequest
      */
     boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
-
-    /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    boolean sendToMQ(BorrowFireRequest borrowFireRequest);
 }

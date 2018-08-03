@@ -40,6 +40,19 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
+
+    @GetMapping("/getActivityList")
+    public ActivityListResponse getActivityList(){
+        ActivityListResponse response = new ActivityListResponse();
+        List<ActivityList> list=activityService.getActivityList();
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,ActivityListVO.class));
+        }
+        return response;
+    }
+
+
+
     @PostMapping("/selectActivityList")
     public ActivityListResponse selectActivityList(@RequestBody @Valid ActivityListRequest activityListRequest){
         ActivityListResponse response = new ActivityListResponse();
@@ -196,9 +209,11 @@ public class ActivityController {
      * @return
      */
     @PostMapping("/selectRecordListValid")
-    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListRequest request) {
+    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
         ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
-        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(request,-1,-1);
+        ActivityListCustomize activityListCustomize = new ActivityListCustomize();
+        BeanUtils.copyProperties(request,activityListCustomize);
+        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(activityListCustomize,-1,-1);
         if (!CollectionUtils.isEmpty(recordList)) {
             List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
             response.setResultList(activityListCustomizeVOS);
@@ -231,10 +246,19 @@ public class ActivityController {
      * @return
      */
     @RequestMapping("/queryactivitylist")
-    public ActivityListResponse queryActivityList(@RequestBody ActivityListRequest activityListRequest){
+    public ActivityListResponse queryActivityList(@RequestBody ActivityListRequest activityListRequest) {
         ActivityListResponse response = new ActivityListResponse();
         List<ActivityListBeanVO> list = activityService.queryActivityList(activityListRequest);
         response.setActivityList(list);
         return response;
+    }
+
+    @GetMapping("/getActivity/{day}")
+    public ActivityListResponse getActivity(@PathVariable int day){
+        ActivityListResponse activityListResponse = new ActivityListResponse();
+        List<ActivityList> activity = activityService.getActivity(day);
+        List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activity, ActivityListVO.class);
+        activityListResponse.setResultList(activityListVOS);
+        return activityListResponse;
     }
 }

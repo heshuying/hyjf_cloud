@@ -10,6 +10,10 @@ public class BankRechargeVO {
     //充值金额
     private String money;
 
+    //订单号
+    private String logOrdId;
+
+
     public String getMobile() {
         return mobile;
     }
@@ -24,5 +28,13 @@ public class BankRechargeVO {
 
     public void setMoney(String money) {
         this.money = money;
+    }
+
+    public String getLogOrdId() {
+        return logOrdId;
+    }
+
+    public void setLogOrdId(String logOrdId) {
+        this.logOrdId = logOrdId;
     }
 }

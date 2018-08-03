@@ -40,7 +40,7 @@ import javax.validation.Valid;
  * @author yaoyong
  * @version CouponIssuanceController, v0.1 2018/7/5 10:05
  */
-@Api(value = "优惠券发行",description ="优惠券发行" )
+@Api(value = "优惠券发行",tags = "优惠券发行" )
 @RestController
 @RequestMapping("/coupon/issuance")
 public class CouponIssuanceController extends BaseController {

@@ -1,12 +1,12 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
@@ -26,7 +26,7 @@ import java.net.URLEncoder;
  * @author hesy
  * @version AppDeleteCardController, v0.1 2018/7/19 9:38
  */
-@Api(value = "app端-解绑银行卡",description = "app端-解绑银行卡")
+@Api(value = "app端-解绑银行卡",tags = "app端-解绑银行卡")
 @RestController
 @RequestMapping("/hyjf-app/bank/app/deleteCard")
 public class AppDeleteCardController extends BaseUserController {

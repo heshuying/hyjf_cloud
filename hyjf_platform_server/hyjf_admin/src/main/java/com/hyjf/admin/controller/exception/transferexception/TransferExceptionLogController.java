@@ -53,7 +53,7 @@ import java.util.*;
 /**
  * 转账异常
  */
-@Api(value = "银行转账异常",description = "银行转账异常")
+@Api(value = "银行转账异常",tags = "银行转账异常")
 @RestController
 @RequestMapping("/exception/transferexception")
 public class TransferExceptionLogController extends BaseController {

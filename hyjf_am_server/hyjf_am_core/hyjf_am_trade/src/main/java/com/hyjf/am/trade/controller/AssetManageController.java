@@ -1,12 +1,15 @@
 package com.hyjf.am.trade.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import com.hyjf.am.response.trade.AppAlreadyRepayListCustomizeResponse;
+import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
+import com.hyjf.am.response.app.AppTenderToCreditListCustomizeResponse;
 import com.hyjf.am.response.trade.QueryMyProjectVOResponse;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
+import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -376,5 +379,17 @@ public class AssetManageController extends BaseController {
         }
         return response;
     }
+
+
+    @PostMapping("/selectTenderToCreditList")
+    public AppTenderToCreditListCustomizeResponse selectTenderToCreditList(@RequestBody Map<String, Object> params){
+        AppTenderToCreditListCustomizeResponse response = new AppTenderToCreditListCustomizeResponse();
+        List<AppTenderToCreditListCustomize> list=assetManageService.selectTenderToCreditList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,AppTenderToCreditListCustomizeVO.class));
+        }
+        return response;
+    }
+
 
 }

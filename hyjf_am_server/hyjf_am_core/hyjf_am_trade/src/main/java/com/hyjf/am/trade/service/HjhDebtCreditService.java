@@ -8,8 +8,10 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author PC-LIUSHOUYI
@@ -63,4 +65,10 @@ public interface HjhDebtCreditService {
 	 * @return
 	 */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
+
+    /**
+     *  查询汇计划的投资记录
+     * @date 2018/8/1 14:00
+     */
+    List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
 }

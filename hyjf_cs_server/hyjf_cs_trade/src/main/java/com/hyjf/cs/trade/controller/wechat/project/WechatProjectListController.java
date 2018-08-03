@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * 微信端标的列表和详情controller
  * @author zhangyk
  * @date 2018/7/2 11:15
  */
-@Api(value = "Web端项目详情")
+@Api(tags = "Web端项目详情")
 @RestController
 @RequestMapping(value = {"/hyjf-wechat/wx/bank/wechat/plan","hyjf-wechat/wx/bank/wechat/borrow"})
 public class WechatProjectListController extends BaseTradeController {

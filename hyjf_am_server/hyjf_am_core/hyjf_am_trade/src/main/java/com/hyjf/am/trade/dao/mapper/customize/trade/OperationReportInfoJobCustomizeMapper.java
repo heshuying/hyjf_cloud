@@ -133,4 +133,10 @@ public interface OperationReportInfoJobCustomizeMapper {
      * @return
      */
     List<OperationReportJobVO>  getTenderAgeByRangeList(Date date, int firstAge, int endAge);
+
+    /**
+     * 按照省份统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO> getTenderCityGroupByList(Date date);
 }

@@ -50,6 +50,8 @@
 		<result column="repay_method" property="repayMethod" jdbcType="VARCHAR" />
 		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
 		<result column="repay_actual_time" property="repayActualTime" jdbcType="VARCHAR" />
+		<result column="wait_capital" property="waitCapital" jdbcType="VARCHAR" />
+		<result column="repay_style" property="repayStyle" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<resultMap id="HjhPlanAppMap" type="com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize">
@@ -76,7 +78,7 @@
 		END AS lock_period,
 		hha.user_id user_id,
 		hha.accede_account accede_account,
-		FROM_UNIXTIME( hha.add_time, '%Y-%m-%d %H:%i' ) AS add_time,
+	    hha.add_time AS add_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'待确认') AS quit_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.last_payment_time=0,NULL,hha.last_payment_time), '%Y-%m-%d' ),'待确认') AS last_payment_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.acctual_payment_time=0,NULL,hha.acctual_payment_time), '%Y-%m-%d' ),'待确认') AS acctual_payment_time,
@@ -84,13 +86,15 @@
 		hha.wait_total wait_total,
 		hha.wait_interest wait_interest,
 		hha.received_total received_total,
+		hha.wait_captical wait_captical,
+		hhp.borrow_style repay_style,
 		hha.received_interest received_interest,
 		(hha.wait_total + hha.received_total) all_total,
 		(hha.wait_interest + hha.received_interest) all_interest,
 
 		SUBSTRING(FORMAT(hha.should_pay_total,4),1,LENGTH(FORMAT(hha.should_pay_total,4))-2) AS should_pay_total,
 
-		(SELECT hbs.NAME FROM huiyingdai_borrow_style hbs where hbs.nid = hhp.borrow_style limit 1 ) repay_method,
+		(SELECT hbs.NAME FROM ht_borrow_style hbs where hbs.nid = hhp.borrow_style limit 1 ) repay_method,
 		hha.order_status order_status,
 		<!-- 新加实际退出时间 -->
 		FROM_UNIXTIME(hhr.repay_actual_time, '%Y-%m-%d') AS repay_actual_time
@@ -943,6 +947,143 @@ ORDER BY
 		WHERE dpa.plan_nid=#{planNid}
 		ORDER BY
 		dpa.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	
+	<select id="searchPlanStatisticData" resultType="map" >
+				SELECT
+			count(hha.id) + (
+				SELECT
+					count(dpa.id) AS total_record
+				FROM
+					ht_debt_plan_accede dpa
+			) AS accede_times,
+
+				(IFNULL(sum(hha.accede_account), 0) + (
+					SELECT
+						IFNULL(sum(dpa.accede_account), 0)
+					FROM
+						ht_debt_plan_accede dpa
+				))/10000
+			 AS accede_account_total,
+
+				(IFNULL(
+					sum(hha.received_interest),
+					0
+				) + (
+					SELECT
+						IFNULL(
+							sum(dpa.repay_interest_yes),
+							0
+						)
+					FROM
+						ht_debt_plan_accede dpa
+				))/10000
+				 AS interest_total
+		FROM
+			ht_hjh_accede hha
+
+	</select>
+
+	<resultMap id="userHjhInvistListMap" type="com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO">
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+		<result column="addtime" property="addTime" jdbcType="VARCHAR" />
+		<result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+
+		<result column="credit_nid" property="creditNid" jdbcType="VARCHAR" />
+		<result column="invest_order_id" property="investOrderId" jdbcType="VARCHAR" />
+		<result column="assign_order_id" property="assignOrderId" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+
+	<select id="getUserHjhInvestList" resultMap="userHjhInvistListMap" parameterType="Map">
+		(
+		SELECT
+		hhdc.assign_order_id AS nid,
+		hhdc.borrow_nid borrow_nid,
+		hhdc.credit_nid credit_nid,
+		hhdc.invest_order_id invest_order_id,
+		hhdc.assign_order_id assign_order_id,
+
+		hhdc.assign_pay account,
+
+		hhdc.assign_plan_order_id accede_order_id,
+		CASE
+		WHEN hb.borrow_style = 'endday' THEN
+		CONCAT(hb.borrow_period, '天')
+		ELSE
+		CONCAT(hb.borrow_period, '个月')
+		END AS borrow_period,
+		hhdc.create_time as addtime,
+
+		CASE
+		WHEN hhdc.assign_repay_next_time = 0 THEN
+		IFNULL(FROM_UNIXTIME( hhdc.assign_repay_end_time, '%Y-%m-%d' ), '--')
+		ELSE
+		IFNULL(FROM_UNIXTIME( hhdc.assign_repay_next_time, '%Y-%m-%d' ), '--')
+		END recover_time,
+
+		1 type
+		FROM ht_hjh_debt_credit_tender hhdc
+		LEFT JOIN ht_borrow hb ON hhdc.borrow_nid = hb.borrow_nid
+		WHERE hhdc.assign_plan_order_id = #{accedeOrderId}
+		)
+
+		UNION ALL
+
+		(
+		SELECT
+		hbt.nid nid,
+		hbt.borrow_nid borrow_nid,
+		0 AS credit_nid,
+		0 AS invest_order_id,
+		0 AS assign_order_id,
+		hbt.account account,
+		hbt.accede_order_id accede_order_id,
+		CASE
+		WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天')
+		ELSE CONCAT(hb.borrow_period, '个月')
+		END AS borrow_period,
+		hbt.create_tiem as addtime,
+
+		CASE
+		WHEN hb.borrow_style = 'endday' or hb.borrow_style = 'end' or hb.borrow_style = 'endmonth'
+		THEN
+		CASE
+		WHEN hbr.recover_status = 1 THEN
+		IFNULL(FROM_UNIXTIME( hbr.recover_yestime, '%Y-%m-%d' ), '--')
+		ELSE
+		IFNULL(FROM_UNIXTIME( hbr.recover_time, '%Y-%m-%d' ), '--')
+		END
+		ELSE
+		CASE WHEN hbrp.recover_status = 1 THEN
+		IFNULL(FROM_UNIXTIME(hbrp.recover_yestime,'%Y-%m-%d'), '--')
+		ELSE
+		IFNULL(FROM_UNIXTIME(hbrp.recover_time,'%Y-%m-%d'), '--')
+		END
+		END AS recover_time,
+		0 type
+		FROM
+		ht_borrow_tender hbt
+		LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_recover hbr ON hbt.nid = hbr.nid
+
+		LEFT JOIN ht_borrow_recover_plan hbrp ON hbt.nid = hbrp.nid
+		AND hbrp.borrow_nid = hb.borrow_nid
+		AND hbrp.recover_period = hb.borrow_period
+		WHERE
+		hb.`status` in (3,4,5)
+		AND
+		hbt.accede_order_id = #{accedeOrderId}
+		)
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>

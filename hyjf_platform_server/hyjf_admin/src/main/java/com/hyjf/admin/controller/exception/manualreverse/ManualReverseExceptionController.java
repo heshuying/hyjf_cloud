@@ -20,7 +20,7 @@ import java.util.List;
  * @author hesy
  * @version ManualReverseExceptionController, v0.1 2018/7/13 14:20
  */
-@Api(value = "异常中心-手动冲正", description = "异常中心-手动冲正")
+@Api(value = "异常中心-手动冲正", tags = "异常中心-手动冲正")
 @RestController
 @RequestMapping("/hyjf-admin/exception/manualreverse")
 public class ManualReverseExceptionController extends BaseController {

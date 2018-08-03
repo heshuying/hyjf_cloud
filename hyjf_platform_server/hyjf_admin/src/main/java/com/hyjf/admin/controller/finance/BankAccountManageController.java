@@ -42,7 +42,7 @@ import java.util.Map;
  * @author PC-LIUSHOUYI
  * @version BankAccountManageController, v0.1 2018/6/28 15:57
  */
-@Api(value = "账户管理(银行)")
+@Api(value = "账户管理(银行)",tags ="账户管理(银行)")
 @RestController
 @RequestMapping("/hyjf-admin/bankAccountManage")
 public class BankAccountManageController extends BaseController {

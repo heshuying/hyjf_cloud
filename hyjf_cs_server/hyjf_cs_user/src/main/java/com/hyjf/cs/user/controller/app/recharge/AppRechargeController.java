@@ -41,7 +41,7 @@ import java.util.List;
  * @author fq
  * @version AppRechargeController, v0.1 2018/7/30 9:34
  */
-@Api(value = "app端-用户充值", description = "app端-用户充值")
+@Api(value = "app端-用户充值", tags = "app端-用户充值")
 @RestController
 @RequestMapping("/hyjf-app/user/bank/recharge")
 public class AppRechargeController extends BaseUserController {
@@ -190,12 +190,10 @@ public class AppRechargeController extends BaseUserController {
                 //Integer userId = SecretUtil.getUserId(sign);
                 if (null != userId) {
 
-                    //add by xiashuqing 20171204 begin app改版2.1新增查询账户余额
                     AccountVO account = this.appRechargeService.getAccountByUserId(userId);
                     if (account != null) {
                         resultBean.setAvailableAmount(CommonUtils.formatAmount(account.getBankBalance()));
                     }
-                    //add by xiashuqing 20171204 end app改版2.1新增查询账户余额
 
                     // 获取用户的快捷卡信息
                     BankCardVO bankCard = this.appRechargeService.selectBankCardByUserId(userId);
@@ -279,7 +277,6 @@ public class AppRechargeController extends BaseUserController {
                     } else {
                         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
                         result.setStatusDesc("未查询到用户快捷卡信息");
-                        //return result;
                     }
 
                     resultBean.setButtonWord("确认充值".concat(CommonUtils.formatAmount(requestBean.getVersion(), requestBean.getMoney())).concat("元"));
@@ -288,12 +285,12 @@ public class AppRechargeController extends BaseUserController {
                     this.setOffLineRechageInfo(resultBean, userId);
 
                 } else {
-                    result.setStatusInfo(MsgEnum.ERR_SIGN);
+                    result.setStatusInfo(MsgEnum.ERR_USER_AUTH);
 /*                    result.setStatus(CustomConstants.TOKEN_ERROR);
                     result.setStatusDesc("用户认证失败");*/
                 }
             } else {
-                result.setStatusInfo(MsgEnum.ERR_ORDER_VERIFY);
+                result.setStatusInfo(MsgEnum.ERR_DATA_VERIFICATION);
             }
         }
         /** 充值描述 */

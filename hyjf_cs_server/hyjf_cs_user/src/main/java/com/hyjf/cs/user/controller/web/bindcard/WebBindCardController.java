@@ -31,10 +31,10 @@ import java.text.ParseException;
  * web端用户解绑卡接口
  * @author hesy
  */
-@Api(value = "web端-用户解绑卡接口",description = "web端-用户解绑卡接口")
+@Api(value = "web端-用户解绑卡接口",tags = "web端-用户解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-web/card")
+@RequestMapping("/hyjf-web/user/card")
 public class WebBindCardController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBindCardController.class);
 
@@ -43,25 +43,31 @@ public class WebBindCardController extends BaseUserController {
 	
 	@ApiOperation(value = "用户绑卡发送短信验证码", notes = "用户绑卡发送短信验证码")
 	@PostMapping(value = "/bindCardSendCode", produces = "application/json; charset=utf-8")
-	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "token", required = true) String token, @RequestParam String mobile, @RequestParam String cardNo) {
-		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", mobile, cardNo);
+	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO) {
+		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", bindCardVO.getMobile(), bindCardVO.getCardNo());
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+		WebViewUserVO user = bindCardService.getUsersByToken(token);
         
-        bindCardService.checkParamSendcode(user.getUserId(), mobile, cardNo);
+        bindCardService.checkParamSendcode(user.getUserId(), bindCardVO.getMobile(), bindCardVO.getCardNo());
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
 		try {
-			bankBean = bindCardService.callSendCode(user.getUserId(),mobile, BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,cardNo);
+			bankBean = bindCardService.callSendCode(user.getUserId(),bindCardVO.getMobile(), BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,bindCardVO.getCardNo());
 		} catch (Exception e) {
-			result.setStatus(ApiResult.FAIL);
+			result.setStatus(ApiResult.ERROR);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口发生异常", e);
 		}
-        
-        if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
-        	result.setStatus(ApiResult.FAIL);
+
+		if (bankBean == null) {
+			result.setStatus(ApiResult.FAIL);
+			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
+			logger.error("请求绑卡验证码接口失败");
+		}
+
+        if(!BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()) && !"JX900651".equals(bankBean.getRetCode())) {
+			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡验证码接口失败");
         }else {
@@ -90,21 +96,31 @@ public class WebBindCardController extends BaseUserController {
 			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡接口发生异常", e);
+			return result;
 		}
-        
+
+		if(bankBean!=null && "CE999042".equals(bankBean.getRetCode())){
+			result.setStatus(ApiResult.FAIL);
+			result.setStatusDesc("短信验证码错误");
+			logger.error("短信验证码错误");
+			return result;
+		}
+
         if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
         	result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
 			logger.error("请求绑卡接口失败");
+			return result;
         }
         
         // 绑卡请求后业务处理
-        try {
+		try {
 			bindCardService.updateAfterBindCard(bankBean);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			result.setStatus(ApiResult.FAIL);
 			result.setStatusDesc(MsgEnum.ERR_CARD_SAVE.getMsg());
 			logger.error("绑卡后处理异常", e);
+			return result;
 		}
         
 		return result;

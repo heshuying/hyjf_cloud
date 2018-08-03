@@ -45,7 +45,7 @@ import io.swagger.annotations.ApiOperation;
  * @package
  * @date 2018/6/27
  */
-@Api(value = "操作日志")
+@Api(value = "操作日志",tags ="操作日志")
 @RestController
 @RequestMapping("/hyjf-admin/changelog")
 public class ChangeLogController extends BaseController {
@@ -56,7 +56,6 @@ public class ChangeLogController extends BaseController {
 	 * 权限维护画面初始化
 	 *
 	 * @param request
-	 * @param form
 	 * @return
 	 */
 	@ApiOperation(value = "查询操作日志", notes = "查询操作日志")
@@ -69,7 +68,6 @@ public class ChangeLogController extends BaseController {
 		clr.setRealName(map.get("realName"));
 		clr.setMobile(map.get("mobile"));
 		clr.setRecommendUser(map.get("recommendUser"));
-		//clr.setPageSize(Integer.valueOf(map.get("pageSize")) );
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
 		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
@@ -101,7 +99,6 @@ public class ChangeLogController extends BaseController {
 		clr.setRealName(map.get("realName"));
 		clr.setMobile(map.get("mobile"));
 		clr.setRecommendUser(map.get("recommendUser"));
-		//clr.setPageSize(Integer.valueOf(map.get("pageSize")) );
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
 		clr.setCurrPage(-1);

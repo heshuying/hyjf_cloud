@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.controller.admin.productcenter.plancenter.plancapital;
 
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.trade.service.admin.HjhPlanCapitalService;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ public class HjhPlanCapitalController {
     public HjhPlanCapitalResponse hjhPlanCapitalReinvestInfo(HjhReInvestDetailRequest request){
         HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
 
-        List<HjhPlanCapitalVO> responseList = hjhPlanCapitalService.getReinvestInfo(request);
+        List<HjhPlanCapitalCustomizeVO> responseList = hjhPlanCapitalService.getReinvestInfo(request);
         response.setResultList(responseList);
         return response;
     }

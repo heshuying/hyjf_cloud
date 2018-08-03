@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.CommonConstant;

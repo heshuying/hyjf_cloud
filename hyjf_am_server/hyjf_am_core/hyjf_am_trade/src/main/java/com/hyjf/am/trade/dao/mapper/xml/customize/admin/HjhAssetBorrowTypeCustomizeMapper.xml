@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.HjhAssetBorrowTypeCustomizeMapper">
+    <resultMap id="selectAssetBorrowTypeListMap" type="com.hyjf.am.vo.admin.HjhAssetBorrowTypeCustomizeVO">
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="borrow_cd" property="borrowCd" jdbcType="VARCHAR"/>
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR"/>
+        <result column="asset_type" property="assetType" jdbcType="VARCHAR"/>
+        <!-- <result column="is_associate_plan" property="isAssociatePlan" jdbcType="VARCHAR" /> -->
+        <result column="auto_add" property="autoAdd" jdbcType="VARCHAR"/>
+        <result column="applicant" property="applicant" jdbcType="VARCHAR"/>
+        <result column="repay_org_name" property="repayOrgName" jdbcType="VARCHAR"/>
+        <result column="auto_record" property="autoRecord" jdbcType="VARCHAR"/>
+        <result column="auto_bail" property="autoBail" jdbcType="VARCHAR"/>
+        <result column="auto_audit" property="autoAudit" jdbcType="VARCHAR"/>
+        <result column="auto_review" property="autoReview" jdbcType="VARCHAR"/>
+        <result column="auto_send_minutes" property="autoSendMinutes" jdbcType="VARCHAR"/>
+        <result column="auto_review_minutes" property="autoReviewMinutes" jdbcType="VARCHAR"/>
+        <result column="is_open" property="isOpen" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="borrow_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="inst_name" property="instName" jdbcType="VARCHAR"/>
+        <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Where_Clause">
+        <!-- 项目类型 -->
+        <if test="borrowCdSrch != null and borrowCdSrch != ''">
+            AND hab.borrow_cd = #{borrowCdSrch}
+        </if>
+        <!-- 资产来源 -->
+        <if test="instCodeSrch != null and instCodeSrch != ''">
+            AND hab.inst_code = #{instCodeSrch}
+        </if>
+        <!-- 产品类型 -->
+        <if test="assetTypeSrch != null and assetTypeSrch != ''">
+            AND hab.asset_type = #{assetTypeSrch}
+        </if>
+        <!-- 状态 -->
+        <if test="statusSrch != null and statusSrch != ''">
+            AND hab.is_open = #{statusSrch}
+        </if>
+    </sql>
+
+    <select id="countRecord" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.AdminBorrowFlowRequest">
+        SELECT
+        COUNT(1)
+        FROM
+        ht_hjh_asset_borrowtype hab
+        where 1=1
+        <include refid="Where_Clause"/>
+    </select>
+
+    <select id="getRecordList" resultMap="selectAssetBorrowTypeListMap"
+            parameterType="com.hyjf.am.resquest.admin.AdminBorrowFlowRequest">
+        SELECT
+        hab.id,
+        hab.inst_code,
+        hab.asset_type,
+        hab.borrow_cd,
+        hab.auto_add,
+        hab.applicant,
+        hab.repay_org_name,
+        hab.auto_record,
+        hab.auto_bail,
+        hab.auto_audit,
+        hab.auto_review,
+        hab.auto_send_minutes,
+        hab.auto_review_minutes,
+        hab.is_open,
+        hab.remark,
+        bpt.borrow_name,
+        hic.inst_name,
+        hat.asset_type_name,
+        #{paramNameVOS.name} `STATUS`
+        FROM
+        ht_hjh_asset_borrowtype hab
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = hab.borrow_cd
+        LEFT JOIN ht_hjh_inst_config hic ON hab.inst_code = hic.inst_code
+        LEFT JOIN ht_hjh_asset_type hat on hab.inst_code = hat.inst_code AND hab.asset_type = hat.asset_type
+        <include refid="Where_Clause" />
+        ORDER BY
+        hab.borrow_cd
+        <if test="limitStart >= 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+</mapper>

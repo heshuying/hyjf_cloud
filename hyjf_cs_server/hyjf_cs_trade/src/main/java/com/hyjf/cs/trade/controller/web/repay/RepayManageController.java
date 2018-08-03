@@ -42,7 +42,7 @@ import java.util.Map;
  * @author hesy
  * @version RepayManageController, v0.1 2018/6/23 14:09
  */
-@Api(value = "web端-还款管理相关页面接口", description ="web端-还款管理相关页面接口")
+@Api(value = "web端-还款管理相关页面接口", tags ="web端-还款管理相关页面接口")
 @RestController
 @RequestMapping("/hyjf-web/repay")
 public class RepayManageController extends BaseTradeController {
@@ -65,6 +65,7 @@ public class RepayManageController extends BaseTradeController {
 
         // 请求参数校验
         requestBean.setStatus("0");
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         repayManageService.checkForRepayList(requestBean);
 
         // 分页信息
@@ -103,6 +104,7 @@ public class RepayManageController extends BaseTradeController {
 
         // 请求参数校验
         requestBean.setStatus("1");
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         repayManageService.checkForRepayList(requestBean);
 
         // 分页信息
@@ -135,8 +137,9 @@ public class RepayManageController extends BaseTradeController {
     public WebResult<List<RepayListCustomizeVO>> selectOrgRepayWaitList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
-        logger.info("用户待还款列表开始，userId:{}", userVO.getUserId());
+        logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
 
@@ -151,7 +154,7 @@ public class RepayManageController extends BaseTradeController {
             List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayList(requestBean);
             result.setData(resultList);
         } catch (Exception e) {
-            logger.error("获取用户待还款列表异常", e);
+            logger.error("获取垫付机构待还款列表异常", e);
             result.setStatus(WebResult.ERROR);
             result.setStatusDesc(WebResult.ERROR_DESC);
         }
@@ -172,8 +175,9 @@ public class RepayManageController extends BaseTradeController {
     public WebResult<List<RepayListCustomizeVO>> selectOrgRepayedList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
-        logger.info("用户待还款列表开始，userId:{}", userVO.getUserId());
+        logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
 

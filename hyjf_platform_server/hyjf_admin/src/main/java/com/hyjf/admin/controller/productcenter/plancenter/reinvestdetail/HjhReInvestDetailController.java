@@ -16,7 +16,7 @@ import javax.validation.Valid;
  * 产品中心 --> 汇计划 --> 资金计划 -> 复投详情
  * @Author : huanghui
  */
-@Api(value = "产品中心-汇计划-资金计划")
+@Api(value = "产品中心-汇计划-资金计划",tags ="产品中心-汇计划-资金计划-复投详情")
 @RestController
 @RequestMapping(value = "/hjhReInvestDetail")
 public class HjhReInvestDetailController extends BaseController {

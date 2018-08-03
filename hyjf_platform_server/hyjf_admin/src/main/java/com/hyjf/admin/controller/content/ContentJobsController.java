@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentJobsController, v0.1 2018/7/12 11:35
  */
-@Api(value = "公司管理-招贤纳士", description = "公司管理-招贤纳士")
+@Api(value = "公司管理-招贤纳士", tags = "公司管理-招贤纳士")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentjob")
 public class ContentJobsController extends BaseController {

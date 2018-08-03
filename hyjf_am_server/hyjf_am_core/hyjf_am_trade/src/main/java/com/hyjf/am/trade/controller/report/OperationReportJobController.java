@@ -34,10 +34,10 @@ public class OperationReportJobController extends BaseController {
      * @Param 上个月的最后一天
      * @return
      */
-    @PostMapping("/tendercitygroup")
-    public OperationReportJobResponse tenderCityGroup(@RequestBody OperationReportJobRequest request) {
+    @PostMapping("/tendercitygroupbylist")
+    public OperationReportJobResponse tenderCityGroupByList(@RequestBody OperationReportJobRequest request) {
         OperationReportJobResponse response = new OperationReportJobResponse();
-        List<OperationReportJobVO> resultList = operationReportJobService.getTenderCityGroupBy(request);
+        List<OperationReportJobVO> resultList = operationReportJobService.getTenderCityGroupByList(request);
         response.setResultList(resultList);
         return response;
     }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangjun
  * @version AppRechargeRuleController, v0.1 2018/7/25 14:49
  */
-@Api(description = "app端获取充值规则")
+@Api(tags = "app端获取充值规则")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-app/user/bank/recharge")
