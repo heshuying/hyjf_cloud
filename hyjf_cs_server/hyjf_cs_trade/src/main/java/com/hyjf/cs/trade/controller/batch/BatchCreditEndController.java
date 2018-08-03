@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BatchCreditEndService;
+import com.hyjf.cs.trade.service.batch.BatchCreditEndService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;

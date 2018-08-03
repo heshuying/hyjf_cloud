@@ -40,9 +40,6 @@ public class ChangeLogController extends BaseController {
 	private ChangeLogService changeLogService;
 	/**
 	 * 列表维护画面初始化
-	 * 
-	 * @param request
-	 * @param form
 	 * @return
 	 */
 	@PostMapping("/init")

@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.controller.app.recharge;
 
 import com.hyjf.cs.trade.bean.app.AppRechargeDescResultBean;
-import com.hyjf.cs.trade.service.AppRechargeRuleService;
+import com.hyjf.cs.trade.service.recharge.AppRechargeRuleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
