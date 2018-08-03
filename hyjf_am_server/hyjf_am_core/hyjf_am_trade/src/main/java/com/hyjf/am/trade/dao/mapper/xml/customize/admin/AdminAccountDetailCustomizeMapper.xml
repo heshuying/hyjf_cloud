@@ -51,9 +51,9 @@
 		IFNULL(l.plan_balance, 0) AS planBalance,
 		IFNULL(l.plan_frost, 0) AS planFrost,
 		l.remark,
-		FROM_UNIXTIME(
+		date_format(
 		l.create_time,
-		'%Y-%m-%d %H:%i:%S'
+		'%Y-%c-%d %H:%i:%s'
 		) AS 'create_time',
 		l.account_id,
 		l.is_bank,
@@ -124,12 +124,10 @@
 			AND l.remark = #{remarkSrch}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			AND FROM_UNIXTIME(l.create_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'
-			),'%Y-%m-%d %H:%i:%s')
+			AND l.create_time <![CDATA[>=]]>  CONCAT(#{startDate},' 00:00:00')
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND FROM_UNIXTIME(l.create_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'
-			),'%Y-%m-%d %H:%i:%s')
+			AND l.create_time <![CDATA[<=]]> CONCAT(#{endDate},' 23:59:59')
 		</if>
 	</sql>
 

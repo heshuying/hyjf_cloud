@@ -63,7 +63,7 @@
         hydur.username AS recommend_name,
         date_format(
         hydu.reg_time,
-        '%Y-%m-%d %H:%i:%s'
+        '%Y-%c-%d %H:%i:%s'
         ) AS reg_time,
         CASE
         WHEN hydui.attribute = 2
@@ -124,10 +124,10 @@
     <sql id="Admin_Where_Clause">
         <where>
             <if test="realName != null and realName != ''">
-                AND t.real_name LIKE CONCAT('%', #{realName}, '%')
+                AND t.real_name LIKE CONCAT(#{realName}, '%')
             </if>
             <if test="recommendName != null and recommendName != ''">
-                AND t.recommend_name LIKE CONCAT('%', #{recommendName}, '%')
+                AND t.recommend_name LIKE CONCAT(#{recommendName}, '%')
             </if>
             <if test="userRole != null and userRole != ''">
                 AND t.role_id = #{userRole,jdbcType=INTEGER}
@@ -143,10 +143,10 @@
             </if>
 
             <if test="regTimeStart != null and regTimeStart != '' ">
-                AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
+                AND t.regTime <![CDATA[>=]]>  concat(#{regTimeStart},' 00:00:00')
             </if>
             <if test="regTimeEnd != null and regTimeEnd != ''">
-                AND FROM_UNIXTIME( t.regTime, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
+                AND t.regTime <![CDATA[<=]]> concat(#{regTimeEnd},' 23:59:59')
             </if>
             <if test="combotreeListSrch != null and combotreeListSrch != ''">
                 AND od.id in
@@ -455,16 +455,16 @@
             AND l.user_id = #{userId}
         </if>
         <if test="username != null and username != ''">
-            AND l.username LIKE CONCAT('%', #{username}, '%')
+            AND l.username LIKE CONCAT( #{username}, '%')
         </if>
         <if test="realName != null and realName != ''">
-            AND l.real_name LIKE CONCAT('%', #{realName}, '%')
+            AND l.real_name LIKE CONCAT( #{realName}, '%')
         </if>
         <if test="mobile != null and mobile != ''">
-            AND l.mobile LIKE CONCAT('%', #{mobile}, '%')
+            AND l.mobile LIKE CONCAT( #{mobile}, '%')
         </if>
         <if test="recommendUser != null and recommendUser != ''">
-            AND l.recommend_user LIKE CONCAT('%', #{recommendUser}, '%')
+            AND l.recommend_user LIKE CONCAT(#{recommendUser}, '%')
         </if>
         <if test="attribute != null and attribute != ''">
             AND l.attribute = #{attribute}
@@ -476,12 +476,10 @@
             AND l.update_type = #{changeType}
         </if>
         <if test="startTime != null and startTime != ''">
-            AND FROM_UNIXTIME(l.change_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startTime},'00:00:00'
-            ),'%Y-%m-%d %H:%i:%s')
+            AND l.change_time <![CDATA[>=]]> CONCAT(#{startTime},' 00:00:00')
         </if>
         <if test="endTime != null and endTime != ''">
-            AND FROM_UNIXTIME(l.change_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endTime},'23:59:59'
-            ),'%Y-%m-%d %H:%i:%s')
+            AND l.change_time <![CDATA[<=]]> CONCAT(#{endTime},' 23:59:59')
         </if>
     </sql>
 
