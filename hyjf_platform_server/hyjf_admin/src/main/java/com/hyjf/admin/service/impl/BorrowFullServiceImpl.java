@@ -150,6 +150,10 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         if(StringUtils.isBlank(borrowFullRequest.getReverifyRemark())){
             return "复审备注为空！";
         }
+        // 255为数据库定义长度
+        if(borrowFullRequest.getReverifyRemark().length() > 255){
+            return "复审备注超出规定长度！";
+        }
 
         //标的信息、状态
         BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowFullRequest.getBorrowNidSrch());

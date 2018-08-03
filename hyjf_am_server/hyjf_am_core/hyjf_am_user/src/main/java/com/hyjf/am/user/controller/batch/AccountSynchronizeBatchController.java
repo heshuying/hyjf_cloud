@@ -34,18 +34,21 @@ public class AccountSynchronizeBatchController extends BaseController {
     MobileSynchronizeService mobileSynchronizeService;
 
     @RequestMapping("/searchAccountMobileSynch/{flag}")
-    public AccountMobileSynchResponse updateActivityEndStatus(@PathVariable String flag){
+    public AccountMobileSynchResponse updateActivityEndStatus(@PathVariable String flag) {
         AccountMobileSynchResponse response = new AccountMobileSynchResponse();
         List<AccountMobileSynch> accountMobileSynches = mobileSynchronizeService.searchAccountMobileSynch(flag);
-        if(!CollectionUtils.isEmpty(accountMobileSynches)){
-            List<AccountMobileSynchVO> list = CommonUtils.convertBeanList(accountMobileSynches,AccountMobileSynchVO.class);
+        if (!CollectionUtils.isEmpty(accountMobileSynches)) {
+            List<AccountMobileSynchVO> list = CommonUtils.convertBeanList(accountMobileSynches, AccountMobileSynchVO.class);
             response.setResultList(list);
         }
         return response;
     }
 
     @RequestMapping("/updateAccountMobileSynch")
-    public boolean updateAccountMobileSynch(@RequestBody @Valid AccountMobileSynchRequest accountMobileSynchRequest){
-        return mobileSynchronizeService.updateAccountMobileSynch(accountMobileSynchRequest);
+    public AccountMobileSynchResponse updateAccountMobileSynch(@RequestBody @Valid AccountMobileSynchRequest accountMobileSynchRequest) {
+        AccountMobileSynchResponse response = new AccountMobileSynchResponse();
+        boolean updateFlag = mobileSynchronizeService.updateAccountMobileSynch(accountMobileSynchRequest);
+        response.setUpdateFlag(updateFlag);
+        return response;
     }
 }

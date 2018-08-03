@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.batch;
+package com.hyjf.cs.user.controller.batch.synchronize;
 
 import com.hyjf.cs.user.service.batch.AccountSynchronizeBatchService;
 import org.slf4j.Logger;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @version AccountSynchronizeBatchController, v0.1 2018/6/22 10:11
  */
 @RestController
-@RequestMapping("/cs-user")
+@RequestMapping("/cs-user/batch")
 public class AccountSynchronizeBatchController {
     private static final Logger logger = LoggerFactory.getLogger(AccountSynchronizeBatchController.class);
 
     @Autowired
     AccountSynchronizeBatchService accountSynchronizeBatchService;
 
-    @RequestMapping("/batch/accountSynchronize")
+    @RequestMapping("/accountSynchronize")
     public void accountSynchronize() {
         logger.info("同步银行卡号(每日)定时任务开始....");
         accountSynchronizeBatchService.accountSynchronize();
