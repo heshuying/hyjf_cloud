@@ -141,8 +141,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/password/openSuccess";
+        //channel=0：设置交易密码/1：重置交易密码
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=0&logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=0";
         // 异步调用路
         String bgRetUrl = systemConfig.getWebHost() + "user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
@@ -192,8 +193,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/password/openSuccess";
+        //channel=0：设置交易密码/1：重置交易密码
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=1&logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=1";
         // 异步调用路
         String bgRetUrl = systemConfig.webHost + "/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);

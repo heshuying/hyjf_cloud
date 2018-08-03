@@ -219,8 +219,8 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String txcode = "";
         BankCallBean bean = new BankCallBean(users.getUserId(), txcode, client);
         // 同步地址 跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/open/openError" + "?logOrdId=" + bean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/open/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?logOrdId=" + bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticSuccess?channel="+type;
         // 异步调用路
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
@@ -296,16 +296,20 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         Map<String, String> result = new HashMap<>();
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthByUserId(userId);
-        //投标
+        //来自投标成功页面
         if (userAuth == null || userAuth.getAutoCreditStatus() == 0) {
+            //未设置自动债转
             result.put("credit", "2");
         } else {
+            //已设置自动债转
             result.put("credit", "0");
         }
-        //债转
+        //来自债转成功页面
         if (userAuth == null || userAuth.getAutoInvesStatus() == 0) {
+            //未设置自动投资
             result.put("inves", "1");
         } else {
+            //已设置自动投资
             result.put("inves", "0");
         }
 
