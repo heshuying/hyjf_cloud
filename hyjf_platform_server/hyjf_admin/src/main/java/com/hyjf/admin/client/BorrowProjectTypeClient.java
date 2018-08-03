@@ -65,13 +65,13 @@ public interface BorrowProjectTypeClient {
      *
      * @param record
      */
-    public void insertRecord(BorrowProjectTypeRequest record);
+    public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record);
     /**
      * 汇直投项目类型维护插入
      *
      * @param record
      */
-    public void updateRecord(BorrowProjectTypeRequest record);
+    public BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest record);
     /**
      *  汇直投项目类型维护删除
      * @param adminRequest
@@ -82,5 +82,5 @@ public interface BorrowProjectTypeClient {
      * @param borrowCd
      * @return
      */
-    public int borrowCdIsExists(String borrowCd);
+    public int borrowCdIsExists(BorrowProjectTypeRequest borrowCd);
 }

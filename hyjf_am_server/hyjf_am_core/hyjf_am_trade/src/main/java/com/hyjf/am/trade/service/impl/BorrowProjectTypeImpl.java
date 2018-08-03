@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectRepayMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
@@ -8,7 +9,6 @@ import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowProjectTypeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BorrowProjectTypeService;
-import com.hyjf.am.vo.trade.HolidaysConfigVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -58,8 +58,8 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
     * 分页查询分项目类型
     * */
     @Override
-    public List<BorrowProjectType>  selectProjectTypeList(BorrowProjectTypeVO borrowProjectTypeVO, int limitStart, int limitEnd){
-        return borrowProjectTypeCustomizeMapper.selectProjectTypeList(borrowProjectTypeVO,-1,-1);
+    public List<BorrowProjectTypeVO>  selectProjectTypeList(BorrowProjectTypeVO borrowProjectTypeVO){
+        return borrowProjectTypeCustomizeMapper.selectProjectTypeList(borrowProjectTypeVO);
     }
 
     /*
@@ -150,7 +150,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
      * @param form
      */
     @Override
-    public  void insertRecord(BorrowProjectTypeRequest form){
+    public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest form){
         Date sysDate = new Date();
 //        String userId = ShiroUtil.getLoginUserId();
         BorrowProjectType record = new BorrowProjectType();
@@ -173,6 +173,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         // 直接插入asset表
         this.insertAsset(form);
 		/*--------------------------add by LSY END-----------------------------------*/
+		return new BorrowProjectTypeResponse();
     }
     public void insertRepay(BorrowProjectType form,String methodName) {
         BorrowProjectRepay repay = new BorrowProjectRepay();
@@ -226,7 +227,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
      * @param form
      */
     @Override
-    public  void updateRecord(BorrowProjectTypeRequest form){
+    public  BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest form){
         BorrowProjectType record = new BorrowProjectType();
         BeanUtils.copyProperties(form, record);
         Date sysDate = new Date();
@@ -249,6 +250,7 @@ public class BorrowProjectTypeImpl implements BorrowProjectTypeService {
         //asset表更新处理
         this.updateAsset(record);
 		/*--------------------------add by LSY END-----------------------------------*/
+		return new BorrowProjectTypeResponse();
     }
 
     public void delectRepay(String borrowClass) {
