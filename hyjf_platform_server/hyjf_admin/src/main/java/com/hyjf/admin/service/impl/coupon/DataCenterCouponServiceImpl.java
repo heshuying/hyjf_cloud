@@ -5,11 +5,13 @@ package com.hyjf.admin.service.impl.coupon;
 
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.DataCenterCouponService;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -19,11 +21,19 @@ import org.springframework.stereotype.Service;
 public class DataCenterCouponServiceImpl implements DataCenterCouponService {
     @Autowired
     private AmTradeClient amTradeClient;
-    @Autowired
-    private AmUserClient amUserClient;
 
     @Override
     public DataCenterCouponResponse searchAction(DadaCenterCouponRequestBean requestBean, String type) {
         return amTradeClient.getDataCenterCouponList(requestBean, type);
+    }
+
+    @Override
+    public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        return null;// todo
+    }
+
+    @Override
+    public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        return null;// todo
     }
 }
