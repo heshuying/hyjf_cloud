@@ -133,8 +133,8 @@
 		hdpa.send_status,
 		hdpa.commission_status,
 		hdpa.available_invest_account,
-		FROM_UNIXTIME(hdpa.commission_count_time,'%Y-%m-%d %H:%i') AS commission_count_time,
-		FROM_UNIXTIME(hdpa.create_time,'%Y-%m-%d %H:%i') AS create_time,
+		date_format(hdpa.commission_count_time,'%Y-%c-%d %h:%i:%s') AS commission_count_time,
+		date_format(hdpa.create_time,'%Y-%c-%d %h:%i:%s') AS create_time,
 		hdpa.create_time AS add_time_long,
 		hdpa.invite_user_name AS invite_name
 		FROM
@@ -143,16 +143,16 @@
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
 		<where>
 			<if test="debtPlanNid != null and debtPlanNid != ''">
-				AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
+				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNidSrch}, '%')
 			</if>
 			<if test="accedeOrderId != null and accedeOrderId != ''">
-				AND hdpa.accede_order_id LIKE CONCAT('%', #{accedeOrderIdSrch}, '%')
+				AND hdpa.accede_order_id LIKE CONCAT(#{accedeOrderIdSrch}, '%')
 			</if>
 			<if test="userName != null and userName != ''">
-				AND hdpa.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+				AND hdpa.user_name LIKE CONCAT(#{userNameSrch},'%')
 			</if>
 			<if test="refereeName != null and refereeName != ''">
-				AND hydui.username LIKE CONCAT('%', #{refereeNameSrch},'%')
+				AND hydui.username LIKE CONCAT(#{refereeNameSrch},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
@@ -161,10 +161,10 @@
 				AND hdpa.client = #{platformSrch}
 			</if>
 			<if test="searchStartDate != null and searchStartDate !='' ">
-				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
+				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
 			</if>
 			<if test="searchEndDate != null and searchEndDate !='' ">
-				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
+				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate}' 23:59:59')
 			</if>
 		</where>
 		ORDER BY
@@ -182,16 +182,16 @@
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
 		<where>
 			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-				AND hdp.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
+				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
 			</if>
 			<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
-				AND hdpa.accede_order_id LIKE CONCAT('%', #{accedeOrderIdSrch}, '%')
+				AND hdpa.accede_order_id LIKE CONCAT( #{accedeOrderIdSrch}, '%')
 			</if>
 			<if test="userNameSrch != null and userNameSrch != ''">
-				AND hdpa.user_name LIKE CONCAT('%', #{userNameSrch},'%')
+				AND hdpa.user_name LIKE CONCAT(#{userNameSrch},'%')
 			</if>
 			<if test="refereeNameSrch != null and refereeNameSrch != ''">
-				AND hydui.username LIKE CONCAT('%', #{refereeNameSrch},'%')
+				AND hydui.username LIKE CONCAT(#{refereeNameSrch},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
@@ -200,10 +200,10 @@
 				AND hdpa.client = #{platformSrch}
 			</if>
 			<if test="searchStartDate != null and searchStartDate !='' ">
-				AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
+				AND hdpa.create_time <![CDATA[>=]]> CONCAT(#{searchStartDate},' 00:00:00')
 			</if>
 			<if test="searchEndDate != null and searchEndDate !='' ">
-				AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
+				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate}' 23:59:59')
 			</if>
 		</where>
 	</select>

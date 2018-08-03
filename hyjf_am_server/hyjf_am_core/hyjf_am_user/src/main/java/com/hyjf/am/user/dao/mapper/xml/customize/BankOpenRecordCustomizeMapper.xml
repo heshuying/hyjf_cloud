@@ -63,12 +63,10 @@
                 #{openAccountPlat,jdbcType=VARCHAR}
             </if>
             <if test="openTimeStart != null and openTimeStart !='' ">
-                AND date_format( hboa.create_time, '%Y-%m-%d' ) <![CDATA[>=]]>
-                #{openTimeStart,jdbcType=VARCHAR}
+                AND hboa.create_time <![CDATA[>=]]>  concat(#{openTimeStart,jdbcType=VARCHAR},' 00:00:00')
             </if>
             <if test="openTimeEnd != null and openTimeEnd !='' ">
-                AND date_format( hboa.create_time, '%Y-%m-%d' ) <![CDATA[<=]]>
-                #{openTimeEnd,jdbcType=VARCHAR}
+                AND hboa.create_time <![CDATA[<=]]>  concat(#{openTimeEnd,jdbcType=VARCHAR},' 23:59:59')
             </if>
         </where>
     </sql>
@@ -147,34 +145,29 @@
         <where>
             hydu.open_account = 1
             <if test="userName != null and userName !='' ">
-                AND hydu.username LIKE CONCAT('%',
-                #{userName,jdbcType=VARCHAR}, '%')
+                AND hydu.username LIKE CONCAT(#{userName,jdbcType=VARCHAR}, '%')
             </if>
             <if test="account != null and account !='' ">
                 AND hydac.chinapnr_usrid = #{account,jdbcType=VARCHAR}
             </if>
             <if test="idCard != null and idCard !='' ">
-                AND hydui.idcard LIKE CONCAT('%',
-                #{idCard,jdbcType=VARCHAR}, '%')
+                AND hydui.idcard LIKE CONCAT(#{idCard,jdbcType=VARCHAR}, '%')
             </if>
             <if test="userProperty != null and userProperty != ''">
                 AND hydui.attribute = #{userProperty,jdbcType=INTEGER}
             </if>
             <if test="realName != null and realName !='' ">
-                AND hydui.truename LIKE CONCAT('%',
-                #{realName,jdbcType=VARCHAR}, '%')
+                AND hydui.truename LIKE CONCAT(#{realName,jdbcType=VARCHAR}, '%')
             </if>
             <if test="openAccountPlat != null and openAccountPlat !='' ">
                 AND hydu.account_esb =
                 #{openAccountPlat,jdbcType=VARCHAR}
             </if>
             <if test="openTimeStart != null and openTimeStart !='' ">
-                AND hydac.addtime <![CDATA[>=]]>
-                unix_timestamp(#{openTimeStart,jdbcType=VARCHAR})
+                AND hydac.create_time <![CDATA[>=]]> concat(#{openTimeStart,jdbcType=VARCHAR},' 00:00:00')
             </if>
             <if test="openTimeEnd != null and openTimeEnd !='' ">
-                AND hydac.addtime <![CDATA[<=]]>
-                unix_timestamp(#{openTimeEnd,jdbcType=VARCHAR})
+                AND hydac.create_time <![CDATA[<=]]>  concat(#{openTimeEnd,jdbcType=VARCHAR},' 23:59:59')
             </if>
         </where>
     </sql>
