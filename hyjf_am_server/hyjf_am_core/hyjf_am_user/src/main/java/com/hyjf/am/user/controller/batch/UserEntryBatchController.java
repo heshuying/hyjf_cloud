@@ -13,13 +13,13 @@ import com.hyjf.am.user.service.batch.UserEntryBatchService;
  */
 
 @RestController
-@RequestMapping("/userBatch/entry")
+@RequestMapping("/am-user/batch")
 public class UserEntryBatchController extends BaseController {
 
     @Autowired
     private UserEntryBatchService userEntryBatchService;
 
-    @RequestMapping("/update")
+    @RequestMapping("/entryupdate")
     public void entryUpdate(){
         logger.info("员工入职修改客户属性...");
         userEntryBatchService.updateUserEntryInfo();
