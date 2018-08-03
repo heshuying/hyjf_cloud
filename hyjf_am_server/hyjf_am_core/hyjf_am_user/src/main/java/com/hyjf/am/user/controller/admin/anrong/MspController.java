@@ -56,8 +56,7 @@ public class MspController extends BaseController {
 
 	/**
 	 * 列表维护画面初始化
-	 * 
-	 * @param request
+	 *
 	 * @param form
 	 * @return
 	 */
@@ -68,9 +67,7 @@ public class MspController extends BaseController {
 
 	/**
 	 * 文章列表维护分页机能 页面初始化
-	 * 
-	 * @param request
-	 * @param modelAndView
+	 *
 	 * @param form
 	 */
 	private MspResponse createPage(@RequestBody MspRequest form) {
@@ -90,8 +87,7 @@ public class MspController extends BaseController {
 
 	/**
 	 * 画面迁移(含有id更新，不含有id添加)
-	 * 
-	 * @param request
+	 *
 	 * @param form
 	 * @return
 	 */
@@ -115,8 +111,7 @@ public class MspController extends BaseController {
 
 	/**
 	 * 添加信息
-	 * 
-	 * @param request
+	 *
 	 * @param form
 	 * @return
 	 */
@@ -153,8 +148,7 @@ public class MspController extends BaseController {
 
 	/**
 	 * 修改维护信息
-	 * 
-	 * @param request
+	 *
 	 * @param form
 	 * @return
 	 */
@@ -171,10 +165,6 @@ public class MspController extends BaseController {
 	}
 	/**
      * ajax用户按照手机号和身份证号查询开户掉单校验
-     * 
-     * @param request
-     * 
-     * @param response
      * @return
      */
     @ResponseBody
@@ -207,8 +197,7 @@ public class MspController extends BaseController {
 
 	/**
 	 * 删除安融查询数据
-	 * 
-	 * @param request
+	 *
 	 * @param form
 	 * @return
 	 */
@@ -244,8 +233,7 @@ public class MspController extends BaseController {
 	}
 	/**
 	 * 检查编号唯一性
-	 * 
-	 * @param request
+	 *
 	 * @return
 	 */
 	@ResponseBody
