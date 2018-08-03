@@ -292,21 +292,24 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     }
 
     @Override
-    public Map<String, String> getStatus(Integer userId) {
+    public Map<String, String> getStatus(Integer userId,Integer type) {
         Map<String, String> result = new HashMap<>();
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthByUserId(userId);
-        //投标
-        if (userAuth.getAutoInvesStatus() == 0) {
-            result.put("autoInves", "1");
-        } else {
-            result.put("autoInves", "0");
-        }
-        //债转
-        if (userAuth.getAutoCreditStatus() == 0) {
-            result.put("autoCredit", "2");
-        } else {
-            result.put("autoCredit", "0");
+        if(type==0){
+            //投标
+            if (userAuth==null||userAuth.getAutoCreditStatus() == 0) {
+                result.put("typeURL", "2");
+            } else {
+                result.put("typeURL", "0");
+            }
+        }else if(type==1){
+            //债转
+            if (userAuth==null||userAuth.getAutoInvesStatus() == 0) {
+                result.put("typeURL", "1");
+            } else {
+                result.put("typeURL", "0");
+            }
         }
         return result;
     }
