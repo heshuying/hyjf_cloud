@@ -148,11 +148,10 @@ public class WebAutoPlusController extends BaseUserController {
     }
 
     @ApiOperation(value = "授权状态接口", notes = "授权状态接口")
-    @ApiImplicitParam(name = "param",value = "{type:0投资/1债转}",dataType = "Map")
     @PostMapping(value = "/userAutoStatus")
-    public WebResult getStatus(@RequestHeader(value = "userId") Integer userId,Map<String,Integer> param){
+    public WebResult getStatus(@RequestHeader(value = "userId") Integer userId){
         WebResult<Object> result = new WebResult<Object>();
-        Map<String,String> map = autoPlusService.getStatus(userId,param.get("type"));
+        Map<String,String> map = autoPlusService.getStatus(userId);
         result.setData(map);
         return result;
     }

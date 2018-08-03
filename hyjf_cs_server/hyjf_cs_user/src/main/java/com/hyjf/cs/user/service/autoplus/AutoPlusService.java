@@ -119,7 +119,7 @@ public interface AutoPlusService extends BaseUserService {
     /**
      * 查询授权状态
      */
-    Map<String,String> getStatus(Integer userId, Integer type);
+    Map<String,String> getStatus(Integer userId);
 
     /**
      * 校验发送验证码接口参数
