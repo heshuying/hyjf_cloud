@@ -241,4 +241,7 @@ public class RedisConstants {
      */
     public static final String Statistics_Operation_Report = "StatisticsOperationReportTask";
 
+    /** CONTROLLOR @value值 */
+    public static final String CONTROLLOR_CLASS_NAME = "UserRegistDefine:";
+
 }

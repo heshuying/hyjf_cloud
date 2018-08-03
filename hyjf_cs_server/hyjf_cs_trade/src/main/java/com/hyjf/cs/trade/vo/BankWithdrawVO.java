@@ -12,6 +12,9 @@ public class BankWithdrawVO {
     // 银联行号
     private String payAllianceCode;
 
+    //订单号
+    private String logOrdId;
+
     public String getWidCard() {
         return widCard;
     }
@@ -34,5 +37,13 @@ public class BankWithdrawVO {
 
     public void setPayAllianceCode(String payAllianceCode) {
         this.payAllianceCode = payAllianceCode;
+    }
+
+    public String getLogOrdId() {
+        return logOrdId;
+    }
+
+    public void setLogOrdId(String logOrdId) {
+        this.logOrdId = logOrdId;
     }
 }
