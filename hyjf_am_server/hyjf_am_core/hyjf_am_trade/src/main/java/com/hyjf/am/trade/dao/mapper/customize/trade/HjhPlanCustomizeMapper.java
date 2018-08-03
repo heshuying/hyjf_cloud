@@ -1,8 +1,5 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.resquest.admin.PlanListCustomizeRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
@@ -15,6 +12,9 @@ import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 计划类
@@ -143,4 +143,10 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     List<DebtPlanAccedeCustomize> selectPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 汇计划数据统计查询
+     * @return
+     */
+    List<Map<String,Object>> searchPlanStatisticData();
 }

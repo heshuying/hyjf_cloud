@@ -98,4 +98,22 @@ public interface OperationReportJobCustomizeMapper {
 	 * 获取截至日期的投资金额
 	 */
 	double getInvestLastDate(Date date);
+
+	/**
+	 * 累计交易笔数(实时)
+	 * @return
+	 */
+	int countTotalInvestNum();
+
+	/**
+	 * 累计交易总额(实时)
+	 * @return
+	 */
+	BigDecimal countTotalInvestAmount();
+
+	/**
+	 * 累计为用户赚取收益(实时)
+	 * @return
+	 */
+	BigDecimal countTotalInterestAmount();
 }

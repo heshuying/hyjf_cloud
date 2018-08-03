@@ -33,19 +33,19 @@ import java.util.List;
 
 /**
  * @author fuqiang
- * @version CouponJXController, v0.1 2018/7/18 18:18
+ * @version CouponDJController, v0.1 2018/7/18 18:18
  */
 @Api(value = "数据中心-加息券", description = "数据中心-加息券")
 @RestController
-@RequestMapping("/hyjf-admin/datacenter/coupon_jx")
-public class CouponJXController extends BaseController {
+@RequestMapping("/hyjf-admin/datacenter/coupon_dj")
+public class CouponDJController extends BaseController {
 	@Autowired
 	private DataCenterCouponService couponService;
 
-	@ApiOperation(value = "数据中心-加息券", notes = "数据中心-加息券列表查询")
-	@RequestMapping("/get_coupon_list")
+	@ApiOperation(value = "数据中心-代金券", notes = "数据中心-代金券列表查询")
+    @RequestMapping("/get_coupon_list")
 	public AdminResult<ListResult<DataCenterCouponCustomizeVO>> getCouponList(DadaCenterCouponRequestBean requestBean) {
-		DataCenterCouponResponse response = couponService.searchAction(requestBean, "JX");
+		DataCenterCouponResponse response = couponService.searchAction(requestBean, "DJ");
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
@@ -55,13 +55,13 @@ public class CouponJXController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
-	@ApiOperation(value = "导出加息券列表", notes = "导出加息券列表")
-	@RequestMapping("/export_jx_action")
-	public void exportJXAction(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
+    @ApiOperation(value = "导出代金券列表", notes = "导出代金券列表")
+	@RequestMapping("/export_dj_action")
+	public void exportDJAction(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
 		// 表格sheet名称
-		String sheetName = "加息券列表";
+		String sheetName = "代金券列表";
 		DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
-		List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
+		List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListJX(dataCenterCouponCustomize);
 		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] {"序号", "来源", "已发放数量","已使用数量","已失效数量","使用率","失效率","总收益","已发放收益" ,"待发放收益" ,"累计真实投资金额" };
 		// 声明一个工作薄
