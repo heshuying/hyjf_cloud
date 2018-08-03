@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class ParamNameVO extends BaseVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
     private String name;
 
     private String other1;
@@ -36,7 +36,7 @@ public class ParamNameVO extends BaseVO implements Serializable {
     private String updateuser;
 
     private String nameCd;
-    
+
     public String getName() {
         return name;
     }

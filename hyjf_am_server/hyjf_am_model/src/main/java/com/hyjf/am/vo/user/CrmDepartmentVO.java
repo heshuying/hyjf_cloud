@@ -13,7 +13,7 @@ import java.util.Date;
  * @Author sss
  * @Date 2018/7/26 11:26
  */
-public class ROaDepartmentVO extends BaseVO implements Serializable {
+public class CrmDepartmentVO extends BaseVO implements Serializable {
 
     private Integer id;
 

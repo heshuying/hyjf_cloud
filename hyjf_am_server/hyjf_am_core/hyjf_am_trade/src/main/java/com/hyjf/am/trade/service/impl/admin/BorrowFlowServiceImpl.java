@@ -66,7 +66,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
         HjhInstConfigExample example = new HjhInstConfigExample();
         HjhInstConfigExample.Criteria cra = example.createCriteria();
 //		cra.andDelFlgEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
-        if (org.apache.commons.lang.StringUtils.isNotEmpty(instCode)) {
+        if (StringUtils.isNotEmpty(instCode)) {
             cra.andInstCodeEqualTo(instCode);
         }
         cra.andDelFlagEqualTo(0);
@@ -115,9 +115,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public int countRecord(AdminBorrowFlowRequest form){
-        HjhAssetBorrowtype hjhAssetBorrowTypeCustomize = new HjhAssetBorrowtype();
-        BeanUtils.copyProperties(form, hjhAssetBorrowTypeCustomize);
-        return hjhAssetBorrowTypeCustomizeMapper.countRecord(hjhAssetBorrowTypeCustomize);
+        return hjhAssetBorrowTypeCustomizeMapper.countRecord(form);
     }
     /**
      * 列表
@@ -151,12 +149,12 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      * @return
      */
     @Override
-    public void insertRecord(AdminBorrowFlowRequest adminRequest){
+    public int insertRecord(AdminBorrowFlowRequest adminRequest){
         HjhAssetBorrowtype record = new HjhAssetBorrowtype();
         BeanUtils.copyProperties(adminRequest, record);
         record.setCreateTime(new Date());
         record.setUpdateTime(new Date());
-         hjhAssetBorrowtypeMapper.insertSelective(record);
+        return hjhAssetBorrowtypeMapper.insertSelective(record);
     }
     /**
      * 修改
@@ -164,12 +162,12 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      * @return
      */
     @Override
-    public void updateRecord(AdminBorrowFlowRequest adminRequest){
+    public int updateRecord(AdminBorrowFlowRequest adminRequest){
         HjhAssetBorrowtype record = new HjhAssetBorrowtype();
         BeanUtils.copyProperties(adminRequest, record);
         // 更新时间
         record.setUpdateTime(new Date());
-         hjhAssetBorrowtypeMapper.updateByPrimaryKeySelective(record);
+         return hjhAssetBorrowtypeMapper.updateByPrimaryKeySelective(record);
     }
     /**
      * 删除
@@ -177,9 +175,10 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      * @return
      */
     @Override
-    public void deleteRecord(Integer id){
+    public int deleteRecord(Integer id){
         if (null != id){
-            hjhAssetBorrowtypeMapper.deleteByPrimaryKey(id);
+            return  hjhAssetBorrowtypeMapper.deleteByPrimaryKey(id);
         }
+        return 0;
     }
 }

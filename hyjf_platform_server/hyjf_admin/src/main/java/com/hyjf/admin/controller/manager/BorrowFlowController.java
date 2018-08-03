@@ -10,7 +10,6 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
-import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -32,7 +31,7 @@ import java.util.Map;
 /**
  * @author by xiehuili on 2018/7/30.
  */
-@Api(value = "admin流程配置",tags = "配置中心借款项目配置---流程配置")
+@Api(value = "admin流程配置",description = "配置中心借款项目配置---流程配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowflow")
 public class BorrowFlowController extends BaseController {
@@ -110,10 +109,13 @@ public class BorrowFlowController extends BaseController {
             resList.setMessage("输入内容验证失败");
             return resList;
         }
-        AdminSystemVO user = getUser(request);
-        String userId = user.getId();
-        adminRequest.setCreateUser(Integer.valueOf(userId));
-        adminRequest.setUpdateUser(Integer.valueOf(userId));
+        // todo 联调时需要放开 todo-------------------------------------------
+//        AdminSystemVO user = getUser(request);
+//        String userId = user.getId();
+//        adminRequest.setCreateUser(Integer.valueOf(userId));
+//        adminRequest.setUpdateUser(Integer.valueOf(userId));
+        adminRequest.setCreateUser(3);
+        adminRequest.setUpdateUser(3);
         // 插入
         this.borrowFlowService.insertRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);
@@ -124,10 +126,12 @@ public class BorrowFlowController extends BaseController {
     @RequestMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminBorrowFlowResponse updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
-        AdminSystemVO user = getUser(request);
-        String userId = user.getId();
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
-        adminRequest.setUpdateUser(Integer.valueOf(userId));
+        // todo 联调时需要放开 todo-------------------------------------------
+//        AdminSystemVO user = getUser(request);
+//        String userId = user.getId();
+//        adminRequest.setUpdateUser(Integer.valueOf(userId));
+        adminRequest.setUpdateUser(3);
         // 数据更新
         this.borrowFlowService.updateRecord(adminRequest);
         resList.setRtn(Response.SUCCESS);
@@ -173,9 +177,7 @@ public class BorrowFlowController extends BaseController {
         ValidatorFieldCheckUtil.validateRequired(modelAndView, "isOpen", form.getIsOpen().toString());
 
         // 检查唯一性
-        int cnt =
-                this.borrowFlowService.countRecordByPK(form.getInstCode(),
-                        form.getAssetType());
+        int cnt = this.borrowFlowService.countRecordByPK(form.getInstCode(), form.getAssetType());
         if (cnt > 0) {
             ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "borrowflow.pk.repeat");
         }

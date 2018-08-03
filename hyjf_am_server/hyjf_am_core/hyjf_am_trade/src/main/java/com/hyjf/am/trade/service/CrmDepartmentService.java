@@ -7,7 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
  * @Author sunss
  * @Date 2018/7/26 11:50
  */
-public interface ROaDepartmentService {
+public interface CrmDepartmentService {
     /**
      * 修改
      *

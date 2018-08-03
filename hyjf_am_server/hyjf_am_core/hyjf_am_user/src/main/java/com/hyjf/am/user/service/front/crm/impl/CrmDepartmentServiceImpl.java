@@ -1,7 +1,7 @@
 package com.hyjf.am.user.service.front.crm.impl;
 
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
-import com.hyjf.am.user.service.front.crm.ROaDepartmentService;
+import com.hyjf.am.user.service.front.crm.CrmDepartmentService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * @Date 2018/7/26 13:52
  */
 @Service
-public class ROaDepartmentServiceImpl extends BaseServiceImpl implements ROaDepartmentService {
+public class CrmDepartmentServiceImpl extends BaseServiceImpl implements CrmDepartmentService {
 
 
     /**
