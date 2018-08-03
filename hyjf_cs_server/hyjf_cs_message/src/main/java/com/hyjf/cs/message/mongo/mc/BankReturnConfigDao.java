@@ -7,11 +7,13 @@ import com.hyjf.cs.message.bean.mc.BankExclusiveLog;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author zhangqingqing
  * @version BankReturnConfig, v0.1 2018/8/3 14:13
  */
+@Repository
 public class BankReturnConfigDao extends BaseMongoDao<BankExclusiveLog> {
 
     @Override
