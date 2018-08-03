@@ -18,7 +18,7 @@ import com.hyjf.cs.trade.bean.MQBorrow;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoPreAuditProducer;
 import com.hyjf.cs.trade.service.handle.AutoPreAuditService;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 
 /**
  * @author fuqiang

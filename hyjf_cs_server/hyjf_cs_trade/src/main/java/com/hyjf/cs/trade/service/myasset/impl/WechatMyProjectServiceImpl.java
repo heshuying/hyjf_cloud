@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.service.myasset.impl;
 
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myasset.WechatMyProjectService;
 import org.springframework.stereotype.Service;
 

@@ -1,14 +1,13 @@
-package com.hyjf.cs.trade.service;
+package com.hyjf.cs.trade.service.repay;
 
-import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
+import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -19,7 +18,7 @@ import java.util.List;
  * @author hesy
  * @version RepayManageService, v0.1 2018/6/23 18:02
  */
-public interface RepayManageService extends BaseTradeService{
+public interface RepayManageService extends BaseTradeService {
     void checkForRepayList(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);

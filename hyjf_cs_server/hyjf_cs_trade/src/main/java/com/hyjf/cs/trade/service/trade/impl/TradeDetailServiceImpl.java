@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.impl;
+package com.hyjf.cs.trade.service.trade.impl;
 
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
@@ -8,8 +8,8 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.TradeDetailBean;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.TradeDetailService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.trade.TradeDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

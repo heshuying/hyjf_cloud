@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.impl;
+package com.hyjf.cs.trade.service.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.*;
@@ -26,8 +26,8 @@ import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.repay.*;
 import com.hyjf.cs.trade.client.*;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.RepayManageService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;

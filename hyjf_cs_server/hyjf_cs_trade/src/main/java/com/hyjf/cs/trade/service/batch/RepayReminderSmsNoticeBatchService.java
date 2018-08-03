@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service;
+package com.hyjf.cs.trade.service.batch;
 
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
 import java.util.Map;

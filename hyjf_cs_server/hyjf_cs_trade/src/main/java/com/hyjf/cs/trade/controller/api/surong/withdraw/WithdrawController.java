@@ -22,7 +22,7 @@ import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.bean.WithdrawResultBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
-import com.hyjf.cs.trade.service.RdfWithdrawService;
+import com.hyjf.cs.trade.service.wirhdraw.RdfWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;

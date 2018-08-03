@@ -1,7 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service;
+package com.hyjf.cs.trade.service.batch;
+
+import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
  * @author PC-LIUSHOUYI

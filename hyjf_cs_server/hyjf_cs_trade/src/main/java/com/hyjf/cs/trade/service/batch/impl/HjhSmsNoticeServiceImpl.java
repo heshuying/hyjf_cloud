@@ -21,7 +21,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.HjhSmsNoticeServiceClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.batch.HjhSmsNoticeService;
 
 /**

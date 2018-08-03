@@ -18,7 +18,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
 import com.hyjf.cs.trade.service.handle.AutoSendService;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

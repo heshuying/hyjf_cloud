@@ -23,7 +23,7 @@ import com.hyjf.cs.trade.client.AmBorrowClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.BorrowTenderClient;
 import com.hyjf.cs.trade.client.CouponUserClient;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 
 /**

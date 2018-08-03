@@ -28,7 +28,6 @@ import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoSendProducer;
 import com.hyjf.cs.trade.service.ApiAssetPushService;
-import com.hyjf.cs.trade.service.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
