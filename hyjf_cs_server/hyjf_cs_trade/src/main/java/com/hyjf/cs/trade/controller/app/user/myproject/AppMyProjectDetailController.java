@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.controller.app.user.myproject;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AppMyProjectService;
+import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

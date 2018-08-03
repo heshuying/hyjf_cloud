@@ -1,14 +1,11 @@
 package com.hyjf.cs.trade.controller.web.home;
 
-import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.service.WebHomeService;
+import com.hyjf.cs.trade.service.home.WebHomeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /**
  * Web端首页controller

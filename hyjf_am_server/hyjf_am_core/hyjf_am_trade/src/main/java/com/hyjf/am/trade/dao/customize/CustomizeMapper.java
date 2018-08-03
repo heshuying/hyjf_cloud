@@ -172,6 +172,15 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowTenderInfoCustomizeMapper borrowTenderInfoCustomizeMapper;
 
 	@Autowired
+	protected PushMoneyCustomizeMapper pushMoneyCustomizeMapper;
+
+	@Autowired
+	protected EveLogCustomizeMapper eveLogCustomizeMapper;
+
+	@Autowired
+	protected AleveLogCustomizeMapper aleveLogCustomizeMapper;
+
+	@Autowired
 	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 
 	@Autowired

@@ -56,4 +56,10 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
         }
         return BigDecimal.ZERO;
     }
+
+    @Override
+    public String getRetCode(String logOrdId) {
+        String response = restTemplate.getForEntity(dataCollectService+"/search/getRetCode/" + logOrdId,String.class).getBody();
+        return response;
+    }
 }

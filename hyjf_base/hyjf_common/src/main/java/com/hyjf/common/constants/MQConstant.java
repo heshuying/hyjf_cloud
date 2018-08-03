@@ -350,6 +350,12 @@ public interface MQConstant {
     String SYNC_RUSER_TOPIC = "SYNC_RUSER_TOPIC";
 
 	/**
+	 * 账户额度信息同步到crm
+	 */
+	String SYNC_ACCOUNT_GROUP = "SYNC_ACCOUNT_GROUP";
+	String SYNC_ACCOUNT_TOPIC = "SYNC_ACCOUNT_TOPIC";
+
+	/**
 	 * user操作CRM  OA USER
 	 */
 	String USER_CRM_OA_USER_GROUP = "USER_CRM_OA_USER_GROUP";
