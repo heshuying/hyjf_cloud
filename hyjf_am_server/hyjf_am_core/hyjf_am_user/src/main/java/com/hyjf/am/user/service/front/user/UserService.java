@@ -79,7 +79,7 @@ public interface UserService extends BaseService {
 	 * @param record
 	 * @return int
 	 */
-	public int updateUserById(User record);
+	int updateUserById(User record);
 
 	UserEvalationResult selectUserEvalationResultByUserId(Integer userId);
 

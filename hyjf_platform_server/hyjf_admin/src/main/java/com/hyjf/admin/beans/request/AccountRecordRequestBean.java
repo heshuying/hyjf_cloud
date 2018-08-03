@@ -26,6 +26,8 @@ public class AccountRecordRequestBean extends BasePage {
 	private String openTimeEnd;
 	@ApiModelProperty(value = "手机号")
 	private String mobile;
+	@ApiModelProperty(value = "电子账号")
+	private String customerAccount;
 	public String getAccount() {
 		return account;
 	}
@@ -96,5 +98,13 @@ public class AccountRecordRequestBean extends BasePage {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getCustomerAccount() {
+		return customerAccount;
+	}
+
+	public void setCustomerAccount(String customerAccount) {
+		this.customerAccount = customerAccount;
 	}
 }

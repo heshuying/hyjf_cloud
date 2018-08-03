@@ -18,6 +18,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.mongo.ic.*;
+import com.hyjf.cs.message.service.bank.BankReturnConfig;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -51,6 +52,20 @@ public class MongoSeachController extends BaseController {
 
     @Autowired
     private HjhPlanCapitalDao hjhPlanCapitalDao;
+
+    @Autowired
+    BankReturnConfig bankReturnConfig;
+
+    /**
+     * 查询检证日志
+     * @param logOrdId
+     * @return
+     */
+    @RequestMapping("/getRetCode/{logOrdId}")
+    public String getRetCode(@PathVariable String logOrdId) {
+        String result = bankReturnConfig.getRetCode(logOrdId);
+        return result;
+    }
 
     /**
      * 根据userId查询渠道投资信息
