@@ -29,7 +29,6 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.service.impl.WebBorrowServiceImpl;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -55,7 +54,7 @@ import java.util.*;
  */
 @Service
 public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements BankWithdrawService {
-    private static final Logger logger = LoggerFactory.getLogger(WebBorrowServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BankWithdrawServiceImpl.class);
 
     @Autowired
     AmUserClient amUserClient;
