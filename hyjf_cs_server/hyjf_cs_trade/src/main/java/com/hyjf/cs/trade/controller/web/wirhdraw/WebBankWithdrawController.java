@@ -129,9 +129,9 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(logOrdId);
+    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestBody @Valid BankWithdrawVO bankWithdrawVO) {
+        logger.info("查询提现失败原因start,logOrdId:{}", bankWithdrawVO.getLogOrdId());
+        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(bankWithdrawVO.getLogOrdId());
         return result;
     }
 }

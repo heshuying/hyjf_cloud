@@ -65,6 +65,7 @@ public class RepayManageController extends BaseTradeController {
 
         // 请求参数校验
         requestBean.setStatus("0");
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         repayManageService.checkForRepayList(requestBean);
 
         // 分页信息
@@ -103,6 +104,7 @@ public class RepayManageController extends BaseTradeController {
 
         // 请求参数校验
         requestBean.setStatus("1");
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         repayManageService.checkForRepayList(requestBean);
 
         // 分页信息
@@ -137,6 +139,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
 
@@ -174,6 +177,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
 

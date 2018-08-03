@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
-import com.hyjf.am.trade.service.ROaDepartmentService;
+import com.hyjf.am.trade.service.CrmDepartmentService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @Date 2018/7/26 13:52
  */
 @Service
-public class ROaDepartmentServiceImpl extends BaseServiceImpl implements ROaDepartmentService {
+public class CrmDepartmentServiceImpl extends BaseServiceImpl implements CrmDepartmentService {
 
 
     /**

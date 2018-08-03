@@ -45,6 +45,42 @@ public class WebRegistController extends BaseUserController {
     private RegistService registService;
 
     /**
+     * 初期化,跳转到注册页面
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "注册初始化",notes = "注册初始化")
+    @ApiImplicitParam(name = "param",value = "{referer:'推荐人',from:'原有逻辑推荐方'}",dataType = "Map")
+    @PostMapping(value = "/init")
+    public WebResult init(HttpServletRequest request,@RequestBody Map<String,String> param){
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        String referer = request.getHeader("Referer");
+        if (null != referer && referer.contains("activity/activity68/getUserStatus")) {
+            ret.put("activity68", "1");
+        }
+        // 如果有推荐人，把推荐人带过去。 着陆页跳转。。。
+        String reff = param.get("referer");
+     /*   if (StringUtils.isEmpty(reff)) {
+            Object rr = request.getSession().getAttribute("from_id");
+            if (rr != null) {
+                reff = rr.toString();
+            }
+        }*/
+        if (reff != null && !"".equals(reff.trim())) {
+            ret.put("newRegReferree", reff);
+        } else {// 这是原有逻辑
+            ret.put("newRegReferree", param.get("from"));
+        }
+        ret.put("pubexponent", "10001");
+        ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+        result.setData(ret);
+        return result;
+    }
+
+
+    /**
      * @param request
      * @Author: zhangqingqing
      * @Desc :注册
