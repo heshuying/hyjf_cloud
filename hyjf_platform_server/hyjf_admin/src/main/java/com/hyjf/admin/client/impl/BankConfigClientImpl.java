@@ -44,7 +44,7 @@ public class BankConfigClientImpl implements BankConfigClient {
 //        return restTemplate
 //                .postForEntity("http://AM-CONFIG/am-config/bankconfig/selectBankConfigById" ,adminRequest, AdminBankConfigResponse.class).getBody();
         BanksConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+                .getForEntity("http://AM-CONFIG/am-config/config/getBankConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
         if (response != null) {
             BanksConfigVO vo=response.getResult();
             if(vo != null){

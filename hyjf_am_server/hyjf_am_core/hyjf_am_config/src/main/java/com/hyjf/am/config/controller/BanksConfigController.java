@@ -210,8 +210,9 @@ public class BanksConfigController extends BaseConfigController{
                 response.setResultList(banksConfigVOList);
                 response.setRecordTotal(banksConfigVOList.size());
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
-            return response;
+            return null;
         }
         return null;
     }
@@ -259,10 +260,10 @@ public class BanksConfigController extends BaseConfigController{
         AdminBankConfigResponse res =new AdminBankConfigResponse();
         int result = bankConfigService.updadteBankConfig(adminBankConfigRequest);
         if(result >0){
-            res.setRtn("SUCCESS");
+            res.setRtn(Response.SUCCESS);
             return res;
         }
-        res.setRtn("FAIL");
+        res.setRtn(Response.FAIL);
         return res;
     }
     /**
@@ -274,9 +275,9 @@ public class BanksConfigController extends BaseConfigController{
         AdminBankConfigResponse res =new AdminBankConfigResponse();
         try{
             this.bankConfigService.deleteBankConfigById(id);
-            res.setRtn("SUCCESS");
+            res.setRtn(Response.SUCCESS);
         }catch (Exception e){
-            res.setRtn("FAIL");
+            res.setRtn(Response.FAIL);
         }
         return  res;
     }
@@ -301,13 +302,13 @@ public class BanksConfigController extends BaseConfigController{
                     }
                 }
                 if (hasnot) {
-                    res.setRtn("FAIL");
+                    res.setRtn(Response.FAIL);
                     res.setMessage("银行名称或银行代码不可重复添加");
                 } else {
-                    res.setRtn("SUCCESS");
+                    res.setRtn(Response.SUCCESS);
                 }
             } else {
-                res.setRtn("FAIL");
+                res.setRtn(Response.FAIL);
                 res.setMessage("银行名称或银行代码不可重复添加");
             }
         }
