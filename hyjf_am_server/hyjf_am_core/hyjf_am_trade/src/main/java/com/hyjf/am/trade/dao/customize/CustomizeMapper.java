@@ -180,6 +180,15 @@ public class CustomizeMapper extends AutoMapper {
 
 
 	@Autowired
+	protected PushMoneyCustomizeMapper pushMoneyCustomizeMapper;
+
+	@Autowired
+	protected EveLogCustomizeMapper eveLogCustomizeMapper;
+
+	@Autowired
+	protected AleveLogCustomizeMapper aleveLogCustomizeMapper;
+
+	@Autowired
 	protected PoundageDetailCustomizeMapper poundageDetailCustomizeMapper;
 
 	@Autowired

@@ -118,4 +118,11 @@ public interface PassWordService extends BaseUserService {
      * @return
      */
     JSONObject validateVerificationCoden(SendSmsVO sendSmsVo, boolean b);
+
+    /**
+     * 查询交易密码失败原因
+     * @param logOrdId
+     * @return
+     */
+    String getFiledMess(String logOrdId);
 }

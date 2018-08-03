@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.password.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -28,11 +29,11 @@ import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
@@ -68,6 +69,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
 
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    private AmDataCollectClient amDataCollectClient;
 
     @Autowired
     private SmsProducer smsProducer;
@@ -619,5 +623,18 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             jsonObject.put("statusDesc","短信验证失败");
         }
         return jsonObject;
+    }
+
+    @Override
+    public String getFiledMess(String logOrdId) {
+        //根据ordid获取retcode
+        String retCode = amDataCollectClient.getRetCode(logOrdId);
+        if (retCode==null){
+            return "未知错误";
+        }
+        //根据retCode获取retMsg
+        String retMsg = this.getBankRetMsg(retCode);
+        return retMsg;
+
     }
 }

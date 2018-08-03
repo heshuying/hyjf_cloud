@@ -45,12 +45,11 @@ public class BorrowFlowController {
     }
     /**
      * 资金来源
-     * @param instCode
      * @return
      */
-    @RequestMapping("/hjhInstConfigList/{instCode}")
-    public List<HjhInstConfigVO> hjhInstConfigList(@PathVariable String instCode){
-        return borrowFlowService.hjhInstConfigList(instCode);
+    @RequestMapping("/hjhInstConfigList")
+    public List<HjhInstConfigVO> hjhInstConfigList(){
+        return borrowFlowService.hjhInstConfigList("");
     }
 
     /**
@@ -123,13 +122,13 @@ public class BorrowFlowController {
     @RequestMapping("/insertRecord")
     public AdminBorrowFlowResponse insertRecord(@RequestBody  AdminBorrowFlowRequest adminRequest){
         AdminBorrowFlowResponse result=new AdminBorrowFlowResponse();
-        try{
-            // 插入
-            this.borrowFlowService.insertRecord(adminRequest);
-            result.setRtn(Response.SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        // 插入
+       int cou= this.borrowFlowService.insertRecord(adminRequest);
+       if(cou > 0){
+           result.setRtn(Response.SUCCESS);
+           return result;
+       }
+        result.setRtn(Response.FAIL);
         return result;
     }
     /**
@@ -139,15 +138,15 @@ public class BorrowFlowController {
      */
     @RequestMapping("/updateRecord")
     public AdminBorrowFlowResponse updateRecord(@RequestBody  AdminBorrowFlowRequest adminRequest){
-        AdminBorrowFlowResponse resp = new AdminBorrowFlowResponse();
-        try{
+        AdminBorrowFlowResponse result = new AdminBorrowFlowResponse();
             // 修改
-            this.borrowFlowService.updateRecord(adminRequest);
-            resp.setRtn(Response.SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
+       int cou= this.borrowFlowService.updateRecord(adminRequest);
+        if(cou > 0){
+            result.setRtn(Response.SUCCESS);
+            return result;
         }
-        return resp;
+        result.setRtn(Response.FAIL);
+        return result;
     }
     /**
      * 删除
@@ -157,15 +156,16 @@ public class BorrowFlowController {
     @RequestMapping("/deleteRecord")
     public AdminBorrowFlowResponse deleteRecord(@RequestBody  AdminBorrowFlowRequest adminRequest){
         AdminBorrowFlowResponse resp = new AdminBorrowFlowResponse();
-        try{
-            if(adminRequest.getId() != null){
-                this.borrowFlowService.deleteRecord(adminRequest.getId());
+        if(adminRequest.getId() != null){
+            int cou= this.borrowFlowService.deleteRecord(adminRequest.getId());
+            if(cou > 0){
                 resp.setRtn(Response.SUCCESS);
+                return resp;
             }
             resp.setRtn(Response.FAIL);
-        }catch (Exception e){
-            e.printStackTrace();
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
         return resp;
     }
 }

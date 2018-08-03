@@ -5,12 +5,9 @@ package com.hyjf.am.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
-import com.hyjf.am.trade.dao.model.auto.ROaUsers;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.ROaDepartmentService;
-import com.hyjf.am.trade.service.ROaUserService;
-import com.hyjf.am.vo.user.ROaDepartmentVO;
-import com.hyjf.am.vo.user.ROaUsersVO;
+import com.hyjf.am.trade.service.CrmDepartmentService;
+import com.hyjf.am.vo.user.CrmDepartmentVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang.StringUtils;
@@ -41,7 +38,7 @@ public class CrmOaDepartmentConsumer extends Consumer {
     private static final String OPERATION_DELETE = "delete";
 
     @Autowired
-    ROaDepartmentService rOaDepartmentService;
+    CrmDepartmentService crmDepartmentService;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -78,9 +75,9 @@ public class CrmOaDepartmentConsumer extends Consumer {
             String msgBody = new String(msg.getBody());
             logger.info("【操作资金crm oa department对象】接收到的消息：" + msgBody);
 
-            ROaDepartmentVO oaDepartmentVO = null;
+            CrmDepartmentVO oaDepartmentVO = null;
             try {
-                oaDepartmentVO = JSONObject.parseObject(msgBody, ROaDepartmentVO.class);
+                oaDepartmentVO = JSONObject.parseObject(msgBody, CrmDepartmentVO.class);
                 if(oaDepartmentVO == null){
                     logger.info("解析为空：" + msgBody);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
@@ -104,18 +101,18 @@ public class CrmOaDepartmentConsumer extends Consumer {
      * 操作数据库
      * @param oaDepartmentVO
      */
-    private void doOperation(ROaDepartmentVO oaDepartmentVO) throws Exception {
+    private void doOperation(CrmDepartmentVO oaDepartmentVO) throws Exception {
         String operation = oaDepartmentVO.getOperation();
         if(StringUtils.isEmpty(operation)){
             throw new Exception("传入参数错误，operation为空");
         }
         ROaDepartment department = CommonUtils.convertBean(oaDepartmentVO,ROaDepartment.class);
         if(OPERATION_UPDATE.equals(operation)){
-            rOaDepartmentService.update(department);
+            crmDepartmentService.update(department);
         } else if(OPERATION_ADD.equals(operation)){
-            rOaDepartmentService.insert(department);
+            crmDepartmentService.insert(department);
         }else if(OPERATION_DELETE.equals(operation)){
-            rOaDepartmentService.delete(department);
+            crmDepartmentService.delete(department);
         }else{
             throw new Exception("传入参数错误，operation错误");
         }

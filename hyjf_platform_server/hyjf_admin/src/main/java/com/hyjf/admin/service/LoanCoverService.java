@@ -40,7 +40,7 @@ public interface LoanCoverService {
     /**
      * 更新记录
      */
-    AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean);
+    AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean,int loginUserId,String loginUserName);
 
     /**
      * 根据id查找借款主体CA认证记录表

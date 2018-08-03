@@ -77,9 +77,6 @@ public class WebBankWithdrawController extends BaseTradeController {
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null==userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
-            return result;
-        }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
@@ -132,9 +129,9 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(logOrdId);
+    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestBody @Valid BankWithdrawVO bankWithdrawVO) {
+        logger.info("查询提现失败原因start,logOrdId:{}", bankWithdrawVO.getLogOrdId());
+        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(bankWithdrawVO.getLogOrdId());
         return result;
     }
 }

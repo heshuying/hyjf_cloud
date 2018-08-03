@@ -63,18 +63,18 @@ public interface BorrowFlowService {
      * @param adminRequest
      * @return
      */
-    public void insertRecord(AdminBorrowFlowRequest adminRequest);
+    public int insertRecord(AdminBorrowFlowRequest adminRequest);
     /**
      * 修改
      * @param adminRequest
      * @return
      */
-    public void updateRecord(AdminBorrowFlowRequest adminRequest);
+    public int updateRecord(AdminBorrowFlowRequest adminRequest);
     /**
      * 删除
      * @param id
      * @return
      */
-    public void deleteRecord(Integer id);
+    public int deleteRecord(Integer id);
 
 }

@@ -55,12 +55,12 @@
 		END AS credit_repay_yes_time,
 	    create_date, 
 	    CASE
-		WHEN add_time != 0 THEN
-			FROM_UNIXTIME(add_time, '%Y-%m-%d %H:%i:%s')
+		WHEN create_time != 0 THEN
+			FROM_UNIXTIME(create_time, '%Y-%m-%d %H:%i:%s')
 		ELSE
 			''
-		END AS add_time,
-		add_time AS add_time_int,
+		END AS create_time,
+		create_time AS create_time_int,
 		CASE
 		WHEN end_time != 0 THEN
 			FROM_UNIXTIME(end_time, '%Y-%m-%d %H:%i:%s')
@@ -160,8 +160,8 @@
 	    <result column="credit_repay_next_time" property="creditRepayNextTime" />
 	    <result column="credit_repay_yes_time" property="creditRepayYesTime" />
 	    <result column="create_date" property="createDate" />
-	    <result column="add_time" property="addTime" />
-	    <result column="add_time_int" property="addTimeInt" />
+	    <result column="create_time" property="addTime" />
+	    <result column="create_time_int" property="addTimeInt" />
 	    <result column="end_time" property="endTime" />
 	    <result column="assign_time" property="assignTime" />
 	    <result column="assign_num" property="assignNum" />
@@ -218,6 +218,44 @@
 		</if>
 	</select>
 
+
+	<!-- 获取投资记录的投资件数 -->
+	<select id="countTenderCreditInvestRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(*)
+		FROM ht_credit_tender hydct
+		LEFT JOIN ht_r_user hydu ON hydct.user_id = hydu.user_id
+		<where>
+			hydct.credit_nid = #{creditNid,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+
+	<!-- 获取投资记录列表 -->
+	<resultMap id="AppCreditTenderInvestMap" type="com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditInvestListCustomize">
+		<id column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="invest_time" property="investTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="searchTenderCreditInvestList" resultMap="AppCreditTenderInvestMap" parameterType="Map">
+		SELECT
+		CONCAT(substring(hydu.username,1,1),'**') AS user_name,
+		SUBSTRING(FORMAT(hydct.assign_capital,4),1,LENGTH(FORMAT(hydct.assign_capital,4))-2) AS account,
+		from_unixtime(
+		hydct.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS invest_time
+		FROM ht_credit_tender hydct
+		LEFT JOIN ht_r_user hydu ON hydct.user_id = hydu.user_id
+		<where>
+			hydct.credit_nid = #{creditNid,jdbcType=VARCHAR}
+		</where>
+		ORDER BY hydct.create_time DESC
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 
 
 </mapper>

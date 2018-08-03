@@ -150,4 +150,10 @@ public interface HjhPlanCustomizeMapper {
      * @date 2018/8/1 14:03
      */
     List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
+
+    /**
+     * 汇计划数据统计查询
+     * @return
+     */
+    List<Map<String,Object>> searchPlanStatisticData();
 }

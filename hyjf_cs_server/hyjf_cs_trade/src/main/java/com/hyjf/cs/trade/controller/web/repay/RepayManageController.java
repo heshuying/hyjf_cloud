@@ -58,13 +58,14 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "用户待还款列表", notes = "用户待还款列表")
     @PostMapping(value = "/repay_wait_list", produces = "application/json; charset=utf-8")
-    public WebResult<List<RepayListCustomizeVO>> selectRepayWaitList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
+    public WebResult<List<RepayListCustomizeVO>> selectRepayWaitList(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("用户待还款列表开始，userId:{}", userVO.getUserId());
 
         // 请求参数校验
         requestBean.setStatus("0");
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         repayManageService.checkForRepayList(requestBean);
 
         // 分页信息
@@ -96,13 +97,14 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "用户已还款列表", notes = "用户已还款列表")
     @PostMapping(value = "/repayed_list", produces = "application/json; charset=utf-8")
-    public WebResult<List<RepayListCustomizeVO>> selectRepayedList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
+    public WebResult<List<RepayListCustomizeVO>> selectRepayedList(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("用户已还款列表开始，userId:{}", userVO.getUserId());
 
         // 请求参数校验
         requestBean.setStatus("1");
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         repayManageService.checkForRepayList(requestBean);
 
         // 分页信息
@@ -132,11 +134,12 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "垫付机构待还款列表", notes = "垫付机构待还款列表")
     @PostMapping(value = "/wait_org_list", produces = "application/json; charset=utf-8")
-    public WebResult<List<RepayListCustomizeVO>> selectOrgRepayWaitList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
+    public WebResult<List<RepayListCustomizeVO>> selectOrgRepayWaitList(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
 
@@ -169,11 +172,12 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "垫付机构已还款列表", notes = "垫付机构已还款列表")
     @PostMapping(value = "/repayed_org_list", produces = "application/json; charset=utf-8")
-    public WebResult<List<RepayListCustomizeVO>> selectOrgRepayedList(@RequestHeader(value = "token", required = true) String token, RepayListRequest requestBean, HttpServletRequest request){
+    public WebResult<List<RepayListCustomizeVO>> selectOrgRepayedList(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
 
@@ -209,7 +213,14 @@ public class RepayManageController extends BaseTradeController {
         Map<String,Object> resultMap = new HashMap<String,Object>();
         ProjectBean projectBean = new ProjectBean();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
-
+        String borrowNid = request.getParameter("borrowNid");
+        if(StringUtils.isBlank(borrowNid)){
+            logger.info("请求参数borrowNid为空");
+            result.setStatus(WebResult.FAIL);
+            result.setStatusDesc("请求参数borrowNid为空");
+            return result;
+        }
+        projectBean.setBorrowNid(borrowNid);
         if(userVO != null){
             projectBean.setUserId(userVO.getUserId().toString());
             projectBean.setUsername(userVO.getUsername());
@@ -238,7 +249,7 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "还款申请", notes = "还款申请")
     @PostMapping(value = "/repay_request", produces = "application/json; charset=utf-8")
-    public WebResult repayRequest(@RequestHeader(value = "token", required = true) String token, RepayRequest requestBean, HttpServletRequest request){
+    public WebResult repayRequest(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayRequest requestBean, HttpServletRequest request){
         WebResult webResult = new WebResult();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
 
@@ -316,7 +327,7 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "收到报文后对合法性检查后的异步回调", notes = "收到报文后对合法性检查后的异步回调")
     @PostMapping("/repayVerifyReturn")
-    public String repayVerifyReturnAction(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
+    public String repayVerifyReturnAction(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         logger.info("批次还款请求,收到报文后对合法性检查后的异步回调开始");
         BankCallResult result = new BankCallResult();
@@ -376,7 +387,7 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "业务处理结果的异步回调", notes = "业务处理结果的异步回调")
     @RequestMapping("/repayResultReturn")
-    public String repayResultReturn(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) throws Exception {
+    public String repayResultReturn(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         logger.info("批次还款请求,业务处理结果的异步回调开始");
         BankCallResult result = new BankCallResult();

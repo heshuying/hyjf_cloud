@@ -10,8 +10,10 @@ import javax.validation.Valid;
 
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
@@ -151,7 +153,21 @@ public interface ProjectListService {
      */
     List<AppProjectInvestListCustomize> selectProjectInvestList(Map<String,Object> params);
 
+    /**
+     * app端债转承接记录数
+     * @param params
+     * @return
+     */
+    int countTenderCreditInvestRecordTotal(Map<String,Object> params);
 
+    /**
+     * 债转承接记录列表
+     * @param params
+     * @return
+     */
+    List<AppTenderCreditInvestListCustomize> searchTenderCreditInvestList(Map<String,Object> params);
+
+    List<BorrowCredit> selectBorrowCreditByNid(String transferId);
 
     // --------------------------app end --------------------------------------------------
 
@@ -176,5 +192,7 @@ public interface ProjectListService {
      * @date 2018/7/24 14:33
      */
     List<WechatHomeProjectListVO> selectHomeRepaymentsProjectList();
+
+
     // -----------------------------wechat end  ---------------------------------------------
 }

@@ -95,7 +95,7 @@ public class MybatisConfig {
 	 */
 	@Bean
 	public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDataSource") DynamicDataSource dynamicDataSource,
-			@Value("${mybatis.mapper-locations}") String mapperLocations,@Autowired SyncRuserInterceptor syncRuserInterceptor) throws Exception {
+											   @Value("${mybatis.mapper-locations}") String mapperLocations, @Autowired SyncRuserInterceptor syncRuserInterceptor) throws Exception {
 		
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
 		factoryBean.setDataSource(dynamicDataSource);

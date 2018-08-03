@@ -51,12 +51,16 @@ public class WebAutoPlusController extends BaseUserController {
         logger.info("Web端授权发送短信验证码, param :{}", param);
         WebResult<Object> result = new WebResult<Object>();
         CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
+        //获取用户信息
         UserVO user = autoPlusService.getUsersById(userId);
+        //0授权自动投标；1授权自动债转 发送短信
         String userAutoType = param.get("userAutoType");
+        //参数检查
         String srvTxCode = autoPlusService.checkSmsParam(user,userAutoType);
         // 请求银行接口
         BankCallBean bankBean = null;
         try {
+            //调用银行发送短信接口
             bankBean = autoPlusService.callSendCode(userId,user.getMobile(),srvTxCode, ClientConstants.CHANNEL_PC,null);
         } catch (Exception e) {
             logger.error("请求验证码接口发生异常", e);
@@ -72,36 +76,36 @@ public class WebAutoPlusController extends BaseUserController {
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :用户授权自动投资
-     * @Param: * @param token
+     * 用户授权自动投资
+     * @param userId
      * @param authorizedVO
-     * @Date: 16:43 2018/5/30
-     * @Return: ModelAndView
+     * @return
      */
     @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
     @PostMapping(value = "/userAuthInves" , produces = "application/json; charset=utf-8")
     public  WebResult<Object> userAuthInves(@RequestHeader(value = "userId") Integer userId, @RequestBody AuthorizedVO authorizedVO) {
         WebResult<Object> result = new WebResult<Object>();
+        //前导业务授权码
         String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
+        //短信
         String smsCode = authorizedVO.getSmsCode();
         // 验证请求参数
         CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
+        //获取用户信息
         UserVO user = this.autoPlusService.getUsersById(userId);
         //检查用户信息
        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
+       //授权
         Map<String,Object> map = autoPlusService.userCreditAuthInves(user, ClientConstants.WEB_CLIENT, ClientConstants.QUERY_TYPE_1, ClientConstants.CHANNEL_PC, lastSrvAuthCode, smsCode);
         result.setData(map);
         return result;
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :用户授权自动债转
-     * @Param: * @param token
+     * 用户授权自动债转
+     * @param userId
      * @param authorizedVO
-     * @Date: 16:42 2018/5/30
-     * @Return: ModelAndView
+     * @return
      */
     @ApiOperation(value = "用户授权自动债转", notes = "用户授权自动债转")
     @PostMapping(value = "/creditUserAuthInves", produces = "application/json; charset=utf-8")
@@ -145,14 +149,6 @@ public class WebAutoPlusController extends BaseUserController {
 
     @ApiOperation(value = "授权状态接口", notes = "授权状态接口")
     @PostMapping(value = "/userAutoStatus")
-    public WebResult<Object> userAutoStatus(@RequestHeader(value = "token") String token){
-        WebResult<Object> result = new WebResult<Object>();
-        UserVO user = autoPlusService.getUsers(token);
-        Map<String, Integer> map = autoPlusService.userAutoStatus(user.getUserId());
-        result.setData(map);
-        return result;
-    }
-
     public WebResult getStatus(@RequestHeader(value = "userId") Integer userId){
         WebResult<Object> result = new WebResult<Object>();
         Map<String,String> map = autoPlusService.getStatus(userId);
