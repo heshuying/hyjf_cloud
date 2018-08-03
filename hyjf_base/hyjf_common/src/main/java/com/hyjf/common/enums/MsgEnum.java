@@ -61,6 +61,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_PAGE_MAX("ETY000201","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
 
+	ERR_DATA_VERIFICATION("EDT000101","数据验证失败"),
+
 
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
@@ -89,6 +91,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_LOGIN_EXPIRE("EUS000010","登录失效，请重新登陆"),
 	ERR_USER_USERNAME_AND_PASSWORD_REQUIRED("EUS000011","用户名或密码不能为空"),
 	ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
+	ERR_USER_AUTH("EUS000013","用户认证失败"),
 
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),

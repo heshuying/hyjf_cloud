@@ -3,15 +3,23 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.app.*;
+import com.hyjf.am.response.app.AppAlreadyRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
+import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
+import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -432,10 +440,173 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<RepayMentPlanListCustomizeVO> selectRepayMentPlanList(AssetManageBeanRequest request) {
         String url = "http://AM-TRADE/am-trade/assetmanage/selectRepayMentPlanList";
         AssetManageResponse response = restTemplate.postForEntity(url,request,AssetManageResponse.class).getBody();
-
         if (response != null) {
             return response.getRepayMentPlanList();
         }
         return null;
     }
+
+
+    @Override
+    public CouponConfigVO getCouponConfig(String ordId) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/getcouponconfigbyorderid/" + ordId;
+        CouponConfigResponse response = restTemplate.getForEntity(url, CouponConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public BorrowVO selectBorrowByBorrowNid(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrow/"+borrowNid;
+        BorrowResponse response = restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public BorrowStyleVO selectBorrowStyleByStyle(String borrowStyle) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectBorrowStyleByStyle/"+borrowStyle;
+        BorrowStyleResponse response = restTemplate.getForEntity(url,BorrowStyleResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取相应的还款数
+     * @param params
+     * @return
+     */
+    @Override
+    public int countRepayRecoverListRecordTotal(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/countRepayRecoverListRecordTotal";
+        return restTemplate.postForEntity(url,params,Integer.class).getBody();
+    }
+
+
+    @Override
+    public List<AppRepayPlanListCustomizeVO> selectRepayRecoverList(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectRepayRecoverList";
+        AppRepayPlanListCustomizeResponse response=restTemplate.postForEntity(url,params,AppRepayPlanListCustomizeResponse.class).getBody();
+        if (response!=null){
+            response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int countRepayPlanListRecordTotal(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/countRepayPlanListRecordTotal";
+        return restTemplate.postForEntity(url,params,Integer.class).getBody();
+    }
+
+    @Override
+    public List<AppRepayPlanListCustomizeVO> selectRepayPlanList(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectRepayPlanList";
+        AppRepayPlanListCustomizeResponse response=restTemplate.postForEntity(url,params,AppRepayPlanListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int countCouponRepayRecoverListRecordTotal(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/countCouponRepayRecoverListRecordTotal";
+        return restTemplate.postForEntity(url,params,Integer.class).getBody();
+    }
+
+    @Override
+    public String selectReceivedInterest(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectReceivedInterest";
+        return restTemplate.postForEntity(url,params,String.class).getBody();
+    }
+
+    @Override
+    public List<AppRepayPlanListCustomizeVO> selectCouponRepayRecoverList(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectCouponRepayRecoverList";
+        AppRepayPlanListCustomizeResponse response =restTemplate.postForEntity(url,params,AppRepayPlanListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public AppProjectContractDetailCustomizeVO selectProjectContractDetail(AppProjectContractDetailBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectProjectContractDetail";
+        AppProjectContractDetailCustomizeResponse response=restTemplate.postForEntity(url,params,AppProjectContractDetailCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public AppProjectDetailCustomizeVO selectProjectDetail(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectProjectDetail/"+borrowNid;
+        AppProjectDetailCustomizeResponse response=restTemplate.getForEntity(url,AppProjectDetailCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AppProjectContractRecoverPlanCustomizeVO> selectProjectContractRecoverPlan(AppProjectContractDetailBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectProjectContractRecoverPlan";
+        AppProjectContractRecoverPlanCustomizeResponse response=restTemplate.postForEntity(url,params,AppProjectContractRecoverPlanCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public BorrowCreditVO selectCreditTenderByCreditNid(String creditNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectCreditTenderByCreditNid/"+creditNid;
+        BorrowCreditResponse response=restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AppTenderCreditRepayPlanListCustomizeVO> selectTenderCreditRepayPlanList(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectTenderCreditRepayPlanList";
+        AppTenderCreditRepayPlanListCustomizeResponse response=restTemplate.postForEntity(url,params,AppTenderCreditRepayPlanListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<AppTenderCreditRepayPlanListCustomizeVO> selectTenderCreditRepayRecoverPlanList(AppRepayPlanListBeanRequest params) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectTenderCreditRepayRecoverPlanList";
+        AppTenderCreditRepayPlanListCustomizeResponse response = restTemplate.postForEntity(url,params,AppTenderCreditRepayPlanListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AppTenderToCreditListCustomizeVO> selectTenderToCreditList(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/assetmanage/selectTenderToCreditList";
+        AppTenderToCreditListCustomizeResponse response=restTemplate.postForEntity(url,params,AppTenderToCreditListCustomizeResponse.class).getBody();
+        if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
 }

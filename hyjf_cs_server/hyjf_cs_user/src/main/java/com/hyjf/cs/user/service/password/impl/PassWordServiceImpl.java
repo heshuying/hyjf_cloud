@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.password.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -32,7 +33,6 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
@@ -137,10 +137,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
-        String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/password/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/app/user/password/passwordBgreturn";
+        String bgRetUrl = systemConfig.getWebHost() + "user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -188,10 +188,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 电子账号
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
-        String retUrl = systemConfig.getFrontHost() + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
-        String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/password/openError"+"?logOrdId="+bean.getLogOrderId();
+        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/password/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.webHost + "/hyjf-web/user/password/resetPasswordBgreturn";
+        String bgRetUrl = systemConfig.webHost + "/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
@@ -457,8 +457,8 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //拼装参数
         UserInfoVO usersInfo = getUserInfo(user.getUserId());
         // 同步调用路径
-         retUrl = systemConfig.getFrontHost() + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
-         String successUrl = systemConfig.getFrontHost() +"/password/openSuccess";
+         retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.API_CLIENT)) + "/password/openError"+"?acqRes="+acqRes+"&callback="+retUrl.replace("#", "*-*-*");
+         String successUrl =super.getFrontHost(systemConfig,String.valueOf(ClientConstants.API_CLIENT)) +"/password/openSuccess";
         // 异步调用路
          bgRetUrl = systemConfig.webHost + "/hyjf-api/user/password/passwordReturn.do?acqRes="+acqRes+"&callback="+bgRetUrl.replace("#", "*-*-*");
         // 调用设置密码接口

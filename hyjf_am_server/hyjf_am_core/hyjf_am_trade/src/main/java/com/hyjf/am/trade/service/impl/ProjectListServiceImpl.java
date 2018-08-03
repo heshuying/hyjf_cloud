@@ -9,8 +9,11 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.auto.BorrowCreditExample;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.vo.trade.CreditListVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
@@ -339,6 +342,38 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     public List<AppProjectInvestListCustomize> selectProjectInvestList(Map<String, Object> params) {
         List<AppProjectInvestListCustomize> list = appProjectListCustomizeMapper.selectProjectInvestList(params);
         return list;
+    }
+
+    /**
+     * app端债转承接记录数
+     * @param params
+     * @return
+     */
+    @Override
+    public int countTenderCreditInvestRecordTotal(Map<String, Object> params) {
+        return appTenderCreditCustomizeMapper.countTenderCreditInvestRecordTotal(params);
+    }
+
+    /**
+     * app端债转承接记录列表
+     * @param params
+     * @return
+     */
+    @Override
+    public List<AppTenderCreditInvestListCustomize> searchTenderCreditInvestList(Map<String, Object> params) {
+        return appTenderCreditCustomizeMapper.searchTenderCreditInvestList(params);
+    }
+
+
+    @Override
+    public List<BorrowCredit> selectBorrowCreditByNid(String creditNid) {
+        // 获取borrow_credit数据
+        BorrowCreditExample borrowCreditExample = new BorrowCreditExample();
+        BorrowCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andCreditNidEqualTo(Integer.parseInt(creditNid));
+        // 获取还款数据
+        List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCreditList;
     }
 
 

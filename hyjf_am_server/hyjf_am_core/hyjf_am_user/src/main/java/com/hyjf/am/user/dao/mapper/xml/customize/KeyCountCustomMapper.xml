@@ -78,6 +78,11 @@
         <result column="userId" property="userId" jdbcType="INTEGER" />
         <result column="userName" property="userName" jdbcType="VARCHAR" />
     </resultMap>
+    <resultMap id="cityResultMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
+        <id column="citycode" property="citycode" jdbcType="INTEGER" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+        <result column="cityname" property="name" jdbcType="VARCHAR" />
+    </resultMap>
 
     <resultMap id="ageResultMap" type="com.hyjf.am.vo.trade.OperationReportJobVO" >
         <id column="sex" property="sex" jdbcType="INTEGER" />
@@ -228,5 +233,18 @@
             #{item.userId}
         </foreach>
         group by ui.sex;
+    </select>
+
+    <select id="getTenderCityGroupByUserIds" resultMap="cityResultMap"  parameterType="java.util.List">
+        SELECT
+        LEFT(ui.idcard, 2) AS title, COUNT(u.user_id) AS count
+        FROM
+        ht_user  u
+        LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id
+        WHERE    u.user_id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+        GROUP BY title
     </select>
 </mapper>

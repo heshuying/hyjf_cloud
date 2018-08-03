@@ -65,9 +65,9 @@ public class AdminAccountDetailController {
             mapParam.put("limitStart", 0);
             mapParam.put("limitEnd", 0);
         }
-        List<AdminAccountDetailCustomize> userManagerCustomizeList = accountDetailService.queryAccountDetails(mapParam);
         response.setRecordTotal(intCountAccountDetail);
         if (intCountAccountDetail > 0) {
+            List<AdminAccountDetailCustomize> userManagerCustomizeList = accountDetailService.queryAccountDetails(mapParam);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AccountDetailVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AccountDetailVO.class);
                 response.setResultList(userVoList);

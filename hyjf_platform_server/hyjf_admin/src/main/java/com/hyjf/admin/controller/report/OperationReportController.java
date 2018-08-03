@@ -41,7 +41,7 @@ import java.util.List;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/02 11:17
  */
-@Api(value = "运营报告配置")
+@Api(value = "运营报告配置",tags ="运营报告配置")
 @RestController
 @RequestMapping("/hyjf-admin/report/operationreport")
 public class OperationReportController extends BaseController {

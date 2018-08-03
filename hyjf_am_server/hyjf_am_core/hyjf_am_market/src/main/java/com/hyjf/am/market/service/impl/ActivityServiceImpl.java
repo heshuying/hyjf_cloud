@@ -87,6 +87,30 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
+     * 根据日期条件查询活动列表
+     * @return
+     */
+    @Override
+    public List<ActivityList> getActivity(int day) {
+        ActivityListExample example = new ActivityListExample();
+        ActivityListExample.Criteria criteria = example.createCriteria();
+        criteria.andTimeStartLessThan(day);
+        criteria.andTimeEndGreaterThan(day);
+        example.setOrderByClause(" create_time desc ");
+        return activityListMapper.selectByExample(example);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<ActivityList> getActivityList() {
+        ActivityListExample example = new ActivityListExample();
+        return activityListMapper.selectByExample(example);
+    }
+
+    /**
      * 添加活动
      *
      * @param activityList
@@ -139,7 +163,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @return
      */
     @Override
-    public List<ActivityListCustomize> selectRecordListValid(ActivityListRequest request, int limitStart, int limitEnd) {
+    public List<ActivityListCustomize> selectRecordListValid(ActivityListCustomize request, int limitStart, int limitEnd) {
         ActivityListCustomize example = new ActivityListCustomize();
         if (limitStart != -1) {
             example.setLimitStart(limitStart);

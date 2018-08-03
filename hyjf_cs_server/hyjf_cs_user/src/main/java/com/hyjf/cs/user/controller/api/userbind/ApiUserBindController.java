@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
 /**
  * @author dongzeshan
  */
-@Api(value = "汇晶社查询用户信息",description = "汇晶社查询用户信息")
+@Api(value = "汇晶社查询用户信息",tags = "汇晶社查询用户信息")
 @RestController
 @RequestMapping("/api/user")
 public class ApiUserBindController extends BaseUserController {
@@ -136,7 +136,7 @@ public class ApiUserBindController extends BaseUserController {
 		 user.setPassword(apiUserPostBean.getLoginPassword());
 		// 登陆
 		 WebResult<WebViewUserVO> login = loginController.login( user,request);
-        if (!login.getStatus().equals("000")) {
+        if (!"000".equals(login.getStatus())) {
             // 登陆失败，返回失败信息
             return jsonObj;
         }

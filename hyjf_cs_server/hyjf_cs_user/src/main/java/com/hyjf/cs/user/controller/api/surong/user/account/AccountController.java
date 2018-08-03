@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -26,7 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "融东风用户账户接口")
+@Api(value = "融东风用户账户接口",tags = "融东风用户账户接口")
+@CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("hyjf-api/surong/account")
 public class AccountController extends BaseUserController{
@@ -105,8 +107,10 @@ public class AccountController extends BaseUserController{
     /**
      * 融东风余额同步
      * @param request
+     * libin
      * @return
      */
+    @ApiOperation(value = "融东风余额同步", notes = "融东风余额同步")
     @RequestMapping("/balanceSync")
     @ResponseBody
     public Object balanceSync(HttpServletRequest request){
@@ -124,12 +128,8 @@ public class AccountController extends BaseUserController{
         } catch (Exception e) {
             logger.info("json集合转换出错! ids="+ids);
         }
-
         return rdfAccountService.balanceSync(userIds);
     }
-
-
-
 
     private boolean checkSign(String mobile,String sign){
         String accessKey = systemConfig.getAopAccesskey();

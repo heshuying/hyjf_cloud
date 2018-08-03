@@ -42,7 +42,7 @@ import java.util.List;
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "会员中心-用户画像接口", description = "会员中心-用户画像接口")
+@Api(value = "会员中心-用户画像接口", tags = "会员中心-用户画像接口")
 @RestController
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
@@ -134,7 +134,7 @@ public class UserPortraitController extends BaseController {
         // 表格sheet名称
         String sheetName = "用户画像";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         //解决IE浏览器导出列表中文乱码问题
         String userAgent = request.getHeader("user-agent").toLowerCase();

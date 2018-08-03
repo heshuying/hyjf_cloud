@@ -23,7 +23,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/user")
-@Api(value = "app",description = "app")
 public class RepayCalendarController extends BaseController {
 
     @Autowired

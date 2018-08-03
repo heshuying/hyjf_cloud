@@ -150,6 +150,8 @@
 		COUNT(hydb.borrow_nid) AS total
 		FROM
 		ht_borrow hydb
+		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
 		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
 		<include refid="Where_Clause_Repay_List" />
@@ -328,6 +330,7 @@
 		COUNT(hydb.borrow_nid) AS total
 		FROM
 		ht_borrow hydb
+		LEFT JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
@@ -336,7 +339,7 @@
 	<sql id="Where_Clause_Repay_Org_List">
 		<where>
 			(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
-			AND hydb.repay_org_user_id = #{userId,jdbcType=VARCHAR}
+			AND hbi.repay_org_user_id = #{userId,jdbcType=VARCHAR}
 			<if test="status == null or status =='' ">
 				AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
 				OR ( hydb.`status` = 5))

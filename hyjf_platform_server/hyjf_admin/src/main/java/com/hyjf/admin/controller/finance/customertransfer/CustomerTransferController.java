@@ -38,7 +38,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/5 18:00
  */
-@Api(value = "资金中心-转账管理-用户转账",description = "资金中心-转账管理-用户转账")
+@Api(value = "资金中心-转账管理-用户转账",tags = "资金中心-转账管理-用户转账")
 @RestController
 @RequestMapping(value = "/hyjf-admin/customertransfer")
 public class CustomerTransferController extends BaseController {
@@ -234,9 +234,7 @@ public class CustomerTransferController extends BaseController {
      * @param map 包含transferId 转账记录id
      * @return
      */
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String"),
-    })
+    @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String")
     @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
     public AdminResult transferSendMail(@RequestBody Map map){

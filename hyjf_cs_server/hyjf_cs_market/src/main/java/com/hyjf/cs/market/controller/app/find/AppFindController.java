@@ -15,9 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +26,7 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "app发现页", description = "app发现页")
+@Api(value = "app发现页", tags = "app发现页")
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppFindController extends BaseMarketController {
@@ -44,7 +42,6 @@ public class AppFindController extends BaseMarketController {
         ret.put("statusDesc", "请求成功");
         ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleListByType");
         try {
-
             // 检查参数正确性
             if (Validator.isNull(form.getVersion()) || Validator.isNull(form.getPlatform())){
                 ret.put("status", "1");
@@ -95,7 +92,7 @@ public class AppFindController extends BaseMarketController {
     @ResponseBody
     @ApiOperation(value = "上下翻页", notes = "上下翻页")
     @RequestMapping(value = "/contentArticle/getContentArticleFlip", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
-    public JSONObject getContentArticleFlip(HttpServletRequest request, HttpServletResponse response, @ModelAttribute() AppContentArticleBean form) {
+    public JSONObject getContentArticleFlip(@ModelAttribute() AppContentArticleBean form) {
 
         //LogUtil.startLog(THIS_CLASS, AppContentArticleDefine.GET_CONTENT_ARTICLE_FLIP_ACTION);
         JSONObject ret = new JSONObject();

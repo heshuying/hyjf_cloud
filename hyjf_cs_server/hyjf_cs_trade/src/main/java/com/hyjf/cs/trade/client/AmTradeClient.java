@@ -8,7 +8,9 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -1452,7 +1454,7 @@ public interface AmTradeClient {
 
     /**
      * 获取债转承接信息by AssignOrderId
-     * @param nid
+     * @param assignOrderId
      * by libin
      * @return
      */
@@ -1460,14 +1462,14 @@ public interface AmTradeClient {
 
     /**
      * 获取债转承接信息by AssignNid
-     * @param AssignOrderId
+     * @param assignNid
      * @return
      */
     CreditTenderVO getCreditTenderByAssignNid(String assignNid);
 
     /**
      * 获取协议模板by DisplayName
-     * @param DisplayName
+     * @param displayName
      * @return
      */
     List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
@@ -1485,4 +1487,32 @@ public interface AmTradeClient {
      * @return
      */
     List<DebtPlanAccedeCustomizeVO> selectPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 获得协议模板图片
+     * @param aliasName 别名
+     * @return
+     */
+    AppNewAgreementVO setProtocolImg(String aliasName);
+
+    /**
+     * APP端债转记录数
+     * @param params
+     * @return
+     */
+    int countTenderCreditInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * 获取债转承接记录列表
+     * @param params
+     * @return
+     */
+    List<AppTenderCreditInvestListCustomizeVO> searchTenderCreditInvestList(Map<String,Object> params);
+
+    /**
+     * 获取债转投资人次和已债转金额
+     * @param transferId
+     * @return
+     */
+    List<BorrowCreditVO> selectBorrowCreditByNid(String transferId);
 }

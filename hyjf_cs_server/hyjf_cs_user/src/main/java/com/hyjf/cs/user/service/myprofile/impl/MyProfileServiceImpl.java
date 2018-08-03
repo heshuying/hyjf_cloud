@@ -7,6 +7,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -16,6 +17,7 @@ import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
 import com.hyjf.cs.user.client.AmConfigClient;
+import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -51,6 +53,9 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 
     @Autowired
     private SystemConfig systemConfig;
+
+    @Autowired
+    private AmMarketClient amMarketClient;
 
     @Override
     public String getUserTrueName(Integer userId) {
@@ -193,6 +198,18 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 
     }
 
+
+    private Map<Integer,String> convertToIdTitleMap(List<ActivityListVO> activityListVOs) {
+        Map<Integer,String> result = new HashMap<Integer,String>();
+        if (CollectionUtils.isNotEmpty(activityListVOs)){
+            for (ActivityListVO obj:activityListVOs) {
+                result.put(obj.getId(),obj.getTitle());
+            }
+        }
+        return result;
+    }
+
+
     /**
      * 查询用户优惠卷列表
      *
@@ -210,6 +227,32 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         mapParameter.put("limitStart",-1);
 
         List<CouponUserListCustomizeVO> lstResult=this.amTradeClient.selectCouponUserList(mapParameter);
+        if (CollectionUtils.isNotEmpty(lstResult)){
+            List<ActivityListVO> actlist =amMarketClient.getActivityList();
+            //活动集合转成 <id,title>格式的map
+            Map<Integer,String> dicMap = this.convertToIdTitleMap(actlist);
+            for (CouponUserListCustomizeVO obj : lstResult) {
+                if ("1".equals(obj.getCouponFrom())){
+                    if (StringUtils.isNotEmpty(dicMap.get(obj.getActivityId()))){
+                        obj.setCouponFrom(dicMap.get(obj.getActivityId()));
+                    }else{
+                        obj.setCouponFrom(obj.getContent());
+                    }
+                }else if ("2".equals(obj.getCouponFrom())){
+                    if (StringUtils.isNotEmpty(dicMap.get(obj.getActivityId()))){
+                        obj.setCouponFrom(dicMap.get(obj.getActivityId()));
+                    }else{
+                        obj.setCouponFrom("活动发放");
+                    }
+                }else if("3".equals(obj.getCouponFrom())){
+                    obj.setCouponFrom("会员礼包");
+
+                }else{
+                    obj.setCouponFrom("");
+                }
+            }
+        }
+
 
         //平台
         List<ParamNameVO> clients = this.getParamNameList("CLIENT");

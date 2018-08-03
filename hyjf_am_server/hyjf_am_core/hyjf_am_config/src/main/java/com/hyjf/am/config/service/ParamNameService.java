@@ -2,6 +2,7 @@ package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.vo.config.ParamNameVO;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface ParamNameService {
      * @return
      */
     public List<ParamName> getParamNameList(String code);
+    public List<ParamName> getNameCd(String code);
     /**
      *（条件）列表查询--其他相关字段
      * @return

@@ -1,9 +1,11 @@
 package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
-import com.hyjf.am.vo.user.ActivityListVO;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -20,4 +22,6 @@ public interface AmMarketClient {
     ActivityListVO selectActivityList(int activityId);
 
     AppAdsCustomizeVO searchBanner(AdsRequest adsRequest);
+
+    List<ActivityListVO> getActivityList();
 }

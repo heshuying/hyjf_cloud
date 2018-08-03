@@ -42,7 +42,7 @@ import java.util.*;
  * @author libin
  * @version AssetListController, v0.1 2018/6/27 15:16
  */
-@Api(value = "资产列表",description = "资产列表")
+@Api(value = "资产列表",tags = "资产列表")
 @RestController
 @RequestMapping("/hyjf-admin/assetcenter")
 public class AssetListController extends BaseController {
@@ -249,7 +249,7 @@ public class AssetListController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "资产列表";
 		// 文件名称
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 封装查询条件
 		AssetListRequest form = new AssetListRequest();
 		// 初始化查询列表

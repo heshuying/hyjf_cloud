@@ -1586,22 +1586,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    @Override
-    public boolean sendToMQ(BorrowFireRequest borrowFireRequest) {
-        String url = "http://AM-TRADE/am-trade/borrow_first/send_to_mq";
-        BorrowFirstCustomizeResponse response =
-                restTemplate.postForEntity(url, borrowFireRequest, BorrowFirstCustomizeResponse.class).getBody();
-        if(response != null){
-            return response.getFlag();
-        }
-        return false;
-    }
-
-    /**
      * 借款复审总条数
      *
      * @param borrowFullRequest
@@ -2016,21 +2000,18 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
+     * @return
      */
     @Override
-    public AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName){
-        String url = "http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist/" + borrowNid + "/" + currUserId + "/" + currUserName;
-        Response response = restTemplate.getForEntity(url, Response.class).getBody();
-        if(response == null){
-            return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
-        }
-        if(!Response.isSuccess(response)){
+    public AdminResult updateBorrowRegist(BorrowRegistUpdateRequest request){
+        String url = "http://AM-TRADE/am-trade/borrow_regist/update_borrow_regist";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if(Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "备案成功！");
+        } else {
             return new AdminResult(BaseResult.FAIL, response.getMessage());
         }
-        return new AdminResult(BaseResult.SUCCESS, "备案成功！");
     }
 
     /**

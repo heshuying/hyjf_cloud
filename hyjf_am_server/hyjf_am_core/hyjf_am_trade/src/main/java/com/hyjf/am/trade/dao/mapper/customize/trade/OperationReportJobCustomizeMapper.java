@@ -77,13 +77,7 @@ public interface OperationReportJobCustomizeMapper {
 	 */
 	int getTenderAgeByRange(Date date, int firstAge, int endAge);
 
-	
-	/**
-	 * 按照省份统计投资人的分布
-	 * @param date 上个月的最后一天
-	 */
-	List<OperationReportJobVO> getTenderCityGroupBy(Date date);
-	
+
 	/**
 	 * 借贷笔数 
 	 */

@@ -40,7 +40,7 @@ import javax.validation.Valid;
  * @version AutoPlusController, v0.1 2018/6/11 14:37
  */
 
-@Api(value = "weChat端用户授权自动投资债转接口",description = "weChat端用户授权自动投资债转接口")
+@Api(tags = "weChat端-用户授权自动投资债转接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/user/autoplus")
 public class WeChatAutoPlusController extends BaseUserController {

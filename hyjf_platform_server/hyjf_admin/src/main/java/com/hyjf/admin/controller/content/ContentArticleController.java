@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yinhui
  * @version ContentArticleController, v0.1 2018/7/17 17:04
  */
-@Api(value = "内容中心-文章管理", description = "内容中心-文章管理")
+@Api(value = "内容中心-文章管理", tags = "内容中心-文章管理")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentarticle")
 public class ContentArticleController extends BaseController {

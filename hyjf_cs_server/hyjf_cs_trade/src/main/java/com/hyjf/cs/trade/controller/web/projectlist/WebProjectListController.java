@@ -26,7 +26,7 @@ import java.util.Map;
  * @author liuyang
  * @version WebProjectListController, v0.1 2018/6/13 10:21
  */
-@Api(description = "Web端项目列表")
+@Api(tags = "Web端项目列表")
 @RestController
 @RequestMapping("/hyjf-web/projectlist")
 public class WebProjectListController extends BaseTradeController {

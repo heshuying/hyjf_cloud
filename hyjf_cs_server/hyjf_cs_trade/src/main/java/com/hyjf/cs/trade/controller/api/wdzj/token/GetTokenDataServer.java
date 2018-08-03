@@ -20,7 +20,7 @@ import java.util.UUID;
  * @author hesy
  * @version GetTokenDataServer, v0.1 2018/7/16 10:25
  */
-@Api(value = "api端网贷之家token获取接口")
+@Api(tags = "api端网贷之家token获取接口")
 @Controller
 @RequestMapping("/hyjf-api/wdzj/token")
 public class GetTokenDataServer extends BaseTradeController {

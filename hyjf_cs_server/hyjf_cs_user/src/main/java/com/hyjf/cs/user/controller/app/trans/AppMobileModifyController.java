@@ -8,6 +8,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,10 +29,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author hesy
  * @version AppMobileModifyController, v0.1 2018/7/18 14:53
  */
-@Api(value = "app端-绑定新手机号",description = "app端-绑定新手机号")
+@Api(value = "app端-绑定新手机号",tags = "app端-绑定新手机号")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppMobileModifyController extends BaseUserController {
+    @Autowired
+    SystemConfig systemConfig;
     @Autowired
     MobileModifyService mobileModifyService;
 
@@ -49,8 +52,8 @@ public class AppMobileModifyController extends BaseUserController {
         String platform = request.getParameter("platform");
         logger.info("江西银行业务码bankCode :{}", bankCode);
 
-        String failReturnUrl = CustomConstants.HOST + "/user/setting/mobile/result/failed";
-        String successReturnUrl = CustomConstants.HOST + "/user/setting/mobile/result/success";
+        String failReturnUrl = systemConfig.AppFrontHost + "/user/setting/mobile/result/failed";
+        String successReturnUrl = systemConfig.AppFrontHost + "/user/setting/mobile/result/success";
 
         // 验证码
         String verificationCode = request.getParameter("newVerificationCode");

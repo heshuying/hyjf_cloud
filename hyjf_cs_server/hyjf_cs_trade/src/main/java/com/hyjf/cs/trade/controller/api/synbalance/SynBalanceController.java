@@ -25,8 +25,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,7 +46,7 @@ import java.util.List;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "api端同步余额信息接口",description = "api端同步余额信息接口")
+@Api(value = "api端同步余额信息接口",tags = "api端同步余额信息接口")
 @Controller
 @RequestMapping("/hyjf-api/synbalance")
 public class SynBalanceController extends BaseTradeController {

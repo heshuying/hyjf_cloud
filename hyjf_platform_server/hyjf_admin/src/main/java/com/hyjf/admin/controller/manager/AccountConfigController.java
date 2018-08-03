@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(value = "配置中心账号平台设置")
+@Api(value = "配置中心账号平台设置",tags ="配置中心账号平台设置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountconfig")
 public class AccountConfigController extends BaseController {

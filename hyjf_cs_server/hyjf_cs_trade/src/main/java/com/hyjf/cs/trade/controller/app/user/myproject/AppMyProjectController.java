@@ -38,7 +38,7 @@ import java.util.*;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的散标接口",description = "app端用户我的散标接口")
+@Api(value = "app端用户我的散标接口",tags = "app端用户我的散标接口")
 @Controller
 @RequestMapping("/hyjf-app/user/invest")
 public class AppMyProjectController extends BaseTradeController {
@@ -46,8 +46,7 @@ public class AppMyProjectController extends BaseTradeController {
     @Autowired
     private AppMyProjectService appMyProjectService;
     /**
-     * 微信端获取首页散标详情
-     * @author zhangyk
+     * 微信端获取首页散标列表
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
@@ -145,8 +144,9 @@ public class AppMyProjectController extends BaseTradeController {
             List<CurrentHoldObligatoryRightListCustomizeVO> customizes, HttpServletRequest request, Integer userId) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(customizes))
+        if (CollectionUtils.isEmpty(customizes)) {
             return vos;
+        }
         String investStatusDesc = "";
         for (CurrentHoldObligatoryRightListCustomizeVO entity : customizes) {
             vo = new MyProjectVo();
@@ -224,8 +224,9 @@ public class AppMyProjectController extends BaseTradeController {
             List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayListCustomizes, HttpServletRequest request) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes))
+        if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes)) {
             return vos;
+        }
         for (AppAlreadyRepayListCustomizeVO entity : appAlreadyRepayListCustomizes) {
             vo = new MyProjectVo();
             BeanUtils.copyProperties(entity, vo);
@@ -264,8 +265,9 @@ public class AppMyProjectController extends BaseTradeController {
                                                       HttpServletRequest request) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(projectList))
+        if (CollectionUtils.isEmpty(projectList)) {
             return vos;
+        }
         for (AppTenderCreditRecordListCustomizeVO customize : projectList) {
             vo = new MyProjectVo();
             vo.setBorrowTheFirst(customize.getCreditCapital() + "元");
@@ -298,8 +300,9 @@ public class AppMyProjectController extends BaseTradeController {
      * @return
      */
     private String concatInvestDetailUrl(String borrowNid, String orderId, String type, String couponType, String assignNid, String investStatusDesc) {
-        if (StringUtils.isEmpty(couponType))
+        if (StringUtils.isEmpty(couponType)) {
             couponType = "0";
+        }
         String url = "" + "/" + borrowNid + "?orderId=" + orderId + "&type=" + type
                 + "&couponType=" + couponType + "&assignNid=" + assignNid +"&investStatusDesc=" + investStatusDesc;
         return url;

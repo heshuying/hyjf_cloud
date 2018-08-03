@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Api(value = "配置中心版本配置")
+@Api(value = "配置中心版本配置",tags ="配置中心版本配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/versionconfig")
 public class AdminVersionConfigController extends BaseController {

@@ -33,7 +33,7 @@ import java.util.List;
  * @author fq
  * @version MessagePushController, v0.1 2018/7/25 9:06
  */
-@Api(value = "消息推送", description = "消息推送")
+@Api(value = "消息推送", tags = "消息推送")
 @RestController
 @RequestMapping("/hyjf-app/msgpush")
 public class MessagePushController extends BaseController {

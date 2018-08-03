@@ -11,7 +11,6 @@ import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ import java.util.List;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 23:58
  */
-@Api(value = "配置中心银行配置 江西银行", description = "配置中心银行配置 江西银行")
 @RestController
 @RequestMapping("/am-config/banksetting")
 public class BankSettingController {
@@ -37,7 +35,7 @@ public class BankSettingController {
     @RequestMapping("/list")
     public AdminBankSettingResponse selectBankSettingListByPage(@RequestBody AdminBankSettingRequest adminRequest) {
         //logger.info("江西银行列表..." + JSONObject.toJSON(adminRequest));
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         List<JxBankConfig> recordList = this.bankSettingService.getRecordList(new JxBankConfig(), -1, -1);
         if (recordList != null) {
             for(JxBankConfig banksConfig : recordList) {
@@ -71,7 +69,7 @@ public class BankSettingController {
      */
     @RequestMapping("/info")
     public AdminBankSettingResponse bankSettingInfo(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         JxBankConfig jxBankConfigList = bankSettingService.bankSettingInfo(adminRequest);
         if(null != jxBankConfigList){
             JxBankConfigVO jxBankConfigVO = CommonUtils.convertBean(jxBankConfigList, JxBankConfigVO.class);
@@ -87,8 +85,8 @@ public class BankSettingController {
      */
     @RequestMapping("/searchForInsert")
     public List<JxBankConfigVO> searchForInsert(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
-            JxBankConfig bc=new JxBankConfig();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
+            JxBankConfig bc = new JxBankConfig();
             bc.setBankName(adminRequest.getBankName());
             List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
             List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
@@ -101,7 +99,7 @@ public class BankSettingController {
      */
     @RequestMapping("/insert")
     public AdminBankSettingResponse insertBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         try{
             int result =this.bankSettingService.insertBankSetting(adminRequest);
             if(result > 0 ){
@@ -120,7 +118,7 @@ public class BankSettingController {
      */
     @RequestMapping("/update")
     public AdminBankSettingResponse updateBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         try{
             int result =this.bankSettingService.updateBankSetting(adminRequest);
             if(result > 0 ){
@@ -139,7 +137,7 @@ public class BankSettingController {
      */
     @RequestMapping("/delete")
     public AdminBankSettingResponse deleteFeeConfig(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         if(adminRequest.getId() != null){
             this.bankSettingService.deleteFeeConfig(adminRequest.getId());
             response.setRtn(Response.SUCCESS);

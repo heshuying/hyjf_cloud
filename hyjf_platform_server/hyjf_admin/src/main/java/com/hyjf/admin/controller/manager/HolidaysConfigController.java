@@ -27,7 +27,7 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Api(value = "配置中心节假日配置")
+@Api(value = "配置中心节假日配置",tags ="配置中心节假日配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/holidaysconfig")
 public class HolidaysConfigController  extends BaseController {

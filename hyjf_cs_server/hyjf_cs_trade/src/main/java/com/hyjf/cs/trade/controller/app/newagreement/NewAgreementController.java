@@ -3,32 +3,13 @@
  */
 package com.hyjf.cs.trade.controller.app.newagreement;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.ProtocolTemplateVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.app.AppNewAgreementVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
@@ -42,7 +23,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.calculate.CalculatesUtil;
-import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.bean.newagreement.NewCreditAssignedBean;
@@ -50,15 +31,28 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(description = "APP端协议接口")
+@Api(tags = "APP端协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
@@ -106,23 +100,23 @@ public class NewAgreementController extends BaseTradeController{
         Integer userId = null;
         try {
             if(userIdStr!= null && StringUtils.isNumeric(userIdStr)){
-                if (StringUtils.isEmpty(tenderNid)   
+                if (StringUtils.isEmpty(tenderNid)
                         || StringUtils.isEmpty(borrowNid)) {
                     newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
                     newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
                     newAgreementResultBean.setInfo(jsonObject);
                     return newAgreementResultBean;
-                } 
+                }
                 userId=Integer.parseInt(userIdStr);
             }else{
                 if (StringUtils.isEmpty(sign)
-                        || StringUtils.isEmpty(tenderNid)   
+                        || StringUtils.isEmpty(tenderNid)
                         || StringUtils.isEmpty(borrowNid)) {
                     newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
                     newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
                     newAgreementResultBean.setInfo(jsonObject);
                     return newAgreementResultBean;
-                } 
+                }
                 userId = SecretUtil.getUserId(sign);
             }
             /*userId = WebUtils.getUserId(request); */// 用户ID
@@ -165,7 +159,7 @@ public class NewAgreementController extends BaseTradeController{
             newAgreementResultBean.setInfo(jsonObject);
         }
         logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
-        return newAgreementResultBean;	
+        return newAgreementResultBean;
     }
 	
     /**
@@ -265,7 +259,6 @@ public class NewAgreementController extends BaseTradeController{
      * @author libin
      * @param request
      * @param response
-     * @param appTenderCreditAssignedBean
      * @return
      */
     @ApiOperation(value = "APP端协议接口", notes = "债权转让协议")
@@ -998,7 +991,7 @@ public class NewAgreementController extends BaseTradeController{
     
     /**
      * 获得 协议模板pdf显示地址
-     * @param request
+     * @param aliasName
      * @return
      */
     @ApiOperation(value = "APP端协议接口", notes = "获得 协议模板pdf显示地址")
@@ -1133,6 +1126,40 @@ public class NewAgreementController extends BaseTradeController{
             listImg.add(new StringBuilder().append(imgPath).append("/").append(str).append(".jpg").toString());
         }
         return listImg;
+    }
+
+    @ApiOperation(value = "APP端协议接口", notes = "获取协议模板")
+    @ResponseBody
+    @PostMapping("/getAgreementTemplateApi")
+    public AppResult getAgreementTemplateApi(@RequestParam String aliasName) {
+        logger.info("*******************************获取协议模板************************************");
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        response.setResult(template);
+        if(response == null) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, BaseResultBeanFrontEnd.FAIL_MSG);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
+        }
+        return new AppResult(response.getResultList());
+    }
+
+    @ApiOperation(value = "APP端协议接口", notes = "查看协议模板接口")
+    @ResponseBody
+    @PostMapping("/getdisplayNameDynamic")
+    public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {
+        logger.info("*******************************查看协议模板接口************************************");
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        response.setResult(template);
+        if(response == null) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, BaseResultBeanFrontEnd.FAIL_MSG);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
+        }
+        return new AppResult(response.getResultList());
     }
     
 }

@@ -761,7 +761,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess";
-        String bgRetUrl = systemConfig.getWebHost()+"/hyjf-web/withdraw/userBankWithdrawBgreturn.do";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
                 + "&wifee=" + fee;//
         // 路由代码
@@ -790,7 +790,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setTxFee(fee);
         // 成功跳转的url
         bean.setSuccessfulUrl(successfulUrl);
-        // 扣除手续费
+        // 提现金额大于五万,走人行通道,路由代码传2
         if ((new BigDecimal(transAmt).compareTo(new BigDecimal(50000)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
             routeCode = "2";// 路由代码
             bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
@@ -928,7 +928,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.put("balance", accountWithdraw.getCredited()==null?"0":accountWithdraw.getCredited().toString());
             result.put("fee", accountWithdraw.getFee());
             result.put("orderId", logOrderId);
-            if(accountWithdraw.getStatus().equals("2")){
+            if("2".equals(accountWithdraw.getStatus())){
                 result.put("status", "0");
             }
         }

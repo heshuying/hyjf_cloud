@@ -23,7 +23,7 @@ import java.util.List;
  * @author hesy
  * @version HjhCreditEndExceptionController, v0.1 2018/7/12 16:55
  */
-@Api(value = "异常中心-汇计划结束债权异常处理", description = "异常中心-汇计划结束债权异常处理")
+@Api(value = "异常中心-汇计划结束债权异常处理", tags = "异常中心-汇计划结束债权异常处理")
 @RestController
 @RequestMapping("/hyjf-admin/exception/hjhcreditend")
 public class HjhCreditEndExceptionController extends BaseController {

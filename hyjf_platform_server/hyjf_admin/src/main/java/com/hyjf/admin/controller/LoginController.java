@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiParam;
  * @author DongZeShan
  * @version LoginController.java, v0.1 2018年6月15日 上午9:32:30
  */
-@Api(value = "admin登陆相关")
+@Api(value = "admin登陆相关",tags ="admin登陆相关")
 @RestController
 @RequestMapping("/hyjf-admin/login")
 public class LoginController extends BaseController {

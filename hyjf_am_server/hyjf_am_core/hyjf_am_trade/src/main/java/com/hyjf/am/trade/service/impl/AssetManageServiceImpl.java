@@ -244,6 +244,11 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         return appUserInvestCustomizeMapper.selectAlreadyRepayList(params);
     }
 
+    @Override
+    public List<AppTenderToCreditListCustomize> selectTenderToCreditList(Map<String, Object> params) {
+        return appTenderCreditCustomizeMapper.selectTenderToCreditList(params);
+    }
+
     private Map<String,Object> createParame(AssetManageBeanRequest request) {
         Map<String,Object> params=new HashMap<String,Object>();
 

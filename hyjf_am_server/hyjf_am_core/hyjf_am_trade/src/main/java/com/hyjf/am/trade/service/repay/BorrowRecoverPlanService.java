@@ -12,4 +12,6 @@ public interface BorrowRecoverPlanService {
     BorrowRecoverPlan selectRecoverPlanById(Integer id);
 
     List<BorrowRecoverPlan> selectRecoverPlan(String borrowNid, Integer period);
+
+    List<BorrowRecoverPlan> selectRecoverPlanListByTenderNid(String tenderNid);
 }

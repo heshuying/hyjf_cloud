@@ -288,9 +288,9 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     logger.info(("查询投资请求成功:" + hjhPlanBorrowTmp.getOrderId())+ " 状态 "+state);
                     // 1：投标中； 2：计息中；4：本息已返还；9：已撤销；
                     if (StringUtils.isNotBlank(state)) {
-                        if (state.equals("1")) {
+                        if ("1".equals(state)) {
                             bankQueryisOK = true;
-                        } else if (state.equals("2")) {
+                        } else if ("2".equals(state)) {
                         }
                     }
                 }

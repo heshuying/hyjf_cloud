@@ -7,6 +7,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.BankWithdrawService;
@@ -31,7 +32,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "web端用户提现接口" ,description = "web端用户提现接口")
+@Api(tags = "web端用户提现接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/withdraw")
@@ -69,15 +70,13 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
+    @RequestLimit(seconds=3)
     public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "token", required = true) String token,
                                                @RequestBody @Valid BankWithdrawVO bankWithdrawVO , HttpServletRequest request) {
         logger.info("web端提现接口, token is :{}", JSONObject.toJSONString(token));
         WebResult<Object> result = new WebResult<Object>();
         WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null==userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){
-            return result;
-        }
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
@@ -130,9 +129,9 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
     @RequestMapping("/seachFiledMess")
     @ResponseBody
-    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("查询提现失败原因start,logOrdId:{}", logOrdId);
-        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(logOrdId);
+    public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestBody @Valid BankWithdrawVO bankWithdrawVO) {
+        logger.info("查询提现失败原因start,logOrdId:{}", bankWithdrawVO.getLogOrdId());
+        WebResult<Object> result = bankWithdrawService.seachUserBankWithdrawErrorMessgae(bankWithdrawVO.getLogOrdId());
         return result;
     }
 }

@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "app端验证码",description = "app端-验证码")
+@Api(value = "app端验证码",tags = "app端-验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
@@ -112,6 +112,9 @@ public class AppSmsCodeController extends BaseUserController {
         mobile = DES.decodeValue(key, mobile);
         int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
+
+        ret.put("status", "0");
+        ret.put("statusDesc", CustomConstants.APP_STATUS_DESC_SUCCESS);
         return ret;
     }
 

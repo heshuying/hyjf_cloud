@@ -3,30 +3,31 @@
  */
 package com.hyjf.cs.trade.controller.app.user.trade;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.TradeDetailService;
 import com.hyjf.cs.trade.util.ProjectConstant;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @author jun
- * @version TradeDetailController, v0.1 2018/7/25 14:05
+ * @version AppTradeDetailController, v0.1 2018/7/25 14:05
  */
-@Api(value = "app端交易详情",description = "app端交易详情")
+@Api(value = "app端交易详情",tags = "app端交易详情")
 @RestController
 @RequestMapping("/hyjf-app/user/trade")
 public class  AppTradeDetailController extends BaseTradeController {

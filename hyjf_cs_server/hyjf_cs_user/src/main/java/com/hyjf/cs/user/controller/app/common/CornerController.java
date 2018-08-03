@@ -4,13 +4,9 @@
 package com.hyjf.cs.user.controller.app.common;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.vo.config.UserCornerVO;
 import com.hyjf.am.vo.config.VersionVO;
 import com.hyjf.am.vo.user.UserAliasVO;
-import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.controller.BaseController;
@@ -20,18 +16,19 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
  * @version CornerController, v0.1 2018/7/18 11:21
  */
-@Api(description = "汇天利资金中心接口")
+@Api(tags = "汇天利资金中心接口")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
 public class CornerController extends BaseController {
@@ -223,14 +220,14 @@ public class CornerController extends BaseController {
     /**
      * 设置角标
      * @param request
-     * @param key
+     * @param
      * @return
      */
     @ApiOperation(value = "设置角标",notes = "设置角标")
     @PostMapping(value = "/setCorner")
-    public AppResult setCorner(@RequestHeader(value = "key")String key, HttpServletRequest request) {
+    public AppResult setCorner(HttpServletRequest request) {
         AppResult result = new AppResult();
-
+/*
         Map<String,String> map = new HashMap<>();
         map.put("request", "/hyjf-app/app/common/setCorner");
         // 唯一标识
@@ -271,7 +268,8 @@ public class CornerController extends BaseController {
         } catch (Exception e) {
             result.setStatusInfo(BaseResult.FAIL,"设置角标异常");
         }
-        result.setData(map);
+        result.setData(map);*/
+        result.setStatusInfo("0","设置成功");
         return result;
     }
 }

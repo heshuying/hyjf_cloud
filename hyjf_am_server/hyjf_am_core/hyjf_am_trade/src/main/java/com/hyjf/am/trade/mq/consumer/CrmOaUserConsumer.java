@@ -4,11 +4,10 @@
 package com.hyjf.am.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.mapper.auto.ROaUsersMapper;
 import com.hyjf.am.trade.dao.model.auto.ROaUsers;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.ROaUserService;
-import com.hyjf.am.vo.user.ROaUsersVO;
+import com.hyjf.am.trade.service.CrmUserService;
+import com.hyjf.am.vo.user.CrmUsersVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +38,7 @@ public class CrmOaUserConsumer extends Consumer {
     private static final String OPERATION_DELETE = "delete";
 
     @Autowired
-    ROaUserService rOaUserService;
+    CrmUserService crmUserService;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -76,9 +75,9 @@ public class CrmOaUserConsumer extends Consumer {
             String msgBody = new String(msg.getBody());
             logger.info("【操作资金crm oa user对象】接收到的消息：" + msgBody);
 
-            ROaUsersVO oaUsersVO = null;
+            CrmUsersVO oaUsersVO = null;
             try {
-                oaUsersVO = JSONObject.parseObject(msgBody, ROaUsersVO.class);
+                oaUsersVO = JSONObject.parseObject(msgBody, CrmUsersVO.class);
                 if(oaUsersVO == null){
                     logger.info("解析为空：" + msgBody);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
@@ -102,18 +101,18 @@ public class CrmOaUserConsumer extends Consumer {
      * 操作数据库
      * @param oaUsersVO
      */
-    private void doOperation(ROaUsersVO oaUsersVO) throws Exception {
+    private void doOperation(CrmUsersVO oaUsersVO) throws Exception {
         String operation = oaUsersVO.getOperation();
         if(StringUtils.isEmpty(operation)){
             throw new Exception("传入参数错误，operation为空");
         }
         ROaUsers user = CommonUtils.convertBean(oaUsersVO,ROaUsers.class);
         if(OPERATION_UPDATE.equals(operation)){
-            rOaUserService.update(user);
+            crmUserService.update(user);
         } else if(OPERATION_ADD.equals(operation)){
-            rOaUserService.insert(user);
+            crmUserService.insert(user);
         }else if(OPERATION_DELETE.equals(operation)){
-            rOaUserService.delete(user);
+            crmUserService.delete(user);
         }else{
             throw new Exception("传入参数错误，operation错误");
         }

@@ -26,7 +26,7 @@ import java.util.Map;
  * @author hesy
  * @version BorrowAuthController, v0.1 2018/7/6 14:15
  */
-@Api(value = "web端-借款人受托支付相关", description ="web端-借款人受托支付相关")
+@Api(value = "web端-借款人受托支付相关", tags ="web端-借款人受托支付相关")
 @RestController
 @RequestMapping("/hyjf-web/borrowauth")
 public class BorrowAuthController extends BaseTradeController {
@@ -54,6 +54,8 @@ public class BorrowAuthController extends BaseTradeController {
         page.setTotal(count);
 
         try {
+            requestBean.setLimitStart(page.getOffset());
+            requestBean.setLimitEnd(page.getLimit());
             List<BorrowAuthCustomizeVO> resultList = borrowAuthService.selectAuthList(requestBean);
             result.setData(resultList);
         } catch (Exception e) {
@@ -87,6 +89,8 @@ public class BorrowAuthController extends BaseTradeController {
         page.setTotal(count);
 
         try {
+            requestBean.setLimitStart(page.getOffset());
+            requestBean.setLimitEnd(page.getLimit());
             List<BorrowAuthCustomizeVO> resultList = borrowAuthService.selectAuthedList(requestBean);
             result.setData(resultList);
         } catch (Exception e) {
