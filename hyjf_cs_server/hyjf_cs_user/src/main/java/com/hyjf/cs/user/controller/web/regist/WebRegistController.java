@@ -51,7 +51,7 @@ public class WebRegistController extends BaseUserController {
      * @throws Exception
      */
     @ApiOperation(value = "注册初始化",notes = "注册初始化")
-    @ApiImplicitParam(name = "param",value = "{referer:String,from:String}",dataType = "Map")
+    @ApiImplicitParam(name = "param",value = "{referer:'推荐人',from:'原有逻辑推荐方'}",dataType = "Map")
     @PostMapping(value = "/init")
     public WebResult init(HttpServletRequest request,@RequestBody Map<String,String> param){
         WebResult result = new WebResult();
