@@ -46,7 +46,6 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private String updateUserId;
 
     private Date updateTime;
-
     private Long increaseMoney;
 
     private Integer interestCoupon;
@@ -54,6 +53,8 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private Integer tasteMoney;
     //modifyFlag
     private String modifyFlag;
+
+    private String repayName;
     //modifyFlag
     private List<BorrowProjectRepayVO> repayNames;
     // 回显checkbox标签
@@ -62,6 +63,15 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private  List<ParamNameVO> investUsers;
     // 获取数据字典表的下拉列表
     private List<ParamNameVO> projectTypeList;
+
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
 
     private static final long serialVersionUID = 1L;
 
@@ -255,5 +265,29 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
 
     public void setProjectTypeList(List<ParamNameVO> projectTypeList) {
         this.projectTypeList = projectTypeList;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
+
+    public String getRepayName() {
+        return repayName;
+    }
+
+    public void setRepayName(String repayName) {
+        this.repayName = repayName;
     }
 }

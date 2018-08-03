@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.controller.app.home;
 
-import com.hyjf.cs.trade.service.AppHomeService;
+import com.hyjf.cs.trade.service.home.AppHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,22 +1,12 @@
 package com.hyjf.cs.message.client;
 
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.vo.market.EventsVO;
-import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
+import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-
-import java.util.List;
-
 /**
  * @author lisheng
  * @version AmTradeClient, v0.1 2018/7/30 14:42
  */
-
 public interface AmTradeClient {
 
      AccountVO getAccountByUserId(Integer userId);
@@ -85,13 +75,10 @@ public interface AmTradeClient {
      boolean getCoupon(int userId) ;
 
 
-
-
-
-
-
-
-
-
+    /**
+     * 获取统计数据
+     * @return
+     */
+    TotalInvestAndInterestVO getTotalInvestAndInterest();
 
 }

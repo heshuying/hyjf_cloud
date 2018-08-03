@@ -119,8 +119,8 @@ public class BorrowProjectTypeClientImpl implements BorrowProjectTypeClient {
      * @param record
      */
     @Override
-    public  void insertRecord(BorrowProjectTypeRequest record){
-         restTemplate.postForEntity("http://AM-TRADE/am-trade/config/projecttype/insertRecord",record,null)
+    public  BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record){
+       return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/projecttype/insertRecord",record,BorrowProjectTypeResponse.class)
                 .getBody();
     }
     /**
@@ -129,8 +129,8 @@ public class BorrowProjectTypeClientImpl implements BorrowProjectTypeClient {
      * @param record
      */
     @Override
-    public  void updateRecord(BorrowProjectTypeRequest record){
-        restTemplate.postForEntity("http://AM-TRADE/am-trade/config/projecttype/updateRecord",record,null)
+    public  BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest record){
+       return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/projecttype/updateRecord",record,BorrowProjectTypeResponse.class)
                 .getBody();
     }
     /**
@@ -148,8 +148,8 @@ public class BorrowProjectTypeClientImpl implements BorrowProjectTypeClient {
      * @return
      */
     @Override
-    public int borrowCdIsExists(String borrowCd){
-        return  restTemplate.postForEntity("http://AM-TRADE/am-trade/config/projecttype/borrowCdIsExists",borrowCd,int.class)
+    public int borrowCdIsExists(BorrowProjectTypeRequest borrowCd){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/projecttype/borrowCdIsExists",borrowCd, Integer.class)
                 .getBody();
     }
 }

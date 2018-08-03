@@ -36,6 +36,8 @@ public class BankCardLogRequest extends BasePage{
     private Date createTime;
 
     private Date updateTime;
+    private String startTime;
+    private String endTime;
     // 分页区分
     private boolean limitFlg =false;
 
@@ -151,5 +153,21 @@ public class BankCardLogRequest extends BasePage{
 
     public void setLimitFlg(boolean limitFlg) {
         this.limitFlg = limitFlg;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

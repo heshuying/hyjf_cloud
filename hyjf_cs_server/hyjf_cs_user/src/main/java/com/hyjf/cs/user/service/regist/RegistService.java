@@ -9,15 +9,9 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.cs.user.controller.wechat.regist.UserRegistResultVO;
+import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.RegisterRequest;
-import com.hyjf.soa.apiweb.CommonParamBean;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -96,7 +90,7 @@ public interface RegistService extends BaseUserService {
      * @param verificationCode
      * @return
      */
-    UserRegistResultVO wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
+    UserRegistResult wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
 
     UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source);
     /**

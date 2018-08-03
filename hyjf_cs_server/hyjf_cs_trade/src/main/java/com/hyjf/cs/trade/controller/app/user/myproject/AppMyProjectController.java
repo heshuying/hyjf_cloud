@@ -1,24 +1,17 @@
 package com.hyjf.cs.trade.controller.app.user.myproject;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AppMyProjectService;
-import com.hyjf.cs.trade.service.AssetManageService;
-import com.hyjf.cs.trade.service.WechatMyProjectService;
+import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;

@@ -1,10 +1,9 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
-import com.hyjf.am.vo.trade.OperationReportJobVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 统计运营报告的相关数据
@@ -22,7 +21,7 @@ public interface OperationReportJobCustomizeMapper {
 	 *            统计月的最后一天
 	 * @return
 	 */
-	BigDecimal getAccountByMonth(Date beginDate, Date endDate);
+	BigDecimal getAccountByMonth(@Param("beginDate") Date beginDate,@Param("endDate") Date endDate);
 
 	/**
 	 * 按月统计交易笔数
@@ -92,4 +91,22 @@ public interface OperationReportJobCustomizeMapper {
 	 * 获取截至日期的投资金额
 	 */
 	double getInvestLastDate(Date date);
+
+	/**
+	 * 累计交易笔数(实时)
+	 * @return
+	 */
+	int countTotalInvestNum();
+
+	/**
+	 * 累计交易总额(实时)
+	 * @return
+	 */
+	BigDecimal countTotalInvestAmount();
+
+	/**
+	 * 累计为用户赚取收益(实时)
+	 * @return
+	 */
+	BigDecimal countTotalInterestAmount();
 }

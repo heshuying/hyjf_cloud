@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
@@ -21,7 +22,7 @@ public interface BorrowProjectTypeService {
     /*
     * 分页查询分项目类型
     * */
-    public List<BorrowProjectType>  selectProjectTypeList(BorrowProjectTypeVO borrowProjectTypeVO, int limitStart, int limitEnd);
+    public List<BorrowProjectTypeVO>  selectProjectTypeList(BorrowProjectTypeVO borrowProjectTypeVO);
 
     /*
     * 根据id查询项目类型
@@ -53,13 +54,13 @@ public interface BorrowProjectTypeService {
      *
      * @param record
      */
-    public  void insertRecord(BorrowProjectTypeRequest record);
+    public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record);
     /**
      * 汇直投项目类型维护插入
      *
      * @param record
      */
-    public  void updateRecord(BorrowProjectTypeRequest record);
+    public  BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest record);
     /**
      * 汇直投项目类型维护删除
      * @param borrowCd

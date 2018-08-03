@@ -11,6 +11,9 @@
 	
 package com.hyjf.common.http;
 
+import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.StringUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,9 +49,44 @@ public class HtmlUtil {
 	        Matcher m_space = p_space.matcher(htmlStr);  
 	        htmlStr = m_space.replaceAll(""); // 过滤空格回车标签  
 	        return htmlStr.trim(); // 返回文本字符串  
-	    }  
-	      
-	    public static String getTextFromHtml(String htmlStr){  
+	    }
+
+	/**
+	 * Html整理
+	 * @param text
+	 * @return
+	 */
+	public static String unescape(String text) {
+		if (text == null) {
+			return null;
+		}
+
+		if (text.length() == 0) {
+			return StringPool.BLANK;
+		}
+
+		// Optimize this
+
+		text = StringUtil.replace(text, "&lt;", "<");
+		text = StringUtil.replace(text, "&gt;", ">");
+		text = StringUtil.replace(text, "&amp;", "&");
+		text = StringUtil.replace(text, "&rsquo;", "\u2019");
+		text = StringUtil.replace(text, "&#034;", "\"");
+		text = StringUtil.replace(text, "&#039;", "'");
+		text = StringUtil.replace(text, "&#040;", "(");
+		text = StringUtil.replace(text, "&#041;", ")");
+		text = StringUtil.replace(text, "&#044;", ",");
+		text = StringUtil.replace(text, "&#035;", "#");
+		text = StringUtil.replace(text, "&#037;", "%");
+		text = StringUtil.replace(text, "&#059;", ";");
+		text = StringUtil.replace(text, "&#061;", "=");
+		text = StringUtil.replace(text, "&#043;", "+");
+		text = StringUtil.replace(text, "&#045;", "-");
+
+		return text;
+	}
+
+	public static String getTextFromHtml(String htmlStr){
 	        htmlStr = delHTMLTag(htmlStr);  
 	        htmlStr = htmlStr.replaceAll("&nbsp;", "");  
 	        return htmlStr;  

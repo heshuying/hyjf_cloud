@@ -7,15 +7,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.HjhPlanResponse;
-import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
+import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -26,6 +29,7 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -564,7 +568,7 @@ public interface AmTradeClient {
      * 子账户类型 查询
      * @return
      */
-    public List<ParamName> getParamNameList(String code);
+    public List<ParamNameVO> getParamNameList(String code);
     /**
      *
      * 根据子账户名称检索
@@ -1547,6 +1551,66 @@ public interface AmTradeClient {
      * @return
      */
     int updateAccountList(AccountListRequest accountListRequest);
+    /**
+     * 查找汇付银行开户记录列表
+     *
+     * @param request
+     * @return
+     */
+    PushMoneyResponse findPushMoneyList(PushMoneyRequest request);
+
+
+
+    /**
+     * 发提成处理- 计算提成
+     *
+     * @param apicornId,request
+     * @return
+     */
+    int insertTenderCommissionRecord(Integer apicornId, ActivityListRequest request) ;
+
+    /**
+     * 计划退出查询判断标的是否还款
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
+
+    /**
+     * 根据项目编号取得borrowTender表
+     * @param nid
+     * @return
+     */
+    List<BorrowTenderVO> getBorrowTenderListByNid(String nid);
+
+    /**
+     * 获取计算提成数据
+     * @param request
+     * @return
+     */
+    Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
+
+    /**
+     * 添加提成数据
+     * @param request
+     * @return
+     */
+    int saveTenderCommission(TenderCommissionRequest request);
+
+
+    /**
+     * 更新借款API表
+     * @param request
+     * @return
+     */
+    int updateByPrimaryKeySelective(BorrowApicronRequest request);
+
+    /**
+     * 獲取銀行開戶信息
+     * @param userId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
 
     /**
      * 查询数据中心优惠券数据
@@ -1555,6 +1619,20 @@ public interface AmTradeClient {
      * @return
      */
     DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
+
+    /**
+     * 根据筛选条件查询银行账务明细list
+     * @param
+     * @return
+     */
+    List<BankAleveVO> queryBankAleveList(BankAleveRequest request);
+
+    /**
+     * 根据筛选条件查询银行账务明细list
+     * @param
+     * @return
+     */
+    List<BankEveVO> queryBankEveList(BankEveRequest request);
 
 
     //董泽杉

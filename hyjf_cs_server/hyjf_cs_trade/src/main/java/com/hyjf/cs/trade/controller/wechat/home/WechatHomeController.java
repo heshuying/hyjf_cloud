@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.controller.wechat.home;
 
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
-import com.hyjf.cs.trade.service.WechatProjectListService;
+import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

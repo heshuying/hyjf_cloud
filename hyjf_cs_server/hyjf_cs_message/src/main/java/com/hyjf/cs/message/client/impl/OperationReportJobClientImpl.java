@@ -3,8 +3,6 @@ package com.hyjf.cs.message.client.impl;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.config.IdCardCustomize;
-import com.hyjf.am.vo.datacollect.OperationReportInfoVO;
-import com.hyjf.am.vo.datacollect.OperationReportVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.cs.message.client.OperationReportJobClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	public List<OperationReportJobVO> getTenderCityGroupByList(Date date){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendercitygroup",request, OperationReportJobResponse.class).getBody();
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tendercitygroupbylist",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

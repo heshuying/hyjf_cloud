@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
 import com.hyjf.am.trade.dao.model.auto.AleveLog;
 import com.hyjf.am.trade.dao.model.auto.EveLog;
 import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @author wangjun
  * @version AleveLogFileService, v0.1 2018/6/25 10:09
  */
-public interface AleveLogFileService {
+public interface AleveLogFileService extends BaseService {
     /**
      * 存款业务红包流水全明细数据文件下载
      */

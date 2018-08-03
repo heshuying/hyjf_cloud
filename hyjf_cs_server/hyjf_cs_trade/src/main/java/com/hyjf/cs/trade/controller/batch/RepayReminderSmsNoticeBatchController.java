@@ -8,7 +8,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.trade.service.RepayReminderSmsNoticeBatchService;
+import com.hyjf.cs.trade.service.batch.RepayReminderSmsNoticeBatchService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

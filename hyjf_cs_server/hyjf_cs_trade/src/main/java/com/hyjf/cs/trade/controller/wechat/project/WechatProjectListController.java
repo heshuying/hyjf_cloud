@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.controller.wechat.project;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.WechatProjectListService;
+import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

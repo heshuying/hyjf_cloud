@@ -4,13 +4,13 @@
     <sql id="Where_Clause">
         <where>
             <if test="userName != null and userName !=''">
-                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+                AND hydu.username LIKE CONCAT(#{userName}, '%')
             </if>
             <if test="realName != null and realName != ''">
-                AND hydui.truename LIKE CONCAT('%', #{realName}, '%')
+                AND hydui.truename LIKE CONCAT( #{realName}, '%')
             </if>
             <if test="mobile != null and mobile != ''">
-                AND hydu.mobile LIKE CONCAT('%', #{mobile}, '%')
+                AND hydu.mobile LIKE CONCAT(#{mobile}, '%')
             </if>
             <if test="userProperty != null and userProperty != ''">
                 AND pna.name_cd= #{userProperty,jdbcType=INTEGER}

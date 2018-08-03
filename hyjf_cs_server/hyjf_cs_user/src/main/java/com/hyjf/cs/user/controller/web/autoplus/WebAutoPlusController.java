@@ -149,14 +149,6 @@ public class WebAutoPlusController extends BaseUserController {
 
     @ApiOperation(value = "授权状态接口", notes = "授权状态接口")
     @PostMapping(value = "/userAutoStatus")
-    public WebResult<Object> userAutoStatus(@RequestHeader(value = "token") String token){
-        WebResult<Object> result = new WebResult<Object>();
-        UserVO user = autoPlusService.getUsers(token);
-        Map<String, Integer> map = autoPlusService.userAutoStatus(user.getUserId());
-        result.setData(map);
-        return result;
-    }
-
     public WebResult getStatus(@RequestHeader(value = "userId") Integer userId){
         WebResult<Object> result = new WebResult<Object>();
         Map<String,String> map = autoPlusService.getStatus(userId);
