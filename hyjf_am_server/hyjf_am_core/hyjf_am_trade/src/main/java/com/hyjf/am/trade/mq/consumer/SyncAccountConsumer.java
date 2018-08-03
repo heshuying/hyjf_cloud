@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -142,6 +143,12 @@ public class SyncAccountConsumer extends Consumer {
         Map<String, Object> map = new HashMap<>();
         map.put("customerId", account.getUserId());
         map.put("availableBalance", account.getBankBalance());
+        if (account.getBankAwait() == null){
+            account.setBankAwait(new BigDecimal("0.00"));
+        }
+        if (account.getPlanAccountWait() == null){
+            account.setPlanAccountWait(new BigDecimal("0.00"));
+        }
         map.put("pendingAmount", account.getBankAwait().add(account.getPlanAccountWait()));
 
         String sign = this.encryptByRSA(map, "10000001");
