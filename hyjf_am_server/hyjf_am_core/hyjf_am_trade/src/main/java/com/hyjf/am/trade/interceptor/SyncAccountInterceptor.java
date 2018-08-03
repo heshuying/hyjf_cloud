@@ -1,4 +1,4 @@
-package com.hyjf.am.user.interceptor;
+package com.hyjf.am.trade.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
