@@ -8,7 +8,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.CouponLoansService;
+import com.hyjf.cs.trade.service.consumer.CouponLoansService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;

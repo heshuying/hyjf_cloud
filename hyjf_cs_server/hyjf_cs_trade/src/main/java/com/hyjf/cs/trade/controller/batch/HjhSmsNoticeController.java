@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.controller.batch;
 
-import com.hyjf.cs.trade.service.HjhSmsNoticeService;
+import com.hyjf.cs.trade.service.batch.HjhSmsNoticeService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

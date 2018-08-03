@@ -17,7 +17,7 @@ import com.hyjf.cs.trade.bean.ResultBean;
 import com.hyjf.cs.trade.bean.SynBalanceResultBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.SynBalanceService;
+import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;

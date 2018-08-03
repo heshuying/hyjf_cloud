@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.hyjf.cs.trade.service.batch.BankCreditTenderService;
 import com.hyjf.cs.trade.service.batch.BankTenderCancelExceptionService;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
-import com.hyjf.cs.trade.service.BatchBankInvestAllService;
+import com.hyjf.cs.trade.service.batch.BatchBankInvestAllService;
 import com.hyjf.cs.trade.service.batch.BatchBankInvestService;
 
 import org.slf4j.Logger;
