@@ -27,7 +27,7 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Api(value = "配置中心节假日配置",tags ="配置中心节假日配置")
+@Api(value = "配置中心节假日配置",description ="配置中心节假日配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/holidaysconfig")
 public class HolidaysConfigController  extends BaseController {
@@ -39,7 +39,7 @@ public class HolidaysConfigController  extends BaseController {
 
     @ApiOperation(value = "配置中心节假日配置", notes = "查询配置中心节假日配置")
     @RequestMapping("/init")
-//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)---原代码中没有权限管理
     public AdminResult initHolidaysConfig(@RequestBody HolidaysConfigRequestBean holidaysConfigRequestBean) {
         AdminHolidaysConfigRequest adminRequest= new AdminHolidaysConfigRequest();
         //可以直接使用
