@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @author zhangqingqing
- * @version AmDataCollectClient, v0.1 2018/6/25 10:27
+ * @version CsMessageClient, v0.1 2018/6/25 10:27
  */
 public interface CsMessageClient {
 
@@ -20,13 +20,6 @@ public interface CsMessageClient {
 
     String selectBorrowInvestAccount(AccountWebListVO accountWebList);
 
-    /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表
-     * @return
-     */
-    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
     /**
      * 查询关联记录列表count
      * @auth sunpeikai
