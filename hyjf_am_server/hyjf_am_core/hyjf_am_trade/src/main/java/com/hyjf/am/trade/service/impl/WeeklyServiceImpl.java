@@ -1,5 +1,8 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.trade.dao.mapper.customize.EventsCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.ContentEventsCustomize;
+import com.hyjf.am.trade.dao.model.customize.Event;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.WeeklyService;
@@ -29,7 +32,8 @@ public class WeeklyServiceImpl implements WeeklyService {
     protected CreditRepayMapper creditRepayMapper;
     @Autowired
     protected CouponUserMapper couponUserMapper;
-
+    @Autowired
+    protected EventsCustomizeMapper eventsCustomizeMapper;
 
 
 
@@ -122,6 +126,23 @@ public class WeeklyServiceImpl implements WeeklyService {
         }
     }
 
+    @Override
+    public Event getEventsAll(int begin, int end) {
+        ContentEventsCustomize contentEventsCustomize = new ContentEventsCustomize();
+        contentEventsCustomize.setStartCreate(begin);
+        contentEventsCustomize.setEndCreate(end);
+        return eventsCustomizeMapper.selectZong(contentEventsCustomize);
+    }
 
+    @Override
+    public Event selectPercentage(int percentage, int begin, int end, int userId) {
+        ContentEventsCustomize contentEventsCustomize=new ContentEventsCustomize();
+        contentEventsCustomize.setEventYear(percentage);
+        contentEventsCustomize.setActTime(userId);
+        contentEventsCustomize.setStartCreate(begin);
+        contentEventsCustomize.setEndCreate(end);
+        return eventsCustomizeMapper.selectPercentage(contentEventsCustomize);
+
+    }
 
 }

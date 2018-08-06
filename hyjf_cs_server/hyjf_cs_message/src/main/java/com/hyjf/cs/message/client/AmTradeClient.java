@@ -1,12 +1,15 @@
 package com.hyjf.cs.message.client;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+
 /**
  * @author lisheng
  * @version AmTradeClient, v0.1 2018/7/30 14:42
  */
+
 public interface AmTradeClient {
 
      AccountVO getAccountByUserId(Integer userId);
@@ -73,6 +76,9 @@ public interface AmTradeClient {
       * @return
       */
      boolean getCoupon(int userId) ;
+
+     EventVO getEventsAll(int begin, int end);
+
 
 
     /**
