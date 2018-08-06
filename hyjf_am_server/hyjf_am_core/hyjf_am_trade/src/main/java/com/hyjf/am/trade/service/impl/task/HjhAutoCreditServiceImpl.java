@@ -3,42 +3,11 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample;
-import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtDetailExample;
-import com.hyjf.am.trade.dao.model.auto.HjhRepay;
-import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.hjh.calculatefairvalue.HjhCalculateFairValueProducer;
+import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
@@ -47,6 +16,18 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 汇计划自动清算Service实现类
@@ -61,6 +42,10 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
 
     @Autowired
     private HjhCalculateFairValueProducer hjhCalculateFairValueProducer;
+
+    @Autowired
+    private AutoIssueMessageProducer autoIssueMessageProducer;
+
 
     /**
      * 检索退出中的加入订单,用于计算计划订单的公允价值
@@ -83,13 +68,12 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
      */
     @Override
     public void sendHjhCalculateFairValueMQ(HjhCalculateFairValueVO hjhCalculateFairValueBean) {
-        // 加入到消息队列
-        JSONObject params = new JSONObject();
-        params.put("status", "1");
-        params.put("accedeOrderId", hjhCalculateFairValueBean.getAccedeOrderId());
-        params.put("calculateType", String.valueOf(hjhCalculateFairValueBean.getCalculateType()));
         try {
-            hjhCalculateFairValueProducer.messageSend(new MessageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+            // 加入到消息队列
+            JSONObject params = new JSONObject();
+            params.put("accedeOrderId", hjhCalculateFairValueBean.getAccedeOrderId());
+            params.put("calculateType", String.valueOf(hjhCalculateFairValueBean.getCalculateType()));
+            hjhCalculateFairValueProducer.messageSend(new MessageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("发送汇计划加入订单计算公允价值MQ失败...");
         }
@@ -112,8 +96,9 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         cra.andEndDateIsNotNull();
         // 债转是否完成标示
         cra.andCreditCompleteFlagIn(statusList);
+        example.setOrderByClause(" end_date asc");
 //        List<String> ordidList = new ArrayList<>();
-//        ordidList.add("25297413568253616522");
+//       ordidList.add("25288687760674416938");
 //        cra.andAccedeOrderIdIn(ordidList);
         List<HjhAccede> list = this.hjhAccedeMapper.selectByExample(example);
         return list;
@@ -128,6 +113,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
      */
     @Override
     public List<String> updateAutoCredit(HjhAccede hjhAccede, Integer creditCompleteFlag) throws Exception {
+
         Integer nowTime = GetDate.getNowTime10();
         // 计划加入订单号
         String accedeOrderId = hjhAccede.getAccedeOrderId();
@@ -141,6 +127,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         logger.info("清算完成:计划加入订单号:[" + accedeOrderId + "].");
         return creditList;
     }
+
 
     /**
      * 清算
@@ -1086,7 +1073,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         statusList.add(3);
         cra.andCreditStatusNotIn(statusList);
         List<HjhDebtCredit> list = this.hjhDebtCreditMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (list != null && list.size() > 0) {
             return list.get(0);
         }
         return null;
@@ -1106,7 +1093,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         cra.andInvestOrderIdEqualTo(investOrderId);
         cra.andCreditStatusEqualTo(2);
         List<HjhDebtCredit> list = this.hjhDebtCreditMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (list != null && list.size() > 0) {
             return list.get(0);
         }
         return null;
@@ -1283,6 +1270,25 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 清算完成后,发送绑定计划MQ
+     *
+     * @param creditNid
+     */
+    @Override
+    public void sendBorrowIssueMQ(String creditNid) {
+        try {
+            // 加入到消息队列
+            JSONObject params = new JSONObject();
+            params.put("creditNid", creditNid);
+            autoIssueMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            logger.info("清算完成后,发送MQ成功,债转编号:[" + creditNid + "].");
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("清算完成后,发送MQ失败,债转编号:[" + creditNid + "].");
         }
     }
 }
