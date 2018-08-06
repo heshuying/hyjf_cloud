@@ -38,10 +38,18 @@ public interface HjhAutoCreditService extends BaseService {
     List<HjhAccede> selectDeadLineAccedeList();
 
     /**
-     *  汇计划自动清算
+     * 汇计划自动清算
+     *
      * @param hjhAccede
      * @param creditCompleteFlag
      * @return
      */
     List<String> updateAutoCredit(HjhAccede hjhAccede, Integer creditCompleteFlag) throws Exception;
+
+    /**
+     * 清算完成后,发送绑定计划MQ
+     *
+     * @param creditNid
+     */
+    void sendBorrowIssueMQ(String creditNid);
 }

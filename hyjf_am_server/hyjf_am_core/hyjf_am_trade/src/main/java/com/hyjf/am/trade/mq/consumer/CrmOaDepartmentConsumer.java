@@ -6,7 +6,7 @@ package com.hyjf.am.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.CrmDepartmentService;
+import com.hyjf.am.trade.service.front.crm.CrmDepartmentService;
 import com.hyjf.am.vo.user.CrmDepartmentVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;

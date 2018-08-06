@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.trade.service.PlanLockQuitService;
+import com.hyjf.am.trade.service.front.borrow.PlanLockQuitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

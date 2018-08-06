@@ -5,7 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.AmDataCollectClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.WebsiteService;
 import com.hyjf.am.response.admin.AccountWebListResponse;
@@ -31,7 +31,7 @@ public class WebsiteServiceImpl implements WebsiteService {
     AmTradeClient amTradeClient;
 
     @Autowired
-    AmDataCollectClient amDataCollectClient;
+    CsMessageClient csMessageClient;
 
     @Override
     public List<AccountTradeVO> selectTradeTypes() {
@@ -41,13 +41,13 @@ public class WebsiteServiceImpl implements WebsiteService {
 
     @Override
     public AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList) {
-        AccountWebListResponse response = amDataCollectClient.queryAccountWebList(accountWebList);
+        AccountWebListResponse response = csMessageClient.queryAccountWebList(accountWebList);
         return response;
     }
 
     @Override
     public String selectBorrowInvestAccount(AccountWebListVO accountWebList) {
-        String total = amDataCollectClient.selectBorrowInvestAccount(accountWebList);
+        String total = csMessageClient.selectBorrowInvestAccount(accountWebList);
         return total;
     }
 

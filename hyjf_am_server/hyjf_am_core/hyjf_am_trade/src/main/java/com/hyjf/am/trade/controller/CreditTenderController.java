@@ -10,7 +10,7 @@ import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
-import com.hyjf.am.trade.service.BankCreditTenderService;
+import com.hyjf.am.trade.service.front.account.BankCreditTenderService;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

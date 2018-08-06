@@ -4,7 +4,7 @@ package com.hyjf.am.trade.controller.front.hjh;
 import com.hyjf.am.response.trade.HjhDebtCreditRepayResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepay;
-import com.hyjf.am.trade.service.HjhDebtCreditRepayService;
+import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

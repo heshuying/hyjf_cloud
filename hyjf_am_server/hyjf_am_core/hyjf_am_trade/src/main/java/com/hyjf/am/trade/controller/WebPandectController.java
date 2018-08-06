@@ -11,7 +11,7 @@ import com.hyjf.am.trade.dao.model.customize.WebPandectBorrowRecoverCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebPandectCreditTenderCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebPandectRecoverMoneyCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebPandectWaitMoneyCustomize;
-import com.hyjf.am.trade.service.WebPandectService;
+import com.hyjf.am.trade.service.front.trade.WebPandectService;
 import com.hyjf.am.vo.trade.WebPandectBorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.WebPandectCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.WebPandectRecoverMoneyCustomizeVO;

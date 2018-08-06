@@ -33,7 +33,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-import static com.hyjf.am.trade.service.impl.task.issuerecover.AutoIssueRecoverServiceImpl.LABEL_MAIL_KEY;
+import static com.hyjf.am.trade.service.task.issuerecover.impl.AutoIssueRecoverServiceImpl.LABEL_MAIL_KEY;
 
 /**
  * @Auther: walter.limeng

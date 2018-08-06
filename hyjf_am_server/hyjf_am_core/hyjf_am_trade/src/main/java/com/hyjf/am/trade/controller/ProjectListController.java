@@ -17,7 +17,7 @@ import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditInvestListCustom
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
-import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;

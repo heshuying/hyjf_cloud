@@ -30,7 +30,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	@Autowired
 	private AmTradeClient amTradeClient;
 	@Autowired
-	private CsMessageClient amDataCollectClient;
+	private CsMessageClient csMessageClient;
 	@Autowired
 	private BorrowUserStatisticsProducer statisticsProducer;
 
@@ -51,7 +51,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		BigDecimal sumBorrowUserMoneyTopTen = amTradeClient.sumBorrowUserMoneyTopTen();
 		// 最大单一借款人待还金额
 		BigDecimal sumBorrowUserMoneyTopOne = amTradeClient.sumBorrowUserMoneyTopOne();
-		BorrowUserStatisticVO statisticVO = amDataCollectClient.selectBorrowUserStatistic();
+		BorrowUserStatisticVO statisticVO = csMessageClient.selectBorrowUserStatistic();
 		BorrowUserStatisticVO record = new BorrowUserStatisticVO();
 		record.setBorrowuserCountTotal(countBorrowUser);
 		record.setBorrowuserCountCurrent(countBorrowUserCurrent);

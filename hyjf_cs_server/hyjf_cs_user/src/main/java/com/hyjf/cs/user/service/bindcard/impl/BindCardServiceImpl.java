@@ -23,7 +23,7 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.BindCardVO;

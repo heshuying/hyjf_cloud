@@ -90,7 +90,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增页面初始化", notes = "新增页面初始化")
-	@RequestMapping("/infoAction")
+	@PostMapping("/infoAction")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<MspApplytResponseBean> info(HttpServletRequest request,
@@ -121,7 +121,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增", notes = "新增")
-	@RequestMapping("/insertAction")
+	@PostMapping("/insertAction")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult insertAction(HttpServletRequest request,
@@ -152,7 +152,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "修改", notes = "修改")
-	@RequestMapping("/updateAction")
+	@PostMapping("/updateAction")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updateAction(HttpServletRequest request,
@@ -181,7 +181,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "删除", notes = "删除")
-	@RequestMapping("/deleteAction")
+	@PostMapping("/deleteAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult deleteRecordAction(HttpServletRequest request,
 			@RequestBody MspApplytRequestBean mspApplytRequestBean) {
@@ -205,7 +205,7 @@ public class MspApplyController extends BaseController {
 	
 
 	@ResponseBody
-	@RequestMapping("/validateBeforeAction")
+	@PostMapping("/validateBeforeAction")
 	@ApiOperation(value = "验证", notes = "验证")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult validateBeforeAction(HttpServletRequest request,
@@ -233,7 +233,7 @@ public class MspApplyController extends BaseController {
 	 * @param
 	 * @param
 	 */
-	@RequestMapping("/exportAction")
+	@PostMapping("/exportAction")
 	@ApiOperation(value = "导出", notes = "导出")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletRequest request,
@@ -314,7 +314,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/applyAction")
+	@PostMapping("/applyAction")
 	@ApiOperation(value = "共享", notes = "共享")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult<MspApplytResponseBean> applyInfo(HttpServletRequest request,
@@ -340,7 +340,7 @@ public class MspApplyController extends BaseController {
 
 	// 安融共享
 	@ResponseBody
-	@RequestMapping("/shareUser")
+	@PostMapping("/shareUser")
 	@ApiOperation(value = "安融共享", notes = "安融共享")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult shareUser(HttpServletRequest request,
@@ -370,7 +370,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("/downloadFile")
+	@PostMapping("/downloadFile")
 	@ApiOperation(value = "安融共享", notes = "安融共享")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<MspApplytResponseBean> download(HttpServletRequest request,
@@ -395,7 +395,7 @@ public class MspApplyController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/mspSearchAction")
+	@PostMapping("/mspSearchAction")
 	@ApiOperation(value = "安融配置列表", notes = "安融配置列表")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<MspConfigureVO>> searchAction(HttpServletRequest request,
@@ -417,7 +417,7 @@ public class MspApplyController extends BaseController {
 		
 	}
 	@ResponseBody
-	@RequestMapping("/mspInfoAction")
+	@PostMapping("/mspInfoAction")
 	@ApiOperation(value = "配置新增页面初始化", notes = "配置新增页面初始化")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<Map<String, Object>> infoAction(HttpServletRequest request,
@@ -441,7 +441,7 @@ public class MspApplyController extends BaseController {
 		return new AdminResult<Map<String, Object>>(map);
 	}
 	@ResponseBody
-	@RequestMapping("/mspInsertAction")
+	@PostMapping("/mspInsertAction")
 	@ApiOperation(value = "新增配置", notes = "新增配置")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult insertAction(HttpServletRequest request,
@@ -462,7 +462,7 @@ public class MspApplyController extends BaseController {
 		return new AdminResult();
 	}
 	@ResponseBody
-	@RequestMapping("/mspUpdateAction")
+	@PostMapping("/mspUpdateAction")
 	@ApiOperation(value = "配置修改", notes = "配置修改")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult updateAction(HttpServletRequest request,
@@ -483,7 +483,7 @@ public class MspApplyController extends BaseController {
 		return new AdminResult();
 	}
 	@ResponseBody
-	@RequestMapping("/configureNameError")
+	@PostMapping("/configureNameError")
 	@ApiOperation(value = "检测标名", notes = "检测标名")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult configureNameError(HttpServletRequest request,
@@ -504,7 +504,7 @@ public class MspApplyController extends BaseController {
 		return new AdminResult();
 	}
 	@ResponseBody
-	@RequestMapping("/mspDeleteAction")
+	@PostMapping("/mspDeleteAction")
 	@ApiOperation(value = "删除配置", notes = "删除配置")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult deleteAction(HttpServletRequest request,
@@ -525,7 +525,7 @@ public class MspApplyController extends BaseController {
 		return new AdminResult();
 	}
 	@ResponseBody
-	@RequestMapping("/mspCheckAction")
+	@PostMapping("/mspCheckAction")
 	@ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult checkAction(HttpServletRequest request,
@@ -553,7 +553,7 @@ public class MspApplyController extends BaseController {
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	@RequestMapping("/mspexportAction")
+	@PostMapping("/mspexportAction")
 	@ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletRequest request,

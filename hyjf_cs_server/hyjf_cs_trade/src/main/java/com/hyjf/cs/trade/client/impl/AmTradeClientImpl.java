@@ -3533,9 +3533,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
-        Response<BigDecimal> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, Response.class).getBody();
+        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, Response.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResult();
+            return new BigDecimal(response.getResult());
         }
         return BigDecimal.ZERO;
     }
@@ -3547,9 +3547,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
-        Response<BigDecimal> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, Response.class).getBody();
+        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, Response.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResult();
+            return new BigDecimal(response.getResult());
         }
         return BigDecimal.ZERO;
     }
@@ -3561,9 +3561,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgRepayWaitTotal(Integer userId) {
-        Response<BigDecimal> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, Response.class).getBody();
+        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, Response.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResult();
+            return new BigDecimal(response.getResult());
         }
         return BigDecimal.ZERO;
     }

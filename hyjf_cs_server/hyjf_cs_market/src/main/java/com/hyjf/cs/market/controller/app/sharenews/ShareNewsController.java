@@ -33,7 +33,7 @@ public class ShareNewsController extends BaseMarketController {
     private SystemConfig systemConfig;
 
     @ApiOperation(value = "分享信息", notes = "app-分享信息")
-    @PostMapping("/activityList")
+    @PostMapping("/getNews")
     public ShareNewsResponse init(HttpServletRequest request, @RequestBody ShareNewsRequest shareNewsRequest){
         ShareNewsResponse response = new ShareNewsResponse();
 

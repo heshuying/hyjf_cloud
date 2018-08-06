@@ -22,7 +22,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.myproject.MyInvestProjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

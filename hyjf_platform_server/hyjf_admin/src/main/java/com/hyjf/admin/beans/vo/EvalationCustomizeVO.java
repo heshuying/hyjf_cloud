@@ -7,125 +7,137 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class EvalationCustomizeVO extends BaseVO implements Serializable {
-    private Integer id;
+@ApiModelProperty(value = "用戶id")
+    //用戶id
+    public String userId;
+    //用戶名
+    @ApiModelProperty(value = "用戶名")
+    public String userName;
+    //真实姓名
+    @ApiModelProperty(value = "真实姓名")
+    public String realName;
+    //用户手机号
+    @ApiModelProperty(value = "用户手机号")
+    public String mobile;
+    //用戶属性
+    @ApiModelProperty(value = "用戶属性")
+    public String userProperty;
+    //开户状态
+    @ApiModelProperty(value = "开户状态")
+    public String accountStatus;
+    //测评状态
+    @ApiModelProperty(value = "测评状态")
+    public String evaluationStatus;
+    //风险等级
+    @ApiModelProperty(value = "风险等级")
+    public String evaluationType;
+    //风险测评分
+    @ApiModelProperty(value = "风险测评分")
+    public String evaluationScore;
 
-    @ApiModelProperty(value = "评分上限")
-    private Short scoreUp;
+    //测评时间
+    @ApiModelProperty(value = "测评时间")
+    private String lasttime;
+    //上次测评时间
+    @ApiModelProperty(value = "上次测评时间")
+    private String createtime;
+    //测评到期时间
+    @ApiModelProperty(value = "测评到期时间")
+    private String evalationTime;
 
-    @ApiModelProperty(value = "评分下限")
-    private Short scoreDown;
-
-    @ApiModelProperty(value = "测评类型")
-    private String evalType;
-
-    @ApiModelProperty(value = "测评分析")
-    private String summary;
-
-    @ApiModelProperty(value = "状态0是可用，1是不可用")
-    private Integer status;
-
-    @ApiModelProperty(value = "创建人")
-    private String createUser;
-
-    @ApiModelProperty(value = "修改人")
-    private String updateUser;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-
-    @ApiModelProperty(value = "修改时间")
-    private Date updateTime;
-
-    @ApiModelProperty(value = "备注")
-    private String remarks;
-
-    private static final long serialVersionUID = 1L;
-
-    public Integer getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public Short getScoreUp() {
-        return scoreUp;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setScoreUp(Short scoreUp) {
-        this.scoreUp = scoreUp;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public Short getScoreDown() {
-        return scoreDown;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setScoreDown(Short scoreDown) {
-        this.scoreDown = scoreDown;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
-    public String getEvalType() {
-        return evalType;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setEvalType(String evalType) {
-        this.evalType = evalType == null ? null : evalType.trim();
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getUserProperty() {
+        return userProperty;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary == null ? null : summary.trim();
+    public void setUserProperty(String userProperty) {
+        this.userProperty = userProperty;
     }
 
-    public Integer getStatus() {
-        return status;
+    public String getAccountStatus() {
+        return accountStatus;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
     }
 
-    public String getCreateUser() {
-        return createUser;
+    public String getEvaluationStatus() {
+        return evaluationStatus;
     }
 
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser == null ? null : createUser.trim();
+    public void setEvaluationStatus(String evaluationStatus) {
+        this.evaluationStatus = evaluationStatus;
     }
 
-    public String getUpdateUser() {
-        return updateUser;
+    public String getEvaluationType() {
+        return evaluationType;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser == null ? null : updateUser.trim();
+    public void setEvaluationType(String evaluationType) {
+        this.evaluationType = evaluationType;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getEvaluationScore() {
+        return evaluationScore;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setEvaluationScore(String evaluationScore) {
+        this.evaluationScore = evaluationScore;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public String getLasttime() {
+        return lasttime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setLasttime(String lasttime) {
+        this.lasttime = lasttime;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public String getCreatetime() {
+        return createtime;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getEvalationTime() {
+        return evalationTime;
+    }
+
+    public void setEvalationTime(String evalationTime) {
+        this.evalationTime = evalationTime;
     }
 }

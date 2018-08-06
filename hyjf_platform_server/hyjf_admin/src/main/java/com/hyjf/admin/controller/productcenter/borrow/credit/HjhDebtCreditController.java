@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -255,6 +256,34 @@ public class HjhDebtCreditController extends BaseController{
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         return this.success();
+    }
+
+    @ApiOperation(value = "运营记录-债转标的", notes = "初始化")
+    @PostMapping(value = "/queryoptAction")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功")
+    })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ResponseBody
+    public JSONObject queryoptAction() {
+        JSONObject jsonObject;
+        HjhDebtCreditListRequest creditListRequest = new HjhDebtCreditListRequest();
+        creditListRequest.setLiquidatesTimeStart(GetDate.date2Str(new Date(), new SimpleDateFormat("yyyy-MM-dd")));
+        jsonObject = queryHjhDebtCreditDetail(creditListRequest);
+        return jsonObject;
+    }
+
+    @ApiOperation(value = "运营记录-债转标的检索", notes = "检索列表")
+    @PostMapping(value = "/queryoptActionSearch")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功")
+    })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ResponseBody
+    public JSONObject queryoptActionSearch(@RequestBody HjhDebtCreditListRequest request) {
+        JSONObject jsonObject;
+        jsonObject = queryHjhDebtCreditDetail(request);
+        return jsonObject;
     }
 
 
