@@ -5,7 +5,6 @@ package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * @author zhangqingqing
  * @version AmDataCollectClient, v0.1 2018/6/25 10:27
  */
-public interface AmDataCollectClient {
+public interface CsMessageClient {
 
     AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList);
 

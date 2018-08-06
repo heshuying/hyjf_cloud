@@ -8,7 +8,7 @@ import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
-import com.hyjf.am.trade.service.BorrowRecoverService;
+import com.hyjf.am.trade.service.front.borrow.BorrowRecoverService;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.util.CommonUtils;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.trade.BorrowUserResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowUser;
-import com.hyjf.am.trade.service.BorrowUserService;
+import com.hyjf.am.trade.service.front.borrow.BorrowUserService;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.common.util.CommonUtils;
 

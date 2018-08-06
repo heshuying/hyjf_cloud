@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.front.borrow;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.service.BorrowApicronService;
+import com.hyjf.am.trade.service.front.borrow.BorrowApicronService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

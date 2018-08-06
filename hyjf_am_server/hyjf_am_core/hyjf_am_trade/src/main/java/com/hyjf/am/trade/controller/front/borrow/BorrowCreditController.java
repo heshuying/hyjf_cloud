@@ -12,7 +12,7 @@ import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
-import com.hyjf.am.trade.service.BorrowCreditService;
+import com.hyjf.am.trade.service.front.borrow.BorrowCreditService;
 import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;

@@ -4,7 +4,7 @@ package com.hyjf.am.trade.controller.front.borrow;
 import com.hyjf.am.response.trade.BorrowHousesResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowHouses;
-import com.hyjf.am.trade.service.BorrowHousesService;
+import com.hyjf.am.trade.service.front.borrow.BorrowHousesService;
 import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
