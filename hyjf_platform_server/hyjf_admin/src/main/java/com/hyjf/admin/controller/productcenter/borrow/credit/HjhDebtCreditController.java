@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.productcenter.borrow.credit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRegistExceptionService;
 import com.hyjf.admin.service.HjhDebtCreditService;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,8 @@ import java.util.List;
 public class HjhDebtCreditController extends BaseController{
 
 
+    private static final String PERMISSIONS = "HjhDebtCredit";
+
     @Autowired
     private HjhDebtCreditService hjhDebtCreditService;
 
@@ -45,6 +50,7 @@ public class HjhDebtCreditController extends BaseController{
 
     @ApiOperation(value = "汇计划-转让记录页面初始化", notes = "页面初始化")
     @PostMapping(value = "/hjhDebtCreditInit")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject hjhDebtCreditInit() {
         JSONObject jsonObject = new JSONObject();
@@ -83,6 +89,7 @@ public class HjhDebtCreditController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject queryHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request) {
         JSONObject jsonObject = null;
@@ -111,6 +118,7 @@ public class HjhDebtCreditController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
     public JSONObject exportHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request,HttpServletResponse response) {
 
@@ -248,6 +256,34 @@ public class HjhDebtCreditController extends BaseController{
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
         return this.success();
+    }
+
+    @ApiOperation(value = "运营记录-债转标的", notes = "初始化")
+    @PostMapping(value = "/queryoptAction")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功")
+    })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ResponseBody
+    public JSONObject queryoptAction() {
+        JSONObject jsonObject;
+        HjhDebtCreditListRequest creditListRequest = new HjhDebtCreditListRequest();
+        creditListRequest.setLiquidatesTimeStart(GetDate.date2Str(new Date(), new SimpleDateFormat("yyyy-MM-dd")));
+        jsonObject = queryHjhDebtCreditDetail(creditListRequest);
+        return jsonObject;
+    }
+
+    @ApiOperation(value = "运营记录-债转标的检索", notes = "检索列表")
+    @PostMapping(value = "/queryoptActionSearch")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功")
+    })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ResponseBody
+    public JSONObject queryoptActionSearch(@RequestBody HjhDebtCreditListRequest request) {
+        JSONObject jsonObject;
+        jsonObject = queryHjhDebtCreditDetail(request);
+        return jsonObject;
     }
 
 

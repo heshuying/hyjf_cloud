@@ -37,7 +37,7 @@ public interface OperationReportInfoJobCustomizeMapper {
      * @param endMonth      去年结束月份
      * @return
      */
-    List<OperationReportJobVO> getRevenueAndYield(int intervalMonth, int startMonth,int endMonth);
+    List<OperationReportJobVO> getRevenueAndYield(@Param("intervalMonth") int intervalMonth,@Param("startMonth")  int startMonth,@Param("endMonth")  int endMonth);
 
     /**
      * 充值金额、充值笔数

@@ -9,7 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.AleveLogFileService;
 import com.hyjf.am.trade.utils.FileUtil;

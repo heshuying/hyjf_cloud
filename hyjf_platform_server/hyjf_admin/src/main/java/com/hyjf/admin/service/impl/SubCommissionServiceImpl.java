@@ -3,7 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.mq.AccountWebListProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SubCommissionService;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.vo.admin.SubCommissionListConfigVO;
@@ -17,7 +20,9 @@ import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -26,6 +31,7 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author: sunpeikai
@@ -46,6 +53,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
 
     @Value("${hyjf.sub.commission.password}")
     private String SUB_COMMISSION_PASSWORD;
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
 
     /**
      * 发起账户分佣所需的detail信息
@@ -344,7 +353,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         // 查询交易记录
         AccountWebListVO accountWebListVO = new AccountWebListVO();
         accountWebListVO.setOrdid(orderId);
-        boolean isExistFlag = amDataCollectClient.queryAccountWebList(accountWebListVO).getResultList().size()>0;
+        boolean isExistFlag = csMessageClient.queryAccountWebList(accountWebListVO).getResultList().size()>0;
         if (isExistFlag) {
             logger.info("重复转账:转账订单号:[" + orderId + "].");
             throw new RuntimeException("重复转账:转账订单号:[" + orderId + "].");
@@ -427,7 +436,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         accountWebList.setRemark(request.getRemark()); // 备注
         accountWebList.setCreateTime(nowTime);
         accountWebList.setOperator(adminSystemVO.getUsername());
-        int webListCount = amDataCollectClient.queryAccountWebList(accountWebList).getResultList().size();
+        int webListCount = csMessageClient.queryAccountWebList(accountWebList).getResultList().size();
         if (webListCount == 0) {
             UserInfoVO userInfo = amUserClient.findUsersInfoById(receiveUserId);
             if (userInfo != null) {
@@ -472,8 +481,11 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 accountWebList.setTruename(userInfo.getTruename());
                 accountWebList.setFlag(1);
             }
-            boolean accountWebListFlag = amDataCollectClient.insertAccountWebList(accountWebList) > 0;
-            if (!accountWebListFlag) {
+           //boolean accountWebListFlag = csMessageClient.insertAccountWebList(accountWebList) > 0;
+            try {
+                boolean accountWebListFlag = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
+            } catch (MQException e) {
+                e.printStackTrace();
                 throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[订单号：" + orderId + "]");
             }
         } else {

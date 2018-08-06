@@ -5,7 +5,7 @@
 	<sql id="Where_Clause">
 		<where>
 			(
-				( b.`status` = 2 AND ( b.verify_time + ( bi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW())))
+				( b.`status` = 2 AND ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW())))
 				OR (b.`status` = 3)
 			)
 				AND (habt.auto_record != 1 OR habt.auto_record IS NULL)
@@ -88,7 +88,7 @@
 			)
 			ELSE
 			FROM_UNIXTIME(
-			b.verify_time + (borrow_valid_time * 24 * 60 * 60),
+			b.verify_time + (b.borrow_valid_time * 24 * 60 * 60),
 			'%Y-%m-%d %H:%i:%s'
 			)
 			END AS over_time,
