@@ -101,4 +101,10 @@ public interface AdminHjhPlanService {
 	 * @param record
 	 */
 	int insertRecord(PlanListRequest form) throws Exception;
+	
+	/**
+	 * 计划列表无分页
+	 * @return
+	 */
+	List<HjhPlanVO> selectHjhPlanListWithoutPage(PlanListRequest request);
 }

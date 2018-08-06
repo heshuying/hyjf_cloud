@@ -1,7 +1,9 @@
 package com.hyjf.am.config.dao.model.customize;
 
 
-public class ContentEventsCustomize extends EventsCustomize {
+import com.hyjf.am.config.dao.model.auto.Event;
+
+public class ContentEventsCustomize extends Event {
 
     /**
      * 

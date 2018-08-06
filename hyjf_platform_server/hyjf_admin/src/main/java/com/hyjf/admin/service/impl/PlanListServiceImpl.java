@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -97,5 +96,11 @@ public class PlanListServiceImpl implements PlanListService{
 	public int insertRecord(PlanListRequest form) {
 		int count = amTradeClient.insertRecord(form);
 		return count;
+	}
+
+	@Override
+	public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
+		HjhPlanResponse response = amTradeClient.getHjhPlanListByParamWithoutPage(form);
+		return response;
 	}
 }
