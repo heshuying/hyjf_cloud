@@ -34,8 +34,8 @@ public class VersionConfigServiceImpl implements VersionConfigService {
         //数据字典
         List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
         List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
-        response.getResult().setVersionNames(versionName);
-        response.getResult().setIsUpdates(isUpdate);
+        response.setVersionNames(versionName);
+        response.setIsUpdates(isUpdate);
         return response;
     }
     /**
@@ -50,8 +50,8 @@ public class VersionConfigServiceImpl implements VersionConfigService {
         //数据字典
         List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
         List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
-        response.getResult().setVersionNames(versionName);
-        response.getResult().setIsUpdates(isUpdate);
+        response.setVersionNames(versionName);
+        response.setIsUpdates(isUpdate);
         return response;
     }
     /**
