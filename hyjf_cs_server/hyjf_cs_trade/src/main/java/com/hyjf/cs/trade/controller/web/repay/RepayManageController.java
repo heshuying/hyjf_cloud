@@ -57,13 +57,10 @@ public class RepayManageController extends BaseTradeController {
     /**
      * 用户还款页面统计数据查询
      * @param token
-     * @param requestBean
-     * @param request
-     * @return
      */
     @ApiOperation(value = "用户还款页面统计数据", notes = "用户还款页面统计数据查询")
     @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
+    public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "token", required = true) String token){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
