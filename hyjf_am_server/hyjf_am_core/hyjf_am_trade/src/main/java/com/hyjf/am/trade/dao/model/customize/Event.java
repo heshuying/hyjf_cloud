@@ -1,26 +1,24 @@
-package com.hyjf.am.config.dao.model.customize;
+package com.hyjf.am.trade.dao.model.customize;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author lisheng
- * @version EventsCustomize, v0.1 2018/7/27 17:46
+ * @version Event, v0.1 2018/8/2 13:53
  */
 
-public class EventsCustomize implements Serializable {
+public class Event {
     private Integer id;
 
     private String eventTime;
 
     private String title;
 
+    private String content;
+
     private Integer eventYear;
 
     private Integer status;
-
-    private Integer createTime;
-
-    private Integer updateTime;
 
     private String addAdmin;
 
@@ -28,7 +26,13 @@ public class EventsCustomize implements Serializable {
 
     private String thumb;
 
-    private String content;
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -56,6 +60,14 @@ public class EventsCustomize implements Serializable {
         this.title = title == null ? null : title.trim();
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
     public Integer getEventYear() {
         return eventYear;
     }
@@ -70,22 +82,6 @@ public class EventsCustomize implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
     }
 
     public String getAddAdmin() {
@@ -112,11 +108,35 @@ public class EventsCustomize implements Serializable {
         this.thumb = thumb == null ? null : thumb.trim();
     }
 
-    public String getContent() {
-        return content;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

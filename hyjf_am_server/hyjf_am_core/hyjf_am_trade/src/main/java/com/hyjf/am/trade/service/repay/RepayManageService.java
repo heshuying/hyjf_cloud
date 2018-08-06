@@ -18,6 +18,12 @@ import java.util.List;
  * @version RepayManageService, v0.1 2018/6/26 18:04
  */
 public interface RepayManageService {
+    BigDecimal selectUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal selectOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal selectRepayOrgRepaywait(Integer userId);
+
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);
 
     Integer selectRepayCount(RepayListRequest requestBean);

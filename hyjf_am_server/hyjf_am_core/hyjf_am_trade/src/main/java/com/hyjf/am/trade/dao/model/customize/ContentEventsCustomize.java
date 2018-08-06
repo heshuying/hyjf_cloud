@@ -1,12 +1,14 @@
-package com.hyjf.am.config.dao.model.customize;
+package com.hyjf.am.trade.dao.model.customize;
 
+/**
+ * @author lisheng
+ * @version ContentEventsCustomize, v0.1 2018/8/2 13:56
+ */
 
-import com.hyjf.am.config.dao.model.auto.Event;
-
-public class ContentEventsCustomize extends Event {
+public class ContentEventsCustomize extends Event{
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -50,5 +52,4 @@ public class ContentEventsCustomize extends Event {
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
     }
-
 }

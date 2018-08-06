@@ -74,9 +74,9 @@ public interface AmConfigClient {
 	 * @return
 	 */
     int updateAppNewsConfig(UserVO users);
-	EventsVO getEventsAll(int begin, int end);
+
 
 	EventResponse getEvents(int userId, int begin, int end);
 
-	EventsVO selectPercentage(int percentage, int begin, int end, int userId);
+	EventVO selectPercentage(int percentage, int begin, int end, int userId);
 }

@@ -13,18 +13,6 @@ public interface ContentEventsCustomizeMapper {
 	 * @return
 	 */
 	List<Event> selectContentEvents(ContentEventsCustomize contentEventsCustomize);
-	/**
-	 * 根据条件查询列表
-	 * @param 
-	 * @return
-	 */
-	Event selectZong(ContentEventsCustomize contentEventsCustomize);
-	/**
-	 * 根据 查询投资百分比
-	 * @param 
-	 * @return
-	 */
-	Event selectPercentage(ContentEventsCustomize contentEventsCustomize);
 
 
 }

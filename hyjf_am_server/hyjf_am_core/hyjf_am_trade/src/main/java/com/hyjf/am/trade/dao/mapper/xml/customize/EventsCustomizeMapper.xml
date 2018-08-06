@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.EventsCustomizeMapper">
+
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.Event" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="event_time" property="eventTime" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="event_year" property="eventYear" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
+    <result column="add_admin" property="addAdmin" jdbcType="VARCHAR" />
+    <result column="act_time" property="actTime" jdbcType="INTEGER" />
+  </resultMap>
+	<select id="selectZong" resultMap="BaseResultMap"
+			parameterType="com.hyjf.am.trade.dao.model.customize.ContentEventsCustomize">
+			SELECT
+				*
+			FROM
+				(
+					SELECT
+						sum(account) AS event_time,
+						COUNT(1) AS event_year
+					FROM
+						(
+							SELECT
+								Account AS account
+							FROM
+								ht_borrow_tender
+							WHERE
+								create_time <![CDATA[<=]]> #{endCreate}
+							AND create_time <![CDATA[>=]]> #{startCreate}
+							UNION ALL
+								SELECT
+									assign_capital AS account
+								FROM
+									ht_credit_tender
+								WHERE
+									create_time <![CDATA[<=]]> #{endCreate}
+								AND create_time <![CDATA[>=]]> #{startCreate}
+						) c
+				) a,
+				(
+					SELECT
+						SUM(content) AS content
+					FROM
+						(
+							SELECT
+								sum(recover_interest_yes) AS content
+							FROM
+								ht_borrow_recover
+							WHERE
+								recover_yestime <![CDATA[<=]]> #{endCreate}
+							AND recover_yestime  <![CDATA[>=]]> #{startCreate}
+							UNION ALL
+								SELECT
+									SUM(recover_account_yes) AS content
+								FROM
+									ht_coupon_recover
+								WHERE
+									recover_yestime <![CDATA[<=]]> #{endCreate}
+								AND recover_yestime  <![CDATA[>=]]> #{startCreate}
+						) q
+				) b
+
+
+
+	</select>
+	<select id="selectPercentage" resultMap="BaseResultMap"
+			parameterType="com.hyjf.am.trade.dao.model.customize.ContentEventsCustomize">
+		SELECT * FROM (
+			SELECT
+				ROUND(bizhong / zongshu * 100) AS event_year
+			FROM
+				(
+					SELECT
+						count(1) AS zongshu
+					FROM
+						ht_account
+				) a,
+				(
+					SELECT
+						count(1) AS bizhong
+					FROM
+						ht_account
+					WHERE
+						bank_interest_sum <![CDATA[<]]>#{eventYear}
+				) b
+		) n,
+		 (
+			SELECT
+				SUM(hcr.recover_account_yes) AS content
+			FROM
+				ht_borrow_tender_cpn cpn
+			LEFT JOIN ht_coupon_recover hcr ON cpn.nid = hcr.tender_id
+			WHERE
+				user_id = #{actTime}
+			AND recover_yestime <![CDATA[<=]]> #{endCreate}
+			AND recover_yestime <![CDATA[>=]]> #{startCreate}
+		) m
+	</select>	
+	<sql id="Where_Clause">
+		<where>
+				AND 1=1
+			<if test="eventYear != null">
+				AND event_year = #{eventYear}
+			</if>
+			<if test="startCreate != null">
+				AND act_time <![CDATA[>=]]> #{startCreate}
+			</if>
+			<if test="endCreate != null">
+				AND act_time <![CDATA[<=]]> #{endCreate}
+			</if>
+				ORDER BY act_time DESC, create_time DESC
+			<if test="limitStart >= 0">
+				limit #{limitStart} , #{limitEnd}
+			</if>
+		</where>
+	</sql>
+
+</mapper>

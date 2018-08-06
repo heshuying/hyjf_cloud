@@ -114,7 +114,7 @@ public class AppRegistController extends BaseUserController {
         }catch (Exception e){
             return ret;
         }
-        if(CustomConstants.APP_STATUS_FAIL.equals(ret.get(CustomConstants.APP_STATUS))){
+        if(ret.get(CustomConstants.APP_STATUS)!=null){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));

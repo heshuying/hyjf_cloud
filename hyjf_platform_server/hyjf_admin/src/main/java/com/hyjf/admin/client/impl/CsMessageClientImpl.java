@@ -29,13 +29,11 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${am.dataCollect.service.name}")
-    private String dataCollectService;
 
     @Override
     public AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList) {
         AccountWebListResponse response = restTemplate
-                .postForEntity(dataCollectService+"/search/queryAccountWebList", accountWebList, AccountWebListResponse.class)
+                .postForEntity("http://CS-MESSAGE/cs-message/search/queryAccountWebList", accountWebList, AccountWebListResponse.class)
                 .getBody();
         if (response != null) {
             return response;
@@ -46,7 +44,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient {
     @Override
     public String selectBorrowInvestAccount(AccountWebListVO accountWebList) {
         String response = restTemplate
-                .postForEntity(dataCollectService+"/search/selectBorrowInvestAccount", accountWebList, String.class)
+                .postForEntity("http://CS-MESSAGE/cs-message/search/selectBorrowInvestAccount", accountWebList, String.class)
                 .getBody();
         if (response != null) {
             return response;
@@ -62,7 +60,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient {
     @Override
     public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
         Integer response = restTemplate
-                .postForEntity(dataCollectService+"/insert/insertaccountweblist", accountWebListVO, Integer.class)
+                .postForEntity("/insert/insertaccountweblist", accountWebListVO, Integer.class)
                 .getBody();
         if (response != null) {
             return response;
@@ -80,7 +78,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient {
     @Override
     public Integer getAssociatedRecordsCount(AssociatedRecordListRequest request) {
         Integer count = restTemplate
-                .postForEntity(dataCollectService+"/search/getassociatedrecordscount", request, Integer.class)
+                .postForEntity("http://CS-MESSAGE/cs-message/search/getassociatedrecordscount", request, Integer.class)
                 .getBody();
 
         return count;
@@ -95,7 +93,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient {
     @Override
     public List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request) {
         AssociatedRecordListResponse response = restTemplate
-                .postForEntity(dataCollectService+"/search/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
+                .postForEntity("http://CS-MESSAGE/cs-message/search/searchassociatedrecordlist", request, AssociatedRecordListResponse.class)
                 .getBody();
         if(Response.isSuccess(response)){
             return response.getResultList();
