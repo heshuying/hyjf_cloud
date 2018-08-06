@@ -218,5 +218,23 @@ public class AdminHjhPlanController {
 		int flg = adminHjhPlanService.insertRecord(form);
 		return flg;
 	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :计划列表无分页
+	 */
+	@RequestMapping(value = "/getHjhPlanListByParamWithoutPage",method = RequestMethod.POST)
+	public HjhPlanResponse getHjhPlanListByParamWithoutPage(@RequestBody @Valid PlanListRequest request){
+		HjhPlanResponse response = new HjhPlanResponse();
+		List<HjhPlanVO> list = adminHjhPlanService.selectHjhPlanListWithoutPage(request);
+        if(list.size() > 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                //代表成功
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+		return response;
+	}
     
 }

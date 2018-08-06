@@ -4,6 +4,7 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.customize.QuestionCustomizeMapper;
+import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionCustomize> getNewQuestionList() {
         List<QuestionCustomize> customizes = questionCustomizeMapper.getNewQuestionList();
+        return customizes;
+    }
+
+    @Override
+    public List<NewAppQuestionCustomize> getNewAppQuestionList() {
+        List<NewAppQuestionCustomize> customizes = questionCustomizeMapper.getNewAppQuestionList();
         return customizes;
     }
 }

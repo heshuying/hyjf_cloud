@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface QuestionService {
     int countScore(List<String> answerList);
 
     List<QuestionCustomize> getNewQuestionList();
+
+    List<NewAppQuestionCustomize> getNewAppQuestionList();
 }

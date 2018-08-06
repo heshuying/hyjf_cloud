@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.trade.mq.producer.WrbCallBackProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 
+import javax.annotation.Resource;
+
 /**
  * @author dxj
  * @version BatchBorrowRepayZTServiceImpl.java, v0.1 2018年6月23日 上午10:09:12
@@ -86,8 +89,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	@Autowired
 	private AppMessageProducer appMessageProducer;
 
+    @Resource
+	private SystemConfig systemConfig;
+
     @Autowired
-    SystemConfig systemConfig;
+	private WrbCallBackProducer wrbCallBackProducer;
     
     
 	@Override
@@ -2930,9 +2936,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			params.put("backTime", GetDate.formatDateTime(System.currentTimeMillis()));
 			// 还款金额
 			params.put("backMoney", repayAccount.toString());
-			//TODO: 风车理财队列
 			try {
-//				rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_WRB_CALLBACK_NOTIFY, JSONObject.toJSONString(params));
+				wrbCallBackProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
 			} catch (Exception e) {
 				logger.error("风车理财还款通知入列失败...", e);
 			}

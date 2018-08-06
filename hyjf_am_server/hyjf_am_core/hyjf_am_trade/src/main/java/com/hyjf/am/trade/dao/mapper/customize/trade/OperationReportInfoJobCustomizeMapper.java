@@ -27,7 +27,7 @@ public interface OperationReportInfoJobCustomizeMapper {
      * @param endMonth   结束月份
      * @return
      */
-    List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth);
+    List<OperationReportJobVO> getMonthDealMoney(@Param("startMonth") int startMonth,@Param("endMonth") int endMonth);
 
     /**
      * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率

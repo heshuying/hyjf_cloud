@@ -13,7 +13,7 @@ import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.HjhTenderService;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;

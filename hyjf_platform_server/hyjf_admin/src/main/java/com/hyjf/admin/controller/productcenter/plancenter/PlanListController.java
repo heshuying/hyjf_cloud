@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,8 @@ import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +28,7 @@ import com.hyjf.admin.beans.request.PlanListViewRequest;
 import com.hyjf.admin.beans.vo.AdminHjhPlanVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -33,13 +38,18 @@ import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 
 import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
 /**
  * @author libin
  * @version PlanListController.java, v0.1 2018年7月6日 上午9:08:43
@@ -461,4 +471,158 @@ public class PlanListController extends BaseController{
 			jsonObject.put("errorMsg", "请输入常见问题！");
 		}
 	}	
+	
+	/**
+	 * 导出功能
+	 * 
+	 * @param request
+	 * @param form
+	 */
+    @ApiOperation(value = "计划列表", notes = "计划列表导出")
+    @PostMapping(value = "/export")
+    @ResponseBody
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) throws Exception {
+		// 表格sheet名称
+		String sheetName = "计划列表";
+		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期年化收益率","最低加入金额（元）","最高加入金额（元）","投资增量（元）", "最小投资笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 生成一个表格
+		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+    	// 初始化原子层请求实体
+    	PlanListRequest form = new PlanListRequest();
+    	BeanUtils.copyProperties(viewRequest, form);
+    	// 不带分页的查询
+    	HjhPlanResponse res = this.planListService.getHjhPlanListByParamWithoutPage(form);
+    	if(CollectionUtils.isNotEmpty(res.getResultList())){
+			int sheetCount = 1;
+			int rowNum = 0;
+			for (int i = 0; i < res.getResultList().size(); i++) {
+				rowNum++;
+				if (i != 0 && i % 60000 == 0) {
+					sheetCount++;
+					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+					rowNum = 1;
+				}
+				// 新建一行
+				Row row = sheet.createRow(rowNum);
+				// 循环数据
+				for (int celLength = 0; celLength < titles.length; celLength++) {
+					HjhPlanVO hjhPlan = res.getResultList().get(i);
+
+					// 创建相应的单元格
+					Cell cell = row.createCell(celLength);
+
+					// 序号
+					if (celLength == 0) {
+						cell.setCellValue(i + 1);
+					}
+					// 计划编号
+					else if (celLength == 1) {
+						cell.setCellValue(StringUtils.isEmpty(hjhPlan.getPlanNid()) ? StringUtils.EMPTY : hjhPlan.getPlanNid());
+					}
+					// 计划名称
+					else if (celLength == 2) {
+						cell.setCellValue(StringUtils.isEmpty(hjhPlan.getPlanName()) ? StringUtils.EMPTY : hjhPlan.getPlanName());
+					}
+					// 还款方式
+					else if (celLength == 3) {
+						if ("endday".equals(hjhPlan.getBorrowStyle())) {
+							cell.setCellValue("按天计息，到期还本还息");
+						} else if ("end".equals(hjhPlan.getBorrowStyle())) {
+							cell.setCellValue("按月计息，到期还本还息");
+						} else {
+							cell.setCellValue(hjhPlan.getBorrowStyle());
+						}
+					}
+					// 锁定期
+					else if (celLength == 4) {
+						if (hjhPlan.getIsMonth() == 0) {
+							cell.setCellValue(hjhPlan.getLockPeriod()+ "天");
+						} else if (hjhPlan.getIsMonth() == 1) {
+							cell.setCellValue(hjhPlan.getLockPeriod()+ "个月");
+						}
+					}
+					// 预期年化收益率
+					else if (celLength == 5) {
+						cell.setCellValue( hjhPlan.getExpectApr() + "%");
+					}
+					
+					// 最低加入金额（元）
+					else if (celLength == 6) {
+						if(hjhPlan.getMinInvestment() != null){
+							cell.setCellValue(hjhPlan.getMinInvestment().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 最高加入金额（元）
+					else if (celLength == 7) {
+						if(hjhPlan.getMaxInvestment() != null){
+							cell.setCellValue(hjhPlan.getMaxInvestment().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 投资增量（元）
+					else if (celLength == 8) {
+						if(hjhPlan.getInvestmentIncrement() != null){
+							cell.setCellValue(hjhPlan.getInvestmentIncrement().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 最小投资笔数
+					else if (celLength == 9) {
+						if(hjhPlan.getMinInvestCounts() != null){
+							cell.setCellValue(hjhPlan.getMinInvestCounts().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 开放额度（元）
+					else if (celLength == 10) {
+						if(hjhPlan.getAvailableInvestAccount() != null){
+							cell.setCellValue(hjhPlan.getAvailableInvestAccount().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 累计加入金额（元）
+					else if (celLength == 11) {
+						if(hjhPlan.getJoinTotal() != null){
+							cell.setCellValue(hjhPlan.getJoinTotal().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 待还总额（元）
+					else if (celLength == 12) {
+						if(hjhPlan.getRepayWaitAll() != null){
+							cell.setCellValue(hjhPlan.getRepayWaitAll().toString());
+						}else{
+							cell.setCellValue("0.00");
+						}
+					}
+					// 计划状态
+					else if (celLength == 13) {
+						if (hjhPlan.getPlanInvestStatus() == 1) {
+							cell.setCellValue("启用");
+						} else if (hjhPlan.getPlanInvestStatus() == 2) {
+							cell.setCellValue("关闭");
+						}
+					}
+					// 添加时间
+					else if (celLength == 14) {
+						if(hjhPlan.getAddTime()!= null){                        
+							cell.setCellValue(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(hjhPlan.getAddTime()));
+						}
+					}	
+				}
+			}
+    	}
+		// 导出
+		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+    }
 }
