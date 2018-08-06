@@ -534,4 +534,5 @@ public interface AmUserClient {
      * @return
      */
     CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
+    CertificateAuthorityResponse isCAIdNoCheck(String param, String name);
 }

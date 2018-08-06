@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BatchCreditEndService;
+import com.hyjf.cs.trade.service.batch.BatchCreditEndService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author liubin
  * @version BatchCreditEndController, v0.1 2018/6/28 13:59
  */
-@Api(value = "批次结束债权Batch接口")
+@Api(tags = "批次结束债权Batch接口")
 @Controller
 @RequestMapping(value = "/batch/creditend")
 public class BatchCreditEndController extends BaseTradeController {

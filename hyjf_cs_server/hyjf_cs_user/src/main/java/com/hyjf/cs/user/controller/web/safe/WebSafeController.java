@@ -38,7 +38,7 @@ import java.util.Map;
  * @version SafeController, v0.1 2018/6/11 14:13
  */
 
-@Api(value = "web端-用户账户设置", description = "web端-用户账户设置")
+@Api(value = "web端-用户账户设置", tags = "web端-用户账户设置")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")
@@ -117,7 +117,7 @@ public class WebSafeController extends BaseUserController {
 
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
         if (null != webUser) {
-            webUser = safeService.setToken(webUser);
+            webUser = safeService.updateToken(token,webUser);
             result.setData(webUser);
         }
 
@@ -170,7 +170,7 @@ public class WebSafeController extends BaseUserController {
             safeService.updateEmail(user.getUserId(), bindEmailVO.getEmail());
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = safeService.setToken(webUser);
+                webUser = safeService.updateToken(token,webUser);
                 result.setData(webUser);
             }
         } catch (MQException e) {
@@ -216,7 +216,7 @@ public class WebSafeController extends BaseUserController {
             safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
             if (null != webUser) {
-                webUser = safeService.setToken(webUser);
+                webUser = safeService.updateToken(token,webUser);
                 result.setData(webUser);
             }
         } catch (MQException e) {
@@ -236,8 +236,9 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "更新sms配置", notes = "更新sms配置")
     @ApiImplicitParam(name = "param", value = "{key:String,value:String}", dataType = "Map")
     @PostMapping(value = "/updateSmsConfig", produces = "application/json; charset=utf-8")
-    public WebResult updateSmsConfig(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
+    public WebResult updateSmsConfig(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<>();
+        String token = request.getHeader("token");
         String key = param.get("key");
         String value = param.get("value");
         // 加入验证
@@ -251,7 +252,7 @@ public class WebSafeController extends BaseUserController {
          */
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
         if (null != webUser) {
-            webUser = safeService.setToken(webUser);
+            webUser = safeService.updateToken(token,webUser);
             result.setData(webUser);
         }
         return result;
@@ -286,16 +287,17 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "上传头像", notes = "上传头像")
     @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
-    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
+    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
         String image = param.get("image");
+        String token = request.getHeader("HttpServletRequest request");
         try {
             UserVO user = safeService.queryUserByUserId(userId);
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
-                webUser = safeService.setToken(webUser);
+                webUser = safeService.updateToken(token,webUser);
                 result.setData(webUser);
             }
             Map<String, String> map = new HashMap<>();

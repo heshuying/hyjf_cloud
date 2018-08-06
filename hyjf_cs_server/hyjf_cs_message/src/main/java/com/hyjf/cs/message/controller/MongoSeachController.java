@@ -5,21 +5,20 @@ import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.mongo.ic.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hyjf.cs.message.service.bank.BankReturnConfig;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -53,6 +52,20 @@ public class MongoSeachController extends BaseController {
 
     @Autowired
     private HjhPlanCapitalDao hjhPlanCapitalDao;
+
+    @Autowired
+    BankReturnConfig bankReturnConfig;
+
+    /**
+     * 查询检证日志
+     * @param logOrdId
+     * @return
+     */
+    @RequestMapping("/getRetCode/{logOrdId}")
+    public String getRetCode(@PathVariable String logOrdId) {
+        String result = bankReturnConfig.getRetCode(logOrdId);
+        return result;
+    }
 
     /**
      * 根据userId查询渠道投资信息
@@ -234,7 +247,7 @@ public class MongoSeachController extends BaseController {
      * @Author : huanghui
      */
     @RequestMapping(value = "/getPlanCapitalList")
-    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalVO hjhPlanCapitalVO){
+    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
         HjhPlanCapitalResponse hjhPlanCapitalResponse = new HjhPlanCapitalResponse();
 
         int recordTotal = (int) hjhPlanCapitalDao.getCount(hjhPlanCapitalVO);
@@ -243,7 +256,7 @@ public class MongoSeachController extends BaseController {
             List<HjhPlanCapital> responseList = hjhPlanCapitalDao.findAllList(hjhPlanCapitalVO);
 
             if (responseList != null) {
-                List<HjhPlanCapitalVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalVO.class);
+                List<HjhPlanCapitalCustomizeVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalCustomizeVO.class);
                 hjhPlanCapitalResponse.setResultList(voList);
             }
         }

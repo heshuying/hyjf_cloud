@@ -1,6 +1,8 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.JxBankConfigResponse;
+import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
@@ -82,4 +84,11 @@ public interface AmConfigClient {
      * @return
      */
     JxBankConfigResponse getJXbankConfigByBankId(int bankId);
+    /**
+   	 * 合作机构
+   	 * @return
+   	 */
+   	LinkResponse getLinks();
+
+   	AdminSystemResponse isExistsApplicant(String applicant);
 }

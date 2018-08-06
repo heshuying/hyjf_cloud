@@ -1,10 +1,12 @@
 package com.hyjf.cs.message.client;
 
-import java.util.List;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.am.vo.user.UserVO;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -65,4 +67,16 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<MessagePushTemplateVO> getAllTemplates();
+
+	/**
+	 * 开关闭推送服务
+	 * @param users
+	 * @return
+	 */
+    int updateAppNewsConfig(UserVO users);
+	EventsVO getEventsAll(int begin, int end);
+
+	EventResponse getEvents(int userId, int begin, int end);
+
+	EventsVO selectPercentage(int percentage, int begin, int end, int userId);
 }

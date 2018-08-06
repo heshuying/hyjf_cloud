@@ -1,16 +1,15 @@
 package com.hyjf.am.trade.service.impl;
 
-import com.google.common.collect.Maps;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
-import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.service.AssetManageService;
+import com.hyjf.am.vo.trade.assetmanage.AppMyPlanCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.QueryMyProjectVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -211,6 +210,43 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         boolean isEnd = request.getCurrentPage() * request.getPageSize() >= total;
         vo.setEnd(isEnd);
         return vo;
+    }
+
+
+    @Override
+    public List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.selectAppAlreadyRepayList(request);
+    }
+
+    @Override
+    public List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.searchAppCreditRecordList(request);
+    }
+
+    @Override
+    public int selectTenderToCreditListCount(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.selectTenderToCreditListCount(request);
+    }
+
+    @Override
+    public List<AppMyPlanCustomize> selectAppMyPlanList(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.selectAppMyPlanList(request);
+    }
+
+    @Override
+    public int countAppMyPlan(AssetManageBeanRequest request) {
+        return assetManageCustomizeMapper.countAppMyPlan(request);
+    }
+
+    @Override
+    public List<AppAlreadyRepayListCustomize> selectAlreadyRepayList(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return appUserInvestCustomizeMapper.selectAlreadyRepayList(params);
+    }
+
+    @Override
+    public List<AppTenderToCreditListCustomize> selectTenderToCreditList(Map<String, Object> params) {
+        return appTenderCreditCustomizeMapper.selectTenderToCreditList(params);
     }
 
     private Map<String,Object> createParame(AssetManageBeanRequest request) {

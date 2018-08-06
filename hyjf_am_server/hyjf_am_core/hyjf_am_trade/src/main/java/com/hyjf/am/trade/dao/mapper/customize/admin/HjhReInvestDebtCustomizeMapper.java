@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public interface HjhReInvestDebtCustomizeMapper {
      * @param
      * @return
      */
-    List<HjhPlanCapitalVO> queryReinvestDebtList(Map<String, Object> param);
+    List<HjhPlanCapitalCustomizeVO> queryReinvestDebtList(Map<String, Object> param);
 
     //    List<HjhReInvestDebtCustomize> queryReInvestDebts(HjhReInvestDebtCustomize hjhReInvestDebtCustomize);
     /**

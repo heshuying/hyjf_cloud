@@ -27,7 +27,7 @@ import java.util.Map;
  * @author walter.limeng
  * @version UtmController, v0.1 2018/7/06 15:17
  */
-@Api(value = "VIP管理汇直投/汇计划回款")
+@Api(value = "VIP管理汇直投/汇计划回款",tags ="VIP管理汇直投/汇计划回款")
 @RestController
 @RequestMapping("/hyjf-admin/coupon")
 public class CouponBackMoneyController extends BaseController {

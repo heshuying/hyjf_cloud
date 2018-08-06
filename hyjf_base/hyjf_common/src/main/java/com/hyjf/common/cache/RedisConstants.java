@@ -12,12 +12,12 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app_";
+    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
 
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web_";
+    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
 
     /**
      * 用户一秒内的登录次数(ip)
@@ -53,7 +53,7 @@ public class RedisConstants {
     /**
      * 加入计划防重校验
      */
-    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT";
+    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT:";
 
     /**
      * 汇计划可投余额前缀
@@ -121,7 +121,7 @@ public class RedisConstants {
     /**
      * 散标投资防重校验
      */
-    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT";
+    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT:";
 
 
     /**
@@ -163,4 +163,85 @@ public class RedisConstants {
      * 单用户防止重复提交redis 前缀
      */
     public static final String PRE_REQUEST_LIMIT = "ReqLimit:";
+
+    /**
+     * borrowNid
+     */
+    public static final String BORROW_NID = "BORROW_NID:";
+    /**
+     * wechat sign
+     */
+    public static final String SIGN = "SIGN:";
+    /**
+     * admin单点登陆用户
+     */
+    public static final String ADMIN_REQUEST = "Admin:";
+    
+    /**
+     * 协议模板---协议前台展示名称的别名
+     */
+    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias:";
+    
+    /**
+     * 协议模板---协议文件存储Redis前缀
+     */
+    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
+    
+
+    /**
+     * 用户token令牌前缀
+     */
+    public static final String USER_TOKEN_REDIS = "user_token_";
+
+    /**
+     * 放款批次号key
+     */
+    public static final String BATCH_NO = "batchNo";
+    /**
+     *
+     */
+    public static final String DATA_BATCH_NO = "dataBatchNo";
+    /**
+     * 短信配置key
+     */
+    public static final String SMS_CONFIG = "smsConfig";
+
+    /**
+     * 记录密码错误次数Redis前缀
+     */
+    public static final String PASSWORD_ERR_COUNT = "password_err_count_";
+
+    /**
+     * 邮件配置key
+     */
+    public static final String SITE_SETTINGS = "site_settings";
+
+    /**
+     * 消息推送模版key
+     */
+    public static final String MESSAGE_PUSH_TEMPLATE = "message_push_template";
+
+    /**
+     * 短信通知配置key
+     */
+    public static final String SMS_NOTICE_CONFIG = "sms_notice_config";
+
+    /**
+     * 短信模版key
+     */
+    public static final String SMS_TEMPLATE = "sms_template";
+
+    /**
+     * 邮件模版key
+     */
+    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template";
+
+    /**
+     * 运营报告定时任务key
+     */
+    public static final String Statistics_Operation_Report = "StatisticsOperationReportTask";
+
+    /** CONTROLLOR @value值 */
+    public static final String CONTROLLOR_CLASS_NAME = "UserRegistDefine:";
+
 }

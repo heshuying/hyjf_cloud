@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AutoTenderService;
+import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import java.util.List;
  * @author liubin
  * @version AutoTenderController, v0.1 2018/6/28 13:59
  */
-@Api(value = "自动投资Batch接口")
+@Api(tags = "自动投资Batch接口")
 @Controller
 @RequestMapping(value = "/batch/tender")
 public class AutoTenderController extends BaseTradeController {

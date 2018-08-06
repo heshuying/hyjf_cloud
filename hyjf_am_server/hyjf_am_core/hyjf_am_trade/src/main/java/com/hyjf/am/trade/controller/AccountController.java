@@ -3,23 +3,22 @@
  */
 package com.hyjf.am.trade.controller;
 
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.BankMerchantAccountResponse;
-import com.hyjf.am.response.trade.AccountResponse;
-import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.hyjf.am.response.admin.BankMerchantAccountResponse;
+import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author ${yaoy}
@@ -32,8 +31,13 @@ public class AccountController extends BaseController {
     @Autowired
     private AccountService accountService;
 
+    /**
+     * 根据用户id查询账户信息
+     * @param borrowUserId
+     * @return
+     */
     @GetMapping("/getAccountByUserId/{borrowUserId}")
-    public AccountResponse getAccountByUserId(Integer borrowUserId) {
+    public AccountResponse getAccountByUserId(@PathVariable Integer borrowUserId) {
         AccountResponse response = new AccountResponse();
         Account account = accountService.getAccount(borrowUserId);
         if (account != null) {
@@ -92,37 +96,6 @@ public class AccountController extends BaseController {
             int updateFlag = accountService.updateOfRepayCouponHjh(accountVO);
             response.setUpdateFlag(updateFlag);
         }
-        return response;
-    }
-
-    /**
-     * @Author walter.limeng
-     * @Description  根据nid和trade查询
-     * @Date 11:33 2018/7/18
-     * @Param nid
-     * @Param trade
-     * @return
-     */
-    @GetMapping("/countaccountweblist/{nid}/{trade}")
-    public AccountWebListResponse countAccountWebList(@PathVariable String nid,@PathVariable String trade) {
-        AccountWebListResponse response = new AccountWebListResponse();
-        Integer count = accountService.countAccountWebList(nid,trade);
-        response.setRecordTotal(count);
-        return response;
-    }
-
-    /**
-     * @Author walter.limeng
-     * @Description  新增accountWebList
-     * @Date 14:08 2018/7/18
-     * @Param
-     * @return
-     */
-    @PostMapping("/insertaccountweblist")
-    public AccountWebListResponse insertAccountWebList(@RequestBody AccountWebListVO accountWebList) {
-        AccountWebListResponse response = new AccountWebListResponse();
-        Integer count = accountService.insertAccountWebList(accountWebList);
-        response.setRecordTotal(count);
         return response;
     }
 

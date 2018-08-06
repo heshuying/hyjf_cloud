@@ -12,4 +12,24 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
  */
 public class BorrowApicronResponse extends Response<BorrowApicronVO> {
 
+    private int count;
+
+    private int flag;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
 }

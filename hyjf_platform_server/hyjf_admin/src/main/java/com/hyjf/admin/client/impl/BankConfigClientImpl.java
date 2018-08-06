@@ -3,11 +3,9 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.client.BankConfigClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
-import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -41,19 +39,16 @@ public class BankConfigClientImpl implements BankConfigClient {
     @Override
     public AdminBankConfigResponse selectBankConfigById(Integer bankId){
         AdminBankConfigResponse res= new AdminBankConfigResponse();
-//        return restTemplate
-//                .postForEntity("http://AM-CONFIG/am-config/bankconfig/selectBankConfigById" ,adminRequest, AdminBankConfigResponse.class).getBody();
-        BanksConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+        BankConfigResponse response = restTemplate
+                .getForEntity("http://AM-CONFIG/am-config/config/getBankConfigByBankId/" + bankId, BankConfigResponse.class).getBody();
         if (response != null) {
-            BanksConfigVO vo=response.getResult();
+            BankConfigVO vo=response.getResult();
             if(vo != null){
-                BankConfigVO vO = new BankConfigVO();
-                BeanUtils.copyProperties(vo,vO);
-                res.setResult(vO);
+                res.setResult(vo);
                 res.setRtn(Response.SUCCESS);
                 return res;
             }
+            return null;
         }
         return null;
     }

@@ -535,7 +535,7 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     borrowPreNid = borrowPreNidNew;
                     break;
                 } else {
@@ -604,7 +604,7 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
                 }
             }else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0) ||
                     (hjhLabel.getLabelTermStart()!=null && hjhLabel.getLabelTermStart().intValue()>0)) {
-                if(borrow.getBorrowPeriod() == hjhLabel.getLabelTermStart() || borrow.getBorrowPeriod() == hjhLabel.getLabelTermEnd()){
+                if(borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermStart()) || borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())){
 //					score = score+1;
                 }else{
                     continue;

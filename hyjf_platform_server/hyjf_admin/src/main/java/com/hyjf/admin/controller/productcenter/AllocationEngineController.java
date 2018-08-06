@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AllocationEngineController.java, v0.1 2018年7月3日 上午11:46:27
  */
-@Api(value = "计划专区列表",description = "计划专区列表")
+@Api(value = "计划专区列表",tags = "计划专区列表")
 @RestController
 @RequestMapping("/hyjf-admin/allocation")
 public class AllocationEngineController extends BaseController{
@@ -252,7 +252,7 @@ public class AllocationEngineController extends BaseController{
 	public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划专区";
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","计划编号", "计划名称","添加时间", "状态" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -364,7 +364,7 @@ public class AllocationEngineController extends BaseController{
 	public void exportPlanConfigAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AllocationEngineViewRequest  viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划配置";
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","标签编号", "标签名称","添加时间", "状态","排序" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -606,7 +606,7 @@ public class AllocationEngineController extends BaseController{
 		hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
 		List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
 		
-		
+
 		if (hjhAllocationEngineList != null) {
 			for(HjhAllocationEngineVO object : hjhAllocationEngineList){
 				//取自DB的LabelSort

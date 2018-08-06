@@ -28,6 +28,20 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         return AccountWebList.class;
     }
 
+    public Integer countAccountWebList(String nid, String trade) {
+        Query query = new Query();
+        Criteria criteria =  Criteria.where("id").gt(0);
+        if(StringUtils.isNoneBlank(nid)){
+            criteria = criteria.and("ordid").is(nid);
+        }
+        if(StringUtils.isNoneBlank(trade)){
+            criteria = criteria.and("trade").is(trade);
+        }
+        query.addCriteria(criteria);
+        Long count = mongoTemplate.count(query,getEntityClass());
+        return count.intValue();
+    }
+
     public long queryWebCount(AccountWebListVO accountWebList){
         Query query = new Query();
         Criteria criteria = createCriteria(accountWebList);

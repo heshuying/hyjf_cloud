@@ -1,14 +1,13 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
-import com.hyjf.am.response.trade.BankCardBeanResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +60,20 @@ public class AmConfigClientImpl implements AmConfigClient {
 		AdminBankConfigResponse response = restTemplate
 				.postForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
 		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询江西银行配置（快捷支付）
+	 * @return
+	 */
+	@Override
+	public List<JxBankConfigVO> getQuickPaymentJxBankConfig(){
+		String url = "http://AM-CONFIG/am-config/config/getQuickPaymentJxBankConfig";
+		JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
+		if(response != null){
 			return response.getResultList();
 		}
 		return null;

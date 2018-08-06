@@ -38,6 +38,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userName查询user信息
+	 * 
 	 * @auth sunpeikai
 	 * @param
 	 * @return
@@ -45,10 +46,8 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<UserVO> searchUserByUsername(String userName) {
 		String url = "http://AM-USER/am-user/customertransfer/searchuserbyusername/" + userName;
-		UserResponse response = restTemplate
-				.getForEntity(url, UserResponse.class)
-				.getBody();
-		if(Response.isSuccess(response)){
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
 			return response.getResultList();
 		}
 		return null;
@@ -56,6 +55,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userId查询accountChinapnr开户信息
+	 * 
 	 * @auth sunpeikai
 	 * @param
 	 * @return
@@ -63,10 +63,8 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<AccountChinapnrVO> searchAccountChinapnrByUserId(Integer userId) {
 		String url = "http://AM-USER/am-user/customertransfer/searchaccountchinapnrbyuserid/" + userId;
-		AccountChinapnrResponse response = restTemplate
-				.getForEntity(url, AccountChinapnrResponse.class)
-				.getBody();
-		if(Response.isSuccess(response)){
+		AccountChinapnrResponse response = restTemplate.getForEntity(url, AccountChinapnrResponse.class).getBody();
+		if (Response.isSuccess(response)) {
 			return response.getResultList();
 		}
 		return null;
@@ -74,17 +72,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据userId查询用户信息
+	 * 
 	 * @auth sunpeikai
-	 * @param userId 用户id
+	 * @param userId
+	 *            用户id
 	 * @return
 	 */
 	@Override
 	public UserVO searchUserByUserId(Integer userId) {
 		String url = "http://AM-USER/am-user/customertransfer/searchuserbyuserid/" + userId;
-		UserResponse response = restTemplate
-				.getForEntity(url, UserResponse.class)
-				.getBody();
-		if(Response.isSuccess(response)){
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
 			return response.getResult();
 		}
 		return null;
@@ -92,16 +90,15 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据accountId获取用户
+	 * 
 	 * @auther: hesy
 	 * @date: 2018/7/14
 	 */
 	@Override
 	public UserVO getUserByAccountId(String accountId) {
 		String url = "http://AM-USER/am-user/user/getby_accountid/" + accountId;
-		UserResponse response = restTemplate
-				.getForEntity(url, UserResponse.class)
-				.getBody();
-		if(Response.isSuccess(response)){
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
 			return response.getResult();
 		}
 		return null;
@@ -110,8 +107,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO getUserByUserName(String loginUserName) {
 		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/findByCondition/" + loginUserName, UserResponse.class)
-				.getBody();
+				.getForEntity(userService + "/user/findByCondition/" + loginUserName, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -149,16 +145,19 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
 	/**
 	 * 根据userId列表查询user列表
+	 * 
 	 * @auth sunpeikai
-	 * @param userIds 用户id列表
+	 * @param userIds
+	 *            用户id列表
 	 * @return
 	 */
 	@Override
 	public List<UserVO> findUserListByUserIds(String userIds) {
-		UserResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/platformtransfer/finduserlistbyuserids",userIds, UserResponse.class).getBody();
+		UserResponse response = restTemplate.postForEntity(
+				"http://AM-USER/am-user/platformtransfer/finduserlistbyuserids", userIds, UserResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -167,15 +166,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 利用borrowNid查询出来的异常标的借款人userId查询银行账户
+	 * 
 	 * @auth sunpeikai
-	 * @param userId 用户id
+	 * @param userId
+	 *            用户id
 	 * @return
 	 */
 	@Override
 	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
 		String url = "http://AM-USER/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
-		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
-		if(response != null){
+		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
+		if (response != null) {
 			return response.getResult();
 		}
 		return null;
@@ -183,15 +184,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户名获取自定义属性的user信息
+	 * 
 	 * @auth sunpeikai
-	 * @param userName 用户名
+	 * @param userName
+	 *            用户名
 	 * @return
 	 */
 	@Override
 	public UserInfoCustomizeVO getUserInfoCustomizeByUserName(String userName) {
 		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserName/" + userName;
-		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
-		if(response != null){
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url, UserInfoCustomizeResponse.class).getBody();
+		if (response != null) {
 			return response.getResult();
 		}
 		return null;
@@ -199,15 +202,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查询自定义用户信息
+	 * 
 	 * @auth sunpeikai
-	 * @param userId 用户名
+	 * @param userId
+	 *            用户名
 	 * @return
 	 */
 	@Override
 	public UserInfoCustomizeVO getUserInfoCustomizeByUserId(Integer userId) {
 		String url = "http://AM-USER/am-user/userInfo/queryUserInfoCustomizeByUserId/" + userId;
-		UserInfoCustomizeResponse response = restTemplate.getForEntity(url,UserInfoCustomizeResponse.class).getBody();
-		if(response != null){
+		UserInfoCustomizeResponse response = restTemplate.getForEntity(url, UserInfoCustomizeResponse.class).getBody();
+		if (response != null) {
 			return response.getResult();
 		}
 		return null;
@@ -215,55 +220,61 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查询推荐人表信息
+	 * 
 	 * @auth sunpeikai
-	 * @param userId 用户id
+	 * @param userId
+	 *            用户id
 	 * @return
 	 */
 	@Override
 	public SpreadsUserVO searchSpreadsUserByUserId(Integer userId) {
 		String url = "http://AM-USER/am-user/userInfo/querySpreadsUsersByUserId/" + userId;
-		SpreadsUserResponse response = restTemplate.getForEntity(url,SpreadsUserResponse.class).getBody();
-		if(response != null){
+		SpreadsUserResponse response = restTemplate.getForEntity(url, SpreadsUserResponse.class).getBody();
+		if (response != null) {
 			return response.getResult();
 		}
 		return null;
 	}
 
-    /**
-     * 根据用户id查询employee
-     * @auth sunpeikai
-     * @param userId 用户id
-     * @return
-     */
-    @Override
-    public EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId) {
-        String url = "http://AM-USER/am-user/userInfo/selectEmployeeByUserId/" + userId;
-        EmployeeCustomizeResponse response = restTemplate.getForEntity(url,EmployeeCustomizeResponse.class).getBody();
-        if(response != null){
-            return response.getResult();
-        }
-        return null;
-    }
+	/**
+	 * 根据用户id查询employee
+	 * 
+	 * @auth sunpeikai
+	 * @param userId
+	 *            用户id
+	 * @return
+	 */
+	@Override
+	public EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectEmployeeByUserId/" + userId;
+		EmployeeCustomizeResponse response = restTemplate.getForEntity(url, EmployeeCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 
 	/**
 	 * 查询自动投资债转异常列表
+	 * 
 	 * @auth sunpeikai
 	 * @param
 	 * @return
 	 */
 	@Override
 	public AdminUserAuthListResponse userAuthList(AdminUserAuthListRequest adminUserAuthListRequest) {
-		AdminUserAuthListResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/userauth/userauthlist",adminUserAuthListRequest, AdminUserAuthListResponse.class)
-				.getBody();
+		AdminUserAuthListResponse response = restTemplate.postForEntity("http://AM-USER/am-user/userauth/userauthlist",
+				adminUserAuthListRequest, AdminUserAuthListResponse.class).getBody();
 
 		return response;
 	}
 
 	/**
 	 * 同步用户授权状态
+	 * 
 	 * @auth sunpeikai
-	 * @param type 1自动投资授权  2债转授权
+	 * @param type
+	 *            1自动投资授权 2债转授权
 	 * @return
 	 */
 	@Override
@@ -277,19 +288,22 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更具userName获取开户信息
+	 * 
 	 * @auther: hesy
 	 * @date: 2018/7/14
 	 */
 	@Override
 	public BankOpenAccountVO queryBankOpenAccountByUserName(String userName) {
-		BankOpenAccountResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/get_openaccount_byusername/" + userName, BankOpenAccountResponse.class).
-				getBody();
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/get_openaccount_byusername/" + userName,
+						BankOpenAccountResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
+
 	/**
 	 * 查找用户信息
 	 *
@@ -310,6 +324,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据筛选条件查找用户总数
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -327,15 +342,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户详情
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserManagerDetailVO selectUserDetailById(String userId) {
-		UserManagerDetailResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectUserDetail/" + userId, UserManagerDetailResponse.class).
-				getBody();
+		UserManagerDetailResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectUserDetail/" + userId,
+						UserManagerDetailResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -344,15 +361,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取测评信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserEvalationResultVO getUserEvalationResult(String userId) {
-		UserEvalationResultResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/user/selectUserEvalationResultByUserId/" + userId, UserEvalationResultResponse.class).
-				getBody();
+		UserEvalationResultResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUserEvalationResultByUserId/" + userId,
+						UserEvalationResultResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -361,15 +380,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取开户信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserBankOpenAccountVO selectBankOpenAccountByUserId(String userId) {
-		UserBankOpenAccountResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByUserId/" + userId, UserBankOpenAccountResponse.class).
-				getBody();
+		UserBankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectBankOpenAccountByUserId/" + userId,
+						UserBankOpenAccountResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -378,15 +399,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取企业用户开户信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public CorpOpenAccountRecordVO selectCorpOpenAccountRecordByUserId(String userId) {
-		CorpOpenAccountRecordResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectCorpOpenAccountRecordByUserId/" + userId, CorpOpenAccountRecordResponse.class).
-				getBody();
+		CorpOpenAccountRecordResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectCorpOpenAccountRecordByUserId/" + userId,
+						CorpOpenAccountRecordResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -395,15 +418,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取第三方平台绑定信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public BindUserVo selectBindeUserByUserId(String userId) {
-		BindUserResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectBindUserByUserId/" + userId, BindUserResponse.class).
-				getBody();
+		BindUserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectBindUserByUserId/" + userId,
+						BindUserResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -412,15 +437,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户CA认证记录表
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public CertificateAuthorityVO selectCertificateAuthorityByUserId(String userId) {
-		CertificateAuthorityResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId, CertificateAuthorityResponse.class).
-				getBody();
+		CertificateAuthorityResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectCertificateAuthorityByUserId/" + userId,
+						CertificateAuthorityResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -429,15 +456,17 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户修改信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserManagerUpdateVO selectUserUpdateInfoByUserId(String userId) {
-		UserManagerUpdateResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectUserUpdateInfoByUserId/" + userId, UserManagerUpdateResponse.class).
-				getBody();
+		UserManagerUpdateResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectUserUpdateInfoByUserId/" + userId,
+						UserManagerUpdateResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -446,20 +475,21 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新用户信息
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public int updataUserInfo(UserManagerUpdateRequest request) {
-		int intUpdFlg = restTemplate.
-				postForEntity("http://AM-USER/am-user/userManager/updataUserInfo", request, Integer.class).
-				getBody();
+		int intUpdFlg = restTemplate
+				.postForEntity("http://AM-USER/am-user/userManager/updataUserInfo", request, Integer.class).getBody();
 		return intUpdFlg;
 	}
 
 	/**
 	 * 根据用户id获取推荐人信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -467,14 +497,18 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserRecommendCustomizeVO selectUserRecommendByUserId(String userId) {
 		UserRecommendCustomizeResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userManager/selectUserRecommendUserId/" +userId, UserRecommendCustomizeResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userManager/selectUserRecommendUserId/" + userId,
+						UserRecommendCustomizeResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
+
 	/**
 	 * 校验手机号
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @param mobile
@@ -482,14 +516,16 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int countUserByMobile(int userId, String mobile) {
-		int checkFlg = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/" + userId +"/"+ mobile, Integer.class).
-				getBody();
+		int checkFlg = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/checkMobileByUserId/" + userId + "/" + mobile,
+						Integer.class)
+				.getBody();
 		return checkFlg;
 	}
 
 	/**
 	 * 校验推荐人
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @param recommendName
@@ -497,23 +533,25 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int checkRecommend(String userId, String recommendName) {
-		int checkFlg = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/checkRecommend/" + userId+"/" + recommendName, Integer.class).
-				getBody();
+		int checkFlg = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/checkRecommend/" + userId + "/" + recommendName,
+						Integer.class)
+				.getBody();
 		return checkFlg;
 	}
 
 	/**
 	 * 根据用户id查找用户信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserVO selectUserByUserId(int userId) {
-		UserResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class).
-				getBody();
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -522,15 +560,16 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id查找用户信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public List<BankCardVO> selectBankCardByUserId(int userId) {
-		BankCardResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + userId, BankCardResponse.class).
-				getBody();
+		BankCardResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/callcenter/getTiedCardForBank/" + userId, BankCardResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}
@@ -539,85 +578,89 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新企业用户开户记录
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public int updateCorpOpenAccountRecord(CorpOpenAccountRecordRequest request) {
-		int updFlg = restTemplate.
-				postForEntity("http://AM-USER/am-user/userManager/updateCorpOpenAccountRecord", request, Integer.class).
-				getBody();
+		int updFlg = restTemplate
+				.postForEntity("http://AM-USER/am-user/userManager/updateCorpOpenAccountRecord", request, Integer.class)
+				.getBody();
 		return updFlg;
 	}
 
 	/**
 	 * 插入企业用户开户记录
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public int insertCorpOpenAccountRecord(CorpOpenAccountRecordRequest request) {
-		int instFlg = restTemplate.
-				postForEntity("http://AM-USER/am-user/userManager/insertCorpOpenAccountRecord", request, Integer.class).
-				getBody();
+		int instFlg = restTemplate
+				.postForEntity("http://AM-USER/am-user/userManager/insertCorpOpenAccountRecord", request, Integer.class)
+				.getBody();
 		return instFlg;
 	}
 
-
 	/**
-     * 获取银行卡配置信息
-     * @auther: nxl
-     * @param bankId
-     * @return
-     */
-   /* @Override
-    public BanksConfigVO getBanksConfigByBankId(int bankId) {
-        BanksConfigResponse response = restTemplate
-                .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }*/
+	 * 获取银行卡配置信息
+	 * 
+	 * @auther: nxl
+	 * @param bankId
+	 * @return
+	 */
+	/*
+	 * @Override public BanksConfigVO getBanksConfigByBankId(int bankId) {
+	 * BanksConfigResponse response = restTemplate
+	 * .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" +
+	 * bankId, BanksConfigResponse.class).getBody(); if (response != null) { return
+	 * response.getResult(); } return null; }
+	 */
 
 	/**
 	 * 更新用户绑定的银行卡
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public int updateUserCard(BankCardRequest request) {
-		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/updateUserCard", request, Integer.class).getBody();
+		int result = restTemplate.postForEntity("http://AM-USER/am-user/card/updateUserCard", request, Integer.class)
+				.getBody();
 		return result;
 	}
 
 	/**
 	 * 保存用户绑定的银行卡
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public int insertUserCard(BankCardRequest request) {
-		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/card/insertUserCard", request, Integer.class).getBody();
+		int result = restTemplate.postForEntity("http://AM-USER/am-user/card/insertUserCard", request, Integer.class)
+				.getBody();
 		return result;
 	}
 
 	/**
 	 * 单表查询开户信息
+	 * 
 	 * @auther: nxl
 	 * @return
 	 */
 	@Override
 	public BankOpenAccountVO queryBankOpenAccountByUserId(int userId) {
-		BankOpenAccountResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/" + userId, BankOpenAccountResponse.class).
-				getBody();
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/" + userId,
+						BankOpenAccountResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
@@ -626,6 +669,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新开户信息
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -633,12 +677,14 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int updateBankOpenAccount(BankOpenAccountRequest request) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER//am-user/userManager/updateBankOpenAccount", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER//am-user/userManager/updateBankOpenAccount", request, Integer.class)
+				.getBody();
 		return result;
 	}
 
 	/**
 	 * 插入开户信息
+	 * 
 	 * @auther: nxl
 	 * @param request
 	 * @return
@@ -646,12 +692,14 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int insertBankOpenAccount(BankOpenAccountRequest request) {
 		int result = restTemplate
-				.postForEntity("http://AM-USER//am-user/userManager/insertBankOpenAccount", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER//am-user/userManager/insertBankOpenAccount", request, Integer.class)
+				.getBody();
 		return result;
 	}
 
 	/**
 	 * 根据用户id获取用户信息
+	 * 
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -668,6 +716,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 更新用户信息表
+	 * 
 	 * @auther: nxl
 	 * @return
 	 */
@@ -676,12 +725,14 @@ public class AmUserClientImpl implements AmUserClient {
 		UserInfoRequest request = null;
 		BeanUtils.copyProperties(userInfoVO, request);
 		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, Integer.class).getBody();
+				.postForEntity("http://AM-USER/am-user/userManager/updateUserInfoByUserInfo", request, Integer.class)
+				.getBody();
 		return result;
 	}
 
 	/**
 	 * 更新用户表
+	 * 
 	 * @return
 	 * @auther: nxl
 	 */
@@ -689,135 +740,156 @@ public class AmUserClientImpl implements AmUserClient {
 	public int updateUser(UserVO userVO) {
 		UserRequest request = null;
 		BeanUtils.copyProperties(userVO, request);
-		int result = restTemplate
-				.postForEntity("http://AM-USER/am-user/userManager/updateUser", request, Integer.class).getBody();
+		int result = restTemplate.postForEntity("http://AM-USER/am-user/userManager/updateUser", request, Integer.class)
+				.getBody();
 		return result;
 	}
 
 	/**
 	 * 获取某一用户的信息修改列表
+	 * 
 	 * @param request
 	 * @return
 	 */
 	@Override
-	public List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request){
+	public List<UserChangeLogVO> selectUserChageLog(UserChangeLogRequest request) {
 		UserChangeLogResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/userManager/selectUserChageLog",request, UserChangeLogResponse.class).getBody();
+				.postForEntity("http://AM-USER/am-user/userManager/selectUserChageLog", request,
+						UserChangeLogResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResultList();
 		}
 		return null;
 	}
+
 	/**
 	 * 根据推荐人姓名查找用户
+	 * 
 	 * @auther: nxl
 	 * @param recommendName
 	 * @return
 	 */
 	@Override
-	public UserVO selectUserByRecommendName(String recommendName){
+	public UserVO selectUserByRecommendName(String recommendName) {
 		UserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userManager/selectUserByRecommendName/"+recommendName, UserResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userManager/selectUserByRecommendName/" + recommendName,
+						UserResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
+
 	/**
 	 * 根据userId查找推荐人信息
+	 * 
 	 * @param userId
 	 * @auther: nxl
 	 * @return
 	 */
 	@Override
-	public SpreadsUserVO selectSpreadsUsersByUserId(String userId){
+	public SpreadsUserVO selectSpreadsUsersByUserId(String userId) {
 		SpreadsUserResponse response = restTemplate
-				.getForEntity("http://AM-USER/am-user/userManager/selectSpreadsUsersByUserId/"+userId, SpreadsUserResponse.class).getBody();
+				.getForEntity("http://AM-USER/am-user/userManager/selectSpreadsUsersByUserId/" + userId,
+						SpreadsUserResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
+
 	/**
 	 * 修改推荐人信息
+	 * 
 	 * @param request
 	 * @auther: nxl
 	 * @return
 	 */
 	@Override
-	public int updateUserRecommend(AdminUserRecommendRequest request){
+	public int updateUserRecommend(AdminUserRecommendRequest request) {
 		int response = restTemplate
-				.postForEntity("http://AM-USER/am-user/userManager/updateUserRecommend",request, Integer.class).getBody();
-		return response;
-	}
-	/**
-	 * 修改用户身份证
-	 * @param request
-	 * @auther: nxl
-	 * @return
-	 */
-	@Override
-	public int updateUserIdCard(AdminUserRecommendRequest request){
-		int response = restTemplate
-				.postForEntity("http://AM-USER/am-user/userManager/updateUserIdCard",request, Integer.class).getBody();
+				.postForEntity("http://AM-USER/am-user/userManager/updateUserRecommend", request, Integer.class)
+				.getBody();
 		return response;
 	}
 
 	/**
 	 * 修改用户身份证
+	 * 
+	 * @param request
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public int updateUserIdCard(AdminUserRecommendRequest request) {
+		int response = restTemplate
+				.postForEntity("http://AM-USER/am-user/userManager/updateUserIdCard", request, Integer.class).getBody();
+		return response;
+	}
+
+	/**
+	 * 修改用户身份证
+	 * 
 	 * @param updCompanyRequest
 	 * @auther: nxl
 	 * @return
 	 */
 	@Override
-	public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest){
+	public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest) {
 		Response response = restTemplate
-				.postForEntity("http://AM-USER/am-user/userManager/saveCompanyInfo",updCompanyRequest, Response.class).getBody();
+				.postForEntity("http://AM-USER/am-user/userManager/saveCompanyInfo", updCompanyRequest, Response.class)
+				.getBody();
 		return response;
 	}
-    /**
-     * 根据参数查询用户画像信息
-     * @param request
-     * @return
-     */
-    @Override
-    public UserPortraitResponse selectRecordList(UserPortraitRequest request){
-        UserPortraitResponse response = restTemplate
-                .postForEntity("http://AM-USER/am-user/userPortraitManage/findUserPortraitRecord", request, UserPortraitResponse.class)
-                .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response;
-        }
-        return null;
-    }
 
-    /**
-     * 根据用户id查找用户画像
-     * @param userId
-     * @return
-     */
-    @Override
-    public UserPortraitVO selectUsersPortraitByUserId(Integer userId){
-        UserPortraitResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/userPortraitManage/selectUserPortraitByUserId/"+ userId, UserPortraitResponse.class)
-                .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
-        }
-        return null;
-    }
+	/**
+	 * 根据参数查询用户画像信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserPortraitResponse selectRecordList(UserPortraitRequest request) {
+		UserPortraitResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/userPortraitManage/findUserPortraitRecord", request,
+						UserPortraitResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 
-    /**
-     * 修改用户画像
-     */
-    @Override
-    public int updateUserPortrait(UserPortraitRequest request){
-        int response = restTemplate
-                .postForEntity("http://AM-USER/am-user/userPortraitManage/updateUserPortraitRecord",request,Integer.class)
-                .getBody();
-        return response;
-    }
+	/**
+	 * 根据用户id查找用户画像
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserPortraitVO selectUsersPortraitByUserId(Integer userId) {
+		UserPortraitResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userPortraitManage/selectUserPortraitByUserId/" + userId,
+						UserPortraitResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 
+	/**
+	 * 修改用户画像
+	 */
+	@Override
+	public int updateUserPortrait(UserPortraitRequest request) {
+		int response = restTemplate.postForEntity("http://AM-USER/am-user/userPortraitManage/updateUserPortraitRecord",
+				request, Integer.class).getBody();
+		return response;
+	}
 
 	/**
 	 * 根据UserID查询开户信息
@@ -834,47 +906,50 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-	
-	/*加入明细start*/
+
+	/* 加入明细start */
 	@Override
 	public UserVO getUserByUserId(int userId) {
-        UserResponse response = restTemplate.
-                getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class).
-                getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
-        }
-        return null;
-	}
-	
-		@Override
-	public UserInfoVO selectUsersInfoByUserId(int userid) {
-        UserInfoResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/userInfo/findById/" + userid, UserInfoResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
-        }
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/selectUserByUserId/" + userId, UserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
 		return null;
 	}
-	/*加入明细end*/
+
+	@Override
+	public UserInfoVO selectUsersInfoByUserId(int userid) {
+		UserInfoResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userInfo/findById/" + userid, UserInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/* 加入明细end */
 	/**
 	 * 查找注册记录列表
+	 * 
 	 * @author nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public RegistRecordResponse findRegistRecordList(RegistRcordRequest request) {
-		RegistRecordResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/registRecord/registRecordList", request, RegistRecordResponse.class)
-				.getBody();
+		RegistRecordResponse response = restTemplate.postForEntity(
+				"http://AM-USER/am-user/registRecord/registRecordList", request, RegistRecordResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
 		return null;
 	}
+
 	/**
 	 * 查找借款盖章用户信息
+	 * 
 	 * @author nxl
 	 * @param request
 	 * @return
@@ -882,83 +957,96 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public LoanCoverUserResponse selectUserMemberList(LoanCoverUserRequest request) {
 		LoanCoverUserResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/loanCoverUser/loanCoverUserRecord", request, LoanCoverUserResponse.class)
+				.postForEntity("http://AM-USER/am-user/loanCoverUser/loanCoverUserRecord", request,
+						LoanCoverUserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
 		return null;
 	}
+
 	/**
 	 * 保存借款盖章用户信息
-     * @param request
+	 * 
+	 * @param request
 	 * @author nxl
 	 */
 	@Override
-	public int insertLoanCoverUser(LoanCoverUserRequest request){
-		int updFlg = restTemplate.
-				postForEntity("http://AM-USER/am-user/loanCoverUser/insertLoanCoverUserRecord", request, Integer.class).
-				getBody();
+	public int insertLoanCoverUser(LoanCoverUserRequest request) {
+		int updFlg = restTemplate
+				.postForEntity("http://AM-USER/am-user/loanCoverUser/insertLoanCoverUserRecord", request, Integer.class)
+				.getBody();
 		return updFlg;
 	}
+
 	/**
 	 * 根据证件号码查找借款主体CA认证记录表
+	 * 
 	 * @param strIdNo
 	 * @author nxl
 	 * @return
 	 */
 	@Override
-	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo){
-		LoanCoverUserResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordByIdNo/"+strIdNo, LoanCoverUserResponse.class).
-				getBody();
+	public LoanCoverUserVO selectIsExistsRecordByIdNo(String strIdNo) {
+		LoanCoverUserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordByIdNo/" + strIdNo,
+						LoanCoverUserResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 
 		}
 		return null;
 	}
+
 	/**
 	 * 根据id查找借款主体CA认证记录表
+	 * 
 	 * @param strId
 	 * @author nxl
 	 * @return
 	 */
 	@Override
-	public  LoanCoverUserResponse selectIsExistsRecordById(String strId){
-		LoanCoverUserResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordById/"+strId, LoanCoverUserResponse.class).
-				getBody();
+	public LoanCoverUserResponse selectIsExistsRecordById(String strId) {
+		LoanCoverUserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/loanCoverUser/selectIsExistsRecordById/" + strId,
+						LoanCoverUserResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
 		return null;
 	}
+
 	/**
 	 * 更新借款盖章用户记录
+	 * 
 	 * @param request
 	 * @author nxl
 	 * @return
 	 */
 	@Override
-	public int updateLoanCoverUserRecord(LoanCoverUserRequest request){
-		int updFlg = restTemplate.
-				postForEntity("http://AM-USER/am-user/loanCoverUser/updateLoanCoverUserRecord", request, Integer.class).
-				getBody();
+	public int updateLoanCoverUserRecord(LoanCoverUserRequest request) {
+		int updFlg = restTemplate
+				.postForEntity("http://AM-USER/am-user/loanCoverUser/updateLoanCoverUserRecord", request, Integer.class)
+				.getBody();
 		return updFlg;
 	}
 
 	/**
 	 * 根据筛选条件查找(用户测评列表显示)
+	 * 
 	 * @author nxl
 	 * @param request
 	 * @return
 	 */
 	@Override
 	public EvalationResponse selectUserEvalationResultList(EvalationRequest request) {
-		EvalationResponse response = restTemplate.
-				postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request, EvalationResponse.class).
-				getBody();
+		EvalationResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request,
+						EvalationResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
@@ -967,22 +1055,26 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找用户测评结果
+	 * 
 	 * @author nxl
 	 * @param userId
 	 * @return
 	 */
 	@Override
 	public UserEvalationResultVO selectEvaluationDetailById(String userId) {
-		UserEvalationResultResponse response = restTemplate.
-				getForEntity("http://AM-USER/am-user/evaluationManager/selectEvaluationDetailById/" + userId, UserEvalationResultResponse.class).
-				getBody();
+		UserEvalationResultResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/evaluationManager/selectEvaluationDetailById/" + userId,
+						UserEvalationResultResponse.class)
+				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
 		return null;
 	}
+
 	/**
 	 * 查找汇付银行开户记录列表
+	 * 
 	 * @author nixiaoling
 	 * @param request
 	 * @return
@@ -990,15 +1082,18 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankAccountRecordResponse findAccountRecordList(AccountRecordRequest request) {
 		BankAccountRecordResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findAccountRecordList", request, BankAccountRecordResponse.class)
+				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findAccountRecordList", request,
+						BankAccountRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
 		return null;
 	}
+
 	/**
 	 * 查找江西银行开户记录列表
+	 * 
 	 * @author nixiaoling
 	 * @param request
 	 * @return
@@ -1006,22 +1101,27 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankAccountRecordResponse findBankAccountRecordList(BankAccountRecordRequest request) {
 		BankAccountRecordResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findBankAccountRecordList", request, BankAccountRecordResponse.class)
+				.postForEntity("http://AM-USER/am-user/bankOpenAccountRecord/findBankAccountRecordList", request,
+						BankAccountRecordResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
 		return null;
 	}
+
 	/**
-	 *  根据筛选条件查找汇付银行卡信息列表
-	 * @param request 筛选条件
+	 * 根据筛选条件查找汇付银行卡信息列表
+	 * 
+	 * @param request
+	 *            筛选条件
 	 * @return
 	 */
 	@Override
-	public BankCardManagerResponse selectBankCardList(BankCardManagerRequest request){
+	public BankCardManagerResponse selectBankCardList(BankCardManagerRequest request) {
 		BankCardManagerResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistHF",request, BankCardManagerResponse.class)
+				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistHF", request,
+						BankCardManagerResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1029,16 +1129,17 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-
 	/**
 	 * 根据筛选条件查找江西银行卡信息列表
+	 * 
 	 * @author nixiaoling
 	 * @return
 	 */
 	@Override
-	public BankCardManagerResponse selectNewBankCardList (BankCardManagerRequest request){
+	public BankCardManagerResponse selectNewBankCardList(BankCardManagerRequest request) {
 		BankCardManagerResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistJX",request, BankCardManagerResponse.class)
+				.postForEntity("http://AM-USER/am-user/bankCardManager/bankcardlistJX", request,
+						BankCardManagerResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1048,14 +1149,16 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 查找用户银行卡操作记录表
+	 * 
 	 * @param request
 	 * @author nixiaoling
 	 * @return
 	 */
 	@Override
-	public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request){
-		BankCardLogResponse response =  restTemplate
-				.postForEntity("http://AM-USER/am-user/bankCardManager/selectBankCardLogByExample",request, BankCardLogResponse.class)
+	public BankCardLogResponse selectBankCardLogByExample(BankCardLogRequest request) {
+		BankCardLogResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/bankCardManager/selectBankCardLogByExample", request,
+						BankCardLogResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1065,14 +1168,34 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表
+	 * 
 	 * @param strIdNo
 	 * @param tureName
 	 * @return
 	 */
 	@Override
-	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName){
-		CertificateAuthorityResponse response =  restTemplate
-				.getForEntity("http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/"+strIdNo+"/"+tureName, CertificateAuthorityResponse.class)
+	public CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName) {
+		CertificateAuthorityResponse response = restTemplate.getForEntity(
+				"http://AM-USER/am-user/loanCoverUser/selectCertificateAuthorityByIdNoName/" + strIdNo + "/" + tureName,
+				CertificateAuthorityResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 根据证件号码和姓名查找用户CA认证记录表
+	 * 
+	 * @param strIdNo
+	 * @param tureName
+	 * @return
+	 */
+	@Override
+	public CertificateAuthorityResponse isCAIdNoCheck(String param, String name) {
+		CertificateAuthorityResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/loanCoverUser/isCAIdNoCheck/" + param + "/" + name,
+						CertificateAuthorityResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;

@@ -1,25 +1,25 @@
 package com.hyjf.am.vo.trade.account;
 
+import com.hyjf.am.vo.BaseVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-
-import com.hyjf.am.vo.BaseVO;
+import java.util.Date;
 
 /**
  * @author xiasq
  * @version AccountVO, v0.1 2018/4/25 10:42
  */
 public class AccountVO extends BaseVO implements Serializable {
-
 	private Integer id;
 
 	private Integer userId;
 
+	private String userName;
+
+	private String accountId;
+
 	private BigDecimal total;
-
-	private BigDecimal income;
-
-	private BigDecimal expend;
 
 	private BigDecimal balance;
 
@@ -32,22 +32,6 @@ public class AccountVO extends BaseVO implements Serializable {
 	private BigDecimal await;
 
 	private BigDecimal repay;
-
-	private BigDecimal frostCash;
-
-	private Integer isUpdate;
-
-	private Integer isok;
-
-	private BigDecimal recMoney;
-
-	private BigDecimal fee;
-
-	private BigDecimal inMoney;
-
-	private Integer inMoneyFlag;
-
-	private BigDecimal version;
 
 	private BigDecimal planRepayInterest;
 
@@ -97,6 +81,18 @@ public class AccountVO extends BaseVO implements Serializable {
 
 	private BigDecimal bankFrostCash;
 
+	private Integer delFlag;
+
+	private Integer createUser;
+
+	private Integer updateUser;
+
+	private Date createTime;
+
+	private Date updateTime;
+
+	private static final long serialVersionUID = 1L;
+
 	public Integer getId() {
 		return id;
 	}
@@ -113,28 +109,28 @@ public class AccountVO extends BaseVO implements Serializable {
 		this.userId = userId;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName == null ? null : userName.trim();
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId == null ? null : accountId.trim();
+	}
+
 	public BigDecimal getTotal() {
 		return total;
 	}
 
 	public void setTotal(BigDecimal total) {
 		this.total = total;
-	}
-
-	public BigDecimal getIncome() {
-		return income;
-	}
-
-	public void setIncome(BigDecimal income) {
-		this.income = income;
-	}
-
-	public BigDecimal getExpend() {
-		return expend;
-	}
-
-	public void setExpend(BigDecimal expend) {
-		this.expend = expend;
 	}
 
 	public BigDecimal getBalance() {
@@ -183,70 +179,6 @@ public class AccountVO extends BaseVO implements Serializable {
 
 	public void setRepay(BigDecimal repay) {
 		this.repay = repay;
-	}
-
-	public BigDecimal getFrostCash() {
-		return frostCash;
-	}
-
-	public void setFrostCash(BigDecimal frostCash) {
-		this.frostCash = frostCash;
-	}
-
-	public Integer getIsUpdate() {
-		return isUpdate;
-	}
-
-	public void setIsUpdate(Integer isUpdate) {
-		this.isUpdate = isUpdate;
-	}
-
-	public Integer getIsok() {
-		return isok;
-	}
-
-	public void setIsok(Integer isok) {
-		this.isok = isok;
-	}
-
-	public BigDecimal getRecMoney() {
-		return recMoney;
-	}
-
-	public void setRecMoney(BigDecimal recMoney) {
-		this.recMoney = recMoney;
-	}
-
-	public BigDecimal getFee() {
-		return fee;
-	}
-
-	public void setFee(BigDecimal fee) {
-		this.fee = fee;
-	}
-
-	public BigDecimal getInMoney() {
-		return inMoney;
-	}
-
-	public void setInMoney(BigDecimal inMoney) {
-		this.inMoney = inMoney;
-	}
-
-	public Integer getInMoneyFlag() {
-		return inMoneyFlag;
-	}
-
-	public void setInMoneyFlag(Integer inMoneyFlag) {
-		this.inMoneyFlag = inMoneyFlag;
-	}
-
-	public BigDecimal getVersion() {
-		return version;
-	}
-
-	public void setVersion(BigDecimal version) {
-		this.version = version;
 	}
 
 	public BigDecimal getPlanRepayInterest() {
@@ -439,5 +371,45 @@ public class AccountVO extends BaseVO implements Serializable {
 
 	public void setBankFrostCash(BigDecimal bankFrostCash) {
 		this.bankFrostCash = bankFrostCash;
+	}
+
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public Integer getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(Integer createUser) {
+		this.createUser = createUser;
+	}
+
+	public Integer getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(Integer updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 }

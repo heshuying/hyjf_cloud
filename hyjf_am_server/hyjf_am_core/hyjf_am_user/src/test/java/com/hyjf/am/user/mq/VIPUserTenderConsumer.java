@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.mq.base.Consumer;
-import com.hyjf.am.user.service.UserService;
+import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
 /**

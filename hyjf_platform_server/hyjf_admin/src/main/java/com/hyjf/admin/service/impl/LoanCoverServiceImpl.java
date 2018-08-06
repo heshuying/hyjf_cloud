@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -114,11 +115,13 @@ public class LoanCoverServiceImpl implements LoanCoverService {
      * 更新记录
      */
     @Override
-    public AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean){
+    public AdminResult updateLoanCoverUser(LoanCoverUserRequestBean loanCoverUserRequestBean,int loginUserId,String loginUserName){
         if(StringUtils.isNotBlank(String.valueOf(loanCoverUserRequestBean.getId()))){
             LoanCoverUserResponse loanCoverUserResponse = loanCoverClient.selectIsExistsRecordById(String.valueOf(loanCoverUserRequestBean.getId()));
             if(null!=loanCoverUserResponse){
                 LoanCoverUserVO loanCoverUserVO = loanCoverUserResponse.getResult();
+                LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
+                BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
                 if (StringUtils.isNotBlank(loanCoverUserVO.getStatus())&& "success".equals(loanCoverUserVO.getStatus())) {
                     if (!loanCoverUserVO.getMobile().equals(loanCoverUserRequestBean.getMobile())) {
                         DzqzCallBean bean = new DzqzCallBean();
@@ -137,14 +140,17 @@ public class LoanCoverServiceImpl implements LoanCoverService {
                         DzqzCallBean resultt = DzqzCallUtil.callApiBg(bean);
                         if (resultt != null && "success".equals(resultt.getResult())) {
                             // 更新
-                            LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
-                            BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
+                            loanCoverUserRequest.setUpdateUserName(loginUserName);
+                            loanCoverUserRequest.setUpdateUserId(loginUserId);
+                            loanCoverUserRequest.setUpdateTime(new Date());
                             loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
                             return new AdminResult<>();
                         } else {
                             return new AdminResult<>("99", "更新失败");
                         }
                     }
+                    loanCoverClient.updateLoanCoverUserRecord(loanCoverUserRequest);
+                    return new AdminResult<>();
                 }
             }
 

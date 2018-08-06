@@ -11,7 +11,6 @@ public interface CouponUserCustomizeMapper {
 
 	/**
 	 * 获取优惠券列表
-	 * 
 	 * @param CouponConfigCustomize
 	 * @return
 	 */

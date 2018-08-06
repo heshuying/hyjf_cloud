@@ -30,7 +30,7 @@ import javax.validation.Valid;
 /**
  * @author sunss
  */
-@Api(value = "微信端用户开户",description = "weChat端-用户开户")
+@Api(value = "微信端用户开户",tags = "weChat端-用户开户")
 @RestController
 @RequestMapping("/hyjf-wechat/user/open")
 public class WeChatBankOpenController extends BaseUserController {

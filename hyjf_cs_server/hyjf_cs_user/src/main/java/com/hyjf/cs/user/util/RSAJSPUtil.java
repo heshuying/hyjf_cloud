@@ -1,39 +1,26 @@
 package com.hyjf.cs.user.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
+import com.hyjf.common.util.RSAKeyUtil;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.Cipher;
+import java.io.*;
 import java.math.BigInteger;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
-import javax.crypto.Cipher;
-
-import org.apache.commons.codec.binary.Base64;
-
-import com.hyjf.common.util.RSAKeyUtil;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 @Component
 public class RSAJSPUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(RSAJSPUtil.class);
 	private static String RSAKeyStore = "RSAKey.txt";
 
 
@@ -268,6 +255,7 @@ public class RSAJSPUtil {
 	 */
 	public static String getPunlicKeys() {
 		String filePath = getHyjfReqPubKeyPath() + PUBK_NAME;
+		logger.info("公钥存放路径"+filePath);
 		return readToString(filePath);
 	}
 

@@ -1,7 +1,9 @@
 package com.hyjf.cs.user.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.BaseBean;
@@ -62,7 +64,7 @@ public interface BaseUserService extends BaseService{
 	 * @param ckcodeYiyan1
 	 * @return
 	 */
-	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
 
 	/**
 	 * 验证外部请求签名
@@ -79,7 +81,9 @@ public interface BaseUserService extends BaseService{
 	 */
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
-	/**
+    BankOpenAccountVO getBankOpenAccountByAccount(String accountId);
+
+    /**
 	 * 校验用户是否已开户
 	 * @param userId
 	 * @return
@@ -133,7 +137,9 @@ public interface BaseUserService extends BaseService{
 	 */
 	UserInfoVO getUserInfo(int userId);
 
-	/**
+    WebViewUserVO updateToken(String token,WebViewUserVO webViewUserVO);
+
+    /**
 	 * 登录
 	 * @param userId
 	 * @return
@@ -150,4 +156,10 @@ public interface BaseUserService extends BaseService{
     String getBankReturnErrorMsg(String retCode);
 
     String strEncode(String str);
+
+	JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey);
+
+	AccountVO getAccountByUserId(Integer userId);
+
+    String getBankRetMsg(String retCode);
 }

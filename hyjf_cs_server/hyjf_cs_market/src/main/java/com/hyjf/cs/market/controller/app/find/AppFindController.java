@@ -11,12 +11,10 @@ import com.hyjf.cs.market.bean.AppContentArticleBean;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,21 +26,22 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "app发现页", description = "app发现页")
+@Api(value = "app发现页", tags = "app发现页")
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppFindController extends BaseMarketController {
     @Autowired
     private AppFindService appFindService;
 
-    @RequestMapping("/contentArticle/getContentArticleListByType")
+    @ResponseBody
+    @ApiOperation(value = "知识列表", notes = "知识列表")
+    @RequestMapping(value = "/contentArticle/getContentArticleListByType", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
     public JSONObject getContentArticleListByType(HttpServletRequest request, AppContentArticleBean form) {
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
         ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleListByType");
         try {
-
             // 检查参数正确性
             if (Validator.isNull(form.getVersion()) || Validator.isNull(form.getPlatform())){
                 ret.put("status", "1");
@@ -88,6 +87,56 @@ public class AppFindController extends BaseMarketController {
         }
         return ret;
 
+    }
+
+    @ResponseBody
+    @ApiOperation(value = "上下翻页", notes = "上下翻页")
+    @RequestMapping(value = "/contentArticle/getContentArticleFlip", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
+    public JSONObject getContentArticleFlip(@ModelAttribute() AppContentArticleBean form) {
+
+        //LogUtil.startLog(THIS_CLASS, AppContentArticleDefine.GET_CONTENT_ARTICLE_FLIP_ACTION);
+        JSONObject ret = new JSONObject();
+        ret.put("status", "0");
+        ret.put("statusDesc", "请求成功");
+        ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleFlip");
+        try {
+
+            // 检查参数正确性
+            if (Validator.isNull(form.getOffset()) || Validator.isNull(form.getMessageId())){
+                ret.put("status", "1");
+                ret.put("statusDesc", "请求参数非法");
+                return ret;
+            }
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("messageId", form.getMessageId());
+            params.put("type", form.getType());
+            // 查询总数
+            ContentArticleCustomizeVO contentArticleCustomize = appFindService.getContentArticleFlip(params,form.getOffset());
+
+            if(contentArticleCustomize!=null){
+                ret.put("messageId", contentArticleCustomize.getMessageId());
+                ret.put("messageUrl", contentArticleCustomize.getMessageUrl());
+                ret.put("shareTitle", contentArticleCustomize.getTitle());
+                ret.put("shareContent", contentArticleCustomize.getShareContent());
+                ret.put("sharePicUrl", contentArticleCustomize.getSharePicUrl());
+                ret.put("shareUrl", contentArticleCustomize.getShareUrl());
+            }else{
+                ret.put("messageId", "");
+                ret.put("messageUrl", "");
+                ret.put("shareTitle", "");
+                ret.put("shareContent", "");
+                ret.put("sharePicUrl", "");
+                ret.put("shareUrl", "");
+            }
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "系统异常请稍后再试");
+            ret.put("messageCount", "0");
+            ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
+            return ret;
+        }
+        //LogUtil.endLog(THIS_CLASS, AppContentArticleDefine.GET_CONTENT_ARTICLE_FLIP_ACTION);
+        return ret;
     }
 
     @RequestMapping("/contentArticle/{type}/{contentArticleId}")

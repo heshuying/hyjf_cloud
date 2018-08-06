@@ -7,6 +7,7 @@ package com.hyjf.am.trade.controller.batch;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.hyjf.am.trade.service.task.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,6 @@ import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
-import com.hyjf.am.trade.service.task.CouponRepaySerivce;
 import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
@@ -34,12 +34,12 @@ import com.hyjf.common.util.CommonUtils;
 public class CouponRepayInterestController extends BaseController {
 
     @Autowired
-    private CouponRepaySerivce couponRepaySerivce;
+    private CouponRepayService couponRepayService;
 
     @GetMapping("/selectCouponInterestWaitToday/{timeStart}/{timeEnd}")
     public CouponRecoverCustomizeResponse selectCouponInterestWaitToday(@PathVariable long timeStart, @PathVariable long timeEnd) {
         CouponRecoverCustomizeResponse response = new CouponRecoverCustomizeResponse();
-        List<CouponRecoverCustomize> couponRecoverCustomizes = couponRepaySerivce.selectCouponInterestWaitToday(timeStart, timeEnd);
+        List<CouponRecoverCustomize> couponRecoverCustomizes = couponRepayService.selectCouponInterestWaitToday(timeStart, timeEnd);
         if (!CollectionUtils.isEmpty(couponRecoverCustomizes)) {
             List<CouponRecoverCustomizeVO> couponRecoverCustomizeVOS = CommonUtils.convertBeanList(couponRecoverCustomizes, CouponRecoverCustomizeVO.class);
             response.setResultList(couponRecoverCustomizeVOS);
@@ -49,7 +49,7 @@ public class CouponRepayInterestController extends BaseController {
 
     @GetMapping("/selectCouponInterestReceivedToday/{timeStart}/{timeEnd}")
     public BigDecimal selectCouponInterestReceivedToday(@PathVariable long timeStart, @PathVariable long timeEnd) {
-        BigDecimal interestReceived = couponRepaySerivce.selectCouponInterestReceivedToday(timeStart, timeEnd);
+        BigDecimal interestReceived = couponRepayService.selectCouponInterestReceivedToday(timeStart, timeEnd);
         if (interestReceived != null) {
             return interestReceived;
         }
@@ -59,7 +59,7 @@ public class CouponRepayInterestController extends BaseController {
     @GetMapping("/selectCouponQuota/{threeBeginDate}/{threeEndDate}")
     public BatchCouponTimeoutCommonResponse selectCouponQuota(@PathVariable int threeBeginDate, @PathVariable int threeEndDate) {
         BatchCouponTimeoutCommonResponse response = new BatchCouponTimeoutCommonResponse();
-        List<BatchCouponTimeoutCommonCustomize> batchCouponTimeoutCommonCustomizes = couponRepaySerivce.selectCouponQuota(threeBeginDate, threeEndDate);
+        List<BatchCouponTimeoutCommonCustomize> batchCouponTimeoutCommonCustomizes = couponRepayService.selectCouponQuota(threeBeginDate, threeEndDate);
         if (!CollectionUtils.isEmpty(batchCouponTimeoutCommonCustomizes)) {
             List<BatchCouponTimeoutCommonCustomizeVO> batchCouponTimeoutCommonCustomizeVOS = CommonUtils.convertBeanList(batchCouponTimeoutCommonCustomizes, BatchCouponTimeoutCommonCustomizeVO.class);
             response.setResultList(batchCouponTimeoutCommonCustomizeVOS);

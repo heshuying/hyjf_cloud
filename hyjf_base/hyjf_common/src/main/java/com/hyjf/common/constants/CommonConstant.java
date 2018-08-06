@@ -111,7 +111,7 @@ public class CommonConstant {
     public static final String JUMP_HTML_SUCCESS_PATH = "/user/setting/bankPassword/result/success";
 
     /** @RequestMapping值 */
-    public static final String REQUEST_MAPPING = "/user/password";
+    public static final String REQUEST_MAPPING = "/bank/user/transpassword";
 
     /** @RequestMapping值 */
     public static final String RETURL_SYN_PASSWORD_ACTION = "/passwordReturn";
@@ -137,4 +137,8 @@ public class CommonConstant {
 
     /** chinapnrForm值 */
     public static final String CHINAPNR_FORM = "chinapnrForm";
+
+    public static final  String PAGE_LIMIT_START = "limitStart";
+
+    public static final  String PAGE_LIMIT_END =   "limitEnd";
 }

@@ -3,15 +3,23 @@
  */
 package com.hyjf.am.trade.controller;
 
+import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
+import com.hyjf.am.response.app.AppProjectListResponse;
+import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectListCustomize;
 import com.hyjf.am.trade.service.ProjectListService;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
@@ -260,6 +268,66 @@ public class ProjectListController extends BaseController{
         }
         return response;
     }
+
+
+    @RequestMapping("/app/countProjectInvestRecordTotal")
+    public int countProjectInvestRecordTotal(@RequestBody Map<String, Object> params){
+        return projectListService.countProjectInvestRecordTotal(params);
+    }
+
+
+    /**
+     * 散标投资记录
+     * @return
+     */
+    @RequestMapping("/app/selectProjectInvestList")
+    public AppProjectInvestListCustomizeResponse selectProjectInvestList(@RequestBody Map<String, Object> params){
+        AppProjectInvestListCustomizeResponse response = new AppProjectInvestListCustomizeResponse();
+        List<AppProjectInvestListCustomize> list=projectListService.selectProjectInvestList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,AppProjectInvestListCustomizeVO.class));
+        }
+        return response;
+    }
+
+
+    /**
+     * app端债转承接记录数
+     * @param params
+     * @return
+     */
+    @PostMapping("/app/countTenderCreditInvestRecordTotal")
+    public int countTenderCreditInvestRecordTotal(@RequestBody Map<String, Object> params){
+        return projectListService.countTenderCreditInvestRecordTotal(params);
+    }
+
+
+    /**
+     * 债转承接记录列表
+     * @param params
+     * @return
+     */
+    @PostMapping("/app/searchTenderCreditInvestList")
+    public AppTenderCreditInvestListCustomizeResponse searchTenderCreditInvestList(Map<String, Object> params){
+        AppTenderCreditInvestListCustomizeResponse response = new AppTenderCreditInvestListCustomizeResponse();
+        List<AppTenderCreditInvestListCustomize> list=projectListService.searchTenderCreditInvestList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,AppTenderCreditInvestListCustomizeVO.class));
+        }
+        return response;
+
+    }
+
+    @GetMapping("/selectBorrowCreditByNid/{transferId}")
+    public BorrowCreditResponse selectBorrowCreditByNid(@PathVariable String transferId){
+        BorrowCreditResponse response = new BorrowCreditResponse();
+        List<BorrowCredit> list = projectListService.selectBorrowCreditByNid(transferId);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,BorrowCreditVO.class));
+        }
+        return response;
+    }
+
 
 
     // --------------------------------------app end-------------------------------------------------

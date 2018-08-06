@@ -20,12 +20,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -34,7 +31,7 @@ import java.util.LinkedList;
  * @author lisheng
  * @version AppBorrowImageController, v0.1 2018/7/11 11:26
  */
-@Api(value = "admin移动客户端",description = "admin移动客户端")
+@Api(value = "admin移动客户端",tags = "admin移动客户端")
 @RestController
 @RequestMapping("app/maintenance/borrowimage")
 public class AppBorrowImageController extends BaseController {
@@ -52,7 +49,7 @@ public class AppBorrowImageController extends BaseController {
     private String TEMP_PATH;
 
 
-    @ApiOperation(value = "产品图片列表查询", notes = "产品图片列表查询")
+    @ApiOperation(value = "产品图片:列表查询", notes = "产品图片:列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
     public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody  AppBorrowImageRequest request) {
@@ -64,7 +61,7 @@ public class AppBorrowImageController extends BaseController {
     }
 
 
-    @ApiOperation(value = "获取详细画面", notes = "获取详细画面")
+    @ApiOperation(value = "产品图片:获取详细画面", notes = "产品图片:获取详细画面")
     @PostMapping(value = "/searchinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> searchinfo(@RequestBody AppBorrowImageRequest request) {
@@ -76,7 +73,7 @@ public class AppBorrowImageController extends BaseController {
     }
 
 
-    @ApiOperation(value = "添加维护信息", notes = "添加维护信息")
+    @ApiOperation(value = "产品图片添加维护信息", notes = "产品图片:添加维护信息")
     @PostMapping(value = "/insertinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
@@ -89,7 +86,7 @@ public class AppBorrowImageController extends BaseController {
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
-    @ApiOperation(value = "修改维护信息", notes = "修改维护信息")
+    @ApiOperation(value = "产品图片:修改维护信息", notes = "产品图片:修改维护信息")
     @PostMapping(value = "/updateinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
@@ -102,7 +99,7 @@ public class AppBorrowImageController extends BaseController {
         return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
-    @ApiOperation(value = "刪除信息", notes = "刪除信息")
+    @ApiOperation(value = "产品图片:刪除信息", notes = "产品图片:刪除信息")
     @PostMapping(value = "/deleteinfo")
     @ResponseBody
     public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) throws Exception {
@@ -120,7 +117,7 @@ public class AppBorrowImageController extends BaseController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "资料上传", notes = "资料上传")
+    @ApiOperation(value = "产品图片:资料上传", notes = "产品图片:资料上传")
     @PostMapping(value = "/uploadFile")
     @ResponseBody
     public String uploadFile(HttpServletRequest request) throws Exception {
@@ -150,7 +147,7 @@ public class AppBorrowImageController extends BaseController {
 
         while (itr.hasNext()) {
             multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
+            String fileRealName = String.valueOf(System.currentTimeMillis());
             String originalFilename = multipartFile.getOriginalFilename();
             fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 

@@ -10,6 +10,7 @@ import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFullCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize;
 import com.hyjf.am.trade.service.admin.BorrowFullService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -41,29 +42,8 @@ import java.util.Map;
  * @version BorrowFullServiceImpl, v0.1 2018/7/6 15:17
  */
 @Service
-public class BorrowFullServiceImpl implements BorrowFullService {
-    Logger logger = LoggerFactory.getLogger(BorrowFullServiceImpl.class);
+public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFullService {
 
-    @Autowired
-    BorrowFullCustomizeMapper borrowFullCustomizeMapper;
-
-    @Autowired
-    BorrowMapper borrowMapper;
-
-    @Autowired
-    BorrowInfoMapper borrowInfoMapper;
-
-    @Autowired
-    BorrowApicronMapper borrowApicronMapper;
-
-    @Autowired
-    BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    BorrowTenderTmpMapper borrowTenderTmpMapper;
-
-    @Autowired
-    FreezeHistoryMapper freezeHistoryMapper;
 
     /**
      * 获取借款复审列表count
@@ -87,11 +67,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
         List<BorrowFullCustomize> list = borrowFullCustomizeMapper.selectBorrowFullList(borrowFullRequest);
         if (!CollectionUtils.isEmpty(list)) {
             Map<String, String> map = CacheUtil.getParamNameMap("REVERIFY_STATUS");
-            if (!CollectionUtils.isEmpty(map)) {
-                for (BorrowFullCustomize borrowFullCustomize : list) {
-                    borrowFullCustomize.setReverifyStatusName(map.getOrDefault(borrowFullCustomize.getReverifyStatus(), null));
-                }
-            }
+            list.forEach((borrowFullCustomize) -> borrowFullCustomize.setReverifyStatusName(map.getOrDefault(borrowFullCustomize.getReverifyStatus(), null)));
         }
         return list;
     }
@@ -141,11 +117,7 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                 borrowFullRequest.getBorrowNidSrch(), borrowFullRequest.getLimitStart(), borrowFullRequest.getLimitEnd());
         if (!CollectionUtils.isEmpty(list)) {
             Map<String, String> map = CacheUtil.getParamNameMap("CLIENT");
-            if (!CollectionUtils.isEmpty(map)) {
-                for (BorrowFullCustomize borrowFullCustomize : list) {
-                    borrowFullCustomize.setOperatingDeck(map.getOrDefault(borrowFullCustomize.getOperatingDeck(), null));
-                }
-            }
+            list.forEach((borrowFullCustomize) -> borrowFullCustomize.setOperatingDeck(map.getOrDefault(borrowFullCustomize.getOperatingDeck(), null)));
         }
         return list;
     }
@@ -365,17 +337,13 @@ public class BorrowFullServiceImpl implements BorrowFullService {
      */
     private BankCallBean queryBorrowTenderList(String accountId, String orgOrderId, String userId) {
         BankCallBean bean = new BankCallBean();
-        //共同参数删除
-//        bean.setVersion(BankCallConstant.VERSION_10);
+        //调用银行接口部分共同参数已删除
+
+        //交易代码
         bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);
+        //用户ID
         bean.setLogUserId(userId);
-//        bean.setInstCode(PropUtils.getSystem(BankCallConstant.BANK_INSTCODE));// 机构代码
-//        bean.setBankCode(PropUtils.getSystem(BankCallConstant.BANK_BANKCODE));
-//        bean.setTxDate(GetOrderIdUtils.getTxDate());
-//        bean.setTxTime(GetOrderIdUtils.getTxTime());
-//        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
-//        bean.setChannel(BankCallConstant.CHANNEL_PC);
-        // 电子账号
+        //电子账号
         bean.setAccountId(accountId);
         bean.setOrgOrderId(orgOrderId);
         bean.setLogOrderId(GetOrderIdUtils.getUsrId(Integer.parseInt(userId)));
@@ -451,17 +419,8 @@ public class BorrowFullServiceImpl implements BorrowFullService {
     public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount) {
         // 标的投资撤销
         BankCallBean bean = new BankCallBean();
-        // 共同参数删除
-//        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);
-//        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);
-//        bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
+        // 部分共同参数删除
 
-//        bean.setInstCode(instCode);
-//        bean.setBankCode(bankCode);
-//        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
-//        bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
-//        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6)); // 交易流水号
-//        bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
         // 交易代码
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         bean.setTxCode(BankCallMethodConstant.TXCODE_BID_CANCEL);

@@ -8,10 +8,14 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 
 /**
  * @Description 计划类
@@ -97,4 +101,59 @@ public interface HjhPlanCustomizeMapper {
      * @date 2018/7/23 10:43
      */
     List<BorrowVO> getPlanBorrowList(Map<String,Object> params);
+
+    /**
+     * 计划加入总数 和加入金额总计
+     * @author zhangyk
+     * @date 2018/7/24 19:05
+     */
+    Map<String,Object> getPlanAccedeTotal(Map<String,Object> params);
+
+
+    /**
+     * 加入记录list
+     * @author zhangyk
+     * @date 2018/7/24 19:05
+     */
+    List<HjhAccedeCustomizeVO> getPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    int countPlanBorrowRecordTotal(Map<String,Object> params);
+
+    /**
+     * 计划标的组成
+     * @param params
+     * @return
+     */
+    List<DebtPlanBorrowCustomize> selectPlanBorrowList(Map<String,Object> params);
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    Long selectPlanAccedeSum(Map<String,Object> params);
+
+    /**
+     * 查询相应的计划的加入明细
+     * @param params
+     * @return
+     */
+    List<DebtPlanAccedeCustomize> selectPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 查询用户的汇计划加入记录
+     * @date 2018/8/1 14:03
+     */
+    List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
+
+    /**
+     * 汇计划数据统计查询
+     * @return
+     */
+    List<Map<String,Object>> searchPlanStatisticData();
 }

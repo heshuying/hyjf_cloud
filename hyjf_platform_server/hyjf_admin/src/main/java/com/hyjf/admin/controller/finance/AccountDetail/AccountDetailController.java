@@ -15,8 +15,8 @@ import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.vo.admin.AccountDetailVO;
@@ -24,12 +24,11 @@ import com.hyjf.am.vo.admin.AdminAccountDetailDataRepairVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -51,7 +50,7 @@ import java.util.*;
  * @version AccountdetailController, v0.1 2018/6/29 13:38
  *          后台管理系统，资金中心->资金明细
  */
-@Api(value = "资金中心->资金明细",description = "资金中心->资金明细")
+@Api(value = "资金中心->资金明细",tags = "资金中心->资金明细")
 @RestController
 @RequestMapping("/hyjf-admin/accountDetail")
 public class AccountDetailController extends BaseController {
@@ -256,7 +255,7 @@ public class AccountDetailController extends BaseController {
         requestAccountDetail.setLimitFlg(true);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
 
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 
         String[] titles = new String[]{"序号", "明细ID", "用户名", "电子账号", "推荐人", "推荐组", "资金托管平台", "流水号", "订单号", "操作类型", "交易类型", "操作金额", "银行总资产", "银行可用余额", "银行冻结金额", "汇付可用金额", "汇付冻结金额", "汇添金可用余额",
                 "汇添金冻结金额", "交易状态", "对账状态", "备注说明", "时间"};

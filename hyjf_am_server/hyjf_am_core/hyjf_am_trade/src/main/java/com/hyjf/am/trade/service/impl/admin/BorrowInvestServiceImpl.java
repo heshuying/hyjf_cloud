@@ -4,10 +4,6 @@
 package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
-import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowInvestCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.WebUserInvestListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverExample;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
@@ -17,8 +13,8 @@ import com.hyjf.am.trade.dao.model.customize.admin.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.admin.BorrowInvestService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,18 +27,7 @@ import java.util.Map;
  * @version BorrowInvestServiceImpl, v0.1 2018/7/10 9:35
  */
 @Service
-public class BorrowInvestServiceImpl implements BorrowInvestService {
-    @Autowired
-    BorrowInvestCustomizeMapper borrowInvestCustomizeMapper;
-
-    @Autowired
-    TenderAgreementMapper tenderAgreementMapper;
-
-    @Autowired
-    BorrowRecoverMapper borrowRecoverMapper;
-
-    @Autowired
-    WebUserInvestListCustomizeMapper webUserInvestListCustomizeMapper;
+public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowInvestService {
 
     /**
      * 投资明细记录 总数COUNT

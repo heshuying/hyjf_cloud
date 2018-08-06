@@ -136,6 +136,10 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         return contentArticleMapper.countByExample(example);
     }
 
+    /**
+     * 取首页公告(风险教育..)列表
+     * @return
+     */
     @Override
     public List<ContentArticle> searchHomeNoticeList(String noticeType, int offset, int limit) {
         ContentArticleExample example = new ContentArticleExample();
@@ -151,16 +155,28 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         return contentArticles;
     }
 
+    /**
+     *
+     * @description: 根据help查出大分类
+     */
     @Override
     public List<HelpCategoryCustomize> selectCategory(String group) {
         return helpCustomizeMapper.selectCategory(group);
     }
 
+    /**
+     *
+     * @description: 	根据大类id查询子类
+     */
     @Override
     public List<HelpCategoryCustomize> selectSunCategory(String pageName) {
         return helpCustomizeMapper.selectSunCategory(pageName);
     }
 
+    /**
+     *
+     * @description: 根据子类id和直属于大类的id查询出所属帮助内容
+     */
     @Override
     public List<HelpContentCustomize> selectSunContentCategory(String type,String pid) {
         Map<String, Object> tmpmap=new HashMap<String, Object>();
@@ -169,8 +185,11 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         return helpCustomizeMapper.selectSunContentCategory(tmpmap);
     }
 
-
-
+    /**
+     * 添加文章管理
+     *
+     * @param request
+     */
     @Override
     public void insertAction(ContentArticleRequest request) {
         if (request != null) {
@@ -185,6 +204,11 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         }
     }
 
+    /**
+     * 修改文章
+     *
+     * @param request
+     */
     @Override
     public void updateAction(ContentArticleRequest request) {
         if (request != null) {
@@ -194,16 +218,30 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         }
     }
 
+    /**
+     * 删除文章
+     *
+     * @param id
+     */
     @Override
     public void delectAction(Integer id) {
         contentArticleMapper.deleteByPrimaryKey(id);
     }
 
+    /**
+     * 查询文章条数
+     * @return
+     */
     @Override
     public Integer countContentArticleByType(Map<String, Object> params) {
         return contentArticleCustomizeMapper.countContentArticleByType(params);
     }
 
+    /**
+     * 查询文章列表
+     * @param params
+     * @return
+     */
     @Override
     public List<ContentArticleCustomize> getContentArticleListByType(Map<String, Object> params) {
         List<ContentArticle> list = contentArticleCustomizeMapper.getContentArticleListByType(params);
@@ -213,6 +251,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             customize.setTitle(contentArticle.getTitle());
             customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
             customize.setMessageId(contentArticle.getId()+"");
+            System.out.println(webUrl);
             customize.setMessageUrl(webUrl +"/find/contentArticle"+
                     "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
             customize.setShareTitle(contentArticle.getTitle());
@@ -224,5 +263,38 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             knowledgeCustomizes.add(customize);
         }
         return knowledgeCustomizes;
+    }
+
+    /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    @Override
+    public ContentArticleCustomize getContentArticleFlip(Map<String, Object> params, String offset) {
+        ContentArticle contentArticle=null;
+        if("0".equals(offset)){
+            contentArticle=contentArticleCustomizeMapper.getContentArticleUp(params);
+        }else{
+            contentArticle=contentArticleCustomizeMapper.getContentArticleDown(params);
+        }
+
+
+        if(contentArticle!=null){
+            ContentArticleCustomize customize=new ContentArticleCustomize();
+            customize.setTitle(contentArticle.getTitle());
+            customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
+            customize.setMessageId(contentArticle.getId()+"");
+            //customize.setMessageUrl(PropUtils.getSystem("hyjf.web.host")+AppContentArticleDefine.REQUEST_MAPPING+
+            //        AppContentArticleDefine.GET_CONTENT_ARTICLE_ID_ACTION.replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+            customize.setShareTitle(contentArticle.getTitle());
+            customize.setShareContent(contentArticle.getSummary());
+            customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+            //customize.setShareUrl(PropUtils.getSystem("hyjf.web.host")+AppContentArticleDefine.REQUEST_MAPPING+
+            //        AppContentArticleDefine.GET_CONTENT_ARTICLE_ID_ACTION.replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+            return customize;
+        }
+        return null;
     }
 }

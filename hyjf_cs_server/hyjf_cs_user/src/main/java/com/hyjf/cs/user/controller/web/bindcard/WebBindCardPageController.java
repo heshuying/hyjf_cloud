@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -33,7 +33,7 @@ import java.util.Map;
  * @author hesy
  * @version WebBindCardPageController, v0.1 2018/6/21 14:26
  */
-@Api(value = "web端-用户绑卡及解绑卡接口",description = "web端-用户绑卡及解绑卡接口")
+@Api(value = "web端-用户绑卡及解绑卡接口",tags = "web端-用户绑卡及解绑卡接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user/card")
@@ -84,7 +84,7 @@ public class WebBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
     public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
 
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");
@@ -119,14 +119,14 @@ public class WebBindCardPageController extends BaseUserController{
         logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+        WebViewUserVO user = bindCardService.getUsersByToken(token);
 
         bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
 
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
         try {
-            bankBean = bindCardService.callBankUnBindCard(bindCardVO, user.getUserId());
+            bankBean = bindCardService.callBankUnBindCard(bindCardVO.getCardNo(), user.getUserId());
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
@@ -142,7 +142,7 @@ public class WebBindCardPageController extends BaseUserController{
         // 绑卡请求后业务处理
         try {
             LogAcqResBean logAcqResBean = bankBean.getLogAcqResBean();
-            boolean updateResult = bindCardService.updateAfterDeleteCard(user.getUserId(),user.getUsername(),logAcqResBean.getCardNo(),logAcqResBean.getCardId());
+            boolean updateResult = bindCardService.updateAfterDeleteCard(user.getUserId(),user.getUsername(),logAcqResBean.getCardNo());
             if(!updateResult){
                 result.setStatus(ApiResult.FAIL);
                 result.setStatusDesc("更新银行卡失败");

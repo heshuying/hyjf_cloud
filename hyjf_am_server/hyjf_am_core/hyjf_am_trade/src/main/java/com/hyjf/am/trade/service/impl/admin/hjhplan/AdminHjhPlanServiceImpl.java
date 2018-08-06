@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -224,7 +225,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		HjhPlanExample example = new HjhPlanExample(); 
 		HjhPlanExample.Criteria cra = example.createCriteria();
 		if (StringUtils.isNotEmpty(planNid)) {
-			cra.andPlanNidNotEqualTo(planNid);
+			cra.andPlanNidEqualTo(planNid);
 			cra.andDelFlagEqualTo(0);
 		}
 		ret = this.hjhPlanMapper.countByExample(example);
@@ -385,27 +386,37 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setUpdateUser(form.getUserid());
 				// 跟新汇计划表
 				count1 = this.hjhPlanMapper.updateByPrimaryKeySelective(plan);
-				if(count1 > 0){
-					//计划列表更新成功才更新引擎表
-					HjhAllocationEngineExample example1 = new HjhAllocationEngineExample(); 
-					HjhAllocationEngineExample.Criteria cra1 = example1.createCriteria();
-					cra1.andPlanNidEqualTo(planNid);
-					List<HjhAllocationEngine> resultList = this.hjhAllocationEngineMapper.selectByExample(example1);
+				
+				// 更新引擎表
+				HjhAllocationEngineExample example1 = new HjhAllocationEngineExample(); 
+				HjhAllocationEngineExample.Criteria cra1 = example1.createCriteria();
+				cra1.andPlanNidEqualTo(planNid);
+				List<HjhAllocationEngine> resultList = this.hjhAllocationEngineMapper.selectByExample(example1);
+				if(CollectionUtils.isNotEmpty(resultList)){
 					for(HjhAllocationEngine hjhAllocationEngine : resultList){
 						hjhAllocationEngine.setPlanName(form.getDebtPlanName());
 						count2 = this.hjhAllocationEngineMapper.updateByPrimaryKeySelective(hjhAllocationEngine);
 					}
-					//计划列表更新成功才更新计划专区表
-					HjhRegionExample example2 = new HjhRegionExample();
-					HjhRegionExample.Criteria cra2 = example2.createCriteria();
-					cra2.andPlanNidEqualTo(planNid);
-					List<HjhRegion> resultList2 = this.hjhRegionMapper.selectByExample(example2);
+				} else {
+					// 该计划未在引擎中添加则无需更改引擎表
+					count2 = 99;
+				}
+				
+				// 更新计划专区表
+				HjhRegionExample example2 = new HjhRegionExample();
+				HjhRegionExample.Criteria cra2 = example2.createCriteria();
+				cra2.andPlanNidEqualTo(planNid);
+				List<HjhRegion> resultList2 = this.hjhRegionMapper.selectByExample(example2);
+				if(CollectionUtils.isNotEmpty(resultList2)){
 					for(HjhRegion hjhRegion : resultList2){
 						hjhRegion.setPlanName(form.getDebtPlanName());
 						count3 = this.hjhRegionMapper.updateByPrimaryKeySelective(hjhRegion);
 					}
+				} else {
+					// 该计划未在计划专区中添加则无需更改引擎表
+					count3 = 99;
 				}
-				if(count1 > 0 && count2 > 0 && count3 >0){
+				if(count1 > 0 && count2 != 0 && count3 != 0){
 					return success;
 				} else {
 					return 0;
@@ -491,6 +502,56 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		} else {
 			return 0;
 		}
+	}
+
+	@Override
+	public List<HjhPlanVO> selectHjhPlanListWithoutPage(PlanListRequest request) {
+		HjhPlanExample example = new HjhPlanExample(); 
+		HjhPlanExample.Criteria cra = example.createCriteria();
+		// 传入查询计划编号
+		if (StringUtils.isNotEmpty(request.getPlanNidSrch())) {
+			cra.andPlanNidLike("%" + request.getPlanNidSrch() + "%");
+		}
+		// 传入查询计划名称
+		if (StringUtils.isNotEmpty(request.getPlanNameSrch())) {
+			cra.andPlanNameLike("%" + request.getPlanNameSrch() + "%");
+		}
+		// 传入锁定期
+		if (StringUtils.isNotEmpty(request.getLockPeriodSrch())) {
+			cra.andLockPeriodEqualTo(Integer.valueOf(request.getLockPeriodSrch()));
+		}
+		// 传入查询投资状态
+		if (StringUtils.isNotEmpty(request.getPlanStatusSrch())) {		
+			cra.andPlanInvestStatusEqualTo(Integer.valueOf(request.getPlanStatusSrch()));
+		}
+		// 传入查询显示状态
+		if (StringUtils.isNotEmpty(request.getPlanDisplayStatusSrch())) {		
+			cra.andPlanDisplayStatusEqualTo(Integer.valueOf(request.getPlanDisplayStatusSrch()));
+		}
+		// 传入查询添加时间
+		if (StringUtils.isNotEmpty(request.getAddTimeStart())&&StringUtils.isNotEmpty(request.getAddTimeEnd())) {		
+			SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+			long start = 0;
+			long end = 0;
+			try {
+				start = formatter.parse(request.getAddTimeStart()).getTime()/1000;
+				end = formatter.parse(request.getAddTimeEnd()).getTime()/1000;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cra.andAddTimeLessThanOrEqualTo((int)end+86399);
+			cra.andAddTimeGreaterThanOrEqualTo((int)start);
+		}
+		// 传入还款方式 汇计划三期新增
+		if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())) {
+			cra.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
+		}
+
+		// 传入排序
+		example.setOrderByClause("create_time Desc");
+		List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
+		List<HjhPlanVO> volist = CommonUtils.convertBeanList(list, HjhPlanVO.class);
+		return volist;
 	}
 
 }

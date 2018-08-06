@@ -7,7 +7,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AssetManageService;
+import com.hyjf.cs.trade.service.assetmanage.AssetManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version WebAssetManageController, v0.1 2018/6/20 17:19
  */
-@Api(value = "Web资产管理页面")
+@Api(tags = "Web资产管理页面")
 @RestController
 @RequestMapping("/hyjf-web/assetmanage")
 public class WebAssetManageController extends BaseTradeController {

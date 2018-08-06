@@ -778,7 +778,7 @@
         <include refid="App_Where_Clause" />
     </select>
 
-    <select id="searchAppProjectList"  resultType="com.hyjf.am.trade.dao.model.customize.trade.AppProjectListCustomize" parameterType="Map">
+    <select id="searchAppProjectList" resultType="com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize" parameterType="Map">
         SELECT
         hydbpt.borrow_class AS borrowType,
         hydbpt.borrow_name AS borrowDesc,
@@ -1102,44 +1102,80 @@
         </if>
     </select>
 
-    <!--app债转list-->
+    <!--app计划list-->
     <select id="searchAppPlanList" resultMap="HjhPlanMap" parameterType="Map">
         SELECT
+        t.*
+        FROM
+        (SELECT
+        hp.id AS order_by_id,
         hp.plan_nid AS plan_nid,
         hp.plan_name AS plan_name,
         hp.expect_apr AS expect_apr,
-        hp.lock_period AS lock_period,
         hp.is_month,
         CASE
-        WHEN hp.plan_invest_status = 1
-        THEN FORMAT(IF(hp.available_invest_account <![CDATA[<=]]> 0, 0, hp.available_invest_account) , 2)
+        WHEN hp.borrow_style = 'endday'
+        THEN CONCAT(hp.lock_period, '天')
+        ELSE CONCAT(hp.lock_period, '个月')
+        END AS lock_period,
+        CASE
+        WHEN hp.borrow_style = 'endday'
+        THEN '1'
+        ELSE '2'
+        END AS number,
+        CASE
+        WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account, 2)   >=   0.00
+        THEN CONCAT(
+        FORMAT(
+        hp.available_invest_account / 10000,
+        2
+        ),
+        '万'
+        )
         WHEN hp.plan_invest_status = 2
-        THEN '0.00'
-        ELSE '0.00'
+        THEN '0.00 万'
+        ELSE '0.00 万'
         END AS available_invest_account,
+        CASE
+        WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account, 2)   >=   0.00
+        THEN hp.available_invest_account
+        ELSE 0
+        END AS order_by_available_invest_account,
         hp.plan_invest_status AS plan_invest_status,
         CASE
-        WHEN hp.plan_invest_status = 1 AND FORMAT(hp.available_invest_account , 2) <![CDATA[<=]]> 0.00
+        WHEN hp.plan_invest_status = 1
+        AND FORMAT(hp.available_invest_account, 2)  <![CDATA[ <= ]]>    0.00
         THEN '稍后开启'
         WHEN hp.plan_invest_status = 1
         THEN '立即加入'
         WHEN hp.plan_invest_status = 2
         THEN '稍后开启'
         ELSE ''
-        END AS plan_invest_status_name
+        END AS plan_invest_status_name,
+        CASE
+        WHEN hp.plan_invest_status = 1
+        AND FORMAT(hp.available_invest_account, 2)   <![CDATA[ <= ]]>   0.00
+        THEN 2
+        WHEN hp.plan_invest_status = 1
+        THEN 1
+        WHEN hp.plan_invest_status = 2
+        THEN 2
+        ELSE 2
+        END AS order_by_status_name,
+        CASE
+        WHEN hp.borrow_style = 'endday'
+        THEN hp.lock_period
+        ELSE hp.lock_period * 30
+        END AS order_by_lock_period,
+        coupon_config
         FROM
         ht_hjh_plan hp
-        <include refid="App_PLan_Where_Clause" />
+        WHERE hp.del_flag = 0 AND hp.plan_display_status = 1) t
         ORDER BY
-        <if test="isHome != null" >
-            hp.lock_period asc,
-            hp.plan_invest_status asc, hp.available_invest_account desc, hp.id
-        </if>
-        <if test="isHome == null" >
-            hp.is_month asc,
-            hp.lock_period asc,
-            hp.id
-        </if>
+        t.is_month ASC,
+        t.order_by_lock_period ASC,
+        t.order_by_id ASC,
+        t.number ASC
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>

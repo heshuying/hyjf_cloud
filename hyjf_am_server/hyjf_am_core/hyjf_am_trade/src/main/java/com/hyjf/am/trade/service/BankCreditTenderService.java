@@ -164,4 +164,27 @@ public interface BankCreditTenderService {
      * @return
      */
     BigDecimal getHzrTenderPrice(List<Integer> list);
+
+
+    /**
+     * 查询承接总记录数
+     * @author zhangyk
+     * @date 2018/7/25 17:19
+     */
+    int getCreditTenderCount(Map<String,Object> params);
+
+
+    /**
+     * 查询承接list
+     * @author zhangyk
+     * @date 2018/7/25 17:19
+     */
+    List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String,Object> params);
+    
+	/**
+	 * 获取债转承接信息AssignNid
+	 * @param nid
+	 * @return
+	 */
+    CreditTenderVO getCreditTenderByAssignNid(String assignNid);
 }

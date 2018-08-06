@@ -37,7 +37,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version CouponRepayController, v0.1 2018/7/9 11:12
  */
-@Api(value = "加息券还款统计")
+@Api(value = "加息券还款统计",tags ="加息券还款统计")
 @RestController
 @RequestMapping("/hyjf-admin/finance/couponrepaymonitor")
 public class CouponRepayController extends BaseController {

@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountDetailResponse;
 import com.hyjf.am.response.admin.AdminAccountDetailDataRepairResponse;
-import com.hyjf.am.response.trade.AccountListResponse;
-import com.hyjf.am.response.trade.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.AccountDetailRequest;
 import com.hyjf.am.resquest.admin.AccountListRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
@@ -65,9 +65,9 @@ public class AdminAccountDetailController {
             mapParam.put("limitStart", 0);
             mapParam.put("limitEnd", 0);
         }
-        List<AdminAccountDetailCustomize> userManagerCustomizeList = accountDetailService.queryAccountDetails(mapParam);
         response.setRecordTotal(intCountAccountDetail);
         if (intCountAccountDetail > 0) {
+            List<AdminAccountDetailCustomize> userManagerCustomizeList = accountDetailService.queryAccountDetails(mapParam);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AccountDetailVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AccountDetailVO.class);
                 response.setResultList(userVoList);

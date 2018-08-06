@@ -21,8 +21,8 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.bean.BankCardBean;
 import com.hyjf.cs.trade.bean.WithdrawResultBean;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.service.BankWithdrawService;
-import com.hyjf.cs.trade.service.RdfWithdrawService;
+import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.service.wirhdraw.RdfWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -95,8 +95,6 @@ public class WithdrawController extends BaseController {
                 ret.put("total", moneyFormat.format(account.getBankBalance()));// 可提现金额
             }
         }
-        // 银行类型
-        String bankType = "";
         // 银联行号
         String openBankCode = "";
         // 路由代码
@@ -112,7 +110,6 @@ public class WithdrawController extends BaseController {
                 BankCardVO bankCard = banks.get(j);
                 BankCardBean bankCardBean = new BankCardBean();
                 openBankCode = bankCard.getPayAllianceCode();// 银联行号
-                bankType = String.valueOf(bankCard.getBankId()); // 银行类型
                 bankCardBean.setIsDefault("2");// 快捷卡
                 bankCardBean.setBankCode(bankCard.getBank());// 银行代号?需要工具类
                 bankCardBean.setBank(bankCard.getBank());// 银行名称
@@ -246,7 +243,7 @@ public class WithdrawController extends BaseController {
         String returnUrl = systemConfig.getFrontHost() + "/password/openError"+"?nid=" + nid + "&retUrl=" + retUrl
                 + "&from=" + from;// 提现同步回调路径
         String bgRetUrl = systemConfig.webHost + "/hyjf-web/user/password/resetPasswordBgreturn?nid=" + nid + "&callBackUrl="
-                + callBackUrl + "&from=" + from;// 提现异步回调路径
+        + callBackUrl + "&from=" + from;// 提现异步回调路径
 
         UserVO users = bankWithdrawService.getUserByUserId(userId);
         UserInfoVO usersInfo = bankWithdrawService.getUserInfoByUserId(userId);

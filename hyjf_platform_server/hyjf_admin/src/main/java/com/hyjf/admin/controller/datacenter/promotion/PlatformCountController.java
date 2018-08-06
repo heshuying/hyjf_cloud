@@ -36,7 +36,7 @@ import java.util.List;
  * @author fuqiang
  * @version PlatformCountController, v0.1 2018/7/18 17:46
  */
-@Api(value = "数据中心-平台统计", description = "数据中心-平台统计")
+@Api(value = "数据中心-平台统计", tags = "数据中心-平台统计")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/platformcount")
 public class PlatformCountController extends BaseController {

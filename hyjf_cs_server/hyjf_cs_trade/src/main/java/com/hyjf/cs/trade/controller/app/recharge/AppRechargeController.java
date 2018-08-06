@@ -7,7 +7,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.RechargeService;
+import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -31,10 +31,10 @@ import java.util.Map;
 /**
  * 用户充值Controller
  * 
- * @author zhangqingqing
+ * @author
  *
  */
-@Api(value = "app端用户充值接口")
+@Api(tags = "app端用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-app/recharge")
@@ -75,12 +75,10 @@ public class AppRechargeController extends BaseTradeController{
 	}
 
 	/**
-	 * @Author: zhangqingqing
-	 * @Desc :页面充值同步
-	 * @Param: * @param request
+	 * 页面充值同步
+	 * @param request
 	 * @param bean
-	 * @Date: 12:40 2018/6/5
-	 * @Return: ModelAndView
+	 * @return
 	 */
 	@ApiOperation(value = "用户充值同步回调", notes = "用户充值")
 	@PostMapping("/return")
@@ -120,12 +118,10 @@ public class AppRechargeController extends BaseTradeController{
 	}
 
 	/**
-	 * @Author: zhangqingqing
-	 * @Desc :页面充值异步回调
-	 * @Param: * @param request
+	 * 页面充值异步回调
+	 * @param request
 	 * @param bean
-	 * @Date: 12:40 2018/6/5
-	 * @Return: BankCallResult
+	 * @return
 	 */
 	@ApiOperation(value = "用户充值异步回调", notes = "用户充值")
 	@ResponseBody

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.trade.dao.model.auto.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +22,13 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.dao.mapper.customize.trade.AccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
-import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowManinfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowSendType;
-import com.hyjf.am.trade.dao.model.auto.BorrowSendTypeExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpinfo;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterest;
-import com.hyjf.am.trade.dao.model.auto.CalculateInvestInterestExample;
-import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
@@ -521,5 +503,36 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
        return borrowCustomizeMapper.getTotalInverestCount(userId);
     }
 
+	/**
+	 * COUNT
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 */
+	@Override
+    public Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.countBorrow(borrowCommonCustomizeVO);
+	}
 
+
+
+	/**
+	 * 借款列表
+	 * 
+	 * @return
+	 */
+	@Override
+    public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.selectBorrowList(borrowCommonCustomizeVO);
+	}
+
+
+    @Override
+    public List<AccountBorrow> getAccountBorrowList(String borrowNid) {
+        AccountBorrowExample example = new AccountBorrowExample();
+        AccountBorrowExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<AccountBorrow> accountBorrows = accountBorrowMapper.selectByExample(example);
+        return  accountBorrows;
+    }
 }

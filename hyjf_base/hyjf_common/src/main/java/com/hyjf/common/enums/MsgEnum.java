@@ -61,6 +61,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_PAGE_MAX("ETY000201","单次检索记录数不能超过{0}条"),
 	ERR_DATA_MAX("ETY000202","单次检索记录时间不能超过{0}天"),
 
+	ERR_DATA_VERIFICATION("EDT000101","数据验证失败"),
+
 
 	ERR_IP_VISIT_TOO_MANNY("ETY000301", "IP访问次数超限"),
 	ERR_INSTCODE("ETY000401","机构编号错误"),
@@ -89,6 +91,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USER_LOGIN_EXPIRE("EUS000010","登录失效，请重新登陆"),
 	ERR_USER_USERNAME_AND_PASSWORD_REQUIRED("EUS000011","用户名或密码不能为空"),
 	ERR_USER_RECOMMEND_INVALID("EUS000012","无效的推荐人"),
+	ERR_USER_AUTH("EUS000013","用户认证失败"),
 
 	// 资金相关错误信息ERR_AMT_
 	ERR_AMT_NO_MONEY("EAM000001","账户余额不足"),
@@ -229,6 +232,9 @@ public enum MsgEnum implements MsgCode {
 	ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
 	ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
 
+	// 订单相关ERR_ORDER_
+	ERR_ORDER_VERIFY("EOD000001","订单验证失败"),
+
 
 
 	// 时间日期相关错误信息ERR_DATE_
@@ -367,8 +373,9 @@ public enum MsgEnum implements MsgCode {
 	ERROR_CREDIT_CANT_BBY_YOURSELF("1","不可以承接自己出让的债权"),
 	ERROR_CREDIT_NO_BORROW_RECOVER("1","未查询到用户的放款记录"),
 	ERROR_CREDIT_NO_BORROW("1","当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试"),
-	ERROR_LOGIN_INVALID("998", "登录过期,请重新登录!"),
+	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
+	ERR_BIND("1", "授权失败，请仔细阅读并同意《汇盈金服授权协议》"),
 	// 枚举终结
 	ERR_ENUM("", "");
 

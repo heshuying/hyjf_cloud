@@ -327,4 +327,7 @@ public class BaseDefine {
     //授权状态查询
     public static final String METHOD_BORROW_AUTH_STATE = "/server/authState/query";
 
+    // 绑卡
+    public static final String METHOD_SERVER_BIND_CARD_PAGE = "/server/user/bindcardpage/bind";
+
 }

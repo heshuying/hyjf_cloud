@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
 import com.hyjf.am.trade.dao.model.auto.AleveLog;
 import com.hyjf.am.trade.dao.model.auto.EveLog;
 import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @author wangjun
  * @version AleveLogFileService, v0.1 2018/6/25 10:09
  */
-public interface AleveLogFileService {
+public interface AleveLogFileService extends BaseService {
     /**
      * 存款业务红包流水全明细数据文件下载
      */
@@ -46,23 +47,8 @@ public interface AleveLogFileService {
     List<AleveLogCustomize> selectAleveReverseList(List<String> tranStype);
 
     /**
-     * 检索手动冲正数量
-     * @param aleveLogCustomize
-     * @return
-     */
-    int countManualReverse(AleveLogCustomize aleveLogCustomize);
-
-    /**
      * 自动冲正
-     * @param aleveLogCustomize
-     * @return
+     * @param aleveLogCustomizeList
      */
-    boolean updateAutoCorretion(AleveLogCustomize aleveLogCustomize);
-
-    /**
-     * 同步冲正后更新处理flg
-     * @param aleveLogCustomize
-     * @return
-     */
-    boolean updateAleveLog(AleveLogCustomize aleveLogCustomize);
+    void updateAutoCorretion(List<AleveLogCustomize> aleveLogCustomizeList);
 }

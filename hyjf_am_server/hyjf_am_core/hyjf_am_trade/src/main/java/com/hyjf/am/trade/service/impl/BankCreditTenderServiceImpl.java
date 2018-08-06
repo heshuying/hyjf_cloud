@@ -38,6 +38,7 @@ import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -1512,4 +1513,43 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	}
 
 
+
+	/**
+	 * 查询承接总记录数
+	 * @author zhangyk
+	 * @date 2018/7/25 17:19
+	 */
+	@Override
+	public int getCreditTenderCount(Map<String, Object> params) {
+		return creditTenderCustomizeMapper.getCreditListCount(params);
+	}
+
+
+	/**
+	 * 查询承接list
+	 * @author zhangyk
+	 * @date 2018/7/25 17:28
+	 */
+	@Override
+	public List<CreditTenderListCustomizeVO> getCreditTenderList(Map<String, Object> params) {
+		return creditTenderCustomizeMapper.getCreditTenderList(params);
+	}
+
+	@Override
+	public CreditTenderVO getCreditTenderByAssignNid(String assignNid) {
+		CreditTenderVO vo = new CreditTenderVO();
+		CreditTender tender = new CreditTender();
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andAssignNidEqualTo(assignNid);
+        List<CreditTender> list = creditTenderMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+        	tender = list.get(0);
+        	if(tender != null){
+        		BeanUtils.copyProperties(tender, vo);
+        		return vo;
+        	}
+        }
+		return null;
+	}
 }

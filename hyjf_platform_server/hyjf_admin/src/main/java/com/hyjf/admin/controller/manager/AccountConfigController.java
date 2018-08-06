@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.manager;
 
-import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.admin.beans.request.MerchantAccountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -8,11 +7,12 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MerchantAccountService;
+import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(value = "配置中心账号平台设置")
+@Api(value = "配置中心账号平台设置",description ="配置中心账号平台设置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountconfig")
 public class AccountConfigController extends BaseController {
@@ -102,7 +102,7 @@ public class AccountConfigController extends BaseController {
         this.validatorFieldCheck(modelAndView, merchantAccountRequestBean);
         if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
             // 子账户类型 ---todo(返回子账号类型)
-            List<ParamName> paramNameList= merchantAccountService.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
+            List<ParamNameVO> paramNameList= merchantAccountService.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
             String paramName =paramNameList.toString();
             return new AdminResult<>(prs.getMessage(),paramName);
         }
@@ -129,7 +129,7 @@ public class AccountConfigController extends BaseController {
         this.validatorFieldCheck(modelAndView, merchantAccountRequestBean);
         if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
             // 子账户类型 ---todo(返回子账号类型)
-            List<ParamName> paramNameList= merchantAccountService.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
+            List<ParamNameVO> paramNameList= merchantAccountService.getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
             String paramName =paramNameList.toString();
             return new AdminResult<>(prs.getMessage(),paramName);
         }

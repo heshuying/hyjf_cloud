@@ -34,11 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 账户总览
+ * 微信端账户总览
  * @author jun
  * @version MyProfileController, v0.1 2018/7/3 15:52
  */
-@Api(value = "wechat端账户总览",description = "wechat端账户总览")
+@Api(value = "wechat端账户总览",tags = "wechat端账户总览")
 @Controller
 @RequestMapping("/hyjf-wechat/myprofile")
 public class MyProfileController extends BaseUserController {

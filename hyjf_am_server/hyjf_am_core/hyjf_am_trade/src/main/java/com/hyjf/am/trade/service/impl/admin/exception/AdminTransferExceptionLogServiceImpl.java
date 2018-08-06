@@ -3,11 +3,14 @@
  */
 package com.hyjf.am.trade.service.impl.admin.exception;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.service.admin.exception.AdminTransferExceptionLogService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -15,6 +18,7 @@ import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -24,14 +28,12 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -46,6 +48,8 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
     /** 还款金额(优惠券用) */
     private static final String VAL_AMOUNT = "val_amount";
 
+    @Autowired
+    private AccountWebListProducer producer;
     /**
      * 银行转账列表
      * @param request
@@ -367,8 +371,9 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
 
         // 插入网站收支明细记录
         //AccountWebList accountWebList = new AccountWebList();
-        AccountWebListVO accountWebListVO= (AccountWebListVO) jsonObject.get("AccountWebListVO");
-        AccountWebList accountWebList = CommonUtils.convertBean(accountWebListVO,AccountWebList.class);
+        AccountWebListVO accountWebList= (AccountWebListVO) jsonObject.get("AccountWebListVO");
+
+        //AccountWebList accountWebList = CommonUtils.convertBean(accountWebListVO,AccountWebList.class);
 
         if(!isMonth){
             // 未分期
@@ -407,10 +412,9 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
         remark = "项目编号："+borrowTender.getBorrowNid()+"<br />优惠券:"+couponUserCode;
         accountWebList.setRemark(remark); // 投资编号
         accountWebList.setCreateTime(GetDate.getNowTime10());
-        int accountWebListCnt = insertAccountWebList(accountWebList);
-        if (accountWebListCnt == 0) {
-            throw new Exception("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTender.getNid() + "]");
-        }
+
+        producer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+
 
         // 添加红包账户明细
         BankMerchantAccount nowBankMerchantAccount = this.getBankMerchantAccount(resultBean.getAccountId());
@@ -577,33 +581,4 @@ public class AdminTransferExceptionLogServiceImpl extends BaseServiceImpl implem
         this.couponRecoverCustomizeMapper.crRecoverPeriod(paramMapCurrent);
 
     }
-
-    /**
-     * 插入网站收支记录
-     *
-     * @param nid
-     * @return
-     */
-    private int insertAccountWebList(AccountWebList accountWebList) {
-        if (countAccountWebList(accountWebList.getOrdid(), accountWebList.getTrade()) == 0) {
-            // 设置部门信息
-            //setDepartments(accountWebList);
-            // 插入
-            return this.accountWebListMapper.insertSelective(accountWebList);
-        }
-        return 0;
-    }
-
-    /**
-     * 判断网站收支是否存在
-     * spreadsUsersMapper
-     * @param nid
-     * @return
-     */
-    private int countAccountWebList(String nid, String trade) {
-        AccountWebListExample example = new AccountWebListExample();
-        example.createCriteria().andOrdidEqualTo(nid).andTradeEqualTo(trade);
-        return this.accountWebListMapper.countByExample(example);
-    }
-
 }

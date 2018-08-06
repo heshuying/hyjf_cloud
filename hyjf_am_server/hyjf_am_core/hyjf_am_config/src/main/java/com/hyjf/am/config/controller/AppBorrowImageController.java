@@ -44,11 +44,9 @@ public class AppBorrowImageController {
         List<AppBorrowImage> recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), -1, -1);
         if (recordList != null) {
             String filePhysicalPath = DOMAIN_URL;//TODO  PropUtils.getSystem("file.domain.url")
-            Paginator paginator = new Paginator(form.getPaginatorPage(), recordList.size(), 12);
+            Paginator paginator = new Paginator(form.getCurrPage(), recordList.size(), 12);
             recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), paginator.getOffset(), paginator.getLimit());
-            form.setPaginator(paginator);
             List<AppBorrowImageVO> resultList = CommonUtils.convertBeanList(recordList, AppBorrowImageVO.class);
-
             for (AppBorrowImage appBorrowImage : recordList) {
                 appBorrowImage.setBorrowImageUrl(filePhysicalPath + appBorrowImage.getBorrowImageUrl());
             }
@@ -88,18 +86,17 @@ public class AppBorrowImageController {
     /**
      * 添加维护信息
      *
-     * @param request
      * @param form
      * @return
      * @throws Exception
      */
     @PostMapping("/insertAction")
-    public AppBorrowImageResponse insertAction(HttpServletRequest request, AppBorrowImageRequest form) throws Exception {
+    public AppBorrowImageResponse insertAction(@RequestBody AppBorrowImageRequest form) throws Exception {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
-        if (form.getPageType()!=null&&!form.getPageType().equals("")
-                &&form.getPageType().equals("0")) {
+        if (form.getPageType()!=null&&!"".equals(form.getPageType())
+                && "0".equals(form.getPageType())) {
             if (form.getJumpName()!=null&&form.getJumpName().contains(",")) {
-                if (form.getJumpName().split(",")[0]==null||form.getJumpName().split(",")[0].equals("")) {
+                if (form.getJumpName().split(",")[0]==null|| "".equals(form.getJumpName().split(",")[0])) {
                     form.setJumpName(form.getJumpName().split(",")[form.getJumpName().split(",").length-1]);
                 }else {
                     form.setJumpName(form.getJumpName().split(",")[0]);
@@ -137,12 +134,12 @@ public class AppBorrowImageController {
      * @throws Exception
      */
     @PostMapping("/updateAction")
-    public AppBorrowImageResponse updateAction(AppBorrowImageRequest form) throws Exception {
+    public AppBorrowImageResponse updateAction(@RequestBody AppBorrowImageRequest form) throws Exception {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
-        if (form.getPageType() != null && !form.getPageType().equals("")
-                && form.getPageType().equals("0")) {
+        if (form.getPageType() != null && !"".equals(form.getPageType())
+                && "0".equals(form.getPageType())) {
             if (form.getJumpName() != null && form.getJumpName().contains(",")) {
-                if (form.getJumpName().split(",")[0] == null || form.getJumpName().split(",")[0].equals("")) {
+                if (form.getJumpName().split(",")[0] == null || "".equals(form.getJumpName().split(",")[0])) {
                     form.setJumpName(form.getJumpName().split(",")[form.getJumpName().split(",").length - 1]);
                 } else {
                     form.setJumpName(form.getJumpName().split(",")[0]);
@@ -192,7 +189,7 @@ public class AppBorrowImageController {
      * @return
      */
     @PostMapping("/deleteAction")
-    public AppBorrowImageResponse deleteRecordAction(AppBorrowImageRequest form) {
+    public AppBorrowImageResponse deleteRecordAction(@RequestBody AppBorrowImageRequest form) {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
         boolean result = appBorrowImageService.deleteRecord(form.getId());
         if(result){

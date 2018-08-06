@@ -8,11 +8,9 @@ import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.InstConfigService;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetCode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -28,6 +26,7 @@ import redis.clients.jedis.Transaction;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,21 +46,33 @@ public class InstConfigController {
      * @return
      */
     @RequestMapping("/list")
-    public AdminInstConfigListResponse instConfigInitByPage(AdminInstConfigListRequest adminRequest) {
+    public AdminInstConfigDetailResponse instConfigInitByPage( @RequestBody AdminInstConfigListRequest adminRequest) {
         logger.info("保证金配置列表..." + JSONObject.toJSON(adminRequest));
-        AdminInstConfigListResponse  response =new AdminInstConfigListResponse();
+        AdminInstConfigDetailResponse  response =new AdminInstConfigDetailResponse();
+        List<HjhInstConfigWrapVo> resList = new ArrayList<>();
         //查询保证金配置条数
-        int recordTotal = this.instConfigService.getInstConfigCount();
-        if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+        List<HjhInstConfig> recordList = this.instConfigService.instConfigInitByPage(-1,-1);
+        if (!CollectionUtils.isEmpty(recordList)) {
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size());
             //查询记录
-            List<HjhInstConfig> recordList =instConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
-            if(!CollectionUtils.isEmpty(recordList)){
-                List<HjhInstConfigVO> hicv = CommonUtils.convertBeanList(recordList, HjhInstConfigVO.class);
-                response.setResultList(hicv);
-                response.setRecordTotal(recordTotal);
-                response.setRtn(Response.SUCCESS);
+            recordList =instConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
+            for(HjhInstConfig instConfigVO:recordList){
+                HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
+                BeanUtils.copyProperties(instConfigVO, recordWrap);
+                //获取发标额度余额
+                String capitalAvailable = RedisUtils.get(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode());
+                if(StringUtils.isNotEmpty(capitalAvailable)){
+                    recordWrap.setCapitalAvailable(capitalAvailable);
+                }else{
+                    recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
+                    RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
+                }
+                resList.add(recordWrap);
             }
+
+            response.setResultList(resList);
+            response.setRecordTotal(recordList.size());
+            response.setRtn(Response.SUCCESS);
             return response;
         }
         return null;
@@ -87,10 +98,8 @@ public class InstConfigController {
                     recordWrap.setCapitalAvailable(recordWrap.getCapitalToplimit().toString());
                     RedisUtils.set(RedisConstants.CAPITAL_TOPLIMIT_+recordWrap.getInstCode(),recordWrap.getCapitalToplimit().toString());
                 }
-                if(recordWrap != null){
-                    response.setResult(recordWrap);
-                    response.setRtn(Response.SUCCESS);
-                }
+                response.setResult(recordWrap);
+                response.setRtn(Response.SUCCESS);
             }
             return response;
         }
@@ -105,11 +114,6 @@ public class InstConfigController {
     public AdminInstConfigListResponse insertInstConfig(@RequestBody AdminInstConfigListRequest req) {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
         String instCode = GetCode.generateInstCode(8);
-        // 调用校验
-//        if (validatorFieldCheck(resp, req) != null) {
-//            // 失败返回
-//            return validatorFieldCheck(modelAndView, form);
-//        }
         try{
            int result =this.instConfigService.insertInstConfig(req,instCode);
             if(result > 0 && req.getCapitalToplimit() != null && !RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+instCode)){
@@ -131,8 +135,8 @@ public class InstConfigController {
         AdminInstConfigListResponse resp = new AdminInstConfigListResponse();
         try{
             HjhInstConfig instConfig = null;
-            if(StringUtils.isNotBlank(req.getIds()) ){
-                instConfig = this.instConfigService.getInstConfigRecordById(req.getIds());
+            if(req.getId() != null ){
+                instConfig = this.instConfigService.getInstConfigRecordById(String.valueOf(req.getId()));
             }
             int result = instConfigService.updateInstConfigRecordById(req);
             // 更新redis中的可用余额
@@ -219,7 +223,7 @@ public class InstConfigController {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     break;
                 } else {
@@ -258,7 +262,7 @@ public class InstConfigController {
                 jedis.unwatch();
             } else {
                 String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
+                if (ret != null && "OK".equals(ret)) {
                     // 成功后
                     result = true;
                     break;

@@ -7,7 +7,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.RechargeService;
+import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -34,7 +34,7 @@ import java.util.Map;
  * @author zhangqingqing
  *
  */
-@Api(value = "wechat端用户充值接口")
+@Api(tags = "wechat端-用户充值接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-wechat/recharge")

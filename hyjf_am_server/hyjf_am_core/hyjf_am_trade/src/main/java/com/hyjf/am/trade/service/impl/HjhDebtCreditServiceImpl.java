@@ -7,13 +7,18 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.HjhDebtCreditService;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+
+import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -38,6 +43,9 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
 
     @Autowired
     private HjhDebtCreditTenderMapper hjhDebtCreditTenderMapper;
+
+    @Autowired
+    private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
 
     /**
      * 判断是否存在债转未承接的项目
@@ -128,6 +136,44 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         return this.hjhDebtCreditMapper.updateByPrimaryKeySelective(hjhDebtCredit);
     }
 
+	/**
+	 * 获取债转承接信息
+	 * by libin
+	 * @param nid
+	 * @return
+	 */
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid) {
+		HjhDebtCreditTenderVO hjhDebtCreditTenderVO = new HjhDebtCreditTenderVO();
+		HjhDebtCreditTender hjhDebtCreditTender = hjhDebtCreditTenderMapper.selectByPrimaryKey(nid);
+		if(hjhDebtCreditTender != null){
+			BeanUtils.copyProperties(hjhDebtCreditTender, hjhDebtCreditTenderVO);
+		}
+		return hjhDebtCreditTenderVO;
+	}
+
+	@Override
+	public HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId) {
+		HjhDebtCreditTenderVO hjhDebtCreditTenderVO = new HjhDebtCreditTenderVO();
+		HjhDebtCreditTender hjhDebtCreditTender = new HjhDebtCreditTender();
+		
+        HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
+        HjhDebtCreditTenderExample.Criteria criteria = example.createCriteria();
+        criteria.andAssignOrderIdEqualTo(assignOrderId);
+        List<HjhDebtCreditTender> list = hjhDebtCreditTenderMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+        	hjhDebtCreditTender =  list.get(0);
+    		if(hjhDebtCreditTender != null){
+    			BeanUtils.copyProperties(hjhDebtCreditTender, hjhDebtCreditTenderVO);
+    		}
+    		return hjhDebtCreditTenderVO;
+        }
+		return null;
+	}
 
 
+    @Override
+    public List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getUserHjhInvestList(params);
+    }
 }

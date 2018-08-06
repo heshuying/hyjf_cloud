@@ -58,7 +58,7 @@ public interface AmUserClient {
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
-						Integer searchStatus, Integer updateStatus);
+						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
 
 	void updateLoginUser(int userId, String ip);
@@ -173,7 +173,7 @@ public interface AmUserClient {
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 
-    List<BankCardVO> getBankOpenAccountById(UserVO user);
+    List<BankCardVO> getBankOpenAccountById(Integer userId);
 
     /**
      * @Description 查询开户失败原因
@@ -277,7 +277,7 @@ public interface AmUserClient {
 	 * @param userId 用户id
 	 * @return
 	 */
-	List<AccountBankVO> getBankCardByUserId(Integer userId);
+	List<AccountBankVO> getAccountBankByUserId(Integer userId);
 
 	/**
 	 * 获取用户信息中vip信息
@@ -295,4 +295,36 @@ public interface AmUserClient {
     List<AccountBankVO> selectAccountBank(Integer userId, int status);
 
     List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
+
+    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+	Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId);
+
+	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
+
+	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
+
+	BankCardVO getBankCardByUserId(Integer userId);
+
+	/**
+	 * 获取用户表总记录数
+	 *
+	 * @return
+	 */
+	Integer countAllUser();
+
+	/**
+	 * 插入各种信息
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
+
+	/**
+	 * 插入测评结果
+	 * @param userId
+	 * @param countScore
+	 * @return
+	 */
+    UserEvalationResultVO skipEvaluate(Integer userId, int countScore);
 }

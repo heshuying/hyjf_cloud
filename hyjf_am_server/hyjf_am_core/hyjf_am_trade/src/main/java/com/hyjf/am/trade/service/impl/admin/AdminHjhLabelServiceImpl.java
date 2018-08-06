@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.consumer.AutoIssueConsumer;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,20 +39,9 @@ import com.hyjf.common.util.GetDate;
  * @version AdminHjhLabelServiceImpl.java, v0.1 2018年6月30日 上午10:54:14
  */
 @Service
-public class AdminHjhLabelServiceImpl implements AdminHjhLabelService{
+public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHjhLabelService{
 
-	private static final Logger logger = LoggerFactory.getLogger(AdminHjhLabelServiceImpl.class);
 
-    @Autowired
-    BorrowStyleMapper borrowStyleMapper;
-    @Autowired 
-    BorrowProjectTypeMapper borrowProjectTypeMapper;
-    @Autowired
-    HjhLabelMapper hjhLabelMapper;
-    @Autowired
-    AdminHjhLabelCustomizeMapper adminHjhLabelCustomizeMapper;
-    @Autowired
-    HjhAllocationEngineMapper hjhAllocationEngineMapper;
 	@Override
 	public List<BorrowStyleVO> selectBorrowStyleList() {
 		BorrowStyleExample example = new BorrowStyleExample();
@@ -179,10 +169,55 @@ public class AdminHjhLabelServiceImpl implements AdminHjhLabelService{
 	}
 
 	@Override
-	public void insertHjhLabelRecord(HjhLabelInfoRequest request) {
+	public int insertHjhLabelRecord(HjhLabelInfoRequest request) {
 		HjhLabel HjhLabel  = new HjhLabel();
-		BeanUtils.copyProperties(request, HjhLabel);
-		hjhLabelMapper.insertSelective(HjhLabel);
+		if(StringUtils.isNotEmpty(request.getLabelName())){
+			HjhLabel.setLabelName(request.getLabelName());
+		}
+		HjhLabel.setLabelTermStart(request.getLabelTermStart());
+		HjhLabel.setLabelTermEnd(request.getLabelTermEnd());
+		if(StringUtils.isNotEmpty(request.getLabelTermType())){
+			HjhLabel.setLabelTermType(request.getLabelTermType());
+		}
+		HjhLabel.setLabelAprStart(request.getLabelAprStart());
+		HjhLabel.setLabelAprEnd(request.getLabelAprEnd());
+		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
+			HjhLabel.setBorrowStyle(request.getBorrowStyle());
+		}
+		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
+			HjhLabel.setBorrowStyleName(request.getBorrowStyleName());
+		}
+		HjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
+		HjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
+		if(StringUtils.isNotEmpty(request.getInstCode())){
+			HjhLabel.setInstCode(request.getInstCode());
+		}
+		if(StringUtils.isNotEmpty(request.getInstName())){
+			HjhLabel.setInstName(request.getInstName());
+		}
+		HjhLabel.setAssetType(request.getAssetType());
+		if(StringUtils.isNotEmpty(request.getAssetTypeName())){
+			HjhLabel.setAssetTypeName(request.getAssetTypeName());
+		}
+		HjhLabel.setProjectType(request.getProjectType());
+		
+		if(StringUtils.isNotEmpty(request.getProjectTypeName())){
+			HjhLabel.setProjectTypeName(request.getProjectTypeName());
+		}
+		HjhLabel.setIsCredit(request.getIsCredit());
+		HjhLabel.setIsLate(request.getIsLate());
+		HjhLabel.setCreditSumMax(request.getCreditSumMax());
+		
+		HjhLabel.setPushTimeStart(request.getPushTimeStart());
+		HjhLabel.setPushTimeEnd(request.getPushTimeEnd());
+		HjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
+		HjhLabel.setRemainingDaysEnd(request.getRemainingDaysEnd());
+		HjhLabel.setLabelState(request.getLabelState());
+		HjhLabel.setCreateUserId(request.getCreateUserId());
+		HjhLabel.setCreateTime(new Date());
+		/*BeanUtils.copyProperties(request, HjhLabel);*/
+		int flg = hjhLabelMapper.insertSelective(HjhLabel);
+		return flg;
 	}
 
 	@Override
@@ -258,7 +293,7 @@ public class AdminHjhLabelServiceImpl implements AdminHjhLabelService{
 				}
 			}else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0) ||
 					(hjhLabel.getLabelTermStart()!=null && hjhLabel.getLabelTermStart().intValue()>0)) {
-				if(borrow.getBorrowPeriod() == hjhLabel.getLabelTermStart() || borrow.getBorrowPeriod() == hjhLabel.getLabelTermEnd()){
+				if(borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermStart()) || borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())){
 //					score = score+1;
 				}else{
 					continue;

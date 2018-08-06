@@ -11,6 +11,10 @@
 
 package com.hyjf.am.trade.dao.mapper.customize.web;
 
+import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppRepayCalendarCustomize;
+import com.hyjf.am.trade.dao.model.customize.app.AppTenderCreditRecordListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 
@@ -105,4 +109,20 @@ public interface AssetManageCustomizeMapper {
      * @Date
      */
     List<WechatRepayMentListCustomize> selectWechatRepaymentList(Map<String,Object> mapParameter);
+
+    List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request);
+
+    List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request);
+
+    int selectTenderToCreditListCount(AssetManageBeanRequest request);
+
+    List<AppMyPlanCustomize> selectAppMyPlanList(AssetManageBeanRequest request);
+
+    int countAppMyPlan(AssetManageBeanRequest request);
+
+    Integer countRepaymentCalendar(Map<String, Object> params);
+
+    List<AppRepayCalendarCustomize> selectRepaymentCalendar(Map<String, Object> params);
+
+    Integer selectNearlyRepaymentTime(Map<String, Object> params);
 }

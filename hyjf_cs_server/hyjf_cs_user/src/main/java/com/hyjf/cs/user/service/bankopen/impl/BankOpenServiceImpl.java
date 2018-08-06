@@ -10,7 +10,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -196,7 +195,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) +"/user/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = systemConfig.getWebHost() + "/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -522,10 +521,10 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             // 同步地址  是否跳转到前端页面
-            String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
-            String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
+            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
+            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = systemConfig.getWebHost() + "/user/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
@@ -576,10 +575,10 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
             openAccoutBean.setIdentity(openBean.getIdentity());
             // 同步地址  是否跳转到前端页面
-            String retUrl = systemConfig.getFrontHost() + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
-            String successUrl = systemConfig.getFrontHost() + "/user/openSuccess";
+            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
+            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
             // 异步调用路
-            String bgRetUrl = systemConfig.getWebHost() + "/hyjf-web/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = systemConfig.getWebHost() + "/user/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);

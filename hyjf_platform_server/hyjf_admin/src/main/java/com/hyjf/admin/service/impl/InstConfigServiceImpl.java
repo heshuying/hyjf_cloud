@@ -23,7 +23,7 @@ public class InstConfigServiceImpl implements InstConfigService {
     @Autowired
     private InstConfigClient instConfigClient;
     @Override
-    public AdminInstConfigListResponse instConfigInit(AdminInstConfigListRequest adminRequest){
+    public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest){
         return instConfigClient.instConfigInit(adminRequest);
     }
     /**

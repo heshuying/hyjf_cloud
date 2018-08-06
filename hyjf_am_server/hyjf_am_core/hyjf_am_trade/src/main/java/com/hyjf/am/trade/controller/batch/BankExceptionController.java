@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.batch;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
@@ -225,11 +226,11 @@ public class BankExceptionController extends BaseController {
      * 处理投资掉单
      * add by jijun 20180623
      */
-    @PostMapping("/insertAuthCode")
-    public void insertAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
+    @PostMapping("/updateAuthCode")
+    public void updateAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
         List<BatchBorrowTenderCustomizeVO> batchBorrowTenderCustomizeVOList = request.getBatchBorrowTenderCustomizeList();
         List<BatchBorrowTenderCustomize> list = CommonUtils.convertBeanList(batchBorrowTenderCustomizeVOList,BatchBorrowTenderCustomize.class);
-        bankInvestExceptionService.insertAuthCode(list);
+        bankInvestExceptionService.updateAuthCode(list);
 
     }
 
@@ -315,5 +316,18 @@ public class BankExceptionController extends BaseController {
         return this.bankTenderCancelService.updateTenderCancelExceptionData(CommonUtils.convertBean(info,BorrowTenderTmp.class));
     }
 
-
+	/**
+	 * 获取债转承接信息AssignNid
+	 * @param nid
+	 * @return
+	 */
+    @GetMapping("/getCreditTenderByAssignNid/{assignNid}")
+    public CreditTenderResponse getCreditTenderByAssignNid(@PathVariable String assignNid){
+        CreditTenderResponse response = new CreditTenderResponse();
+        CreditTenderVO vo = bankCreditTenderService.getCreditTenderByAssignNid(assignNid);
+        if(vo != null){
+        	response.setResult(vo);
+        }
+        return response;
+    }
 }

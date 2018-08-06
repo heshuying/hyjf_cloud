@@ -10,7 +10,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BorrowCreditTenderService;
+import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @Author sunss
  * @Date 2018/7/3 14:02
  */
-@Api(value = "web端散标债转投资")
+@Api(tags = "web端散标债转投资")
 @RestController
 @RequestMapping("/hyjf-web/tender/credit")
 public class BorrowCreditTenderController extends BaseTradeController {

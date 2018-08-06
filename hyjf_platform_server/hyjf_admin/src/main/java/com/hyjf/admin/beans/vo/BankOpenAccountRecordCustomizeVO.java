@@ -58,9 +58,7 @@ public class BankOpenAccountRecordCustomizeVO extends BaseVO implements Serializ
     // 注册所在地
     @ApiModelProperty(value = "注册所在地")
     public String registArea;
-    // 身份证号
-    @ApiModelProperty(value = "身份证号")
-    public String idcard;
+
 
     public String getUserId() {
         return userId;
@@ -182,11 +180,4 @@ public class BankOpenAccountRecordCustomizeVO extends BaseVO implements Serializ
         this.registArea = registArea;
     }
 
-    public String getIdcard() {
-        return idcard;
-    }
-
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
-    }
 }

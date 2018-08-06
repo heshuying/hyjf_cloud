@@ -69,7 +69,7 @@ public class SignValidateInteceptorJson extends HandlerInterceptorAdapter {
 				// 如果查询不到 证明过期了 需要重新登录
 				if (userId == null || userId - 0 == 0) {
 					out = response.getWriter();
-					out.append(JSONObject.toJSONString(result.buildErrorResponse(MsgEnum.ERROR_LOGIN_INVALID)));
+					out.append(JSONObject.toJSONString(result.buildErrorResponse(MsgEnum.ERR_LOGIN_INVALID)));
 					return false;
 				}
 			} else {

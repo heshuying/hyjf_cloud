@@ -5,11 +5,9 @@ package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowRegistCustomizeMapper;
+import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
-import com.hyjf.am.trade.service.AccountService;
 import com.hyjf.am.trade.service.admin.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
@@ -20,7 +18,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -34,26 +32,6 @@ import java.util.Map;
  */
 @Service
 public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRegistService {
-    @Autowired
-    private BorrowProjectTypeMapper borrowProjectTypeMapper;
-
-    @Autowired
-    private BorrowStyleMapper borrowStyleMapper;
-
-    @Autowired
-    private BorrowRegistCustomizeMapper borrowRegistCustomizeMapper;
-
-    @Autowired
-    private StzhWhiteListMapper stzhWhiteListMapper;
-
-    @Autowired
-    private BorrowMapper borrowMapper;
-
-    @Autowired
-    private RUserMapper rUserMapper;
-
-    @Autowired
-    private AccountService accountService;
 
     /**
      * 获取项目类型
@@ -108,11 +86,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         if (!CollectionUtils.isEmpty(list)) {
             //处理标的备案状态
             Map<String, String> map = CacheUtil.getParamNameMap("REGIST_STATUS");
-            if (!CollectionUtils.isEmpty(map)) {
-                for (BorrowRegistCustomize borrowRegistCustomize : list) {
-                    borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(), null));
-                }
-            }
+            list.forEach((borrowRegistCustomize) -> borrowRegistCustomize.setRegistStatusName(map.getOrDefault(borrowRegistCustomize.getRegistStatus(), null)));
         }
         return list;
     }
@@ -131,149 +105,139 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
      * @return
      */
     @Override
-    public Response debtRegist(String borrowNid, String currUserId, String currUserName){
+    public Response debtRegist(BorrowRegistUpdateRequest request){
         Response result = new Response();
-        // 获取相应的标的详情
-        Borrow borrow = this.getBorrow(borrowNid);
-        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
-        if (borrow != null && borrowInfo != null) {
-            //項目还款方式
-            String borrowStyle = borrow.getBorrowStyle();
-            //是否月标(true:月标, false:天标)
-            boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
-                    || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
-            int userId = borrow.getUserId();
-            RUser user = rUserMapper.selectByPrimaryKey(userId);
-            if (Validator.isNotNull(user)) {
-                //用account中的account_id代替
-                Account bankOpenAccount = accountService.getAccount(userId);
-                if (Validator.isNotNull(bankOpenAccount)) {
-                    // 更新相应的标的状态为备案中
-                    boolean debtRegistingFlag = this.updateBorrowRegist(borrow, 0, 1, currUserId, currUserName);
-                    if (debtRegistingFlag) {
-                        // 获取共同参数
-                        String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
-                        String orderDate = GetOrderIdUtils.getOrderDate();
-                        // 调用开户接口
-                        BankCallBean debtRegistBean = new BankCallBean();
-                        // 接口版本号 共同参数删除
-//                        debtRegistBean.setVersion(BankCallConstant.VERSION_10);
-                        // 消息类型(用户开户)
-                        debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);
-                        // 机构代码 共同参数删除
-//                        debtRegistBean.setInstCode(instCode);
-//                        debtRegistBean.setBankCode(bankCode);
-//                        debtRegistBean.setTxDate(txDate);
-//                        debtRegistBean.setTxTime(txTime);
-//                        debtRegistBean.setSeqNo(seqNo);
-//                        debtRegistBean.setChannel(channel);
-                        // 借款人电子账号
-                        debtRegistBean.setAccountId(bankOpenAccount.getAccountId());
-                        // 标的表id
-                        debtRegistBean.setProductId(borrowNid);
-                        // 标的名称
-                        debtRegistBean.setProductDesc(borrowInfo.getName());
-                        // 募集日,标的保存时间
-                        debtRegistBean.setRaiseDate(borrowInfo.getBankRaiseStartDate());
-                        // 募集结束日期
-                        debtRegistBean.setRaiseEndDate(borrowInfo.getBankRaiseEndDate());
-                        if (isMonth) {
-                            debtRegistBean.setIntType(BankCallConstant.DEBT_INTTYPE_UNCERTAINDATE);
+        // 从请求实体类中获取相应的标的详情
+        // 标的
+        Borrow borrow = new Borrow();
+        BeanUtils.copyProperties(request.getBorrowVO(), borrow);
+        // 标的信息
+        BorrowInfo borrowInfo = new BorrowInfo();
+        BeanUtils.copyProperties(request.getBorrowInfoVO(), borrowInfo);
+        // 标的编号
+        String borrowNid = borrow.getBorrowNid();
+        // 当前登录用户ID
+        String currUserId = request.getCurrUserId();
+        // 当前登录用户名
+        String currUserName = request.getCurrUserName();
+
+        //項目还款方式
+        String borrowStyle = borrow.getBorrowStyle();
+        //是否月标(true:月标, false:天标)
+        boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
+        //借款人用户ID
+        int userId = borrow.getUserId();
+
+        // 更新相应的标的状态为备案中
+        boolean debtRegistingFlag = this.updateBorrowRegist(borrow, 0, 1, currUserId, currUserName);
+        if (debtRegistingFlag) {
+            // 获取共同参数
+            String orderId = GetOrderIdUtils.getOrderId2(userId);
+            String orderDate = GetOrderIdUtils.getOrderDate();
+            // 调用开户接口
+            BankCallBean debtRegistBean = new BankCallBean();
+            // 调用银行接口部分共同参数删除
+            // 消息类型(用户开户)
+            debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);
+            // 借款人电子账号
+            debtRegistBean.setAccountId(request.getAccountId());
+            // 标的表id
+            debtRegistBean.setProductId(borrowNid);
+            // 标的名称
+            debtRegistBean.setProductDesc(borrowInfo.getName());
+            // 募集日,标的保存时间
+            debtRegistBean.setRaiseDate(borrowInfo.getBankRaiseStartDate());
+            // 募集结束日期
+            debtRegistBean.setRaiseEndDate(borrowInfo.getBankRaiseEndDate());
+            if (isMonth) {
+                debtRegistBean.setIntType(BankCallConstant.DEBT_INTTYPE_UNCERTAINDATE);
+            } else {
+                debtRegistBean.setIntType(BankCallConstant.DEBT_INTTYPE_EXPIREDATE);
+            }
+            // (借款期限,天数）
+            debtRegistBean.setDuration(String.valueOf(borrowInfo.getBankBorrowDays()));
+            // 交易金额
+            debtRegistBean.setTxAmount(String.valueOf(borrow.getAccount()));
+            // 年化利率
+            debtRegistBean.setRate(String.valueOf(borrow.getBorrowApr()));
+            //如果有担保机构ID
+            if (Validator.isNotNull(borrowInfo.getRepayOrgUserId())) {
+                debtRegistBean.setBailAccountId(request.getBailAccountId());
+            }
+            debtRegistBean.setLogOrderId(orderId);
+            debtRegistBean.setLogOrderDate(orderDate);
+            debtRegistBean.setLogUserId(String.valueOf(userId));
+            debtRegistBean.setLogRemark("借款人标的登记");
+            debtRegistBean.setLogClient(0);
+
+            //备案接口(EntrustFlag和ReceiptAccountId要么都传，要么都不传)
+            if (borrowInfo.getEntrustedFlg() == 1) {
+                //查询受托支付记录
+                StzhWhiteList stzhWhiteList = this.selectStzfWhiteList(borrowInfo.getInstCode().trim(), String.valueOf(borrowInfo.getEntrustedUserId()));
+                if (stzhWhiteList != null) {
+                    debtRegistBean.setEntrustFlag(borrowInfo.getEntrustedFlg().toString());
+                    debtRegistBean.setReceiptAccountId(stzhWhiteList.getStAccountid());
+                } else {
+                    this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
+                    return new Response(Response.FAIL, "受托白名单查询为空！");
+                }
+            }
+            try {
+                //调用银行接口
+                BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
+                String retCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
+                if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+                    //受托支付备案
+                    if (borrowInfo.getEntrustedFlg() == 1) {
+                        boolean debtEntrustedRegistedFlag = this.updateEntrustedBorrowRegist(borrow, 7, 2, currUserId, currUserName);
+                        if (debtEntrustedRegistedFlag) {
+                            result.setRtn(Response.SUCCESS);
+                            result.setMessage("备案成功！");
                         } else {
-                            debtRegistBean.setIntType(BankCallConstant.DEBT_INTTYPE_EXPIREDATE);
-                        }
-                        // (借款期限,天数）
-                        debtRegistBean.setDuration(String.valueOf(borrowInfo.getBankBorrowDays()));
-                        // 交易金额
-                        debtRegistBean.setTxAmount(String.valueOf(borrow.getAccount()));
-                        // 年化利率
-                        debtRegistBean.setRate(String.valueOf(borrow.getBorrowApr()));
-                        if (Validator.isNotNull(borrowInfo.getRepayOrgUserId())) {
-                            //用account中的account_id代替
-                            Account account = accountService.getAccount(borrowInfo.getRepayOrgUserId());
-                            if (Validator.isNotNull(account)) {
-                                debtRegistBean.setBailAccountId(account.getAccountId());
-                            }
-                        }
-                        debtRegistBean.setLogOrderId(orderId);
-                        debtRegistBean.setLogOrderDate(orderDate);
-                        debtRegistBean.setLogUserId(String.valueOf(user.getUserId()));
-                        debtRegistBean.setLogRemark("借款人标的登记");
-                        debtRegistBean.setLogClient(0);
-
-                        //备案接口(EntrustFlag和ReceiptAccountId要么都传，要么都不传)
-                        if (borrowInfo.getEntrustedFlg() == 1) {
-
-                            StzhWhiteList stzhWhiteList = this.selectStzfWhiteList(borrowInfo.getInstCode().trim(), String.valueOf(borrowInfo.getEntrustedUserId()));
-                            if (stzhWhiteList != null) {
-                                debtRegistBean.setEntrustFlag(borrowInfo.getEntrustedFlg().toString());
-                                debtRegistBean.setReceiptAccountId(stzhWhiteList.getStAccountid());
-                            } else {
-                                this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
-                                return new Response(Response.FAIL, "受托白名单查询为空！");
-                            }
-                        }
-                        try {
-                            BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
-                            String retCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
-                            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-                                //受托支付备案
-                                if (borrowInfo.getEntrustedFlg() == 1) {
-                                    boolean debtEntrustedRegistedFlag = this.updateEntrustedBorrowRegist(borrow, 7, 2, currUserId, currUserName);
-                                    if (debtEntrustedRegistedFlag) {
-                                        result.setRtn(Response.SUCCESS);
-                                        result.setMessage("备案成功！");
-                                    } else {
-                                        result.setRtn(Response.FAIL);
-                                        result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
-                                    }
-                                } else {
-                                    boolean debtRegistedFlag = this.updateBorrowRegist(borrow, 1, 2, currUserId, currUserName);
-                                    if (debtRegistedFlag) {
-                                        result.setRtn(Response.SUCCESS);
-                                        result.setMessage("备案成功！");
-                                    } else {
-                                        result.setRtn(Response.FAIL);
-                                        result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
-                                    }
-                                }
-                            } else {
-                                this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
-                                String message = registResult.getRetMsg();
-                                result.setRtn(Response.FAIL);
-                                result.setMessage(StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
-                            }
-                        } catch (Exception e) {
-                            logger.error("标的备案失败,编号："+ borrow.getBorrowNid(),e);
-                            this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
                             result.setRtn(Response.FAIL);
-                            result.setMessage("银行备案接口调用失败！");
+                            result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
                         }
                     } else {
-                        result.setRtn(Response.FAIL);
-                        result.setMessage("更新相应的标的信息失败,请稍后再试！");
+                        boolean debtRegistedFlag = this.updateBorrowRegist(borrow, 1, 2, currUserId, currUserName);
+                        if (debtRegistedFlag) {
+                            result.setRtn(Response.SUCCESS);
+                            result.setMessage("备案成功！");
+                        } else {
+                            result.setRtn(Response.FAIL);
+                            result.setMessage("备案成功后，更新相应的状态失败,请联系客服！");
+                        }
                     }
                 } else {
+                    // 调用银行接口失败
+                    this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
+                    String message = registResult.getRetMsg();
                     result.setRtn(Response.FAIL);
-                    result.setMessage("未查询到开户信息！");
+                    result.setMessage(StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                 }
-            } else {
+            } catch (Exception e) {
+                logger.error("标的备案失败,编号："+ borrow.getBorrowNid(),e);
+                this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
                 result.setRtn(Response.FAIL);
-                result.setMessage("借款人信息错误！");
+                result.setMessage("银行备案接口调用失败！");
             }
         } else {
             result.setRtn(Response.FAIL);
-            result.setMessage("未查询到相应标的信息！");
+            result.setMessage("更新相应的标的信息失败,请稍后再试！");
         }
         return result;
     }
 
+    /**
+     * 受托白名单查询
+     * @param instCode
+     * @param entrustedAccountId
+     * @return
+     */
     private StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
         StzhWhiteListExample example = new StzhWhiteListExample();
         StzhWhiteListExample.Criteria crt = example.createCriteria();

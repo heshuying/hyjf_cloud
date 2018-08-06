@@ -29,6 +29,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,9 @@ import java.util.Map;
 /**
  * @author wangc
  */
-@Api(value = "web端-密码相关服务",description = "web端-密码相关服务")
+@Api(value = "web端-密码相关服务",tags = "web端-密码相关服务")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/password")
 public class WebPassWordController {
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
@@ -54,12 +56,18 @@ public class WebPassWordController {
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
-    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,PasswordRequest passwordRequest){
+    public WebResult updateLoginPassWD(@RequestHeader(value = "userId") Integer userId,@RequestBody PasswordRequest passwordRequest){
         UserVO userVO = passWordService.getUsersById(userId);
         WebResult<String> response = new WebResult<>();
         String oldPW = passwordRequest.getOldPassword();
         String newPW = passwordRequest.getNewPassword();
         String pwSure = passwordRequest.getPwSure();
+        CheckUtil.check(StringUtils.isNotBlank(oldPW),MsgEnum.ERR_OBJECT_REQUIRED,"原始登录密码");
+        CheckUtil.check(StringUtils.isNotBlank(newPW)&&StringUtils.isNotBlank(pwSure),MsgEnum.ERR_OBJECT_REQUIRED,"新密码");
+        CheckUtil.check(newPW.equals(pwSure),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
+        oldPW = RSAJSPUtil.rsaToPassword(oldPW);
+        newPW = RSAJSPUtil.rsaToPassword(newPW);
+        pwSure = RSAJSPUtil.rsaToPassword(pwSure);
         passWordService.checkParam(userVO,oldPW,newPW,pwSure);
         int result = passWordService.updatePassword(userVO, newPW);
        if(result>0){
@@ -271,7 +279,7 @@ public class WebPassWordController {
         CheckUtil.check(StringUtils.isNotBlank(password2)&&password1.equals(password2),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
         CheckUtil.check(password1.length() >= 6 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         // 改变验证码状态
-        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+        int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         // 再次验证验证码
         CheckUtil.check(checkStatus==1,MsgEnum.STATUS_ZC000015);
         UserVO user = passWordService.getUsersByMobile(mobile);
@@ -291,7 +299,7 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "验证原密码是否存在",notes = "验证原密码是否存在")
     @ApiImplicitParam(name = "param",value = "{oldPassword:String}",dataType = "Map")
-    @PostMapping(value = "checkoriginapw", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/checkoriginapw", produces = "application/json; charset=utf-8")
     public boolean checkPw(@RequestHeader(value = "userId") Integer userId,@RequestBody Map<String,String> param) {
         String pw = param.get("oldPassword");
         if (pw != null && !"".equals(pw.trim())) {
@@ -327,6 +335,46 @@ public class WebPassWordController {
         ret.put("pubexponent", "10001");
         ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
         result.setData(ret);
+        return result;
+    }
+
+    /**
+     * 修改 登录密码 页面初始化
+     *
+     * @param token
+     * @return
+     */
+    @ApiOperation(value = "修改 登录密码 页面初始化",notes = "修改 登录密码 页面初始化")
+    @PostMapping(value = "/modifyCode")
+    public WebResult modifyCode(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId) {
+        WebResult result = new WebResult();
+        JSONObject ret = new JSONObject();
+        try {
+            ret.put("tokenGrant",token);
+            ret.put("pubexponent", "10001");
+            ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
+            ret.put("userId",userId);
+            result.setData(ret);
+        } catch (Exception e) {
+            logger.error("修改密码时，生成密码加密密钥错误",e);
+        }
+        return result;
+    }
+
+    /**
+     * @Description 查询交易密码失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
+    @RequestMapping("/searchFiledMess")
+    @ResponseBody
+    public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = new WebResult<Object>();
+        String retMsg = passWordService.getFiledMess(logOrdId);
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
         return result;
     }
 

@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xiasq
  * @version WebSmsCodeController, v0.1 2018/4/25 9:01
  */
-@Api(value = "app端验证码",description = "app端-验证码")
+@Api(value = "app端验证码",tags = "app端-验证码")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSmsCodeController extends BaseUserController {
@@ -110,8 +110,11 @@ public class AppSmsCodeController extends BaseUserController {
             return ret;
         }
         mobile = DES.decodeValue(key, mobile);
-        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN);
+        int cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");
+
+        ret.put("status", "0");
+        ret.put("statusDesc", CustomConstants.APP_STATUS_DESC_SUCCESS);
         return ret;
     }
 
@@ -223,7 +226,7 @@ public class AppSmsCodeController extends BaseUserController {
                 //判断用户是否登录
                 UserVO userVO = smsCodeService.getUsers(token);
                 // 发送短信
-                smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
+                smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
                     ret.put("status", "0");
                     ret.put("statusDesc", "发送验证码成功");
             }else{
@@ -234,7 +237,7 @@ public class AppSmsCodeController extends BaseUserController {
                 if (bankAccount == null) {
                     // 未开户  发送平台验证码
                     // 发送短信
-                    smsCodeService.sendSmsCode(verificationType, mobile, platform, token, GetCilentIP.getIpAddr(request));
+                    smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
                     ret.put("bankCode",  "");
                         ret.put("status", "0");
                         ret.put("statusDesc", "发送验证码成功");

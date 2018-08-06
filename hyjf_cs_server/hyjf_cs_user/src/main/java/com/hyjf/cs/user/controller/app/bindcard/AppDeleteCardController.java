@@ -1,9 +1,17 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -11,87 +19,103 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
 
 /**
  * app端解绑银行卡
  * @author hesy
  * @version AppDeleteCardController, v0.1 2018/7/19 9:38
  */
-@Api(value = "app端-解绑银行卡",description = "app端-解绑银行卡")
+@Api(value = "app端-解绑银行卡",tags = "app端-解绑银行卡")
 @RestController
-@RequestMapping("/hyjf-app/user/card")
+@RequestMapping("/hyjf-app/bank/app/deleteCard")
 public class AppDeleteCardController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
+    @Autowired
+    SystemConfig systemConfig;
 
+    /**
+     * 解绑银行卡
+     * @param userId
+     * @param token
+     * @param request
+     * @return
+     */
     @PostMapping("/deleteCard")
-    public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId,  HttpServletRequest request) {
-       /* String cardId = request.getParameter("cardId");
-        JSONObject ret = new JSONObject();
-        // 检查参数
-        if(userId == null || userId == 0){
-            ret.put("status", "false");
-            return ret;
+    public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+        JSONObject info = new JSONObject();
+        info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard.do");
+        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+        String cardNo = request.getParameter("bankNumber");// 银行卡号
+
+        logger.info("delete bankcard userId IS:{}, cardNo IS:{}", userId, cardNo);
+        if (webViewUserVO == null) {
+            info.put(CustomConstants.APP_STATUS, 1);
+            info.put(CustomConstants.APP_STATUS_DESC, "您未登陆，请先登录");
+            info.put("successUrl", "");
+            return info;
+        }
+        // 取得用户在汇付天下的客户号
+        String checkResult = bindCardService.checkParamUnBindCardAPP(webViewUserVO,cardNo);
+        if (StringUtils.isNotBlank(checkResult)) {
+            info.put(CustomConstants.APP_STATUS, 1);
+            info.put(CustomConstants.APP_STATUS_DESC, checkResult);
+            info.put("successUrl", "");
+            return info;
         }
 
-        // 条件校验
-        bindCardService.checkParamBindCardPage(user);
-
-        String cardNo = bankCard.getCardNo();
-        Users users = userDeleteCardService.getUsers(userId);
-        UsersInfo usersInfo = userDeleteCardService.getUsersInfoByUserId(userId);
-        // 调用汇付接口(4.2.6 删除银行卡接口)
-        BankCallBean retBean = null;
-        BankCallBean bean = new BankCallBean();
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
-        bean.setLogUserId(String.valueOf(userId));
-        bean.setLogRemark("解绑银行卡");
-        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-        bean.setTxCode(BankCallMethodConstant.TXCODE_CARD_UNBIND);
-        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
-        bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
-        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
-        bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
-        bean.setAccountId(accountChinapnrTender.getAccount());// 存管平台分配的账号
-        bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);// 证件类型01身份证
-        bean.setIdNo(usersInfo.getIdcard());// 证件号
-        bean.setName(usersInfo.getTruename());// 姓名
-        bean.setMobile(users.getMobile());// 手机号
-        bean.setCardNo(cardNo);// 银行卡号
-        LogAcqResBean logAcqResBean = new LogAcqResBean();
-        logAcqResBean.setCardNo(cardNo);// 银行卡号
-        logAcqResBean.setCardId(Integer.parseInt(cardId)); // 银行卡Id
-        bean.setLogAcqResBean(logAcqResBean);
-        // 调用汇付接口
+        // 请求银行绑卡接口
+        BankCallBean bankBean = null;
         try {
-            retBean = BankCallUtils.callApiBg(bean);
+            bankBean = bindCardService.callBankUnBindCard(cardNo, userId);
+            logger.info("调用江西银行解绑银行卡接口结束.... ");
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("调用银行接口失败~!");
-            ret.put("status", "false");
-            return ret;
+            logger.error("调用江西银行解绑银行卡接口出错...", e);
+            info.put(CustomConstants.APP_STATUS, 1);
+            info.put(CustomConstants.APP_STATUS_DESC, "调用银行接口失败,请联系客服!");
+            info.put("successUrl", "");
+            return info;
         }
         // 回调数据处理
-        if (retBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {
-            LogUtil.debugLog(THIS_CLASS, "RetCode:" + (retBean == null ? "" : retBean.getRetCode()) + "&&&&&&&&&&& RetMsg:" + (retBean == null ? "" : retBean.getRetMsg()));
-            ret.put("status", "false");
-            return ret;
+        if (bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
+            info.put(CustomConstants.APP_STATUS, 1);
+            info.put(CustomConstants.APP_STATUS_DESC, "抱歉，银行卡删除错误，请联系客服！");
+            info.put("successUrl", "");
+            return info;
         }
+
+        logger.info("执行删除卡后处理,判断银行卡状态，删除平台本地银行卡信息...");
         // 执行删除卡后处理,判断银行卡状态，删除平台本地银行卡信息
         try {
-            boolean isUpdateFlag = this.userDeleteCardService.updateAfterDeleteCard(bean, userId);
-            if (!isUpdateFlag) {
-                ret.put("status", "false");
+            boolean isdelFlag = bindCardService.updateAfterDeleteCard(userId,webViewUserVO.getUsername(),cardNo);
+            // 删除失败
+            if (!isdelFlag) {
+                info.put(CustomConstants.APP_STATUS, 1);
+                info.put(CustomConstants.APP_STATUS_DESC, "抱歉，银行卡删除错误，请联系客服！");
+                info.put("successUrl", "");
+                return info;
             } else {
-                ret.put("status", "true");
+                BaseMapBean baseMapBean=new BaseMapBean();
+                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+                //baseMapBean.set(CustomConstants.APP_STATUS_DESC, "恭喜您！您的普通银行卡删除成功");
+                baseMapBean.set(CustomConstants.APP_STATUS_DESC, "");
+                baseMapBean.set("token", URLEncoder.encode(token, "UTF-8"));
+                baseMapBean.set("sign", "");
+                Integer urlType = bindCardService.getBankInterfaceFlagByType("BIND_CARD");
+                baseMapBean.set("urlType", urlType.toString());//绑卡开关 0跳转老接口  1跳转新接口
+                baseMapBean.setCallBackAction(systemConfig.appHost + "/user/bankCard/unbind/result/success");
+                info.put(CustomConstants.APP_STATUS, 0);
+                //info.put(CustomConstants.APP_STATUS_DESC, "恭喜您！您的普通银行卡删除成功");
+                info.put(CustomConstants.APP_STATUS_DESC, "");
+                info.put("successUrl", baseMapBean.getUrl());
+                return info;
             }
         } catch (Exception e) {
-            ret.put("status", "false");
+            info.put(CustomConstants.APP_STATUS, 1);
+            info.put(CustomConstants.APP_STATUS_DESC, "抱歉，银行卡删除错误，请联系客服！");
+            info.put("successUrl", "");
         }
-        LogUtil.endLog(THIS_CLASS, DeleteCardDefine.REQUEST_MAPPING);
-        return ret;*/
-
-       return null;
+        return info;
     }
 }

@@ -2,14 +2,19 @@ package com.hyjf.am.market.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import io.swagger.models.auth.In;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +39,19 @@ public class ActivityController {
 
     @Autowired
     private ActivityService activityService;
+
+
+    @GetMapping("/getActivityList")
+    public ActivityListResponse getActivityList(){
+        ActivityListResponse response = new ActivityListResponse();
+        List<ActivityList> list=activityService.getActivityList();
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(CommonUtils.convertBeanList(list,ActivityListVO.class));
+        }
+        return response;
+    }
+
+
 
     @PostMapping("/selectActivityList")
     public ActivityListResponse selectActivityList(@RequestBody @Valid ActivityListRequest activityListRequest){
@@ -182,5 +200,65 @@ public class ActivityController {
             response.setAttrbute(activityList.getTitle());
         }
         return response;
+    }
+
+
+    /**
+     * 获取有效活动列表
+     * @param request
+     * @return
+     */
+    @PostMapping("/selectRecordListValid")
+    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
+        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
+        ActivityListCustomize activityListCustomize = new ActivityListCustomize();
+        BeanUtils.copyProperties(request,activityListCustomize);
+        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(activityListCustomize,-1,-1);
+        if (!CollectionUtils.isEmpty(recordList)) {
+            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
+            response.setResultList(activityListCustomizeVOS);
+        }
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP根据条件查询活动列表总数
+     * @Date 11:53 2018/7/26
+     * @Param activityListRequest
+     * @return ActivityListResponse
+     */
+    @RequestMapping("/queryactivitycount")
+    public ActivityListResponse queryActivityCount(@RequestBody ActivityListRequest activityListRequest){
+        ActivityListResponse response = new ActivityListResponse();
+        Integer count = activityService.queryactivitycount(activityListRequest);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP根据条件分页查询数据
+     * @Date 11:54 2018/7/26
+     * @Param activityListRequest
+     * @return
+     */
+    @RequestMapping("/queryactivitylist")
+    public ActivityListResponse queryActivityList(@RequestBody ActivityListRequest activityListRequest) {
+        ActivityListResponse response = new ActivityListResponse();
+        List<ActivityListBeanVO> list = activityService.queryActivityList(activityListRequest);
+        response.setActivityList(list);
+        return response;
+    }
+
+    @GetMapping("/getActivity/{day}")
+    public ActivityListResponse getActivity(@PathVariable int day){
+        ActivityListResponse activityListResponse = new ActivityListResponse();
+        List<ActivityList> activity = activityService.getActivity(day);
+        List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activity, ActivityListVO.class);
+        activityListResponse.setResultList(activityListVOS);
+        return activityListResponse;
     }
 }

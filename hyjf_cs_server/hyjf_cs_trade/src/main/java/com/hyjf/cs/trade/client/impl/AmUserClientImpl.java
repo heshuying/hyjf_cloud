@@ -592,4 +592,15 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
+
+	@Override
+	public UtmPlatVO selectUtmPlatByUserId(Integer userId) {
+		UtmPlatResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUserId/" + userId,UtmPlatResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

@@ -320,6 +320,34 @@ public class CreditTenderController extends BaseController{
     }
 
 
+    /**
+     * 查询债转承接数
+     * @author zhangyk
+     * @date 2018/7/25 17:23
+     */
+    @PostMapping("/getCreditDetailTenderCount")
+    public CountResponse getCreditTenderCount(@RequestBody Map<String,Object> param){
+        CountResponse response = new CountResponse();
+        Integer count = bankCreditTenderService.getCreditTenderCount(param);
+        response.setCount(count);
+        return response;
+    }
+
+
+    /**
+     * 查询债转承接list
+     * @author zhangyk
+     * @date 2018/7/25 17:23
+     */
+    @PostMapping("/getCreditDetailTenderList")
+    public CreditTenderListResponse getCreditTenderList(@RequestBody Map<String,Object> param){
+        CreditTenderListResponse response = new CreditTenderListResponse();
+        List<CreditTenderListCustomizeVO> list = bankCreditTenderService.getCreditTenderList(param);
+        response.setResultList(list);
+        return response;
+    }
+
+
 
 
 }

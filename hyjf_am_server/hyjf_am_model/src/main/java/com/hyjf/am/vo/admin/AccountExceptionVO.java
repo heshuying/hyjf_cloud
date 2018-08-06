@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * @author: sunpeikai
+ * @author: zdj
  * @version: AccountExceptionVO, v0.1 2018/7/11 15:10
  */
 public class AccountExceptionVO extends BaseVO implements Serializable {

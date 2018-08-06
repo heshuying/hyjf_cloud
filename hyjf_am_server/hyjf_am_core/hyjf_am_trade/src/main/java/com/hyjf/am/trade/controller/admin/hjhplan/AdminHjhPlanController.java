@@ -171,7 +171,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/isExistsRecord/{planNid}", method = RequestMethod.POST)
+    @GetMapping(value = "/isExistsRecord/{planNid}")
     public boolean isExistsRecord(@PathVariable String planNid) {
     	boolean Flag = adminHjhPlanService.isExistsRecord(planNid);
     	return Flag;
@@ -181,7 +181,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/countByPlanName/{planName}", method = RequestMethod.POST)
+    @GetMapping(value = "/countByPlanName/{planName}")
     public Integer countByPlanName(@PathVariable String planName) {
     	int Flag = adminHjhPlanService.countByPlanName(planName);
     	return Flag;
@@ -191,7 +191,7 @@ public class AdminHjhPlanController {
 	 * @Author: libin
 	 * @Desc :
 	 */
-    @RequestMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}", method = RequestMethod.POST)
+    @GetMapping(value = "/isLockPeriodExist/{lockPeriod}/{borrowStyle}/{isMonth}")
     public Integer isLockPeriodExist(@PathVariable String lockPeriod, @PathVariable String borrowStyle, @PathVariable String isMonth) {
     	int Flag = adminHjhPlanService.isLockPeriodExist(lockPeriod,borrowStyle,isMonth);
     	return Flag;
@@ -217,6 +217,24 @@ public class AdminHjhPlanController {
 	public int insertRecord(@RequestBody PlanListRequest form) throws Exception {
 		int flg = adminHjhPlanService.insertRecord(form);
 		return flg;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :计划列表无分页
+	 */
+	@RequestMapping(value = "/getHjhPlanListByParamWithoutPage",method = RequestMethod.POST)
+	public HjhPlanResponse getHjhPlanListByParamWithoutPage(@RequestBody @Valid PlanListRequest request){
+		HjhPlanResponse response = new HjhPlanResponse();
+		List<HjhPlanVO> list = adminHjhPlanService.selectHjhPlanListWithoutPage(request);
+        if(list.size() > 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                //代表成功
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+		return response;
 	}
     
 }

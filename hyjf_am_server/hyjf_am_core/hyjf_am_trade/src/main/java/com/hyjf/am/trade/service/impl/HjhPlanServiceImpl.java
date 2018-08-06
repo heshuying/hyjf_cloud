@@ -8,11 +8,14 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
@@ -32,28 +35,8 @@ import java.util.Map;
  * @version HjhPlanServiceImpl, v0.1 2018/6/13 17:23
  */
 @Service
-public class HjhPlanServiceImpl implements HjhPlanService {
+public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanService {
 
-    @Resource
-    private HjhInstConfigMapper hjhInstConfigMapper;
-
-    @Resource
-    private HjhLabelMapper hjhLabelMapper;
-
-    @Resource
-    private HjhPlanMapper hjhPlanMapper;
-
-    @Resource
-    private HjhAccedeMapper hjhAccedeMapper;
-
-    @Resource
-    private AccountMapper accountMapper;
-
-    @Resource
-    private AccountListMapper accountListMapper;
-
-    @Resource
-    private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
 
     @Override
     public List<HjhInstConfig> selectHjhInstConfigByInstCode(String instCode) {
@@ -190,6 +173,94 @@ public class HjhPlanServiceImpl implements HjhPlanService {
     public List<BorrowVO> getPlanBorrowList(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.getPlanBorrowList(params);
     }
+
+    @Override
+    public Map<String, Object> getPlanAccecdeTotal(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanAccedeTotal(params);
+    }
+
+    @Override
+    public List<HjhAccedeCustomizeVO> getPlanAccecdeList(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getPlanAccedeList(params);
+    }
+
+    /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    @Override
+    public int countPlanBorrowRecordTotal(Map<String, Object> params) {
+        int count = this.hjhPlanCustomizeMapper.countPlanBorrowRecordTotal(params);
+        return count;
+    }
+
+
+    /**
+     * 查询相应的计划标的列表
+     * @param params
+     * @return
+     */
+    @Override
+    public List<DebtPlanBorrowCustomize> selectPlanBorrowList(Map<String, Object> params) {
+        List<DebtPlanBorrowCustomize> planAccedeList = this.hjhPlanCustomizeMapper.selectPlanBorrowList(params);
+        for (DebtPlanBorrowCustomize planAccede : planAccedeList) {
+            String borrowNid = planAccede.getBorrowNid();
+            if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
+                BorrowUserExample caExample = new BorrowUserExample();
+                BorrowUserExample.Criteria caCra = caExample.createCriteria();
+                caCra.andBorrowNidEqualTo(borrowNid);
+                List<BorrowUser> selectByExample = this.borrowUserMapper.selectByExample(caExample);
+                String trueName= selectByExample.get(0).getUsername();
+                String str = "******";
+                String userNameEncry = "";
+                if (StringUtils.isNotBlank(trueName)) {
+                    if (trueName.length()>=2){
+                        userNameEncry = trueName.replaceFirst(trueName.substring(0,trueName.length()-2),str);
+                    }else {
+                        userNameEncry = str+trueName;
+                    }
+                }
+                planAccede.setTrueName(userNameEncry);
+            }else if("2".equals(planAccede.getCompanyOrPersonal())){//类型是个人 huiyingdai_borrow_maninfo
+                //根据borrowNid查询查询个人的真实姓名
+                BorrowManinfoExample boExample = new BorrowManinfoExample();
+                BorrowManinfoExample.Criteria caCra = boExample.createCriteria();
+                caCra.andBorrowNidEqualTo(borrowNid);
+                List<BorrowManinfo> selectByExample = this.borrowManinfoMapper.selectByExample(boExample);
+                String trueName = selectByExample.get(0).getName();
+                String str = "**";
+                String userNameEncry = "";
+                if (StringUtils.isNotBlank(trueName)) {
+                    userNameEncry=trueName.substring(0,1)+str;
+                }
+                planAccede.setTrueName(userNameEncry);
+            }
+        }
+        return planAccedeList;
+    }
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    @Override
+    public Long selectPlanAccedeSum(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.selectPlanAccedeSum(params);
+    }
+
+    /**
+     * 查询计划的加入记录
+     * @param params
+     * @return
+     */
+    @Override
+    public List<DebtPlanAccedeCustomize> selectPlanAccedeList(Map<String, Object> params) {
+        List<DebtPlanAccedeCustomize> planAccedeList = this.hjhPlanCustomizeMapper.selectPlanAccedeList(params);
+        return planAccedeList;
+    }
+
 
     /**
      * 插入资金明细表

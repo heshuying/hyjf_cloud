@@ -6,7 +6,7 @@ import com.hyjf.admin.service.VersionConfigService;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +32,8 @@ public class VersionConfigServiceImpl implements VersionConfigService {
         AdminVersionResponse response = new AdminVersionResponse();
         response =versionConfigClient.versionConfigInit(adminRequest);
         //数据字典
-        List<ParamName> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
-        List<ParamName> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
+        List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
+        List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
         response.getResult().setVersionNames(versionName);
         response.getResult().setIsUpdates(isUpdate);
         return response;
@@ -48,8 +48,8 @@ public class VersionConfigServiceImpl implements VersionConfigService {
         AdminVersionResponse response = new AdminVersionResponse();
         response= versionConfigClient.searchVersionConfigInfo(adminRequest);
         //数据字典
-        List<ParamName> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
-        List<ParamName> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
+        List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
+        List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
         response.getResult().setVersionNames(versionName);
         response.getResult().setIsUpdates(isUpdate);
         return response;
@@ -60,7 +60,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      * @return
      */
     @Override
-    public List<ParamName> getParamNameList(String code){
+    public List<ParamNameVO> getParamNameList(String code){
         return amTradeClient.getParamNameList(code);
     }
 

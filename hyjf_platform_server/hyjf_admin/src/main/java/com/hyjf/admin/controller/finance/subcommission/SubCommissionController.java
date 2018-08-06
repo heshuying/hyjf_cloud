@@ -34,7 +34,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: SubCommissionController, v0.1 2018/7/10 9:28
  */
-@Api(value = "资金中心-平台账户分佣",description = "资金中心-平台账户分佣")
+@Api(value = "资金中心-平台账户分佣",tags = "资金中心-平台账户分佣")
 @RestController
 @RequestMapping(value = "/hyjf-admin/subcommission")
 public class SubCommissionController extends BaseController {

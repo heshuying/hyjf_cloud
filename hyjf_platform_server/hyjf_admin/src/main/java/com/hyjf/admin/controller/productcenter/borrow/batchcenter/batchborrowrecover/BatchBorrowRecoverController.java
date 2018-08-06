@@ -9,8 +9,6 @@ import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
-import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -31,7 +29,7 @@ import java.util.List;
  * @Date:2018/7/7
  * @Description: 批次中心-批次放款
  */
-@Api(value = "Admin端产品中心-批次中心-批次放款",description="Admin端产品中心-批次中心-批次放款")
+@Api(value = "Admin端产品中心-批次中心-批次放款",tags="Admin端产品中心-批次中心-批次放款")
 @RestController
 @RequestMapping("/hyjf-admin/batchBorrowRecover")
 public class BatchBorrowRecoverController extends BaseController{

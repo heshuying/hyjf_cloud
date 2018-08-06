@@ -8,7 +8,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BankWithdrawService;
+import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -33,7 +33,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "app端用户提现接口")
+@Api(value = "app端用户提现接口",tags = "app端用户提现接口")
 @Controller
 @RequestMapping("/hyjf-app/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {
@@ -61,7 +61,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         String platform = request.getParameter("platform");
         WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
-        if(null!=userVO||0==userVO.getIsSetPassword()){
+        if(null!=userVO||0==userVO.getIsSetPassword()||userVO.getOpenAccount()==0){
             return  new ModelAndView();
         }
         logger.info("user is :{}", JSONObject.toJSONString(user));
@@ -113,7 +113,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         logger.info("app端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
         bean.convert();
-        Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
+        // 用户ID
+        Integer userId = Integer.parseInt(bean.getLogUserId());
         // 插值用参数
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", String.valueOf(userId));
