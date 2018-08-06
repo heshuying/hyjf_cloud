@@ -29,14 +29,16 @@ import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
 import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
-import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -67,25 +69,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
     @Autowired
     private AmUserClient amUserClient;
-
     @Autowired
-    private AmBorrowClient amBorrowClient;
-
-    @Autowired
-    private CouponClient couponClient;
-
-
+    private AmTradeClient amTradeClient;
     @Autowired
     private AmMongoClient amMongoClient;
-
     @Autowired
     private CouponService couponService;
-
-    @Autowired
-    private CouponConfigClient couponConfigClient;
-
-    @Autowired
-    private CouponUserClient couponUserClient;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
@@ -124,13 +113,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 查询选择的优惠券
         CouponUserVO cuc = null;
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
-            cuc = couponClient.getCouponUser(request.getCouponGrantId(), userId);
+            cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
         }
         // 查询计划
         if (StringUtils.isEmpty(request.getBorrowNid())) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
-        HjhPlanVO plan = amBorrowClient.getPlanByNid(request.getBorrowNid());
+        HjhPlanVO plan = amTradeClient.getPlanByNid(request.getBorrowNid());
         if (plan == null) {
             throw new ReturnMessageException(MsgEnum.FIND_PLAN_ERROR);
         }
@@ -173,7 +162,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         Integer couponId = tender.getCouponGrantId();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         df.setRoundingMode(RoundingMode.FLOOR);
-        HjhPlanVO plan = amBorrowClient.getPlanByNid(planNid);
+        HjhPlanVO plan = amTradeClient.getPlanByNid(planNid);
         if (null == plan) {
             // 计划不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
@@ -190,7 +179,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             request.setUserId(String.valueOf(loginUser.getUserId()));
             request.setPlatform(tender.getPlatform());
             if (couponId == null || couponId == 0) {
-                couponConfig = couponConfigClient.selectHJHBestCoupon(request);
+                couponConfig = amTradeClient.selectHJHBestCoupon(request);
             }
             if (couponConfig != null) {
                 investInfo.setIsThereCoupon(1);
@@ -217,12 +206,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             /** 计算最优优惠券结束 */
 
             /** 可用优惠券张数开始 */
-            int availableCouponListCount = couponConfigClient.countHJHAvaliableCoupon(request);
+            int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
             investInfo.setCouponAvailableCount(availableCouponListCount);
             /** 可用优惠券张数结束 */
 
             /** 获取用户优惠券总张数开始 */
-            int recordTotal = couponUserClient.getUserCouponCount(tender.getUser().getUserId(), "0");
+            int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
             investInfo.setRecordTotal(recordTotal);
             /** 获取用户优惠券总张数结束 */
             investInfo.setCouponCapitalInterest(df.format(couponInterest));
@@ -507,7 +496,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         planAccede.setRequest(request);
         // 插入汇计划加入明细表
-        boolean trenderFlag = amBorrowClient.insertHJHPlanAccede(planAccede);
+        boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
