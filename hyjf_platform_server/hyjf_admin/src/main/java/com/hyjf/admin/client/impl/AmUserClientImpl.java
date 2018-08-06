@@ -1042,10 +1042,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public EvalationResponse selectUserEvalationResultList(EvalationRequest request) {
-		EvalationResponse response = restTemplate
+	public EvalationResultResponse selectUserEvalationResultList(EvalationRequest request) {
+		EvalationResultResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request,
-						EvalationResponse.class)
+						EvalationResultResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;

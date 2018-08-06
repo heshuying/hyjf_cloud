@@ -481,7 +481,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
+    EvalationResultResponse selectUserEvalationResultList(EvalationRequest request);
     /**
      * 根据id查找用户测评结果
      * @param userId

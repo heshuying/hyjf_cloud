@@ -6,7 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.response.EvalationInitResponseBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.EvalationService;
-import com.hyjf.am.response.user.EvalationResponse;
+import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
@@ -32,7 +32,7 @@ public class EvalationServiceImpl implements EvalationService {
      * @return
      */
     @Override
-    public EvalationResponse selectUserEvalationResultList(EvalationRequest request){
+    public EvalationResultResponse selectUserEvalationResultList(EvalationRequest request){
         return  evalationClient.selectUserEvalationResultList(request);
     }
 
