@@ -24,7 +24,7 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.util.ResultEnum;

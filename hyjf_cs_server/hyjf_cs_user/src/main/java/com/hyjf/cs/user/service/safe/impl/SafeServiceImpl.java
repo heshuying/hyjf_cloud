@@ -27,7 +27,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.MailProducer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import org.apache.commons.lang3.StringUtils;

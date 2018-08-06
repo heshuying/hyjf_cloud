@@ -11,7 +11,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.OrganizationStructureRequestBean;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.group.ApiOrganizationStructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

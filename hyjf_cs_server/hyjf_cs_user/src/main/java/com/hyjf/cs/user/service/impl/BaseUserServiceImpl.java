@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.service;
+package com.hyjf.cs.user.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
@@ -25,6 +25,7 @@ import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
+import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
