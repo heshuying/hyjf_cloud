@@ -15,7 +15,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
-import com.hyjf.am.trade.service.front.borrow.BorrowService;
+import com.hyjf.am.trade.service.BorrowService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
