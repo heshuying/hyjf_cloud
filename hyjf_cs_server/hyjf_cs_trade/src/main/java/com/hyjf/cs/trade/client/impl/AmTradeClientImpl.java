@@ -50,7 +50,6 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
@@ -59,6 +58,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -3511,6 +3511,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = BASE_URL + "/app/selectBorrowCreditByNid/"+transferId;
         BorrowCreditResponse response=restTemplate.getForEntity(url,BorrowCreditResponse.class).getBody();
         if (response!=null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd) {
+        BorrowProjectTypeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectBorrowProjectByBorrowCd/" + borrowCd, BorrowProjectTypeResponse.class).getBody();
+        if (response != null) {
             return response.getResultList();
         }
         return null;

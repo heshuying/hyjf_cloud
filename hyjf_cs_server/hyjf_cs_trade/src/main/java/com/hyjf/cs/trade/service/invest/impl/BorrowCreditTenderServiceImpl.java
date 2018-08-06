@@ -32,13 +32,15 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmConfigClient;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
-import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -62,44 +64,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
     @Autowired
     private AmUserClient amUserClient;
-
-    @Autowired
-    private AmBorrowClient amBorrowClient;
-
-    @Autowired
-    private CouponClient couponClient;
-
-
-    @Autowired
-    private AmMongoClient amMongoClient;
-
-    @Autowired
-    private CouponService couponService;
-
-    @Autowired
-    private BorrowClient borrowClient;
-
-    @Autowired
-    private AutoSendClient autoSendClient;
-
-    @Autowired
-    SystemConfig systemConfig;
-
-    @Autowired
-    private AmConfigClient amConfigClient;
-
-    @Autowired
-    private BorrowTenderClient borrowTenderClient;
-
-    @Autowired
-    private CreditClient creditClient;
-
     @Autowired
     private AmTradeClient amTradeClient;
-
     @Autowired
-    private AmBorrowRepayPlanClient amBorrowRepayPlanClient;
-
+    private AmMongoClient amMongoClient;
+    @Autowired
+    SystemConfig systemConfig;
+    @Autowired
+    private AmConfigClient amConfigClient;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
     @Autowired
@@ -111,11 +83,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private AccountWebListProducer accountWebListProducer;
     @Autowired
     private UtmRegProducer utmRegProducer;
-
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
-
-
 
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
@@ -135,7 +104,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 检查请求参数是否正确
         this.checkRequest(request);
         // 获取债转数据
-        BorrowCreditVO borrowCredit = creditClient.getBorrowCreditByCreditNid(request.getCreditNid());
+        BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(request.getCreditNid());
         if(borrowCredit==null){
             // 获取债转数据错误
             throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
@@ -149,7 +118,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 查询用户账户表-投资账户
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
-        TenderToCreditAssignCustomizeVO creditAssign = this.creditClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
+        TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(request.getCreditNid(), request.getAssignCapital(),userId);
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform());
@@ -194,7 +163,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             if (retMsgVo != null) {
                 retMsg = retMsgVo.getErrorMsg();
             }
-            creditClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
+            amTradeClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
             resultBean.setStatus(true);
             return resultBean;
         }
@@ -237,7 +206,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 if (retMsgVo != null) {
                     retMsg = retMsgVo.getErrorMsg();
                 }
-                creditClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
+                amTradeClient.updateCreditTenderResult(bean.getLogOrderId(),bean.getLogUserId(),retCode,retMsg);
                 // 债转承接状态异常
                 throw new CheckException(MsgEnum.ERROR_CREDIT_QUERY_ERROR);
             }
@@ -259,7 +228,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public WebResult<Map<String, Object>> getFaileResult(WebViewUserVO userVO, String logOrdId) {
-        String errorMsg = creditClient.getFailResult(logOrdId,userVO.getUserId());
+        String errorMsg = amTradeClient.getFailResult(logOrdId,userVO.getUserId());
         Map<String, Object> data = new HashedMap();
         data.put("errorMsg",errorMsg);
         WebResult<Map<String, Object>> result = new WebResult();
@@ -276,7 +245,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
-        CreditTenderVO bean = creditClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
+        CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
         Map<String, Object> data = new HashedMap();
         // 投资金额
         data.put("assignCapital",bean.getAssignCapital());
@@ -317,7 +286,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 承接人账户信息
             AccountVO assignAccount = this.amTradeClient.getAccount(userId);
             // 项目详情
-            BorrowVO borrow = this.borrowClient.selectBorrowByNid(borrowNid);
+            BorrowVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
             // 还款方式
             String borrowStyle = borrow.getBorrowStyle();
             // 项目总期数
@@ -1057,7 +1026,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         creditTenderLog.setLogOrderId(bean.getLogOrderId());
         // 检查是否能债转  ？？？原来的逻辑不用了1726行CreditServiceImpl
         // 插入债转日志表
-        Integer saveCount = borrowTenderClient.saveCreditTenderAssignLog(creditTenderLog);
+        Integer saveCount = amTradeClient.saveCreditTenderAssignLog(creditTenderLog);
     }
 
     /**
@@ -1078,13 +1047,13 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 如果放款时间小于 20170703 重新计算已承接金额
         if (borrowRecover.getAddTime() < 1499011200 && borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
             // 计算已承接的债权
-            BigDecimal assignedCapital = borrowTenderClient.getAssignCapital(borrowRecover.getNid());
+            BigDecimal assignedCapital = amTradeClient.getAssignCapital(borrowRecover.getNid());
             creditTenderLog.setTenderMoney(borrowRecover.getRecoverCapital().subtract(assignedCapital));
         } else {
             creditTenderLog.setTenderMoney(borrowRecover.getRecoverCapital());
         }
         // 获取借款数据
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowCredit.getBidNid());
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowCredit.getBidNid());
         if (borrow == null) {
             // 标的信息不存在  当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试
             throw new CheckException(MsgEnum.ERROR_CREDIT_NO_BORROW);
@@ -1153,7 +1122,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             int lastDays = 0;
             String bidNid = borrow.getBorrowNid();
-            List<BorrowRepayPlanVO> borrowRepayPlans = amBorrowRepayPlanClient.selectBorrowRepayPlan(bidNid, borrow.getBorrowPeriod());
+            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.selectBorrowRepayPlan(bidNid, borrow.getBorrowPeriod());
 
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {

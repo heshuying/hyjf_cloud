@@ -32,7 +32,7 @@ import java.util.Map;
 @Api(value = "App端风险测评接口",tags = "App端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/hyjf-app/user/financialAdvisor")
+@RequestMapping("/financialAdvisor")
 public class AppEvaluationController {
 
     @Autowired
@@ -128,7 +128,6 @@ public class AppEvaluationController {
         JSONObject ret = new JSONObject();
         // 统计ID
         String behaviorId = request.getParameter("behaviorId");
-//        Integer userId =2;
         if (userId == null || userId == 0) {
             //ifEvaluation是否已经调查表示  1是已调查，0是未调查
             ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 0);
