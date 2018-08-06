@@ -19,7 +19,7 @@ import com.hyjf.am.trade.bean.BorrowCommonBean;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
-import com.hyjf.am.trade.service.InstConfigService;
+import com.hyjf.am.trade.service.front.config.InstConfigService;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonNameAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
