@@ -3516,6 +3516,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd) {
         BorrowProjectTypeResponse response = restTemplate
                 .getForEntity("http://AM-TRADE/am-trade/assetPush/selectBorrowProjectByBorrowCd/" + borrowCd, BorrowProjectTypeResponse.class).getBody();
