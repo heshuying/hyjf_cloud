@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -153,7 +154,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				//redis防重校验
-				boolean reslut = RedisUtils.tranactionSet("recharge_orderid" + orderId, 10);
+				boolean reslut = RedisUtils.tranactionSet(RedisConstants.RECHARGE_ORDERID + orderId, 10);
 				if(!reslut){
 					return jsonMessage("充值成功", "0");
 				}
@@ -229,7 +230,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 							}
 						}
 					} catch (Exception e) {
-						System.err.println(e);
+						logger.error("充值错误，错误原因："+e);
 					}
 				}
 			} else {

@@ -54,7 +54,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     private AmUserClient amUserClient;
 
     @Autowired
-    SystemConfig systemConfig;
+    private SystemConfig systemConfig;
 
     @Autowired
     private AmConfigClient amConfigClient;
