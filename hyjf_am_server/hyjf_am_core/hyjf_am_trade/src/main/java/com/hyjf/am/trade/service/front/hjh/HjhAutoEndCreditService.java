@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
 

@@ -1,18 +1,17 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
-import com.hyjf.am.trade.service.HjhPlanService;
+import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
@@ -24,7 +23,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;

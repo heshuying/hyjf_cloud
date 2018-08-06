@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.service.BaseService;
 
 /**
  * 汇计划加入订单计算公允价值Service
@@ -11,7 +12,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccede;
  * @author liuyang
  * @version HjhCalculateFairValueService, v0.1 2018/6/27 14:09
  */
-public interface HjhCalculateFairValueService extends BaseService{
+public interface HjhCalculateFairValueService extends BaseService {
     /**
      * 根据加入订单号查询
      * @param accedeOrderId

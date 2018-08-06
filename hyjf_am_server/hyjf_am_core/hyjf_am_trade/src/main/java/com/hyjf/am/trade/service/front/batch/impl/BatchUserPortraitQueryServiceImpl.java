@@ -1,12 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.batch.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountWithdrawMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.BatchUserPortraitQueryService;
+import com.hyjf.am.trade.service.front.batch.BatchUserPortraitQueryService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;

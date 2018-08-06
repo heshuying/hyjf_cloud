@@ -11,7 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.service.front.borrow.BorrowInfoService;
 import com.hyjf.am.trade.service.front.borrow.BorrowProjectTypeService;
 import com.hyjf.am.trade.service.BorrowService;
-import com.hyjf.am.trade.service.HjhPlanService;
+import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.trade.service.coupon.MyCouponListService;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;

@@ -1,10 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.HjhAutoEndCreditService;
+import com.hyjf.am.trade.service.front.hjh.HjhAutoEndCreditService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;

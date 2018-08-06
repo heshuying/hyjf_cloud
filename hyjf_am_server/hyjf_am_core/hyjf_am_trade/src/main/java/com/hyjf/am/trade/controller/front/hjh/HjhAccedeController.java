@@ -9,7 +9,7 @@ import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
-import com.hyjf.am.trade.service.HjhAccedeService;
+import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;

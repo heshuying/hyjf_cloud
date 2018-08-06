@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.front.batch;
 
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.BatchUserPortraitQueryService;
+import com.hyjf.am.trade.service.front.batch.BatchUserPortraitQueryService;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
