@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.front.borrow;
 import com.hyjf.am.response.trade.BorrowRepayResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
-import com.hyjf.am.trade.service.BorrowRepayService;
+import com.hyjf.am.trade.service.front.borrow.BorrowRepayService;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

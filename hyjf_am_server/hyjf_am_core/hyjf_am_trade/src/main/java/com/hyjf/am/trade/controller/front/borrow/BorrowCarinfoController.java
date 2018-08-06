@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.trade.BorrowCarinfoResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowCarinfo;
-import com.hyjf.am.trade.service.BorrowCarinfoService;
+import com.hyjf.am.trade.service.front.borrow.BorrowCarinfoService;
 import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
 import com.hyjf.common.util.CommonUtils;
 

@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.front.borrow;
 import com.hyjf.am.response.trade.BorrowConfigResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.service.BorrowConfigService;
+import com.hyjf.am.trade.service.front.borrow.BorrowConfigService;
 import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
