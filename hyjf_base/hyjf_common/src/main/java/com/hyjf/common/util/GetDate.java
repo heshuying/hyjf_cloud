@@ -423,7 +423,9 @@ public class GetDate extends PropertyEditorSupport {
 		if (null == date) {
 			return null;
 		}
-		return date_sdf.format(date);
+		synchronized (date_sdf){
+			return date_sdf.format(date);
+		}
 	}
 
 	/**
