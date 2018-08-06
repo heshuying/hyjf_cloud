@@ -5,6 +5,7 @@ import java.util.List;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.trade.dao.model.customize.app.AppTradeListCustomize;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("am-trade/tradedetail")
-public class TradeDetailController extends BaseController{
+public class TradeDetailController extends BaseController {
     @Autowired
     private TradeDetailService tradeDetailService;
 
