@@ -344,9 +344,13 @@ public class WithdrawController extends BaseController {
         if (account == null || transAmt.compareTo(account.getBankBalance()) > 0) {
             return jsonMessage("提现金额大于可用余额，请确认后再次提现。", "1");
         }
-        // 检查参数(银行卡ID是否数字)
+        /*// 检查参数(银行卡ID是否数字)
         if (Validator.isNotNull(bankId) && !NumberUtils.isNumber(bankId)) {
             return jsonMessage("银行卡号不正确，请确认后再次提现。", "1");
+        }*/
+        // 检查参数(由于可能存在特殊的以04开头的银行卡,所以不再采用是否是数字格式进行校验)
+        if (Validator.isNull(bankId)) {
+            return jsonMessage("请输入提现银行卡。", "1");
         }
         return null;
     }
