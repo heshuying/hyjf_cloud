@@ -3,7 +3,7 @@ package com.hyjf.admin.service;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public interface VersionConfigService {
      * @param code
      * @return
      */
-    public  List<ParamName> getParamNameList(String code);
+    public  List<ParamNameVO> getParamNameList(String code);
 
     /**
      * 编辑保存版本设置

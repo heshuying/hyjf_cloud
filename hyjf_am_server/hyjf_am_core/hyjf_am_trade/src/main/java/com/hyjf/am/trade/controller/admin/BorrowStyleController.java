@@ -113,7 +113,7 @@ public class BorrowStyleController {
                 response.setRecordTotal(recordTotal);
                 response.setRtn(Response.SUCCESS);
             }
-            return response;
+            return null;
         }
         return null;
     }

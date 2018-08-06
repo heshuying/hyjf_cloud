@@ -756,11 +756,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @return
      */
     private BankCallBean getCommonBankCallBean(UserVO user, String platform, String channel, String transAmt, String cardNo, String payAllianceCode, String fee) {
+        String orderId=GetOrderIdUtils.getOrderId2(user.getUserId());
         BankCardVO bankCard = this.bindCardClient.queryUserCardValid(user.getUserId()+"", cardNo);
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
-        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess";
+        String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawError?logOrdId="+orderId;
         String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn.do";
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
                 + "&wifee=" + fee;//
@@ -769,7 +770,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 调用汇付接口(4.2.2 用户绑卡接口)
 
         BankCallBean bean = new BankCallBean();
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
+        bean.setLogOrderId(orderId);
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogRemark("用户提现");

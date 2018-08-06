@@ -96,8 +96,8 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      * @param record
      */
     @Override
-    public void insertRecord(BorrowProjectTypeRequest record){
-         borrowProjectTypeClient.insertRecord(record);
+    public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record){
+        return borrowProjectTypeClient.insertRecord(record);
     }
     /**
      * 汇直投项目类型维护修改
@@ -122,7 +122,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      * @return
      */
     @Override
-    public int borrowCdIsExists(String borrowCd){
+    public int borrowCdIsExists(BorrowProjectTypeRequest borrowCd){
         return borrowProjectTypeClient.borrowCdIsExists(borrowCd);
     }
 }

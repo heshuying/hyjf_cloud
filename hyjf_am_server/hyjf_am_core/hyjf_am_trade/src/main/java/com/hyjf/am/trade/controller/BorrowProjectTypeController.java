@@ -11,11 +11,9 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,25 +38,27 @@ public class BorrowProjectTypeController extends BaseController{
         logger.info("项目类型列表..." + JSONObject.toJSON(adminRequest));
         List<ParamNameVO> paramNameVOS = adminRequest.getParamNameVO();
         BorrowProjectTypeResponse  result=new BorrowProjectTypeResponse();
-        List<BorrowProjectType> borrowProjectTypeVO = borrowProjectTypeService.selectProjectTypeList(new BorrowProjectTypeVO(),-1,-1);
-        if(!CollectionUtils.isEmpty(borrowProjectTypeVO)){
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), borrowProjectTypeVO.size());
-            borrowProjectTypeVO = borrowProjectTypeService.selectProjectTypeList(new BorrowProjectTypeVO(),paginator.getOffset(), paginator.getLimit());
-            for(int i=0;i<borrowProjectTypeVO.size();i++){
+        List<BorrowProjectTypeVO> list = borrowProjectTypeService.selectProjectTypeList(new BorrowProjectTypeVO());
+        if(!CollectionUtils.isEmpty(list)){
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), list.size());
+            BorrowProjectTypeVO borrowProjectTypeVO =new BorrowProjectTypeVO();
+            borrowProjectTypeVO.setLimitStart(paginator.getOffset());
+            borrowProjectTypeVO.setLimitEnd(paginator.getLimit());
+            list = borrowProjectTypeService.selectProjectTypeList(borrowProjectTypeVO);
+            for(int i=0;i<list.size();i++){
                 for(int j=0;j<paramNameVOS.size();j++){
-                    if(paramNameVOS.get(j).getNameCd().equals(borrowProjectTypeVO.get(i).getBorrowProjectType())){
-                        borrowProjectTypeVO.get(i).setBorrowProjectType(paramNameVOS.get(j).getName());
+                    if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getBorrowProjectType())){
+                        list.get(i).setBorrowProjectType(paramNameVOS.get(j).getName());
                     }
-                    if(paramNameVOS.get(j).getNameCd().equals(borrowProjectTypeVO.get(i).getInvestUserType())){
-                        borrowProjectTypeVO.get(i).setInvestUserType(Integer.valueOf(paramNameVOS.get(j).getName()));
+                    if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getInvestUserType())){
+                        list.get(i).setInvestUserType(paramNameVOS.get(j).getName());
                     }
-                    if(paramNameVOS.get(j).getNameCd().equals(borrowProjectTypeVO.get(i).getStatus())){
-                        borrowProjectTypeVO.get(i).setStatus(Integer.valueOf(paramNameVOS.get(j).getName()));
+                    if(paramNameVOS.get(j).getNameCd().equals(list.get(i).getStatus())){
+                        list.get(i).setStatus(paramNameVOS.get(j).getName());
                     }
                 }
             }
-            List<BorrowProjectTypeVO> configList = CommonUtils.convertBeanList(borrowProjectTypeVO, BorrowProjectTypeVO.class);
-            result.setResultList(configList);
+            result.setResultList(list);
             result.setRtn(Response.SUCCESS);
             return result;
         }
@@ -128,8 +128,8 @@ public class BorrowProjectTypeController extends BaseController{
      * @param record
      */
     @RequestMapping("/insertRecord")
-    public  void insertRecord(@RequestBody BorrowProjectTypeRequest record){
-         borrowProjectTypeService.insertRecord(record);
+    public  BorrowProjectTypeResponse insertRecord(@RequestBody BorrowProjectTypeRequest record){
+       return borrowProjectTypeService.insertRecord(record);
     }
 
     /**
@@ -138,8 +138,8 @@ public class BorrowProjectTypeController extends BaseController{
      * @param record
      */
     @RequestMapping("/updateRecord")
-    public  void updateRecord(@RequestBody BorrowProjectTypeRequest record){
-        borrowProjectTypeService.updateRecord(record);
+    public  BorrowProjectTypeResponse updateRecord(@RequestBody BorrowProjectTypeRequest record){
+       return borrowProjectTypeService.updateRecord(record);
     }
     /**
      *  汇直投项目类型维护删除
@@ -148,26 +148,25 @@ public class BorrowProjectTypeController extends BaseController{
     @RequestMapping("/deleteProjectType")
     public BorrowProjectTypeResponse deleteProjectType(@RequestBody BorrowProjectTypeRequest adminRequest){
         BorrowProjectTypeResponse resp = new BorrowProjectTypeResponse();
-        try{
-            if(adminRequest.getBorrowCd() != null){
-                this.borrowProjectTypeService.deleteProjectType(adminRequest.getBorrowCd());
-                /*--------------------------add by LSY START-----------------------------------*/
-                //删除asset表相应数据
-                this.borrowProjectTypeService.deleteAsset(Integer.parseInt(adminRequest.getBorrowCd()));
-		/*--------------------------add by LSY END-----------------------------------*/
-                resp.setRtn("SUCCESS");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        if(adminRequest.getBorrowCd() != null){
+            this.borrowProjectTypeService.deleteProjectType(adminRequest.getBorrowCd());
+            /*--------------------------add by LSY START-----------------------------------*/
+            //删除asset表相应数据
+            this.borrowProjectTypeService.deleteAsset(Integer.parseInt(adminRequest.getBorrowCd()));
+            /*--------------------------add by LSY END-----------------------------------*/
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
         return resp;
     }
     /**
      * 检查项目名称唯一性
-     * @param borrowCd
+     * @param request
      * @return
      */
-    public int borrowCdIsExists(@PathVariable  String borrowCd){
-       return borrowProjectTypeService.borrowCdIsExists(borrowCd);
+    @RequestMapping("/borrowCdIsExists")
+    public Integer borrowCdIsExists(@RequestBody BorrowProjectTypeRequest request){
+       return borrowProjectTypeService.borrowCdIsExists(request.getBorrowCd());
     }
 }

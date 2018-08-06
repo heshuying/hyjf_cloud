@@ -12,7 +12,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Api(value = "配置中心版本配置",tags ="配置中心版本配置")
+@Api(value = "配置中心版本配置",description ="配置中心版本配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/versionconfig")
 public class AdminVersionConfigController extends BaseController {
@@ -93,8 +93,8 @@ public class AdminVersionConfigController extends BaseController {
         this.validatorFieldCheck(mv, adminRequest);
         if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
             //数据字典
-            List<ParamName> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
-            List<ParamName> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
+            List<ParamNameVO> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
+            List<ParamNameVO> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
             adminResponse.getResult().setVersionNames(versionName);
             adminResponse.getResult().setIsUpdates(isUpdate);
             return new AdminResult<VersionVO>(adminResponse.getResult()) ;
@@ -122,8 +122,8 @@ public class AdminVersionConfigController extends BaseController {
         this.validatorFieldCheck(mv, adminRequest);
         if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
             //数据字典
-            List<ParamName> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
-            List<ParamName> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
+            List<ParamNameVO> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
+            List<ParamNameVO> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
             adminResponse.getResult().setVersionNames(versionName);
             adminResponse.getResult().setIsUpdates(isUpdate);
             return new AdminResult<VersionVO>(adminResponse.getResult()) ;

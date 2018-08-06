@@ -36,12 +36,14 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.CreditResultBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,33 +73,15 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      * 折让率范围结束
      */
     private static float creditDiscountEnd = 2.0f;
-
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
-
-    @Autowired
-    private CreditClient creditClient;
-
     @Autowired
     private AmUserClient amUserClient;
-
     @Autowired
     private AmMongoClient amMongoClient;
-
-    @Autowired
-    private AccountClient accountClient;
-
-    @Autowired
-    private BorrowClient borrowClient;
-
-    @Autowired
-    private AmBorrowRepayPlanClient amBorrowRepayPlanClient;
-
     @Autowired
     private AmTradeClient amTradeClient;
-
     @Autowired
     private SmsProducer smsProducer;
-
     @Autowired
     private SystemConfig systemConfig;
 
@@ -112,7 +96,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     @Override
     public WebResult getCreditListData(MyCreditListRequest request, Integer userId) {
         // 判断用户所处的渠道如果不允许债转，可债转金额为0  start
-        if (!creditClient.isAllowChannelAttorn(userId)) {
+        if (!amTradeClient.isAllowChannelAttorn(userId)) {
             logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
             throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
         }
@@ -125,8 +109,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             }
         }
         // 获取可债转金额   转让中本金   累计已转让本金
-        CreditPageVO moneys = creditClient.selectCreditPageMoneyTotal(userId);
-        AccountVO account = accountClient.getAccountByUserId(userId);
+        CreditPageVO moneys = amTradeClient.selectCreditPageMoneyTotal(userId);
+        AccountVO account = amTradeClient.getAccountByUserId(userId);
         moneys.setHoldMoneyTotal(account.getBankAwaitCapital());
         WebResult result =  new WebResult();
         result.setData(moneys);
@@ -142,7 +126,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     @Override
     public WebResult getCreditList(MyCreditListQueryRequest request, Integer userId) {
-        if (!creditClient.isAllowChannelAttorn(userId)) {
+        if (!amTradeClient.isAllowChannelAttorn(userId)) {
             logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
             throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
         }
@@ -150,7 +134,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
-        MyCreditListQueryResponse res = creditClient.countMyCreditList(request);
+        MyCreditListQueryResponse res = amTradeClient.countMyCreditList(request);
         WebResult webResult = new WebResult();
         if (!Response.isSuccess(res)) {
             logger.error("查询count异常");
@@ -161,7 +145,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         webResult.setData(new ArrayList<>());
         if (count > 0) {
             List<TenderCreditCustomizeVO> result = new ArrayList<>();
-            MyCreditListQueryResponse dataResponse = creditClient.searchMyCreditList(request);
+            MyCreditListQueryResponse dataResponse = amTradeClient.searchMyCreditList(request);
             if (!Response.isSuccess(dataResponse)) {
                 logger.error("查询list数据异常");
                 throw new RuntimeException("查询list数据异常");
@@ -191,7 +175,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             // 转让失败,无法获取借款和投资编号
             throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
-        TenderCreditCustomizeVO tenderToCreditDetail = creditClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
+        TenderCreditCustomizeVO tenderToCreditDetail = amTradeClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
                 request.getTenderNid());
         if(tenderToCreditDetail==null){
             // 获取债转数据为空
@@ -200,7 +184,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         int lastdays = 0;
         String borrowNid = tenderToCreditDetail.getBorrowNid();
         // 根据borrowNid判断是否分期
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         String borrowStyle = borrow.getBorrowStyle();
         if (borrowStyle.equals(CalculatesUtil.STYLE_END) || borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {
             try {
@@ -214,7 +198,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
 
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-            List<BorrowRepayPlanVO> list = this.amBorrowRepayPlanClient.selectBorrowRepayPlan(borrowNid, borrow.getBorrowPeriod());
+            List<BorrowRepayPlanVO> list = this.amTradeClient.selectBorrowRepayPlan(borrowNid, borrow.getBorrowPeriod());
             if (list != null && list.size() > 0) {
                 try {
                     lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(list.get(0).getRepayTime()));
@@ -226,7 +210,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         }
 
         // 债转详细预计服务费计算
-        ExpectCreditFeeVO resultMap = creditClient.selectExpectCreditFee(request.getBorrowNid(), request.getTenderNid());
+        ExpectCreditFeeVO resultMap = amTradeClient.selectExpectCreditFee(request.getBorrowNid(), request.getTenderNid());
         tenderToCreditDetail.setLastDays(lastdays + "");
         creditResultBean.setData(tenderToCreditDetail);
         creditResultBean.setCalData(resultMap);
@@ -250,7 +234,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
 
-        Integer creditedNum = creditClient.tenderAbleToCredit(userId);
+        Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
         Map<String,Object> data = new HashedMap();
         data.put("creditedNum",creditedNum);
         webResult.setData(data);
@@ -271,7 +255,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             // 转让失败,无法获取借款和投资编号
             throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
-        Integer creditedNum = creditClient.tenderAbleToCredit(userId);
+        Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
         if (creditedNum != null && creditedNum >= 3) {
             // 今天的转让次数已满3次,请明天再试
             throw  new CheckException(MsgEnum.ERROR_CREDIT_THREE);
@@ -314,7 +298,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 当前日期
         Integer nowTime = GetDate.getNowTime10();
         // 查询borrow 和 BorrowRecover
-        BorrowVO borrow = borrowClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
@@ -434,7 +418,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 当前日期
         Integer nowTime = GetDate.getNowTime10();
         // 查询borrow 和 BorrowRecover
-        BorrowVO borrow = borrowClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
         if (borrow == null) {
             throw new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
@@ -450,11 +434,11 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 生成creditNid
         // 获取当前时间的日期
         String nowDate = (GetDate.yyyyMMdd.format(new Date()) != null && !"".equals(GetDate.yyyyMMdd.format(new Date()))) ? GetDate.yyyyMMdd.format(new Date()) : "0";
-        Integer creditedNum = creditClient.tenderAbleToCredit(userId);
+        Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
         Integer creditNumToday = (creditedNum == null ? 0 : creditedNum);
         String creditNid = nowDate.substring(2) + String.format("%04d", (creditNumToday + 1));
         // 获取待债转数据
-        TenderCreditCustomizeVO tenderToCreditDetail = creditClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
+        TenderCreditCustomizeVO tenderToCreditDetail = amTradeClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
                 request.getTenderNid());
         // 债转nid
         borrowCredit.setCreditNid(Integer.parseInt(creditNid));
@@ -479,7 +463,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             String bidNid = borrow.getBorrowNid();
-            List<BorrowRepayPlanVO> borrowRepayPlans = amBorrowRepayPlanClient.getBorrowRepayPlansByPeriod(bidNid, borrow.getBorrowPeriod());
+            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrow.getBorrowPeriod());
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
                     String hodeDate = GetDate.getDateTimeMyTimeInMillis(recover.getAddTime());
@@ -575,7 +559,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         }
 
         // 操作数据库表
-        return creditClient.insertCredit(borrowCredit);
+        return amTradeClient.insertCredit(borrowCredit);
     }
 
     /**
@@ -657,9 +641,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             // 根据投资订单号检索已债转还款信息
-            List<CreditRepayVO> creditRepayList = creditClient.selectCreditRepayList(borrowRecover.getTenderId());
+            List<CreditRepayVO> creditRepayList = amTradeClient.selectCreditRepayList(borrowRecover.getTenderId());
             int lastDays = 0;
-            List<BorrowRepayPlanVO> borrowRepayPlans = this.amBorrowRepayPlanClient.selectBorrowRepayPlan(borrow.getBorrowNid(), 0);
+            List<BorrowRepayPlanVO> borrowRepayPlans = this.amTradeClient.selectBorrowRepayPlan(borrow.getBorrowNid(), 0);
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
                     String nowDate = GetDate.getDateTimeMyTimeInMillis(nowTime);

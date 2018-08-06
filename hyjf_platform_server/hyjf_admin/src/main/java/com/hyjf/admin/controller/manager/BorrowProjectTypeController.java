@@ -11,9 +11,11 @@ import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/27.
  */
-@Api(value = "admin配置中心借款项目配置",tags = "配置中心借款项目配置---项目流程")
+@Api(value = "admin借款项目配置---项目类型",description = "配置中心借款项目配置---项目流程的项目类型")
 @RestController
 @RequestMapping("/hyjf-admin/config/projecttype")
 public class BorrowProjectTypeController extends BaseController {
@@ -83,10 +85,10 @@ public class BorrowProjectTypeController extends BaseController {
         List<BorrowStyleVO> selectStyles = this.borrowProjectTypeService.selectStyles();
         record.setRepayStyles(selectStyles);
         // 用户角色
-//        List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
-//        record.setInvestUsers(investUsers);
-//        List<ParamNameVO> projectTypeList =  this.borrowProjectTypeService.getParamNameList(CustomConstants.BORROW_PROJTCT);
-//        record.setProjectTypeList(projectTypeList);
+        List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
+        record.setInvestUsers(investUsers);
+        List<ParamNameVO> projectTypeList =  this.borrowProjectTypeService.getParamNameList(CustomConstants.BORROW_PROJTCT);
+        record.setProjectTypeList(projectTypeList);
         response.setResult(record);
         return response ;
     }
@@ -95,7 +97,7 @@ public class BorrowProjectTypeController extends BaseController {
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public BorrowProjectTypeResponse insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
-        BorrowProjectTypeResponse response = null;
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
@@ -115,25 +117,27 @@ public class BorrowProjectTypeController extends BaseController {
             }
             borrowProjectTypeVO.setRepayNames(selectRepay);
             // 用户角色
-//            List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
-//            borrowProjectTypeVO.setInvestUsers(investUsers);
+            List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
+            borrowProjectTypeVO.setInvestUsers(investUsers);
             // 回显checkbox标签
             List<BorrowStyleVO> selectStyles = this.borrowProjectTypeService.selectStyles();
             borrowProjectTypeVO.setRepayStyles(selectStyles);
             response.setResult(borrowProjectTypeVO);
             BeanUtils.copyProperties(adminRequest,borrowProjectTypeVO);
+            response.setRtn(Response.FAIL);
+            response.setMessage("输入内容验证失败");
             return response;
         }
         if (StringUtils.equals("N", adminRequest.getModifyFlag())) {
-             this.borrowProjectTypeService.insertRecord(adminRequest);
+            response = this.borrowProjectTypeService.insertRecord(adminRequest);
         }
-        return new BorrowProjectTypeResponse();
+        return response;
     }
     @ApiOperation(value = "配置中心项目配置---项目流程 项目类型", notes = "项目类型修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public BorrowProjectTypeResponse updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
-        BorrowProjectTypeResponse response = null;
+        BorrowProjectTypeResponse response =  new BorrowProjectTypeResponse();
         BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
@@ -153,22 +157,22 @@ public class BorrowProjectTypeController extends BaseController {
             }
             borrowProjectTypeVO.setRepayNames(selectRepay);
             // 用户角色
-//            List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
-//            borrowProjectTypeVO.setInvestUsers(investUsers);
+            List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
+            borrowProjectTypeVO.setInvestUsers(investUsers);
             // 回显checkbox标签
             List<BorrowStyleVO> selectStyles = this.borrowProjectTypeService.selectStyles();
             borrowProjectTypeVO.setRepayStyles(selectStyles);
-            response.setResult(borrowProjectTypeVO);
             BeanUtils.copyProperties(adminRequest,borrowProjectTypeVO);
+            response.setRtn(Response.FAIL);
+            response.setMessage("输入内容验证失败");
+            response.setResult(borrowProjectTypeVO);
             return response;
         }
         if (StringUtils.isNotEmpty(adminRequest.getBorrowCd())) {
             this.borrowProjectTypeService.updateRecord(adminRequest);
         }
-        //分页，todo
-        // 创建分页
-//        this.createPage(request, modelAndView, form);
-        return new BorrowProjectTypeResponse();
+         response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
+        return response;
     }
     @ApiOperation(value = "配置中心项目配置---项目流程 项目类型", notes = "项目类型删除")
     @PostMapping("/deleteAction")
@@ -199,7 +203,9 @@ public class BorrowProjectTypeController extends BaseController {
         String borrowCd = request.getParameter("param");
         JSONObject ret = new JSONObject();
         // 检查项目名称唯一性
-        int cnt = this.borrowProjectTypeService.borrowCdIsExists(borrowCd);
+        BorrowProjectTypeRequest form =new BorrowProjectTypeRequest();
+        form.setBorrowCd(borrowCd);
+        int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
         if (cnt > 0) {
             String message = ValidatorFieldCheckUtil.getErrorMessage("repeat", "");
             message = message.replace("{label}", "项目编号");
@@ -237,10 +243,10 @@ public class BorrowProjectTypeController extends BaseController {
 
         if ("N".equals(form.getModifyFlag()) && borrowCdFlag) {
             // 检查唯一性
-//            int cnt = this.projectTypeService.borrowCdIsExists(form.getBorrowCd());
-//            if (cnt > 0) {
-//                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "borrowCd", "repeat");
-//            }
+            int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
+            if (cnt > 0) {
+                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "borrowCd", "repeat");
+            }
         }
     }
 

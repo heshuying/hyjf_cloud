@@ -5,11 +5,9 @@ import com.hyjf.am.config.dao.mapper.customize.ParamNameCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.auto.ParamNameExample;
 import com.hyjf.am.config.service.ParamNameService;
-import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +52,7 @@ public class ParamNameServiceImpl implements ParamNameService {
         List<ParamNameVO> paramNameVOS =new ArrayList<>();
         List<ParamName> borrowProjectTypes=  paramNameCustomizeMapper.selectProjectTypeParamList();
         if(!CollectionUtils.isEmpty(borrowProjectTypes)){
-            BeanUtils.copyProperties(borrowProjectTypes,paramNameVOS);
+            paramNameVOS= CommonUtils.convertBeanList(borrowProjectTypes,ParamNameVO.class);
         }
         return paramNameVOS;
     }
