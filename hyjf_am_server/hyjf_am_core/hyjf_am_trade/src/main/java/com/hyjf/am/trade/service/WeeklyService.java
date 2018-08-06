@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.trade.dao.model.customize.Event;
 import com.hyjf.am.trade.dao.model.auto.*;
 
 import java.util.List;
@@ -82,6 +83,22 @@ public interface WeeklyService {
      */
     boolean coupon(int userid);
 
+    /**
+     * 获取公司纪事
+     * @param begin
+     * @param end
+     * @return
+     */
+    Event getEventsAll(int begin,int end);
 
+    /**
+     * 获取百分比
+     * @param percentage
+     * @param begin
+     * @param end
+     * @param userId
+     * @return
+     */
+    Event selectPercentage(int percentage, int begin, int end, int userId);
 
 }

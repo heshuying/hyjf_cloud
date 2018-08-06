@@ -1523,4 +1523,10 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd);
+
+    BigDecimal getUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayWaitTotal(Integer userId);
 }

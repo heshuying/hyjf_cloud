@@ -65,7 +65,9 @@ public class VersionConfigController extends BaseConfigController{
         if(null != record){
             response.setResult(record);
             response.setRtn(Response.SUCCESS);
+            return response;
         }
+        response.setRtn(Response.FAIL);
         return response;
     }
 
@@ -76,16 +78,14 @@ public class VersionConfigController extends BaseConfigController{
     @RequestMapping("/insert")
     public AdminVersionResponse insertVersionConfig(@RequestBody AdminVersionRequest req) {
         AdminVersionResponse resp = new AdminVersionResponse();
-        try{
-            int result =this.versionConfigService.insertVersionConfig(req);
-            if(result > 0 ){
-                //分页查询
-                resp = versionConfigInitByPage(req);
-                resp.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+        int result =this.versionConfigService.insertVersionConfig(req);
+        if(result > 0 ){
+            //分页查询
+            resp = versionConfigInitByPage(req);
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
         return resp;
     }
 
@@ -96,16 +96,14 @@ public class VersionConfigController extends BaseConfigController{
     @RequestMapping("/update")
     public AdminVersionResponse updateVersionConfig(@RequestBody AdminVersionRequest req) {
         AdminVersionResponse resp = new AdminVersionResponse();
-        try{
-            int result =this.versionConfigService.updateVersionConfig(req);
-            if(result > 0 ){
-                //分页查询
-                resp = versionConfigInitByPage(req);
-                resp.setRtn(Response.SUCCESS);
-            }
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
+        int result =this.versionConfigService.updateVersionConfig(req);
+        if(result > 0 ){
+            //分页查询
+            resp = versionConfigInitByPage(req);
+            resp.setRtn(Response.SUCCESS);
+            return resp;
         }
+        resp.setRtn(Response.FAIL);
         return resp;
     }
 
@@ -130,16 +128,8 @@ public class VersionConfigController extends BaseConfigController{
      * @param map
      */
     @RequestMapping("/validationFeild")
-    public AdminVersionResponse validationFeild(@RequestBody Map map) {
-        AdminVersionResponse resp = new AdminVersionResponse();
-        try{
-            VersionVO version = this.versionConfigService.validationFeild(map);
-            resp.setResult(version);
-            resp.setRtn(Response.SUCCESS);
-        }catch (Exception e){
-            resp.setRtn(Response.FAIL);
-        }
-        return  resp;
+    public VersionVO validationFeild(@RequestBody Map map) {
+        return  this.versionConfigService.validationFeild(map);
     }
 
 

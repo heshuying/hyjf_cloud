@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.controller.web.repay;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -52,6 +53,40 @@ public class RepayManageController extends BaseTradeController {
 
     @Autowired
     RepayManageService repayManageService;
+
+    /**
+     * 用户还款页面统计数据查询
+     * @param token
+     */
+    @ApiOperation(value = "用户还款页面统计数据", notes = "用户还款页面统计数据查询")
+    @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "token", required = true) String token){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        Map<String,Object> resultMap = new HashMap<>();
+        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
+        if ("2".equals(userVO.getRoleId())) {
+            AccountVO account = repayManageService.getAccountByUserId(userVO.getUserId());
+            // 1.待还款总额
+            BigDecimal repay = account.getBankWaitCapital().add(account.getBankWaitInterest());
+            BigDecimal repayMangeFee = repayManageService.getUserRepayFeeWaitTotal(userVO.getUserId());
+            repay = repay.add(repayMangeFee);
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
+        }
+        // 根据RoleId 判断用户为垫付机构
+        else if ("3".equals(userVO.getRoleId())) {
+            // 1.待垫付总额
+            BigDecimal repay = repayManageService.getOrgRepayWaitTotal(userVO.getUserId());
+            BigDecimal repayMangeFee = repayManageService.getOrgRepayFeeWaitTotal(userVO.getUserId());
+            repay = repay.add(repayMangeFee);
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
+        }
+
+        resultMap.put("roleId", userVO.getRoleId());
+        resultMap.put("userId", userVO.getUserId());
+
+        result.setData(resultMap);
+        return result;
+    }
 
     /**
      * 用户待还款列表
@@ -142,6 +177,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setStatus("0");
         requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);
@@ -193,6 +229,7 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
+        requestBean.setStatus("1");
         requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
         repayManageService.checkForRepayList(requestBean);

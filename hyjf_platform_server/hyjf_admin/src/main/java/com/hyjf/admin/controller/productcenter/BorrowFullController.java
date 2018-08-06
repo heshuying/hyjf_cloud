@@ -72,6 +72,9 @@ public class BorrowFullController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
     public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(FAIL, "未获取到当前登录用户信息");
+        }
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         borrowFullRequest.setBorrowNidSrch(borrowNid);
         borrowFullRequest.setCurrUserId(currUser.getId());

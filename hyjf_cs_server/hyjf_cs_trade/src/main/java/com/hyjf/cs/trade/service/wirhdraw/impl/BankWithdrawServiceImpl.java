@@ -651,10 +651,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if (account.compareTo(new BigDecimal(feetmp)) <= 0) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE);
         }
-        // 检查参数(银行卡ID是否数字)
-        if (Validator.isNotNull(cardNo) && !StringUtils.isNumeric(cardNo)) {
+        // 检查参数(可能使用特殊开头(如04)的银行卡,所以不再使用是否是数字进行判断)
+       /* if (Validator.isNotNull(cardNo) && !StringUtils.isNumeric(cardNo)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_CARD);
-        }
+        }*/
         UserVO users= amUserClient.findUserById(user.getUserId());
         if (users.getBankOpenAccount()==0) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -762,7 +762,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         BankOpenAccountVO bankOpenAccountVO=bankOpenClient.selectById(user.getUserId());
         // 调用汇付接口(提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawError?logOrdId="+orderId;
-        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn.do";
+        String bgRetUrl = systemConfig.getWebHost()+"/withdraw/userBankWithdrawBgreturn";
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdrawSuccess?withdrawmoney=" + transAmt
                 + "&wifee=" + fee;//
         // 路由代码

@@ -6,7 +6,7 @@ import com.hyjf.am.response.admin.AdminBorrowStyleResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowStyleRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.service.BorrowStyleService;
+import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
