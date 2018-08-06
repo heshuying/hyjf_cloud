@@ -1717,6 +1717,11 @@ public interface AmTradeClient {
 
     int isEntrustedExistsUser(String userName);
 
+    /**
+     * 获取计划列表无分页
+     * @return
+     */
+ 	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
 
-
+	public HjhAccedeResponse canCancelAuth(Integer userId);
 }

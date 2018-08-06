@@ -7,7 +7,8 @@ package com.hyjf.admin.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.UserauthClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.UserauthService;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
@@ -22,7 +23,9 @@ import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
 @Service
 public class UserauthServiceImpl  implements UserauthService{
 	@Autowired
-	private UserauthClient userauthClient;
+	private AmUserClient userauthClient;
+	@Autowired
+	private AmTradeClient amTradeClient;
 	@Override
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest) {
 		
@@ -30,19 +33,19 @@ public class UserauthServiceImpl  implements UserauthService{
 	}
 
 	@Override
-	public AdminUserAuthListResponse cancelInvestAuth(int userId, String ordId) {
+	public AdminUserAuthListResponse cancelInvestAuth(int userId) {
 		
-		return userauthClient.cancelInvestAuth(userId, ordId);
+		return userauthClient.cancelInvestAuth(userId);
 	}
 
 	@Override
-	public AdminUserAuthListResponse cancelCreditAuth(int userId, String ordId) {
-		return userauthClient.cancelCreditAuth(userId, ordId);
+	public AdminUserAuthListResponse cancelCreditAuth(int userId) {
+		return userauthClient.cancelCreditAuth(userId);
 	}
 
 	@Override
 	public HjhAccedeResponse canCancelAuth(Integer userId) {
-		return userauthClient.canCancelAuth(userId);
+		return amTradeClient.canCancelAuth(userId);
 	}
 
 	@Override

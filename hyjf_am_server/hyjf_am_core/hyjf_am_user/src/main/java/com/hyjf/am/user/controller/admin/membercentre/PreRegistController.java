@@ -71,7 +71,7 @@ public class PreRegistController extends BaseController {
 		int recordTotal = this.preRegistService.countRecordTotal(registUser);
 
 		if (recordTotal > 0) {
-			Paginator paginator = new Paginator(adminPreRegistListRequest.getCurrPage(),adminPreRegistListRequest.getPageSize(),recordTotal);
+			Paginator paginator = new Paginator(adminPreRegistListRequest.getCurrPage(),recordTotal,adminPreRegistListRequest.getPageSize());
 			List<AdminPreRegistListCustomize> recordList = this.preRegistService.getRecordList(registUser, paginator.getOffset(), paginator.getLimit());
 			if (recordList != null) {
 				List<AdminPreRegistListVO> avo = CommonUtils.convertBeanList(recordList,AdminPreRegistListVO.class);
