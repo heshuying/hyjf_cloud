@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.productcenter;
 import com.hyjf.admin.beans.request.BorrowRegistRequestBean;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -80,7 +81,7 @@ public class BorrowRegistController extends BaseController {
     public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
-            return new AdminResult(FAIL, "未获取到当前登录用户信息");
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
         return borrowRegistService.updateBorrowRegist(borrowNid, currUser.getId(), currUser.getUsername());
     }
