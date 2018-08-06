@@ -418,8 +418,8 @@
 		CASE
 		WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
 		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
-		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
-		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
+		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
 		WHEN b.`status` = 2 THEN '已流标'
