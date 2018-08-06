@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.wdzj;
+package com.hyjf.am.trade.controller.front.wdzj;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -6,7 +6,7 @@ import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize;
-import com.hyjf.am.trade.service.wdzj.BorrowDataService;
+import com.hyjf.am.trade.service.front.wdzj.BorrowDataService;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
