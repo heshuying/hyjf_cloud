@@ -49,7 +49,7 @@ public class ChangeLogController extends BaseController {
 		BeanUtils.copyProperties(changeLogRequest,change);
 		int recordTotal = this.changeLogService.countRecordTotal(change);
 		if (recordTotal > 0) {
-			Paginator paginator = new Paginator(changeLogRequest.getCurrPage(),changeLogRequest.getPageSize(), recordTotal);
+			Paginator paginator = new Paginator(changeLogRequest.getCurrPage(),recordTotal,changeLogRequest.getPageSize());
 			change.setLimitStart(paginator.getOffset());
 			change.setLimitEnd(paginator.getLimit());
 			List<ChangeLogCustomize> recordList = this.changeLogService.getChangeLogList(change);

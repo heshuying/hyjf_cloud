@@ -134,8 +134,8 @@ public class UserauthController extends BaseController {
 	 * @param userId,解约id
 	 */
 
-	@RequestMapping("/userinvescancel")
-	public AdminUserAuthListResponse cancelInvestAuth(@PathVariable int userId, @PathVariable String ordId) {
+	@RequestMapping("/userinvescancel/{userId}")
+	public AdminUserAuthListResponse cancelInvestAuth(@PathVariable int userId) {
 		// 返回结果
 		AdminUserAuthListResponse result = new AdminUserAuthListResponse();
 		logger.info("自动投资解约开始，用户：{}", userId);
@@ -171,8 +171,8 @@ public class UserauthController extends BaseController {
 	 *
 	 * @param userId,解约id
 	 */
-	@RequestMapping("/usercreditcancel")
-	public AdminUserAuthListResponse cancelCreditAuth(@PathVariable int userId, @PathVariable String ordId) {
+	@RequestMapping("/usercreditcancel/{userId}")
+	public AdminUserAuthListResponse cancelCreditAuth(@PathVariable int userId) {
 		// 返回结果
 		AdminUserAuthListResponse result = new AdminUserAuthListResponse();
 		BankCallBean retBean = userauthService.cancelCreditAuth(userId, "000002");

@@ -3301,7 +3301,6 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
-
 	@Override
 	public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
 		HjhPlanResponse response = restTemplate
@@ -3311,5 +3310,13 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
 		return null;
 	}
+	@Override
+	public HjhAccedeResponse canCancelAuth(Integer userId) {
+		HjhAccedeResponse response = restTemplate.
+                getForEntity("http://AM-TRADE/am-trade/hjhAccede/canCancelAuth/" + userId , HjhAccedeResponse.class).
+                getBody();
+		return response;
+	}
+
 
 }

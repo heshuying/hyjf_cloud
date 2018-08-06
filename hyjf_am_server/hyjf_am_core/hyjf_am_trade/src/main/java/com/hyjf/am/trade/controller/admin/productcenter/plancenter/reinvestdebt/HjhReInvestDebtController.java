@@ -2,7 +2,7 @@ package com.hyjf.am.trade.controller.admin.productcenter.plancenter.reinvestdebt
 
 import com.hyjf.am.response.admin.HjhReInvestDebtResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;
-import com.hyjf.am.trade.service.admin.HjhReInvestDebtService;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhReInvestDebtService;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;

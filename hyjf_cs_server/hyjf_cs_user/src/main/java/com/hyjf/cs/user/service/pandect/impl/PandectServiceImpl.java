@@ -12,7 +12,7 @@ import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.pandect.PandectService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

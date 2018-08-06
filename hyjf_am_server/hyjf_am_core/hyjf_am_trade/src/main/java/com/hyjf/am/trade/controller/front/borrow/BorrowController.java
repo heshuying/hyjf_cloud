@@ -12,7 +12,7 @@ import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
-import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;

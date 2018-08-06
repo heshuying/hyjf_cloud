@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.TransPasswordService;
 
 /**
@@ -27,7 +27,7 @@ public class TransPasswordServiceImpl extends BaseUserServiceImpl implements Tra
     
     /**
      * 通过手机号获取用户
-     * @param newPW
+     * @param
      * @return
      */
 	@Override
