@@ -3,7 +3,7 @@ package com.hyjf.am.trade.controller.front.hjh;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.HjhInstConfigService;
+import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

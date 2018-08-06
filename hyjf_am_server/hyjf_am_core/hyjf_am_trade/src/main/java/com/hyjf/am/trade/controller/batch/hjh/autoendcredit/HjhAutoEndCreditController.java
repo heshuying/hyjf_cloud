@@ -3,16 +3,15 @@
  */
 package com.hyjf.am.trade.controller.batch.hjh.autoendcredit;
 
-import java.util.List;
-
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
+import com.hyjf.am.trade.service.front.hjh.HjhAutoEndCreditService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.service.HjhAutoEndCreditService;
+import java.util.List;
 
 /**
  * 汇计划自动结束前一天未完全承接完成的债转

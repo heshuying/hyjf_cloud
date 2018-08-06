@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample;
-import com.hyjf.am.trade.service.HjhPlanBorrowTmpService;
+import com.hyjf.am.trade.service.front.hjh.HjhPlanBorrowTmpService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

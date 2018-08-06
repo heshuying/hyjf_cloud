@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepay;
 

@@ -1,10 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.HjhCalculateFairValueService;
+import com.hyjf.am.trade.service.front.hjh.HjhCalculateFairValueService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;

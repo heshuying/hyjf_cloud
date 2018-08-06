@@ -1,17 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
-import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
-import com.hyjf.am.trade.service.HjhDebtCreditService;
-import com.hyjf.am.trade.service.HjhDebtCreditTenderService;
+import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
