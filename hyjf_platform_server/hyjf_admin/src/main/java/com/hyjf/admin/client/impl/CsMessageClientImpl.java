@@ -49,22 +49,6 @@ public class  CsMessageClientImpl  implements CsMessageClient {
         }
         return null;
     }
-    /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表
-     * @return
-     */
-    @Override
-    public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
-        Integer response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/insert/insertaccountweblist", accountWebListVO, Integer.class)
-                .getBody();
-        if (response != null) {
-            return response;
-        }
-        return 0;
-    }
 
 
     /**
