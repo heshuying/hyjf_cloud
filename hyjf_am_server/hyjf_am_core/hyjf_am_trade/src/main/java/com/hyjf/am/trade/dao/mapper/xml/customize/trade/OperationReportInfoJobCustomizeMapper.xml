@@ -1090,7 +1090,7 @@
     <select id="getOneInvestMost" resultMap="performanceMap">
         SELECT
         tmp.user_id as userId,
-        account as dealSum,
+        account as dealSum
         FROM
         (
         SELECT
