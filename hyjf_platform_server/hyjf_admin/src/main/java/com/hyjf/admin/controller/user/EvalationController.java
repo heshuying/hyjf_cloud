@@ -12,7 +12,7 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.EvalationResponse;
+import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.util.CommonUtils;
@@ -52,7 +52,7 @@ public class EvalationController extends BaseController {
     public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation(HttpServletRequest request, HttpServletResponse response, @RequestBody EvalationRequestBean evalationRequestBean){
         EvalationRequest evalationRequest = new EvalationRequest();
         BeanUtils.copyProperties(evalationRequestBean,evalationRequest);
-        EvalationResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
+        EvalationResultResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
         if(evalationResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
