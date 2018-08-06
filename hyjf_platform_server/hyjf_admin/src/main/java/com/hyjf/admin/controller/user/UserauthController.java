@@ -1,10 +1,14 @@
 package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserauthService;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
 import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.vo.user.AdminUserAuthListVO;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -44,26 +48,10 @@ public class UserauthController extends BaseController {
 	@ApiOperation(value = "授权状态", notes = "授权状态集合")
 	@PostMapping(value = "/userauthlist")
 	@ResponseBody
-	public JSONObject userManagerInit(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody Map<String, String> map) {
-		JSONObject info = new JSONObject();
-		AdminUserAuthListRequest adminUserAuthListRequest = new AdminUserAuthListRequest();
-		adminUserAuthListRequest.setCurrPage(Integer.valueOf(map.get("currPage")));
-		adminUserAuthListRequest.setPageSize(Integer.valueOf(map.get("pageSize")));
-		adminUserAuthListRequest.setUserName(map.get("userName"));
-		adminUserAuthListRequest.setRecommendName(map.get("recommendName"));
-		adminUserAuthListRequest.setAutoInvesStatus(map.get("autoInvesStatus"));
-		adminUserAuthListRequest.setAutoCreditStatus(map.get("autoCreditStatus"));
-		adminUserAuthListRequest.setInvesAddTimeStart(map.get("invesAddTimeStart"));
-		adminUserAuthListRequest.setInvestEndTimeEnd(map.get("investEndTimeEnd"));
-		adminUserAuthListRequest.setInvesAddTimeEnd(map.get("invesAddTimeEnd"));
-		adminUserAuthListRequest.setInvestEndTimeStart(map.get("investEndTimeStart"));
+	public AdminResult<ListResult<AdminUserAuthListVO>> userManagerInit(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody AdminUserAuthListRequest adminUserAuthListRequest) {
 		AdminUserAuthListResponse rqes = userauthService.userauthlist(adminUserAuthListRequest);
-		info.put("list", rqes.getResultList());
-		info.put("recordTotal", rqes.getRecordTotal());
-		info.put("status", "00");
-		info.put("msg", "成功");
-		return info;
+		return new AdminResult<>(ListResult.build(rqes.getResultList(), rqes.getRecordTotal()));
 
 	}
 
@@ -76,30 +64,17 @@ public class UserauthController extends BaseController {
 	@ApiOperation(value = "授权状态", notes = "自动投资解约")
 	@PostMapping(value = "/userinvescancel")
 	@ResponseBody
-	public JSONObject cancelInvestAuth(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody Map<String, String> map) {
-		int userid=Integer.valueOf(map.get("userId"));
-		// 返回结果
-		JSONObject result = new JSONObject();
-		logger.info("自动投资解约开始，用户：{}", userid);
-		if ("00".equals(userauthService.canCancelAuth(userid).getRtn())) {
-			result.put("success", "99");
-			result.put("msg", "当前用户存在持有中计划，不能解约！");
-			return result;
-		}
-		//TODO 请求江苏银行
-		/*
-		 * 		result.put("success", "1");
-				result.put("msg", "调用银行接口失败");
-				result.put("success", "1");
-				result.put("msg", e.getMessage());
-		 */
-		//插入数据库
-		userauthService.cancelInvestAuth(userid, "123");
-		result.put("success", "00");
-		result.put("msg", "自动投资解约成功！");
+	public AdminResult cancelInvestAuth(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Integer userId) {
+		logger.info("自动投资解约开始，用户：{}", userId);
+		if ("00".equals(userauthService.canCancelAuth(userId).getRtn())) {
 
-		return result;
+			return new AdminResult<>("99",  "当前用户存在持有中计划，不能解约！");
+		}
+
+		//插入数据库
+		userauthService.cancelInvestAuth(userId);
+		return new AdminResult<>();
 	}
 
 	/**
@@ -110,32 +85,19 @@ public class UserauthController extends BaseController {
 	@ApiOperation(value = "授权状态", notes = "自动债转解约")
 	@PostMapping(value = "/usercreditcancel")
 	@ResponseBody
-	public JSONObject cancelCreditAuth(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody Map<String, String> map) {
+	public AdminResult cancelCreditAuth(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Integer userId) {
 		
-		
-		int userid=Integer.valueOf(map.get("userId"));
+
 		// 返回结果
 		JSONObject result = new JSONObject();
-		logger.info("自动债转授权开始，用户：{}", userid);
-		if ("00".equals(userauthService.canCancelAuth(userid).getRtn())) {
-			result.put("success", "99");
-			result.put("msg", "当前用户存在持有中计划，不能解约！");
-			return result;
+		logger.info("自动债转授权开始，用户：{}", userId);
+		if ("00".equals(userauthService.canCancelAuth(userId).getRtn())) {
+			return new AdminResult<>("99",  "当前用户存在持有中计划，不能解约！");
 		}
-		//TODO 请求江苏银行
-		/*
-		 * 		result.put("success", "1");
-				result.put("msg", "调用银行接口失败");
-				result.put("success", "1");
-				result.put("msg", e.getMessage());
-		 */
 		//插入数据库
-		userauthService.cancelCreditAuth(userid, "123");
-		result.put("success", "00");
-		result.put("msg", "自动投资解约成功！");
-
-		return result;
+		userauthService.cancelCreditAuth(userId);
+		return new AdminResult<>();
 		
 	}
 

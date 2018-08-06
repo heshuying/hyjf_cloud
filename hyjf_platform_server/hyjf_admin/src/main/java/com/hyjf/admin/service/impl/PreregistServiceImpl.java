@@ -6,7 +6,7 @@ package com.hyjf.admin.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.admin.client.PreregistClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.PreregistService;
 import com.hyjf.am.response.user.AdminPreRegistListResponse;
 import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
@@ -19,26 +19,20 @@ import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
 @Service
 public class PreregistServiceImpl implements  PreregistService {
 	@Autowired
-	private PreregistClient preregistClient;
+	private AmUserClient preregistClient;
 
 	@Override
 	public AdminPreRegistListResponse getRecordList(AdminPreRegistListRequest adminPreRegistListRequest) {
-		return preregistClient.getPreRegist(adminPreRegistListRequest);
+		return preregistClient.getRecordList(adminPreRegistListRequest);
 	}
 
 	@Override
 	public AdminPreRegistListResponse getPreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
-		return preregistClient.getRecordList(adminPreRegistListRequest);
+		return preregistClient.getPreRegist(adminPreRegistListRequest);
 	}
 
 	@Override
 	public AdminPreRegistListResponse savePreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
 		return preregistClient.savePreRegist(adminPreRegistListRequest);
 	}
-	
-
-
-
-
-
 }
