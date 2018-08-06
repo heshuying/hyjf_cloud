@@ -249,7 +249,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
                     serviceFee = new BigDecimal(list.get(i).getServiceFee());
                 }
-                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount());
+                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
                 BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
                 list.get(i).setYesAccount(yesAccount.toString());
                 list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
