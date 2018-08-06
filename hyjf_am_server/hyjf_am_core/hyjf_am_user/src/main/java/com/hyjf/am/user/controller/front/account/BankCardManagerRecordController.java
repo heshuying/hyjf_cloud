@@ -182,12 +182,12 @@ public class BankCardManagerRecordController extends BaseController {
         int limitEnd = paginator.getLimit();
         //查询导出数据
         if(request.isLimitFlg()){
-            limitStart = 0;
-            limitEnd = 0;
+            limitStart = -1;
+            limitEnd = -1;
         }
-        List<BankCardLog> bankCardLogs = bankCardManagerServiceService.selectBankCardLogByExample(request,limitStart,limitEnd);
         response.setCount(bankCount);
         if(bankCount>0){
+            List<BankCardLog> bankCardLogs = bankCardManagerServiceService.selectBankCardLogByExample(request,limitStart,limitEnd);
             if (!CollectionUtils.isEmpty(bankCardLogs)) {
                 List<BankCardLogVO> bankcardManager = CommonUtils.convertBeanList(bankCardLogs, BankCardLogVO.class);
                 response.setResultList(bankcardManager);

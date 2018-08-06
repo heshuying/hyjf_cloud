@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.controller.web.repay;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -17,7 +18,8 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.RepayManageService;
+import com.hyjf.cs.trade.service.repay.RepayManageService;
+import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -28,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +53,43 @@ public class RepayManageController extends BaseTradeController {
 
     @Autowired
     RepayManageService repayManageService;
+
+    /**
+     * 用户还款页面统计数据查询
+     * @param token
+     * @param requestBean
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "用户还款页面统计数据", notes = "用户还款页面统计数据查询")
+    @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        Map<String,Object> resultMap = new HashMap<>();
+        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
+        if ("2".equals(userVO.getRoleId())) {
+            AccountVO account = repayManageService.getAccountByUserId(userVO.getUserId());
+            // 1.待还款总额
+            BigDecimal repay = account.getBankWaitCapital().add(account.getBankWaitInterest());
+            BigDecimal repayMangeFee = repayManageService.getUserRepayFeeWaitTotal(userVO.getUserId());
+            repay = repay.add(repayMangeFee);
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
+        }
+        // 根据RoleId 判断用户为垫付机构
+        else if ("3".equals(userVO.getRoleId())) {
+            // 1.待垫付总额
+            BigDecimal repay = repayManageService.getOrgRepayWaitTotal(userVO.getUserId());
+            BigDecimal repayMangeFee = repayManageService.getOrgRepayFeeWaitTotal(userVO.getUserId());
+            repay = repay.add(repayMangeFee);
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
+        }
+
+        resultMap.put("roleId", userVO.getRoleId());
+        resultMap.put("userId", userVO.getUserId());
+
+        result.setData(resultMap);
+        return result;
+    }
 
     /**
      * 用户待还款列表
@@ -134,8 +174,9 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "垫付机构待还款列表", notes = "垫付机构待还款列表")
     @PostMapping(value = "/wait_org_list", produces = "application/json; charset=utf-8")
-    public WebResult<List<RepayListCustomizeVO>> selectOrgRepayWaitList(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
-        WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
+    public WebResult<Map<String,Object>> selectOrgRepayWaitList(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         logger.info("垫付机构待还款列表开始，userId:{}", userVO.getUserId());
 
@@ -152,7 +193,20 @@ public class RepayManageController extends BaseTradeController {
 
         try {
             List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayList(requestBean);
-            result.setData(resultList);
+
+            requestBean.setLimitStart(null);
+            requestBean.setLimitEnd(null);
+            List<RepayListCustomizeVO> resultListAll = repayManageService.selectOrgRepayList(requestBean);
+            BigDecimal repayMoneyTotal = BigDecimal.ZERO;
+            if(!CollectionUtils.isEmpty(resultListAll)){
+                for (RepayListCustomizeVO customize : resultListAll) {
+                    repayMoneyTotal=repayMoneyTotal.add(new BigDecimal(customize.getRealAccountYes()));
+                }
+                resultMap.put("repayMoneyTotal", repayMoneyTotal);
+                resultMap.put("repayMoneyNum", resultListAll.size());
+            }
+            resultMap.put("recordList",resultList);
+            result.setData(resultMap);
         } catch (Exception e) {
             logger.error("获取垫付机构待还款列表异常", e);
             result.setStatus(WebResult.ERROR);
@@ -208,19 +262,18 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "还款详情页面数据", notes = "还款详情页面数据")
     @PostMapping(value = "/repay_detail", produces = "application/json; charset=utf-8")
-    public WebResult repayDetail(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
+    public WebResult repayDetail(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayDetailRequestVO requestBean, HttpServletRequest request){
         WebResult result = new WebResult();
         Map<String,Object> resultMap = new HashMap<String,Object>();
         ProjectBean projectBean = new ProjectBean();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
-        String borrowNid = request.getParameter("borrowNid");
-        if(StringUtils.isBlank(borrowNid)){
+        if(StringUtils.isBlank(requestBean.getBorrowNid())){
             logger.info("请求参数borrowNid为空");
             result.setStatus(WebResult.FAIL);
             result.setStatusDesc("请求参数borrowNid为空");
             return result;
         }
-        projectBean.setBorrowNid(borrowNid);
+        projectBean.setBorrowNid(requestBean.getBorrowNid());
         if(userVO != null){
             projectBean.setUserId(userVO.getUserId().toString());
             projectBean.setUsername(userVO.getUsername());

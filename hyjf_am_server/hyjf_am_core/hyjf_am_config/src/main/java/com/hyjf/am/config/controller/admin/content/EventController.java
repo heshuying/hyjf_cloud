@@ -5,13 +5,11 @@ package com.hyjf.am.config.controller.admin.content;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Event;
-import com.hyjf.am.config.dao.model.customize.EventsCustomize;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
-import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,31 +124,5 @@ public class EventController extends BaseConfigController {
 	}
 
 
-	/**
-	 *获取公司纪事
-	 * @param begin
-	 * @param end
-	 * @return
-	 */
-	@GetMapping("/EventsAll/{begin}/{end}")
-	public EventsVO queryEventsAll(@PathVariable Integer begin,@PathVariable Integer end){
-		Event eventsAll = eventService.getEventsAll(begin, end);
-		EventsVO eventsVO = CommonUtils.convertBean(eventsAll, EventsVO.class);
-		return eventsVO;
-	}
 
-	/**
-	 * 查询投资百分比
-	 * @param percentage
-	 * @param begin
-	 * @param end
-	 * @param userId
-	 * @return
-	 */
-	@GetMapping("/selectPercentage/{percentage}/{begin}/{end}/{userId}")
-	public EventsVO queryPercentage(@PathVariable int percentage,@PathVariable int begin,@PathVariable int end,@PathVariable int userId){
-		Event eventsAll = eventService.selectPercentage(percentage, begin, end, userId);
-		EventsVO eventsVO = CommonUtils.convertBean(eventsAll, EventsVO.class);
-		return eventsVO;
-	}
 }

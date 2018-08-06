@@ -204,7 +204,7 @@
         FROM
         ht_user_info ui
         WHERE
-        u.user_id = #{userId} LIMIT 1;
+        ui.user_id = #{userId} LIMIT 1;
     </select>
 
     <select id="getTenderAgeByRange" resultType="int"  parameterType="com.hyjf.am.resquest.trade.OperationReportJobRequest">

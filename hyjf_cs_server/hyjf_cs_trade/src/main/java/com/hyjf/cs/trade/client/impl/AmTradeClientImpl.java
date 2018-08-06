@@ -50,7 +50,6 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.slf4j.Logger;
@@ -59,6 +58,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -3514,5 +3514,57 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    @Override
+    public List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd) {
+        BorrowProjectTypeResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectBorrowProjectByBorrowCd/" + borrowCd, BorrowProjectTypeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 普通用户管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
+        Response<BigDecimal> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, Response.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
+        Response<BigDecimal> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, Response.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 担保机构总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
+        Response<BigDecimal> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, Response.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return BigDecimal.ZERO;
     }
 }

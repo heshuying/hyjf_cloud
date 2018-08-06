@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AutoTenderService;
+import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

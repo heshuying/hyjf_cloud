@@ -1515,4 +1515,18 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowCreditVO> selectBorrowCreditByNid(String transferId);
+
+    /**
+     * 获取项目类型
+     *
+     * @param borrowCd
+     * @return
+     */
+    List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd);
+
+    BigDecimal getUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayWaitTotal(Integer userId);
 }

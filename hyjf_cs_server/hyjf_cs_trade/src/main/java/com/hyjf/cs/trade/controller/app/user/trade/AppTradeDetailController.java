@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.TradeDetailService;
+import com.hyjf.cs.trade.service.trade.TradeDetailService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 
 import io.swagger.annotations.Api;

@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.controller.batch;
 
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.trade.service.CouponExpiredSmsService;
+import com.hyjf.cs.trade.service.batch.CouponExpiredSmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

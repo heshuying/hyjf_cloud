@@ -1,11 +1,9 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/16.
@@ -30,10 +28,7 @@ public class VersionVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
-    /*数据字典*/
-    private List<ParamName> versionNames;
 
-    private List<ParamName> isUpdates;
 
     public Integer getId() {
         return id;
@@ -115,21 +110,7 @@ public class VersionVO extends BaseVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public List<ParamName> getVersionNames() {
-        return versionNames;
-    }
 
-    public void setVersionNames(List<ParamName> versionNames) {
-        this.versionNames = versionNames;
-    }
-
-    public List<ParamName> getIsUpdates() {
-        return isUpdates;
-    }
-
-    public void setIsUpdates(List<ParamName> isUpdates) {
-        this.isUpdates = isUpdates;
-    }
 
     private static final long serialVersionUID = 1L;
 }

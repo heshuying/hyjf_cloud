@@ -12,6 +12,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
@@ -21,15 +22,17 @@ import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -56,9 +59,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author zhangqingqing
@@ -1340,7 +1340,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         MerchantAccountResponse response = restTemplate.
                 postForEntity(url, request, MerchantAccountResponse.class).
                 getBody();
-        List paramList =getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
+        List<ParamNameVO> paramList =getParamNameList(CustomConstants.SUB_ACCOUNT_CLASS);
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             if(!CollectionUtils.isEmpty(paramList)){
                 response.setParamNameList(paramList);
@@ -1356,9 +1356,9 @@ public class AmTradeClientImpl implements AmTradeClient{
     @Override
     public MerchantAccountResponse searchAccountConfigInfo(Integer id){
         String url="http://AM-TRADE/am-trade/config/accountconfig/searchAccountConfigInfo";
-        MerchantAccountResponse response = restTemplate.
-                postForEntity(url, id, MerchantAccountResponse.class).
-                getBody();
+        AdminMerchantAccountRequest request = new  AdminMerchantAccountRequest();
+        request.setId(id);
+        MerchantAccountResponse response = restTemplate.postForEntity(url, request,MerchantAccountResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -1400,11 +1400,11 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @return
      */
     @Override
-    public List<ParamName> getParamNameList(String code){
-        String url="http://AM-CONFIG/am-config/config/accountconfig/getParamNameList";
-        List<ParamName>  response = restTemplate.postForEntity(url, code, List.class).getBody();
-        if (!CollectionUtils.isEmpty(response)){
-            return response;
+    public List<ParamNameVO> getParamNameList(String code){
+        ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/"+CustomConstants.SUB_ACCOUNT_CLASS, ParamNameResponse.class)
+                .getBody();
+        if(amResponse != null &&Response.isSuccess(amResponse)){
+            return amResponse.getResultList();
         }
         return null;
     }
@@ -3266,7 +3266,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
-
+	
 	@Override
 	public boolean isExistsBorrowPreNidRecord(String borrowPreNid) {
 		boolean response = restTemplate
@@ -3302,5 +3302,14 @@ public class AmTradeClientImpl implements AmTradeClient{
         return response;
 	}
 
+	@Override
+	public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
+		HjhPlanResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParamWithoutPage", form, HjhPlanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
 
 }

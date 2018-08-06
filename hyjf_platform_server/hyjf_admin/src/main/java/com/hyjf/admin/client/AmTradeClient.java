@@ -4,12 +4,13 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.HjhPlanResponse;
-import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.HjhAccedeResponse;
+import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
+import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -17,8 +18,11 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -564,7 +568,7 @@ public interface AmTradeClient {
      * 子账户类型 查询
      * @return
      */
-    public List<ParamName> getParamNameList(String code);
+    public List<ParamNameVO> getParamNameList(String code);
     /**
      *
      * 根据子账户名称检索
@@ -1713,6 +1717,10 @@ public interface AmTradeClient {
 
     int isEntrustedExistsUser(String userName);
 
-
+    /**
+     * 获取计划列表无分页
+     * @return
+     */
+ 	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
 
 }

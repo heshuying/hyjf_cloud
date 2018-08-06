@@ -199,4 +199,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowInvestCustomizeMapper borrowInvestCustomizeMapper;
+
+	@Autowired
+	protected AleveCustomizeMapper aleveCustomizeMapper;
 }
