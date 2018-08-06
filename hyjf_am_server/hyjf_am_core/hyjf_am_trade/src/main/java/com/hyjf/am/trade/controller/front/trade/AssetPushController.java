@@ -1,10 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.asset.AssetPushService;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;

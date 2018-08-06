@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
@@ -10,6 +10,7 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectInvestListCustomize;
 import com.hyjf.am.trade.dao.model.customize.app.AppProjectListCustomize;
@@ -40,7 +41,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/projectlist")
-public class ProjectListController extends BaseController{
+public class ProjectListController extends BaseController {
 
     @Autowired
    private ProjectListService projectListService;

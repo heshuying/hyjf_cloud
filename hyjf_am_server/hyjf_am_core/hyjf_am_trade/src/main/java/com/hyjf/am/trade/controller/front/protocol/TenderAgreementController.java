@@ -1,7 +1,8 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.protocol;
 
 import java.util.List;
 
+import com.hyjf.am.trade.controller.BaseController;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ import io.swagger.annotations.Api;
 @Api(value = "法大大协议信息")
 @RestController
 @RequestMapping("/am-trade/tenderagreement")
-public class TenderAgreementController extends BaseController{
+public class TenderAgreementController extends BaseController {
 
     @Autowired
     private TenderAgreementService tenderAgreementService;

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.trade.ProductSearchForPageResponse;
 import com.hyjf.am.trade.dao.model.customize.ProductSearchForPage;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 获取汇天利用户本金
  * @author zhangqingqing
  * @version HtlCommonController, v0.1 2018/7/19 12:31
  */
