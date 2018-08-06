@@ -152,7 +152,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	}
 	@Override
 	public List<OperationReportJobVO> getPerformanceSum(){
-		OperationReportJobResponse response =  restTemplate.getForEntity("http://AM-TRADE/am-trade/report/operationreportjob/performanceSum", OperationReportJobResponse.class).getBody();
+		OperationReportJobResponse response =  restTemplate.getForEntity("http://AM-TRADE/am-trade/report/operationreportjob/performancesum", OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
