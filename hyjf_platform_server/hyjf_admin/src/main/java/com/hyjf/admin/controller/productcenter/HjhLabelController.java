@@ -44,7 +44,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;

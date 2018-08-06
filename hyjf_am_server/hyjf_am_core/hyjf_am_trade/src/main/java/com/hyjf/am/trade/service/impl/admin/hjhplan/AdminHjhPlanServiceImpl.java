@@ -504,4 +504,54 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		}
 	}
 
+	@Override
+	public List<HjhPlanVO> selectHjhPlanListWithoutPage(PlanListRequest request) {
+		HjhPlanExample example = new HjhPlanExample(); 
+		HjhPlanExample.Criteria cra = example.createCriteria();
+		// 传入查询计划编号
+		if (StringUtils.isNotEmpty(request.getPlanNidSrch())) {
+			cra.andPlanNidLike("%" + request.getPlanNidSrch() + "%");
+		}
+		// 传入查询计划名称
+		if (StringUtils.isNotEmpty(request.getPlanNameSrch())) {
+			cra.andPlanNameLike("%" + request.getPlanNameSrch() + "%");
+		}
+		// 传入锁定期
+		if (StringUtils.isNotEmpty(request.getLockPeriodSrch())) {
+			cra.andLockPeriodEqualTo(Integer.valueOf(request.getLockPeriodSrch()));
+		}
+		// 传入查询投资状态
+		if (StringUtils.isNotEmpty(request.getPlanStatusSrch())) {		
+			cra.andPlanInvestStatusEqualTo(Integer.valueOf(request.getPlanStatusSrch()));
+		}
+		// 传入查询显示状态
+		if (StringUtils.isNotEmpty(request.getPlanDisplayStatusSrch())) {		
+			cra.andPlanDisplayStatusEqualTo(Integer.valueOf(request.getPlanDisplayStatusSrch()));
+		}
+		// 传入查询添加时间
+		if (StringUtils.isNotEmpty(request.getAddTimeStart())&&StringUtils.isNotEmpty(request.getAddTimeEnd())) {		
+			SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+			long start = 0;
+			long end = 0;
+			try {
+				start = formatter.parse(request.getAddTimeStart()).getTime()/1000;
+				end = formatter.parse(request.getAddTimeEnd()).getTime()/1000;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cra.andAddTimeLessThanOrEqualTo((int)end+86399);
+			cra.andAddTimeGreaterThanOrEqualTo((int)start);
+		}
+		// 传入还款方式 汇计划三期新增
+		if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())) {
+			cra.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
+		}
+
+		// 传入排序
+		example.setOrderByClause("create_time Desc");
+		List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
+		List<HjhPlanVO> volist = CommonUtils.convertBeanList(list, HjhPlanVO.class);
+		return volist;
+	}
+
 }
