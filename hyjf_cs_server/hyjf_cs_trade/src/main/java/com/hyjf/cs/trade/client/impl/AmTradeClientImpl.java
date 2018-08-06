@@ -20,6 +20,7 @@ import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
+import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -27,6 +28,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -3522,6 +3524,27 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .getForEntity("http://AM-TRADE/am-trade/assetPush/selectBorrowProjectByBorrowCd/" + borrowCd, BorrowProjectTypeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public int countAppTradeDetailListRecordTotal(AppTradeDetailBeanRequest request) {
+        String url = "http://AM-TRADE/am-trade/tradedetail/countAppTradeDetailListRecordTotal";
+        TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
+        if (response != null) {
+            return response.getAppTradeDetailListCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<AppTradeListCustomizeVO> searchAppTradeDetailList(AppTradeDetailBeanRequest trade) {
+        String url = "http://AM-TRADE/am-trade/tradedetail/searchAppTradeDetailList";
+        TenderDetailResponse response = restTemplate.postForEntity(url,trade,TenderDetailResponse.class).getBody();
+
+        if (response != null) {
+            return response.getAppTradeList();
         }
         return null;
     }

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.Response;
@@ -9,6 +9,7 @@ import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
 import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.resquest.trade.UpdateCreditForAutoTenderRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;

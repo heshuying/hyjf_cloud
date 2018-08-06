@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.dao.model.customize.Event;

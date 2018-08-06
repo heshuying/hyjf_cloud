@@ -1722,9 +1722,6 @@ public interface AmTradeClient {
      * @return
      */
  	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
-<<<<<<< HEAD
 	public HjhAccedeResponse canCancelAuth(Integer userId);
-=======
 
->>>>>>> branch 'master' of http://10.10.2.12/java_new/hyjf_cloud.git
 }

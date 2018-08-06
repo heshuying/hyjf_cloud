@@ -139,7 +139,6 @@ public class RechargeServiceImpl implements RechargeService {
 			Integer userId = Integer.parseInt(accountRechargeVO.getLogUserId());
 			BigDecimal txAmount = new BigDecimal(accountRechargeVO.getTxAmount());
 			String accountId = accountRechargeVO.getAccountId();
-			int nowTime = GetDate.getNowTime10();
 			AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
 			accountRechargeExample.createCriteria().andNidEqualTo(orderId).andStatusEqualTo(accountRechargeVO.getStatus());
 			AccountRecharge accountRecharge = new AccountRecharge();

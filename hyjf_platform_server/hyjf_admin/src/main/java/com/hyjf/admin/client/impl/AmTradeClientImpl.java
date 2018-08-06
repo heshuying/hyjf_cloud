@@ -3318,14 +3318,5 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return response;
 	}
 
-	@Override
-	public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
-		HjhPlanResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParamWithoutPage", form, HjhPlanResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response;
-        }
-		return null;
-	}
 
 }

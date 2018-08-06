@@ -4,6 +4,7 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -11,6 +12,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -1523,6 +1525,10 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd);
+
+    int countAppTradeDetailListRecordTotal(AppTradeDetailBeanRequest trade);
+
+    List<AppTradeListCustomizeVO> searchAppTradeDetailList(AppTradeDetailBeanRequest trade);
 
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
 

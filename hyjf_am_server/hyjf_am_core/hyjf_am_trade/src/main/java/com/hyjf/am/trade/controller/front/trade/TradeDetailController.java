@@ -2,6 +2,10 @@ package com.hyjf.am.trade.controller;
 
 import java.util.List;
 
+import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppTradeListCustomize;
+import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +30,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("am-trade/tradedetail")
-public class TradeDetailController extends BaseController{
+public class TradeDetailController extends BaseController {
     @Autowired
     private TradeDetailService tradeDetailService;
 
@@ -129,6 +133,40 @@ public class TradeDetailController extends BaseController{
         int count = this.tradeDetailService.countUserWithdrawRecordTotal(request);
 
         response.setWithdrawListCount(count);
+        return response;
+    }
+
+
+    /**
+     * @Description "获取用户提现记录列表
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/searchAppTradeDetailList")
+    public TenderDetailResponse searchAppTradeDetailList(@RequestBody AppTradeDetailBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        TenderDetailResponse response = new TenderDetailResponse();
+        List<AppTradeListCustomize> list = tradeDetailService.searchAppTradeDetailList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<AppTradeListCustomizeVO> voList = CommonUtils.convertBeanList(list, AppTradeListCustomizeVO.class);
+            response.setAppTradeList(voList);
+        }
+        return response;
+    }
+    /**
+     * @Description 获取用户提现记录列表数量
+     * @Author pangchengchao
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/countAppTradeDetailListRecordTotal")
+    public TenderDetailResponse countAppTradeDetailListRecordTotal(@RequestBody AppTradeDetailBeanRequest request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        TenderDetailResponse response = new TenderDetailResponse();
+        int count = this.tradeDetailService.countAppTradeDetailListRecordTotal(request);
+
+        response.setAppTradeDetailListCount(count);
         return response;
     }
 }

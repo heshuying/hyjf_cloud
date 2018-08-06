@@ -1,6 +1,7 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.trade.SynBalanceService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "江西银行同步线下充值信息")
 @RestController
 @RequestMapping("/am-trade/synBalance")
-public class SynBalanceController extends BaseController{
+public class SynBalanceController extends BaseController {
     @Autowired
     private SynBalanceService synBalanceService;
     /**

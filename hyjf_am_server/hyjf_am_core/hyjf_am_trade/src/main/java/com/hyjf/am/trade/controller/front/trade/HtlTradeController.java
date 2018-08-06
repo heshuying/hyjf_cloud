@@ -1,12 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HtlProductIntoRecordResponse;
 import com.hyjf.am.response.trade.HtlProductRedeemResponse;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.ProductIntoRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.ProductRedeemCustomize;
 import com.hyjf.am.trade.service.admin.htl.HtlTradeService;
@@ -31,7 +32,7 @@ import java.util.List;
 @Api(value = "获取我的账单-汇天利",description = "获取我的账单-汇天利")
 @RestController
 @RequestMapping(value = "/am-trade/htl")
-public class HtlTradeController extends BaseController{
+public class HtlTradeController extends BaseController {
 
     @Autowired
     private HtlTradeService htlTradeService;

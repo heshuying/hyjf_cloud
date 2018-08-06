@@ -78,7 +78,7 @@ public class BorrowInvestController extends BaseController {
         return new AdminResult(responseBean);
     }
 
-    @ApiOperation(value = "投资明细列表查询", notes = "投资明细列表查询")
+    @ApiOperation(value = "投资明细列表查询/运营记录-投资明细", notes = "投资明细列表查询/运营记录-投资明细")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowInvestResponseBean> getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
@@ -357,5 +357,20 @@ public class BorrowInvestController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT_AGREEMENT)
     public AdminResult sendAgreement(@RequestBody InvestorRequest investorRequest) {
         return borrowInvestService.sendAgreement(investorRequest);
+    }
+
+    @ApiOperation(value = "运营记录-投资明细", notes = "运营记录-投资明细")
+    @PostMapping("/optactioninit")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult optRecordTender(@RequestBody BorrowInvestRequestBean requestBean) {
+        //查询类赋值
+        BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
+        BeanUtils.copyProperties(requestBean, borrowInvestRequest);
+        // 如果是从原始标的跳转过来，不默认时间，否则默认最近10天
+        if(!"1".equals(requestBean.getIsOptFlag())){
+            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
+        }
+        BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
+        return new AdminResult(responseBean);
     }
 }

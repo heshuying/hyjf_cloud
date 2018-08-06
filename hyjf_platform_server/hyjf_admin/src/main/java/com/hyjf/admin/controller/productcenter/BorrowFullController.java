@@ -67,18 +67,19 @@ public class BorrowFullController extends BaseController {
         return borrowFullService.updateBorrowFull(borrowFullRequest);
     }
 
-    @ApiOperation(value = "流标", notes = "流标")
-    @GetMapping("/update_borrow_over/{borrowNid}")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
-    public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
-        AdminSystemVO currUser = getUser(request);
-        if(currUser == null){
-            return new AdminResult(FAIL, "未获取到当前登录用户信息");
-        }
-        BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
-        borrowFullRequest.setBorrowNidSrch(borrowNid);
-        borrowFullRequest.setCurrUserId(currUser.getId());
-        borrowFullRequest.setCurrUserName(currUser.getUsername());
-        return borrowFullService.updateBorrowOver(borrowFullRequest);
-    }
+    //流标为汇付使用功能，原代码有此功能但是没有用到，暂时删除
+//    @ApiOperation(value = "流标", notes = "流标")
+//    @GetMapping("/update_borrow_over/{borrowNid}")
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
+//    public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
+//        AdminSystemVO currUser = getUser(request);
+//        if(currUser == null){
+//            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+//        }
+//        BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
+//        borrowFullRequest.setBorrowNidSrch(borrowNid);
+//        borrowFullRequest.setCurrUserId(currUser.getId());
+//        borrowFullRequest.setCurrUserName(currUser.getUsername());
+//        return borrowFullService.updateBorrowOver(borrowFullRequest);
+//    }
 }
