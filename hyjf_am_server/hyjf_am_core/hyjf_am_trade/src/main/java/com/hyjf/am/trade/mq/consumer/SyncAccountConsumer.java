@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.RSAHelper;
 import com.hyjf.common.util.RSAKeyUtil;

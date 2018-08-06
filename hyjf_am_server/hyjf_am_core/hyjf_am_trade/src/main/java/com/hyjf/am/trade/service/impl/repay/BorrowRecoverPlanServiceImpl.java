@@ -3,13 +3,9 @@
  */
 package com.hyjf.am.trade.service.impl.repay;
 
-import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
-import com.hyjf.am.trade.dao.mapper.auto.TenderAgreementMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.BorrowRecoverService;
 import com.hyjf.am.trade.service.repay.BorrowRecoverPlanService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

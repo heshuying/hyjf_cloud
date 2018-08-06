@@ -18,6 +18,8 @@
     </resultMap>
 
 
+
+
     <select id="getNewQuestionList" resultMap="NewQuestionCustomizeResultMap">
         select id,type as typeString,question,sort from ht_question where status=0
     </select>
@@ -47,6 +49,11 @@
         select id,question from ht_question where status=0
     </select>
 
+
+    <resultMap id="NewAppAnswerResultMap" type="com.hyjf.am.config.dao.model.customize.NewAppAnswerCustomize" >
+        <result column="ques_id" property="quesId" jdbcType="VARCHAR" />
+        <result column="answer" property="quesText" jdbcType="VARCHAR" />
+    </resultMap>
     <select id="getNewAppAnswerList" parameterType="java.lang.Integer" resultMap="NewAppAnswerResultMap">
         select CONCAT(question_id,"_",id) as ques_id,replace(answer,"."," ") as answer from ht_answer where question_id=#{id} AND status=0
     </select>
