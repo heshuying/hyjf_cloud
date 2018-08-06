@@ -3,16 +3,14 @@
  */
 package com.hyjf.admin.client.impl;
 
-import com.hyjf.admin.client.AmDataCollectClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
-import com.hyjf.am.vo.admin.AccountDirectionalTransferVO;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +23,7 @@ import java.util.List;
  * todo 这个类全部错了，都要改 ！！！！！！！！！！！！！！！！！！！！！！！！
  */
 @Service
-public class  AmDataCollectClientImpl  implements AmDataCollectClient {
+public class  CsMessageClientImpl  implements CsMessageClient {
     @Autowired
     private RestTemplate restTemplate;
 
@@ -60,7 +58,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient {
     @Override
     public Integer insertAccountWebList(AccountWebListVO accountWebListVO) {
         Integer response = restTemplate
-                .postForEntity("/insert/insertaccountweblist", accountWebListVO, Integer.class)
+                .postForEntity("http://CS-MESSAGE/cs-message/insert/insertaccountweblist", accountWebListVO, Integer.class)
                 .getBody();
         if (response != null) {
             return response;
