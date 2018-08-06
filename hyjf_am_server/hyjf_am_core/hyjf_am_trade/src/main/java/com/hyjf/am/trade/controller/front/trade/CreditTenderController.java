@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
@@ -29,7 +30,7 @@ import java.util.Map;
 @Api(value = "债转投资")
 @RestController
 @RequestMapping("/am-trade/creditTender")
-public class CreditTenderController extends BaseController{
+public class CreditTenderController extends BaseController {
 
     @Autowired
     BankCreditTenderService bankCreditTenderService;

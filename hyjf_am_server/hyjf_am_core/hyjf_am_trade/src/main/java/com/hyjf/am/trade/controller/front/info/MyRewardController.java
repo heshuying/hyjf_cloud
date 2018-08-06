@@ -1,8 +1,9 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.info;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyRewardListResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.trade.MyRewardService;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/reward")
-public class MyRewardController extends BaseController{
+public class MyRewardController extends BaseController {
     @Autowired
     MyRewardService myRewardService;
 

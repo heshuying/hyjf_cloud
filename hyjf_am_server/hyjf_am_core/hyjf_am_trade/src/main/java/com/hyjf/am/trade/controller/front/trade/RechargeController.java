@@ -1,5 +1,6 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.trade;
 
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping("am-trade/trade")
-public class RechargeController extends BaseController{
+public class RechargeController extends BaseController {
 
     @Autowired
     private RechargeService rechargeService;

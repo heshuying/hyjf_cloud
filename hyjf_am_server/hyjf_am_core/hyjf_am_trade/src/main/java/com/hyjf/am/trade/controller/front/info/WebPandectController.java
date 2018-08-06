@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.info;
 
 import com.hyjf.am.response.trade.WebPandectBorrowRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.WebPandectCreditTenderCustomizeResponse;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 /**
+ * 账户总览
  * @author zhangqingqing
  * @version WebPandectController, v0.1 2018/7/23 11:37
  */

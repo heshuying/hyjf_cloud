@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.coupon;
 
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
@@ -6,6 +6,7 @@ import com.hyjf.am.response.trade.coupon.AppCouponInfoResponse;
 import com.hyjf.am.response.trade.coupon.AppCouponResponse;
 import com.hyjf.am.response.trade.coupon.CouponRepayResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
@@ -38,7 +39,7 @@ import java.util.Map;
 @Api(value = "优惠券相关")
 @RestController
 @RequestMapping("/am-trade/coupon")
-public class CouponController extends BaseController{
+public class CouponController extends BaseController {
 
     @Autowired
     CouponService couponService;
