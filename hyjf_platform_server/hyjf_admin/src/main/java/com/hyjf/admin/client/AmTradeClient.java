@@ -1722,6 +1722,5 @@ public interface AmTradeClient {
      * @return
      */
  	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
-
 	public HjhAccedeResponse canCancelAuth(Integer userId);
 }

@@ -535,8 +535,6 @@ public interface AmUserClient {
      */
     CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
     CertificateAuthorityResponse isCAIdNoCheck(String param, String name);
-    
-
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest);
 	public AdminUserAuthListResponse cancelInvestAuth(int userId);
 	public AdminUserAuthListResponse cancelCreditAuth( int userId);
