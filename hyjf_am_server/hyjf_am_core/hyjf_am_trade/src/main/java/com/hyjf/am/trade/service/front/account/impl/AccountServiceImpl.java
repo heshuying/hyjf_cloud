@@ -1,9 +1,9 @@
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.account.impl;
 
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.front.account.AccountService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.common.util.CommonUtils;

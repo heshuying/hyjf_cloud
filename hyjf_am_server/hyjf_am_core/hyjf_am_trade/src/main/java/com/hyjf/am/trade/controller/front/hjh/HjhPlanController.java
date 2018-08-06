@@ -15,7 +15,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.HjhPlanService;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;

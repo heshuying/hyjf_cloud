@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.service.HjhPlanBorrowTmpService;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;

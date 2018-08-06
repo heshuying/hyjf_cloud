@@ -8,7 +8,7 @@ import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;

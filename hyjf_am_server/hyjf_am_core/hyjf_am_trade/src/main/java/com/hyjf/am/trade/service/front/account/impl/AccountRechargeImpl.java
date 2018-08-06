@@ -1,10 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.account.impl;
 
 import com.hyjf.am.trade.dao.mapper.customize.trade.AccountRechargeCustomizeMapper;
-import com.hyjf.am.trade.service.AccountRecharge;
+import com.hyjf.am.trade.service.front.account.AccountRecharge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

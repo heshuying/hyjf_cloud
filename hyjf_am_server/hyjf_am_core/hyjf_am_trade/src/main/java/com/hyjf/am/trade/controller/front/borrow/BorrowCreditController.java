@@ -3,13 +3,13 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.admin.AdminBorrowCreditInfoResponse;
 import com.hyjf.am.response.admin.AdminBorrowCreditResponse;
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
 import com.hyjf.am.response.trade.BorrowCreditResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditAmRequest;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
 import com.hyjf.am.trade.service.BorrowCreditService;
@@ -20,7 +20,6 @@ import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +34,7 @@ import java.util.List;
 @Api(value = "债转信息")
 @RestController
 @RequestMapping("/am-trade/borrowCredit")
-public class BorrowCreditController extends BaseController{
+public class BorrowCreditController extends BaseController {
 
     @Autowired
     BorrowCreditService borrowCreditService;

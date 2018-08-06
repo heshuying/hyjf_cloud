@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.front.account;
 
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.AccountRecharge;
+import com.hyjf.am.trade.service.front.account.AccountRecharge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

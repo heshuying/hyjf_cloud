@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.front.batch;
 
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhPlanResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BatchHjhBorrowRepayService;
 import com.hyjf.am.vo.trade.CalculateInvestInterestVO;

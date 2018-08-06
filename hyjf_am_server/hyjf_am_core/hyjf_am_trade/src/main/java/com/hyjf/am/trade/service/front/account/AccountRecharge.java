@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.account;
 
 import java.math.BigDecimal;
 import java.util.List;

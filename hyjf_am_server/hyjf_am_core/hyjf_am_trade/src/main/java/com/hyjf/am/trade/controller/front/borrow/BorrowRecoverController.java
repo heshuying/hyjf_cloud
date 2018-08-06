@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.service.BorrowRecoverService;
@@ -26,7 +27,7 @@ import java.util.List;
 @Api(value = "借款信息")
 @RestController
 @RequestMapping("/am-trade/borrowRecover")
-public class BorrowRecoverController extends BaseController{
+public class BorrowRecoverController extends BaseController {
 
 	@Autowired
 	BorrowRecoverService borrowRecoverService;

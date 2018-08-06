@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.account;
 
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.app.AppAccountTradeListCustomize;

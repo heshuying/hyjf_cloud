@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.account;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;

@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service;
+package com.hyjf.am.trade.service.front.account;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
