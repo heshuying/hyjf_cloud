@@ -3,38 +3,14 @@
  */
 package com.hyjf.am.trade.service.impl.task;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AleveErrorLogMapper;
-import com.hyjf.am.trade.dao.mapper.auto.AleveLogMapper;
-import com.hyjf.am.trade.dao.mapper.auto.EveLogMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.AleveCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.ManualReverseCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
-import com.hyjf.am.trade.dao.model.auto.AleveLog;
-import com.hyjf.am.trade.dao.model.auto.AleveLogExample;
-import com.hyjf.am.trade.dao.model.auto.EveLog;
-import com.hyjf.am.trade.dao.model.auto.EveLogExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
 import com.hyjf.am.trade.service.AccountService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.AleveLogFileService;
 import com.hyjf.am.trade.utils.FileUtil;
 import com.hyjf.am.trade.utils.FtpUtil;
@@ -43,35 +19,22 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
  * @version AleveLogFileServiceImpl, v0.1 2018/6/25 10:09
  */
 @Service
-public class AleveLogFileServiceImpl implements AleveLogFileService {
-    private static final Logger logger = LoggerFactory.getLogger(AleveLogFileServiceImpl.class);
-
-    @Autowired
-    protected AleveLogMapper aleveLogMapper;
-
-    @Autowired
-    protected EveLogMapper eveLogMapper;
-
-    @Autowired
-    protected AleveErrorLogMapper aleveErrorLogMapper;
-
-    @Autowired
-    private AleveCustomizeMapper aleveCustomizeMapper;
-
-    @Autowired
-    private ManualReverseCustomizeMapper manualReverseCustomizeMapper;
-
-    @Autowired
-    private AccountListMapper accountListMapper;
-
-    @Autowired
-    private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
+public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLogFileService {
 
     @Autowired
     private AccountService accountService;
@@ -145,13 +108,10 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
     @Override
     public void insertAleveLog(List<AleveLog> list){
         for (AleveLog aleve : list) {
-//            AleveLogExample example = new AleveLogExample();
-//            AleveLogExample.Criteria eveCrt = example.createCriteria();
             aleve.setCreateTime(GetDate.getNowTime());
             aleve.setCreateUserId(1);
             aleve.setDelFlag(0);
             aleve.setUpdFlag(0);
-//            eveCrt.andTrannoEqualTo(aleve.getTranno());
             aleveLogMapper.insert(aleve);
         }
     }
@@ -163,13 +123,9 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
     @Override
     public void insertEveLog(List<EveLog> list){
         for (EveLog eve : list) {
-//            EveLogExample example = new EveLogExample();
-//            EveLogExample.Criteria eveCrt = example.createCriteria();
             eve.setCreateTime(GetDate.getNowTime());
             eve.setCreateUserId(1);
             eve.setDelFlag(0);
-//            eveCrt.andTrannoEqualTo(eve.getTranno());
-//            eveCrt.andOrdernoEqualTo(eve.getOrderno());
             eveLogMapper.insert(eve);
         }
     }
@@ -196,14 +152,50 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
     }
 
     /**
+     * 自动冲正
+     * @param aleveLogCustomizeList
+     */
+    @Override
+    public void updateAutoCorretion(List<AleveLogCustomize> aleveLogCustomizeList){
+        //循环遍历冲正数据
+        for (AleveLogCustomize aleveLogCustomize : aleveLogCustomizeList) {
+            if (!"1".equals(aleveLogCustomize.getRevind().toString())) {
+                //处理完成flg变为1下次处理不再抽出
+                if(!this.updateAleveLog(aleveLogCustomize)) {
+                    logger.error("【自动冲正异常】：非冲正flg数据处理完成字段更新失败，银行账号：" + aleveLogCustomize.getCardnbr() + "----Seqno:" + aleveLogCustomize.getSeqno() + "----CreateTime:" + aleveLogCustomize.getCreateTime());
+                    continue;
+                }
+                //非冲正交易的场合处理下一条
+                logger.info("【自动冲正】非冲正交易，银行账号：" + aleveLogCustomize.getCardnbr());
+                continue;
+            }
+            //白名单校验订单号+用户名存在的情况不再自动冲正
+            boolean isExists = this.countManualReverse(aleveLogCustomize) > 0 ? true : false;
+            if (isExists) {
+                //处理完成flg变为1下次处理不再抽出
+                if(!this.updateAleveLog(aleveLogCustomize)) {
+                    logger.error("【自动冲正异常】：手动冲正数据处理完成字段更新失败，银行账号：" + aleveLogCustomize.getCardnbr() + "----Seqno:" + aleveLogCustomize.getSeqno() + "----CreateTime:" + aleveLogCustomize.getCreateTime());
+                    continue;
+                }
+                //白名单手动冲正的数据不再处理
+                logger.info("【自动冲正】白名单数据不再处理，银行账号：" + aleveLogCustomize.getCardnbr());
+                continue;
+            }
+            //冲正出错的情况打印log处理下一条
+            if (!this.updateAutoCorretion(aleveLogCustomize)) {
+                logger.error("【自动冲正异常】用户资产/余额处理失败，银行账号：" + aleveLogCustomize.getCardnbr());
+            }
+        }
+    }
+
+    /**
      * 检索手动冲正数量
      * @param aleveLogCustomize
      * @return
      */
-    @Override
-    public int countManualReverse(AleveLogCustomize aleveLogCustomize) {
-
+    private int countManualReverse(AleveLogCustomize aleveLogCustomize) {
         //通过账号ID获取用户信息
+        //原代码使用的是hyjf_bank_open_account跟huiyingdai_users表查询，现在牵扯到跨库，使用ht_account与ht_r_user
         List<String> userIds = this.selectUserIdsByAccount(aleveLogCustomize.getCardnbr());
         if (userIds.isEmpty()) {
             logger.error("【自动冲正异常】获取用户信息失败、电子账号：" + aleveLogCustomize.getCardnbr());
@@ -240,9 +232,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * @param aleveLogCustomize
      * @return
      */
-    @Override
-    public boolean updateAutoCorretion(AleveLogCustomize aleveLogCustomize) {
-
+    private boolean updateAutoCorretion(AleveLogCustomize aleveLogCustomize) {
         //冲正金额
         BigDecimal total = aleveLogCustomize.getAmount();
 
@@ -340,8 +330,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * @param aleveLogCustomize
      * @return
      */
-    @Override
-    public boolean updateAleveLog(AleveLogCustomize aleveLogCustomize) {
+    private boolean updateAleveLog(AleveLogCustomize aleveLogCustomize) {
 
         //处理成功后、该条记录的处理flg变为1
         AleveLogExample example = new AleveLogExample();
@@ -391,7 +380,7 @@ public class AleveLogFileServiceImpl implements AleveLogFileService {
      * @param accountId
      * @return
      */
-    public List<String> selectUserIdsByAccount(String accountId){
+    private List<String> selectUserIdsByAccount(String accountId){
         Map<String, Object> param = new HashMap<String, Object>();
         // 原交易流水号
         param.put("accountId", accountId);

@@ -11,7 +11,7 @@ import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
@@ -146,7 +146,7 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
      * @return
      */
     @Override
-    public List<ParamName> getParamNameList(String code){
+    public List<ParamNameVO> getParamNameList(String code){
         return amTradeClient.getParamNameList(code);
     }
     /**

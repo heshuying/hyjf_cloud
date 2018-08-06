@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -115,7 +116,6 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
     public List<BankCardLog> selectBankCardLogByExample(BankCardLogRequest request, int limitStart, int limitEnd) {
         BankCardLogExample example = new BankCardLogExample();
         BankCardLogExample.Criteria criteria = example.createCriteria();
-        Map<String, String> bankcardProperty = CacheUtil.getParamNameMap("BANKCARD_PROPERTY");
         // 条件查询
         if (StringUtils.isNotEmpty(request.getBankCode())) {
             criteria.andBankCodeEqualTo(request.getBankCode());
@@ -126,9 +126,9 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStart = null;
         Date dateEnd = null;
-        /*if (StringUtils.isNotEmpty(request.getStartTime())) {
+        if (StringUtils.isNotEmpty(request.getStartTime())) {
             try {
-                dateStart = smp.parse(request.getStartTime());
+                dateStart = smp.parse(request.getStartTime()+" 00:00:00");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -136,12 +136,12 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
         }
         if (StringUtils.isNotEmpty(request.getEndTime())) {
             try {
-                dateEnd = smp.parse(request.getEndTime());
+                dateEnd = smp.parse(request.getEndTime()+" 23:59:59");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             criteria.andCreateTimeLessThanOrEqualTo(dateEnd);
-        }*/
+        }
         if (limitStart != -1 && limitEnd != -1) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
@@ -170,9 +170,9 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStart = null;
         Date dateEnd = null;
-        /*if (StringUtils.isNotEmpty(request.getStartTime())) {
+        if (StringUtils.isNotEmpty(request.getStartTime())) {
             try {
-                dateStart = smp.parse(request.getStartTime());
+                dateStart = smp.parse(request.getStartTime()+" 00:00:00");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -180,12 +180,12 @@ public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordSe
         }
         if (StringUtils.isNotEmpty(request.getEndTime())) {
             try {
-                dateEnd = smp.parse(request.getEndTime());
+                dateEnd = smp.parse(request.getEndTime()+" 23:59:59");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             criteria.andCreateTimeLessThanOrEqualTo(dateEnd);
-        }*/
+        }
         int intCount = bankCardLogMapper.countByExample(example);
         return intCount;
     }

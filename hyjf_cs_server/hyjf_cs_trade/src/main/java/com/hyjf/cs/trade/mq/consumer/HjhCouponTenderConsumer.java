@@ -5,16 +5,13 @@ package com.hyjf.cs.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.AmBorrowClient;
-import com.hyjf.cs.trade.client.BorrowClient;
 import com.hyjf.cs.trade.client.CouponClient;
 import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.CouponService;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.cs.trade.service.consumer.CouponService;
 import org.apache.commons.collections.MapUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;

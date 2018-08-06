@@ -26,6 +26,7 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
+import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.util.ResultEnum;
@@ -103,8 +104,8 @@ public class WeChatRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/registAction.do")
-    public UserRegistResultVO registAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        UserRegistResultVO ret = new UserRegistResultVO();
+    public UserRegistResult registAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        UserRegistResult ret = new UserRegistResult();
         ret.setRequest("/registAction");
         // 手机号
         String mobile = request.getParameter("mobile");

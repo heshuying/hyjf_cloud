@@ -29,6 +29,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -357,6 +358,23 @@ public class WebPassWordController {
         } catch (Exception e) {
             logger.error("修改密码时，生成密码加密密钥错误",e);
         }
+        return result;
+    }
+
+    /**
+     * @Description 查询交易密码失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
+    @RequestMapping("/searchFiledMess")
+    @ResponseBody
+    public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = new WebResult<Object>();
+        String retMsg = passWordService.getFiledMess(logOrdId);
+        Map<String,String> map = new HashedMap();
+        map.put("error",retMsg);
+        result.setData(map);
         return result;
     }
 

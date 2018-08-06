@@ -53,7 +53,7 @@ public class RedisConstants {
     /**
      * 加入计划防重校验
      */
-    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT";
+    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT:";
 
     /**
      * 汇计划可投余额前缀
@@ -121,7 +121,7 @@ public class RedisConstants {
     /**
      * 散标投资防重校验
      */
-    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT";
+    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT:";
 
 
     /**

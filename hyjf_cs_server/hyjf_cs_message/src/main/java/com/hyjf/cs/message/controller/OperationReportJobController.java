@@ -34,10 +34,10 @@ public class OperationReportJobController extends BaseController {
 	@RequestMapping("/countOperationReport")
 	public void countOperationReport() {
 		logger.info("开始 从数据库获取运营报告的数据...");
-		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
-		if(!flag){
-			return;
-		}
+//		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
+//		if(!flag){
+//			return;
+//		}
 		Calendar cal = Calendar.getInstance();
 
 		try {
@@ -89,7 +89,7 @@ public class OperationReportJobController extends BaseController {
 			e.printStackTrace();
 		}
 
-		RedisUtils.del("StatisticsOperationReportTask");
+		RedisUtils.del(RedisConstants.Statistics_Operation_Report);
 
 		logger.info("完成 插入统计数据到mongodb...");
 	}

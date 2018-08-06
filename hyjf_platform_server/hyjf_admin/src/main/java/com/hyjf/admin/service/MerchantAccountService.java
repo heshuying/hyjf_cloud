@@ -7,7 +7,7 @@ import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.resquest.admin.AdminMerchantAccountRequest;
 import com.hyjf.am.resquest.admin.MerchantAccountListRequest;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public interface MerchantAccountService {
      * 子账户类型
      * @return
      */
-    List<ParamName> getParamNameList(String code);
+    List<ParamNameVO> getParamNameList(String code);
     /**
      *
      * 根据子账户名称检索

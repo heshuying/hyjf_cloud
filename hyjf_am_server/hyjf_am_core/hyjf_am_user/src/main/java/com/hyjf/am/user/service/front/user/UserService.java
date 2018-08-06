@@ -79,7 +79,7 @@ public interface UserService extends BaseService {
 	 * @param record
 	 * @return int
 	 */
-	public int updateUserById(User record);
+	int updateUserById(User record);
 
 	UserEvalationResult selectUserEvalationResultByUserId(Integer userId);
 
@@ -220,4 +220,12 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	User insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
+
+	/**
+	 * app跳过测评查询信息
+	 * @param userId
+	 * @param countScore
+	 * @return
+	 */
+    UserEvalationResult skipEvaluate(Integer userId, Integer countScore);
 }

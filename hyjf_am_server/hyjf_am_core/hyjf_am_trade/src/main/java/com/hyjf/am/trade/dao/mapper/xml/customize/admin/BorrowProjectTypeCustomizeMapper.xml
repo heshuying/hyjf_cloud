@@ -6,7 +6,7 @@
         </where>
     </sql>
 
-    <resultMap id="getProjectTypeListMap" type="com.hyjf.am.trade.dao.model.auto.BorrowProjectType">
+    <resultMap id="getProjectTypeListMap" type="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
         <result column="borrow_project_type" property="borrowProjectType" jdbcType="VARCHAR" />
         <result column="borrow_cd" property="borrowCd" jdbcType="VARCHAR" />
         <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />

@@ -58,7 +58,7 @@ public interface BorrowProjectTypeService {
      *
      * @param record
      */
-    public void insertRecord(BorrowProjectTypeRequest record);
+    public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record);
     /**
      * 汇直投项目类型维护修改
      *
@@ -76,5 +76,5 @@ public interface BorrowProjectTypeService {
      * @param borrowCd
      * @return
      */
-    public int borrowCdIsExists(String borrowCd);
+    public int borrowCdIsExists(BorrowProjectTypeRequest borrowCd);
 }

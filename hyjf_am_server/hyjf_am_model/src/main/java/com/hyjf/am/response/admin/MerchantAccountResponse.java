@@ -6,6 +6,7 @@ package com.hyjf.am.response.admin;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 
 import java.util.List;
 
@@ -15,14 +16,14 @@ import java.util.List;
  */
 public class MerchantAccountResponse extends Response<MerchantAccountVO> {
     //子账号类型
-    private List<ParamName> paramNameList;
+    private List<ParamNameVO> paramNameList;
     private int recordTotal;
 
-    public List<ParamName> getParamNameList() {
+    public List<ParamNameVO> getParamNameList() {
         return paramNameList;
     }
 
-    public void setParamNameList(List<ParamName> paramNameList) {
+    public void setParamNameList(List<ParamNameVO> paramNameList) {
         this.paramNameList = paramNameList;
     }
 

@@ -840,7 +840,12 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public boolean updateAccountMobileSynch(AccountMobileSynchRequest accountMobileSynchRequest){
 		String url = userService+"/batch/updateAccountMobileSynch";
-		return restTemplate.postForEntity(url,accountMobileSynchRequest,boolean.class).getBody();
+		AccountMobileSynchResponse response =
+				restTemplate.postForEntity(url,accountMobileSynchRequest, AccountMobileSynchResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getUpdateFlag();
+		}
+		return false;
 	}
 	/**
 	 * 集团组织结构查询
@@ -1037,5 +1042,14 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	@Override
+	public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
+		UserEvalationResultResponse response = restTemplate.getForEntity(userService+"/user/skipEvaluate/"+userId+"/"+countScore,UserEvalationResultResponse.class).getBody();
+		if(null!=response){
+			return   response.getResult();
+		}
+		return  null;
 	}
 }

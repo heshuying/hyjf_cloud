@@ -319,4 +319,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
+
+	/**
+	 * 插入测评结果
+	 * @param userId
+	 * @param countScore
+	 * @return
+	 */
+    UserEvalationResultVO skipEvaluate(Integer userId, int countScore);
 }

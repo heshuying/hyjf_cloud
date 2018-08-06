@@ -143,7 +143,6 @@ public class MspApplyController  {
 		}
 		    
 		form.setApplyId(postResultJson.getString(AnRongDefine.RESULT_JSON_KEY_REQID));
-		//form.setApplyId("kkkkkkk");
 		form.setCreateTime(GetDate.getNowTime10());
 		// 数据插入
 		
@@ -291,8 +290,6 @@ public class MspApplyController  {
         	
         	form.setUnredeemedMoney(null);
         	form.setRepaymentStatus(null);
-//        	form.setContractBegin(null);
-//        	form.setContractEnd(null);
 
         }
         Map<String, String> params = ParamUtil.getSendParm(form);
@@ -345,7 +342,6 @@ public class MspApplyController  {
 			
 			
 			List<MspApplydetails> applylist = this.mspApplyService.getApplyDetails(applyId);
-			//BigDecimal daishenhe = new BigDecimal(0);
 			BigDecimal tongguo= new BigDecimal(0);
 			BigDecimal jujue= new BigDecimal(0);
 			BigDecimal  zongshu= new BigDecimal(0);

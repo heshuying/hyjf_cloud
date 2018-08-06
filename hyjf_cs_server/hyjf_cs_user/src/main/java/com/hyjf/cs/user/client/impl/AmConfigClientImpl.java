@@ -1,13 +1,12 @@
 package com.hyjf.cs.user.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
-import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -83,6 +82,17 @@ public class AmConfigClientImpl implements AmConfigClient {
     public List<QuestionCustomizeVO> getNewQuestionList() {
         QuestionCustomizeResponse response = restTemplate
                 .getForEntity(configService+"/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<NewAppQuestionCustomizeVO> getNewAppQuestionList() {
+        NewAppQuestionCustomizeResponse response = restTemplate
+                .getForEntity(configService+"/config/getNewAppQuestionList", NewAppQuestionCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }

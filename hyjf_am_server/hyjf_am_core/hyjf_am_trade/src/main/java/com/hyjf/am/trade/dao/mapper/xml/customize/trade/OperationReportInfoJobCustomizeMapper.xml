@@ -36,9 +36,9 @@
         FROM
         ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
+        # 加入时间
         UNION ALL
         # 债转
         SELECT
@@ -46,9 +46,9 @@
         FROM
         ht_credit_tender ct
         WHERE
-        ct.add_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
+        # 承接时间
         UNION ALL
         # 汇添金
         SELECT
@@ -56,9 +56,9 @@
         FROM
         ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
+         # 加入时间
         UNION ALL
         # 汇添利
         SELECT
@@ -96,9 +96,9 @@
         FROM
         ht_hjh_accede a
         WHERE
-        a.add_time <![CDATA[ < ]]> unix_timestamp(
+        a.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
+        # 加入时间
         UNION ALL
         # 汇添金
         SELECT
@@ -106,9 +106,9 @@
         FROM
         ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
+        # 加入时间
         UNION ALL
         # 汇添利
         SELECT
@@ -133,7 +133,7 @@
         # 直投
         SELECT
         date_format(
-        from_unixtime(b.recover_time),
+        from_unixtime(br.recover_time),
         '%Y%m'
         ) AS 'month',
         sum(br.recover_capital) AS account # 放款金额
@@ -141,13 +141,13 @@
         ht_borrow_recover br
         INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
         WHERE
-        b.recover_time <![CDATA[ < ]]>  unix_timestamp(
+        br.recover_time <![CDATA[ < ]]>  unix_timestamp(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
         ) # 放款时间
-        AND b.recover_time <![CDATA[ >= ]]> unix_timestamp(
+        AND br.recover_time <![CDATA[ >= ]]> unix_timestamp(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
@@ -156,7 +156,7 @@
         AND br.accede_order_id IS NULL
         GROUP BY
         date_format(
-        from_unixtime(b.recover_time),
+        from_unixtime(br.recover_time),
         '%Y%m'
         )
         UNION ALL
@@ -668,7 +668,7 @@
     <!-- 	用户分析 - 性别分布 -->
     <select id="getSexDistribute" resultMap="performanceMap">
         SELECT
-        t.user_id userId
+        t.user_id as userId
         FROM
         (
         # 直投
@@ -761,7 +761,7 @@
     <select id="getAgeDistribute" resultMap="performanceMap">
         # 直投
         SELECT
-        br.user_id
+        br.user_id as userId
         FROM
         ht_borrow_tender br
         INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
@@ -779,7 +779,7 @@
         UNION
         # 汇计划
         SELECT
-        a.user_id
+        a.user_id as userId
         FROM
         ht_hjh_accede a
         WHERE
@@ -795,7 +795,7 @@
         UNION
         # 债转
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_credit_tender ct
         WHERE
@@ -811,7 +811,7 @@
         UNION
         # 汇添金
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_debt_plan_accede
         WHERE
@@ -827,7 +827,7 @@
         UNION
         # 汇添利
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_product_list
         WHERE
@@ -1280,7 +1280,7 @@
     <!-- 	投资人年龄分布 -->
     <select id="getTenderAgeByRangeList"   resultMap="performanceMap">
         SELECT
-        br .user_id
+        br .user_id as userId
         FROM
         ht_borrow_tender  br
         INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
@@ -1288,7 +1288,7 @@
         b.recover_last_time  &lt;=  unix_timestamp(#{0})
         UNION
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_credit_tender
         WHERE
@@ -1296,7 +1296,7 @@
 
         UNION
         SELECT
-        hdpa.user_id
+        hdpa.user_id as userId
         FROM
         ht_debt_plan_accede hdpa
         left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
@@ -1304,7 +1304,7 @@
         hdp.plan_lock_time  &lt;=  unix_timestamp(#{0})
         UNION
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_product_list
         WHERE
@@ -1316,7 +1316,7 @@
     <select  id="getTenderSexGroupByList"  resultMap="performanceMap">
 
         SELECT
-        br.user_id
+        br.user_id as userId
         FROM
         ht_borrow_tender br
         INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
@@ -1324,7 +1324,7 @@
         b.recover_last_time &lt;= unix_timestamp(#{0})
         UNION
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_credit_tender
         WHERE
@@ -1332,7 +1332,7 @@
 
         UNION
         SELECT
-        hdpa.user_id
+        hdpa.user_id as userId
         FROM
         ht_debt_plan_accede hdpa
         left join ht_debt_plan hdp on hdpa.plan_nid=hdp. debt_plan_nid
@@ -1341,7 +1341,7 @@
 
         UNION
         SELECT
-        user_id
+        user_id as userId
         FROM
         ht_product_list
         WHERE
@@ -1353,7 +1353,7 @@
     <!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
     <select  id="getTenderCityGroupByList" parameterType="java.util.Date" resultMap="performanceMap">
        SELECT
-		        user_id
+		        user_id as userId
 		    FROM
 		        ht_borrow_tender
 		    WHERE

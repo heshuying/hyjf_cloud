@@ -3,15 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -21,7 +12,15 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.HjhQuitProducer;
-import com.hyjf.cs.trade.service.BorrowRepayToHjhQuitService;
+import com.hyjf.cs.trade.service.batch.BorrowRepayToHjhQuitService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author PC-LIUSHOUYI

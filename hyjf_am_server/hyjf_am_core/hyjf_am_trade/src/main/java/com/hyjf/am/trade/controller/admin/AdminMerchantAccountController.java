@@ -50,8 +50,9 @@ public class AdminMerchantAccountController {
                 result.setResultList(configList);
                 result.setRecordTotal(recordTotal);
                 result.setRtn(Response.SUCCESS);
+                return result;
             }
-            return result;
+            return null;
         }
         return null;
     }
@@ -61,16 +62,16 @@ public class AdminMerchantAccountController {
      * @return
      */
     @RequestMapping("/searchAccountConfigInfo")
-    public MerchantAccountResponse searchAccountConfigInfo(Integer id) {
-        logger.info("平台账户设置详情页面..." + JSONObject.toJSON(id));
+    public MerchantAccountResponse searchAccountConfigInfo(@RequestBody AdminMerchantAccountRequest request) {
+        logger.info("平台账户设置详情页面..." + JSONObject.toJSON(request));
         MerchantAccountResponse  result=new MerchantAccountResponse();
         MerchantAccount record = new MerchantAccount();
         // 设置子账户自动转入 默认值:支持
         record.setTransferIntoFlg(1);
         // 设置子账户转出 默认值:支持
         record.setTransferOutFlg(1);
-        if (id != null&&id.intValue()>0) {
-            record = merchantAccountService.selectAccountConfigInfo(id);
+        if (request.getId() != null&&request.getId().intValue()>0) {
+            record = merchantAccountService.selectAccountConfigInfo(request.getId());
             MerchantAccountVO recordVo = new MerchantAccountVO();
             if(null != record){
                 BeanUtils.copyProperties(record, recordVo);
@@ -88,16 +89,12 @@ public class AdminMerchantAccountController {
     @RequestMapping("/saveAccountConfig")
     public MerchantAccountResponse saveAccountConfig(@RequestBody AdminMerchantAccountRequest adminRequest) {
         MerchantAccountResponse resp = new MerchantAccountResponse();
-        try{
-            // 插入
-            int cot = merchantAccountService.saveAccountConfig(adminRequest);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 插入
+        int cot = merchantAccountService.saveAccountConfig(adminRequest);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }
@@ -108,16 +105,12 @@ public class AdminMerchantAccountController {
     @RequestMapping("/updateAccountConfig")
     public MerchantAccountResponse updateAccountConfig(@RequestBody AdminMerchantAccountRequest adminRequest) {
         MerchantAccountResponse resp = new MerchantAccountResponse();
-        try{
-            // 插入
-            int cot = merchantAccountService.updateAccountConfig(adminRequest);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 插入
+        int cot = merchantAccountService.updateAccountConfig(adminRequest);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }
