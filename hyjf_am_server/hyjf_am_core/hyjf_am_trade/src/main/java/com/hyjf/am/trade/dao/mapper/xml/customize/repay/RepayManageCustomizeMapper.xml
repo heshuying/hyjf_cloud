@@ -141,7 +141,7 @@
 		<include refid="Where_Clause_Repay_List" />
 		ORDER BY
 		<include refid="Where_order_Repay" />
-		<if test="limitStart != null and limitEnd !=null" >
+		<if test="limitStart != null and limitEnd !=null and limitStart != -1 and limitEnd !=-1" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
     </select>
@@ -321,7 +321,7 @@
 		<if test="repayTimeOrder == 1" >
 			DESC
 		</if>
-		<if test="limitStart != null and limitEnd !=null" >
+		<if test="limitStart != null and limitEnd !=null and limitStart != -1 and limitEnd !=-1" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
