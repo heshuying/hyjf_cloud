@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service.wdzj;
+package com.hyjf.am.trade.service.front.wdzj;
 
 import com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize;
