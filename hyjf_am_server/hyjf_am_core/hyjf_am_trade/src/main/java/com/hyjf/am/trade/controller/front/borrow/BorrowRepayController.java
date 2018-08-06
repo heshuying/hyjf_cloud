@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.trade.BorrowRepayResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.service.BorrowRepayService;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -23,7 +24,7 @@ import java.util.List;
 @Api(value = "还款记录总表")
 @RestController
 @RequestMapping("/am-trade/borrowRepay")
-public class BorrowRepayController extends BaseController{
+public class BorrowRepayController extends BaseController {
 
     @Autowired
     BorrowRepayService borrowRepayService;

@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 
 import java.util.List;

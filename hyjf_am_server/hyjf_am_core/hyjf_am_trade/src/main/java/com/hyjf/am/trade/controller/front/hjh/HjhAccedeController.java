@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
 import com.hyjf.am.trade.service.HjhAccedeService;
@@ -29,7 +30,7 @@ import java.util.List;
 @Api(value = "汇计划加入明细表")
 @RestController
 @RequestMapping("/am-trade/hjhAccede")
-public class HjhAccedeController extends BaseController{
+public class HjhAccedeController extends BaseController {
 
     @Autowired
     HjhAccedeService hjhAccedeService;

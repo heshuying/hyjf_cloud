@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.account;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
@@ -6,6 +6,7 @@ import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;

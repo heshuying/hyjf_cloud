@@ -1,12 +1,13 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.trade.service.BorrowCreditTenderService;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/creditTender")
-public class BorrowCreditTenderController extends BaseController{
+public class BorrowCreditTenderController extends BaseController {
 
     @Autowired
     private BorrowCreditTenderService borrowCreditTenderService;

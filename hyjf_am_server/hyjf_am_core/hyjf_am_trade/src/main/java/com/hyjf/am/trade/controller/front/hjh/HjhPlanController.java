@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
@@ -37,7 +38,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/hjhPlan")
-public class HjhPlanController extends BaseController{
+public class HjhPlanController extends BaseController {
 
     @Autowired
     private HjhPlanService hjhPlanService;

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;

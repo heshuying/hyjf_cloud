@@ -1,6 +1,7 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 
+import com.hyjf.am.trade.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import com.hyjf.common.util.CommonUtils;
  */
 @RestController
 @RequestMapping("/am-trade/borrow")
-public class BorrowUserController extends BaseController{
+public class BorrowUserController extends BaseController {
 
     @Autowired
     private BorrowUserService borrowUserService;

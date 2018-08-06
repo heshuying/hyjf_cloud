@@ -1,7 +1,8 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.hjh;
 
 
 import com.hyjf.am.response.trade.HjhDebtCreditRepayResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepay;
 import com.hyjf.am.trade.service.HjhDebtCreditRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/hjhcreditrepay")
-public class HjhDebtCreditRepayController extends BaseController{
+public class HjhDebtCreditRepayController extends BaseController {
 
     @Autowired
     HjhDebtCreditRepayService hjhDebtCreditRepayService;

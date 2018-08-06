@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.BorrowAccountResponse;
@@ -9,6 +9,7 @@ import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.BorrowService;
@@ -38,7 +39,7 @@ import java.util.Map;
 @Api(value = "借款信息")
 @RestController
 @RequestMapping("/am-trade/borrow")
-public class BorrowController extends BaseController{
+public class BorrowController extends BaseController {
 
 	@Autowired
 	HjhInstConfigService hjhInstConfigService;

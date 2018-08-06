@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.trade.BorrowConfigResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
 import com.hyjf.am.trade.service.BorrowConfigService;
 import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * */
 @RestController
 @RequestMapping("/am-trade/borrowconfig")
-public class BorrowConfigController extends BaseController{
+public class BorrowConfigController extends BaseController {
 
 	@Autowired
 	BorrowConfigService borrowConfigService;

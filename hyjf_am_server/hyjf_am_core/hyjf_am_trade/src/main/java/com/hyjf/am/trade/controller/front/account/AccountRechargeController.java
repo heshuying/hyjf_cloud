@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.account;
 
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.AccountRecharge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,7 +1,8 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.account;
 
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.trade.account.AppAccountTradeListCustomizeResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.app.AppAccountTradeListCustomize;
 import com.hyjf.am.trade.service.AccountTradeService;

@@ -1,9 +1,10 @@
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.service.BorrowProjectTypeService;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-trade/config/projecttype")
-public class BorrowProjectTypeController extends BaseController{
+public class BorrowProjectTypeController extends BaseController {
 
     @Autowired
     private BorrowProjectTypeService borrowProjectTypeService;

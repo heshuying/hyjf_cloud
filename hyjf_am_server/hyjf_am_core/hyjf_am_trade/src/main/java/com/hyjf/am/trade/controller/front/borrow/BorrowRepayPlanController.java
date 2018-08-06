@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.service.BorrowRepayPlanService;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
@@ -22,7 +23,7 @@ import java.util.List;
 @Api(value = "还款记录分期")
 @RestController
 @RequestMapping("/am-trade/borrowRepayPlan")
-public class BorrowRepayPlanController extends BaseController{
+public class BorrowRepayPlanController extends BaseController {
 
     @Autowired
     BorrowRepayPlanService borrowRepayPlanService;

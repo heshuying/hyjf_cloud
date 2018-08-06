@@ -1,9 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller;
+package com.hyjf.am.trade.controller.front.account;
 
 import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.service.AccountListService;
 import com.hyjf.am.vo.trade.account.AccountListVO;
