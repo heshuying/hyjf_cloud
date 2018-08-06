@@ -90,35 +90,8 @@ public class AutoCorrectionConsumer extends Consumer{
                     logger.info("【自动冲正】未查询到冲正信息");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-                //循环遍历冲正数据
-                for (AleveLogCustomize aleveLogCustomize : aleveLogCustomizes) {
-                    if (!"1".equals(aleveLogCustomize.getRevind().toString())) {
-                        //处理完成flg变为1下次处理不再抽出
-                        if(!aleveLogFileService.updateAleveLog(aleveLogCustomize)) {
-                            logger.error("【自动冲正异常】：非冲正flg数据处理完成字段更新失败，银行账号：" + aleveLogCustomize.getCardnbr() + "----Seqno:" + aleveLogCustomize.getSeqno() + "----CreateTime:" + aleveLogCustomize.getCreateTime());
-                            continue;
-                        }
-                        //非冲正交易的场合处理下一条
-                        logger.info("【自动冲正】非冲正交易，银行账号：" + aleveLogCustomize.getCardnbr());
-                        continue;
-                    }
-                    //白名单校验订单号+用户名存在的情况不再自动冲正
-                    boolean isExists = aleveLogFileService.countManualReverse(aleveLogCustomize) > 0 ? true : false;
-                    if (isExists) {
-                        //处理完成flg变为1下次处理不再抽出
-                        if(!aleveLogFileService.updateAleveLog(aleveLogCustomize)) {
-                            logger.error("【自动冲正异常】：手动冲正数据处理完成字段更新失败，银行账号：" + aleveLogCustomize.getCardnbr() + "----Seqno:" + aleveLogCustomize.getSeqno() + "----CreateTime:" + aleveLogCustomize.getCreateTime());
-                            continue;
-                        }
-                        //白名单手动冲正的数据不再处理
-                        logger.info("【自动冲正】白名单数据不再处理，银行账号：" + aleveLogCustomize.getCardnbr());
-                        continue;
-                    }
-                    //冲正出错的情况打印log处理下一条
-                    if (!aleveLogFileService.updateAutoCorretion(aleveLogCustomize)) {
-                        logger.error("【自动冲正异常】用户资产/余额处理失败，银行账号：" + aleveLogCustomize.getCardnbr());
-                    }
-                }
+                //自动冲正
+                aleveLogFileService.updateAutoCorretion(aleveLogCustomizes);
 
             } catch (Exception e) {
                 logger.error("【自动冲正异常】处理失败！", e);

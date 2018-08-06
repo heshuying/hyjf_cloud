@@ -152,12 +152,48 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
     }
 
     /**
+     * 自动冲正
+     * @param aleveLogCustomizeList
+     */
+    @Override
+    public void updateAutoCorretion(List<AleveLogCustomize> aleveLogCustomizeList){
+        //循环遍历冲正数据
+        for (AleveLogCustomize aleveLogCustomize : aleveLogCustomizeList) {
+            if (!"1".equals(aleveLogCustomize.getRevind().toString())) {
+                //处理完成flg变为1下次处理不再抽出
+                if(!this.updateAleveLog(aleveLogCustomize)) {
+                    logger.error("【自动冲正异常】：非冲正flg数据处理完成字段更新失败，银行账号：" + aleveLogCustomize.getCardnbr() + "----Seqno:" + aleveLogCustomize.getSeqno() + "----CreateTime:" + aleveLogCustomize.getCreateTime());
+                    continue;
+                }
+                //非冲正交易的场合处理下一条
+                logger.info("【自动冲正】非冲正交易，银行账号：" + aleveLogCustomize.getCardnbr());
+                continue;
+            }
+            //白名单校验订单号+用户名存在的情况不再自动冲正
+            boolean isExists = this.countManualReverse(aleveLogCustomize) > 0 ? true : false;
+            if (isExists) {
+                //处理完成flg变为1下次处理不再抽出
+                if(!this.updateAleveLog(aleveLogCustomize)) {
+                    logger.error("【自动冲正异常】：手动冲正数据处理完成字段更新失败，银行账号：" + aleveLogCustomize.getCardnbr() + "----Seqno:" + aleveLogCustomize.getSeqno() + "----CreateTime:" + aleveLogCustomize.getCreateTime());
+                    continue;
+                }
+                //白名单手动冲正的数据不再处理
+                logger.info("【自动冲正】白名单数据不再处理，银行账号：" + aleveLogCustomize.getCardnbr());
+                continue;
+            }
+            //冲正出错的情况打印log处理下一条
+            if (!this.updateAutoCorretion(aleveLogCustomize)) {
+                logger.error("【自动冲正异常】用户资产/余额处理失败，银行账号：" + aleveLogCustomize.getCardnbr());
+            }
+        }
+    }
+
+    /**
      * 检索手动冲正数量
      * @param aleveLogCustomize
      * @return
      */
-    @Override
-    public int countManualReverse(AleveLogCustomize aleveLogCustomize) {
+    private int countManualReverse(AleveLogCustomize aleveLogCustomize) {
         //通过账号ID获取用户信息
         //原代码使用的是hyjf_bank_open_account跟huiyingdai_users表查询，现在牵扯到跨库，使用ht_account与ht_r_user
         List<String> userIds = this.selectUserIdsByAccount(aleveLogCustomize.getCardnbr());
@@ -196,9 +232,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
      * @param aleveLogCustomize
      * @return
      */
-    @Override
-    public boolean updateAutoCorretion(AleveLogCustomize aleveLogCustomize) {
-
+    private boolean updateAutoCorretion(AleveLogCustomize aleveLogCustomize) {
         //冲正金额
         BigDecimal total = aleveLogCustomize.getAmount();
 
@@ -296,8 +330,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
      * @param aleveLogCustomize
      * @return
      */
-    @Override
-    public boolean updateAleveLog(AleveLogCustomize aleveLogCustomize) {
+    private boolean updateAleveLog(AleveLogCustomize aleveLogCustomize) {
 
         //处理成功后、该条记录的处理flg变为1
         AleveLogExample example = new AleveLogExample();
@@ -347,7 +380,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
      * @param accountId
      * @return
      */
-    public List<String> selectUserIdsByAccount(String accountId){
+    private List<String> selectUserIdsByAccount(String accountId){
         Map<String, Object> param = new HashMap<String, Object>();
         // 原交易流水号
         param.put("accountId", accountId);

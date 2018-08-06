@@ -7,9 +7,9 @@ import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 
 /**
  * @author fuqiang
- * @version AmDataCollectClient, v0.1 2018/7/18 13:56
+ * @version CsMessageClient, v0.1 2018/7/18 13:56
  */
-public interface AmDataCollectClient {
+public interface CsMessageClient {
     /**
      * 获取借款用户数据
      * @return
