@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.productcenter.borrow.batchcenter.batchborrowre
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
@@ -35,12 +37,14 @@ public class BatchBorrowRepayController extends BaseController{
 
     private static final String NAME_CLASS = "REPAY_STATUS";
 
+    private static final String PERMISSIONS = "HjhDebtCredit";
 
     @Autowired
     private BatchBorrowRecoverService batchBorrowRecoverService;
 
     @ApiOperation(value = "批次中心-批次还款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRepayInit")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject batchBorrowRepayInit() {
         JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
@@ -52,6 +56,7 @@ public class BatchBorrowRepayController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject querybatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request) {
         request.setApiType(1);
@@ -67,6 +72,7 @@ public class BatchBorrowRepayController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ApiImplicitParam(name = "apicronID",value = "任务ID")
     public JSONObject querybatchBorrowRepayBankInfoList(@RequestBody String apicronID) {
         JSONObject jsonObject;
@@ -84,6 +90,7 @@ public class BatchBorrowRepayController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
     public JSONObject exportBatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response){
         // 表格sheet名称
