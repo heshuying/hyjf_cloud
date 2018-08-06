@@ -3,18 +3,14 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
-import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
-import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
-import com.hyjf.am.trade.service.CouponUserService;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.trade.service.front.coupon.CouponUserService;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.util.CommonUtils;
