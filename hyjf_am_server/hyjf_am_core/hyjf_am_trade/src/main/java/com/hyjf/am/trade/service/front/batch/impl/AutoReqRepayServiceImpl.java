@@ -9,7 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.trade.AutoReqRepayBorrowCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoReqRepayService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.repay.RepayManageService;
+import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;

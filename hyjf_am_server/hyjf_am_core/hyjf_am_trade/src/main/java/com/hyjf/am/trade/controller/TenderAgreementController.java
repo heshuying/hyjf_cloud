@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.hyjf.am.response.trade.AssetManageResponse;
 import com.hyjf.am.response.trade.TenderAgreementResponse;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.trade.service.TenderAgreementService;
+import com.hyjf.am.trade.service.front.config.TenderAgreementService;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;

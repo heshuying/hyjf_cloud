@@ -34,7 +34,7 @@
                 AND hydu.evaluation_expired_time <![CDATA[<=]]> NOW()
             </if>
             <if test="evaluationType != null and evaluationType != ''">
-                AND huer.type = #{evaluationType,jdbcType=INTEGER}
+                AND huer.eval_type = #{evaluationType,jdbcType=INTEGER}
             </if>
         </where>
     </sql>

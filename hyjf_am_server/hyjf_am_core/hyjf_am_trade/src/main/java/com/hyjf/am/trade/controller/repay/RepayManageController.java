@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.repay.RepayManageService;
+import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
 /**

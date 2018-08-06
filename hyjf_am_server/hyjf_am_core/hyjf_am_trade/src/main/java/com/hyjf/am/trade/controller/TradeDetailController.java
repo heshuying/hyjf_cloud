@@ -17,7 +17,7 @@ import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserWithdrawListCustomize;
-import com.hyjf.am.trade.service.TradeDetailService;
+import com.hyjf.am.trade.service.front.trade.TradeDetailService;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
