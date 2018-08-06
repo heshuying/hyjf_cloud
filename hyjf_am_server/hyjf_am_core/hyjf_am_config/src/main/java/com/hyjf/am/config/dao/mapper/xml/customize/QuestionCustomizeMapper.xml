@@ -27,7 +27,6 @@
         select id,question_id,answer,score from ht_answer where question_id=#{id} AND status=0
     </select>
 
-
     <select id="countScore"  parameterType="map" resultType="java.lang.Integer">
         Select
         SUM(score)
@@ -37,4 +36,18 @@
         </foreach>
     </select>
 
+    <!-- app 改版 -->
+    <resultMap id="NewAppQuestionResultMap" type="com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="question" property="title" jdbcType="VARCHAR" />
+        <association property="selection" column="id"  select="getNewAppAnswerList"/>
+    </resultMap>
+
+    <select id="getNewAppQuestionList" resultMap="NewAppQuestionResultMap">
+        select id,question from ht_question where status=0
+    </select>
+
+    <select id="getNewAppAnswerList" parameterType="java.lang.Integer" resultMap="NewAppAnswerResultMap">
+        select CONCAT(question_id,"_",id) as ques_id,replace(answer,"."," ") as answer from ht_answer where question_id=#{id} AND status=0
+    </select>
 </mapper>

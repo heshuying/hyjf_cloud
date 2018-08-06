@@ -535,6 +535,18 @@ public class UserController extends BaseController {
         return response;
     }
 
+    @RequestMapping("/skipEvaluate/{userId}/{countScore}")
+    public UserEvalationResultResponse skipEvaluate(@PathVariable Integer userId, @PathVariable int countScore) {
+        UserEvalationResult userEvalationResult = userService.skipEvaluate(userId, countScore);
+        UserEvalationResultResponse response = new UserEvalationResultResponse();
+        if (null != userEvalationResult) {
+            UserEvalationResultVO userEvalationResultVO = new UserEvalationResultVO();
+            BeanUtils.copyProperties(userEvalationResult, userEvalationResultVO);
+            response.setResult(userEvalationResultVO);
+        }
+        return response;
+    }
+
     @RequestMapping("/saveUserEvaluation")
     public int saveUserEvaluation(UserEvalationResult userEvalationResult) {
         int cnt = userService.saveUserEvaluation(userEvalationResult);
@@ -542,7 +554,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/isCompAccount/{userId}")
-    public int isCompAccount(Integer userId) {
+    public int isCompAccount(@PathVariable Integer userId) {
         int count = userService.isCompAccount(userId);
         return count;
     }
@@ -566,7 +578,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/findUtmRegByUserId/{userId}")
-    public UtmRegResponse findUtmRegByUserId(@RequestBody Integer userId) {
+    public UtmRegResponse findUtmRegByUserId(@PathVariable Integer userId) {
         UtmRegResponse response = new UtmRegResponse();
         UtmReg utmReg = userService.findUtmRegByUserId(userId);
         if (null != utmReg) {
@@ -651,7 +663,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/selectUtmPlatByUtmId/{userId}")
-    public UtmPlatResponse selectUtmPlatByUserId(Integer userId) {
+    public UtmPlatResponse selectUtmPlatByUserId(@PathVariable Integer userId) {
         UtmPlat utmPlat = userService.selectUtmPlatByUserId(userId);
         UtmPlatResponse response = new UtmPlatResponse();
         if (null != utmPlat) {

@@ -27,13 +27,19 @@ import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
-import com.hyjf.cs.trade.client.*;
+import com.hyjf.cs.trade.client.AmConfigClient;
+import com.hyjf.cs.trade.client.AmMongoClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.*;
+import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
+import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
+import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
-import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -67,48 +73,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
     @Autowired
     private AmUserClient amUserClient;
-
     @Autowired
-    private AmBorrowClient amBorrowClient;
-
-    @Autowired
-    private CouponClient couponClient;
-
-
+    private AmTradeClient amTradeClient;
     @Autowired
     private AmMongoClient amMongoClient;
-
     @Autowired
     private CouponService couponService;
-
     @Autowired
-    private BorrowClient borrowClient;
-
-    @Autowired
-    private AutoSendClient autoSendClient;
-
-    @Autowired
-    SystemConfig systemConfig;
-
+    private SystemConfig systemConfig;
     @Autowired
     private AmConfigClient amConfigClient;
-
-    @Autowired
-    private BorrowTenderClient borrowTenderClient;
-
-    @Autowired
-    private BorrowTenderCpnClient borrowTenderCpnClient;
-
-    @Autowired
-    private CouponConfigClient couponConfigClient;
-    @Autowired
-    private CouponUserClient couponUserClient;
     @Autowired
     private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-    @Autowired
-    private AppMessageProducer appMsProcesser;
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
     @Autowired
     private UtmRegProducer utmRegProducer;
     @Autowired
@@ -142,10 +118,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 查询选择的优惠券
         CouponUserVO cuc = null;
         if (request.getCouponGrantId() != null && request.getCouponGrantId() > 0) {
-            cuc = couponClient.getCouponUser(request.getCouponGrantId(), userId);
+            cuc = amTradeClient.getCouponUser(request.getCouponGrantId(), userId);
         }
         // 查询散标是否存在
-        BorrowVO borrow = borrowClient.selectBorrowByNid(request.getBorrowNid());
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(request.getBorrowNid());
         if (borrow == null) {
             throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
         }
@@ -218,7 +194,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setNotifyUrl(bgRetUrl);
         callBean.setForgotPwdUrl(forgetPassWoredUrl);
         // 插入记录 tmp表
-        amBorrowClient.updateBeforeChinaPnR(request);
+        amTradeClient.updateBeforeChinaPnR(request);
         try {
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -448,7 +424,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     private BorrowProjectTypeVO getProjectType(String projectType) {
         BorrowProjectTypeVO borrowProjectType = null;
-        List<BorrowProjectTypeVO> projectTypes = autoSendClient.selectBorrowProjectByBorrowCd(projectType);
+        List<BorrowProjectTypeVO> projectTypes = amTradeClient.selectBorrowProjectByBorrowCd(projectType);
         if (projectTypes != null && projectTypes.size() == 1) {
             borrowProjectType = projectTypes.get(0);
         }
@@ -485,7 +461,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (retMsgVo != null) {
                 retMsg = retMsgVo.getErrorMsg();
             }
-            amBorrowClient.updateTenderResult(bean.getLogUserId(),bean.getLogOrderId(),respCode,retMsg,bean.getProductId());
+            amTradeClient.updateTenderResult(bean.getLogUserId(),bean.getLogOrderId(),respCode,retMsg,bean.getProductId());
             // 返回码提示余额不足，不结冻
             if (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(respCode)) {
                 logger.info("用户:" + userId + "**投资接口调用失败，余额不足，错误码: " + respCode);
@@ -499,7 +475,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         bean.convert();
         // 借款Id
         String borrowId = bean.getProductId();
-        BorrowVO borrow = borrowClient.selectBorrowByNid(borrowId);
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowId);
         if (borrow == null) {
             logger.info("用户:" + userId + "**回调时,borrowNid为空，错误码: " + respCode);
             result.setStatus(false);
@@ -523,7 +499,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Override
     public WebResult<Map<String, Object>> getBorrowTenderResult(WebViewUserVO userVO, String logOrdId, String borrowNid) {
         WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-        String retMsg = amBorrowClient.getBorrowTenderResult(userVO.getUserId(),logOrdId,borrowNid);
+        String retMsg = amTradeClient.getBorrowTenderResult(userVO.getUserId(),logOrdId,borrowNid);
         Map<String, Object> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);
@@ -542,14 +518,14 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Override
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(WebViewUserVO userVO, String logOrdId, String borrowNid, Integer couponGrantId) {
         Map<String, Object> data = new HashedMap();
-        BorrowVO borrow = amBorrowClient.getBorrowByNid(borrowNid);
+        BorrowVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         // 查看tmp表
         BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
         borrowTenderRequest.setBorrowNid(borrowNid);
         borrowTenderRequest.setTenderNid(logOrdId);
         borrowTenderRequest.setTenderUserId(userVO.getUserId());
         data.put("borrowNid",borrow.getBorrowNid());
-        BorrowTenderVO borrowTender = borrowTenderClient.selectBorrowTender(borrowTenderRequest);
+        BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
         if(borrowTender!=null){
             // 本金收益  历史回报
             data.put("income",borrowTender.getRecoverAccountWait());
@@ -557,9 +533,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("account",borrowTender.getAccount());
 
             // 查询优惠券信息
-            CouponUserVO couponUser = couponClient.getCouponUser(couponGrantId, userVO.getUserId());
+            CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userVO.getUserId());
             // 查询优惠券的投资
-            BorrowTenderCpnVO borrowTenderCpn = borrowTenderCpnClient.getCouponTenderByTender(userVO.getUserId(),borrowNid,borrowTender.getNid(),couponGrantId);
+            BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userVO.getUserId(),borrowNid,borrowTender.getNid(),couponGrantId);
             // 优惠券收益
             data.put("couponQuota",borrowTenderCpn.getAccount());
             data.put("couponType",couponUser.getCouponType());
@@ -584,7 +560,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         df.setRoundingMode(RoundingMode.FLOOR);
         // 查询项目信息
         String money = tender.getAccount();
-        BorrowVO borrow = borrowClient.selectBorrowByNid(tender.getBorrowNid());
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
         if (null == borrow) {
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
@@ -598,18 +574,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             request.setBorrowNid(tender.getBorrowNid());
             request.setUserId(String.valueOf(loginUser.getUserId()));
             request.setPlatform(tender.getPlatform());
-            couponConfig = couponConfigClient.selectBestCoupon(request);
+            couponConfig = amTradeClient.selectBestCoupon(request);
             if (couponConfig != null) {
                 investInfo.setIsThereCoupon(1);
             } else {
                 investInfo.setIsThereCoupon(0);
             }
             // 可用优惠券张数
-            Integer couponAvailableCount = couponConfigClient.countAvaliableCoupon(request);
+            Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             investInfo.setCouponAvailableCount(couponAvailableCount);
             // 优惠券总张数
             /** 获取用户优惠券总张数开始  */
-            Integer recordTotal = couponUserClient.getUserCouponCount(loginUser.getUserId(),"0");
+            Integer recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(),"0");
             investInfo.setRecordTotal(recordTotal);
             /** 获取用户优惠券总张数结束 */
         } else {
@@ -850,7 +826,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             tenderBg.setAuthCode(bean.getAuthCode());
         }
 
-        boolean insertFlag = amBorrowClient.borrowTender(tenderBg);
+        boolean insertFlag = amTradeClient.borrowTender(tenderBg);
         if (insertFlag) {
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             // 网站累计投资追加
