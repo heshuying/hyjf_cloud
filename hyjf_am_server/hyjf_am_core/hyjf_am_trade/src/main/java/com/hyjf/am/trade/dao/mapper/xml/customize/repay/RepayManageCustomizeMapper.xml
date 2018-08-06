@@ -368,4 +368,44 @@
 			</if>
 		</where>
 	</sql>
+	<select id="selectUserRepayFeeWaitTotal" resultType="java.math.BigDecimal" parameterType="Map">
+		SELECT
+		SUM(IFNULL(hydbr.repay_fee,0)) AS all_repay_fee
+		FROM
+		ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		where
+		(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
+		AND hydb.user_id = #{userId,jdbcType=VARCHAR}
+		AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+	</select>
+	<select id="selectOrgRepayFeeWaitTotal" resultType="java.math.BigDecimal" parameterType="Map">
+		SELECT
+		hydbr.repay_fee AS all_repay_fee,
+		FROM
+		ht_borrow hydb
+		INNER JOIN ht_users u ON hydb.repay_org_user_id= u.user_id
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		WHERE
+		(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
+		AND hydb.repay_org_user_id = #{userId,jdbcType=VARCHAR}
+		AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+	</select>
+	<!-- 待垫付总额 -->
+	<select id="selectRepayOrgRepaywait" resultType="java.math.BigDecimal" parameterType="java.lang.Integer">
+		SELECT
+		IF (
+			sum(b.repay_account_wait) IS NULL,
+			0,
+			sum(b.repay_account_wait)
+		)
+		FROM
+			ht_borrow b
+		INNER JOIN ht_users u ON b.repay_org_user_id = u.user_id
+		WHERE
+			b.`status` = 4
+		AND u.user_id = #{userId}
+	</select>
 </mapper>

@@ -65,6 +65,36 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     HjhDebtCreditClient hjhDebtCreditClient;
 
     /**
+     * 普通用户管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
+        return amTradeClient.getUserRepayFeeWaitTotal(userId);
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
+        return amTradeClient.getUserRepayFeeWaitTotal(userId);
+    }
+
+    /**
+     * 担保机构待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
+        return amTradeClient.getOrgRepayWaitTotal(userId);
+    }
+
+    /**
      * 请求参数校验
      *
      * @param requestBean

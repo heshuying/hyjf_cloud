@@ -49,6 +49,40 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     BankRepayFreezeLogService bankRepayFreezeLogService;
 
     /**
+     * 普通借款人管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectUserRepayFeeWaitTotal(Integer userId){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        return repayManageCustomizeMapper.selectUserRepayFeeWaitTotal(params);
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgRepayFeeWaitTotal(Integer userId){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        return repayManageCustomizeMapper.selectOrgRepayFeeWaitTotal(params);
+    }
+
+    /**
+     * 担保机构总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectRepayOrgRepaywait(Integer userId){
+        return repayManageCustomizeMapper.selectRepayOrgRepaywait(userId);
+    }
+
+    /**
      * 检索还款列表
      * @param requestBean
      * @return
