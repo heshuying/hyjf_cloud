@@ -1043,4 +1043,13 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
+		UserEvalationResultResponse response = restTemplate.getForEntity(userService+"/user/skipEvaluate/"+userId+"/"+countScore,UserEvalationResultResponse.class).getBody();
+		if(null!=response){
+			return   response.getResult();
+		}
+		return  null;
+	}
 }

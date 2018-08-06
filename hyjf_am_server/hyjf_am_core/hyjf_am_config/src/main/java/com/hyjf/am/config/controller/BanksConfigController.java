@@ -4,6 +4,7 @@ import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
 import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
 import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
@@ -14,9 +15,11 @@ import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -115,6 +118,17 @@ public class BanksConfigController extends BaseConfigController{
         List<QuestionCustomize> questionCustomizes = questionService.getNewQuestionList();
         if(!CollectionUtils.isEmpty(questionCustomizes)){
             List<QuestionCustomizeVO> questionCustomizeVOS = CommonUtils.convertBeanList(questionCustomizes,QuestionCustomizeVO.class);
+            response.setResultList(questionCustomizeVOS);
+        }
+        return response;
+    }
+
+    @RequestMapping("/getNewAppQuestionList")
+    public NewAppQuestionCustomizeResponse getNewAppQuestionList() {
+        NewAppQuestionCustomizeResponse response = new NewAppQuestionCustomizeResponse();
+        List<NewAppQuestionCustomize> questionCustomizes = questionService.getNewAppQuestionList();
+        if(!CollectionUtils.isEmpty(questionCustomizes)){
+            List<NewAppQuestionCustomizeVO> questionCustomizeVOS = CommonUtils.convertBeanList(questionCustomizes,NewAppQuestionCustomizeVO.class);
             response.setResultList(questionCustomizeVOS);
         }
         return response;

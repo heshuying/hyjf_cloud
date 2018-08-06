@@ -42,6 +42,8 @@ public interface AmConfigClient {
      */
     List<QuestionCustomizeVO> getNewQuestionList();
 
+    List<NewAppQuestionCustomizeVO> getNewAppQuestionList();
+
     /**
      * 计算测评得分
      * @param answerList
