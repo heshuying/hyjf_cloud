@@ -27,7 +27,7 @@ import java.util.Map;
 public class ProjectConstant {
 
 
-     public static final String REQUEST_HOME = "/hyjf-app/";
+     public static final String REQUEST_HOME = "/hyjf-app";
 
      public static final String REQUEST_MAPPING = "/project";
 

@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.trade.HjhDebtDetailResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
-import com.hyjf.am.trade.service.HjhDebtDetailService;
+import com.hyjf.am.trade.service.front.hjh.HjhDebtDetailService;
 import com.hyjf.am.vo.trade.hjh.HjhDebtDetailVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;

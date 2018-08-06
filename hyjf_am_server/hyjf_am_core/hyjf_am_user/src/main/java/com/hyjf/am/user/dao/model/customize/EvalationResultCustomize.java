@@ -29,8 +29,6 @@ public class EvalationResultCustomize {
     public String mobile;
     //用戶属性
     public String userProperty;
-    //是否51老用户
-    public String is51;
     //开户状态
     public String accountStatus;
     //测评状态
@@ -87,13 +85,7 @@ public class EvalationResultCustomize {
         this.userProperty = userProperty;
     }
 
-    public String getIs51() {
-        return is51;
-    }
 
-    public void setIs51(String is51) {
-        this.is51 = is51;
-    }
 
     public String getAccountStatus() {
         return accountStatus;

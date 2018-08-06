@@ -7,7 +7,7 @@ import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
-import com.hyjf.am.trade.service.HjhDebtCreditTenderService;
+import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

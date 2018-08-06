@@ -71,7 +71,7 @@ public class AppProjectListController extends BaseTradeController {
      * 原接口:com.hyjf.app.project.BorrowProjectController.searchProjectInvestList()
      */
     @ApiOperation(value = "APP端散标投资记录", notes = "APP端散标投资记录")
-    @PostMapping(value = "/{borrowId}/investRecord", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/borrow/{borrowId}/investRecord", produces = "application/json; charset=utf-8")
     public JSONObject searchProjectInvestList(@PathVariable("borrowId") String borrowNid, HttpServletRequest request, HttpServletResponse response) {
         JSONObject info = new JSONObject();
         Integer currentPage = 1;
@@ -133,7 +133,7 @@ public class AppProjectListController extends BaseTradeController {
      *  com.hyjf.app.user.transfer.AppTransferController.investRecord()
      */
     @ApiOperation(value="APP端债转承接记录",notes="APP端债转承接记录")
-    @PostMapping(value = "/{transferId}/investRecord", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/transfer/{transferId}/investRecord", produces = "application/json; charset=utf-8")
     public BaseResultBeanFrontEnd investRecord(@PathVariable("transferId") String transferId, Integer currentPage, Integer pageSize) {
         return appProjectListService.investRecord(transferId,currentPage,pageSize);
     }
@@ -181,7 +181,7 @@ public class AppProjectListController extends BaseTradeController {
      * com.hyjf.app.hjhplan.HjhPlanController.searchHjhPlanBorrow()
      */
     @ApiOperation(value = "APP端计划标的组成", notes = "APP端计划标的组成")
-    @RequestMapping(value = "/{planId}/borrowComposition",produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/plan/{planId}/borrowComposition",produces = "application/json; charset=utf-8")
     public HjhPlanBorrowResultBean searchHjhPlanBorrow(
             @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId) {
@@ -195,7 +195,7 @@ public class AppProjectListController extends BaseTradeController {
      * com.hyjf.wechat.controller.hjh.WxHjhPlanController.searchHjhPlanAccede()
      */
     @ApiOperation(value = "APP端汇计划加入记录", notes = "APP端汇计划加入记录")
-    @RequestMapping(value = "/{planId}/investRecord",produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/plan/{planId}/investRecord",produces = "application/json; charset=utf-8")
     public HjhPlanAccedeResultBean searchHjhPlanAccede(
             @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId) {

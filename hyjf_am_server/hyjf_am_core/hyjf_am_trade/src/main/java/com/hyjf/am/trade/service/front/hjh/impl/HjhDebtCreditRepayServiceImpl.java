@@ -1,11 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.impl;
+package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditRepayExample;
-import com.hyjf.am.trade.service.HjhDebtCreditRepayService;
+import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditRepayService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
