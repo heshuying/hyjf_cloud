@@ -6,11 +6,13 @@ import com.hyjf.am.config.dao.model.auto.VersionExample;
 import com.hyjf.am.config.service.VersionConfigService;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -130,11 +132,11 @@ public class VersionConfigServiceImpl implements VersionConfigService {
             cra.andIdNotEqualTo((Integer)map.get("vid"));
         }
         cra.andTypeEqualTo((Integer)map.get("type"));
-        cra.andVersionEqualTo((String) map.get("vid"));
+        cra.andVersionEqualTo((String) map.get("version"));
         List<Version> list = versionMapper.selectByExample(example);
         if(list != null && list.size() > 0){
             VersionVO record = new VersionVO();
-            BeanUtils.copyProperties(list, record);
+            BeanUtils.copyProperties(list.get(0), record);
             return record;
         }
         return null;

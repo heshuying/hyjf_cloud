@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.repay;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.repay.RepayManageService;
+import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
 /**
@@ -35,6 +37,43 @@ import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 public class RepayManageController extends BaseController {
     @Autowired
     RepayManageService repayManageService;
+
+    /**
+     * 普通借款人管理费总待还
+     * @return
+     */
+    @RequestMapping(value = "/feewait_total_user/{userId}")
+    public Response<BigDecimal> userRepayFeeWaitTotal(@PathVariable Integer userId) {
+        Response<BigDecimal> response = new Response<>();
+        BigDecimal waitTotal = repayManageService.selectUserRepayFeeWaitTotal(userId);
+        response.setResult(waitTotal);
+        return response;
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @return
+     */
+    @RequestMapping(value = "/feewait_total_org/{userId}")
+    public Response<BigDecimal> orgRepayFeeWaitTotal(@PathVariable Integer userId) {
+        Response<BigDecimal> response = new Response<>();
+        BigDecimal waitTotal = repayManageService.selectOrgRepayFeeWaitTotal(userId);
+        response.setResult(waitTotal);
+        return response;
+    }
+
+    /**
+     * 担保机构待还
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/repaywait_total_org/{userId}")
+    public Response<BigDecimal> orgRepayWaitTotal(@PathVariable Integer userId) {
+        Response<BigDecimal> response = new Response<>();
+        BigDecimal waitTotal = repayManageService.selectRepayOrgRepaywait(userId);
+        response.setResult(waitTotal);
+        return response;
+    }
 
     /**
      * 检索还款列表

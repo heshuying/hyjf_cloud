@@ -9,7 +9,9 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.vo.user.EvalationResultVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +53,9 @@ public class EvaluationManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/selectUserEvalationResultList")
-    public EvalationResponse selectUserEvalationResultList(@RequestBody @Valid EvalationRequest request) {
+    public EvalationResultResponse selectUserEvalationResultList(@RequestBody @Valid EvalationRequest request) {
         logger.info("---selectUserEvalationResultList by param---  " + JSONObject.toJSON(request));
-        EvalationResponse response = new EvalationResponse();
+        EvalationResultResponse response = new EvalationResultResponse();
         Map<String,Object> mapParam = paramSet(request);
         int usesrCount = evaluationManagerService.countEvalationResultRecord(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), usesrCount,request.getPageSize());
@@ -64,7 +66,7 @@ public class EvaluationManagerController extends BaseController {
         if(usesrCount>0){
             List<EvalationResultCustomize> userManagerCustomizeList = evaluationManagerService.selectUserEvalationResultList(mapParam,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
-                List<EvalationVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, EvalationVO.class);
+                List<EvalationResultVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, EvalationResultVO.class);
                 response.setResultList(userVoList);
                 response.setRtn(Response.SUCCESS);
                 response.setMessage(Response.SUCCESS_MSG);

@@ -1042,10 +1042,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public EvalationResponse selectUserEvalationResultList(EvalationRequest request) {
-		EvalationResponse response = restTemplate
+	public EvalationResultResponse selectUserEvalationResultList(EvalationRequest request) {
+		EvalationResultResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request,
-						EvalationResponse.class)
+						EvalationResultResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1202,4 +1202,96 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest) {
+		AdminUserAuthListResponse response = restTemplate
+	                .postForEntity("http://AM-USER/am-user/userauth/userauthlist",adminUserAuthListRequest, AdminUserAuthListResponse.class)
+	                .getBody();
+
+	        return response;
+	}
+
+	@Override
+	public AdminUserAuthListResponse cancelInvestAuth(int userId) {
+		AdminUserAuthListResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userauth/userinvescancel/" + userId , AdminUserAuthListResponse.class).
+                getBody();
+		return response;
+	}
+
+	@Override
+	public AdminUserAuthListResponse cancelCreditAuth(int userId) {
+		AdminUserAuthListResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userauth/usercreditcancel/" + userId, AdminUserAuthListResponse.class).
+                getBody();
+		return response;
+	}
+
+
+	@Override
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest) {
+		AdminUserAuthLogListResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userauth/userauthloglist",adminUserAuthListRequest, AdminUserAuthLogListResponse.class)
+                .getBody();
+
+        return response;
+	}
+	@Override
+	public CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr) {
+		String url = "http://AM-USER/am-user/certificate/search";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, aprlr, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public CertificateAuthorityResponse updateUserCAMQ(int userId) {
+		String url = "http://AM-USER/am-user/certificate/modifyAction/";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, userId, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public AdminPreRegistListResponse getRecordList(AdminPreRegistListRequest adminPreRegistListRequest) {
+		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/preregist/preregistlist" ,adminPreRegistListRequest,
+						AdminPreRegistListResponse.class)
+				.getBody();
+		if (adminPreRegistListResponse != null) {
+			return adminPreRegistListResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public AdminPreRegistListResponse getPreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
+		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/preregist/updatepreregistlist" ,adminPreRegistListRequest,
+						AdminPreRegistListResponse.class)
+				.getBody();
+		if (adminPreRegistListResponse != null) {
+			return adminPreRegistListResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public AdminPreRegistListResponse savePreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
+		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/preregist/savepreregistlist" ,adminPreRegistListRequest,
+						AdminPreRegistListResponse.class)
+				.getBody();
+		if (adminPreRegistListResponse != null) {
+			return adminPreRegistListResponse;
+		}
+		return null;
+	}
+	
 }

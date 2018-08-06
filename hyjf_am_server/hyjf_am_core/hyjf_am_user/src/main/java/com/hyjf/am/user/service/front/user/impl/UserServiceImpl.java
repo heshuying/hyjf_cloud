@@ -1425,4 +1425,25 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return user;
 	}
+
+	@Override
+	public UserEvalationResult skipEvaluate(Integer userId, Integer countScore) {
+		UserEvalationResult userEvalationResult = selectUserEvalationResultByUserId(userId);
+		deleteUserEvalationResultByUserId(userId);
+		Evalation evalation = getEvalationByCountScore(countScore.shortValue());
+		userEvalationResult.setUserId(userId);
+		userEvalationResult.setScoreCount(countScore);
+		userEvalationResult.setEvalType(evalation.getEvalType());
+		userEvalationResult.setSummary(evalation.getSummary());
+		userEvalationResult.setCreateTime(new Date());
+		if(userEvalationResult!=null){
+			userEvalationResult.setLasttime(userEvalationResult.getCreateTime());
+		}
+		int i=userEvalationResultMapper.insertSelective(userEvalationResult);
+		if(i>0){
+			return userEvalationResult;
+		}else {
+			return null;
+		}
+	}
 }

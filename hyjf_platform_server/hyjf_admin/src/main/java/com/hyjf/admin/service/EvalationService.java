@@ -3,7 +3,8 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.user.EvalationResponse;
+import com.hyjf.admin.beans.response.EvalationInitResponseBean;
+import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 
@@ -16,7 +17,7 @@ public interface EvalationService {
      * 查找用户测评数据
      * @return
      */
-    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
+    EvalationResultResponse selectUserEvalationResultList(EvalationRequest request);
 
     /**
      * 查找用户测评结果
@@ -24,4 +25,9 @@ public interface EvalationService {
      * @return
      */
     UserEvalationResultVO selectUserEvalationResultByUserId(String userId);
+    /**
+     * 用户测评初始化
+     * @return
+     */
+    public EvalationInitResponseBean initUserManaget();
 }

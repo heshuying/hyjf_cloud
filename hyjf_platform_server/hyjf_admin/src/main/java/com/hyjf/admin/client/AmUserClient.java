@@ -481,7 +481,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
+    EvalationResultResponse selectUserEvalationResultList(EvalationRequest request);
     /**
      * 根据id查找用户测评结果
      * @param userId
@@ -535,4 +535,31 @@ public interface AmUserClient {
      */
     CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
     CertificateAuthorityResponse isCAIdNoCheck(String param, String name);
+	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest);
+	public AdminUserAuthListResponse cancelInvestAuth(int userId);
+	public AdminUserAuthListResponse cancelCreditAuth( int userId);
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest);
+	CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr);
+	CertificateAuthorityResponse updateUserCAMQ(int userId);
+	/**
+	 * 获取预注册数据列表
+	 * 
+	 * @return
+	 */
+	public  AdminPreRegistListResponse getRecordList(AdminPreRegistListRequest adminPreRegistListRequest);
+	
+	/**
+     * 获取预注册页面信息
+     * 
+     * @return
+     */
+    public AdminPreRegistListResponse getPreRegist(AdminPreRegistListRequest adminPreRegistListRequest);
+    
+    /**
+     * 编辑保存预注册页面信息
+     * 
+     * @return
+     */
+    public AdminPreRegistListResponse savePreRegist(AdminPreRegistListRequest adminPreRegistListRequest);
+
 }

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.mapper.customize.repay;
 
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -17,4 +18,10 @@ public interface RepayManageCustomizeMapper {
     List<RepayListCustomizeVO> selectOrgRepayList(Map<String,Object> paraMap);
 
     Integer selectOrgRepayCount(Map<String,Object> paraMap);
+
+    BigDecimal selectUserRepayFeeWaitTotal(Map<String,Object> paraMap);
+
+    BigDecimal selectOrgRepayFeeWaitTotal(Map<String,Object> paraMap);
+
+    BigDecimal selectRepayOrgRepaywait(Integer userId);
 }

@@ -6,7 +6,7 @@ import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.resquest.trade.BorrowAuthRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
-import com.hyjf.am.trade.service.repay.BorrowAuthService;
+import com.hyjf.am.trade.service.front.repay.BorrowAuthService;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import org.apache.commons.lang3.StringUtils;

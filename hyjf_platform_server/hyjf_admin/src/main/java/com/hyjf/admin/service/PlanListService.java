@@ -99,4 +99,10 @@ public interface PlanListService {
 	 * @param record
 	 */
 	int insertRecord(PlanListRequest form);
+	
+	/**
+     * 获取计划列表不分页
+     * @return
+     */
+	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
 }

@@ -4,7 +4,6 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.Event;
-import com.hyjf.am.config.dao.model.customize.EventsCustomize;
 import com.hyjf.am.resquest.admin.EventsRequest;
 
 import java.util.List;
@@ -63,22 +62,6 @@ public interface EventService {
 	 */
 	 List<Event> getEvents(int begin, int end,int year);
 
-	/**
-	 * 获取公司纪事
-	 * @param begin
-	 * @param end
-	 * @return
-	 */
-	Event getEventsAll(int begin,int end);
 
-	/**
-	 * 获取百分比
-	 * @param percentage
-	 * @param begin
-	 * @param end
-	 * @param userId
-	 * @return
-	 */
-	Event selectPercentage(int percentage, int begin, int end, int userId);
 
 }

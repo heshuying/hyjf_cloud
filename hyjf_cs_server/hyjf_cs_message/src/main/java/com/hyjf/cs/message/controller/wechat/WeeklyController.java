@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.controller.wechat;
 
 import com.hyjf.am.response.trade.WeeklyResponse;
+import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
@@ -65,7 +66,7 @@ public class WeeklyController {
 
         if(wse1.isEmpty()) {
             //放入公共周数据
-            EventsVO eal = weeklyService.getEventsAll(date1, date2);
+            EventVO eal = weeklyService.getEventsAll(date1, date2);
             String eventTime = eal.getEventTime();
             BigDecimal benzhoutouzie = new BigDecimal(eventTime);
             String content = eal.getContent();
@@ -104,7 +105,7 @@ public class WeeklyController {
         wrt.setZongtianshu(Integer.valueOf(date.get("zongtianshu")));
         wrt.setDatestring(date.get("dateString"));
 
-        EventsVO eal2 = weeklyService.selectPercentage(act.getBankInterestSum().intValue(),date1,date2,Integer.valueOf(userId));
+        EventVO eal2 = weeklyService.selectPercentage(act.getBankInterestSum().intValue(),date1,date2,Integer.valueOf(userId));
         resultBean.setBaifenbi(eal2.getEventYear());
         wrt.setBaifenbi(eal2.getEventYear());
 

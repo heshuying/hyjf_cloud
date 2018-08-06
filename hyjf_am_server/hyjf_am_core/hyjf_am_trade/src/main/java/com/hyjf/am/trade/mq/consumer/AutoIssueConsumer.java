@@ -7,7 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.AssetPushService;
+import com.hyjf.am.trade.service.front.asset.AssetPushService;
 import com.hyjf.am.trade.service.admin.AdminAllocationEngineService;
 import com.hyjf.am.trade.service.admin.AdminHjhLabelService;
 import com.hyjf.am.vo.task.autoissue.AutoIssueMsg;

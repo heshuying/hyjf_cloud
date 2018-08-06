@@ -128,7 +128,7 @@ public class UserPortraitController extends BaseController {
      *
      * @param request
      */
-    @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
+    @ApiOperation(value = "导出用户画像户", notes = "导出用户画像")
     @PostMapping(value = "/exportLoancover")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) throws Exception {
         // 表格sheet名称

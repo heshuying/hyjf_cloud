@@ -40,7 +40,7 @@ public interface WeeklyService {
      * @param end
      * @return
      */
-    EventsVO getEventsAll(int begin, int end);
+    EventVO getEventsAll(int begin, int end);
 
 
     /**
@@ -66,7 +66,7 @@ public interface WeeklyService {
      * @param userId
      * @return
      */
-    EventsVO selectPercentage(int percentage,int begin,int end,int userId);
+    EventVO selectPercentage(int percentage,int begin,int end,int userId);
 
 
     /**

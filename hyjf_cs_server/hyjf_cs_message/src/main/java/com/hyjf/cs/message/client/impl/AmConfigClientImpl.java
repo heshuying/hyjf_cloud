@@ -138,14 +138,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
-	@Override
-	public EventsVO getEventsAll(int begin, int end){
-		EventsVO response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/EventsAll/" + begin+"/"+end,
-						EventsVO.class)
-				.getBody();
-		return response;
-	}
+
 
 	@Override
 	public EventResponse getEvents(int userId,int begin, int end) {
@@ -158,10 +151,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 
 	@Override
-	public EventsVO selectPercentage(int percentage, int begin, int end, int userId) {
-		EventsVO response = restTemplate
+	public EventVO selectPercentage(int percentage, int begin, int end, int userId) {
+		EventVO response = restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/selectPercentage/"+percentage+"/" + begin+"/"+end+"/"+userId,
-						EventsVO.class)
+						EventVO.class)
 				.getBody();
 		return response;
 	}

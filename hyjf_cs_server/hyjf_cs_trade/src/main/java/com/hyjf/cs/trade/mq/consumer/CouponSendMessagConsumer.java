@@ -7,6 +7,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.Consumer;
 import com.hyjf.cs.trade.service.coupon.CouponSendMessageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -36,6 +37,8 @@ public class CouponSendMessagConsumer extends Consumer {
     private static final Logger logger = LoggerFactory.getLogger(CouponSendMessagConsumer.class);
     @Autowired
     private CouponSendMessageService couponSendMessageService;
+    @Autowired
+    private SystemConfig systemConfig;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -113,9 +116,7 @@ public class CouponSendMessagConsumer extends Consumer {
 
         String userId = paramBean.getUserId();
         Integer sendFlg = paramBean.getSendFlg();
-        //TODO 暂未确定该参数如何存放
-//        String accessKey = PropUtils.getSystem(UserCouponDefine.RELEASE_COUPON_ACCESSKEY);
-        String accessKey = "";
+        String accessKey = systemConfig.getCouponAccesskey();
         String sign = StringUtils.lowerCase(MD5.toMD5Code(accessKey + userId + sendFlg + accessKey));
         return StringUtils.equals(sign, paramBean.getSign()) ? true : false;
 

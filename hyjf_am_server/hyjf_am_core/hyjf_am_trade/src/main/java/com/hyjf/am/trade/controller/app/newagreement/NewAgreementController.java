@@ -5,15 +5,12 @@ package com.hyjf.am.trade.controller.app.newagreement;
 
 import com.hyjf.am.bean.app.NewAgreementResultBean;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
-import com.hyjf.am.trade.service.NewAgreementService;
+import com.hyjf.am.trade.service.front.config.NewAgreementService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author dangzw

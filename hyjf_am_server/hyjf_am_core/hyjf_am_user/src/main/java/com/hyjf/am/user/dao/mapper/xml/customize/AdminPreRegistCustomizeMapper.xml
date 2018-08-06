@@ -59,7 +59,7 @@
 			hp.remark AS remark,
 			hp.create_time AS createTime,
 			hp.update_time AS updateTime,
-			hp.update_by AS updateBy
+			hp.update_user AS updateBy
 		FROM
 			ht_pre_regist hp
 		LEFT JOIN ht_utm hutm ON hp.utm_id = hutm.utm_id

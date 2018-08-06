@@ -34,7 +34,7 @@
                 AND hydu.evaluation_expired_time <![CDATA[<=]]> NOW()
             </if>
             <if test="evaluationType != null and evaluationType != ''">
-                AND huer.type = #{evaluationType,jdbcType=INTEGER}
+                AND huer.eval_type = #{evaluationType,jdbcType=INTEGER}
             </if>
         </where>
     </sql>
@@ -45,7 +45,6 @@
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
         <result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
-        <result column="is51_cd" property="is51" jdbcType="INTEGER" />
         <result column="evaluation_status" property="evaluationStatus" jdbcType="VARCHAR" />
         <result column="evaluation_type" property="evaluationType" jdbcType="VARCHAR" />
         <result column="evaluation_score" property="evaluationScore" jdbcType="VARCHAR" />
@@ -71,6 +70,9 @@
         hydui.attribute AS user_property,
         hydui.attribute AS user_property_id,
         hydu.bank_open_account AS account_status,
+        CASE IFNULL(huer.user_id,0)
+        WHEN 0 THEN "未测评"
+        ELSE IF(hydu.evaluation_expired_time <![CDATA[<=]]> NOW()=0,"已测评","已过期") END evaluation_status,
         huer.eval_type as evaluation_type,
         huer.score_count evaluation_score,
         date_format(huer.create_time, '%Y-%c-%d %h:%i:%s') createtime,
@@ -81,8 +83,6 @@
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
         LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
-        --         LEFT JOIN hyjf_param_name pna ON cast(hydui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
-        --         LEFT JOIN hyjf_param_name pnac ON cast(hydu.bank_open_account AS CHAR) = pnac.name_cd AND pnac.name_class = 'ACCOUNT_STATUS'
         LEFT JOIN ht_user_evalation_result huer on hydu.user_id=huer.user_id
         <include refid="Where_Clause" />
         <if test="limitStart != null and limitEnd !=null" >
