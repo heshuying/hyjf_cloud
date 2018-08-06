@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.controller;
 
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
@@ -88,7 +89,7 @@ public class OperationReportJobController extends BaseController {
 			e.printStackTrace();
 		}
 
-		RedisUtils.del("StatisticsOperationReportTask");
+		RedisUtils.del(RedisConstants.Statistics_Operation_Report);
 
 		logger.info("完成 插入统计数据到mongodb...");
 	}

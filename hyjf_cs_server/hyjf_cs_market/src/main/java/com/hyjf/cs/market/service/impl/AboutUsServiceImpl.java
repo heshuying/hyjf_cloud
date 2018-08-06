@@ -9,9 +9,8 @@ import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.market.client.AmConfigClient;
-import com.hyjf.cs.market.client.AmDataCollectClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     private AmConfigClient amConfigClient;
 
     @Autowired
-    private AmDataCollectClient amDataCollectClient;
+    private CsMessageClient amDataCollectClient;
 
 
     //TODO 路径配置

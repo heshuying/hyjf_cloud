@@ -19,6 +19,12 @@ import java.util.List;
  * @version RepayManageService, v0.1 2018/6/23 18:02
  */
 public interface RepayManageService extends BaseTradeService {
+    BigDecimal getUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayWaitTotal(Integer userId);
+
     void checkForRepayList(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);

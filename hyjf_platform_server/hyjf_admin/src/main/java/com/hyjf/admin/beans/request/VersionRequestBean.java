@@ -9,19 +9,23 @@ import java.io.Serializable;
  */
 public class VersionRequestBean extends BaseRequest implements Serializable {
     private static final long serialVersionUID = 387630498860089653L;
+    //删除条件
     private String ids;
+    //系统名称--检索条件
     private String nameSrh;
+    //版本号--检索条件
     private String versionSrh;
+    //版本id
     private Integer id;
-
+    //版本类型
     private Integer type;
-
+    //版本号
     private String version;
-
+    //是否需要更新
     private Integer isupdate;
-
+    //url
     private String url;
-
+    //版本描述
     private String content;
 
     public String getIds() {
