@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.service;
 
+import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
+import com.hyjf.am.trade.dao.model.customize.app.AppTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserWithdrawListCustomize;
@@ -23,4 +25,8 @@ public interface TradeDetailService  extends BaseService {
     List<WebUserWithdrawListCustomize> searchUserWithdrawList(TradeDetailBeanRequest request);
 
     int countUserWithdrawRecordTotal(TradeDetailBeanRequest request);
+
+    List<AppTradeListCustomize> searchAppTradeDetailList(AppTradeDetailBeanRequest request);
+
+    int countAppTradeDetailListRecordTotal(AppTradeDetailBeanRequest request);
 }
