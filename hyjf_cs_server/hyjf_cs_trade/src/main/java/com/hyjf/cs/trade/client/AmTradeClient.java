@@ -119,7 +119,7 @@ public interface AmTradeClient {
     List<HjhAccedeVO> selectPlanJoinList();
 
     /**
-     * 计算实际金额 保存creditTenderLog表
+     * 计算计划债转实际金额 保存creditTenderLog表
      * @author liubin
      * @return
      */
@@ -137,14 +137,14 @@ public interface AmTradeClient {
      * @author liubin
      * @return
      */
-    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
 
     /**
      * 银行自动投资成功后，更新投资数据
      * @author liubin
      * @return
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     /**
      * 根据是否原始债权获出让人投标成功的授权号
@@ -208,7 +208,8 @@ public interface AmTradeClient {
 
     /**
      * 根据主键，更新汇计划自动投资临时表
-     * @author liubin
+     * @param hjhPlanBorrowTmpVO
+     * @return
      */
     int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 

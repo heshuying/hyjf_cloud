@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Api(value = "汇计划按日对账统计表")
 @RestController
-@RequestMapping("/am-trade/hjhAccede")
+@RequestMapping("/am-trade/hjhAccountBalanceController")
 public class HjhAccountBalanceController {
     @Autowired
     private HjhAccountBalanceService hjhAccountBalanceService;

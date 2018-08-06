@@ -38,6 +38,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
+ * 自动投资
  * @author liubin
  * @version AutoTenderServiceImpl, v0.1 2018/6/28 21:26
  */
@@ -174,14 +175,17 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 银行自动投资成功后，更新投资数据
-     * @param borrow
-     * @param hjhAccede
+     * @param borrowNid
+     * @param accedeOrderId
      * @param bean
      * @return
      */
     @Override
-    public boolean updateBorrowForAutoTender(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
+    public boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean) {
         boolean result = false;
+        // 防范主从数据库不同步，取读库传参改从写库拉数据
+        Borrow borrow = this.selectBorrowByNid(borrowNid);
+        HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
 
         String txAmount = bean.getTxAmount();// 借款金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
@@ -247,6 +251,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 插入冻结表
+     * @param borrow
+     * @param hjhAccede
+     * @param bean
+     * @return
      */
     private boolean insertFreezeList(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
 
@@ -285,7 +293,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      * @param hjhAccede
      * @param bean
      * @return
-     * @throws Exception
      */
     public boolean insertBorrowTender(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
         int nowTime = GetDate.getNowTime10();
@@ -420,7 +427,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      * @param hjhAccede
      * @param bean
      * @return
-     * @throws Exception
      */
     private boolean insertAccountList(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
 
@@ -538,6 +544,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 获取相应的标的详情
+     * @param borrowNid
+     * @return
      */
     @Override
     public Borrow selectBorrowByNid(String borrowNid) {
@@ -557,6 +565,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 获取相应的债转详情
+     * @param creditNid
+     * @return
      */
     @Override
     public HjhDebtCredit selectCreditByNid(String creditNid) {
@@ -573,6 +583,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 投资完成更新计划明细
+     * @param hjhAccede
+     * @param orderStaus
+     * @return
      */
     @Override
     public int updateHjhAccede(HjhAccede hjhAccede, int orderStaus) {
@@ -589,20 +602,24 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 银行自动投资成功后，更新投资数据
-     * @param credit
-     * @param hjhAccede
-     * @param hjhPlan
+     * @param creditNid
+     * @param accedeOrderId
+     * @param planNid
      * @param bean
      * @param tenderUsrcustid
      * @param sellerUsrcustid
      * @param resultMap
      * @return
-     * @throws Exception
      */
     @Override
-    public boolean updateCreditForAutoTender(HjhDebtCredit credit, HjhAccede hjhAccede, HjhPlan hjhPlan, BankCallBean bean,
-                                String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap){
+    public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
+                                             String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
         boolean result = false;
+
+        // 防范主从数据库不同步，取读库传参改从写库拉数据
+        HjhDebtCredit credit = this.selectCreditByNid(creditNid);
+        HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
+        HjhPlan hjhPlan = this.selectHjhPlanByPlanNid(planNid);
 
         String txAmount = bean.getTxAmount();// 交易金额
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 交易金额(实际支付金额)
@@ -674,7 +691,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 保存用户的债转承接log数据
+     * 计算计划债转实际金额 保存creditTenderLog表
      *
      * @param credit
      * @param debtPlanAccede
@@ -682,7 +699,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      * @param creditOrderDate
      * @param account
      * @return
-     * @throws Exception
      */
     @Override
     public Map<String, Object> saveCreditTenderLog(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast) {
@@ -2168,7 +2184,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      * @return
      * @throws Exception
      */
-    private HjhDebtCreditRepay selectDebtCreditRepay(String liquidatesPlanNid, String liquidatesPlanOrderId, String sellerOrderId, int waitRepayPeriod){
+    private HjhDebtCreditRepay selectDebtCreditRepay(String liquidatesPlanNid, String liquidatesPlanOrderId, String sellerOrderId, int waitRepayPeriod) {
 
         HjhDebtCreditRepayExample example = new HjhDebtCreditRepayExample();
         HjhDebtCreditRepayExample.Criteria crt = example.createCriteria();
@@ -2434,6 +2450,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 调用MQ,生成计划债权转让协议
+     *
      * @param assignNid
      */
     private void planCreditGenerateContractByMQ(String assignNid) {
