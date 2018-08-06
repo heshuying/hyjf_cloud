@@ -79,6 +79,9 @@ public class BorrowRegistController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(FAIL, "未获取到当前登录用户信息");
+        }
         return borrowRegistService.updateBorrowRegist(borrowNid, currUser.getId(), currUser.getUsername());
     }
 }

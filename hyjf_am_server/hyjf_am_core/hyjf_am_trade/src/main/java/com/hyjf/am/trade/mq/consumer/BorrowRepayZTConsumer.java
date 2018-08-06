@@ -25,7 +25,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.service.BatchBorrowRepayZTService;
+import com.hyjf.am.trade.service.front.batch.BatchBorrowRepayZTService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
