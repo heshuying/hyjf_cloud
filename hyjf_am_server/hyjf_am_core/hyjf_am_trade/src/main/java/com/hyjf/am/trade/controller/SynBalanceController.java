@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
-import com.hyjf.am.trade.service.SynBalanceService;
+import com.hyjf.am.trade.service.front.trade.SynBalanceService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

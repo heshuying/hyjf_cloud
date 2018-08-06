@@ -3525,4 +3525,46 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 普通用户管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
+        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_user/" + userId, Response.class).getBody();
+        if (Response.isSuccess(response)) {
+            return new BigDecimal(response.getResult());
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
+        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/feewait_total_org/" + userId, Response.class).getBody();
+        if (Response.isSuccess(response)) {
+            return new BigDecimal(response.getResult());
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 担保机构总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
+        Response<Double> response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, Response.class).getBody();
+        if (Response.isSuccess(response)) {
+            return new BigDecimal(response.getResult());
+        }
+        return BigDecimal.ZERO;
+    }
 }

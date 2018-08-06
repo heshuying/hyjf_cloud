@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.trade.ProtocolTemplateResponse;
-import com.hyjf.am.trade.service.ProtocolTemplateService;
+import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
 import io.swagger.annotations.Api;

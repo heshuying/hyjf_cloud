@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.AssetPushService;
+import com.hyjf.am.trade.service.front.asset.AssetPushService;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;

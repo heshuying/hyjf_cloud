@@ -36,7 +36,7 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.regist.RegistService;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;

@@ -1,8 +1,10 @@
 package com.hyjf.am.trade.controller;
 
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.trade.dao.model.customize.Event;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.WeeklyService;
+import com.hyjf.am.trade.service.front.trade.WeeklyService;
+import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
@@ -146,5 +148,32 @@ public class WxWeeklyController {
         return weeklyService.coupon(userid);
     }
 
+    /**
+     *获取公司纪事
+     * @param begin
+     * @param end
+     * @return
+     */
+    @GetMapping("/EventsAll/{begin}/{end}")
+    public EventVO queryEventsAll(@PathVariable Integer begin, @PathVariable Integer end){
+        Event eventsAll = weeklyService.getEventsAll(begin, end);
+        EventVO eventsVO = CommonUtils.convertBean(eventsAll, EventVO.class);
+        return eventsVO;
+    }
+
+    /**
+     * 查询投资百分比
+     * @param percentage
+     * @param begin
+     * @param end
+     * @param userId
+     * @return
+     */
+    @GetMapping("/selectPercentage/{percentage}/{begin}/{end}/{userId}")
+    public EventVO queryPercentage(@PathVariable int percentage,@PathVariable int begin,@PathVariable int end,@PathVariable int userId){
+        Event eventsAll = weeklyService.selectPercentage(percentage, begin, end, userId);
+        EventVO eventsVO = CommonUtils.convertBean(eventsAll, EventVO.class);
+        return eventsVO;
+    }
 
 }

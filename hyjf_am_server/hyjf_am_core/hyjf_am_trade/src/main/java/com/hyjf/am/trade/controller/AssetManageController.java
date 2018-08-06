@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.AssetManageResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.trade.dao.model.customize.trade.*;
-import com.hyjf.am.trade.service.AssetManageService;
+import com.hyjf.am.trade.service.front.asset.AssetManageService;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 

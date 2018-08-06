@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.user;
 
 import com.hyjf.admin.beans.request.EvalationRequestBean;
+import com.hyjf.admin.beans.response.EvalationInitResponseBean;
 import com.hyjf.admin.beans.vo.EvalationCustomizeVO;
 import com.hyjf.admin.beans.vo.UserEvalationResultCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -11,7 +12,7 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.EvalationResponse;
+import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.util.CommonUtils;
@@ -37,13 +38,21 @@ public class EvalationController extends BaseController {
     @Autowired
     private EvalationService evalationService;
 
+    @ApiOperation(value = "用户测评初始化(下拉列表)", notes = "用户测评页面初始化")
+    @PostMapping(value = "/usersInit")
+    @ResponseBody
+    public  AdminResult<EvalationInitResponseBean>  userManagerInit() {
+        EvalationInitResponseBean evalationInitResponseBean =evalationService.initUserManaget();
+        return new AdminResult<EvalationInitResponseBean>(evalationInitResponseBean);
+
+    }
     @ApiOperation(value = "用户测评列表查询", notes = "用户测评列表查询")
     @PostMapping(value = "/evalationRecord")
     @ResponseBody
     public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation(HttpServletRequest request, HttpServletResponse response, @RequestBody EvalationRequestBean evalationRequestBean){
         EvalationRequest evalationRequest = new EvalationRequest();
         BeanUtils.copyProperties(evalationRequestBean,evalationRequest);
-        EvalationResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
+        EvalationResultResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
         if(evalationResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

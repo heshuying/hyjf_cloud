@@ -4,7 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
-import com.hyjf.am.trade.service.admin.HjhRepayService;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

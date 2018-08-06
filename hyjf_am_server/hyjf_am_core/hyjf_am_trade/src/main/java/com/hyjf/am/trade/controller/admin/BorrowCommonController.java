@@ -3,7 +3,6 @@ package com.hyjf.am.trade.controller.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,11 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.bean.BorrowCommonBean;
-import com.hyjf.am.trade.bean.BorrowCommonNameAccount;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.BorrowCommonService;
-import com.hyjf.am.trade.service.InstConfigService;
+import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
+import com.hyjf.am.trade.service.front.config.InstConfigService;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonNameAccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;

@@ -12,7 +12,7 @@ import com.hyjf.am.resquest.trade.InsertBankCreditEndForCreditEndRequest;
 import com.hyjf.am.resquest.trade.UpdateBankCreditEndForStatusRequest;
 import com.hyjf.am.trade.dao.model.auto.BankCreditEnd;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.service.BankCreditEndService;
+import com.hyjf.am.trade.service.front.account.BankCreditEndService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.CommonUtils;

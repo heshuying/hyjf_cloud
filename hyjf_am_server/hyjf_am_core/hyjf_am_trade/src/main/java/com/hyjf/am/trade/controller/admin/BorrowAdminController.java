@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +14,8 @@ import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.BorrowCommonService;
-import com.hyjf.am.trade.service.BorrowService;
+import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
+import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;

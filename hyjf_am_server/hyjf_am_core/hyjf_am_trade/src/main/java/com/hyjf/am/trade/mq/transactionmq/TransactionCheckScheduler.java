@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
-import com.hyjf.am.trade.service.ProducerTransactionMessageService;
+import com.hyjf.am.trade.service.front.batch.ProducerTransactionMessageService;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.remoting.exception.RemotingException;

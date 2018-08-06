@@ -13,8 +13,8 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
-import com.hyjf.am.trade.service.AccountService;
-import com.hyjf.am.trade.service.RechargeService;
+import com.hyjf.am.trade.service.front.account.AccountService;
+import com.hyjf.am.trade.service.front.trade.RechargeService;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 

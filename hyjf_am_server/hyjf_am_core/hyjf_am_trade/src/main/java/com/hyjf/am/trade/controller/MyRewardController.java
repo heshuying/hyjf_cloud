@@ -3,7 +3,7 @@ package com.hyjf.am.trade.controller;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.MyRewardListResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.trade.service.MyRewardService;
+import com.hyjf.am.trade.service.front.trade.MyRewardService;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
