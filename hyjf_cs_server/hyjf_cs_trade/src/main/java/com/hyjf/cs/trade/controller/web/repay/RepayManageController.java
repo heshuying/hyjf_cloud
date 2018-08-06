@@ -467,7 +467,7 @@ public class RepayManageController extends BaseTradeController {
      * @throws Exception
      */
     @ApiOperation(value = "业务处理结果的异步回调", notes = "业务处理结果的异步回调")
-    @RequestMapping("/repayResultReturn")
+    @PostMapping("/repayResultReturn")
     public String repayResultReturn(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         logger.info("批次还款请求,业务处理结果的异步回调开始");
