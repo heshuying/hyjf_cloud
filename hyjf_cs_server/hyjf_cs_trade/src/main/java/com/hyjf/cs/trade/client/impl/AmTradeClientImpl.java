@@ -9,6 +9,7 @@ import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
+import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -19,6 +20,7 @@ import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -28,6 +30,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -3585,5 +3588,20 @@ public class AmTradeClientImpl implements AmTradeClient {
             return new BigDecimal(response.getResult());
         }
         return BigDecimal.ZERO;
+    }
+
+
+    /**
+     * 查询广告列表
+     * @author zhangyk
+     * @date 2018/7/5 15:32
+     */
+    @Override
+    public List<AppAdsCustomizeVO> getBannerList(AdsRequest request) {
+        AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchBanner",request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -14,6 +15,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -1536,4 +1538,11 @@ public interface AmTradeClient {
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
 
     BigDecimal getOrgRepayWaitTotal(Integer userId);
+
+    /**
+     * 查询广告列表
+     * @author zhangyk
+     * @date 2018/7/5 15:32
+     */
+    List<AppAdsCustomizeVO> getBannerList(AdsRequest request);
 }
