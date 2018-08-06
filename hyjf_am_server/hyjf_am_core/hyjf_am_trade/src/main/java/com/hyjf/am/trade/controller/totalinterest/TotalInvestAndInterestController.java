@@ -5,7 +5,7 @@ package com.hyjf.am.trade.controller.totalinterest;
 
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.TotalInvestAndInterestService;
+import com.hyjf.am.trade.service.front.statistics.TotalInvestAndInterestService;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

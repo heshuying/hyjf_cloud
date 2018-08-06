@@ -39,6 +39,8 @@ public interface RepayManageService extends BaseTradeService {
 
     Integer selectOrgRepayedCount(RepayListRequest requestBean);
 
+    boolean checkPassword(Integer userId, String password);
+
     ProjectBean searchRepayProjectDetail(ProjectBean form) throws NumberFormatException, ParseException;
 
     RepayBean checkForRepayRequest(RepayRequest requestBean, WebViewUserVO user, int flag);

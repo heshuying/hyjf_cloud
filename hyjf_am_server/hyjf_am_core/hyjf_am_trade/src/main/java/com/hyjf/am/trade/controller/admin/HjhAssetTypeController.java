@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.admin.HjhAssetTypeResponse;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
-import com.hyjf.am.trade.service.admin.HjhAssetTypeService;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhAssetTypeService;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.common.util.CommonUtils;
 

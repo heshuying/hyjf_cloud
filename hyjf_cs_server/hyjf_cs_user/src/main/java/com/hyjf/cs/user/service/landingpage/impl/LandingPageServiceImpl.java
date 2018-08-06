@@ -4,7 +4,7 @@
 package com.hyjf.cs.user.service.landingpage.impl;
 
 import com.hyjf.cs.user.client.AmDataCollectClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.landingpage.LandingPageService;
 import com.hyjf.cs.user.vo.LandingPageResulltVO;
 import org.springframework.beans.factory.annotation.Autowired;

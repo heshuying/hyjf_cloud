@@ -6,7 +6,7 @@ import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
 import com.hyjf.am.response.admin.AdminInstConfigListResponse;
 import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.InstConfigService;
+import com.hyjf.am.trade.service.front.config.InstConfigService;
 import com.hyjf.am.vo.admin.HjhInstConfigWrapVo;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;

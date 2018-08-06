@@ -47,7 +47,7 @@ import java.util.Map;
  * 资金中心->直投提成管理
  */
 
-@Api(value = "资金中心->直投提成管理",description = "资金中心->直投提成管理")
+@Api(value = "资金中心->直投提成管理",tags = "资金中心->直投提成管理")
 @RestController
 @RequestMapping("/hyjf-admin/pushMoney")
 public class PushMoneyManageController extends BaseController {
