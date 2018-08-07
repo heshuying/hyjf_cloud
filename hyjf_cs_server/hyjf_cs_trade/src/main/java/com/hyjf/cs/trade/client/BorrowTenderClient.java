@@ -67,11 +67,5 @@ public interface BorrowTenderClient {
      */
 	CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
 
-	/**
-	 * 获取计算提成数据
-	 * @param request
-	 * @return
-	 */
-	Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
 
 }

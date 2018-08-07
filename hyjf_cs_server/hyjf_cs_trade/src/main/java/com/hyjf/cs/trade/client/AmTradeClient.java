@@ -71,22 +71,6 @@ public interface AmTradeClient {
 
     List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean);
 
-    /**
-     * 根据borrowNid查询优惠券还款列表
-     * @param borrowNid
-     * @param repayTimeConfig
-     * @return
-     */
-    List<CouponTenderCustomizeVO> selectCouponRecoverAll(String borrowNid, int repayTimeConfig);
-
-    /**
-     * 取得分期付款信息
-     * @param couponTenderNid
-     * @param periodNow
-     * @return
-     */
-    CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
-
 
     int selectMyRewardCount(MyInviteListRequest requestBean);
 

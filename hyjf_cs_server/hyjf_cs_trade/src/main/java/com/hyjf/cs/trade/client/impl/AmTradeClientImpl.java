@@ -129,26 +129,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    @Override
-    public List<CouponTenderCustomizeVO> selectCouponRecoverAll(String borrowNid, int repayTimeConfig) {
-        String url = urlBase + "batch/selectCouponRecover/" + borrowNid + "/" + repayTimeConfig;
-        CouponTenderCustomizeResponse response = restTemplate.getForEntity(url, CouponTenderCustomizeResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
-    public CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow) {
-        String url = urlBase + "batch/getCurrentCouponRecover/" + couponTenderNid + "/" + periodNow;
-        CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url, CouponRecoverCustomizeResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
 
     /**
      * 统计总的优惠券数

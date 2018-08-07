@@ -7,11 +7,9 @@ import com.hyjf.am.vo.trade.account.AccountListVO;
  * @version AccountListClient, v0.1 2018/6/11 17:26
  */
 public interface AccountListClient {
-    AccountListVO selectAccountListByOrdId(String ordId, String type);
 
     int countAccountListByOrdId(String ordId, String type);
 
-    int countAccountListByNidCoupon(String orderId);
 
     Integer insertAccountListSelective(AccountListVO accountListVO);
 
