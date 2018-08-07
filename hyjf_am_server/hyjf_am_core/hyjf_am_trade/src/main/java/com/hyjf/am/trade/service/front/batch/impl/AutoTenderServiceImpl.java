@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.front.borrow.impl;
+package com.hyjf.am.trade.service.front.batch.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -10,7 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
+import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
@@ -829,10 +829,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         HjhDebtDetail debtDetailOld = debtDetailOldList.get(i);
                         // 还款期数
                         int waitRepayPeriod = debtDetailOld.getRepayPeriod();
-                        // 承接人此次承接的分期待收本金 TODO
+                        // 承接人此次承接的分期待收本金
                         assignPeriodCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
                                 debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
-                        // 承接人此次承接的分期待收利息 TODO
+                        // 承接人此次承接的分期待收利息
                         assignPeriodInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
                                 debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
                         // 本期延期利息(0)
@@ -1083,15 +1083,15 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         HjhDebtDetail debtDetailOld = debtDetailOldList.get(i);
                         // 还款期数
                         int waitRepayPeriod = debtDetailOld.getRepayPeriod();
-                        // 承接人此次承接的分期待收本金 TODO
+                        // 承接人此次承接的分期待收本金
                         assignPeriodCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
                                 debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
-                        // 承接人此次承接的分期待收利息 TODO
+                        // 承接人此次承接的分期待收利息
                         assignPeriodInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
                                 debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
-                        // 本期延期利息(0) TODO
+                        // 本期延期利息(0)
                         assignPeriodRepayDelayInterest = BigDecimal.ZERO;
-                        // 本期逾期利息(0) TODO
+                        // 本期逾期利息(0)
                         assignPeriodRepayLateInterest = BigDecimal.ZERO;
                         // 承接人此次承接的总待收本金
                         assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
@@ -1357,7 +1357,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                             debtCredit.setAssignNum(debtCredit.getAssignNum() + 1);// 投资次数
 //								if (debtCredit.getCreditCapitalWait().compareTo(new BigDecimal(0)) == 0) {
 //									debtCredit.setCreditStatus(2);//转让状态 2完全承接
-//									debtCredit.setIsLiquidates(1);//TODO
+//									debtCredit.setIsLiquidates(1);
 //								} else {
                             debtCredit.setCreditStatus(1);//转让状态 1.部分承接
 //								}
@@ -1666,7 +1666,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                     // 更新相应的债转承接金额
                                                                     BorrowRecoverExample debtLoanExample = new BorrowRecoverExample();
                                                                     BorrowRecoverExample.Criteria debtLoanCrt = debtLoanExample.createCriteria();
-                                                                    debtLoanCrt.andNidEqualTo(debtCredit.getInvestOrderId());//TODO
+                                                                    debtLoanCrt.andNidEqualTo(debtCredit.getInvestOrderId());
                                                                     List<BorrowRecover> debtLoanList = this.borrowRecoverMapper.selectByExample(debtLoanExample);
                                                                     if (debtLoanList != null && debtLoanList.size() == 1) {
                                                                         BorrowRecover debtLoan = debtLoanList.get(0);
