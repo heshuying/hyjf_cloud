@@ -135,8 +135,6 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
-    @Value("${hyjf.app.server.host}")
-    private String appServerHost;
 
     public String getBankInstcode() {
         return bankInstcode;
@@ -440,11 +438,4 @@ public class SystemConfig {
         this.couponAccesskey = couponAccesskey;
     }
 
-    public String getAppServerHost() {
-        return appServerHost;
-    }
-
-    public void setAppServerHost(String appServerHost) {
-        this.appServerHost = appServerHost;
-    }
 }
