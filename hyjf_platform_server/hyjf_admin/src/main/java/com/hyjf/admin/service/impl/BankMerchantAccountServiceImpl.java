@@ -38,6 +38,9 @@ import java.util.Map;
 @Service
 public class BankMerchantAccountServiceImpl implements BankMerchantAccountService {
 
+    /** 必须Key */
+    private static final String REQUIRED = "required";
+
     @Autowired
     AmTradeClient amTradeClient;
 
@@ -157,5 +160,68 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
 
     }
 
+    @Override
+    public AdminResult resetPassword(String accountCode) {
+        AdminResult result = new AdminResult();
+        BankMerchantAccountVO bankMerchantAccount = this.getBankMerchantAccount(accountCode);
+        // 判断用户是否设置过交易密码
+        Integer passwordFlag = bankMerchantAccount.getIsSetPassword();
+        CheckUtil.check(passwordFlag != 0, MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        BankMerchantAccountInfoVO info=this.getBankMerchantAccountInfoByCode(accountCode);
+        String userName="";
+        String mobile="";
+        String idNo="";
+        String idType="";
+        if(info!=null){
+            //服务费账户
+            mobile=info.getMobile();
+            idNo=info.getIdNo();
+            idType=info.getIdType();
+            //用户名
+            userName = info.getAccountName();
+        } else{
+            throw new CheckException("1","账户不存在");
+        }
+     // 调用设置密码接口
+        BankCallBean bean = new BankCallBean();
+        // 同步地址  是否跳转到前端页面
+        String retUrl = systemConfig.getAdminFrontHost() +"/admin/openError"+"?logOrdId="+bean.getLogOrderId();
+        String successUrl = systemConfig.getAdminFrontHost() +"/admin/openSuccess";
+        // 异步调用路
+        String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
+                + "/resetPasswordBgreturn";
+        // 消息类型(用户开户)
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        bean.setIdType(idType);
+        bean.setIdNo(idNo);
+        bean.setName(userName);
+        // 电子账号
+        bean.setAccountId(accountCode);
+        bean.setMobile(mobile);
+        // 页面同步返回 URL
+        bean.setRetUrl(retUrl);
+        bean.setSuccessfulUrl(successUrl);
+        // 页面异步返回URL(必须)
+        bean.setNotifyUrl(bgRetUrl);
+        // 商户私有域，存放开户平台,用户userId
+        LogAcqResBean acqRes = new LogAcqResBean();
+        acqRes.setUserId(40);
+        bean.setLogAcqResBean(acqRes);
+        // 操作者ID
+        bean.setLogUserId(String.valueOf(40));
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogOrderId(GetOrderIdUtils.getUsrId(40));
+        // 跳转到江西银行画面
+        Map<String, Object> map = new HashMap<>();
+        try {
+            map = BankCallUtils.callApiMap(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CheckException("1","调用银行接口失败!");
+        }
+        result.setData(map);
+        return result;
+    }
 
 }

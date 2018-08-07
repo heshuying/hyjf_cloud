@@ -249,5 +249,8 @@ public class RedisConstants {
      */
     public static final String RECHARGE_ORDERID = "recharge_orderid:";
 
-
+    /**
+     * 定时发标key
+     */
+    public static final String ON_TIME = "ON_TIME:";
 }

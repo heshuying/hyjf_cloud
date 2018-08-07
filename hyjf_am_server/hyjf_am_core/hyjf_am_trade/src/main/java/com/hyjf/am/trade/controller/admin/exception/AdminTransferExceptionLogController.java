@@ -27,7 +27,7 @@ import java.util.List;
  * @author jun
  * @version AdminTransferExceptionLogController, v0.1 2018/7/10 11:19
  */
-@Api(value = "异常中心-银行转账异常",description = "异常中心-银行转账异常")
+@Api(value = "异常中心-银行转账异常",tags ="异常中心-银行转账异常")
 @RestController
 @RequestMapping("/am-trade/transferExceptionLog")
 public class AdminTransferExceptionLogController extends BaseController {

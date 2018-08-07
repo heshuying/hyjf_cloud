@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * 组合层共用Controller基类
@@ -83,4 +85,22 @@ public class BaseController {
         result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
         return result;
     }
+
+    /**
+     *
+     * 特殊字符编码
+     * @author pangchengchao
+     * @return
+     * @throws Exception
+     */
+    public String strEncode(String str) {
+        try {
+            str = URLEncoder.encode(str, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+
 }

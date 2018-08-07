@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Api(value = "app端-用户授权自动投资自动债转接口",tags = "app端-用户授权自动投资自动债转接口")
 @RestController
-@RequestMapping("/hyjf-app/user/bank/autoplus")
+@RequestMapping("/hyjf-app/bank/user/autoplus")
 public class APPAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(APPAutoPlusController.class);
@@ -55,7 +55,7 @@ public class APPAutoPlusController extends BaseUserController {
     public AutoPlusResultBean autoPlusSendCode(@RequestHeader(value = "userId") Integer userId, @RequestParam String userAutoType,
                                                @RequestParam(value = "mobile", required = false) String mobile) {
         logger.info("app端授权发送短信验证码, mobile :{}", mobile);
-        String returnRequest = "/user/bank/autoplus/sendcode";
+        String returnRequest = "/bank/user/autoplus/sendcode";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         CheckUtil.check(userId != null, MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = autoPlusService.getUsersById(userId);
@@ -97,7 +97,7 @@ public class APPAutoPlusController extends BaseUserController {
     @RequestMapping(value = "/getUserAuthInvesUrl")
     @ResponseBody
     public AutoPlusResultBean getUserAuthInvesUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode, @RequestParam String code) {
-        String returnRequest = "/user/bank/autoplus/getUserAuthInvesUrl";
+        String returnRequest = "/bank/user/autoplus/getUserAuthInvesUrl";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         if (StringUtils.isBlank(code) || StringUtils.isBlank(srvAuthCode)) {
             result.setStatusDesc("验证码或前导业务码不能为空");
@@ -107,7 +107,7 @@ public class APPAutoPlusController extends BaseUserController {
         if (userAuth != null && userAuth.getAutoInvesStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
-        String url = systemConfig.getAppHost()+"/hyjf-app/user/bank/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
+        String url = systemConfig.getAppHost()+"/hyjf-app/bank/user/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -124,7 +124,7 @@ public class APPAutoPlusController extends BaseUserController {
     @ResponseBody
     public AutoPlusResultBean getUserAuthCreditUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode,
                                                    @RequestParam String code) {
-        String returnRequest = "/user/bank/autoplus/getUserAuthCreditUrl";
+        String returnRequest = "/bank/user/autoplus/getUserAuthCreditUrl";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         if (StringUtils.isBlank(code) || StringUtils.isBlank(srvAuthCode)) {
             result.setStatusDesc("验证码或前导业务码不能为空");
@@ -136,7 +136,7 @@ public class APPAutoPlusController extends BaseUserController {
             result.setStatusDesc("自动投标已授权");
             return result;
         }
-        String url = systemConfig.getAppHost()+"/hyjf-app/user/bank/autoplus/userAuthCredit?code=" + code
+        String url = systemConfig.getAppHost()+"/hyjf-app/bank/user/autoplus/userAuthCredit?code=" + code
                 + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
