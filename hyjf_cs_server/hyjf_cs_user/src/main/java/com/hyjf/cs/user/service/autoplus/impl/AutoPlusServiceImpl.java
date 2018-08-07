@@ -470,7 +470,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Override
     public BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId) {
-        String errorPath = systemConfig.getAppHost() + "/user/setting/authorization/result/failed";
+        String errorPath = systemConfig.getAppServerHost() + "/user/setting/authorization/result/failed";
         if (checkResult != null) {
             BaseMapBean baseMapBean = new BaseMapBean();
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
