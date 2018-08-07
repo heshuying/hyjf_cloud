@@ -3,44 +3,32 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.hyjf.am.resquest.admin.BorrowFireRequest;
+import com.hyjf.am.resquest.admin.BorrowFirstRequest;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
+import com.hyjf.am.trade.dao.model.auto.BorrowBail;
+import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowExample;
+import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
+import com.hyjf.am.trade.mq.producer.BorrowFirstProducer;
+import com.hyjf.am.trade.service.admin.BorrowFirstService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.admin.BorrowFireRequest;
-import com.hyjf.am.resquest.admin.BorrowFirstRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowBailMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFirstCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowBail;
-import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowConfig;
-import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowFirstProducer;
-import com.hyjf.am.trade.service.admin.BorrowFirstService;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author wangjun
@@ -186,8 +174,8 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 根据此标的是否跑引擎操作redis ：0未使用 1使用
                     if (borrow.getIsEngineUsed() == 0) {
                         // borrowNid，借款的borrowNid,account借款总额
-                        // todo redis key不正确
-                        RedisUtils.set(borrow.getBorrowNid(), borrow.getAccount().toString());
+                        //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
+                        RedisUtils.set(RedisConstants.BORROW_NID + borrow.getBorrowNid(), borrow.getAccount().toString());
                     }
                 }
                 // 更新时间
@@ -209,14 +197,13 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
     }
 
     private void changeOntimeOfRedis(BorrowVO borrow) {
-        //todo 此处rediskey不正确，需要修改，已在文件中添加
+        //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
-            RedisUtils.set(borrow.getBorrowNid() + CustomConstants.UNDERLINE +
-                    CustomConstants.REDIS_KEY_ONTIME, String.valueOf(borrow.getOntime()), 864000);
+            RedisUtils.set(RedisConstants.ON_TIME + borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);
         } else {
             //非定时发标 删redis
-            RedisUtils.del(borrow.getBorrowNid() + CustomConstants.UNDERLINE + CustomConstants.REDIS_KEY_ONTIME);
+            RedisUtils.del(RedisConstants.ON_TIME + borrow.getBorrowNid());
         }
     }
 }
