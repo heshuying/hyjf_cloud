@@ -1,33 +1,106 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.am.trade.service.front.batch;
 
+import java.util.List;
+import java.util.Map;
+
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
-import java.util.Map;
-
-/**
- * @author dxj
- * @version BatchBorrowRepayPlanService.java, v0.1 2018年6月23日 下午12:03:33
- */
 public interface BatchBorrowRepayPlanService extends BaseService {
 
+	/**
+	 * 取得借款API任务表
+	 *
+	 * @return
+	 */
+	public List<BorrowApicron> getBorrowApicronList(Integer apiType);
 
-	Map requestRepay(BorrowApicron apicron);
+	/**
+	 * 更新借款API任务表
+	 * 
+	 * @param borrowNid
+	 * @param batchNo
+	 *
+	 * @return
+	 * @throws Exception 
+	 */
+	public boolean updateBorrowApicron(BorrowApicron borrowApicron,int status) throws Exception;
 
-	boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception;
+	/**
+	 * 取出账户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public Account getAccountByUserId(Integer userId);
 
-	BankCallBean batchQuery(BorrowApicron apicron);
+	/**
+	 * 取得借款列表
+	 *
+	 * @return
+	 */
+	public List<BorrowTender> getBorrowTenderList(String borrowNid);
 
-	boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
+	/**
+	 * 查询批次还款状态
+	 * 
+	 * @param apicron
+	 * @return
+	 */
+	public BankCallBean batchQuery(BorrowApicron apicron);
 
-	void updateQuitRepayInfo(String accedeOrderId);
+	/***
+	 * 发起还款请求
+	 * 
+	 * @param apicron
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public Map requestRepay(BorrowApicron apicron);
 
-    void updateLockRepayInfo(String accedeOrderId);
+	/**
+	 * 查询还款请求明细
+	 * 
+	 * @param apicron
+	 * @return
+	 */
+	public boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
+
+	/**
+	 * 获取相应的还款记录
+	 * @param id
+	 * @return
+	 */
+	public BorrowApicron getBorrowApicron(Integer id);
+
+	/**
+	 * 查询相应的放款明细
+	 * @param borrowNid
+	 * @return
+	 */
+	List<BorrowRecover> getBorrowRecoverList(String borrowNid);
+
+	/**
+	 * 退出计划
+	 * @param accedeOrderId
+	 */
+	public void updateQuitRepayInfo(String accedeOrderId);
+
+	/**
+	 * 锁定计划
+	 * @param accedeOrderId
+	 */
+	public void updateLockRepayInfo(String accedeOrderId);
+
+	/**
+	 * 获得优先待处理的还款任务
+	 * @param borrowNid
+	 */
+    public BorrowApicron getRepayPeriodSort(String borrowNid);
 
 	BorrowApicron selApiCronByPrimaryKey(int id);
-
 }
