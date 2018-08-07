@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service;
 import com.hyjf.am.trade.dao.model.auto.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 资金服务: BaseService
@@ -77,7 +78,15 @@ public interface BaseService {
 
     BorrowRepay getBorrowRepay(String borrowNid);
 
+    List<BorrowRecover> getBorrowRecover(String borrowNid);
+
+    List<BorrowRecoverPlan> getBorrowRecoverPlan(String borrowNid, int period);
+
     BorrowRepayPlan getRepayPlan(String borrowNid, int period);
+
+    CreditTender getCreditTender(String assignNid);
+
+    HjhDebtCreditTender getHjhDebtCreditTender(String assignNid);
 
     /**
      * 获取系统配置
