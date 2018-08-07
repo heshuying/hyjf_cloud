@@ -38,8 +38,8 @@ public class AdminVersionConfigController extends BaseController {
     @Autowired
     private VersionConfigService adminVersionConfigService;
 
-    @ApiOperation(value = "配置中心版本配置", notes = "查询配置中心版本配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心版本配置", notes = "查询配置中心版本配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<AdminVersionResponse> versionConfigInit(@RequestBody VersionRequestBean versionRequestBean) {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
@@ -60,7 +60,7 @@ public class AdminVersionConfigController extends BaseController {
         return new AdminResult<AdminVersionResponse>(response) ;
     }
 
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置详情页面")
+    @ApiOperation(value = "版本配置详情页面", notes = "版本配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<AdminVersionResponse> versionConfigInfo(@RequestBody VersionRequestBean versionRequestBean) {
@@ -80,7 +80,7 @@ public class AdminVersionConfigController extends BaseController {
         }
         return new AdminResult<AdminVersionResponse>(adminResponse) ;
     }
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置添加")
+    @ApiOperation(value = "版本配置添加", notes = "版本配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<AdminVersionResponse> insertVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
@@ -109,7 +109,7 @@ public class AdminVersionConfigController extends BaseController {
         return new AdminResult<AdminVersionResponse>(adminResponse) ;
     }
 
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置修改")
+    @ApiOperation(value = "版本配置修改", notes = "版本配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AdminVersionResponse> updateVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
@@ -138,7 +138,7 @@ public class AdminVersionConfigController extends BaseController {
         return new AdminResult<AdminVersionResponse>(adminResponse) ;
     }
 
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置删除")
+    @ApiOperation(value = "版本配置删除", notes = "版本配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {

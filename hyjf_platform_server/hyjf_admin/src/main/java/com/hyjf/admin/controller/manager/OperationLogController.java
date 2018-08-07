@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +38,7 @@ import java.util.*;
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Api(value = "配置中心操作日志配置",description ="配置中心操作日志配置")
+@Api(value = "配置中心操作日志配置",tags ="配置中心操作日志配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/operationlog")
 public class OperationLogController  extends BaseController {
@@ -49,8 +50,8 @@ public class OperationLogController  extends BaseController {
     @Autowired
     private OperationLogService operationLogService;
 
-    @ApiOperation(value = "配置中心操作日志配置", notes = "查询配置中心操作日志配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心操作日志配置", notes = "查询配置中心操作日志配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult operationLogConfigInit(@RequestBody OperationLogRequestBean operationLogRequestBean) {
         AdminOperationLogRequest adminRequest= new AdminOperationLogRequest();
@@ -69,8 +70,8 @@ public class OperationLogController  extends BaseController {
         return new AdminResult<ListResult<FeerateModifyLogVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心操作日志配置", notes = "查询配置中心操作日志配置")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询配置中心操作日志配置详情", notes = "查询配置中心操作日志配置详情")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult operationLogConfigInfoList(@RequestBody OperationLogRequestBean operationLogRequestBean) {
         AdminOperationLogResponse response = new AdminOperationLogResponse();
@@ -107,8 +108,8 @@ public class OperationLogController  extends BaseController {
      * @param operationLogRequestBean
      * @return
      */
-    @ApiOperation(value = "配置中心操作日志配置", notes = "导出配置中心操作日志配置")
-    @RequestMapping("/exportAction")
+    @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
+    @PostMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
         AdminOperationLogRequest form= new AdminOperationLogRequest();

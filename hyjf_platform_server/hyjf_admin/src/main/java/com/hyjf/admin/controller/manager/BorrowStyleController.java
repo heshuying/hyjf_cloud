@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(value = "配置中心还款方式",description ="配置中心还款方式")
+@Api(value = "配置中心还款方式",tags ="配置中心还款方式")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowstyle")
 public class BorrowStyleController extends BaseController {
@@ -37,8 +37,8 @@ public class BorrowStyleController extends BaseController {
     @Autowired
     private BorrowStyleService borrowStyleService;
 
-    @ApiOperation(value = "配置中心还款方式", notes = "查询配置中心还款方式")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心还款方式", notes = "查询配置中心还款方式")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<BorrowStyleVO>> borrowStyleInit(@RequestBody BorrowStyleRequestBean borrowStyleRequestBean) {
         AdminBorrowStyleRequest request = new AdminBorrowStyleRequest();
@@ -54,7 +54,7 @@ public class BorrowStyleController extends BaseController {
         }
         return new AdminResult<ListResult<BorrowStyleVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
-    @ApiOperation(value = "配置中心还款方式", notes = "保证金配置还款方式")
+    @ApiOperation(value = "查询还款方式详情", notes = "查询还款方式详情")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult  searchBorrowStyleInfo(@RequestBody BorrowStyleRequestBean borrowStyleRequestBean) {
@@ -71,7 +71,7 @@ public class BorrowStyleController extends BaseController {
         return new AdminResult<BorrowStyleVO>(adminResponse.getResult()) ;
     }
 
-    @ApiOperation(value = "配置中心还款方式", notes = "还款方式添加")
+    @ApiOperation(value = "还款方式添加", notes = "还款方式添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBorrowStyle( @RequestBody BorrowStyleRequestBean from) {
@@ -91,7 +91,7 @@ public class BorrowStyleController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心还款方式", notes = "还款方式修改")
+    @ApiOperation(value = "还款方式修改", notes = "还款方式修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBorrowStyle(HttpServletRequest request,  @RequestBody BorrowStyleRequestBean from) {
@@ -110,7 +110,7 @@ public class BorrowStyleController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心还款方式", notes = "还款方式修改状态")
+    @ApiOperation(value = "还款方式修改状态", notes = "还款方式修改状态")
     @PostMapping("/statusAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult modifyBorrowStyle(@RequestBody BorrowStyleRequestBean from) {
@@ -129,7 +129,7 @@ public class BorrowStyleController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置删除")
+    @ApiOperation(value = "保证金配置删除", notes = "保证金配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBorrowStyle(@RequestBody String id) {

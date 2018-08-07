@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Api(value = "配置中心返回码配置",description ="配置中心返回码配置")
+@Api(value = "配置中心返回码配置",tags = "配置中心返回码配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankretcodeconfig")
 public class BankRetcodeConfigController extends BaseController {
@@ -36,8 +36,8 @@ public class BankRetcodeConfigController extends BaseController {
     @Autowired
     private BankRetcodeConfigService bankRetcodeConfigService;
 
-    @ApiOperation(value = "配置中心返回码配置", notes = "查询配置中心返回码配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心返回码配置", notes = "查询配置中心返回码配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult bankRetcodeConfigInit(@RequestBody BankRetcodeConfigRequestBean bankRetcodeConfigRequestBean) {
         AdminBankRetcodeConfigRequest adminRequest= new AdminBankRetcodeConfigRequest();
@@ -54,8 +54,8 @@ public class BankRetcodeConfigController extends BaseController {
         return new AdminResult<ListResult<BankReturnCodeConfigVO>>(ListResult.build(response.getResultList(), response.getResultList().size())) ;
     }
 
-    @ApiOperation(value = "配置中心返回码配置--条件查询", notes = "查询配置中心返回码配置--条件查询")
-    @RequestMapping("/searchAction")
+    @ApiOperation(value = "查询配置中心返回码配置--条件查询", notes = "查询配置中心返回码配置--条件查询")
+    @PostMapping("/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult bankRetcodeConfigSearch(@RequestBody BankRetcodeConfigRequestBean bankRetcodeConfigRequestBean) {
         AdminBankRetcodeConfigRequest adminRequest= new AdminBankRetcodeConfigRequest();
@@ -72,8 +72,8 @@ public class BankRetcodeConfigController extends BaseController {
         return new AdminResult<ListResult<BankReturnCodeConfigVO>>(ListResult.build(response.getResultList(), response.getResultList().size())) ;
     }
 
-    @ApiOperation(value = "配置中心返回码配置", notes = "查询配置中心返回码配置详情页面")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询配置中心返回码配置详情页面", notes = "查询配置中心返回码配置详情页面")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)//权限    todo
     public AdminResult bankRetcodeConfigInfo(@RequestBody BankRetcodeConfigRequestBean bankRetcodeConfigRequestBean) {
         BankReturnCodeConfigResponse response = null;
@@ -102,7 +102,7 @@ public class BankRetcodeConfigController extends BaseController {
         }
         return new AdminResult<BankReturnCodeConfigVO>(response.getResult()) ;
     }
-    @ApiOperation(value = "配置中心返回码配置", notes = "返回码配置添加")
+    @ApiOperation(value = "返回码配置添加", notes = "返回码配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBankReturnCodeConfig( @RequestBody BankRetcodeConfigRequestBean from) {
@@ -136,7 +136,7 @@ public class BankRetcodeConfigController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心返回码配置", notes = "返回码配置修改")
+    @ApiOperation(value = "返回码配置修改", notes = "返回码配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankReturnCodeConfig( @RequestBody BankRetcodeConfigRequestBean from) {
