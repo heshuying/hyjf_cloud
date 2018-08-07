@@ -1,20 +1,16 @@
 package com.hyjf.cs.message.mongo.ic;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.hyjf.am.trade.dao.model.auto.ChinapnrExclusiveLog;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
+import com.hyjf.common.util.GetDate;
 
 /**
  * 汇计划-资金计划

@@ -36,6 +36,7 @@
     <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
     <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     <result column="ordid" property="ordid" jdbcType="VARCHAR" />
+    <result column="is_allrepay" property="isAllrepay" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -105,8 +106,8 @@
     credit_repay_status, extra_yield_status, extra_yield_repay_status, is_repay_org_flag, 
     user_name, borrow_account, borrow_period, batch_no, batch_amount, batch_counts, batch_service_fee, 
     tx_amount, tx_counts, fail_times, suc_counts, suc_amount, fail_counts, fail_amount, 
-    service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, create_time, 
-    update_time
+    service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, is_allrepay, 
+    create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     `data`
@@ -180,8 +181,8 @@
       suc_amount, fail_counts, fail_amount, 
       service_fee, tx_date, tx_time, 
       seq_no, bank_seq_no, plan_nid, 
-      ordid, create_time, update_time, 
-      `data`)
+      ordid, is_allrepay, create_time, 
+      update_time, `data`)
     values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, #{apiType,jdbcType=TINYINT}, 
       #{repayStatus,jdbcType=TINYINT}, #{periodNow,jdbcType=INTEGER}, #{creditRepayStatus,jdbcType=TINYINT}, 
@@ -193,8 +194,8 @@
       #{sucAmount,jdbcType=DECIMAL}, #{failCounts,jdbcType=INTEGER}, #{failAmount,jdbcType=DECIMAL}, 
       #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
-      #{ordid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{data,jdbcType=LONGVARCHAR})
+      #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -300,6 +301,9 @@
       </if>
       <if test="ordid != null" >
         ordid,
+      </if>
+      <if test="isAllrepay != null" >
+        is_allrepay,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -410,6 +414,9 @@
       </if>
       <if test="ordid != null" >
         #{ordid,jdbcType=VARCHAR},
+      </if>
+      <if test="isAllrepay != null" >
+        #{isAllrepay,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -533,6 +540,9 @@
       <if test="record.ordid != null" >
         ordid = #{record.ordid,jdbcType=VARCHAR},
       </if>
+      <if test="record.isAllrepay != null" >
+        is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -583,6 +593,7 @@
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
+      is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `data` = #{record.data,jdbcType=LONGVARCHAR}
@@ -626,6 +637,7 @@
       bank_seq_no = #{record.bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
+      is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -734,6 +746,9 @@
       <if test="ordid != null" >
         ordid = #{ordid,jdbcType=VARCHAR},
       </if>
+      <if test="isAllrepay != null" >
+        is_allrepay = #{isAllrepay,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -781,6 +796,7 @@
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
+      is_allrepay = #{isAllrepay,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       `data` = #{data,jdbcType=LONGVARCHAR}
@@ -821,6 +837,7 @@
       bank_seq_no = #{bankSeqNo,jdbcType=VARCHAR},
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
+      is_allrepay = #{isAllrepay,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

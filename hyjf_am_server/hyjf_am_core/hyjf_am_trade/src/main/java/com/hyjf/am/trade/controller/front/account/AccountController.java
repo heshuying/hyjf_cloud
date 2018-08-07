@@ -3,12 +3,14 @@
  */
 package com.hyjf.am.trade.controller.front.account;
 
+import com.hyjf.am.response.admin.BankMerchantAccountInfoResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.front.account.AccountService;
+import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -112,6 +114,31 @@ public class AccountController extends BaseController {
         BankMerchantAccountVO bankMerchantAccount = accountService.getBankMerchantAccount(accountCode);
         response.setResult(bankMerchantAccount);
         return response;
+    }
+
+    /**
+     * 根据accountCode查询子账户信息
+     * @param accountCode
+     * @return
+     */
+    @GetMapping("/getBankMerchantAccountInfo/{accountCode}")
+    public BankMerchantAccountInfoResponse getBankMerchantAccountInfo(@PathVariable String accountCode) {
+        BankMerchantAccountInfoResponse response = new BankMerchantAccountInfoResponse();
+        BankMerchantAccountInfoVO bankMerchantAccount = accountService.getBankMerchantAccountInfo(accountCode);
+        response.setResult(bankMerchantAccount);
+        return response;
+    }
+
+    /**
+     * 更新子账户信息-已设置交易密码
+     * @param accountId
+     * @param flag
+     * @return
+     */
+    @GetMapping("/updateBankMerchantAccountIsSetPassword/{accountId}/{flag}")
+    public Integer updateBankMerchantAccountIsSetPassword(@PathVariable String accountId,@PathVariable Integer flag) {
+        int count = accountService.updateBankMerchantAccountIsSetPassword(accountId,flag);
+        return count;
     }
 
     /**

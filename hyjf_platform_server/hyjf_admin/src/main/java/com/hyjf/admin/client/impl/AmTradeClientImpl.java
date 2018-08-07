@@ -14,13 +14,11 @@ import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.config.AdminSystemResponse;
-import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
@@ -33,7 +31,6 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
-import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -3318,5 +3315,32 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return response;
 	}
 
+    @Override
+    public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
+        BankMerchantAccountResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getbankmerchantaccount/"+accountCode,
+                BankMerchantAccountResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
 
+    @Override
+    public BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode) {
+        BankMerchantAccountInfoResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getBankMerchantAccountInfo/"+accountCode,
+                BankMerchantAccountInfoResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public void updateBankMerchantAccountIsSetPassword(String accountId, int flag) {
+        Integer response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountIsSetPassword/"+accountId+"/"+flag, Integer.class)
+                .getBody();
+    }
 }

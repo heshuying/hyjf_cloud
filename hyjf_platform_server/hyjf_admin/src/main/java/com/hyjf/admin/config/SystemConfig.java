@@ -9,6 +9,9 @@ public class SystemConfig {
     @Value("${hyjf.web.host}")
     public String webHost;
 
+    @Value("${hyjf.admin.host}")
+    public String adminHost;
+
 //    @Value("${http.hyjf.web.host}")
     public String httpWebHost;
 
@@ -51,6 +54,15 @@ public class SystemConfig {
     @Value("${hyjf.bank.instcode}")
     private String BANK_INSTCODE;
 
+    private String adminFrontHost;
+
+    public String getAdminFrontHost() {
+        return adminFrontHost;
+    }
+
+    public void setAdminFrontHost(String adminFrontHost) {
+        this.adminFrontHost = adminFrontHost;
+    }
 
     public String getBANK_BANKCODE() {
         return BANK_BANKCODE;
@@ -111,6 +123,14 @@ public class SystemConfig {
     @Value("${hyjf.seal.operate}")
     private String sealOperate;
 
+
+    public String getAdminHost() {
+        return adminHost;
+    }
+
+    public void setAdminHost(String adminHost) {
+        this.adminHost = adminHost;
+    }
 
     public String getBANK_MERRP_ACCOUNT() {
 		return BANK_MERRP_ACCOUNT;
