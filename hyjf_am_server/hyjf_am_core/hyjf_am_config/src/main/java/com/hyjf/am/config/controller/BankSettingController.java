@@ -90,7 +90,7 @@ public class BankSettingController {
         bc.setBankName(adminRequest.getBankName());
         List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
         List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
-        if(CollectionUtils.isNotEmpty(jxBankConfigVO)){
+        if(CollectionUtils.isEmpty(jxBankConfigVO)){
             response.setResultList(jxBankConfigVO);
             return response;
         }
