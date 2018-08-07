@@ -21,7 +21,6 @@ import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -3066,21 +3065,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     /**
-     * 取得借款API表
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    public int insertTenderCommissionRecord(Integer apicornId, ActivityListRequest request) {
-        String url = "http://AM-MARKET/am-market/activity/insertRecord/"+apicornId;
-        ActivityListResponse response = restTemplate.postForEntity(url,request,ActivityListResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getFlag();
-        }
-        return 0;
-    }
-    /**
      * 计划退出查询判断标的是否还款
      * BorrowNidEqualTo(borrowNid)
      * ApiTypeEqualTo(1)
@@ -3120,11 +3104,12 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @return
      */
     @Override
-    public Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request) {
+    public Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request) {
+
         TenderCommissionResponse response = restTemplate
-                .postForEntity("http://AM-USER/am-user/pushMoneyRecord/findPushMoneyRecordList", request, TenderCommissionResponse.class)
-                .getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+                .postForEntity("http://AM-TRADE/am-trade/tenderCommission/countTenderCommissionByTenderIdAndTenderType/",
+                        request,TenderCommissionResponse.class).getBody();
+        if (response != null) {
             return response.getCount();
         }
         return null;
@@ -3138,7 +3123,7 @@ public class AmTradeClientImpl implements AmTradeClient{
      */
     @Override
     public int saveTenderCommission(TenderCommissionRequest request) {
-        String url = "http://AM-MARKET/am-market/activity/insertRecord";
+        String url = "http://AM-MARKET/am-trade/tenderCommission/insertTenderCommission/";
         TenderCommissionResponse response = restTemplate.postForEntity(url,request,TenderCommissionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getFlag();
@@ -3148,13 +3133,13 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
      * 更新借款API表
-     * @param request
+     * @param apicornId
      * @return
      */
     @Override
-    public int updateByPrimaryKeySelective(BorrowApicronRequest request) {
-        String url = "http://AM-MARKET/am-market/activity/insertRecord";
-        BorrowApicronResponse response = restTemplate.postForEntity(url,request,BorrowApicronResponse.class).getBody();
+    public Integer updateBorrowApicronByPrimaryKeySelective(String apicornId) {
+        String url = "http://AM-MARKET/am-market/activity/updateBorrowApicronByPrimaryKeySelective/";
+        BorrowApicronResponse response = restTemplate.postForEntity(url,apicornId,BorrowApicronResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getFlag();
         }
@@ -3264,7 +3249,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
-	
+
 	@Override
 	public boolean isExistsBorrowPreNidRecord(String borrowPreNid) {
 		boolean response = restTemplate

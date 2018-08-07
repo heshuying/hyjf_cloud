@@ -3,12 +3,10 @@ package com.hyjf.admin.client.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -699,7 +697,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
