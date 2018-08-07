@@ -2622,7 +2622,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 投资用户银行账户
 		String assignAccountId = assignBankAccount.getAccountId();
 		// 查询相应的债权承接记录
-		HjhDebtCreditTender creditTender = this.getCreditTender(assignNid);
+		HjhDebtCreditTender creditTender = this.getCreditTenderHjh(assignNid);
 		if (Validator.isNull(creditTender)) {
 			throw new Exception("投资人未开户。[用户ID：" + repayUserId + "]，" + "[投资订单号：" + tenderOrderId + "]");
 		}
