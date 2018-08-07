@@ -484,7 +484,7 @@ public class PlanListController extends BaseController{
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "计划列表";
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期年化收益率","最低加入金额（元）","最高加入金额（元）","投资增量（元）", "最小投资笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();

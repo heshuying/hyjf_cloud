@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,7 +101,7 @@ public class ProtocolsController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "协议管理";
 		// 文件名称
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 需要输出的结果列表
 		List<FddTempletCustomizeVO> recordList = new ArrayList<>();
 		FddTempletCustomizeResponse fddResponse = this.protocolsService.selectFddTempletList(form);

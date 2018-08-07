@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -170,7 +171,7 @@ public class BankRechargeController extends BaseController {
         List<BankRechargeLimitConfigVO> resultList  = this.bankRechargeService.exportRecordList(bankRecharge);
         //获取银行列表(快捷支付卡)
         List<BankConfigVO> bankList = bankRechargeService.getBankRecordList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] {"序号", "银行", "接入方式","银行卡类型","单笔充值限额（元）","单卡单日累计限额（元）","状态" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

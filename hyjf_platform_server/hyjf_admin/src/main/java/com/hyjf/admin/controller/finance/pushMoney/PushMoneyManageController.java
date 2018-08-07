@@ -4,9 +4,7 @@
 package com.hyjf.admin.controller.finance.pushMoney;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.PlanListViewRequest;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
-import com.hyjf.admin.beans.vo.AdminHjhPlanVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -15,9 +13,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
-import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
@@ -25,7 +21,6 @@ import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,9 +32,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author zdj
@@ -141,11 +137,11 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理记录导出")
     @PostMapping(value = "/exportpushmoney")
-    public void exportExcel(PushMoneyRequest pushMoneyRequest, HttpServletResponse response){
+    public void exportExcel(PushMoneyRequest pushMoneyRequest, HttpServletResponse response) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "直投提成管理";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         List<PushMoneyVO> pushMoneyVOList =pushMoneyManageService.findPushMoneyList(pushMoneyRequest).getResultList();
         String[] titles = new String[] { "序号", "项目编号", "项目标题", "融资期限", "融资金额", "提成总额", "放款时间" };

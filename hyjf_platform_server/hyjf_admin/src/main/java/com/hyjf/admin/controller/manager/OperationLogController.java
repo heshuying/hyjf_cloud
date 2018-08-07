@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -122,7 +123,7 @@ public class OperationLogController  extends BaseController {
         AdminOperationLogResponse operationLogResponseResponse = this.operationLogService.selectOperationLogList(conditionMap,-1,-1);
 
         List<FeerateModifyLogVO> resultList =  operationLogResponseResponse.getResultList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "资产来源", "产品类型", "期限", "自动发标利率", "服务费", "管理费", "收益差率", "逾期利率", "逾期免息天数", "状态", "修改类型", "操作人", "操作时间" };
         // 声明一个工作薄
