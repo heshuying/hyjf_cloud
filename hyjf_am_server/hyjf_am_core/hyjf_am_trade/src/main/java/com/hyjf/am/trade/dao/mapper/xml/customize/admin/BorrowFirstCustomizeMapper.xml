@@ -16,10 +16,10 @@
 				AND ( ui.truename LIKE CONCAT('%', #{usernameSrch}, '%') OR u.username LIKE CONCAT('%', #{usernameSrch}, '%') )
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND b.create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND b.create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="verifyStatusSrch != null and verifyStatusSrch != ''">
 				AND b.verify_status = #{verifyStatusSrch}
