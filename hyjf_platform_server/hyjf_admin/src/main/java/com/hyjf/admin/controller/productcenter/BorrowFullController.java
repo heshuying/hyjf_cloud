@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.request.BorrowFullRequestBean;
 import com.hyjf.admin.beans.response.BorrowFullInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFullResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -60,6 +61,9 @@ public class BorrowFullController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
     public AdminResult updateBorrowFull(HttpServletRequest request, @RequestBody @Valid BorrowFullRequestBean borrowFullRequestBean) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         BeanUtils.copyProperties(borrowFullRequestBean, borrowFullRequest);
         borrowFullRequest.setCurrUserId(currUser.getId());
