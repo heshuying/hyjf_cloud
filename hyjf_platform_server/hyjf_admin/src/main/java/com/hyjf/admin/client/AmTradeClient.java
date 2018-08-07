@@ -1750,4 +1750,20 @@ public interface AmTradeClient {
     void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
 
     AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
+
+    /**
+     *
+     * @author zhangyk
+     * @date 2018/8/7 16:37
+     */
+    Integer getBankMerchantAccountListByOrderId(String orderId);
+
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/7 18:53
+     */
+    Boolean updateAccountCallbackRecharge(Map<String,Object> params);
 }
+

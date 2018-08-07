@@ -361,7 +361,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                             borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                         }
                         borrowRepayPlanBean.setNumber("第" + (i + 1) + "期");
-                        borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                        borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
                         repayPlanList.add(borrowRepayPlanBean);
                     }
                 }
