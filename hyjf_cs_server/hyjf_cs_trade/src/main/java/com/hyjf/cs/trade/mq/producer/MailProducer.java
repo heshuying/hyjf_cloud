@@ -3,17 +3,12 @@
  */
 package com.hyjf.cs.trade.mq.producer;
 
-import com.hyjf.common.constants.MessageConstant;
-import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.vo.message.MailMessage;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.base.Producer;
 import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
+import org.springframework.stereotype.Component;
 
 /**
  * @author fuqiang
@@ -34,16 +29,4 @@ public class MailProducer extends Producer {
         return super.messageSend(messageContent);
     }
 
-    /**
-     * 信息采集，返回1为成功
-     * @param message
-     * @return
-     */
-    public int gather(MailMessage message) {
-        if (null != message) {
-            return Integer.parseInt(RedisUtils.lpush(MessageConstant.MAILQUENEM, JSON.toJSONString(message)) + "");
-        } else {
-            return 0;
-        }
-    }
 }

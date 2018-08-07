@@ -3,6 +3,19 @@
  */
 package com.hyjf.cs.trade.service.handle.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -13,28 +26,21 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.MailProducer;
 import com.hyjf.cs.trade.service.handle.ApiAssetPushService;
 import com.hyjf.cs.trade.service.handle.AutoSendService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 自动录标
@@ -206,11 +212,9 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
                 String [] toMail = emailList.split(",");
                 MailMessage message = new MailMessage(null, null, "资产ID为：" + hjhPlanAssetVO.getAssetId(), msg.toString(), null, toMail, null,
                         MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
-                int num = mailProducer.gather(message);
-                if( num > 0){
+                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
                     // String key, String value, int expireSeconds
                     RedisUtils.set(LABEL_MAIL_KEY + hjhPlanAssetVO.getAssetId(), hjhPlanAssetVO.getAssetId(), 24 * 60 * 60);
-                }
             } else {
                 _log.info("此邮件key值还未过期(一天)");
             }
