@@ -1104,7 +1104,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait) ? "" : "剩余" + borrowAccountWait);
             }
 
-            appProjectType.setBorrowUrl(systemConfig.getWebHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
+            appProjectType.setBorrowUrl(systemConfig.getAppServerHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 
@@ -1437,7 +1437,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppProjectListCustomizeVO appProjectListCustomize;
         if (!CollectionUtils.isEmpty(planList)) {
             appProjectList = new ArrayList<AppProjectListCustomizeVO>();
-            String host = systemConfig.getWebHost();
+            String host = systemConfig.getAppServerHost();
             for (HjhPlanCustomizeVO entity : planList) {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
@@ -1955,7 +1955,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }else if (status.equals("14")){
                 appProjectType.setStatusName("已还款");
             }
-            appProjectType.setBorrowUrl(systemConfig.getWebHost() + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
+            appProjectType.setBorrowUrl(systemConfig.getAppServerHost() + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 

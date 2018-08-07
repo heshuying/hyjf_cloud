@@ -27,6 +27,12 @@ public class AdminBorrowCreditController {
     private BorrowCreditService borrowCreditService;
 
 
+    /**
+     * 债权转让列表
+     * @author zhangyk
+     * 原接口：com.hyjf.admin.manager.borrow.borrowcredit.BorrowCreditController.search()
+     * @date 2018/8/7 9:36
+     */
     @ApiOperation(value = "债权转让", notes = "债权转让")
     @PostMapping("/getList")
     @ResponseBody

@@ -244,4 +244,10 @@ public class RedisConstants {
     /** CONTROLLOR @value值 */
     public static final String CONTROLLOR_CLASS_NAME = "UserRegistDefine:";
 
+    /**
+     * 充值防重校验
+     */
+    public static final String RECHARGE_ORDERID = "recharge_orderid:";
+
+
 }

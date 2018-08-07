@@ -182,7 +182,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     @Override
     public boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean){
-        return amTradeClient.updateBorrowForAutoTender(borrow,hjhAccede,bean);
+        return amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(),bean);
     }
     /**
      * 更新
@@ -212,7 +212,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     @Override
     public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap){
-        return amTradeClient.updateCreditForAutoTender(credit,hjhAccede,hjhPlan,bean,tenderUsrcustid,sellerUsrcustid,resultMap);
+        return amTradeClient.updateCreditForAutoTender(credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),bean,tenderUsrcustid,sellerUsrcustid,resultMap);
     }
 
     /**

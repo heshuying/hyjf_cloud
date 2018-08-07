@@ -635,7 +635,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean);
 
@@ -656,7 +656,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
 
     /**
      * 根据机构编号获取机构列表
