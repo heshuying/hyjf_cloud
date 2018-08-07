@@ -3,7 +3,7 @@ package com.hyjf.am.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.mq.base.Consumer;
-import com.hyjf.am.trade.service.wrb.WrbCallBackService;
+import com.hyjf.am.trade.service.front.wrb.WrbCallBackService;
 import com.hyjf.am.trade.utils.WrbCoopDESUtil;
 import com.hyjf.am.trade.utils.WrbParseParamUtil;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;

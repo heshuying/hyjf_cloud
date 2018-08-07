@@ -34,4 +34,11 @@ public interface CsMessageClient {
      * @return
      */
     List<AssociatedRecordListVo> getAssociatedRecordList(AssociatedRecordListRequest request);
+
+    /**
+     * 获取错误码
+     * @param logOrdId
+     * @return
+     */
+    String getRetCode(String logOrdId);
 }

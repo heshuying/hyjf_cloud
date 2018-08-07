@@ -2,11 +2,9 @@ package com.hyjf.cs.user.service.invite.impl;
 
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
-import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.invite.InviteService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

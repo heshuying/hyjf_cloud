@@ -27,7 +27,7 @@ import java.util.List;
  * @author sunpeikai
  * @version HtlTradeController, v0.1 2018/7/25 9:21
  */
-@Api(value = "app端-获取我的账单(汇天利)",description = "app端-获取我的账单(汇天利)")
+@Api(value = "app端-获取我的账单(汇天利)",tags = "app端-获取我的账单(汇天利)")
 @RestController
 @CrossOrigin("*")
 @RequestMapping(value = "/hyjf-app/htl")

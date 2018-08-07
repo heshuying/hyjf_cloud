@@ -25,6 +25,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -85,6 +86,34 @@ public class RepayManageController extends BaseTradeController {
         resultMap.put("userId", userVO.getUserId());
 
         result.setData(resultMap);
+        return result;
+    }
+
+    @ApiOperation(value = "平台登录密码校验", notes = "平台登录密码校验")
+    @ApiImplicitParam(name = "paraMap", value = "{password:string}", dataType = "Map")
+    @PostMapping(value = "/pwd_check", produces = "application/json; charset=utf-8")
+    public WebResult<String> pwdCheck(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap){
+        WebResult<String> result = new WebResult<>();
+        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
+        if(userVO == null){
+            result.setData("false");
+            result.setStatusDesc("用户不存在");
+            return result;
+        }
+        String password = paraMap.get("password");
+        if(StringUtils.isBlank(password)){
+            result.setData("false");
+            result.setStatusDesc("请输入密码");
+            return result;
+        }
+
+        // 密码校验
+        if(!repayManageService.checkPassword(userVO.getUserId(),password)){
+            result.setData("false");
+            result.setStatusDesc("密码不正确");
+            return result;
+        }
+        result.setData("true");
         return result;
     }
 

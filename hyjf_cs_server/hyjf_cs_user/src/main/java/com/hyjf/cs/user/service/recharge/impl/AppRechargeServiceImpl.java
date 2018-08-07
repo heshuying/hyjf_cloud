@@ -6,7 +6,7 @@ package com.hyjf.cs.user.service.recharge.impl;
 import com.hyjf.am.vo.config.BankRechargeConfigVo;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.recharge.AppRechargeService;
 import org.springframework.stereotype.Service;
 

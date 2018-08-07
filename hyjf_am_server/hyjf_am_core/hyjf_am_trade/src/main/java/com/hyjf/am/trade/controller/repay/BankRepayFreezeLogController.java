@@ -4,7 +4,7 @@ import com.hyjf.am.response.trade.BankRepayFreezeLogResponse;
 import com.hyjf.am.resquest.trade.BankRepayFreezeLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BankRepayFreezeLog;
-import com.hyjf.am.trade.service.repay.BankRepayFreezeLogService;
+import com.hyjf.am.trade.service.front.repay.BankRepayFreezeLogService;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;

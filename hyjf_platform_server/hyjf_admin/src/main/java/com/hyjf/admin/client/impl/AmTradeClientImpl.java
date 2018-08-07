@@ -1240,14 +1240,14 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @author nxl
      */
     @Override
-    public boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean) {
+    public boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean) {
         String url = "http://AM-TRADE/am-trade/autoTenderController/updateBorrowForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
-        UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrow, hjhAccede, bankCallBeanVO);
+        UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrowNid, accedeOrderId, bankCallBeanVO);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (!Response.isSuccess(response)) {
-            logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动投资成功后，更新投资数据失败。");
+            logger.error("[" + accedeOrderId + "] 银行自动投资成功后，更新投资数据失败。");
             throw new RuntimeException("银行自动投资成功后，更新投资数据失败。");
         }
         return true;
@@ -1313,15 +1313,15 @@ public class AmTradeClientImpl implements AmTradeClient{
      * @author nxl
      */
     @Override
-    public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,
+    public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                              String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap) {
         String url = "http://AM-TRADE/am-trade/autoTenderController/updateCreditForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
-        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(credit, hjhAccede, hjhPlan, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap);
+        UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(creditNid, accedeOrderId, planNid, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultMap);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (!Response.isSuccess(response)) {
-            logger.error("[" + hjhAccede.getAccedeOrderId() + "] 银行自动债转成功后，更新债转数据失败。");
+            logger.error("[" + accedeOrderId + "] 银行自动债转成功后，更新债转数据失败。");
             throw new RuntimeException("银行自动债转成功后，更新债转数据失败。");
         }
         return true;
@@ -3299,6 +3299,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
+	@Override
 
     @Override
 	public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
@@ -3320,6 +3321,24 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
 		return null;
 	}
+	@Override
+	public HjhAccedeResponse canCancelAuth(Integer userId) {
+		HjhAccedeResponse response = restTemplate.
+                getForEntity("http://AM-TRADE/am-trade/hjhAccede/canCancelAuth/" + userId , HjhAccedeResponse.class).
+                getBody();
+		return response;
+	}
+
+    @Override
+    public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
+        BankMerchantAccountResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getbankmerchantaccount/"+accountCode,
+                BankMerchantAccountResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
 
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
@@ -3332,4 +3351,21 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+    @Override
+    public BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode) {
+        BankMerchantAccountInfoResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getBankMerchantAccountInfo/"+accountCode,
+                BankMerchantAccountInfoResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public void updateBankMerchantAccountIsSetPassword(String accountId, int flag) {
+        Integer response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountIsSetPassword/"+accountId+"/"+flag, Integer.class)
+                .getBody();
+    }
 }

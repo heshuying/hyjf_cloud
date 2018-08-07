@@ -3,6 +3,7 @@ package com.hyjf.am.trade.service.front.account.impl;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -104,6 +105,29 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
     @Override
     public int updateOfLoansTender(AccountVO accountVO) {
         return adminAccountCustomizeMapper.updateOfLoansTender(CommonUtils.convertBean(accountVO,Account.class));
+    }
+
+    @Override
+    public BankMerchantAccountInfoVO getBankMerchantAccountInfo(String accountCode) {
+        BankMerchantAccountInfoExample example=new BankMerchantAccountInfoExample();
+        example.createCriteria().andAccountCodeEqualTo(accountCode);
+        List<BankMerchantAccountInfo> bankMerchantAccountInfo = bankMerchantAccountInfoMapper.selectByExample(example);
+        if (bankMerchantAccountInfo != null && bankMerchantAccountInfo.size() > 0) {
+            BankMerchantAccountInfoVO bankMerchantAccountInfoVO = CommonUtils.convertBean(bankMerchantAccountInfo.get(0),BankMerchantAccountInfoVO.class);
+            return bankMerchantAccountInfoVO;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int updateBankMerchantAccountIsSetPassword(String accountId, Integer flag) {
+        BankMerchantAccountExample example=new BankMerchantAccountExample();
+        example.createCriteria().andAccountCodeEqualTo(accountId);
+        BankMerchantAccount bankMerchantAccount=new BankMerchantAccount();
+        bankMerchantAccount.setIsSetPassword(flag);
+        int cnt = bankMerchantAccountMapper.updateByExampleSelective(bankMerchantAccount, example);
+        return cnt;
     }
 
 }

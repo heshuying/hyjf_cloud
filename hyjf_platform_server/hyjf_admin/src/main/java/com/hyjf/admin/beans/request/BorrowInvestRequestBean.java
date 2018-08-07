@@ -61,6 +61,9 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     @ApiModelProperty(value = "产品类型")
     private String productType;
 
+    @ApiModelProperty(value = "是从原始标的点击链接跳转标志（1：是）(汇计划三期)")
+    private String isOptFlag;
+
     public String getBorrowNidSrch() {
         return borrowNidSrch;
     }
@@ -187,5 +190,13 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
 
     public void setProductType(String productType) {
         this.productType = productType;
+    }
+
+    public String getIsOptFlag() {
+        return isOptFlag;
+    }
+
+    public void setIsOptFlag(String isOptFlag) {
+        this.isOptFlag = isOptFlag;
     }
 }

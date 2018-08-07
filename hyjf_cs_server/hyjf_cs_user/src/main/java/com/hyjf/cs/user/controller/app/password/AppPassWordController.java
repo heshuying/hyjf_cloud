@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 /**
  * @author wangc
  */
-@Api(value = "app端密码相关服务",description = "app端-密码相关服务")
+@Api(value = "app端密码相关服务",tags = "app端-密码相关服务")
 @Controller
 @RestController
 @RequestMapping("/")

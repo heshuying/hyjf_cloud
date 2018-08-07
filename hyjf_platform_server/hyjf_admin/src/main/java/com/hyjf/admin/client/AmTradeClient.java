@@ -636,7 +636,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean);
 
@@ -1640,8 +1640,6 @@ public interface AmTradeClient {
     /**
      * 迁移到详细画面
      *
-     * @param request
-     * @param form
      * @return
      */
     BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
@@ -1649,8 +1647,7 @@ public interface AmTradeClient {
     /**
      * 添加信息
      *
-     * @param request
-     * @param form
+     * @param borrowCommonRequest
      * @return
      * @throws Exception
      */
@@ -1660,7 +1657,7 @@ public interface AmTradeClient {
     /**
      * 用户是否存在
      *
-     * @param request
+     * @param userId
      * @return
      */
     int isExistsUser(String userId);
@@ -1669,16 +1666,13 @@ public interface AmTradeClient {
     /**
      * 获取最新的借款预编码
      *
-     * @param request
      * @return
      */
-
     String getBorrowPreNid();
 
     /**
      * 获取现金贷的借款预编号
      *
-     * @param request
      * @return
      */
     String getXJDBorrowPreNid();
@@ -1686,7 +1680,7 @@ public interface AmTradeClient {
     /**
      * 借款预编码是否存在
      *
-     * @param request
+     * @param borrowPreNid
      * @return
      */
     boolean isExistsBorrowPreNidRecord(String borrowPreNid);
@@ -1694,7 +1688,7 @@ public interface AmTradeClient {
     /**
      * 获取融资服务费率 & 账户管理费率
      *
-     * @param request
+     * @param borrowCommonRequest
      * @return
      */
     String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
@@ -1702,8 +1696,6 @@ public interface AmTradeClient {
     /**
      * 根据资产编号查询该资产下面的产品类型
      *
-     * @param request
-     * @param attr
      * @param instCode
      * @return
      */
@@ -1712,7 +1704,7 @@ public interface AmTradeClient {
     /**
      * 受托用户是否存在
      *
-     * @param request
+     * @param userName
      * @return
      */
 
@@ -1729,6 +1721,14 @@ public interface AmTradeClient {
      * @return
      */
  	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
+	public HjhAccedeResponse canCancelAuth(Integer userId);
+
+    /**
+     * 获取平台子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountVO getBankMerchantAccount(String accountCode);
 
     /**
      * 获取代金券回款列表
@@ -1736,4 +1736,17 @@ public interface AmTradeClient {
      * @return
      */
     List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
+     * 获取子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode);
+
+    /**
+     * 更新子账户信息已设置交易密码
+     * @param accountId
+     * @param flag
+     */
+    void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
 }

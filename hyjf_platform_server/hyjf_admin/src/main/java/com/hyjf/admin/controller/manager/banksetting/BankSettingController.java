@@ -21,6 +21,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,7 +38,7 @@ import java.util.*;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 22:16
  */
-@Api(tags = "配置中心银行配置 江西银行")
+@Api(description = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
 @RestController
 @RequestMapping(value = "/hyjf-admin/config/banksetting")
 public class BankSettingController extends BaseController {
@@ -47,7 +48,7 @@ public class BankSettingController extends BaseController {
     @Autowired
     private BankSettingService bankSettingService;
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "(条件)列表查询")
+    @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "GET", notes = "列表(条件)查询;江西银行的银行卡配置表")
     @RequestMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initBankSettingList(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
@@ -63,7 +64,8 @@ public class BankSettingController extends BaseController {
         return new AdminResult<ListResult<JxBankConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "画面迁移(含有id更新，不含有id添加)")
+    @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
@@ -84,7 +86,8 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>(response.getResult());
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "江西银行添加")
+    @ApiOperation(value = "添加一条数据", httpMethod = "POST", notes = "添加一条数据")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "添加内容")
     @PostMapping("/insert")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
@@ -114,7 +117,8 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "江西银行修改")
+    @ApiOperation(value = "修改一条数据", httpMethod = "POST", notes = "修改一条数据")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "修改内容和id")
     @PostMapping("/update")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
@@ -142,12 +146,14 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "江西银行删除")
+    @ApiOperation(value = "删除一条数据", httpMethod = "POST", notes = "删除一条数据")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "被删除数据对应的id")
     @PostMapping("/delete")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
+        BeanUtils.copyProperties(bankSettingRequestBean ,request);
         Integer id = request.getId();
         if(id != null){
             response = this.bankSettingService.deleteRecord(request);
@@ -161,8 +167,9 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "提交内容校验")
-    @RequestMapping("/validateBeforeAction")
+    @ApiOperation(value = "提交内容校验", httpMethod = "POST", notes = "提交内容校验")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "校验内容")
+    @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public Map<String, Object> validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -194,7 +201,7 @@ public class BankSettingController extends BaseController {
         return resultMap;
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行", notes = "资料上传")
+    @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
     public AdminResult<JxBankConfigVO> upLoadFile(HttpServletResponse response, HttpServletRequest request) throws Exception {
@@ -206,7 +213,8 @@ public class BankSettingController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "配置中心银行配置 江西银行列表导出", notes = "列表导出")
+    @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "列表导出内容")
     @PostMapping(value = "/exportregist")
     public void exportAction(HttpServletResponse response, @RequestBody BankSettingRequestBean bankSettingRequestBean) throws Exception {
         AdminBankSettingRequest requestBean = new AdminBankSettingRequest();

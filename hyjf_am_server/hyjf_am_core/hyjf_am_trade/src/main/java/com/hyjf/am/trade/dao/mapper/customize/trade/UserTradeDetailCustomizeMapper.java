@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.trade.dao.model.customize.app.AppTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserWithdrawListCustomize;
@@ -23,4 +24,9 @@ public interface UserTradeDetailCustomizeMapper {
     List<WebUserWithdrawListCustomize> selectUserWithdrawList(Map<String, Object> params);
 
     int countUserWithdrawRecordTotal(Map<String, Object> params);
+
+
+    int countTradeDetailListRecordTotal(Map<String, Object> params);
+
+    List<AppTradeListCustomize> searchAppTradeDetailList(Map<String,Object> params);
 }

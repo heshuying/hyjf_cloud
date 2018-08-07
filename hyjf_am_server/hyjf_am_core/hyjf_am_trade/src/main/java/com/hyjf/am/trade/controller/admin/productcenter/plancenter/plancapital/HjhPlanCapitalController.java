@@ -2,7 +2,7 @@ package com.hyjf.am.trade.controller.admin.productcenter.plancenter.plancapital;
 
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
-import com.hyjf.am.trade.service.admin.HjhPlanCapitalService;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhPlanCapitalService;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
@@ -32,11 +32,12 @@ public class HjhPlanCapitalController {
     //复投原始标的列表(通过planNid)
     @RequestMapping(value = "/hjhPlanCapitalReinvestInfo", method = RequestMethod.POST)
     public HjhPlanCapitalResponse hjhPlanCapitalReinvestInfo(HjhReInvestDetailRequest request){
-        HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
-
-        List<HjhPlanCapitalCustomizeVO> responseList = hjhPlanCapitalService.getReinvestInfo(request);
-        response.setResultList(responseList);
-        return response;
+//        HjhPlanCapitalResponse response = new HjhPlanCapitalResponse();
+//
+//        List<HjhPlanCapitalCustomizeVO> responseList = hjhPlanCapitalService.getReinvestInfo(request);
+//        response.setResultList(responseList);
+//        return response;
+        return null;
     }
 
     //复投承接债权(通过planNid)

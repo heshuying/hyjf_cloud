@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.controller.transactiondemo.TransactionService;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
-import com.hyjf.am.trade.service.ProducerTransactionMessageService;
+import com.hyjf.am.trade.service.front.batch.ProducerTransactionMessageService;
 import com.hyjf.common.exception.MQException;
 
 /**
