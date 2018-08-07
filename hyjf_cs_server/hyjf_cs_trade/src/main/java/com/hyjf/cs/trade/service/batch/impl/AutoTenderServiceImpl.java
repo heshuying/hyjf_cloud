@@ -50,7 +50,11 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     @Autowired
     private AmUserClient amUserClient;
 
-    //取得自动投资用加入计划列表
+    /**
+     * 取得自动投资用加入计划列表
+     *
+     * @return
+     */
     @Override
     public List<HjhAccedeVO> selectPlanJoinList() {
         return this.amTradeClient.selectPlanJoinList();
@@ -83,11 +87,14 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      */
     @Override
     public boolean AutoTenderForOneAccede(HjhAccedeVO hjhAccede) {
-        String accedeOrderId = hjhAccede.getAccedeOrderId();//汇计划加入订单号
-        final Integer ORDER_STATUS_ERR = hjhAccede.getOrderStatus() + 90;//银行交易前，异常订单状态设定，和系统异常
-        final Integer ORDER_STATUS_FAIL = hjhAccede.getOrderStatus() + 80;//银行交易后，异常订单状态设定
-        // 计算标的的剩余可投资金额
-        int serialFaileCount = 0;//一个计划订单的连续失败次数
+        //汇计划加入订单号
+        String accedeOrderId = hjhAccede.getAccedeOrderId();
+        //银行交易前，异常订单状态设定，和系统异常
+        final Integer ORDER_STATUS_ERR = hjhAccede.getOrderStatus() + 90;
+        //银行交易后，异常订单状态设定
+        final Integer ORDER_STATUS_FAIL = hjhAccede.getOrderStatus() + 80;
+        //一个计划订单的连续失败次数
+        int serialFaileCount = 0;
 
         // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
         //是否分散投资
@@ -109,17 +116,23 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         /** 0. 取得计划信息 */
         HjhPlanVO hjhPlan = amTradeClient.getPlanByNid(hjhAccede.getPlanNid());
+        // 计划订单加入计划金额
+        BigDecimal accedeAccount = hjhAccede.getAccedeAccount();
+        // 计划订单可投金额
+        BigDecimal ketouplanAmoust = hjhAccede.getAvailableInvestAccount();
 
-        BigDecimal accedeAccount = hjhAccede.getAccedeAccount();// 计划订单加入计划金额
-        BigDecimal ketouplanAmoust = hjhAccede.getAvailableInvestAccount();// 计划订单可投金额
         // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-        BigDecimal groupAmoust = ketouplanAmoust;// 每组可投金额（分散投资的最小分散金额）
-        int groupCount = 1; //最小分散组数
-        //标的队列名称
-        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();//原始标的队列
+        // 每组可投金额（分散投资的最小分散金额）
+        BigDecimal groupAmoust = ketouplanAmoust;
+        // 最小分散组数
+        int groupCount = 1;
+        // 标的队列名称
+        // 原始标的队列
+        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
         // ★临时队列有标的时，先推回主队列（恢复前次分散投资）★
         RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
         // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+
         logger.info("====[" + accedeOrderId + "]" + "加入计划金额：" + accedeAccount.toString());
         logger.info("====[" + accedeOrderId + "]" + "初始可投金额：" + ketouplanAmoust.toString());
 
@@ -311,14 +324,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     String orderId = GetOrderIdUtils.getOrderId2(hjhAccede.getUserId());
                     // 债权承接订单日期
                     String orderDate = GetOrderIdUtils.getTxDate();
-                    // 计算实际金额 保存creditTenderLog表
+                    // 计算计划债转实际金额 保存creditTenderLog表
                     Map<String, Object> resultMap = this.amTradeClient.saveCreditTenderLog(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
                     if (Validator.isNull(resultMap)) {
                         throw new Exception("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
-                    BigDecimal assignPay = (BigDecimal) resultMap.get("assignPay");//承接支付金额
-                    BigDecimal assignCapital = (BigDecimal) resultMap.get("assignCapital");//承接本金
-                    BigDecimal serviceFee = (BigDecimal) resultMap.get("serviceFee");//承接服务费
+                    //承接支付金额
+                    BigDecimal assignPay = (BigDecimal) resultMap.get("assignPay");
+                    //承接本金
+                    BigDecimal assignCapital = (BigDecimal) resultMap.get("assignCapital");
+                    //承接服务费
+                    BigDecimal serviceFee = (BigDecimal) resultMap.get("serviceFee");
                     logger.info("[" + accedeOrderId + "]" + "承接用计算完成"
                             + "\n,分期数据结果:" + resultMap.get("assignResult")
                             + "\n,承接总额:" + resultMap.get("assignAccount")
@@ -349,6 +365,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         return false;
                     }
 
+                    //调用银行自动购买债权接口
                     BankCallBean bean = this.autoCreditApi(credit, hjhAccede, hjhUserAuth,
                             assignPay, assignCapital, serviceFee,
                             tenderUsrcustid, sellerUsrcustid,
@@ -383,7 +400,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     /** 4.6. 更新同步数据库	 */
                     try {
-                        this.amTradeClient.updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, tenderUsrcustid, sellerUsrcustid, resultMap);
+                        this.amTradeClient.updateCreditForAutoTender(credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),
+                                bean, tenderUsrcustid, sellerUsrcustid, resultMap);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
@@ -462,6 +480,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     /** 5.4. 调用银行自动投标申请接口	 */
                     logger.info("[" + accedeOrderId + "]" + " 银行自动投标申请接口调用前  " + borrow.getBorrowNid());
 
+                    // 调用同步银行接口（投资）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
 
                     // 投资失败不回滚队列
@@ -511,8 +530,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     /** 5.6. 更新同步数据库	 */
                     // 单笔标的投资
                     try {
-//						result = this.autoTenderService.updateBorrow(borrow, hjhAccede, realAmoust,bean,redisBorrow);
-                        this.amTradeClient.updateBorrowForAutoTender(borrow, hjhAccede, bean);
+                        this.amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(), bean);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。");
@@ -636,6 +654,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 调用同步银行接口（投资）
+     * @return
      */
     private BankCallBean autotenderApi(BorrowVO borrow, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth, BigDecimal account, String tenderUsrcustid, boolean isLast) {
         BankCallBean bankResult = null;
@@ -673,6 +692,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
     /**
      * 调用同步银行接口（自动债转）
+     * @return
      */
     private BankCallBean autoCreditApi(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhUserAuthVO hjhUserAuth,
                                        BigDecimal account, BigDecimal assignCapital, BigDecimal serviceFee,
@@ -684,8 +704,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         // 取得当前债权在清算前已经发生债转的本金
         BigDecimal preCreditCapital = this.amTradeClient.getPreCreditCapital(credit);
-        // 生成订单
-//		String orderId = GetOrderIdUtils.getOrderId2(userId);
 
         // 银行接口用bean
         BankCallBean bean = new BankCallBean(orderId, userId, BankCallConstant.TXCODE_CREDIT_AUTO_INVEST, "自动购买债权", hjhAccede.getClient());
@@ -798,20 +816,5 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
         hjhPlanBorrowTmpVO.setUpdateTime(GetDate.getDate());
         return this.amTradeClient.updateHjhPlanBorrowTmpByPK(hjhPlanBorrowTmpVO) > 0 ? true : false;
-    }
-
-    /**
-     * 删除 自动投资临时表
-     *
-     * @param borrowNid
-     * @param hjhAccede
-     * @return
-     */
-    private boolean deleteBorrowTmp(String borrowNid, HjhAccedeVO hjhAccede) {
-        HjhPlanBorrowTmpVO record = new HjhPlanBorrowTmpVO();
-        record.setAccedeOrderId(hjhAccede.getAccedeOrderId());
-        record.setBorrowNid(borrowNid);
-        record.setUserId(hjhAccede.getUserId());
-        return this.amTradeClient.deleteHjhPlanBorrowTmp(record) > 0 ? true : false;
     }
 }

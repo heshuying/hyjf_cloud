@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAppCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
@@ -116,10 +117,10 @@ public class HjhDebtCreditController extends BaseController {
     }
 
     @GetMapping("/updateHjhDebtCreditByPK")
-    public Response<Integer> updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
+    public IntegerResponse updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
         HjhDebtCredit hjhDebtCredit =  new HjhDebtCredit();
         BeanUtils.copyProperties(hjhDebtCreditVO, hjhDebtCredit);
-        return new Response(this.hjhDebtCreditService.updateHjhDebtCreditByPK(hjhDebtCredit));
+        return new IntegerResponse(this.hjhDebtCreditService.updateHjhDebtCreditByPK(hjhDebtCredit));
     }
 	/**
 	 * 获取债转承接信息 PrimaryKey

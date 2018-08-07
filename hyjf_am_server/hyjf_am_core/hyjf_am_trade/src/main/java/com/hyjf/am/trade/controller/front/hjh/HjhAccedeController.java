@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
@@ -63,6 +64,10 @@ public class HjhAccedeController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据加入计划订单，取得加入订单
+     * @return
+     */
     @GetMapping("/getHjhAccedeByAccedeOrderId/{accedeOrderId}")
     public HjhAccedeResponse getHjhAccedeListByAccedeOrderId(@PathVariable String accedeOrderId){
         HjhAccedeResponse response = new HjhAccedeResponse();
@@ -94,9 +99,9 @@ public class HjhAccedeController extends BaseController {
 
 
     @RequestMapping("/updateHjhAccedeByPrimaryKey")
-    public Response<Integer> updateHjhAccedeByPrimaryKey(@RequestBody HjhAccedeVO hjhAccedeVO) {
+    public IntegerResponse updateHjhAccedeByPrimaryKey(@RequestBody HjhAccedeVO hjhAccedeVO) {
         HjhAccede hjhAccede = new HjhAccede();
         BeanUtils.copyProperties(hjhAccedeVO,hjhAccede);
-        return new Response(this.hjhAccedeService.updateHjhAccedeByPrimaryKey(hjhAccede));
+        return new IntegerResponse(this.hjhAccedeService.updateHjhAccedeByPrimaryKey(hjhAccede));
     }
 }

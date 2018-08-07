@@ -5,6 +5,7 @@ import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -14,6 +15,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -119,7 +121,7 @@ public interface AmTradeClient {
     List<HjhAccedeVO> selectPlanJoinList();
 
     /**
-     * 计算实际金额 保存creditTenderLog表
+     * 计算计划债转实际金额 保存creditTenderLog表
      * @author liubin
      * @return
      */
@@ -137,14 +139,14 @@ public interface AmTradeClient {
      * @author liubin
      * @return
      */
-    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
 
     /**
      * 银行自动投资成功后，更新投资数据
      * @author liubin
      * @return
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     /**
      * 根据是否原始债权获出让人投标成功的授权号
@@ -208,7 +210,8 @@ public interface AmTradeClient {
 
     /**
      * 根据主键，更新汇计划自动投资临时表
-     * @author liubin
+     * @param hjhPlanBorrowTmpVO
+     * @return
      */
     int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 
@@ -1535,4 +1538,11 @@ public interface AmTradeClient {
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
 
     BigDecimal getOrgRepayWaitTotal(Integer userId);
+
+    /**
+     * 查询广告列表
+     * @author zhangyk
+     * @date 2018/7/5 15:32
+     */
+    List<AppAdsCustomizeVO> getBannerList(AdsRequest request);
 }

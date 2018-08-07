@@ -30,7 +30,7 @@ import javax.validation.Valid;
  */
 @Api(tags = "APP端项目列表")
 @RestController
-@RequestMapping(ProjectConstant.REQUEST_HOME)
+@RequestMapping("/")
 public class AppProjectListController extends BaseTradeController {
 
     @Autowired
@@ -43,7 +43,7 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端散标列表", notes = "APP投资散标列表")
-    @PostMapping(value = "/projectlist/borrowProjectList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = ProjectConstant.REQUEST_HOME+ "/projectlist/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object homeBorrowProjectList(@ModelAttribute @Valid ProjectListRequest request) {
         // controller 不做业务处理
         JSONObject result = appProjectListService.searchAppProjectList(request);
@@ -101,7 +101,7 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端债转列表", notes = "APP端债转列表")
-    @PostMapping(value = "/projectlist/creditList", produces = "application/json; charset=utf-8")
+    @PostMapping(value = ProjectConstant.REQUEST_HOME + "/projectlist/creditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@ModelAttribute @Valid ProjectListRequest request) {
         JSONObject result = null;
         try {
@@ -149,7 +149,7 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端计划列表", notes = "APP端计划列表")
-    @PostMapping(value = "/projectlist/planList", produces = "application/json; charset=utf-8")
+    @PostMapping(value =  ProjectConstant.REQUEST_HOME + "/projectlist/planList", produces = "application/json; charset=utf-8")
     public Object getPlanList(@ModelAttribute @Valid ProjectListRequest request) {
         JSONObject result = null;
         try {

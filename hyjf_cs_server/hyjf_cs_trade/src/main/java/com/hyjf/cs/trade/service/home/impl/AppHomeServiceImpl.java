@@ -49,9 +49,6 @@ public class AppHomeServiceImpl implements AppHomeService {
     private AmUserClient amUserClient;
 
     @Autowired
-    private AmAdsClient amAdsClient;
-
-    @Autowired
     private AmTradeClient amTradeClient;
 
     @Autowired
@@ -452,7 +449,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             code = "ios_banner";
         }
         adsRequest.setCode(code);
-        List<AppAdsCustomizeVO> picList =amAdsClient.getBannerList(adsRequest);
+        List<AppAdsCustomizeVO> picList =amTradeClient.getBannerList(adsRequest);
         if (picList != null && picList.size() > 0) {
             for(AppAdsCustomizeVO appAdsCustomize : picList){
                 appAdsCustomize.setPicUrl(appAdsCustomize.getImage());
@@ -484,7 +481,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         request.setHost(systemConfig.fileDomainUrl);
         request.setCode("bannerlittle");
-        List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
         if (picList != null && picList.size() > 0) {
             AppAdsCustomizeVO appads = picList.get(0);
             System.out.println("adImageUrl: " + appads.getImage());
@@ -520,7 +517,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setCode("popup");
 
         Integer userId = info.get("userId") == null? null: (Integer)info.get("userId");
-        List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(request);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(request);
         if (picList != null && picList.size() > 0) {
             AppAdsCustomizeVO appads = picList.get(0);
             info.put("imageUrl", appads.getImage());
@@ -568,7 +565,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             code = ios;
         }
         adsRequest.setCode(code);
-        List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(adsRequest);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(adsRequest);
         if (picList != null && picList.size() > 0) {
             AppModuleBean appModule = new AppModuleBean();
             appModule.setModuleUrl(picList.get(0).getImage());
@@ -702,7 +699,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
         }
         adsRequest.setCode(code);
-        List<AppAdsCustomizeVO> picList = amAdsClient.getBannerList(adsRequest);
+        List<AppAdsCustomizeVO> picList = amTradeClient.getBannerList(adsRequest);
         if (!CollectionUtils.isEmpty(picList)) {
             info.put("adPicUrl", picList.get(0).getImage());
             info.put("adClickPicUrl", picList.get(0).getUrl());
