@@ -38,7 +38,7 @@ import java.util.*;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 22:16
  */
-@Api(description = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
+@Api(value = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
 @RestController
 @RequestMapping(value = "/hyjf-admin/config/banksetting")
 public class BankSettingController extends BaseController {
@@ -48,7 +48,7 @@ public class BankSettingController extends BaseController {
     @Autowired
     private BankSettingService bankSettingService;
 
-    @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "POST", notes = "列表(条件)查询;江西银行的银行卡配置表")
+    @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "GET", notes = "列表(条件)查询;江西银行的银行卡配置表")
     @RequestMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initBankSettingList(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
@@ -169,7 +169,7 @@ public class BankSettingController extends BaseController {
 
     @ApiOperation(value = "提交内容校验", httpMethod = "POST", notes = "提交内容校验")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "校验内容")
-    @RequestMapping("/validateBeforeAction")
+    @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public Map<String, Object> validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         Map<String, Object> resultMap = new HashMap<String, Object>();

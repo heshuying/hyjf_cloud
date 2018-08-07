@@ -25,7 +25,7 @@ import java.util.Map;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/23 14:10
  */
-@Api(value = "运营报告配置",description = "app和web和api通用接口")
+@Api(value = "运营报告配置",tags ="app和web和api通用接口")
 @RestController
 @RequestMapping("/cs-message/operation_report")
 public class OperationReportController extends BaseController {

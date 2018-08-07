@@ -420,9 +420,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String remark = "";
         String txcode = "";
         // 同步调用路径
-        String retUrl = systemConfig.getAppHost() + "/hyjf-app/user/bank/autoplus";
+        String retUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/user/bank/autoplus";
+        String bgRetUrl = systemConfig.getAppHost() + "/hyjf-app/bank/user/autoplus";
         String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
         BankCallBean bean = new BankCallBean();
         if (type == 1) {

@@ -33,7 +33,7 @@ import java.util.List;
  * @author pangchengchao
  * @version AdminBorrowRepaymentController, v0.1 2018/7/4 14:26
  */
-@Api(value = "产品中心-汇直投-还款信息查询",description = "产品中心-汇直投-还款信息查询")
+@Api(value = "产品中心-汇直投-还款信息查询",tags ="产品中心-汇直投-还款信息查询")
 @RestController
 @RequestMapping("/am-trade/adminBorrowRepayment")
 public class AdminBorrowRepaymentController extends BaseController {

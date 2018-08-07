@@ -48,15 +48,6 @@ public class HjhAccedeClientImpl implements HjhAccedeClient {
     }
 
     @Override
-    public Integer countPlanAccedeRecordTotal(HjhAccedeRequest request) {
-        HjhAccedeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAccede/countAccede/" + request.getPlanNid() ,HjhAccedeResponse.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getAccedeCount();
-        }
-        return null;
-    }
-
-    @Override
     public PlanDetailCustomizeVO getPlanDetail(String planNid) {
         return null;
     }

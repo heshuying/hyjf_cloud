@@ -86,7 +86,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * @return
      */
     @Override
-    public boolean AutoTenderForOneAccede(HjhAccedeVO hjhAccede) {
+    public boolean autoTenderForOneAccede(HjhAccedeVO hjhAccede) {
         //汇计划加入订单号
         String accedeOrderId = hjhAccede.getAccedeOrderId();
         //银行交易前，异常订单状态设定，和系统异常
@@ -249,7 +249,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             boolean isLast = false;
             String borrowNidForCredit = "";
             try {
-                //TODO
                 if (borrowFlag.equals(RedisConstants.HJH_BORROW_CREDIT)) {
                     /** 4. 自动投资债转标的（承接）	 */
                     logger.info("==[" + accedeOrderId + "]" + "自动承接债转标的" + redisBorrow.getBorrowNid());
@@ -257,7 +256,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     /** 4.1. 债转用金额计算	 */
                     // 设置实际投资金额
-                    // 债转标的： 清算时公允价值-已投本金和已投垫付利息TODO
+                    // 债转标的： 清算时公允价值-已投本金和已投垫付利息
                     BigDecimal yujiAmoust = ketouplanAmoust;
                     if (yujiAmoust.compareTo(redisBorrow.getBorrowAccountWait()) >= 0) {
                         // 该标的/债转最后一笔投资
@@ -552,7 +551,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 if (result) {
                 } else {
                     String redisStr = JSON.toJSONString(redisBorrow);
-                    RedisUtils.rightpush(queueName, redisStr);//redis相应计划//TODO:可能放两遍
+                    RedisUtils.rightpush(queueName, redisStr);//redis相应计划//可能放两遍
 //				    break;
                 }
             }

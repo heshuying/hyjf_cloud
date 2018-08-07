@@ -1,12 +1,10 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.TenderCommissionResponse;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
-import com.hyjf.am.resquest.admin.TenderCommissionRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
@@ -140,20 +138,4 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 		return null;
 	}
 
-	/**
-	 * 查找汇付银行开户记录列表
-	 *
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request) {
-		TenderCommissionResponse response = restTemplate
-				.postForEntity("http://AM-USER/am-user/pushMoneyRecord/findPushMoneyRecordList", request, TenderCommissionResponse.class)
-				.getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getCount();
-		}
-		return null;
-	}
 }

@@ -10,14 +10,6 @@ import java.util.List;
  */
 public interface BorrowApicronClient {
     /**
-     *
-     * @param extraYieldRepayStatus 融通宝加息利息还款状态0未完成1已完成
-     * @param apiType 0放款1还款
-     * @return
-     */
-    List<BorrowApicronVO> getBorrowApicronList(int extraYieldRepayStatus, int apiType);
-
-    /**
      * 计划退出查询判断标的是否还款
      * @param borrowNid
      * @return

@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.service.front.batch;
 
+import java.util.Map;
+
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-
-import java.util.Map;
 
 /**
  * @author dxj

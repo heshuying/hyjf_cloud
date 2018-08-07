@@ -18,7 +18,7 @@ spring:
 server:
   port: 9093
   session:
-     timeout:36000
+     timeout: 36000
 logging:
   file: admin.log
 file:

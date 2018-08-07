@@ -3,14 +3,18 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
+import com.hyjf.am.response.admin.DataCenterCouponCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserListCustomizeResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
+import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponUserService;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.util.CommonUtils;
@@ -112,6 +116,38 @@ public class CouponUserController extends BaseController {
         CouponUserResponse response = new CouponUserResponse();
         boolean isSend = couponUserService.getSendRepeat(couponUserSearchRequest);
         response.setSend(isSend);
+        return response;
+    }
+
+    /**
+     * 获取加息券列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("/get_record_list_jx")
+    public DataCenterCouponCustomizeResponse getRecordListJX(@RequestBody DadaCenterCouponCustomizeRequest request) {
+        DataCenterCouponCustomizeResponse response = new DataCenterCouponCustomizeResponse();
+        List<DataCenterCouponCustomize> list = couponUserService.getRecordListJX(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<DataCenterCouponCustomizeVO> voList = CommonUtils.convertBeanList(list, DataCenterCouponCustomizeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 获取代金券列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("/get_record_list_dj")
+    public DataCenterCouponCustomizeResponse getRecordListDJ(@RequestBody DadaCenterCouponCustomizeRequest request) {
+        DataCenterCouponCustomizeResponse response = new DataCenterCouponCustomizeResponse();
+        List<DataCenterCouponCustomize> list = couponUserService.getRecordListDJ(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<DataCenterCouponCustomizeVO> voList = CommonUtils.convertBeanList(list, DataCenterCouponCustomizeVO.class);
+            response.setResultList(voList);
+        }
         return response;
     }
 }

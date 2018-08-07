@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.service.front.account;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 
@@ -77,4 +77,19 @@ public interface AccountService {
      * @return
      */
     int updateOfLoansTender(AccountVO accountVO);
+
+    /**
+     *根据accountCode获取子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountInfoVO getBankMerchantAccountInfo(String accountCode);
+
+    /**
+     * 更新子账户信息-已设置交易密码
+     * @param accountId
+     * @param flag
+     * @return
+     */
+    int updateBankMerchantAccountIsSetPassword(String accountId, Integer flag);
 }

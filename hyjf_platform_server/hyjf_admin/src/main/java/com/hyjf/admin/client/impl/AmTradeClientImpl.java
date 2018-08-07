@@ -14,26 +14,24 @@ import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.config.AdminSystemResponse;
-import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
-import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -3301,7 +3299,19 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
-	@Override
+
+    @Override
+	public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+		DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/couponUser/get_record_list_jx", dataCenterCouponCustomize,
+				DataCenterCouponCustomizeResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
 	public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
 		HjhPlanResponse response = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParamWithoutPage", form, HjhPlanResponse.class).getBody();
@@ -3318,5 +3328,43 @@ public class AmTradeClientImpl implements AmTradeClient{
 		return response;
 	}
 
+    @Override
+    public BankMerchantAccountVO getBankMerchantAccount(String accountCode) {
+        BankMerchantAccountResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getbankmerchantaccount/"+accountCode,
+                BankMerchantAccountResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
 
+    @Override
+    public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/couponUser/get_record_list_dj", dataCenterCouponCustomize,
+                DataCenterCouponCustomizeResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode) {
+        BankMerchantAccountInfoResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/account/getBankMerchantAccountInfo/"+accountCode,
+                BankMerchantAccountInfoResponse.class).getBody();
+        if (response == null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public void updateBankMerchantAccountIsSetPassword(String accountId, int flag) {
+        Integer response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountIsSetPassword/"+accountId+"/"+flag, Integer.class)
+                .getBody();
+    }
 }

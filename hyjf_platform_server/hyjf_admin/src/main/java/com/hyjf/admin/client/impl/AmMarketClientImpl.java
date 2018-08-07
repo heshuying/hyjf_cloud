@@ -1,15 +1,17 @@
 package com.hyjf.admin.client.impl;
 
-import com.hyjf.admin.client.AmMarketClient;
-import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.vo.market.ActivityListVO;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.hyjf.admin.client.AmMarketClient;
+import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.response.market.ActivityListResponse;
+import com.hyjf.am.vo.market.ActivityListVO;
 
 /**
  * @author zhangqingqing
@@ -29,6 +31,18 @@ public class AmMarketClientImpl implements AmMarketClient {
 				ActivityListResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public String getActivityTitle(Integer activityId) {
+		CouponTenderResponse response = restTemplate
+				.getForEntity("http://AM-MARKET/am-market/activity/hztgetactivitytitle/" + activityId,
+						CouponTenderResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getAttrbute();
 		}
 		return null;
 	}
