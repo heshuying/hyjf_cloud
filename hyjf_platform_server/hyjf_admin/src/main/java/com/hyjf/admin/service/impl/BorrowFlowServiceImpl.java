@@ -1,15 +1,23 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BorrowFlowClient;
 import com.hyjf.admin.service.BorrowFlowService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +27,10 @@ import java.util.List;
 public class BorrowFlowServiceImpl implements BorrowFlowService {
     @Autowired
     private BorrowFlowClient borrowFlowClient;
+    @Autowired
+    private AmTradeClient amTradeClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
 
 
     /**
@@ -67,7 +79,28 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest){
-        return borrowFlowClient.selectBorrowFlowList(adminRequest);
+        List<HjhAssetBorrowTypeVO>  hjhAssetBorrowType=new ArrayList<>();
+        ParamNameResponse amResponse = amConfigClient.getNameCd("FLOW_STATUS");
+        AdminBorrowFlowResponse response= amTradeClient.selectBorrowFlowList(adminRequest);
+        if( Response.isSuccess(amResponse)&& Response.isSuccess(response)){
+            List<ParamNameVO>  paramNameS =amResponse.getResultList();
+            List<HjhAssetBorrowTypeVO>  hjhAssetBorrowTypeVOS =response.getResultList();
+            if( !CollectionUtils.isEmpty(hjhAssetBorrowTypeVOS)&&!CollectionUtils.isEmpty(paramNameS)){
+                for(int i=0;i<paramNameS.size();i++){
+                    for(int j=0;j<hjhAssetBorrowTypeVOS.size();j++){
+                        if(paramNameS.get(i).getNameCd().equals(String.valueOf(hjhAssetBorrowTypeVOS.get(j).getIsOpen()))){
+                            hjhAssetBorrowTypeVOS.get(j).setStatus(paramNameS.get(i).getName());
+                            hjhAssetBorrowType.add(hjhAssetBorrowTypeVOS.get(j));
+                        }
+                    }
+                }
+            }
+            response.setResultList(hjhAssetBorrowType);
+            return response;
+        }else{
+            response.setRtn(Response.FAIL);
+        }
+        return response;
     }
     /**
      * 详情
