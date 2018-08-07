@@ -272,6 +272,25 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
     }
 
+    @Override
+    public List<BorrowRecover> getBorrowRecover(String borrowNid) {
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria crt = example.createCriteria();
+        crt.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRecover> borrowRecovers = borrowRecoverMapper.selectByExample(example);
+        return borrowRecovers;
+    }
+
+    @Override
+    public List<BorrowRecoverPlan> getBorrowRecoverPlan(String borrowNid, int period) {
+        BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
+        BorrowRecoverPlanExample.Criteria crt = example.createCriteria();
+        crt.andBorrowNidEqualTo(borrowNid);
+        crt.andRecoverPeriodEqualTo(period);
+        List<BorrowRecoverPlan> borrowRecovers = borrowRecoverPlanMapper.selectByExample(example);
+        return borrowRecovers;
+    }
+
     /**
      * 获取某一期的还款计划
      * @auther: hesy
@@ -289,6 +308,41 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 债转投资记录获取
+     * @auther: hesy
+     * @date: 2018/8/7
+     */
+    @Override
+    public CreditTender getCreditTender(String assignNid) {
+        CreditTenderExample example = new CreditTenderExample();
+        CreditTenderExample.Criteria crt = example.createCriteria();
+        crt.andAssignNidEqualTo(assignNid);
+        List<CreditTender> creditTenderList = this.creditTenderMapper.selectByExample(example);
+        if (creditTenderList != null && creditTenderList.size() == 1) {
+            return creditTenderList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 计划类债转
+     * 根据承接订单号获取承接记录
+     * @param assignNid
+     * @return
+     */
+    @Override
+    public HjhDebtCreditTender getHjhDebtCreditTender(String assignNid) {
+        HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
+        HjhDebtCreditTenderExample.Criteria crt = example.createCriteria();
+        crt.andAssignOrderIdEqualTo(assignNid);
+        List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(example);
+        if (creditTenderList != null && creditTenderList.size() == 1) {
+            return creditTenderList.get(0);
+        }
+        return null;
     }
 
     /**

@@ -42,4 +42,10 @@ public class MessageConstant {
 	/** 给指定邮件地址发邮件 */
 	public static final String MAIL_SEND_FOR_MAILING_ADDRESS = "mail_send_for_mailing_address";
 
+	/** 给指定邮件地址发邮件 */
+	public static final String MAILSENDFORMAILINGADDRESSMSG = "maillSendForMailingAddressMsg";
+
+	/* 邮件主队列key */
+	public static final String MAILQUENEM = "mailQuenem";
+
 }

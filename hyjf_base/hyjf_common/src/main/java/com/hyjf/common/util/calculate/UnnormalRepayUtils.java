@@ -105,14 +105,42 @@ public class UnnormalRepayUtils {
 		return aheadInterest;
 	}
 
+	/**
+	 * 	 **NEW** 计算机实际天数罚息
+	 * （提前还款8日包含8日还款，利息按实际持有天数计算）
+	 * （10000*0.085/360）*82+（10000*0.085/360）*3+10000=10200.69
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @param actualDays
+	 * @return
+	 */
+	public static BigDecimal aheadEndRepayInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int actualDays) {
+		// 借款日利息 （10000*0.085/360）代入计算
+		BigDecimal advanceDays = new BigDecimal(actualDays).add(new BigDecimal(3));
+		BigDecimal aheadInterest = termShouldPrincipal.multiply(yearRate).divide(new BigDecimal(36000),8,BigDecimal.ROUND_DOWN).multiply(advanceDays);
+		aheadInterest = aheadInterest.setScale(2,BigDecimal.ROUND_DOWN);
+		return aheadInterest;
+	}
+
+	/**
+	 * 	 **NEW**计算最后一期利息
+	 * （提前还款8日包含8日还款，利息按实际持有天数计算）
+	 * （10000*0.08/360）*3*（3-1）-6.66=6.6
+	 * @param termShouldPrincipal
+	 * @param yearRate
+	 * @return
+	 */
+	public static BigDecimal aheadLastRepayInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int totalPeriod) {
+		// 借款日利息 （10000*0.085/360）代入计算
+		BigDecimal advanceDays = new BigDecimal(3);
+		BigDecimal totalInterest = termShouldPrincipal.multiply(yearRate).divide(new BigDecimal(36000),8,BigDecimal.ROUND_DOWN).multiply(advanceDays).multiply(new BigDecimal(totalPeriod));
+		totalInterest = totalInterest.setScale(2,BigDecimal.ROUND_DOWN);
+		BigDecimal oneInterest = aheadEndRepayInterest(termShouldPrincipal,yearRate,0).multiply(new BigDecimal(totalPeriod-1));
+		return totalInterest.subtract(oneInterest).setScale(2, BigDecimal.ROUND_DOWN);
+	}
 
 	/**
 	 * 融通宝提前还款减少的利息
-	 * @param termShouldPrincipalInterest
-	 * @param termShouldPrincipal
-	 * @param yearRate
-	 * @param aheadDays
-	 * @return
 	 */
 	public static BigDecimal aheadRTBRepayChargeInterest(BigDecimal termShouldPrincipal,BigDecimal yearRate, int aheadDays) {
 		

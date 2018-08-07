@@ -20,6 +20,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -68,6 +69,15 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
     private MailProducer mailProducer;
     @Resource
     private BorrowManinfoMapper borrowManinfoMapper;
+
+    @Value("${hyjf.env.test}")
+    private Boolean env_test;
+
+    @Value("${hyjf.alerm.email.test}")
+    private static String emailList1;
+
+    @Value("${hyjf.alerm.email}")
+    private static String emaillist2;
 
     /**
      * 邮件发送key
@@ -228,18 +238,13 @@ public class AutoIssueRecoverServiceImpl implements AutoIssueRecoverService {
                 msg.append("资产ID：").append(hjhPlanAsset.getAssetId()).append("<br/>");
                 msg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
                 msg.append("错误信息：").append("该资产在自动录标时未打上标签！").append("<br/>");
-                //TODO 之前为配置文件获取发送人邮箱，现在暂时未知！
-                // 邮箱集合
-//                Boolean env_test = "true".equals(PropUtils.getSystem("hyjf.env.test")) ? true : false;
-//                logger.info("自动录标时未打上标签环境 evn_test is test ? " + env_test);
                 String emailList= "";
-//                if (env_test){
-//                    emailList = PropUtils.getSystem("hyjf.alerm.email.test");
-//                }else{
-//                    emailList = PropUtils.getSystem("hyjf.alerm.email");
-//                }
+                if (env_test){
+                    emailList = emailList1;
+                }else{
+                    emailList = emaillist2;
+                }
                 String [] toMail = emailList.split(",");
-
                 MailMessage mailMessage = new MailMessage(null, null, "资产ID为：" + hjhPlanAsset.getAssetId(), msg.toString(), null, toMail, CustomConstants.MAILSENDFORMAILINGADDRESSMSG,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                 // 发送邮件

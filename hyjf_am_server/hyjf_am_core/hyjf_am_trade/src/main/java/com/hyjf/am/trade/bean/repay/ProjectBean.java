@@ -7,89 +7,96 @@ import java.util.List;
 
 public class ProjectBean extends BaseVO implements Serializable {
 
-    /**
-     * 此处为属性说明
-     */
-    private static final long serialVersionUID = -2142812516666739413L;
 
-    // 是否是汇添金项目
-    public String tType;
+	/**
+	 * 此处为属性说明
+	 */
+	private static final long serialVersionUID = -2142812516666739413L;
 
-    // 还款人id
-    public String userId;
-    
-    //角色
-    public String roleId;
+	// 是否是汇添金项目
+	public String tType;
 
-    // 项目编号
-    public String borrowNid;
+	// 还款人id
+	public String userId;
 
-    // 项目名称
-    public String borrowName;
+	//角色
+	public String roleId;
 
-    // 项目还款方式
-    public String borrowStyle;
+	// 项目编号
+	public String borrowNid;
 
-    // 项目还款总额 加管理费
-    public String repayTotal;
-    
-    // 项目还款本息和
-    public String repayAccount;
-    
-    // 项目还款本金
-    public String repayCapital;
-    
-    // 当前的利息
-    public String repayInterest;
-    
-    //应还利息
-    public String shouldInterest;
-    
-    // 当前管理费
-    public String manageFee;
+	// 项目名称
+	public String borrowName;
 
-    // 当前还款期数
-    public String repayPeriod;
+	// 项目还款方式
+	public String borrowStyle;
 
-    // 当前还款状态(是否完成 0未还款1还款中)
-    public String repayStatus;
+	// 项目还款总额 加管理费
+	public String repayTotal;
 
-    // 当前还款方式（0正常还款1提前还款2延期还款3逾期还款）
-    public String advanceStatus;
+	// 项目还款本息和
+	public String repayAccount;
 
-    // 提前天数
-    public String chargeDays;
+	// 项目还款本金
+	public String repayCapital;
 
-    public String advanceDays;
+	// 当前的利息
+	public String repayInterest;
 
-    // 提前还款利息
-    public String chargeInterest;
+	//应还利息
+	public String shouldInterest;
 
-    public String advanceInterest;
+	// 当前管理费
+	public String manageFee;
 
-    // 延期天数
-    public String delayDays;
+	// 当前还款期数
+	public String repayPeriod;
 
-    // 延期利息
-    public String delayInterest;
+	// 当前还款状态(是否完成 0未还款1还款中)
+	public String repayStatus;
 
-    // 逾期天数
-    public String lateDays;
+	// 当前还款方式（0正常还款1提前还款2延期还款3逾期还款）
+	public String advanceStatus;
 
-    // 逾期罚息
-    public String lateInterest;
-    
-    public String username;
-    //本期应还笔数
+	// 提前天数
+	public String chargeDays;
+
+	public String advanceDays;
+
+	// 提前还款利息
+	public String chargeInterest;
+
+	public String advanceInterest;
+
+	// 延期天数
+	public String delayDays;
+
+	// 延期利息
+	public String delayInterest;
+
+	// 逾期天数
+	public String lateDays;
+
+	// 逾期罚息
+	public String lateInterest;
+
+	public String username;
+	//本期应还笔数
 	public String repayNum;
 
-    /** 用户还款详情 */
-    private List<ProjectRepayBean> userRepayList;
-    
-    public ProjectBean() {
-        super();
-    }
-    
+	// 看正在还款的是否 全部结清（1为全部结清的还款中，以外则全否）
+	private String allRepay;
+
+	// 看正在还款的是否  只能全部结清（1为 是，以外则全否）
+	private String onlyAllRepay;
+
+	/** 用户还款详情 */
+	private List<ProjectRepayBean> userRepayList;
+
+	public ProjectBean() {
+		super();
+	}
+
 	public String getShouldInterest() {
 		return shouldInterest;
 	}
@@ -298,4 +305,19 @@ public class ProjectBean extends BaseVO implements Serializable {
 		this.userRepayList = userRepayList;
 	}
 
+	public String getAllRepay() {
+		return allRepay;
+	}
+
+	public void setAllRepay(String allRepay) {
+		this.allRepay = allRepay;
+	}
+
+	public String getOnlyAllRepay() {
+		return onlyAllRepay;
+	}
+
+	public void setOnlyAllRepay(String onlyAllRepay) {
+		this.onlyAllRepay = onlyAllRepay;
+	}
 }
