@@ -143,7 +143,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         baseMapBean.set("autoCreditStatus", hjhUserAuth == null ? "0" : hjhUserAuth.getAutoCreditStatus() == null ? "0" : hjhUserAuth.getAutoCreditStatus() + "");
         baseMapBean.set("userAutoType", type);
         baseMapBean.set(CustomConstants.APP_SIGN, sign);
-        baseMapBean.setCallBackAction(systemConfig.getWebHost() + "/user/setting/authorization/result/failed");
+        baseMapBean.setCallBackAction(systemConfig.getFrontHost() + "/user/setting/authorization/result/failed");
         result.put("callBackForm", baseMapBean);
         return result;
     }
@@ -165,7 +165,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         baseMapBean.set("autoInvesStatus", hjhUserAuth == null ? "0" : hjhUserAuth.getAutoInvesStatus() == null ? "0" : hjhUserAuth.getAutoInvesStatus() + "");
         baseMapBean.set("autoCreditStatus", hjhUserAuth == null ? "0" : hjhUserAuth.getAutoCreditStatus() == null ? "0" : hjhUserAuth.getAutoCreditStatus() + "");
         baseMapBean.set("userAutoType", type);
-        baseMapBean.setCallBackAction(systemConfig.getWebHost() + "/user/setting/authorization/result/success");
+        baseMapBean.setCallBackAction(systemConfig.getFrontHost() + "/user/setting/authorization/result/success");
         result.put("callBackForm", baseMapBean);
         return result;
     }
@@ -470,7 +470,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Override
     public BaseMapBean appAuthInvesCheck(String srvAuthCode, String code, JSONObject checkResult, Integer userId) {
-        String errorPath = systemConfig.getAppHost() + "/user/setting/authorization/result/failed";
+        String errorPath = systemConfig.getAppServerHost() + "/user/setting/authorization/result/failed";
         if (checkResult != null) {
             BaseMapBean baseMapBean = new BaseMapBean();
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);

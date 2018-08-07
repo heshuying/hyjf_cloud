@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.user.MspApplytRequest;
@@ -93,6 +94,10 @@ public interface AmConfigClient {
    	 * @return
    	 */
    	LinkResponse getLinks();
+	/**
+	 * 子账户类型 查询
+	 */
+	ParamNameResponse getNameCd(String code);
 
    	AdminSystemResponse isExistsApplicant(String applicant);
    	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);

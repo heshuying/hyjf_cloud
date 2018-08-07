@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -120,7 +122,7 @@ public class HjhDebtCreditController extends BaseController{
     })
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
-    public JSONObject exportHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request,HttpServletResponse response) {
+    public JSONObject exportHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
 
         request.setCurrPage(-1);
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhDebtCreditService.queryHjhDebtCreditList(request);
@@ -130,7 +132,7 @@ public class HjhDebtCreditController extends BaseController{
         // 表格sheet名称
         String sheetName = "汇计划转让记录";
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "出让人计划编号", "出让人计划订单号", "清算后计划编号", "出让人", "债转编号", "原项目编号", "原项目收益率", "还款方式", "债权本金","债权价值", "预计实际收益率", "已转让本金", "垫付利息", /*"清算手续费率", "实际服务费",*/"在途资金", "出让人实际到账金额", "实际清算时间", "转让状态", "还款状态","项目总期数 ","清算时所在期数","当期应还款时间" };
         // 声明一个工作薄

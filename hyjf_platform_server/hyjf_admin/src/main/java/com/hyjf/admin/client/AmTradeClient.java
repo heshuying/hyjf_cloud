@@ -1748,4 +1748,6 @@ public interface AmTradeClient {
      * @param flag
      */
     void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
+
+    AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
 }

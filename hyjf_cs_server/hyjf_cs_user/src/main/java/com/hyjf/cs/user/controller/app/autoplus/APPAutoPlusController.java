@@ -107,7 +107,7 @@ public class APPAutoPlusController extends BaseUserController {
         if (userAuth != null && userAuth.getAutoInvesStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
-        String url = systemConfig.getAppHost()+"/hyjf-app/bank/user/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
+        String url = systemConfig.getAppServerHost()+"/hyjf-app/bank/user/autoplus/userAuthInves?code=" + code + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -136,7 +136,7 @@ public class APPAutoPlusController extends BaseUserController {
             result.setStatusDesc("自动投标已授权");
             return result;
         }
-        String url = systemConfig.getAppHost()+"/hyjf-app/bank/user/autoplus/userAuthCredit?code=" + code
+        String url = systemConfig.getAppServerHost()+"/hyjf-app/bank/user/autoplus/userAuthCredit?code=" + code
                 + "&srvAuthCode=" + srvAuthCode;
         result.setAuthUrl(url);
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
@@ -176,7 +176,7 @@ public class APPAutoPlusController extends BaseUserController {
             modelAndView = new ModelAndView("/jumpHTML");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败！");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
             modelAndView.addObject("callBackForm", baseMapBean);
         }
         return modelAndView;
@@ -189,8 +189,8 @@ public class APPAutoPlusController extends BaseUserController {
      */
     @RequestMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@ModelAttribute BankCallBean bean) {
-        String errorPath = systemConfig.getAppHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
-        String successPath = systemConfig.getAppHost()+"/user/setting/authorization/result/success";
+        String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
+        String successPath = systemConfig.getAppServerHost()+"/user/setting/authorization/result/success";
         ModelAndView modelAndView = new ModelAndView();
         bean.convert();
         // 返回失败
@@ -299,7 +299,7 @@ public class APPAutoPlusController extends BaseUserController {
             modelAndView = new ModelAndView("/jumpHTML");
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "调用银行接口失败！");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH);
             modelAndView.addObject("callBackForm", baseMapBean);
         }
         return modelAndView;
@@ -313,7 +313,7 @@ public class APPAutoPlusController extends BaseUserController {
     @ApiOperation(value = "用户授权自动投资同步回调",notes = "用户授权自动投资同步回调")
     @RequestMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean) {
-        String errorPath = systemConfig.getAppHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
+        String errorPath = systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_ERROR_PATH;
         ModelAndView modelAndView = new ModelAndView();
         bean.convert();
         // 返回失败
@@ -342,7 +342,7 @@ public class APPAutoPlusController extends BaseUserController {
                 baseMapBean.set("autoCreditStatus",hjhUserAuth.getAutoCreditStatus()+"");
                 baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
                 baseMapBean.set(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
-                baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/setting/authorization/result/success");
+                baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/setting/authorization/result/success");
                 modelAndView.addObject("callBackForm", baseMapBean);
                 return modelAndView;
             }

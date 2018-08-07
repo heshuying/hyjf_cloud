@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -79,13 +81,13 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
      * @date 2018/7/10 14:09
      */
     @Override
-    public void exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) {
+    public void exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         BorrowCreditAmRequest req = CommonUtils.convertBean(request,BorrowCreditAmRequest.class);
 
         String sheetName = "债权转让列表";
         String[] titles = new String[] { "债转编号", "项目编号", "用户名", "债权本金", "转让本金", "折让率", "转让价格", "已转让金额", "发布时间",
                 "还款时间", "转让状态", "发起平台" };
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         List<BorrowCreditVO> list = amBorrowCreditClient.getBorrowCreditList(req);
         exportExcel(sheetName,fileName,titles,list,response);

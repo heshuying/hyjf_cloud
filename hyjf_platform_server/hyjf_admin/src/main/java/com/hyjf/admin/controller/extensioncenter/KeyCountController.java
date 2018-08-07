@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class KeyCountController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "关键词统计";
 		// 文件名称
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
 		KeyCountResponse keyCountResponse = keyCountService.searchAction(form);
 		List<KeyCountVO> recordList = keyCountResponse.getResultList();
