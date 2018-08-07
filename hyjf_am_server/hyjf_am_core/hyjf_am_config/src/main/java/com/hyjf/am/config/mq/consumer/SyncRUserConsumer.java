@@ -16,6 +16,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
@@ -30,7 +31,8 @@ import com.hyjf.common.constants.MQConstant;
  * @author dxj
  * @version SyncRUserConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-@Component
+//@ConditionalOnProperty(value = "hyjf.env.test", matchIfMissing = false)
+//@Component
 public class SyncRUserConsumer extends Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncRUserConsumer.class);
@@ -75,7 +77,7 @@ public class SyncRUserConsumer extends Consumer {
                 String jsonMsg = new String(msg.getBody());
                 JSONObject jsonObj = JSON.parseObject(jsonMsg);
 
-                logger.info("Ruser: " + jsonMsg);
+                logger.info(tagName+" Ruser: " + jsonMsg);
                 
                 if ("ht_user_info".equals(tagName)) {
 
@@ -91,6 +93,7 @@ public class SyncRUserConsumer extends Consumer {
 
                 }
 
+                logger.info(tagName+" Ruser同步OK ");
             } catch (Exception e1) {
                 logger.error(e1.getMessage());
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
