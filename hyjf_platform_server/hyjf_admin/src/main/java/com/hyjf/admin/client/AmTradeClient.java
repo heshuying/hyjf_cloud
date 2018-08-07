@@ -18,6 +18,7 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
@@ -1718,9 +1719,21 @@ public interface AmTradeClient {
     int isEntrustedExistsUser(String userName);
 
     /**
+     * 获取加息券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
      * 获取计划列表无分页
      * @return
      */
  	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
 
+    /**
+     * 获取代金券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
 }
