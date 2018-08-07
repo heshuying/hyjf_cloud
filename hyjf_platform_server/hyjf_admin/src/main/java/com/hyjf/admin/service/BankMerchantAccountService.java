@@ -53,4 +53,11 @@ public interface BankMerchantAccountService {
      * @return
      */
     String getFiledMess(String logOrdId);
+
+    /**
+     * 重置交易密码
+     * @param accountCode
+     * @return
+     */
+    AdminResult resetPassword(String accountCode);
 }

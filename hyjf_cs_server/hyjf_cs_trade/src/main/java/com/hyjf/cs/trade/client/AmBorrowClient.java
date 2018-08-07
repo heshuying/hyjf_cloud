@@ -49,18 +49,6 @@ public interface AmBorrowClient {
      */
     BorrowVO getBorrowByNid(String borrowId);
 
-    /**
-     * 获取userInfo对象
-     * @param borrowNid
-     * @return
-     */
-	BorrowInfoVO getBorrowInfoByNid(String borrowNid);
-
-    /**
-     * 投资之前插入tmp表
-     * @param request
-     */
-    boolean updateBeforeChinaPnR(TenderRequest request);
 
     /**
      * 用户投资散标操作表

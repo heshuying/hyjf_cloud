@@ -31,7 +31,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: PlatformTransferController, v0.1 2018/7/9 11:07
  */
-@Api(value = "资金中心-转账管理-平台转账",description = "资金中心-转账管理-平台转账")
+@Api(value = "资金中心-转账管理-平台转账",tags ="资金中心-转账管理-平台转账")
 @RestController
 @RequestMapping(value = "/am-trade/platformtransfer")
 public class PlatformTransferController extends BaseController {

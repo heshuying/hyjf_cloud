@@ -99,7 +99,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      */
     @Override
     public JSONObject searchAppProjectList(ProjectListRequest request) {
-        // TODO: 2018/6/20   参数验证
         //CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getPage(), request.getPageSize());
@@ -1104,7 +1103,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait) ? "" : "剩余" + borrowAccountWait);
             }
 
-            appProjectType.setBorrowUrl(systemConfig.getAppServerHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
+            appProjectType.setBorrowUrl(systemConfig.getAppFrontHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 
@@ -1437,7 +1436,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppProjectListCustomizeVO appProjectListCustomize;
         if (!CollectionUtils.isEmpty(planList)) {
             appProjectList = new ArrayList<AppProjectListCustomizeVO>();
-            String host = systemConfig.getAppServerHost();
+            String host = systemConfig.getAppFrontHost() ;
             for (HjhPlanCustomizeVO entity : planList) {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
@@ -1955,7 +1954,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }else if (status.equals("14")){
                 appProjectType.setStatusName("已还款");
             }
-            appProjectType.setBorrowUrl(systemConfig.getAppServerHost() + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
+            appProjectType.setBorrowUrl(systemConfig.getAppFrontHost()  + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 
