@@ -50,9 +50,9 @@ public class BankSettingController extends BaseController {
     private BankSettingService bankSettingService;
 
     @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "GET", notes = "列表(条件)查询;江西银行的银行卡配置表")
-    @RequestMapping("/list")
+    @GetMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult initBankSettingList(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
+    public AdminResult initBankSettingList(@ModelAttribute BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
         AdminBankSettingResponse response = this.bankSettingService.selectBankSettingList(request);
@@ -62,14 +62,14 @@ public class BankSettingController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<JxBankConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<ListResult<JxBankConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
     }
 
-    @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
+    @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "GET", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
-    @PostMapping("/info")
+    @GetMapping("/info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
+    public AdminResult bankSettingInfo(@ModelAttribute BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
@@ -118,9 +118,9 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "修改一条数据", httpMethod = "POST", notes = "修改一条数据")
+    @ApiOperation(value = "修改一条数据", httpMethod = "PUT", notes = "修改一条数据")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "修改内容和id")
-    @PostMapping("/update")
+    @PutMapping("/update")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingResponse response = null;
@@ -147,9 +147,9 @@ public class BankSettingController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "删除一条数据", httpMethod = "POST", notes = "删除一条数据")
+    @ApiOperation(value = "删除一条数据", httpMethod = "DELETE", notes = "删除一条数据")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "被删除数据对应的id")
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         AdminBankSettingResponse response = null;
@@ -173,15 +173,15 @@ public class BankSettingController extends BaseController {
     @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public Map<String, Object> validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
+        JxBankConfigVO jxBankConfig = new JxBankConfigVO();
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        AdminBankSettingRequest request = new AdminBankSettingRequest();
-        BeanUtils.copyProperties(bankSettingRequestBean ,request);
-        List<JxBankConfigVO> list = bankSettingService.getRecordList(request.getJxBankConfig(), -1, -1);
+        BeanUtils.copyProperties(bankSettingRequestBean ,jxBankConfig);
+        List<JxBankConfigVO> list = bankSettingService.getRecordList(jxBankConfig, -1, -1);
         if (list != null && list.size() != 0) {
             if (bankSettingRequestBean.getId() != null) {
                 Boolean hasnot = true;
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getId().equals(request.getId())) {
+                    if (list.get(i).getId().equals(bankSettingRequestBean.getId())) {
                         hasnot = false;
                         break;
                     }
@@ -214,10 +214,10 @@ public class BankSettingController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
+    @ApiOperation(value = "列表导出", httpMethod = "GET", notes = "列表导出")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "列表导出内容")
-    @PostMapping(value = "/exportregist")
-    public void exportAction(HttpServletResponse response, @RequestBody BankSettingRequestBean bankSettingRequestBean) throws Exception {
+    @GetMapping(value = "/exportregist")
+    public void exportAction(HttpServletResponse response, @ModelAttribute BankSettingRequestBean bankSettingRequestBean) throws Exception {
         AdminBankSettingRequest requestBean = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, requestBean);
         // 表格sheet名称
