@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.handle.impl;
 
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
+import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
@@ -12,10 +13,12 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AutoSendClient;
+import com.hyjf.cs.trade.mq.producer.MailProducer;
 import com.hyjf.cs.trade.service.handle.ApiAssetPushService;
 import com.hyjf.cs.trade.service.handle.AutoSendService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -23,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -45,11 +49,27 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
 
     public static JedisPool pool = RedisUtils.getPool();
 
+    @Value("${hyjf.env.test}")
+    private Boolean env_test;
+
+    @Value("${hyjf.alerm.email.test}")
+    private static String emailList1;
+
+    @Value("${hyjf.alerm.email}")
+    private static String emaillist2;
+
     @Autowired
     private AutoSendClient autoSendClient;
 
     @Autowired
     private ApiAssetPushService apiAssetPushService;
+
+    @Autowired
+    private MailProducer mailProducer;
+    /**
+     * 邮件发送key
+     */
+    public static String LABEL_MAIL_KEY = "labelmailkey";
 
     @Override
     public boolean insertSendBorrow(HjhPlanAssetVO hjhPlanAssetVO, HjhAssetBorrowTypeVO hjhAssetBorrowTypeVO) throws Exception {
@@ -168,6 +188,33 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         HjhLabelVO label = apiAssetPushService.getLabelId(borrowVO, hjhPlanAssetVO);
         if (label == null || label.getId() == null) {
             _log.info(hjhPlanAssetVO.getAssetId() + " 没有获取到标签");
+            /**汇计划三期邮件预警 BY LIBIN start*/
+            // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
+            if(!RedisUtils.exists(LABEL_MAIL_KEY + hjhPlanAssetVO.getAssetId())){
+                StringBuffer msg = new StringBuffer();
+                msg.append("资产ID：").append(hjhPlanAssetVO.getAssetId()).append("<br/>");
+                msg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
+                msg.append("错误信息：").append("该资产在自动录标时未打上标签！").append("<br/>");
+                // 邮箱集合
+                _log.info("自动录标时未打上标签环境 evn_test is test ? " + env_test);
+                String emailList= "";
+                if (env_test){
+                    emailList = emailList1;
+                }else{
+                    emailList = emaillist2;
+                }
+                String [] toMail = emailList.split(",");
+                MailMessage message = new MailMessage(null, null, "资产ID为：" + hjhPlanAssetVO.getAssetId(), msg.toString(), null, toMail, null,
+                        MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+                int num = mailProducer.gather(message);
+                if( num > 0){
+                    // String key, String value, int expireSeconds
+                    RedisUtils.set(LABEL_MAIL_KEY + hjhPlanAssetVO.getAssetId(), hjhPlanAssetVO.getAssetId(), 24 * 60 * 60);
+                }
+            } else {
+                _log.info("此邮件key值还未过期(一天)");
+            }
+            /**汇计划三期邮件预警 BY LIBIN end*/
             return result;
         }
 
