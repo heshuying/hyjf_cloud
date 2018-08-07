@@ -505,7 +505,11 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		AccountRechargeVO vo = amTradeClient.selectByOrderId(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
 		Map<String,String> map = new HashedMap();
-		map.put("error",vo.getMessage());
+		if(vo!=null){
+			map.put("error",vo.getMessage());
+		}else{
+			map.put("error","系统异常，请稍后再试！");
+		}
 		result.setData(map);
 		return result;
 	}
