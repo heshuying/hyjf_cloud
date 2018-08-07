@@ -252,14 +252,14 @@ public class MongoSeachController extends BaseController {
 
         int recordTotal = (int) hjhPlanCapitalDao.getCount(hjhPlanCapitalVO);
 
-        if (recordTotal > 0) {
+/*        if (recordTotal > 0) {
             List<HjhPlanCapital> responseList = hjhPlanCapitalDao.findAllList(hjhPlanCapitalVO);
 
             if (responseList != null) {
                 List<HjhPlanCapitalCustomizeVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalCustomizeVO.class);
                 hjhPlanCapitalResponse.setResultList(voList);
             }
-        }
+        }*/
         return hjhPlanCapitalResponse;
     }
 }
