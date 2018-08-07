@@ -1,16 +1,15 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.admin.coupon;
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.resquest.trade;
 
 import java.text.DecimalFormat;
 
 /**
  * @author fq
- * @version DataCenterCouponCustomizeVO, v0.1 2018/7/19 9:43
+ * @version DadaCenterCouponCustomizeRequest, v0.1 2018/8/6 16:53
  */
-public class DataCenterCouponCustomizeVO extends BaseVO {
+public class DadaCenterCouponCustomizeRequest {
     /**
      * serialVersionUID:
      */

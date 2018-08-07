@@ -25,6 +25,7 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
@@ -3298,7 +3299,19 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
-	@Override
+
+    @Override
+	public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+		DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+				"http://AM-TRADE/am-trade/couponUser/get_record_list_jx", dataCenterCouponCustomize,
+				DataCenterCouponCustomizeResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
 	public HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form) {
 		HjhPlanResponse response = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/planList/getHjhPlanListByParamWithoutPage", form, HjhPlanResponse.class).getBody();
@@ -3322,6 +3335,17 @@ public class AmTradeClientImpl implements AmTradeClient{
                 BankMerchantAccountResponse.class).getBody();
         if (response == null) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/couponUser/get_record_list_dj", dataCenterCouponCustomize,
+                DataCenterCouponCustomizeResponse.class);
+        if (response != null) {
+            return response.getResultList();
         }
         return null;
     }

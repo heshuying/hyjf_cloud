@@ -3,14 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
@@ -19,13 +11,20 @@ import com.hyjf.am.trade.dao.model.auto.PushMoney;
 import com.hyjf.am.trade.service.admin.PushMoneyService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author fuqiang
  * @version PushMoneyController, v0.1 2018/7/10 19:20
  */
 @RestController
-@RequestMapping("/hyjf-trade/pushmoney")
+@RequestMapping("/am-trade/pushmoney")
 public class PushMoneyController extends BaseController {
 	@Autowired
 	private PushMoneyService pushMoneyService;
