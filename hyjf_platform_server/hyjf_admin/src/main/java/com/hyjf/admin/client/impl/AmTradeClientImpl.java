@@ -3299,7 +3299,6 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
         return response;
 	}
-	@Override
 
     @Override
 	public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
