@@ -931,7 +931,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         String borrowStyle = borrow.getBorrowStyle(); // 还款方式
         BigDecimal feeRate = Validator.isNull(borrow.getManageFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getManageFeeRate());// 管理费率
         BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());// 差异费率
-        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : Integer.parseInt(borrow.getVerifyTime());// 初审时间
+        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();// 初审时间
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 项目总期数
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
@@ -1459,7 +1459,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                     userRepayDetail.setLateDays(userRecover.getLateDays().toString());
                     userRepayDetail.setLateInterest(userRecover.getLateInterest().toString());
                     userRepayDetail.setAdvanceStatus(userRecover.getAdvanceStatus().toString());
-                    userRepayDetail.setRepayTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(userRecover.getRecoverTime())));
+                    userRepayDetail.setRepayTime(GetDate.getDateMyTimeInMillis(userRecover.getRecoverTime()));
                     BigDecimal total = new BigDecimal("0");
                     if (userRecover.getRecoverStatus() == 1) {
                         total = userRecover.getRecoverAccountYes().add(userRecover.getRecoverFee());
@@ -1628,7 +1628,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         // 差异费率
         BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
         // 初审时间
-        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : Integer.parseInt(borrow.getVerifyTime());
+        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();
         // 项目总期数
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
         // 还款期数
@@ -2368,7 +2368,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         // 差异费率
         BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
         // 初审时间
-        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : Integer.parseInt(borrow.getVerifyTime());
+        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();
         // 项目总期数
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
         // 还款期数

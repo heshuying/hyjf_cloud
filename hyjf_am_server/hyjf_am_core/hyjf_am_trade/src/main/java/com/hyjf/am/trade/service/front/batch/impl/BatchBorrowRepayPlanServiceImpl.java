@@ -3106,7 +3106,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @param assignNid
 	 * @return
 	 */
-	private HjhDebtCreditTender getCreditTender(String assignNid) {
+	private HjhDebtCreditTender getCreditTenderHjh(String assignNid) {
 		
 		HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
 		example.createCriteria().andAssignOrderIdEqualTo(assignNid);
