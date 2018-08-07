@@ -26,5 +26,5 @@ public interface AutoTenderService extends BaseTradeService {
      * @param hjhAccede
      * @return
      */
-    boolean AutoTenderForOneAccede(HjhAccedeVO hjhAccede);
+    boolean autoTenderForOneAccede(HjhAccedeVO hjhAccede);
 }

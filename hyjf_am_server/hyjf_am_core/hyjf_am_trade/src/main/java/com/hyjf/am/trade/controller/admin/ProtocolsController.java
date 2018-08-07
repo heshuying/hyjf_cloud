@@ -23,7 +23,7 @@ import java.util.List;
  * @version ProtocolsController, v0.1 2018/7/10 18:06
  */
 @RestController
-@RequestMapping("/hyjf-trade/protocol")
+@RequestMapping("/am-trade/protocol")
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;

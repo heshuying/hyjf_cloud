@@ -73,6 +73,8 @@ public class BorrowApicron implements Serializable {
 
     private String ordid;
 
+    private Integer isAllrepay;
+
     private Date createTime;
 
     private Date updateTime;
@@ -351,6 +353,14 @@ public class BorrowApicron implements Serializable {
 
     public void setOrdid(String ordid) {
         this.ordid = ordid == null ? null : ordid.trim();
+    }
+
+    public Integer getIsAllrepay() {
+        return isAllrepay;
+    }
+
+    public void setIsAllrepay(Integer isAllrepay) {
+        this.isAllrepay = isAllrepay;
     }
 
     public Date getCreateTime() {

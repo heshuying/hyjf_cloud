@@ -46,7 +46,7 @@ public class AutoTenderController extends BaseTradeController {
             try {
                 logger.info(logMsgHeader + " 计划自动投资开始。");
                 // 汇计划加入订单 自动投资/复投
-                flag = this.autoTenderService.AutoTenderForOneAccede(hjhAccede);
+                flag = this.autoTenderService.autoTenderForOneAccede(hjhAccede);
                 if (!flag) {
                     logger.info(logMsgHeader + " 计划自动投资结束。投资失败！！！");
                 } else {

@@ -11,7 +11,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminPlanAccedeListCustomize;
-import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
+import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;

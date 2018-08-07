@@ -45,6 +45,7 @@ public class ProtocolsController extends BaseController {
 	private ProtocolsService protocolsService;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
+	@RequestMapping("/init")
 	public AdminResult<ListResult<FddTempletCustomizeVO>> selectFddTempletList(
 			@RequestBody ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = protocolsService.selectFddTempletList(request);
