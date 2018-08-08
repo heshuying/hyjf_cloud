@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.batch.hjh.autocalculatefairvalue;
+package com.hyjf.am.trade.controller.front.hjh.autocalculatefairvalue;
 
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;

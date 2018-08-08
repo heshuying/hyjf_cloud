@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.batch;
+package com.hyjf.am.trade.controller.admin.exception;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;

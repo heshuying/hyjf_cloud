@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.batch;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;

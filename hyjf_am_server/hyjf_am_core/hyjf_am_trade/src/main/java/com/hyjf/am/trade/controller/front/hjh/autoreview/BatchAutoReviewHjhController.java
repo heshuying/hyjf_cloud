@@ -1,6 +1,5 @@
-package com.hyjf.am.trade.controller.batch.hjh.autoreview;
+package com.hyjf.am.trade.controller.front.hjh.autoreview;
 
-import com.hyjf.am.trade.controller.batch.bank.autoreview.BatchAutoReviewController;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewHjhService;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import org.slf4j.Logger;

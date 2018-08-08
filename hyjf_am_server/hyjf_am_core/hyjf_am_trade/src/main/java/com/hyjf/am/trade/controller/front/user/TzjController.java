@@ -1,8 +1,8 @@
-package com.hyjf.am.trade.controller.batch;
-
-import javax.validation.Valid;
+package com.hyjf.am.trade.controller.front.user;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.trade.bean.TzjDayReportBean;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.task.TzjService;
@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.datacollect.TzjDayReportResponse;
-import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import javax.validation.Valid;
 
 /**
  * @author xiasq
