@@ -600,4 +600,11 @@ public interface AmUserClient {
      * @return
      */
     WhereaboutsPageResponse deleteById(Integer id);
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
 }
