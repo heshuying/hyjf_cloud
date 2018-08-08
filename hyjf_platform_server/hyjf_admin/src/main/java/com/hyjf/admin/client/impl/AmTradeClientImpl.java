@@ -4470,7 +4470,6 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
 	 * 查询金额总计
-	 * @param id
 	 * @return
 	 */
 	@Override
@@ -4503,7 +4502,6 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
 	 * 查询汇计划提成是否已经发放
-	 * @param id
 	 * @return
 	 */
 	@Override
