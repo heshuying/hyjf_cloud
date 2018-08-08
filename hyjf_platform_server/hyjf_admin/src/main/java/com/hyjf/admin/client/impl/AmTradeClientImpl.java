@@ -19,10 +19,12 @@ import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -3372,4 +3374,11 @@ public class AmTradeClientImpl implements AmTradeClient{
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList",adminRequest,AdminBorrowFlowResponse.class)
                 .getBody();
     }
+    @Override
+    public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
+        ChannelStatisticsDetailResponse amTradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/extensioncenter/channelstatisticsdetail/searchaction",
+                request, ChannelStatisticsDetailResponse.class);
+        return amTradeResponse;
+    }
+
 }

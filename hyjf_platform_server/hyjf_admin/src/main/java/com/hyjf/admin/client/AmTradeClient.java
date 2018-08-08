@@ -13,9 +13,11 @@ import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -1750,4 +1752,11 @@ public interface AmTradeClient {
     void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
 
     AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
 }
