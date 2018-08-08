@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.wechat.myAsset;
+package com.hyjf.cs.user.controller.wechat.myasset;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
