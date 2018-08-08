@@ -941,8 +941,17 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         AccountWithdrawVO vo = amTradeClient.getAccountWithdrawByOrdId(logOrdId);
         result.setStatus(WebResult.SUCCESS);
         Map<String,String> map = new HashedMap();
-        map.put("error",vo.getReason());
+        if(vo!=null){
+            map.put("error",vo.getReason());
+        }else{
+            map.put("error","系统异常，请稍后再试！");
+        }
         result.setData(map);
         return result;
+    }
+
+    @Override
+    public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
+        return amConfigClient.getBankNameByBankId(bankId+"");
     }
 }

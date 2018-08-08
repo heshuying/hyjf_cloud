@@ -22,10 +22,10 @@
 				AND b.borrow_style = #{borrowStyleSrch}
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( b.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( b.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="registStatusSrch != null and registStatusSrch != ''">
 				AND b.regist_status = #{registStatusSrch}

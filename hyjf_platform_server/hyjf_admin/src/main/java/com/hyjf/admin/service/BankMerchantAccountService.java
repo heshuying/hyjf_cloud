@@ -8,6 +8,9 @@ import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
 import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -53,4 +56,35 @@ public interface BankMerchantAccountService {
      * @return
      */
     String getFiledMess(String logOrdId);
+
+    /**
+     * 重置交易密码
+     * @param accountCode
+     * @return
+     */
+    AdminResult resetPassword(String accountCode);
+
+    /**
+     * 充值前处理
+     * @author zhangyk
+     * @date 2018/8/7 16:23
+     */
+    int updateBeforeRecharge(BankCallBean bean, Map<String, String> params,
+                             BankMerchantAccountVO bankMerchantAccount);
+
+
+    /**
+     * 回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:41
+     */
+    void handlerAfterRecharge(BankCallBean bean , Map<String,String> params);
+
+
+    /**
+     * 更新圈提和圈存的交易状态为交易失败
+     * @author zhangyk
+     * @date 2018/8/7 19:29
+     */
+    void updateBankAccountListFail(String orderId);
 }

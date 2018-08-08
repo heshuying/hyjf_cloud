@@ -29,7 +29,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AppEvaluationController, v0.1 2018/7/4 11:19
  */
-@Api(value = "App端风险测评接口",tags = "App端-风险测评接口")
+@Api(value = "App端-风险测评接口",tags = "App端-风险测评接口（老）")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/financialAdvisor")

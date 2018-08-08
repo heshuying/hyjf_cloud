@@ -48,6 +48,9 @@ public class SystemConfig {
     @Value("${file.upload.head.path}")
     public String uploadHeadPath;
 
+    @Value("${hyjf.app.server.host}")
+    public String appServerHost;
+
     /**
      * pc前端地址
      */
@@ -112,6 +115,14 @@ public class SystemConfig {
     private String publickeyhjs;
     @Value("${privatekey.hjs}")
     private String privatekeyhjs;
+
+    public String getAppServerHost() {
+        return appServerHost;
+    }
+
+    public void setAppServerHost(String appServerHost) {
+        this.appServerHost = appServerHost;
+    }
 
     public String getCouponAccesskey() {
         return couponAccesskey;

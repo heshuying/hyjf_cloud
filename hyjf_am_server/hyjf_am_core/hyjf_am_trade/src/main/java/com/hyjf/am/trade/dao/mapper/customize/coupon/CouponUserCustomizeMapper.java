@@ -3,6 +3,8 @@ package com.hyjf.am.trade.dao.mapper.customize.coupon;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
+import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomizeV2;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserForAppCustomize;
@@ -77,7 +79,18 @@ public interface CouponUserCustomizeMapper {
 	 * @return
 	 */
 	List<CouponUserCustomize> selectLatestCouponValidUNReadList(Integer userId);
-	
-	
 
+	/**
+	 * 获取加息券列表
+	 * @param request
+	 * @return
+	 */
+    List<DataCenterCouponCustomize> selectDataCenterCouponJXList(DadaCenterCouponCustomizeRequest request);
+
+	/**
+	 * 获取代金券列表
+	 * @param request
+	 * @return
+	 */
+	List<DataCenterCouponCustomize> selectDataCenterCouponDJList(DadaCenterCouponCustomizeRequest request);
 }

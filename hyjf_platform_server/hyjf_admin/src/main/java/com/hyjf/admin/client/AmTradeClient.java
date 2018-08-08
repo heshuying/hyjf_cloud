@@ -13,11 +13,14 @@ import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
@@ -657,7 +660,6 @@ public interface AmTradeClient {
      * @author nxl
      */
     boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
-
     /**
      * 根据机构编号获取机构列表
      * @return
@@ -1561,13 +1563,6 @@ public interface AmTradeClient {
 
 
 
-    /**
-     * 发提成处理- 计算提成
-     *
-     * @param apicornId,request
-     * @return
-     */
-    int insertTenderCommissionRecord(Integer apicornId, ActivityListRequest request) ;
 
     /**
      * 计划退出查询判断标的是否还款
@@ -1588,7 +1583,14 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
+    Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request);
+
+    /**
+     * 更新借款API表
+     * @param apicornId
+     * @return
+     */
+    Integer  updateBorrowApicronByPrimaryKeySelective(String apicornId);
 
     /**
      * 添加提成数据
@@ -1596,14 +1598,6 @@ public interface AmTradeClient {
      * @return
      */
     int saveTenderCommission(TenderCommissionRequest request);
-
-
-    /**
-     * 更新借款API表
-     * @param request
-     * @return
-     */
-    int updateByPrimaryKeySelective(BorrowApicronRequest request);
 
     /**
      * 獲取銀行開戶信息
@@ -1710,6 +1704,12 @@ public interface AmTradeClient {
     int isEntrustedExistsUser(String userName);
 
     /**
+     * 获取加息券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
      * 获取计划列表无分页
      * @return
      */
@@ -1724,6 +1724,12 @@ public interface AmTradeClient {
     BankMerchantAccountVO getBankMerchantAccount(String accountCode);
 
     /**
+     * 获取代金券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
      * 获取子账户信息
      * @param accountCode
      * @return
@@ -1736,4 +1742,29 @@ public interface AmTradeClient {
      * @param flag
      */
     void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
+
+    AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
+
+    /**
+     *
+     * @author zhangyk
+     * @date 2018/8/7 16:37
+     */
+    Integer getBankMerchantAccountListByOrderId(String orderId);
+
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/7 18:53
+     */
+    Boolean updateAccountCallbackRecharge(Map<String,Object> params);
 }
+

@@ -1408,7 +1408,6 @@
         </table>
 
         <table tableName="ht_r_user" domainObjectName="RUser">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

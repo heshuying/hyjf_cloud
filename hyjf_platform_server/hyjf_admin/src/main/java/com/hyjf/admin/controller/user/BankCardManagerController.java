@@ -189,7 +189,7 @@ public class BankCardManagerController extends BaseController {
         // 表格sheet名称
         String sheetName = "银行卡管理";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         BankCardManagerResponse bankCardManagerResponse  =bankCardManagerService.selectBankCardList(requestBank);
         List<BankcardManagerVO> bankcardManagerVOList = new ArrayList<BankcardManagerVO>();

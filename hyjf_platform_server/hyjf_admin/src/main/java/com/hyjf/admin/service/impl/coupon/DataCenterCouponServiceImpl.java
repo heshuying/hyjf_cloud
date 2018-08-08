@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl.coupon;
 
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.DataCenterCouponService;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
@@ -21,6 +22,8 @@ import java.util.List;
 public class DataCenterCouponServiceImpl implements DataCenterCouponService {
     @Autowired
     private AmTradeClient amTradeClient;
+    @Autowired
+    private AmMarketClient amMarketClient;
 
     @Override
     public DataCenterCouponResponse searchAction(DadaCenterCouponRequestBean requestBean, String type) {
@@ -29,11 +32,23 @@ public class DataCenterCouponServiceImpl implements DataCenterCouponService {
 
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
-        return null;// todo
+        List<DataCenterCouponCustomizeVO> list = amTradeClient.getRecordListJX(dataCenterCouponCustomize);
+        for (DataCenterCouponCustomizeVO vo : list) {
+            Integer activityId = vo.getActivityId();
+            String title = amMarketClient.getActivityTitle(activityId);
+            vo.setTitle(title);
+        }
+        return list;
     }
 
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
-        return null;// todo
+        List<DataCenterCouponCustomizeVO> list = amTradeClient.getRecordListDJ(dataCenterCouponCustomize);
+        for (DataCenterCouponCustomizeVO vo : list) {
+            Integer activityId = vo.getActivityId();
+            String title = amMarketClient.getActivityTitle(activityId);
+            vo.setTitle(title);
+        }
+        return list;
     }
 }

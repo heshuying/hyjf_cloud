@@ -4,11 +4,13 @@
 package com.hyjf.am.trade.service.front.coupon.impl;
 
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CouponUserMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
 import com.hyjf.am.trade.dao.model.auto.CouponUserExample;
+import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponUserService;
 import com.hyjf.common.util.CustomConstants;
@@ -140,6 +142,16 @@ public class CouponUserServiceImpl implements CouponUserService {
         List<CouponUser> couponUserList = this.couponUserMapper.selectByExample(couponUserExample);
 
         return couponUserList == null || couponUserList.size() == 0 ? true : false;
+    }
+
+    @Override
+    public List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request) {
+        return couponUserCustomizeMapper.selectDataCenterCouponJXList(request);
+    }
+
+    @Override
+    public List<DataCenterCouponCustomize> getRecordListDJ(DadaCenterCouponCustomizeRequest request) {
+        return couponUserCustomizeMapper.selectDataCenterCouponDJList(request);
     }
 
 }

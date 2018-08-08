@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowcredit;
 
-import com.hyjf.admin.beans.BorrowCreditListResultBean;
 import com.hyjf.admin.beans.request.BorrowCreditRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.BorrowCreditService;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 /**
  * admin: 汇直投：债权转让
@@ -44,7 +44,7 @@ public class AdminBorrowCreditController {
     @ApiOperation(value = "债权转让导出", notes = "债权转让导出")
     @PostMapping("/exportData")
     @ResponseBody
-    public void  exportBorrowCreditList(@RequestBody BorrowCreditRequest request,HttpServletResponse response){
+    public void  exportBorrowCreditList(@RequestBody BorrowCreditRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
         borrowCreditService.exportBorrowCreditList(request,response);
     }
 

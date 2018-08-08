@@ -8,7 +8,7 @@ import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.FddUserInfoChangeMessageHandle;
+import com.hyjf.cs.trade.mq.handle.FddUserInfoChangeMessageHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
