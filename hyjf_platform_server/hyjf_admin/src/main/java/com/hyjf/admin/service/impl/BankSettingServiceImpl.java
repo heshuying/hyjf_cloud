@@ -11,6 +11,7 @@ import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.file.UploadFileUtils;
+import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -111,11 +112,14 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        //ShiroHttpServletRequest shiroRequest = (ShiroHttpServletRequest) request;
+        ShiroHttpServletRequest shiroRequest = (ShiroHttpServletRequest) request;
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
+        //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
         String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
+        //TODO String filePhysicalPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.physical.path"));
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
+        //TODO String fileUploadTempPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.upload.temp.path"));
         String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
 
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
