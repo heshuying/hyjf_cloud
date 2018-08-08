@@ -1768,14 +1768,6 @@ public interface AmTradeClient {
     public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
-     * 根据条件查询PC统计明细
-     *
-     * @param request
-     * @return
-     */
-    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
-
-    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37

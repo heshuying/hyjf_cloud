@@ -4205,6 +4205,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
+
     @Override
     public Boolean updateAccountCallbackRecharge(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/platformtransfer/updataAccountByRechargeCallback";
