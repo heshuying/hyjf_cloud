@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service.front.batch.impl;
+package com.hyjf.am.trade.service.front.consumer.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -63,7 +63,7 @@ import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
-import com.hyjf.am.trade.service.front.batch.BatchBorrowRepayPlanService;
+import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
