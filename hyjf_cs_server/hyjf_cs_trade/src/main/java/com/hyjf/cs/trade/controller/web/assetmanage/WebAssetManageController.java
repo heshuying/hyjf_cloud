@@ -5,6 +5,7 @@ import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -49,7 +50,7 @@ public class WebAssetManageController extends BaseTradeController {
 
         String currentTab = form.getCurrentTab();
         AccountVO account = assetManageService.getAccount(user.getUserId());
-        result.put("account", account);
+        result.put("data", account);
         result.put("currentTab", currentTab);
         result.put("status", BaseResult.SUCCESS);
         result.put("statusDesc", BaseResult.SUCCESS_DESC);

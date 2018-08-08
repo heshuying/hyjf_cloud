@@ -38,8 +38,6 @@ import java.util.UUID;
 @Service
 public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAutoCreditService {
 
-    private static final Logger logger = LoggerFactory.getLogger(HjhAutoCreditServiceImpl.class);
-
     @Autowired
     private HjhCalculateFairValueProducer hjhCalculateFairValueProducer;
 
