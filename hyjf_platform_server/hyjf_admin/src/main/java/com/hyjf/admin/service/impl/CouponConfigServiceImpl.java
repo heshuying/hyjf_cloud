@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.CouponConfigClient;
 import com.hyjf.admin.service.CouponConfigService;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CouponConfigServiceImpl implements CouponConfigService {
     @Autowired
-    CouponConfigClient couponConfigClient;
+    AmTradeClient amTradeClient;
     /**
      * 获取优惠券发行列表
      * @param couponConfigRequest
@@ -28,7 +29,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigCustomizeResponse getRecordList(CouponConfigRequest couponConfigRequest) {
-        return couponConfigClient.getRecordList(couponConfigRequest);
+        return amTradeClient.getRecordList(couponConfigRequest);
     }
 
     /**
@@ -38,7 +39,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigResponse getCouponConfig(CouponConfigRequest couponConfigRequest) {
-        return couponConfigClient.getCouponConfig(couponConfigRequest);
+        return amTradeClient.getCouponConfig(couponConfigRequest);
     }
 
     /**
@@ -48,7 +49,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigResponse saveCouponConfig(CouponConfigRequest request) {
-        return couponConfigClient.saveCouponConfig(request);
+        return amTradeClient.saveCouponConfig(request);
     }
 
     /**
@@ -58,7 +59,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigResponse insertAction(CouponConfigRequest couponConfigRequest) {
-        return couponConfigClient.insertAction(couponConfigRequest);
+        return amTradeClient.insertAction(couponConfigRequest);
     }
 
     /**
@@ -68,7 +69,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigResponse deleteAction(CouponConfigRequest couponConfigRequest) {
-        return couponConfigClient.deleteAction(couponConfigRequest);
+        return amTradeClient.deleteAction(couponConfigRequest);
     }
 
     /**
@@ -78,7 +79,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigResponse getAuditInfo(CouponConfigRequest ccfr) {
-        return couponConfigClient.getAuditInfo(ccfr);
+        return amTradeClient.getAuditInfo(ccfr);
     }
 
     /**
@@ -88,7 +89,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponConfigResponse updatrAudit(CouponConfigRequest couponConfigRequest) {
-        return couponConfigClient.updateAuditInfo(couponConfigRequest);
+        return amTradeClient.updateAuditInfo(couponConfigRequest);
     }
 
     /**
@@ -98,6 +99,6 @@ public class CouponConfigServiceImpl implements CouponConfigService {
      */
     @Override
     public CouponUserResponse getIssueNumber(CouponUserRequest cur) {
-        return couponConfigClient.getIssueNumber(cur);
+        return amTradeClient.getIssueNumber(cur);
     }
 }

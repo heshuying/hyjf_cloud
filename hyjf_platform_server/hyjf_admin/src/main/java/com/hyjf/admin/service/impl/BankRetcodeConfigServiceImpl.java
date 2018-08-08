@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.BankRetcodeConfigClient;
 import com.hyjf.admin.service.BankRetcodeConfigService;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
 
     @Autowired
-    private BankRetcodeConfigClient bankRetcodeConfigClient;
+    private AmConfigClient amConfigClient;
 
     /**
      * 查询返回码配置列表
@@ -23,7 +24,7 @@ public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
      */
     @Override
     public BankReturnCodeConfigResponse selectBankRetcodeListByPage(AdminBankRetcodeConfigRequest adminRequest){
-        return bankRetcodeConfigClient.selectBankRetcodeListByPage(adminRequest);
+        return amConfigClient.selectBankRetcodeListByPage(adminRequest);
     }
     /**
      * 查询返回码配置详情页面
@@ -32,7 +33,7 @@ public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
      */
     @Override
     public BankReturnCodeConfigResponse selectBankRetcodeConfigInfo(AdminBankRetcodeConfigRequest adminRequest){
-        return bankRetcodeConfigClient.selectBankRetcodeConfigInfo(adminRequest);
+        return amConfigClient.selectBankRetcodeConfigInfo(adminRequest);
     }
 
     /**
@@ -41,7 +42,7 @@ public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
      */
     @Override
     public BankReturnCodeConfigResponse insertBankReturnCodeConfig(AdminBankRetcodeConfigRequest req){
-        return bankRetcodeConfigClient.insertBankReturnCodeConfig(req);
+        return amConfigClient.insertBankReturnCodeConfig(req);
     }
 
     /**
@@ -50,7 +51,7 @@ public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
      */
     @Override
     public BankReturnCodeConfigResponse updateBankReturnCodeConfig(AdminBankRetcodeConfigRequest req){
-        return bankRetcodeConfigClient.updateBankReturnCodeConfig(req);
+        return amConfigClient.updateBankReturnCodeConfig(req);
     }
 
     /**
@@ -60,7 +61,7 @@ public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
      */
     @Override
     public boolean isExistsReturnCode(AdminBankRetcodeConfigRequest record){
-        return bankRetcodeConfigClient.isExistsReturnCode(record);
+        return amConfigClient.isExistsReturnCode(record);
     }
     /**
      * 根据条件判断该条数据在数据库中是否存在
@@ -69,7 +70,7 @@ public class BankRetcodeConfigServiceImpl implements BankRetcodeConfigService {
      */
     @Override
     public boolean isExistsRecord(AdminBankRetcodeConfigRequest adminRequest){
-        return bankRetcodeConfigClient.isExistsRecord(adminRequest);
+        return amConfigClient.isExistsRecord(adminRequest);
     }
 
 

@@ -4,6 +4,7 @@
 package com.hyjf.admin.common.service;
 
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.BankAccountManageClient;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -26,7 +27,7 @@ public class BaseServiceImpl implements BaseService{
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private BankAccountManageClient bankAccountManageClient;
+    private AmUserClient amUserClient;
 
     /**
      * 根据hyjf_param_name 的nameCd和nameClass获得param描述
@@ -66,7 +67,7 @@ public class BaseServiceImpl implements BaseService{
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        BankOpenAccountVO bankAccount = bankAccountManageClient.getBankOpenAccount(userId);
+        BankOpenAccountVO bankAccount = amUserClient.getBankOpenAccount(userId);
         return bankAccount;
     }
 }

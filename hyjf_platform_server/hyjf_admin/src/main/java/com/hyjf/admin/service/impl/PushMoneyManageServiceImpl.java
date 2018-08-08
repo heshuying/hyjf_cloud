@@ -41,6 +41,13 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
     @Autowired
     public AmUserClient amUserClient;
 
+
+//    @Autowired
+//    private BankAccountManageClient bankAccountManageClient;
+
+
+
+
     /**
      * 查找直投提成管理列表
      *

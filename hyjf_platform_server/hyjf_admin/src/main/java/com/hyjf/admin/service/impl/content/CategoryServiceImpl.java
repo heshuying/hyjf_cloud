@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.content;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ContentCategoryClient;
 import com.hyjf.admin.service.content.CategoryService;
 import com.hyjf.am.response.admin.CategoryResponse;
@@ -23,95 +24,95 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     @Resource
-    private ContentCategoryClient contentCategoryClient;
+    private AmConfigClient amConfigClient;
 
     @Override
     public CategoryResponse getCategoryPage(CategoryBeanRequest categoryBeanRequest) {
-        return contentCategoryClient.getCategoryPage(categoryBeanRequest);
+        return amConfigClient.getCategoryPage(categoryBeanRequest);
     }
 
     @Override
     public CategoryResponse changeSubTypeAction(CategoryBeanRequest categoryBeanRequest) {
-        return contentCategoryClient.changeSubTypeAction(categoryBeanRequest);
+        return amConfigClient.changeSubTypeAction(categoryBeanRequest);
     }
 
     @Override
     public CategoryResponse infoTypeAction(Integer id) {
-        return contentCategoryClient.infoTypeAction(id);
+        return amConfigClient.infoTypeAction(id);
     }
 
     @Override
     public CategoryResponse infoSubTypeAction(CategoryBeanRequest categoryBeanRequest) {
-        return contentCategoryClient.infoSubTypeAction(categoryBeanRequest);
+        return amConfigClient.infoSubTypeAction(categoryBeanRequest);
     }
 
     @Override
     public Integer insertCategory(CategoryVO categoryVO) {
-        return contentCategoryClient.insertCategory(categoryVO);
+        return amConfigClient.insertCategory(categoryVO);
     }
 
     @Override
     public Integer updateAction(CategoryVO categoryVO) {
-        return contentCategoryClient.updateAction(categoryVO);
+        return amConfigClient.updateAction(categoryVO);
     }
 
     @Override
     public CategoryResponse getCategoryCount(CategoryVO record) {
-        return contentCategoryClient.getCategoryCount(record);
+        return amConfigClient.getCategoryCount(record);
     }
 
     @Override
     public Integer getCountByPcateIdAndcateId(Integer pid, Integer cid) {
-        return contentCategoryClient.getCountByPcateIdAndcateId(pid,cid);
+        return amConfigClient.getCountByPcateIdAndcateId(pid,cid);
     }
 
     @Override
     public List<ContentHelpVO> getListByPcateIdAndcateId(Integer pid, Integer cid) {
-        return contentCategoryClient.getListByPcateIdAndcateId(pid,cid);
+        return amConfigClient.getListByPcateIdAndcateId(pid,cid);
     }
 
     @Override
     public Integer delContentHelp(Integer id) {
-        return contentCategoryClient.delContentHelp(id);
+        return amConfigClient.delContentHelp(id);
     }
 
     @Override
     public Integer delCategory(Integer id) {
-        return contentCategoryClient.delCategory(id);
+        return amConfigClient.delCategory(id);
     }
 
     @Override
     public Integer updateContentHelp(ContentHelpVO contentHelpVO) {
-        return contentCategoryClient.updateContentHelp(contentHelpVO);
+        return amConfigClient.updateContentHelp(contentHelpVO);
     }
 
     @Override
     public CategoryResponse getHelpPage(ContentHelpBeanRequest contentHelpBeanRequest) {
-        return contentCategoryClient.getHelpPage(contentHelpBeanRequest);
+        return amConfigClient.getHelpPage(contentHelpBeanRequest);
     }
 
     @Override
     public CategoryResponse getHelpInfo(ContentHelpBeanRequest contentHelpBeanRequest) {
-        return contentCategoryClient.getHelpInfo(contentHelpBeanRequest);
+        return amConfigClient.getHelpInfo(contentHelpBeanRequest);
     }
 
     @Override
     public CategoryResponse insertHelpInfo(ContentHelpBeanRequest contentHelpBeanRequest) {
-        return contentCategoryClient.insertHelpInfo(contentHelpBeanRequest);
+        return amConfigClient.insertHelpInfo(contentHelpBeanRequest);
     }
 
     @Override
     public CategoryResponse updateHelpAction(ContentHelpBeanRequest contentHelpBeanRequest) {
-        return contentCategoryClient.updateHelpAction(contentHelpBeanRequest);
+        return amConfigClient.updateHelpAction(contentHelpBeanRequest);
     }
 
     @Override
     public Integer chanContentHelp(Integer contentId, Integer status, Integer zhiChiStatus) {
-        return contentCategoryClient.chanContentHelp(contentId,status,zhiChiStatus);
+        return amConfigClient.chanContentHelp(contentId,status,zhiChiStatus);
     }
 
     @Override
     public CategoryResponse getOftenInitPage(ContentHelpBeanRequest contentHelpBeanRequest) {
-        return contentCategoryClient.getOftenInitPage(contentHelpBeanRequest);
+        return amConfigClient.getOftenInitPage(contentHelpBeanRequest);
     }
 }
