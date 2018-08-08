@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,13 +46,14 @@ import com.hyjf.am.trade.dao.model.auto.FreezeList;
 import com.hyjf.am.trade.dao.model.auto.FreezeListExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
+import com.hyjf.am.trade.mq.producer.AmTradeProducer;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.CouponLoansHjhMessageProducer;
 import com.hyjf.am.trade.mq.producer.CouponLoansMessageProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -124,6 +124,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	@Autowired
 	private CouponLoansMessageProducer couponLoansMessageProducer;
     
+	@Autowired
+	private AmTradeProducer amTradeProducer;
 
 	@Override
 	public BankCallBean requestLoans(BorrowApicron apicron) {
@@ -477,7 +479,6 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 						if (repayFlag) {
 						    //TODO 生成投资人居间服务协议
 
-
 							 Map result = this.updateBorrowLoans(apicron, borrow, borrowInfo, borrowTender);
 							 boolean tenderFlag = (boolean) result.get("result");
 							 recoverInterest = (BigDecimal) result.get("recoverInterest");
@@ -492,13 +493,19 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 						//双十二气球活动   
 			           // actBalloonTender(borrowTender);
 						
-						//crm投资推送 //TODO: 坐等CRM 队列更新
+						//crm投资推送 //TODO: 确认CRM 队列更新
+						try {
+							amTradeProducer.messageSend(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(borrowTender)));
+						} catch (Exception e) {
+							logger.error("发送CRM消息失败:" + e.getMessage());
+						}
+						
 //				        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME,
 //				                RabbitMQConstants.ROUTINGKEY_POSTINTERFACE_CRM, JSON.toJSONString(borrowTender));
 
 					}
 				} catch (Exception e) {
-					logger.info("================cwyang 还款变更投资人数据异常!异常:" + e.getMessage());
+					logger.info("======== 还款变更投资人数据异常!异常:" + e.getMessage());
 					continue;
 				}
 			}
@@ -1380,7 +1387,6 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
                 e.printStackTrace();
             }
 //            rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS, JSONObject.toJSONString(params));
-            //TODO: 优惠券放款队列
             
             // add by hsy 优惠券放款请求加入到消息队列 end
 			//发送短信
