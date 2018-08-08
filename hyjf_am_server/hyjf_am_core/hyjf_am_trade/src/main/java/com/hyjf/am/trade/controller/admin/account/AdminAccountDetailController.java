@@ -15,7 +15,7 @@ import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminAccountDetailDataRepairCustomize;
-import com.hyjf.am.trade.service.admin.AccountDetailService;
+import com.hyjf.am.trade.service.admin.account.AccountDetailService;
 import com.hyjf.am.vo.admin.AccountDetailVO;
 import com.hyjf.am.vo.admin.AdminAccountDetailDataRepairVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;

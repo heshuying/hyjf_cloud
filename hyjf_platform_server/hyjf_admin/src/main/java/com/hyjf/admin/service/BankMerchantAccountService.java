@@ -86,5 +86,5 @@ public interface BankMerchantAccountService {
      * @author zhangyk
      * @date 2018/8/7 19:29
      */
-    void updateBankAccountListFail(String orderId);
+    void updateBankAccountListFailByOrderId(String orderId);
 }

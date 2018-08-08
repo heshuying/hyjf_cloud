@@ -16,7 +16,7 @@ import com.hyjf.am.trade.dao.model.customize.admin.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.WebUserInvestListCustomize;
-import com.hyjf.am.trade.service.admin.BorrowInvestService;
+import com.hyjf.am.trade.service.admin.borrow.BorrowInvestService;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowListCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;

@@ -7,7 +7,7 @@ import com.hyjf.am.response.admin.BorrowFirstCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
-import com.hyjf.am.trade.service.admin.BorrowFirstService;
+import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1766,5 +1766,12 @@ public interface AmTradeClient {
      * @date 2018/8/7 18:53
      */
     Boolean updateAccountCallbackRecharge(Map<String,Object> params);
+
+    /**
+     * 更新明细表为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:22
+     */
+    Boolean updateBankAccountListFailByOrderId(String orderId);
 }
 

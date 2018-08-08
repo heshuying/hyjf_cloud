@@ -13,7 +13,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentPlanCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminRepayDelayCustomize;
-import com.hyjf.am.trade.service.admin.AdminBorrowRepaymentService;
+import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentService;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;

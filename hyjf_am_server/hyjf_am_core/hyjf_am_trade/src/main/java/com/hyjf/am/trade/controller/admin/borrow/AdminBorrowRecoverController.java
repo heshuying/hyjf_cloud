@@ -5,7 +5,7 @@ import com.hyjf.am.response.admin.AdminBorrowRecoverResponse;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
-import com.hyjf.am.trade.service.admin.AdminBorrowRecoverService;
+import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRecoverService;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;

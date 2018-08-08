@@ -305,7 +305,7 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
      * @date 2018/8/7 19:29
      */
     @Override
-    public void updateBankAccountListFail(String orderId) {
-        //amTradeClient.update
+    public void updateBankAccountListFailByOrderId(String orderId) {
+        amTradeClient.updateBankAccountListFailByOrderId(orderId);
     }
 }

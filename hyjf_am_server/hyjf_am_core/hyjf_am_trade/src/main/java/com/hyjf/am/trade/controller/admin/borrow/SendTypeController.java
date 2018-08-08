@@ -6,7 +6,7 @@ import com.hyjf.am.response.admin.BorrowSendTypeResponse;
 import com.hyjf.am.resquest.admin.BorrowSendTypeRequest;
 import com.hyjf.am.trade.controller.admin.config.InstConfigController;
 import com.hyjf.am.trade.dao.model.auto.BorrowSendType;
-import com.hyjf.am.trade.service.admin.SendTypeService;
+import com.hyjf.am.trade.service.admin.borrow.SendTypeService;
 import com.hyjf.am.vo.admin.BorrowSendTypeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;

@@ -2,16 +2,11 @@ package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowLogResponse;
-import com.hyjf.am.response.admin.AdminBorrowRecoverResponse;
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
-import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
 import com.hyjf.am.trade.dao.model.customize.admin.BorrowLogCustomize;
-import com.hyjf.am.trade.service.admin.AdminBorrowLogService;
-import com.hyjf.am.trade.service.admin.AdminBorrowRecoverService;
+import com.hyjf.am.trade.service.admin.borrow.AdminBorrowLogService;
 import com.hyjf.am.vo.admin.BorrowLogCustomizeVO;
-import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
