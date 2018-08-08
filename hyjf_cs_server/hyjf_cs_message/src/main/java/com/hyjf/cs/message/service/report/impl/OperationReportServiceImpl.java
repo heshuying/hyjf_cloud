@@ -85,7 +85,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		response.setCount(count);
 		if (count != null && count > 0) {
 			//是否有分页参数
-			if (!"null".equals(String.valueOf(map.get("paginatorPage")))&&Integer.valueOf( map.get("paginatorPage").toString())>0) {
+			if (!"null".equals(String.valueOf(map.get("paginatorPage")))) {
 				Paginator paginator = new Paginator((Integer.valueOf(String.valueOf(map.get("paginatorPage")))), count);
 				map.put("limitStart", paginator.getOffset());
 				map.put("limitEnd", paginator.getLimit());
