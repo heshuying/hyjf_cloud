@@ -41,12 +41,13 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户资产信息", notes = "获取用户资产信息")
     @PostMapping(value = "/init")
-    public Map<String,Object> init(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public Map<String,Object> init(@RequestHeader(value = "token", required = true) String token,
+                                   @RequestBody @Valid AssetManageBeanRequest form, HttpServletRequest request) {
         logger.info("web获取用户资产信息, token is :{}", JSONObject.toJSONString(token));
         Map<String,Object> result = new HashMap<>();
         WebViewUserVO user=assetManageService.getUsersByToken(token);
 
-        String currentTab = request.getParameter("currentTab");
+        String currentTab = form.getCurrentTab();
         AccountVO account = assetManageService.getAccount(user.getUserId());
         result.put("account", account);
         result.put("currentTab", currentTab);
