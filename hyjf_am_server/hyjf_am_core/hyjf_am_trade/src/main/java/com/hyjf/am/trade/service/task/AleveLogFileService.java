@@ -47,23 +47,8 @@ public interface AleveLogFileService extends BaseService {
     List<AleveLogCustomize> selectAleveReverseList(List<String> tranStype);
 
     /**
-     * 检索手动冲正数量
-     * @param aleveLogCustomize
-     * @return
-     */
-    int countManualReverse(AleveLogCustomize aleveLogCustomize);
-
-    /**
      * 自动冲正
-     * @param aleveLogCustomize
-     * @return
+     * @param aleveLogCustomizeList
      */
-    boolean updateAutoCorretion(AleveLogCustomize aleveLogCustomize);
-
-    /**
-     * 同步冲正后更新处理flg
-     * @param aleveLogCustomize
-     * @return
-     */
-    boolean updateAleveLog(AleveLogCustomize aleveLogCustomize);
+    void updateAutoCorretion(List<AleveLogCustomize> aleveLogCustomizeList);
 }

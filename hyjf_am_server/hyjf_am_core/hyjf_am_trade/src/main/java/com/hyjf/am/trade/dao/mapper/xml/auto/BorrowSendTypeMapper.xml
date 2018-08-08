@@ -116,14 +116,11 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowSendType" >
-    <!--<selectKey resultType="java.lang.String" keyProperty="sendCd" order="AFTER" >-->
-      <!--SELECT LAST_INSERT_ID()-->
-    <!--</selectKey>-->
+    <selectKey resultType="java.lang.String" keyProperty="sendCd" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_borrow_send_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="sendCd != null" >
-        send_cd,
-      </if>
       <if test="sendName != null" >
         send_name,
       </if>
@@ -144,9 +141,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="sendCd != null" >
-        #{sendCd,jdbcType=VARCHAR},
-      </if>
       <if test="sendName != null" >
         #{sendName,jdbcType=VARCHAR},
       </if>

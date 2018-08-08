@@ -1,14 +1,14 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -699,7 +699,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -1042,10 +1042,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public EvalationResponse selectUserEvalationResultList(EvalationRequest request) {
-		EvalationResponse response = restTemplate
+	public EvalationResultResponse selectUserEvalationResultList(EvalationRequest request) {
+		EvalationResultResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/evaluationManager/selectUserEvalationResultList", request,
-						EvalationResponse.class)
+						EvalationResultResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
@@ -1187,8 +1187,8 @@ public class AmUserClientImpl implements AmUserClient {
 	/**
 	 * 根据证件号码和姓名查找用户CA认证记录表
 	 * 
-	 * @param strIdNo
-	 * @param tureName
+	 * @param
+	 * @param
 	 * @return
 	 */
 	@Override
@@ -1202,4 +1202,133 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest) {
+		AdminUserAuthListResponse response = restTemplate
+	                .postForEntity("http://AM-USER/am-user/userauth/userauthlist",adminUserAuthListRequest, AdminUserAuthListResponse.class)
+	                .getBody();
+
+	        return response;
+	}
+
+	@Override
+	public AdminUserAuthListResponse cancelInvestAuth(int userId) {
+		AdminUserAuthListResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userauth/userinvescancel/" + userId , AdminUserAuthListResponse.class).
+                getBody();
+		return response;
+	}
+
+	@Override
+	public AdminUserAuthListResponse cancelCreditAuth(int userId) {
+		AdminUserAuthListResponse response = restTemplate.
+                getForEntity("http://AM-USER/am-user/userauth/usercreditcancel/" + userId, AdminUserAuthListResponse.class).
+                getBody();
+		return response;
+	}
+
+
+	@Override
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest) {
+		AdminUserAuthLogListResponse response = restTemplate
+                .postForEntity("http://AM-USER/am-user/userauth/userauthloglist",adminUserAuthListRequest, AdminUserAuthLogListResponse.class)
+                .getBody();
+
+        return response;
+	}
+	@Override
+	public CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr) {
+		String url = "http://AM-USER/am-user/certificate/search";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, aprlr, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public CertificateAuthorityResponse updateUserCAMQ(int userId) {
+		String url = "http://AM-USER/am-user/certificate/modifyAction/";
+		CertificateAuthorityResponse response = restTemplate
+				.postForEntity(url, userId, CertificateAuthorityResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public AdminPreRegistListResponse getRecordList(AdminPreRegistListRequest adminPreRegistListRequest) {
+		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/preregist/preregistlist" ,adminPreRegistListRequest,
+						AdminPreRegistListResponse.class)
+				.getBody();
+		if (adminPreRegistListResponse != null) {
+			return adminPreRegistListResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public AdminPreRegistListResponse getPreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
+		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/preregist/updatepreregistlist" ,adminPreRegistListRequest,
+						AdminPreRegistListResponse.class)
+				.getBody();
+		if (adminPreRegistListResponse != null) {
+			return adminPreRegistListResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public AdminPreRegistListResponse savePreRegist(AdminPreRegistListRequest adminPreRegistListRequest) {
+		AdminPreRegistListResponse adminPreRegistListResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/preregist/savepreregistlist" ,adminPreRegistListRequest,
+						AdminPreRegistListResponse.class)
+				.getBody();
+		if (adminPreRegistListResponse != null) {
+			return adminPreRegistListResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
+		WhereaboutsPageResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/searchaction",
+				requestBean, WhereaboutsPageResponse.class);
+		return  amUserResponse;
+
+	}
+
+	@Override
+	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
+		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/insert",
+				requestBean, WhereaboutsPageResponse.class);
+	}
+
+	@Override
+	public WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean) {
+		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/update",
+				requestBean, WhereaboutsPageResponse.class);
+	}
+	@Override
+	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean){
+		return restTemplate.postForObject("http://AM-USER/am-user/content/whereaboutspage/updatestatus",
+				requestBean, WhereaboutsPageResponse.class);
+	}
+
+	@Override
+	public WhereaboutsPageResponse deleteById(Integer id) {
+		return restTemplate.getForObject("http://AM-USER/am-user/content/whereaboutspage/delete/" + id,
+				WhereaboutsPageResponse.class);
+	}
+	@Override
+	public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
+		ChannelStatisticsDetailResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/channelstatisticsdetail/searchaction",
+				request, ChannelStatisticsDetailResponse.class);
+		return amUserResponse;
+	}
+
 }

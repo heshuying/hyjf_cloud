@@ -2,7 +2,7 @@ package com.hyjf.cs.user.service.recharge.impl;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.recharge.RdfRechargeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

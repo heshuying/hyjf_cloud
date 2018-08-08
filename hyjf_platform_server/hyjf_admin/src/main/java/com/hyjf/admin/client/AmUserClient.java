@@ -1,11 +1,12 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 
@@ -420,7 +421,7 @@ public interface AmUserClient {
 	 * 通过userid获取user
 	 * 
 	 * @Title selectAccedeRecordList
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	UserVO getUserByUserId(int userId);
@@ -429,7 +430,7 @@ public interface AmUserClient {
 	 * 通过
 	 * 
 	 * @Title selectAccedeRecordList
-	 * @param form
+	 * @param
 	 * @return
 	 */
 	UserInfoVO selectUsersInfoByUserId(int userid);
@@ -481,7 +482,7 @@ public interface AmUserClient {
      * @param request
      * @return
      */
-    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
+    EvalationResultResponse selectUserEvalationResultList(EvalationRequest request);
     /**
      * 根据id查找用户测评结果
      * @param userId
@@ -535,4 +536,75 @@ public interface AmUserClient {
      */
     CertificateAuthorityResponse selectCertificateAuthorityByIdNoName(String strIdNo, String tureName);
     CertificateAuthorityResponse isCAIdNoCheck(String param, String name);
+	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest);
+	public AdminUserAuthListResponse cancelInvestAuth(int userId);
+	public AdminUserAuthListResponse cancelCreditAuth( int userId);
+	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest);
+	CertificateAuthorityResponse getRecordList(CertificateAuthorityExceptionRequest aprlr);
+	CertificateAuthorityResponse updateUserCAMQ(int userId);
+	/**
+	 * 获取预注册数据列表
+	 * 
+	 * @return
+	 */
+	public  AdminPreRegistListResponse getRecordList(AdminPreRegistListRequest adminPreRegistListRequest);
+	
+	/**
+     * 获取预注册页面信息
+     * 
+     * @return
+     */
+    public AdminPreRegistListResponse getPreRegist(AdminPreRegistListRequest adminPreRegistListRequest);
+    
+    /**
+     * 编辑保存预注册页面信息
+     * 
+     * @return
+     */
+    public AdminPreRegistListResponse savePreRegist(AdminPreRegistListRequest adminPreRegistListRequest);
+
+    /**
+     * 根据条件查询移动端着陆页管理
+     *
+     * @param requestBean
+     * @return
+     */
+    WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean);
+
+    /**
+     * 添加移动端着陆页管理
+     *
+     * @param requestBean
+     * @return
+     */
+    WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean);
+
+    /**
+     * 修改移动端着陆页管理
+     *
+     * @param requestBean
+     * @return
+     */
+    WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean);
+    /**
+     * 修改移动端着陆页管理状态
+     *
+     * @param requestBean
+     * @return
+     */
+    WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean);
+    /**
+     * 根据id删除移动端着陆页管理
+     *
+     * @param id
+     * @return
+     */
+    WhereaboutsPageResponse deleteById(Integer id);
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
 }

@@ -91,5 +91,10 @@ public class AdminBatchBorrowRecoverController extends BaseController {
         return reponse;
     }
 
+    @ApiOperation(value = "根据id更新借款API表")
+    @PostMapping("/updateBorrowApicronByPrimaryKeySelective")
+    public boolean updateBorrowApicronByPrimaryKeySelective(@RequestBody String id){
+        return batchBorrowRecoverService.updateBorrowApicronByPrimaryKeySelective(id);
+    }
 
 }

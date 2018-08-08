@@ -220,4 +220,12 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	User insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
+
+	/**
+	 * app跳过测评查询信息
+	 * @param userId
+	 * @param countScore
+	 * @return
+	 */
+    UserEvalationResult skipEvaluate(Integer userId, Integer countScore);
 }

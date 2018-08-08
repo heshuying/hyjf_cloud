@@ -17,6 +17,8 @@ public class HjhInstConfig implements Serializable {
 
     private BigDecimal commissionFee;
 
+    private Integer repayCapitalType;
+
     private String remark;
 
     private Integer delFlag;
@@ -77,6 +79,14 @@ public class HjhInstConfig implements Serializable {
 
     public void setCommissionFee(BigDecimal commissionFee) {
         this.commissionFee = commissionFee;
+    }
+
+    public Integer getRepayCapitalType() {
+        return repayCapitalType;
+    }
+
+    public void setRepayCapitalType(Integer repayCapitalType) {
+        this.repayCapitalType = repayCapitalType;
     }
 
     public String getRemark() {

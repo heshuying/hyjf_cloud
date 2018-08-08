@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.resquest.user.UserEvalationRequest;
+import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
@@ -28,7 +29,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.soa.apiweb.CommonParamBean;
 import org.apache.commons.lang3.StringUtils;
@@ -103,6 +104,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         UserEvalationResultVO userEvalationResult = amUserClient.insertUserEvalationResult(userEvalationRequest);
         return userEvalationResult;
     }
+
 
 
     /**
@@ -288,6 +290,33 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
     @Override
     public void updateUserEvalationBehavior(UserEvalationBehaviorVO userEvalationBehavior) {
         amUserClient.updateUserEvaluationBehavior(userEvalationBehavior);
+    }
+
+    @Override
+    public List<NewAppQuestionCustomizeVO> getNewAppQuestionList() {
+        List<NewAppQuestionCustomizeVO> result = amConfigClient.getNewAppQuestionList();
+        return result;
+    }
+
+    /**
+     * 修改user表的风险测评标志
+     * @param userId
+     */
+    @Override
+    public void updateUser(int userId){
+        //修改users表标志位
+        UserVO users = this.getUsersById(userId);
+        if (users != null) {
+            users.setIsEvaluationFlag(1);
+            users.setEvaluationExpiredTime(GetDate.countDate(GetDate.countDate(new Date(),1,1), 5,-1));
+            this.updateUserByUserId(users);
+        }
+    }
+
+    @Override
+    public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
+        UserEvalationResultVO userEvalationResult = amUserClient.skipEvaluate(userId,countScore);
+        return userEvalationResult;
     }
 
 }

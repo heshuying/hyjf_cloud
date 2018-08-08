@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
-import com.hyjf.admin.beans.request.BankAccountRecordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.beans.vo.BankOpenAccountRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -197,10 +196,9 @@ public class BankOpenRecordController extends BaseController {
      */
     @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
     @PostMapping(value = "/exportbankaccount")
-    public void exportBankExcel( HttpServletResponse response, @RequestBody BankAccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
-
+    public void exportBankExcel( HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
-        BeanUtils.copyProperties(bankAccountRecordRequestBeans,bankAccountRecordRequestBeans);
+        BeanUtils.copyProperties(bankAccountRecordRequestBeans,registerRcordeRequest);
         registerRcordeRequest.setLimitFlg(true);
         // 表格sheet名称
         String sheetName = "江西银行开户记录";

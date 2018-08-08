@@ -102,6 +102,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现异步回调", notes = "用户银行提现异步回调")
     @PostMapping("/userBankWithdrawBgreturn")
+    @ResponseBody
     public String userBankWithdrawBgreturn(HttpServletRequest request,BankCallBean bean) {
         logger.info("[web用户银行提现异步回调开始]");
         logger.info("web端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
@@ -127,7 +128,7 @@ public class WebBankWithdrawController extends BaseTradeController {
      * @Date
      */
     @ApiOperation(value = "web端查询提现失败原因", notes = "web端查询提现失败原因")
-    @RequestMapping("/seachFiledMess")
+    @PostMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachUserBankWithdrawErrorMessgae(@RequestBody @Valid BankWithdrawVO bankWithdrawVO) {
         logger.info("查询提现失败原因start,logOrdId:{}", bankWithdrawVO.getLogOrdId());

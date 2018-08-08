@@ -16,6 +16,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * @author by xiehuili on 2018/7/30.
  */
-@Api(value = "admin流程配置",description = "配置中心借款项目配置---流程配置")
+@Api(value = "配置中心借款项目配置---流程配置",tags = "配置中心借款项目配置---流程配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/borrowflow")
 public class BorrowFlowController extends BaseController {
@@ -45,8 +46,8 @@ public class BorrowFlowController extends BaseController {
 //    private BorrowCommonService BorrowCommonService;
     @Autowired
     private BorrowProjectTypeService borrowProjectTypeService;
-    @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "查询流程配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询流程配置", notes = "查询流程配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminBorrowFlowResponse selectBorrowFlowList(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=borrowFlowService.selectBorrowFlowList(adminRequest);
@@ -65,8 +66,8 @@ public class BorrowFlowController extends BaseController {
         return resList ;
     }
 
-    @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "查询流程配置")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询流程配置详情页面", notes = "查询流程配置详情页面")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminBorrowFlowResponse selectBorrowFlowInfo(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList= null;
@@ -87,8 +88,8 @@ public class BorrowFlowController extends BaseController {
         }
         return resList;
     }
-    @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "添加流程配置")
-    @RequestMapping("/insertAction")
+    @ApiOperation(value = "添加流程配置", notes = "添加流程配置")
+    @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminBorrowFlowResponse insertBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
@@ -122,8 +123,8 @@ public class BorrowFlowController extends BaseController {
         return resList ;
     }
 
-    @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "修改流程配置")
-    @RequestMapping("/updateAction")
+    @ApiOperation(value = "修改流程配置", notes = "修改流程配置")
+    @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminBorrowFlowResponse updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();
@@ -138,7 +139,7 @@ public class BorrowFlowController extends BaseController {
         return resList ;
     }
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "删除流程配置")
-    @RequestMapping("/deleteAction")
+    @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public String deleteBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         AdminBorrowFlowResponse resList=new AdminBorrowFlowResponse();

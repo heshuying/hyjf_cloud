@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +34,7 @@ import java.util.List;
  * 资金中心->银行账务明细
  */
 
-@Api(value = "资金中心->银行账务明细",description = "资金中心->银行账务明细")
+@Api(value = "资金中心->银行账务明细",tags = "资金中心->银行账务明细")
 @RestController
 @RequestMapping("/hyjf-admin/bankaleve")
 public class BankAleveController {
@@ -69,11 +71,11 @@ public class BankAleveController {
      */
     @ApiOperation(value = "银行账务明细", notes = "银行账务明细导出")
     @PostMapping(value = "/exportbankaleve")
-    public void exportBankaleveList( HttpServletResponse response, @RequestBody BankAleveRequest bankAleveRequest){
+    public void exportBankaleveList( HttpServletResponse response, @RequestBody BankAleveRequest bankAleveRequest) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "银行账务明细";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
         String[] titles = new String[] { "序号", "银行号", "电子账号", "交易金额", "货币代码", "交易金额符号", "入帐日期","交易日期",

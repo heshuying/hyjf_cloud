@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.request.BorrowFullRequestBean;
 import com.hyjf.admin.beans.response.BorrowFullInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFullResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -60,6 +61,9 @@ public class BorrowFullController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_FULL)
     public AdminResult updateBorrowFull(HttpServletRequest request, @RequestBody @Valid BorrowFullRequestBean borrowFullRequestBean) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
         BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
         BeanUtils.copyProperties(borrowFullRequestBean, borrowFullRequest);
         borrowFullRequest.setCurrUserId(currUser.getId());
@@ -67,15 +71,19 @@ public class BorrowFullController extends BaseController {
         return borrowFullService.updateBorrowFull(borrowFullRequest);
     }
 
-    @ApiOperation(value = "流标", notes = "流标")
-    @GetMapping("/update_borrow_over/{borrowNid}")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
-    public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
-        AdminSystemVO currUser = getUser(request);
-        BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
-        borrowFullRequest.setBorrowNidSrch(borrowNid);
-        borrowFullRequest.setCurrUserId(currUser.getId());
-        borrowFullRequest.setCurrUserName(currUser.getUsername());
-        return borrowFullService.updateBorrowOver(borrowFullRequest);
-    }
+    //流标为汇付使用功能，原代码有此功能但是没有用到，暂时删除
+//    @ApiOperation(value = "流标", notes = "流标")
+//    @GetMapping("/update_borrow_over/{borrowNid}")
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.BORROW_OVER)
+//    public AdminResult updateBorrowOver(HttpServletRequest request, @PathVariable String borrowNid) {
+//        AdminSystemVO currUser = getUser(request);
+//        if(currUser == null){
+//            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+//        }
+//        BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
+//        borrowFullRequest.setBorrowNidSrch(borrowNid);
+//        borrowFullRequest.setCurrUserId(currUser.getId());
+//        borrowFullRequest.setCurrUserName(currUser.getUsername());
+//        return borrowFullService.updateBorrowOver(borrowFullRequest);
+//    }
 }

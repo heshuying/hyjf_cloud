@@ -27,7 +27,7 @@ import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.mq.base.Consumer;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.CrmBankOpenMessageProducer;
-import com.hyjf.am.user.service.batch.FddCertificateService;
+import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
 import com.hyjf.common.constants.MQConstant;
 

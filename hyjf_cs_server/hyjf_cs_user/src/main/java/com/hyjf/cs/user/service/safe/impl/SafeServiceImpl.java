@@ -27,7 +27,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.MailProducer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import org.apache.commons.lang3.StringUtils;
@@ -176,7 +176,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
         }
-        resultMap.put("inviteLink", systemConfig.getWebHost() + "/user/regist?from=" + user.getUserId());
+        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/user/regist?from=" + user.getUserId());
         return resultMap;
     }
 

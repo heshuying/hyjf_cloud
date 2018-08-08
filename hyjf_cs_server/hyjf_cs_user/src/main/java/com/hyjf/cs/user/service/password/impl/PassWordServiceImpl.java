@@ -34,7 +34,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.SendSmsVO;
@@ -565,7 +565,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         if(token==null){
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+ CommonConstant.JUMP_HTML_FAILED_PATH);
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+ CommonConstant.JUMP_HTML_FAILED_PATH);
             result.put("baseMapBean",baseMapBean);
             return result;
         }
@@ -574,7 +574,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         if(userId==null||userId<=0){
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未登录！");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
             result.put("baseMapBean",baseMapBean);
             return result;
         }
@@ -584,7 +584,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             //未开户
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户未开户！");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
             result.put("baseMapBean",baseMapBean);
             return result;
         }
@@ -594,7 +594,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             //已设置交易密码
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "已设置交易密码！");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+CommonConstant.JUMP_HTML_FAILED_PATH);
             result.put("baseMapBean",baseMapBean);
             return result;
         }

@@ -26,7 +26,7 @@ import java.util.List;
  * @author libin
  * @version AdminHjhPlanController.java, v0.1 2018年7月6日 上午10:04:37
  */
-@Api(value = "计划列表",description = "计划列表")
+@Api(value = "计划列表",tags ="计划列表")
 @RestController
 @RequestMapping("/am-trade/planList")
 public class AdminHjhPlanController {
@@ -217,6 +217,24 @@ public class AdminHjhPlanController {
 	public int insertRecord(@RequestBody PlanListRequest form) throws Exception {
 		int flg = adminHjhPlanService.insertRecord(form);
 		return flg;
+	}
+	
+	/**
+	 * @Author: libin
+	 * @Desc :计划列表无分页
+	 */
+	@RequestMapping(value = "/getHjhPlanListByParamWithoutPage",method = RequestMethod.POST)
+	public HjhPlanResponse getHjhPlanListByParamWithoutPage(@RequestBody @Valid PlanListRequest request){
+		HjhPlanResponse response = new HjhPlanResponse();
+		List<HjhPlanVO> list = adminHjhPlanService.selectHjhPlanListWithoutPage(request);
+        if(list.size() > 0){
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+                //代表成功
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+		return response;
 	}
     
 }

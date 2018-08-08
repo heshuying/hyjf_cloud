@@ -68,13 +68,13 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	@Override
 	public OperationReportResponse getRecordListByReleaseJson(OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
-		if(request.getOperationReport()==null||request.getOperationReport().getIsRelease()==null){
+		if(request.getIsRelease()==null){
 			response.setRtn("1");
 			response.setMessage("发布状态为空");
 			return response;
 		}
 		Map<String, Object> map = new HashMap<String ,Object>();
-		map.put("isRelease", request.getOperationReport().getIsRelease());
+		map.put("isRelease", request.getIsRelease());
 		map.put("paginatorPage", request.getCurrPage());
 		Query query = new Query();
 		Criteria criteria = getCriteria(map, query);

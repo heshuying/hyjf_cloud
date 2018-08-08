@@ -3,12 +3,10 @@
  */
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 
@@ -22,30 +20,12 @@ public interface CouponConfigClient {
    CouponConfigVO selectCouponConfig(String couponCode);
 
 
-   BestCouponListVO selectBestCoupon(MyCouponListRequest request);
-
-
-   Integer countAvaliableCoupon(MyCouponListRequest request);
-
-   /**
-    * 查询汇计划最优优惠券
-    * @param request
-    * @return
-    */
-   BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
-
    /**
     *
     * @param couponCode
     * @return
     */
    Integer checkCouponSendExcess(String couponCode);
-   /**
-    * 查询HJH可用优惠券数量
-    * @param request
-    * @return
-    */
-   Integer countHJHAvaliableCoupon(MyCouponListRequest request);
 
    /**
     * @Author walter.limeng

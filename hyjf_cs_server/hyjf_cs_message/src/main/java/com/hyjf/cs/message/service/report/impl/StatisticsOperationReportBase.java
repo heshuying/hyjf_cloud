@@ -408,12 +408,13 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         List<OperationReportJobVO> listOperationReportInfoCustomize = operationReportJobClient.getRevenueAndYield(intervalMonth, startMonth, endMonth);
         if (!CollectionUtils.isEmpty(listOperationReportInfoCustomize)) {
             for (OperationReportJobVO opear : listOperationReportInfoCustomize) {
+                BigDecimal sumAccount = opear.getSumAccount()==null?new BigDecimal(0):opear.getSumAccount();
                 if ("本次到手收益".equals(opear.getTitle())) {
-                    map.put("operationProfit", opear.getSumAccount().setScale(2, BigDecimal.ROUND_DOWN));
+                    map.put("operationProfit", sumAccount.setScale(2, BigDecimal.ROUND_DOWN));
                 } else if ("去年本次到手收益".equals(opear.getTitle())) {
-                    map.put("lastYearProfit", opear.getSumAccount().setScale(2, BigDecimal.ROUND_DOWN));
+                    map.put("lastYearProfit", sumAccount.setScale(2, BigDecimal.ROUND_DOWN));
                 } else if ("平均预期收益率".equals(opear.getTitle())) {
-                    map.put("avgProfit", opear.getSumAccount().setScale(2, BigDecimal.ROUND_DOWN));
+                    map.put("avgProfit", sumAccount.setScale(2, BigDecimal.ROUND_DOWN));
                 }
             }
 

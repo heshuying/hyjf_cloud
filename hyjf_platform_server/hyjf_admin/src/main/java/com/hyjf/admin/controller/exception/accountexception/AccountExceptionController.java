@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.exception.accountexception;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
@@ -26,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -83,13 +84,13 @@ public class AccountExceptionController extends BaseController {
      */
     @ApiOperation(value = "汇付对账列表导出", notes = "汇付对账列表导出")
     @PostMapping(value = "/accountexceptionlistexport")
-    public void exportAccountExceptionList(HttpServletResponse response, @RequestBody AccountExceptionRequest request){
+    public void exportAccountExceptionList(HttpServletResponse response, @RequestBody AccountExceptionRequest request) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
         // 表格sheet名称
         String sheetName = "注册信息";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
 
         List<AccountExceptionVO> recordList = accountExceptionService.searchAccountExceptionList(request);

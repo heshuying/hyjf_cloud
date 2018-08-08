@@ -24,7 +24,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
 import com.hyjf.cs.user.controller.app.login.UserParameters;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -192,7 +192,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserParameters result = new UserParameters();
 		String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
 		imghost = imghost.substring(0, imghost.length() - 1);
-		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppHost())
+		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppServerHost())
 				+ BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
 		apphost = apphost.substring(0, apphost.length() - 1);
 		String iconUrl = "";
@@ -687,7 +687,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				}
 			}
 			result.setAnswerUrl(
-					CommonUtils.concatReturnUrl(request, systemConfig.getAppHost() + ClientConstants.USER_RISKTEST));
+					CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.USER_RISKTEST));
 		}
 
 		{
@@ -717,7 +717,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		result.setIsNewHand(isNewHand ? "1" : "0");
 		result.setRewardDesc("邀请好友");
 		result.setRewardUrl(
-				CommonUtils.concatReturnUrl(request, systemConfig.getAppHost() + ClientConstants.REWARD_URL));
+				CommonUtils.concatReturnUrl(request, systemConfig.getAppServerHost() + ClientConstants.REWARD_URL));
 		{
 			// 自动投标授权状态 0: 未授权 1:已授权
 			HjhUserAuthVO hjhUserAuthVO = this.getHjhUserAuth(userId);

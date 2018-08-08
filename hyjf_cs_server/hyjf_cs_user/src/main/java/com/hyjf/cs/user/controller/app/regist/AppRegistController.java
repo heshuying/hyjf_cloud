@@ -114,7 +114,7 @@ public class AppRegistController extends BaseUserController {
         }catch (Exception e){
             return ret;
         }
-        if(CustomConstants.APP_STATUS_FAIL.equals(ret.get(CustomConstants.APP_STATUS))){
+        if(ret.get(CustomConstants.APP_STATUS)!=null){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));
@@ -135,7 +135,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", "");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
@@ -163,7 +163,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", operationUrl);
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());

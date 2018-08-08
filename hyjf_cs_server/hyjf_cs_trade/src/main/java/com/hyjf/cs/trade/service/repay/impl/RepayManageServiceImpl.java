@@ -17,10 +17,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
@@ -63,6 +60,36 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     AmBorrowRepayPlanClient borrowRepayPlanClient;
     @Autowired
     HjhDebtCreditClient hjhDebtCreditClient;
+
+    /**
+     * 普通用户管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserRepayFeeWaitTotal(Integer userId) {
+        return amTradeClient.getUserRepayFeeWaitTotal(userId);
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
+        return amTradeClient.getUserRepayFeeWaitTotal(userId);
+    }
+
+    /**
+     * 担保机构待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
+        return amTradeClient.getOrgRepayWaitTotal(userId);
+    }
 
     /**
      * 请求参数校验
@@ -156,6 +183,21 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public Integer selectOrgRepayedCount(RepayListRequest requestBean) {
         return amTradeClient.orgRepayedCount(requestBean);
+    }
+
+    @Override
+    public boolean checkPassword(Integer userId, String password) {
+        UserVO user = this.getUserByUserId(userId);
+        String codeSalt = user.getSalt();
+        String passwordDb = user.getPassword();
+        // 验证用的password
+        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+        // 密码正确时
+        if (password.equals(passwordDb)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private BorrowApicronVO getApiCron(List<BorrowApicronVO> borrowApicrons, Integer periodNow){

@@ -20,7 +20,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;

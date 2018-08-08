@@ -32,9 +32,9 @@ public class HjhSmsNoticeController {
 	@ApiOperation(value = "标的还款逾期短信提醒", notes = "标的还款逾期短信提醒")
 	@GetMapping(value = "/overdueSmsNotice")
 	public String overdueSmsNotice() {
-		logger.info("投资异常全部掉单跑批任务开始start...");
+		logger.info("标的还款逾期短信提醒跑批任务开始start...");
 		hjhSmsNoticeService.overdueSmsNotice();
-		logger.info("投资异常全部掉单跑批任务结束end...");
+		logger.info("标的还款逾期短信提醒跑批任务结束end...");
 		return "SUCCESS";
 	}
 }

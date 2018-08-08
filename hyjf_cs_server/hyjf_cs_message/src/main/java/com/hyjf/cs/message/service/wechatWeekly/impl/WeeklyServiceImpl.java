@@ -5,7 +5,6 @@ import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.am.vo.market.EventsVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -103,7 +102,7 @@ public class WeeklyServiceImpl implements WeeklyService {
      * @return
      */
     @Override
-    public EventsVO selectPercentage(int percentage, int begin, int end, int userId) {
+    public EventVO selectPercentage(int percentage, int begin, int end, int userId) {
         return amConfigClient.selectPercentage(percentage,  begin,  end,  userId);
     }
 
@@ -205,8 +204,8 @@ public class WeeklyServiceImpl implements WeeklyService {
      * @return
      */
     @Override
-    public EventsVO getEventsAll(int begin, int end) {
-        return  amConfigClient.getEventsAll(begin,end);
+    public EventVO getEventsAll(int begin, int end) {
+        return  amTradeClient.getEventsAll(begin,end);
     }
 
 

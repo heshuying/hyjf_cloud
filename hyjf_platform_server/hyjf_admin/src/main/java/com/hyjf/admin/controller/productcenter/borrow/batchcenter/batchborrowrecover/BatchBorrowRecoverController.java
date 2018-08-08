@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.productcenter.borrow.batchcenter.batchborrowre
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +41,11 @@ public class BatchBorrowRecoverController extends BaseController{
 
     public static final String NAME_CLASS = "REVERIFY_STATUS";
 
+    private static final String PERMISSIONS = "HjhDebtCredit";
 
     @ApiOperation(value = "批次中心-批次放款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRecoverInit")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject batchBorrowRecoverInit() {
         JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
@@ -52,6 +58,7 @@ public class BatchBorrowRecoverController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject querybatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request) {
         JSONObject jsonObject;
@@ -66,6 +73,7 @@ public class BatchBorrowRecoverController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     @ApiImplicitParam(name = "apicronID",value = "任务ID")
     public JSONObject querybatchBorrowRecoverBankInfoList(@RequestBody String apicronID) {
@@ -85,8 +93,9 @@ public class BatchBorrowRecoverController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
-    public JSONObject exportBatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response){
+    public JSONObject exportBatchBorrowRecoverList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
         String sheetName = "批次放款列表";
 
         request.setLimitStart(-1);
@@ -96,7 +105,7 @@ public class BatchBorrowRecoverController extends BaseController{
         }
         List<BatchBorrowRecoverVo> recordList = (List<BatchBorrowRecoverVo>) jsonObject.get(LIST);
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号","借款编号","资产来源","批次号", "借款金额","放款服务费","应放款","已放款","总笔数","成功笔数","失败笔数","更新时间","批次状态"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

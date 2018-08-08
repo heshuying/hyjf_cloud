@@ -41,7 +41,7 @@ public class PushMoneyManageController extends BaseController {
      * @return
      */
     @RequestMapping("/findPushMoneyRecordList")
-    public PushMoneyResponse findPushMoneyRecordList(@RequestBody @Valid PushMoneyRequest request) {
+    public PushMoneyResponse findPushMoneyRecordList(@RequestBody PushMoneyRequest request) {
         logger.info("---findPushMoneyRecordList by param---  " + JSONObject.toJSON(request));
         PushMoneyResponse response = new PushMoneyResponse();
         int pushMoneyTotal = pushMoneyManagerService.countPushMoney(request);

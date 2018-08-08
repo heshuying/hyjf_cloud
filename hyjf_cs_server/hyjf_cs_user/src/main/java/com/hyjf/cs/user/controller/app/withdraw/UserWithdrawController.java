@@ -107,7 +107,7 @@ public class UserWithdrawController extends BaseUserController {
         // getcash 提现金额
         String getcash = request.getParameter("getcash");
         // 提现规则静态页面的url
-        ret.put("url", systemConfig.getAppHost() + request.getContextPath() + "/hyjf-app/user/withdraw" + ClientConstants.GET_WITHDRAW_RULE_MAPPING);
+        ret.put("url", systemConfig.getAppServerHost() + request.getContextPath() + "/hyjf-app/user/withdraw" + ClientConstants.GET_WITHDRAW_RULE_MAPPING);
         ret =  userWithdrawService.getCashInfo(userId,ret,version,bankCode,getcash);
         return ret;
     }

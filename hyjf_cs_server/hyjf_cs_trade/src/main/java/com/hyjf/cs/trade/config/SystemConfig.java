@@ -131,6 +131,11 @@ public class SystemConfig {
     @Value("${hyjf.activity.id}")
     private String activityId;
 
+    /*需要在cs-trade的工程配置里面添加 CouponAccesskey */
+    @Value("${release.coupon.accesskey}")
+    private String couponAccesskey;
+
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -424,4 +429,13 @@ public class SystemConfig {
     public void setRegisterCouponCode(String registerCouponCode) {
         this.registerCouponCode = registerCouponCode;
     }
+
+    public String getCouponAccesskey() {
+        return couponAccesskey;
+    }
+
+    public void setCouponAccesskey(String couponAccesskey) {
+        this.couponAccesskey = couponAccesskey;
+    }
+
 }

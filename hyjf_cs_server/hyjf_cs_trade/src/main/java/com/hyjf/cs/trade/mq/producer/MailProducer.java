@@ -3,13 +3,12 @@
  */
 package com.hyjf.cs.trade.mq.producer;
 
-import org.springframework.stereotype.Component;
-
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.base.Producer;
 import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
+import org.springframework.stereotype.Component;
 
 /**
  * @author fuqiang
@@ -29,4 +28,5 @@ public class MailProducer extends Producer {
     public boolean messageSend(MessageContent messageContent) throws MQException {
         return super.messageSend(messageContent);
     }
+
 }

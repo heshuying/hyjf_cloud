@@ -11,6 +11,10 @@ import com.hyjf.am.response.config.SiteSettingsResponse;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.MspApplytResponse;
+import com.hyjf.am.response.user.MspResponse;
+import com.hyjf.am.resquest.user.MspApplytRequest;
+import com.hyjf.am.resquest.user.MspRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SiteSettingsVO;
@@ -192,6 +196,18 @@ public class AmConfigClientImpl implements AmConfigClient {
        return null;
 	}
 	/**
+	 * 子账户类型 查询
+	 */
+	@Override
+	public ParamNameResponse getNameCd(String code){
+		ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/"+"FLOW_STATUS", ParamNameResponse.class)
+                .getBody();
+		if (amResponse != null && Response.SUCCESS.equals(amResponse.getRtn())) {
+			return amResponse;
+		}
+		return null;
+	}
+	/**
 	 * 项目申请人是否存在
 	 * @param request
 	 * @return
@@ -207,5 +223,195 @@ public class AmConfigClientImpl implements AmConfigClient {
        return null;
 	}
 	
+	@Override
+	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/init" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
 
+	@Override
+	public MspApplytResponse infoAction() {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/infoAction" ,null,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/deleteRecordAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/validateBeforeAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/applyInfo" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/shareUser" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse download(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapply/download" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse searchAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse infoAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/infoAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse insertAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse updateAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/insertAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse configureNameError(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/configureNameError" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse deleteAction(MspRequest mspRequest) {
+		 MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/deleteAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse checkAction(MspRequest mspRequest) {
+		 MspResponse mspResponse = restTemplate
+					.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/checkAction" ,mspRequest,
+							MspResponse.class)
+					.getBody();
+			if (mspResponse != null) {
+				return mspResponse;
+			}
+			return null;
+	}
 }

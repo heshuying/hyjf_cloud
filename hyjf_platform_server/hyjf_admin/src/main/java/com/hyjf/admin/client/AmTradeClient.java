@@ -13,11 +13,14 @@ import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
@@ -635,7 +638,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean);
 
@@ -656,8 +659,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
-
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
     /**
      * 根据机构编号获取机构列表
      * @return
@@ -1561,13 +1563,6 @@ public interface AmTradeClient {
 
 
 
-    /**
-     * 发提成处理- 计算提成
-     *
-     * @param apicornId,request
-     * @return
-     */
-    int insertTenderCommissionRecord(Integer apicornId, ActivityListRequest request) ;
 
     /**
      * 计划退出查询判断标的是否还款
@@ -1588,7 +1583,14 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
+    Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request);
+
+    /**
+     * 更新借款API表
+     * @param apicornId
+     * @return
+     */
+    Integer  updateBorrowApicronByPrimaryKeySelective(String apicornId);
 
     /**
      * 添加提成数据
@@ -1596,14 +1598,6 @@ public interface AmTradeClient {
      * @return
      */
     int saveTenderCommission(TenderCommissionRequest request);
-
-
-    /**
-     * 更新借款API表
-     * @param request
-     * @return
-     */
-    int updateByPrimaryKeySelective(BorrowApicronRequest request);
 
     /**
      * 獲取銀行開戶信息
@@ -1639,8 +1633,6 @@ public interface AmTradeClient {
     /**
      * 迁移到详细画面
      *
-     * @param request
-     * @param form
      * @return
      */
     BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
@@ -1648,8 +1640,7 @@ public interface AmTradeClient {
     /**
      * 添加信息
      *
-     * @param request
-     * @param form
+     * @param borrowCommonRequest
      * @return
      * @throws Exception
      */
@@ -1659,7 +1650,7 @@ public interface AmTradeClient {
     /**
      * 用户是否存在
      *
-     * @param request
+     * @param userId
      * @return
      */
     int isExistsUser(String userId);
@@ -1668,16 +1659,13 @@ public interface AmTradeClient {
     /**
      * 获取最新的借款预编码
      *
-     * @param request
      * @return
      */
-
     String getBorrowPreNid();
 
     /**
      * 获取现金贷的借款预编号
      *
-     * @param request
      * @return
      */
     String getXJDBorrowPreNid();
@@ -1685,7 +1673,7 @@ public interface AmTradeClient {
     /**
      * 借款预编码是否存在
      *
-     * @param request
+     * @param borrowPreNid
      * @return
      */
     boolean isExistsBorrowPreNidRecord(String borrowPreNid);
@@ -1693,7 +1681,7 @@ public interface AmTradeClient {
     /**
      * 获取融资服务费率 & 账户管理费率
      *
-     * @param request
+     * @param borrowCommonRequest
      * @return
      */
     String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
@@ -1701,8 +1689,6 @@ public interface AmTradeClient {
     /**
      * 根据资产编号查询该资产下面的产品类型
      *
-     * @param request
-     * @param attr
      * @param instCode
      * @return
      */
@@ -1711,12 +1697,74 @@ public interface AmTradeClient {
     /**
      * 受托用户是否存在
      *
-     * @param request
+     * @param userName
      * @return
      */
 
     int isEntrustedExistsUser(String userName);
 
+    /**
+     * 获取加息券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
+     * 获取计划列表无分页
+     * @return
+     */
+ 	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
+	public HjhAccedeResponse canCancelAuth(Integer userId);
+
+    /**
+     * 获取平台子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountVO getBankMerchantAccount(String accountCode);
+
+    /**
+     * 获取代金券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
+     * 获取子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode);
+
+    /**
+     * 更新子账户信息已设置交易密码
+     * @param accountId
+     * @param flag
+     */
+    void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
+
+    AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
+
+    /**
+     *
+     * @author zhangyk
+     * @date 2018/8/7 16:37
+     */
+    Integer getBankMerchantAccountListByOrderId(String orderId);
 
 
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/7 18:53
+     */
+    Boolean updateAccountCallbackRecharge(Map<String,Object> params);
 }
+

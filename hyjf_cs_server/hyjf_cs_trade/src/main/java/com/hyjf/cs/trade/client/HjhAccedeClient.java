@@ -16,13 +16,6 @@ public interface HjhAccedeClient {
     HjhAccedeVO getHjhAccedeByAccedeOrderId(String contract_id);
 
     /**
-     * 统计计划加入总数
-     * @author zhangyk
-     * @date 2018/6/27 19:05
-     */
-    Integer countPlanAccedeRecordTotal(HjhAccedeRequest request);
-
-    /**
      * 计划详情
      * @author zhangyk
      * @date 2018/6/27 19:26
