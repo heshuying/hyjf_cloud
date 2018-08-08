@@ -1846,11 +1846,18 @@ public interface AmTradeClient {
     DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
 
     /**
-     * 圈存异步回调业务处理
+     * 圈提异步回调业务处理
      * @author zhangyk
      * @date 2018/8/7 18:53
      */
     Boolean updateAccountCallbackRecharge(Map<String,Object> params);
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/8 16:41
+     */
+    Boolean updateAccountCallbackWithdraw(Map<String,Object> params);
 
     /**
      * 更新明细表为失败状态
@@ -1858,7 +1865,7 @@ public interface AmTradeClient {
      * @date 2018/8/8 10:22
      */
     Boolean updateBankAccountListFailByOrderId(String orderId);
-
+    
 	/**
 	 * 汇计划提成列表查询
 	 *
@@ -2250,16 +2257,23 @@ public interface AmTradeClient {
      */
     STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean);
 
+    /**
+     * 批量审核优惠券
+     * @param params
+     * @param params
+     * @return
+     */
+    JSONObject getBatchCoupons(Map<String, String> params);
+
 
 
 
     /**
-     * 圈提异步回调业务处理
-     * @author zhangyk
-     * @date 2018/8/8 16:41
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
      */
-    Boolean updateAccountCallbackWithdraw(Map<String,Object> params);
-
-
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
 }
 

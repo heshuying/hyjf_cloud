@@ -870,7 +870,12 @@ public class AmTradeClientImpl implements AmTradeClient{
         return restTemplate.postForEntity(url,jsonObject,Boolean.class).getBody();
     }
 
-
+    @Override
+    public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
+        ChannelStatisticsDetailResponse amTradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/extensioncenter/channelstatisticsdetail/searchaction",
+                request, ChannelStatisticsDetailResponse.class);
+        return amTradeResponse;
+    }
 
     /**
      * 根据主键获取优惠券还款记录
@@ -4242,7 +4247,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return false;
     }
-
+    
 	/**
 	 * 汇计划提成列表查询
 	 *
@@ -4512,6 +4517,17 @@ public class AmTradeClientImpl implements AmTradeClient{
             return response.getSuccessFlag();
         }
         return false;
+    }
+
+    /**
+     * 批量上传发放优惠券
+     * @param params
+     * @return
+     */
+    @Override
+    public JSONObject getBatchCoupons(Map<String, String> params) {
+        String url = "http://AM-TRADE/am-user/checkCoupon/getBatchCoupons";
+        return restTemplate.postForEntity(url,params,JSONObject.class).getBody();
     }
 }
 

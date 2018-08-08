@@ -1105,4 +1105,68 @@ public interface AmConfigClient {
 	 */
 	AnswerResponse getAllAnswer();
 
+	/**
+	 * 根据条件查询公司管理-招贤纳士
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	JobResponse searchAction(ContentJobRequestBean requestBean);
+
+	/**
+	 * 添加公司管理-招贤纳士
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	JobResponse insertAction(ContentJobRequestBean requestBean);
+
+	/**
+	 * 修改公司管理-招贤纳士
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	JobResponse updateAction(ContentJobRequestBean requestBean);
+
+	/**
+	 * 根据id查询公司管理-招贤纳士
+	 *
+	 * @param id
+	 * @return
+	 */
+	JobsVo getJobsRecord(Integer id);
+
+	/**
+	 * 根据id删除招贤纳士
+	 *
+	 * @param id
+	 * @return
+	 */
+	JobResponse deleteJobById(Integer id);
+
+	/**
+	 * 根据条件查询友情链接列表
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse searchAction(ContentLinksRequestBean requestBean);
+
+	/**
+	 * 添加根据条件查询友情链接列表
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse insertAction(ContentLinksRequestBean requestBean);
+
+	/**
+	 * 修改根据条件查询友情链接列表
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	LinkResponse updateAction(ContentLinksRequestBean requestBean);
+
 }
