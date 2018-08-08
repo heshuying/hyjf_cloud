@@ -1,23 +1,23 @@
 package com.hyjf.am.trade.dao.customize;
 
+import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.*;
 import com.hyjf.am.trade.dao.mapper.customize.app.AppProjectListCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.app.AppTenderCreditCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.*;
-import com.hyjf.am.trade.dao.mapper.customize.wdzj.BorrowTenderInfoCustomizeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchHjhAccedeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.OntimeTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.TzjCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.coupon.CouponUserCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.BorrowAuthCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.repay.RepayManageCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.*;
+import com.hyjf.am.trade.dao.mapper.customize.trade.HjhAccountBalanceCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.wdzj.BorrowTenderInfoCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 
@@ -177,8 +177,6 @@ public class CustomizeMapper extends AutoMapper {
 	@Autowired
 	protected HjhAccountBalanceCustomizeMapper hjhAccountBalanceCustomizeMapper;
 
-
-
 	@Autowired
 	protected PushMoneyCustomizeMapper pushMoneyCustomizeMapper;
 
@@ -202,4 +200,8 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AleveCustomizeMapper aleveCustomizeMapper;
+	
+	@Autowired
+	protected AdminHjhCommissionMapper adminHjhCommissionMapper;
+
 }

@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -160,6 +161,13 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     public AccountVO getAccountByUserId(Integer userId){
         return accountClient.getAccountByUserId(userId);
     }
+
+    @Override
+    public BankCardVO getBankCardVOByUserId(Integer userId) {
+        BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
+        return bankCard;
+    }
+
     /**
      * 获取前端的地址
      * @param sysConfig

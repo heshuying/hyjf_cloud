@@ -1,12 +1,15 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.FeeConfigResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import org.slf4j.Logger;
@@ -78,5 +81,20 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
 	}
-
+	/**
+	 * @param bankId
+	 * @Description 根据bankId查询所属银行
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/5 15:13
+	 */
+	@Override
+	public BanksConfigVO getBankNameByBankId(String bankId) {
+		BanksConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

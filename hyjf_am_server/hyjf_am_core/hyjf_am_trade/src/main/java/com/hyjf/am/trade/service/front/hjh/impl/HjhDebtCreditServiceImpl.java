@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.hjh.impl;
 
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
@@ -173,5 +174,24 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
     @Override
     public List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String, Object> params) {
         return hjhPlanCustomizeMapper.getUserHjhInvestList(params);
+    }
+
+
+    /**
+     * 根据borrowNid和creditStatus查询债转列表
+     * @author zhangyk
+     * @date 2018/8/8 9:54
+     */
+    @Override
+    public List<HjhDebtCredit> selectHjhDebtCreditListByBorrowNidAndStatus(DebtCreditRequest request) {
+        HjhDebtCreditExample hjhDebtCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria criteria = hjhDebtCreditExample.createCriteria();
+        if(!CollectionUtils.isEmpty(request.getCreditStatus())) {
+            List<Integer> listIn = request.getCreditStatus();
+            criteria.andCreditStatusIn(listIn);
+        }
+        criteria.andBorrowNidEqualTo(request.getBorrowNid());
+        List<HjhDebtCredit> listHjhDebtCredit = this.hjhDebtCreditMapper.selectByExample(hjhDebtCreditExample);
+        return listHjhDebtCredit;
     }
 }

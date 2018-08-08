@@ -141,4 +141,15 @@ public class CommonConstant {
     public static final  String PAGE_LIMIT_START = "limitStart";
 
     public static final  String PAGE_LIMIT_END =   "limitEnd";
+
+    /** ValidateForm请求返回值 */
+    public static final String JSON_IF_EVALUATION_KEY = "ifEvaluation";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_EVALATION_RESULT_KEY = "userEvalationResult";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_QUESRION_LIST_KEY = "questionList";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_LOGIN_ERROR_KEY = "userError";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_LOGIN_ERROR_VLUES = "userError";
 }

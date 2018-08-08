@@ -699,7 +699,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -1324,5 +1324,11 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForObject("http://AM-USER/am-user/content/whereaboutspage/delete/" + id,
 				WhereaboutsPageResponse.class);
 	}
-	
+	@Override
+	public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
+		ChannelStatisticsDetailResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/channelstatisticsdetail/searchaction",
+				request, ChannelStatisticsDetailResponse.class);
+		return amUserResponse;
+	}
+
 }

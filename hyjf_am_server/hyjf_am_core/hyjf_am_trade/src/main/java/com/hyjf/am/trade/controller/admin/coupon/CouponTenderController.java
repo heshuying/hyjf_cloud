@@ -3,7 +3,7 @@ package com.hyjf.am.trade.controller.admin.coupon;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.trade.controller.admin.AdminAccountDetailController;
+import com.hyjf.am.trade.controller.admin.account.AdminAccountDetailController;
 import com.hyjf.am.trade.service.admin.coupon.CouponTenderService;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;

@@ -4,6 +4,7 @@
 package com.hyjf.cs.market.controller.app.home;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.market.controller.BaseMarketController;
@@ -89,4 +90,18 @@ public class HomePageController extends BaseMarketController {
         return result;
     }
 
+    /**
+     * 获取JumpCommend
+     * @return
+     *
+     */
+    @ResponseBody
+    @ApiOperation(value = "获取JumpCommend", notes = "获取JumpCommend")
+    @RequestMapping(value = "/getJumpCommend")
+    public BaseResultBeanFrontEnd getJumpCommend() {
+        BaseResultBeanFrontEnd baseResultBeanFrontEnd=new BaseResultBeanFrontEnd();
+        baseResultBeanFrontEnd.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+        baseResultBeanFrontEnd.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+        return baseResultBeanFrontEnd;
+    }
 }

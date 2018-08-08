@@ -35,7 +35,7 @@ public class FindController {
 
     @ResponseBody
     @RequestMapping(value = "/hyjf-app/find")
-    public JSONObject find(@RequestHeader(value = "userId")Integer userId) {
+    public JSONObject find() {
         JSONObject ret = new JSONObject();
         List<ContentArticleVO> newsList = appFindService.searchHomeNoticeList("20", 0, 3);
         JSONArray jsonArray = new JSONArray();
@@ -55,9 +55,6 @@ public class FindController {
         ret.put("status", "000");
         ret.put("statusDesc", "成功");
         ret.put("newsList", jsonArray);
-        ret.put("userid",userId);
-        ret.put("status", "000");
-        ret.put("statusDesc", "成功");
         return ret;
     }
 }

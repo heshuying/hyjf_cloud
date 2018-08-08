@@ -9,6 +9,7 @@ import com.hyjf.am.response.trade.HjhAppCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.response.trade.HjhUserInvestListResponse;
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
@@ -164,6 +165,17 @@ public class HjhDebtCreditController extends BaseController {
         HjhUserInvestListResponse response = new HjhUserInvestListResponse();
         List<UserHjhInvistListCustomizeVO> list = hjhDebtCreditService.getUserHjhInvestList(params);
         response.setResultList(list);
+        return response;
+    }
+
+    @PostMapping("/selectHjhDebtCreditListByBorrowNidAndStatus")
+    public HjhDebtCreditResponse selectHjhDebtCreditListByBorrowNidAndStatus(@RequestBody DebtCreditRequest request){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        List<HjhDebtCredit> list = hjhDebtCreditService.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            List<HjhDebtCreditVO> resultList = CommonUtils.convertBeanList(list,HjhDebtCreditVO.class);
+            response.setResultList(resultList);
+        }
         return response;
     }
 }

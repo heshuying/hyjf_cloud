@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.List;
@@ -34,4 +35,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<JxBankConfigVO> getQuickPaymentJxBankConfig();
+
+	/**
+	 * @Description 根据bankId查询所属银行
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/5 15:13
+	 */
+	BanksConfigVO getBankNameByBankId(String bankId);
 }

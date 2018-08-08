@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -252,7 +253,7 @@ public class MspApplyController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "安融反欺诈查询";
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
 				+ CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号", "姓名", "身份证号", "操作人", "查询时间" };
 		// 声明一个工作薄
@@ -573,7 +574,7 @@ public class MspApplyController extends BaseController {
 		List<MspConfigureVO> resultList = prs.getResultList();
 
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "序号", "标的名称", "业务类型", "借款类型(借款用途)", "审批结果 ", "借款金额（合同金额）（元）", "借款/还款期数（月）", "借款城市(借款地点)", "担保类型", "未偿还本金", "当前还款状态"};
 		// 声明一个工作薄
