@@ -8,12 +8,14 @@ import com.hyjf.am.trade.service.admin.finance.TenderCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @version TenderCommissionServiceImpl, v0.1 2018/8/7 9:39
  * @Author: Zha Daojian
  */
+@Service
 public class TenderCommissionServiceImpl  extends BaseServiceImpl implements TenderCommissionService {
 
     @Autowired
