@@ -2,7 +2,10 @@ package com.hyjf.cs.message.mq.consumer;
 
 import java.util.List;
 
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
+import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.AccountWebListDao;
 import com.hyjf.cs.message.mq.base.Consumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -33,7 +36,8 @@ public class AccountWebListConsumer extends Consumer {
 
 	@Autowired
 	private AccountWebListDao accountWebListDao;
-
+	@Autowired
+	private AmUserClient amUserClient;
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
@@ -55,7 +59,6 @@ public class AccountWebListConsumer extends Consumer {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			logger.info("AccountWebListConsumer 收到消息，开始处理....msgs is :{}", msgs);
-
 			for (MessageExt msg : msgs) {
 				AccountWebListVO accountWebListVO = JSONObject.parseObject(msg.getBody(), AccountWebListVO.class);
 				AccountWebList accountWebList = null;
@@ -63,9 +66,23 @@ public class AccountWebListConsumer extends Consumer {
 					accountWebList = new AccountWebList();
 					BeanUtils.copyProperties(accountWebListVO, accountWebList);
 				}
+				UserInfoVO usersInfo = amUserClient.findUsersInfoById(accountWebListVO.getUserId());
+				// 承接人
+				UserInfoCustomizeVO userInfoCustomize = amUserClient.queryUserInfoCustomizeByUserId(accountWebListVO.getUserId());
+				if (usersInfo != null) {
+					Integer attribute = usersInfo.getAttribute();
+					if (attribute != null) {
+						if (userInfoCustomize != null ) {
+							// 查找用户信息
+							accountWebList.setRegionName(userInfoCustomize.getRegionName());
+							accountWebList.setBranchName(userInfoCustomize.getBranchName());
+							accountWebList.setDepartmentName(userInfoCustomize.getDepartmentName());
+						}
+					}
+					accountWebList.setTruename(usersInfo.getTruename());
+				}
 				accountWebListDao.save(accountWebList);
 			}
-
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 		}

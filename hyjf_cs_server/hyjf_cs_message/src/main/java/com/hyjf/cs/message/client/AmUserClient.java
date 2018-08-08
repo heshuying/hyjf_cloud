@@ -5,6 +5,7 @@ import java.util.List;
 import com.hyjf.am.response.config.SmsNoticeConfigResponse;
 import com.hyjf.am.response.user.UserAliasResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,4 +69,11 @@ public interface AmUserClient {
 	 * @return
 	 */
 	int countAliasByClient(String clientAndroid);
+
+	/**
+	 * 查看用户详情
+	 * @param userId
+	 * @return
+	 */
+	 UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId);
 }
