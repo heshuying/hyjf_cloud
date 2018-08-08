@@ -1,14 +1,14 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.batch.impl;
+package com.hyjf.am.user.service.front.user.impl;
 
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.service.batch.UserPortraitBatchService;
+import com.hyjf.am.user.service.front.user.UserPortraitBatchService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.utils.IdCard15To18;
 import com.hyjf.am.vo.trade.BatchUserPortraitQueryVO;

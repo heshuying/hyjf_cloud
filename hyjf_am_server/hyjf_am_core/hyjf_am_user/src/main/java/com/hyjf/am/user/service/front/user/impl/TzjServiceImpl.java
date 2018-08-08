@@ -1,12 +1,11 @@
-package com.hyjf.am.user.service.batch.impl;
+package com.hyjf.am.user.service.front.user.impl;
+
+import com.hyjf.am.user.service.front.user.TzjService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Set;
-
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.user.service.batch.TzjService;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
 
 /**
  * @author xiasq

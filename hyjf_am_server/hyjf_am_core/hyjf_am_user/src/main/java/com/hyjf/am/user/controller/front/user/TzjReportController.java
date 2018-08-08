@@ -1,4 +1,4 @@
-package com.hyjf.am.user.controller.batch;
+package com.hyjf.am.user.controller.front.user;
 
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import org.springframework.web.bind.annotation.RequestMapping;

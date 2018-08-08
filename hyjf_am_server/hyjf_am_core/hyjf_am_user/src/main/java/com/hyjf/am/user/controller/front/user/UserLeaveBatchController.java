@@ -1,9 +1,7 @@
-package com.hyjf.am.user.controller.batch;
+package com.hyjf.am.user.controller.front.user;
 
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.batch.UserLeaveBatchService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hyjf.am.user.service.front.user.UserLeaveBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

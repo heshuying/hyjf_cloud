@@ -1,13 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.controller.batch;
+package com.hyjf.am.user.controller.front.ca;
 
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.batch.FddCertificateService;
+import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.common.exception.MQException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

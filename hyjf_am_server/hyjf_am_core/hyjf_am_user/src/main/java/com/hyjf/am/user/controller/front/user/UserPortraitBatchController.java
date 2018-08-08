@@ -1,17 +1,15 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.controller.batch;
+package com.hyjf.am.user.controller.front.user;
 
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.service.batch.UserPortraitBatchService;
+import com.hyjf.am.user.service.front.user.UserPortraitBatchService;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CommonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;

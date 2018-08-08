@@ -1,4 +1,4 @@
-package com.hyjf.am.user.service.batch;
+package com.hyjf.am.user.service.front.user;
 
 import com.hyjf.am.user.service.BaseService;
 

@@ -1,9 +1,9 @@
-package com.hyjf.am.user.service.batch.impl;
+package com.hyjf.am.user.service.front.user.impl;
 
 import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
-import com.hyjf.am.user.service.batch.UserEntryBatchService;
+import com.hyjf.am.user.service.front.user.UserEntryBatchService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

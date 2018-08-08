@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.batch.impl;
+package com.hyjf.am.user.service.front.account.impl;
 
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
 import com.hyjf.am.user.dao.mapper.auto.AccountMobileSynchMapper;
@@ -9,7 +9,7 @@ import com.hyjf.am.user.dao.model.auto.AccountMobileSynch;
 import com.hyjf.am.user.dao.model.auto.AccountMobileSynchExample;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.service.front.account.BindCardService;
-import com.hyjf.am.user.service.batch.MobileSynchronizeService;
+import com.hyjf.am.user.service.front.account.MobileSynchronizeService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

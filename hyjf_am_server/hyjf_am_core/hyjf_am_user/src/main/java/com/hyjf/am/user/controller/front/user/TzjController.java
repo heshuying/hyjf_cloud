@@ -1,9 +1,9 @@
-package com.hyjf.am.user.controller.batch;
+package com.hyjf.am.user.controller.front.user;
 
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.batch.TzjService;
+import com.hyjf.am.user.service.front.user.TzjService;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

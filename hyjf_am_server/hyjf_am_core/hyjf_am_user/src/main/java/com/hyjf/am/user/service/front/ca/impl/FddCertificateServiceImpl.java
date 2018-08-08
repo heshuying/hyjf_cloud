@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.batch.impl;
+package com.hyjf.am.user.service.front.ca.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
@@ -10,7 +10,7 @@ import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.FddCertificateProducer;
-import com.hyjf.am.user.service.batch.FddCertificateService;
+import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
 import com.hyjf.common.constants.MQConstant;

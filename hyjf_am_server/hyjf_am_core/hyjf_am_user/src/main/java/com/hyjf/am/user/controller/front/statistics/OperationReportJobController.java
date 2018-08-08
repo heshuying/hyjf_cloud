@@ -1,12 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.controller.batch;
+package com.hyjf.am.user.controller.front.statistics;
 
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import io.swagger.annotations.Api;
