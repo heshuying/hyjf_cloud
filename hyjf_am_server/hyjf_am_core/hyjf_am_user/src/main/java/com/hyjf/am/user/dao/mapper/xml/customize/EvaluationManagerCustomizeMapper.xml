@@ -53,13 +53,6 @@
         <result column="evalationTime" property="evalationTime" jdbcType="VARCHAR" />
     </resultMap>
 
-
-    <resultMap id="UserEvalationPOMap" type="com.hyjf.am.user.dao.model.customize.EvalationResultCustomize">
-        <result column="question" property="question" jdbcType="VARCHAR" />
-        <result column="answer" property="answer" jdbcType="VARCHAR" />
-        <result column="score" property="score" jdbcType="VARCHAR" />
-    </resultMap>
-
     <select id="selectUserEvalationResultList" resultMap="UserEvalationResultListPOMap" parameterType="Map">
         SELECT
         hydu.user_id,
@@ -101,5 +94,16 @@
         <include refid="Where_Clause" />
     </select>
 
-
+    <resultMap id="UserEvalationPOMap" type="com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize">
+        <result column="question_id" property="question" jdbcType="VARCHAR" />
+        <result column="answer_id" property="answer" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="getUserEvalation" resultMap="UserEvalationPOMap" parameterType="java.lang.Integer">
+        select
+        hue.question_id,
+        hue.answer_id
+        from ht_user_evalation hue
+        where hue.er_id=#{id,jdbcType=INTEGER}
+        ORDER BY hue.question_id
+    </select>
 </mapper>
