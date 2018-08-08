@@ -52,7 +52,7 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端获取散标投资详情
-     *
+     * 原接口：com.hyjf.app.project.BorrowProjectController.searchProjectDetail()
      * @param param
      * @return
      */

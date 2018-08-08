@@ -9,7 +9,7 @@ import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.handle.ApiAssetPushService;
+import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import org.slf4j.Logger;

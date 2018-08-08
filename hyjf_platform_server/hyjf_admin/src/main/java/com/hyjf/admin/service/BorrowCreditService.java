@@ -4,6 +4,7 @@ import com.hyjf.admin.beans.request.BorrowCreditRequest;
 import com.hyjf.admin.common.result.AdminResult;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 public interface BorrowCreditService {
 
@@ -20,7 +21,7 @@ public interface BorrowCreditService {
      * @author zhangyk
      * @date 2018/7/10 14:09
      */
-    void  exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response);
+    void  exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) throws UnsupportedEncodingException;
 
 
     /**

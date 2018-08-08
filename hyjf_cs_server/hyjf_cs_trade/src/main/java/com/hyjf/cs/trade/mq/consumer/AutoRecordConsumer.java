@@ -6,7 +6,7 @@ package com.hyjf.cs.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.AutoRecordMessageHandle;
+import com.hyjf.cs.trade.mq.handle.AutoRecordMessageHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;

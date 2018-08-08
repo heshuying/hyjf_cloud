@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -169,12 +171,12 @@ public class TransferController extends BaseController {
      */
     @RequestMapping(value = "/exportTransfer")
     public void exportExcel(@RequestBody TransferListRequest form, HttpServletRequest request,
-                            HttpServletResponse response)  {
+                            HttpServletResponse response) throws UnsupportedEncodingException {
 
         // 表格sheet名称
         String sheetName = "转账记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
 
         //设置默认查询时间

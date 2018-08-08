@@ -196,6 +196,18 @@ public class AmConfigClientImpl implements AmConfigClient {
        return null;
 	}
 	/**
+	 * 子账户类型 查询
+	 */
+	@Override
+	public ParamNameResponse getNameCd(String code){
+		ParamNameResponse amResponse = restTemplate.getForEntity("http://AM-CONFIG/am-config/accountconfig/getNameCd/"+"FLOW_STATUS", ParamNameResponse.class)
+                .getBody();
+		if (amResponse != null && Response.SUCCESS.equals(amResponse.getRtn())) {
+			return amResponse;
+		}
+		return null;
+	}
+	/**
 	 * 项目申请人是否存在
 	 * @param request
 	 * @return
