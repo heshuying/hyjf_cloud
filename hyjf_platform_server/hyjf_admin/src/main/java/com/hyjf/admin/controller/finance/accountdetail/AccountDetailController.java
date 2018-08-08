@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.controller.finance.AccountDetail;
+package com.hyjf.admin.controller.finance.accountdetail;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
