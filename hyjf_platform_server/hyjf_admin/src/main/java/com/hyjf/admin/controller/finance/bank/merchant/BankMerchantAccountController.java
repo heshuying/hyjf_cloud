@@ -57,6 +57,10 @@ public class BankMerchantAccountController extends BaseController {
 
     private static final String WITHDRAW_METHOD_NAME = "/withdrawCallback";
 
+    private static final String OPT_SUCCESS_URL = "/onSuccess.jsp";  // TODO: 2018/8/8 后期确定操作成功页面地址 zyk
+
+    private static final String OPT_ERROR_URL = "/onError.jsp";  // TODO: 2018/8/8 后期确定操作失败页面地址 zyk
+
     private static final String REQUEST_MAPPING = "/hyjf-admin/bank/merchant/account";
 
     @Autowired
@@ -278,8 +282,8 @@ public class BankMerchantAccountController extends BaseController {
         // 调用江西银行接口(2.3.3.圈存)
         BankCallBean bean = new BankCallBean();
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(0));
-        String errorUrl = systemConfig.getAdminFrontHost()+ "/admin/onError";  // TODO: 2018/8/7   后期确认错误页面地址 zyk
-        String successUrl = systemConfig.getAdminFrontHost() + "/admin/onSuccess" ; // TODO: 2018/8/7 后期去人成功页面 zyk
+        String errorUrl = systemConfig.getAdminFrontHost()+ OPT_ERROR_URL;
+        String successUrl = systemConfig.getAdminFrontHost() + OPT_SUCCESS_URL ;
         String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + RECHARGE_METHOD_NAME;
 
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
@@ -453,9 +457,9 @@ public class BankMerchantAccountController extends BaseController {
         }
 
         // 调用汇付接口(提现)
-        String errorUrl = systemConfig.getAdminFrontHost()  +"/onError.jsp";
+        String errorUrl = systemConfig.getAdminFrontHost()  + OPT_ERROR_URL;
         String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + "/withDrawCallback";
-        String successUrl = systemConfig.getAdminFrontHost() + "/onSuccess.jsp";
+        String successUrl = systemConfig.getAdminFrontHost() + OPT_SUCCESS_URL;
 
         // 调用汇付接口(4.2.2 用户绑卡接口)
         BankCallBean bean = new BankCallBean();
