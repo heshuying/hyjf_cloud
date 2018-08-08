@@ -1,9 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.config.AdminSystemResponse;
-import com.hyjf.am.response.config.LinkResponse;
-import com.hyjf.am.response.config.ParamNameResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.user.MspApplytRequest;
@@ -116,4 +114,15 @@ public interface AmConfigClient {
 	public MspResponse configureNameError(MspRequest mspRequest);
 	public MspResponse deleteAction(MspRequest mspRequest);
 	public MspResponse checkAction(MspRequest mspRequest);
+	/**
+	 * 获取所有问题
+	 * @return
+	 */
+	QuestionResponse getAllQuestion();
+	/**
+	 * 获取所有回答
+	 * @return
+	 */
+	AnswerResponse getAllAnswer();
+
 }

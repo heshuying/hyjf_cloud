@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.app.riskassesment;
+package com.hyjf.cs.user.result;
 
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 

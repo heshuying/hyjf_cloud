@@ -49,12 +49,12 @@ public interface BorrowRegistService extends BaseService {
      * @param borrowRegistListRequest
      * @return
      */
-    String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
+    String getSumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest);
 
     /**
      * 标的备案
      * @param request
      * @return
      */
-    Response debtRegist(BorrowRegistUpdateRequest request);
+    Response updateBorrowRegist(BorrowRegistUpdateRequest request);
 }

@@ -155,6 +155,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_BANK_ACCOUNT_REALNAME_MORE_THAN_TEN("EBK000007","真实姓名不能超过十位"),
 	ERR_BANK_ACCOUNT_IDCARDNO_REQUIRED("EBK000008","身份证不能为空"),
 	ERR_BANK_ACCOUNT_IDCARDNO_EXIST("EBK000009","身份证号已存在"),
+	ERR_BANK_ACCOUNT_NOT_EXIST("EBK0000010","userId={0}没有账户信息！"),
+
 
 	// 银行卡相关错误信息ERR_CARD_
 	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
@@ -376,6 +378,8 @@ public enum MsgEnum implements MsgCode {
 	ERR_LOGIN_INVALID("EUS000013", "登录过期,请重新登录!"),
 	ERR_SUCCESS("0", ""),
 	ERR_BIND("1", "授权失败，请仔细阅读并同意《汇盈金服授权协议》"),
+	ERR_DIC_NO_MATCH("ENM000001","字典表中没有值={0}的平台"),
+
 	// 枚举终结
 	ERR_ENUM("", "");
 

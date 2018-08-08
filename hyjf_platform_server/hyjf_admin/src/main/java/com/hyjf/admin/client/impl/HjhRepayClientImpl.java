@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 /**
+ * 已迁移
  * 产品中心 -> 汇计划 -> 订单退出
  * @Author : huanghui
  */

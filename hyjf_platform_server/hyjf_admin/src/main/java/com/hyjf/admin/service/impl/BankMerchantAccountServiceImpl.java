@@ -24,20 +24,16 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.hyjf.pay.lib.bank.util.*;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -305,7 +301,55 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
      * @date 2018/8/7 19:29
      */
     @Override
-    public void updateBankAccountListFail(String orderId) {
-        //amTradeClient.update
+    public void updateBankAccountListFailByOrderId(String orderId) {
+        amTradeClient.updateBankAccountListFailByOrderId(orderId);
     }
+
+    @Override
+    public int updateBankMerchantAccount(String accountCode, BigDecimal currBalance, BigDecimal balance, BigDecimal frost) {
+        BankMerchantAccountVO bankMerchantAccount=new BankMerchantAccountVO();
+        bankMerchantAccount.setAccountCode(accountCode);
+        bankMerchantAccount.setAccountBalance(currBalance);
+        bankMerchantAccount.setAvailableBalance(balance);
+        bankMerchantAccount.setFrost(frost);
+        bankMerchantAccount.setUpdateTime(new Date());
+        return amTradeClient.updateBankMerchantAccountByCode(bankMerchantAccount);
+    }
+
+    /**
+     * 根据电子账号查询用户在江西银行的可用余额
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public BigDecimal getBankBalance(Integer userId, String accountId) {
+        // 账户可用余额
+        BigDecimal balance = BigDecimal.ZERO;
+        BankCallBean bean = new BankCallBean();
+        // 交易代码
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
+        // 交易渠道
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        bean.setAccountId(accountId);
+        // 订单号
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(userId)));
+        // 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        bean.setLogUserId(String.valueOf(userId));
+        // 平台
+        bean.setLogClient(0);
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return balance;
+    }
+
 }

@@ -18,6 +18,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

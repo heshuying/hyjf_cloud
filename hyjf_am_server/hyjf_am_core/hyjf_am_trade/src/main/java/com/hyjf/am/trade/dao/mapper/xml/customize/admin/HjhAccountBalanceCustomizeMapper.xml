@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
-		namespace="com.hyjf.am.trade.dao.mapper.customize.admin.HjhAccountBalanceCustomizeMapper">
+		namespace="com.hyjf.am.trade.dao.mapper.customize.admin.HjhInfoAccountBalanceCustomizeMapper">
 	<!--汇计划资本按天统计及预估表列表 -->
 	<resultMap id="selectHjhAccountBalanceMap" type="com.hyjf.am.vo.admin.HjhAccountBalanceVO">
 		<id column="id" property="id" jdbcType="INTEGER" />
@@ -19,97 +19,6 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="del_flag" property="delFlag" jdbcType="TINYINT" />
 	</resultMap>
-	<select id="selectHjhAccountBalanceForActList" resultMap="selectHjhAccountBalanceMap"
-			parameterType="java.util.Date">
-		SELECT
-		`rpt_date` `rptDate`,
-		SUM(i_account) invest_account,
-		SUM(c_account) credit_account,
-		SUM(r_account) reinvest_account,
-		SUM(a_account) add_account,
-		flag flag
-		FROM
-		(
-		SELECT
-		DATE_FORMAT(
-		FROM_UNIXTIME(bt.addtime),
-		'%Y-%m-%d'
-		) `rptDate`,
-		SUM(bt.account) i_account,
-		0 c_account,
-		0 r_account,
-		0 a_account,
-		1 flag -- 原始
-		FROM
-		huiyingdai_borrow_tender bt
-		WHERE
-		bt.addtime BETWEEN UNIX_TIMESTAMP(#{date}) AND UNIX_TIMESTAMP(#{date}) + 86399
-		AND bt.accede_order_id IS NOT NULL
-		UNION ALL
-		SELECT
-		DATE_FORMAT(
-		FROM_UNIXTIME(hdct.create_time),
-		'%Y-%m-%d'
-		) `rptDate`,
-		0 i_account,
-		SUM(hdct.assign_pay) c_account,
-		0 r_account,
-		0 a_account,
-		2 flag -- 债转
-		FROM
-		hyjf_hjh_debt_credit_tender hdct
-		WHERE
-		hdct.create_time BETWEEN UNIX_TIMESTAMP(#{date}) AND UNIX_TIMESTAMP(#{date}) + 86399
-		UNION ALL
-		SELECT
-		DATE_FORMAT(
-		FROM_UNIXTIME(bt.addtime),
-		'%Y-%m-%d'
-		) `rptDate`,
-		0 i_account,
-		0 c_account,
-		SUM(bt.account) r_account,
-		0 a_account,
-		3 flag -- 复投原始
-		FROM
-		huiyingdai_borrow_tender bt
-		WHERE
-		bt.addtime BETWEEN UNIX_TIMESTAMP(#{date}) AND UNIX_TIMESTAMP(#{date}) + 86399
-		AND bt.tender_type = 1
-		AND bt.accede_order_id IS NOT NULL
-		UNION ALL
-		SELECT
-		DATE_FORMAT(
-		FROM_UNIXTIME(hdct.create_time),
-		'%Y-%m-%d'
-		) `rptDate`,
-		0 i_account,
-		0 c_account,
-		SUM(hdct.assign_pay) r_account,
-		0 a_account,
-		3 flag -- 复投债转
-		FROM
-		hyjf_hjh_debt_credit_tender hdct
-		WHERE
-		hdct.create_time BETWEEN UNIX_TIMESTAMP(#{date}) AND UNIX_TIMESTAMP(#{date}) + 86399
-		AND hdct.tender_type = 1
-		UNION ALL
-		SELECT
-		DATE_FORMAT(
-		FROM_UNIXTIME(ha.add_time),
-		'%Y-%m-%d'
-		) `rptDate`,
-		0 i_account,
-		0 c_account,
-		0 r_account,
-		SUM(ha.accede_account) a_account,
-		4 flag -- 加入计划
-		FROM
-		hyjf_hjh_accede ha
-		WHERE
-		ha.add_time BETWEEN UNIX_TIMESTAMP(#{date}) AND UNIX_TIMESTAMP(#{date}) + 86399
-		) t
-	</select>
 
 
 	<resultMap id="RM_HjhAccountBalance"
@@ -218,38 +127,6 @@
 		,sum(reinvest_account)as 'reinvestAccount',sum(add_account)as
 		'addAccount'
 		from ht_hjh_account_balance
-		group by DATE_FORMAT(rpt_date,'%Y-%m')
-		order by rpt_date desc
-		<include refid="pagination_Tail" />
-	</select>
-	<select id="getHjhAccountBalanceMonthListNew" resultMap="RM_HjhAccountBalance" parameterType="java.lang.String">
-		select DATE_FORMAT(rpt_date,'%Y-%m')as dataFormt ,sum(invest_account) as'investAccount',sum(credit_account) as 'creditAccount',sum(reinvest_account)as 'reinvestAccount',sum(add_account)as'addAccount'
-		from ht_hjh_account_balance
-		where rpt_date &gt;= STR_TO_DATE(#{addTimeStart},"%Y-%m-%d")AND rpt_date &lt;= STR_TO_DATE(#{addTimeEnd},"%Y-%m-%d")
-		group by DATE_FORMAT(rpt_date,'%Y-%m')
-		order by rpt_date desc
-		<include refid="pagination_Tail" />
-	</select>
-
-	<select id="getHjhAccountBalanceSum" resultMap="RM_HjhAccountBalance">
-		SELECT
-		sum(invest_account) AS 'investAccount',
-		sum(credit_account) AS 'creditAccount',
-		sum(reinvest_account) AS 'reinvestAccount',
-		sum(add_account) AS 'addAccount'
-		FROM
-		ht_hjh_account_balance HjhAccountBalance
-		<include refid="HjhAccountBalance_findPage_where" />
-		<include refid="pagination_Tail" />
-	</select>
-	<select id="getHjhAccountBalanceMonthSum" resultMap="RM_HjhAccountBalance">
-		select
-		sum(invest_account) as'investAccount',
-		sum(credit_account) as 'creditAccount',
-		sum(reinvest_account)as 'reinvestAccount',
-		sum(add_account)as'addAccount'
-		from ht_hjh_account_balance
-		where rpt_date &gt;= STR_TO_DATE(#{addTimeStart},"%Y-%m-%d")AND rpt_date &lt;= STR_TO_DATE(#{addTimeEnd},"%Y-%m-%d")
 		group by DATE_FORMAT(rpt_date,'%Y-%m')
 		order by rpt_date desc
 		<include refid="pagination_Tail" />

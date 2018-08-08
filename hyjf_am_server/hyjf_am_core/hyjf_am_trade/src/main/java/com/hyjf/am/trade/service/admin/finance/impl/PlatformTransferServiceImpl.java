@@ -262,4 +262,22 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         }
         return false;
     }
+
+
+    /**
+     * 更新充值明细为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:30
+     */
+    @Override
+    public Boolean updateMerchantAccountListFail(String orderId) {
+        BankMerchantAccountListExample accountWithdrawExample = new BankMerchantAccountListExample();
+        accountWithdrawExample.createCriteria().andOrderIdEqualTo(orderId);
+        BankMerchantAccountList bankMerchantAccountList = new BankMerchantAccountList();
+        bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_FAIL);
+        bankMerchantAccountList.setUpdateUserName("0");
+        bankMerchantAccountList.setUpdateTime(new Date());
+        int ret = bankMerchantAccountListMapper.updateByExampleSelective(bankMerchantAccountList, accountWithdrawExample);
+        return ret > 0 ? true : false;
+    }
 }

@@ -98,7 +98,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
      * @return
      */
     @Override
-    public String sumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest) {
+    public String getSumBorrowRegistAccount(BorrowRegistListRequest borrowRegistListRequest) {
         return borrowRegistCustomizeMapper.sumBorrowRegistAccount(borrowRegistListRequest);
     }
 
@@ -109,7 +109,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
      * @return
      */
     @Override
-    public Response debtRegist(BorrowRegistUpdateRequest request){
+    public Response updateBorrowRegist(BorrowRegistUpdateRequest request){
         Response result = new Response();
         // 从请求实体类中获取相应的标的详情
         // 标的
