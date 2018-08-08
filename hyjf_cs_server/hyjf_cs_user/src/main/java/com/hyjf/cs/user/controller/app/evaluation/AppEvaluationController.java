@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationBehaviorVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AppEvaluationController, v0.1 2018/7/4 11:19
  */
-@Api(value = "App端风险测评接口",tags = "App端-风险测评接口")
+@Api(value = "App端-风险测评接口",tags = "App端-风险测评接口（老）")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/financialAdvisor")
@@ -88,9 +89,9 @@ public class AppEvaluationController {
         if (userId == null || userId == 0) {
             Map<String, String> map = new HashMap<>();
             //ifEvaluation是否已经调查表示  1是已调查，0是未调查
-            ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 0);
+            ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 0);
             //userError 用户未登录
-            ret.put(AppEvaluationDefine.JSON_USER_LOGIN_ERROR_KEY, AppEvaluationDefine.JSON_USER_LOGIN_ERROR_VLUES);
+            ret.put(CommonConstant.JSON_USER_LOGIN_ERROR_KEY, CommonConstant.JSON_USER_LOGIN_ERROR_VLUES);
             return JSONObject.toJSONString(ret);
         }
         UserEvalationResultVO userEvalationResult = evaluationService.selectUserEvalationResultByUserId(new Integer(userId));
@@ -101,18 +102,18 @@ public class AppEvaluationController {
             Long lNow = GetDate.countDate(new Date(), 5, 1).getTime();
             if (lCreate <= lNow) {
                 //已过期需要重新评测
-                ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 2);
+                ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 2);
             } else {
                 //ifEvaluation是否已经调查表示  1是已调查，0是未调查
-                ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 1);
+                ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 1);
                 //userEvalationResult 测评结果
-                ret.put(AppEvaluationDefine.JSON_USER_EVALATION_RESULT_KEY, userEvalationResult);
+                ret.put(CommonConstant.JSON_USER_EVALATION_RESULT_KEY, userEvalationResult);
             }
         } else {
-            ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 0);
+            ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 0);
         }
         List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
-        ret.put(AppEvaluationDefine.JSON_QUESRION_LIST_KEY, list);
+        ret.put(CommonConstant.JSON_QUESRION_LIST_KEY, list);
         return JSONObject.toJSONString(ret);
     }
 
@@ -130,9 +131,9 @@ public class AppEvaluationController {
         String behaviorId = request.getParameter("behaviorId");
         if (userId == null || userId == 0) {
             //ifEvaluation是否已经调查表示  1是已调查，0是未调查
-            ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 0);
+            ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 0);
             //userError 用户未登录
-            ret.put(AppEvaluationDefine.JSON_USER_LOGIN_ERROR_KEY, AppEvaluationDefine.JSON_USER_LOGIN_ERROR_VLUES);
+            ret.put(CommonConstant.JSON_USER_LOGIN_ERROR_KEY, CommonConstant.JSON_USER_LOGIN_ERROR_VLUES);
             return JSONObject.toJSONString(ret);
         }
         UserEvalationResultVO ueResult = new UserEvalationResultVO();
@@ -142,9 +143,9 @@ public class AppEvaluationController {
             ueResult = (UserEvalationResultVO) returnMap.get("userEvalationResult");
         }
         //ifEvaluation是否已经调查表示  1是已调查，0是未调查
-        ret.put(AppEvaluationDefine.JSON_IF_EVALUATION_KEY, 1);
+        ret.put(CommonConstant.JSON_IF_EVALUATION_KEY, 1);
         //userEvalationResult 测评结果
-        ret.put(AppEvaluationDefine.JSON_USER_EVALATION_RESULT_KEY, evaluationService.createUserEvalationResult(ueResult));
+        ret.put(CommonConstant.JSON_USER_EVALATION_RESULT_KEY, evaluationService.createUserEvalationResult(ueResult));
         return JSONObject.toJSONString(ret);
     }
 

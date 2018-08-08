@@ -99,7 +99,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      */
     @Override
     public JSONObject searchAppProjectList(ProjectListRequest request) {
-        // TODO: 2018/6/20   参数验证
         //CheckUtil.check(CustomConstants.HZT.equals(request.getProjectType()), MsgEnum.ERR_OBJECT_VALUE, "peojectType");
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getPage(), request.getPageSize());
@@ -362,7 +361,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                             borrowRepayPlanBean.setTime(borrowRepayPlan.getRepayTime());
                         }
                         borrowRepayPlanBean.setNumber("第" + (i + 1) + "期");
-                        borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(borrowRepayPlan.getRepayTotal()));
+                        borrowRepayPlanBean.setAccount(DF_FOR_VIEW.format(new BigDecimal(borrowRepayPlan.getRepayTotal())));
                         repayPlanList.add(borrowRepayPlanBean);
                     }
                 }
@@ -373,7 +372,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
              * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
              */
-            int count = amTradeClient.countUserInvest(userId, borrowNid);
+            int count = 0;
+            if (userId != null){
+                count = amTradeClient.countUserInvest(userId, borrowNid);
+            }
             Boolean viewableFlag = false;
             String statusDescribe = "";
             DebtCreditRequest request = new DebtCreditRequest();
@@ -1104,7 +1106,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait) ? "" : "剩余" + borrowAccountWait);
             }
 
-            appProjectType.setBorrowUrl(systemConfig.getWebHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
+            appProjectType.setBorrowUrl(systemConfig.getAppFrontHost() + ProjectConstant.CREDIT_DETAIL + "/" + creditNid);
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 
@@ -1437,7 +1439,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppProjectListCustomizeVO appProjectListCustomize;
         if (!CollectionUtils.isEmpty(planList)) {
             appProjectList = new ArrayList<AppProjectListCustomizeVO>();
-            String host = systemConfig.getWebHost();
+            String host = systemConfig.getAppFrontHost() ;
             for (HjhPlanCustomizeVO entity : planList) {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
@@ -1955,7 +1957,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }else if (status.equals("14")){
                 appProjectType.setStatusName("已还款");
             }
-            appProjectType.setBorrowUrl(systemConfig.getWebHost() + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
+            appProjectType.setBorrowUrl(systemConfig.getAppFrontHost()  + HomePageDefine.BORROW  + listCustomize.getBorrowNid());
             appProjectType.setStatus(listCustomize.getStatus());
             appProjectType.setOnTime(listCustomize.getOnTime());
 

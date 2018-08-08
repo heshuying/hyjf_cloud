@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAppCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditResponse;
 import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
 import com.hyjf.am.response.trade.HjhUserInvestListResponse;
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
@@ -116,10 +118,10 @@ public class HjhDebtCreditController extends BaseController {
     }
 
     @GetMapping("/updateHjhDebtCreditByPK")
-    public Response<Integer> updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
+    public IntegerResponse updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
         HjhDebtCredit hjhDebtCredit =  new HjhDebtCredit();
         BeanUtils.copyProperties(hjhDebtCreditVO, hjhDebtCredit);
-        return new Response(this.hjhDebtCreditService.updateHjhDebtCreditByPK(hjhDebtCredit));
+        return new IntegerResponse(this.hjhDebtCreditService.updateHjhDebtCreditByPK(hjhDebtCredit));
     }
 	/**
 	 * 获取债转承接信息 PrimaryKey
@@ -163,6 +165,17 @@ public class HjhDebtCreditController extends BaseController {
         HjhUserInvestListResponse response = new HjhUserInvestListResponse();
         List<UserHjhInvistListCustomizeVO> list = hjhDebtCreditService.getUserHjhInvestList(params);
         response.setResultList(list);
+        return response;
+    }
+
+    @PostMapping("/selectHjhDebtCreditListByBorrowNidAndStatus")
+    public HjhDebtCreditResponse selectHjhDebtCreditListByBorrowNidAndStatus(@RequestBody DebtCreditRequest request){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        List<HjhDebtCredit> list = hjhDebtCreditService.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            List<HjhDebtCreditVO> resultList = CommonUtils.convertBeanList(list,HjhDebtCreditVO.class);
+            response.setResultList(resultList);
+        }
         return response;
     }
 }

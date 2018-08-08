@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.hyjf.am.trade.dao.mapper.customize.trade.HjhAccountBalanceCustomizeMapper">
+	<!--汇计划资本按天统计及预估表列表 -->
+	<resultMap id="selectHjhAccountBalanceMap" type="com.hyjf.am.vo.trade.HjhAccountBalanceVO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="date" property="date" jdbcType="DATE" />
+		<result column="invest_account" property="investAccount"
+			jdbcType="DECIMAL" />
+		<result column="credit_account" property="creditAccount"
+			jdbcType="DECIMAL" />
+		<result column="reinvest_account" property="reinvestAccount"
+			jdbcType="DECIMAL" />
+		<result column="add_account" property="addAccount" jdbcType="DECIMAL" />
+		<result column="create_user" property="createUser" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="INTEGER" />
+		<result column="update_user" property="updateUser" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="INTEGER" />
+		<result column="del_flg" property="delFlg" jdbcType="TINYINT" />
+	</resultMap>
+	<select id="selectHjhAccountBalanceForActList" resultMap="selectHjhAccountBalanceMap"
+		parameterType="java.util.Date">
+				SELECT
+			DATE_FORMAT('2018-05-25', '%Y-%m-%d') `date`,
+			SUM(i_account) invest_account,
+			SUM(c_account) credit_account,
+			SUM(r_account) reinvest_account,
+			SUM(a_account) add_account,
+			flag flag
+		FROM
+			(
+				SELECT
+					SUM(bt.account) i_account,
+					0 c_account,
+					0 r_account,
+					0 a_account,
+					1 flag -- 原始
+				FROM
+					ht_borrow_tender bt
+				WHERE
+					bt.create_time BETWEEN #{date} AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+				AND bt.accede_order_id IS NOT NULL
+			UNION ALL
+				SELECT
+					0 i_account,
+					SUM(hdct.assign_pay) c_account,
+					0 r_account,
+					0 a_account,
+					2 flag -- 债转
+				FROM
+					ht_hjh_debt_credit_tender hdct
+				WHERE
+					hdct.create_time BETWEEN #{date} AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+			UNION ALL
+				SELECT
+					0 i_account,
+					0 c_account,
+					SUM(bt.account) r_account,
+					0 a_account,
+					3 flag -- 复投原始
+				FROM
+					ht_borrow_tender bt
+				WHERE
+					bt.create_time BETWEEN #{date} AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+				AND bt.tender_type = 1
+				AND bt.accede_order_id IS NOT NULL
+			UNION ALL
+				SELECT
+					0 i_account,
+					0 c_account,
+					SUM(hdct.assign_pay) r_account,
+					0 a_account,
+					3 flag -- 复投债转
+				FROM
+					ht_hjh_debt_credit_tender hdct
+				WHERE
+					hdct.create_time BETWEEN #{date} AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+				AND hdct.tender_type = 1
+			UNION ALL
+				SELECT
+					0 i_account,
+					0 c_account,
+					0 r_account,
+					SUM(ha.accede_account) a_account,
+					4 flag -- 加入计划
+				FROM
+					ht_hjh_accede ha
+				WHERE
+					ha.create_time BETWEEN #{date} AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+		) t
+	</select>
+
+</mapper>

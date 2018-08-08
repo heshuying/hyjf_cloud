@@ -9,12 +9,13 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.result.RiskAssesmentResponse;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
+import com.hyjf.cs.user.vo.UserAnswerRequestBean;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -25,6 +26,9 @@ import java.util.List;
  * @author zhangqingqing
  * @version AppRiskAssesmentController, v0.1 2018/8/3 17:17
  */
+@Api(value = "app端-风险测评",tags = "app端-风险测评（新）")
+@RestController
+@RequestMapping("/hyjf-app")
 public class AppRiskAssesmentController {
 
     private final String TOKEN_ISINVALID_STATUS = "Token失效，请重新登录";

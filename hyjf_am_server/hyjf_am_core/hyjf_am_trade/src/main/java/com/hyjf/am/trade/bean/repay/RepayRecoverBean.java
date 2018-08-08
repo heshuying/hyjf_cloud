@@ -1,13 +1,13 @@
 package com.hyjf.am.trade.bean.repay;
 
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepayRecoverBean extends BorrowRecoverVO implements Serializable {
+public class RepayRecoverBean extends BorrowRecover implements Serializable {
 
     /**
      * 序列化id
@@ -15,6 +15,10 @@ public class RepayRecoverBean extends BorrowRecoverVO implements Serializable {
     private static final long serialVersionUID = -2372632484178256288L;
 
     private BigDecimal recoverTotal;
+
+    private BigDecimal recoverCapitalOld;
+
+    private BigDecimal creditAmountOld;
 
     /**
      * 债转还款
@@ -48,5 +52,21 @@ public class RepayRecoverBean extends BorrowRecoverVO implements Serializable {
 
     public void setHjhCreditRepayList(List<HjhDebtCreditRepayBean> hjhCreditRepayList) {
         this.hjhCreditRepayList = hjhCreditRepayList;
+    }
+
+    public BigDecimal getRecoverCapitalOld() {
+        return recoverCapitalOld;
+    }
+
+    public void setRecoverCapitalOld(BigDecimal recoverCapitalOld) {
+        this.recoverCapitalOld = recoverCapitalOld;
+    }
+
+    public BigDecimal getCreditAmountOld() {
+        return creditAmountOld;
+    }
+
+    public void setCreditAmountOld(BigDecimal creditAmountOld) {
+        this.creditAmountOld = creditAmountOld;
     }
 }

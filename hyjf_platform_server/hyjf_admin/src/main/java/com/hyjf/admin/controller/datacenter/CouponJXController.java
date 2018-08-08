@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class CouponJXController extends BaseController {
 		String sheetName = "加息券列表";
 		DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
 		List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] {"序号", "来源", "已发放数量","已使用数量","已失效数量","使用率","失效率","总收益","已发放收益" ,"待发放收益" ,"累计真实投资金额" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();

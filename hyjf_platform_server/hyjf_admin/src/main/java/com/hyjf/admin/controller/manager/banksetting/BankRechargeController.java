@@ -32,13 +32,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author by xiehuili on 2018/7/19.
  */
-@Api(value = "配置中心银行配置 快捷充值限额",tags ="配置中心银行配置 快捷充值限额")
+@Api(value = "配置中心银行配置-快捷充值限额", tags = "配置中心银行配置-快捷充值限额")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankrecharge")
 public class BankRechargeController extends BaseController {
@@ -47,8 +48,8 @@ public class BankRechargeController extends BaseController {
     @Autowired
     private BankRechargeService bankRechargeService;
 
-    @ApiOperation(value = "配置中心银行配置 快捷充值限额", notes = "查询配置中心快捷充值限额")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心快捷充值限额", notes = "查询配置中心快捷充值限额")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult bankRechargeInit(@RequestBody AdminBankRechargeConfigRequest adminRequest) {
         AdminBankRechargeConfigResponse response=bankRechargeService.bankRechargeInit(adminRequest);
@@ -62,15 +63,15 @@ public class BankRechargeController extends BaseController {
         return new AdminResult<ListResult<BankRechargeLimitConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心银行配置 快捷充值查询", notes = "查询配置中心快捷充值查询")
-    @RequestMapping("/getBankRecordList")
+    @ApiOperation(value = "查询配置中心快捷充值查询", notes = "查询配置中心快捷充值查询")
+    @PostMapping("/getBankRecordList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public List<BankConfigVO> getBankRecordList() {
         //分页查询的时候查询快捷支付银行列表接口
         return bankRechargeService.getBankRecordList();
     }
 
-    @ApiOperation(value = "配置中心银行配置 快捷充值限额", notes = "快捷充值限额详情页面")
+    @ApiOperation(value = "快捷充值限额详情页面", notes = "快捷充值限额详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult  bankRechargeConfigInfo(@RequestBody AdminBankRechargeConfigRequest adminRequest) {
@@ -93,7 +94,7 @@ public class BankRechargeController extends BaseController {
         return new AdminResult<BankRechargeLimitConfigVO>(response.getResult()) ;
     }
 
-    @ApiOperation(value = "配置中心银行配置 快捷充值限额", notes = "快捷充值限额添加")
+    @ApiOperation(value = "快捷充值限额添加", notes = "快捷充值限额添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBankRechargeConfig(@RequestBody  AdminBankRechargeConfigRequest adminRequest)  {
@@ -113,7 +114,7 @@ public class BankRechargeController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心银行配置 快捷充值限额", notes = "快捷充值限额修改")
+    @ApiOperation(value = "快捷充值限额修改", notes = "快捷充值限额修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankRechargeConfig(@RequestBody AdminBankRechargeConfigRequest adminRequest)  {
@@ -121,7 +122,7 @@ public class BankRechargeController extends BaseController {
         // 调用校验
         if (validatorFieldCheck(modelAndView, adminRequest) != null) {
             // 失败返回
-            return new AdminResult<>(FAIL, "校验字段填写为空或长度太长，不符合要求         !");
+            return new AdminResult<>(FAIL, "校验字段填写为空或长度太长，不符合要求 !");
         }
         // // 根据id更新
         if (!ValidatorFieldCheckUtil.validateRequired(modelAndView, "id", String.valueOf(adminRequest.getId()))) {
@@ -137,7 +138,7 @@ public class BankRechargeController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心快捷充值限额", notes = "快捷充值限额删除")
+    @ApiOperation(value = "快捷充值限额删除", notes = "快捷充值限额删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankRechargeConfig(@RequestBody AdminBankRechargeConfigRequest adminRequest)  {
@@ -159,7 +160,7 @@ public class BankRechargeController extends BaseController {
      * 导出功能
      *
      */
-    @ApiOperation(value = "配置中心快捷充值限额", notes = "快捷充值限额导出")
+    @ApiOperation(value = "快捷充值限额导出", notes = "快捷充值限额导出")
     @PostMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletResponse response ,@RequestBody AdminBankRechargeConfigRequest adminRequest) throws Exception {
@@ -170,7 +171,7 @@ public class BankRechargeController extends BaseController {
         List<BankRechargeLimitConfigVO> resultList  = this.bankRechargeService.exportRecordList(bankRecharge);
         //获取银行列表(快捷支付卡)
         List<BankConfigVO> bankList = bankRechargeService.getBankRecordList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] {"序号", "银行", "接入方式","银行卡类型","单笔充值限额（元）","单卡单日累计限额（元）","状态" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

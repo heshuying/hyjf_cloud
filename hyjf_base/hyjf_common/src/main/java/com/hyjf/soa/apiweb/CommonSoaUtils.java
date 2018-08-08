@@ -4,13 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
-import com.hyjf.common.util.PropertiesConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +33,9 @@ public class CommonSoaUtils {
 
 	// 优惠券投资接口
 	private static final String  SYNBALANCE= "/hyjf-api/synbalance/synbalance.json";
+
+	/** 权限 CONTROLLOR @RequestMapping值 */
+	public static final String REQUEST_MAPPING = "/bank/merchant/account";
 
 	private static ExecutorService exec = Executors.newFixedThreadPool(50);
     

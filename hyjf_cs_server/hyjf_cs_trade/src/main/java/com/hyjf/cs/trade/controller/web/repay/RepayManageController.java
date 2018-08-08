@@ -92,24 +92,28 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "平台登录密码校验", notes = "平台登录密码校验")
     @ApiImplicitParam(name = "paraMap", value = "{password:string}", dataType = "Map")
     @PostMapping(value = "/pwd_check", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> pwdCheck(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap){
-        WebResult<Map<String,Object>> result = new WebResult<>();
+    public WebResult<String> pwdCheck(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> paraMap){
+        WebResult<String> result = new WebResult<>();
         WebViewUserVO userVO = repayManageService.getUsersByToken(token);
         if(userVO == null){
-            result.setStatusInfo(WebResult.FAIL, "用户不存在");
+            result.setData("false");
+            result.setStatusDesc("用户不存在");
             return result;
         }
         String password = paraMap.get("password");
         if(StringUtils.isBlank(password)){
-            result.setStatusInfo(WebResult.FAIL, "请输入密码");
+            result.setData("false");
+            result.setStatusDesc("请输入密码");
             return result;
         }
 
         // 密码校验
         if(!repayManageService.checkPassword(userVO.getUserId(),password)){
-            result.setStatusInfo(WebResult.FAIL, "密码不正确");
+            result.setData("false");
+            result.setStatusDesc("密码不正确");
             return result;
         }
+        result.setData("true");
         return result;
     }
 
@@ -463,7 +467,7 @@ public class RepayManageController extends BaseTradeController {
      * @throws Exception
      */
     @ApiOperation(value = "业务处理结果的异步回调", notes = "业务处理结果的异步回调")
-    @RequestMapping("/repayResultReturn")
+    @PostMapping("/repayResultReturn")
     public String repayResultReturn(HttpServletRequest request, HttpServletResponse response, @RequestBody BankCallBean bean) throws Exception {
 
         logger.info("批次还款请求,业务处理结果的异步回调开始");

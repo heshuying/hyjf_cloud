@@ -8,15 +8,7 @@ public class SystemConfig {
 	
 	@Value("${hyjf.env.test}")
 	private boolean envTest;
-
-	public boolean isEnvTest() {
-		return envTest;
-	}
-
-	public void setEnvTest(boolean envTest) {
-		this.envTest = envTest;
-	}
-
+	
     @Value("${hostFtp.hostName}")
     public String ftpHostName;
 
@@ -56,6 +48,9 @@ public class SystemConfig {
      /** 风车理财回调服务器url */
      @Value("${wrb.callback.notify.url}")
      private String WRB_CALLBACK_NOTIFY_URL;
+     
+    @Value("${hyjf.mail.loadrepay}")
+    private String[] loadRepayMailAddrs;
 
     public String getBankInstcode() {
         return bankInstcode;
@@ -160,4 +155,22 @@ public class SystemConfig {
     public void setWRB_CALLBACK_NOTIFY_URL(String WRB_CALLBACK_NOTIFY_URL) {
         this.WRB_CALLBACK_NOTIFY_URL = WRB_CALLBACK_NOTIFY_URL;
     }
+
+	public boolean isEnvTest() {
+		return envTest;
+	}
+
+	public void setEnvTest(boolean envTest) {
+		this.envTest = envTest;
+	}
+
+	public String[] getLoadRepayMailAddrs() {
+		return loadRepayMailAddrs;
+	}
+
+	public void setLoadRepayMailAddrs(String[] loadRepayMailAddrs) {
+		this.loadRepayMailAddrs = loadRepayMailAddrs;
+	}
+	
+
 }

@@ -362,8 +362,8 @@ public class WebPassWordController {
     }
 
     /**
-     * @Description 查询交易密码失败原因
-     * @Author sunss
+     * @Description 调用银行失败原因
+     * @Author
      */
     @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
     @RequestMapping("/searchFiledMess")

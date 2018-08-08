@@ -83,4 +83,10 @@ public class  CsMessageClientImpl  implements CsMessageClient {
         return null;
     }
 
+    @Override
+    public String getRetCode(String logOrdId) {
+        String response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/search/getRetCode/" + logOrdId,String.class).getBody();
+        return response;
+    }
+
 }

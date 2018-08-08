@@ -135,6 +135,7 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     private String couponAccesskey;
 
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -436,4 +437,5 @@ public class SystemConfig {
     public void setCouponAccesskey(String couponAccesskey) {
         this.couponAccesskey = couponAccesskey;
     }
+
 }

@@ -460,6 +460,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         planAccede.setCreateUser(userId);
         //初始未未删除
         planAccede.setDelFlag(0);
+		//汇计划三期要求加入计划存当时的预期年化收益率 LIBIN PC  微服务三端共用此方法
+		if(plan.getExpectApr() != null){
+			planAccede.setExpectApr(plan.getExpectApr());
+		}
         // 给加入明细用的
         request.setPlanOrderId(planOrderId);
         request.setEarnings(earnings);

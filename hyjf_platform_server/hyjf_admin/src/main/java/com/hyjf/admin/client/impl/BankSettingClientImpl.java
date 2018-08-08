@@ -55,7 +55,7 @@ public class BankSettingClientImpl implements BankSettingClient {
     @Override
     public List<JxBankConfigVO> getRecordList(JxBankConfigVO bank, int limitStart, int limitEnd) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/banksetting/searchForInsert",
-                bank, List.class);
+                bank, AdminBankSettingResponse.class).getResultList();
     }
 
     /**

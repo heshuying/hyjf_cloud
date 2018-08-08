@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.UtmRegHandle;
+import com.hyjf.cs.trade.mq.handle.UtmRegHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
 
 /**

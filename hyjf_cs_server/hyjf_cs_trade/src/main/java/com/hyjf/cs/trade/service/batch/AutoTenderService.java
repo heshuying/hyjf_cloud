@@ -15,7 +15,16 @@ import java.util.List;
  */
 public interface AutoTenderService extends BaseTradeService {
 
+    /**
+     * 取得自动投资用加入计划列表
+     * @return
+     */
     List<HjhAccedeVO> selectPlanJoinList();
 
-    boolean AutoTenderForOneAccede(HjhAccedeVO hjhAccede);
+    /**
+     * 汇计划加入订单 自动投资/复投
+     * @param hjhAccede
+     * @return
+     */
+    boolean autoTenderForOneAccede(HjhAccedeVO hjhAccede);
 }

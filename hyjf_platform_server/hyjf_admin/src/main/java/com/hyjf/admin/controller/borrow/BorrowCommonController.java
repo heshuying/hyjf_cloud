@@ -2,6 +2,7 @@ package com.hyjf.admin.controller.borrow;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -372,7 +373,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "抵押车辆模板";
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "车辆品牌", "型号", "车系", "颜色", "出厂年份", "产地", "购买日期(例：2016-01-04)", "购买价格（元）", "是否有保险(否|有)", "评估价（元）","车牌号","车辆登记地","车架号" };
 		// 声明一个工作薄
@@ -493,7 +494,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "抵押房产模板";
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "房产类型", "房产位置", "建筑面积", "市值", "资产数量","评估价值（元）","资产所属" };
 		// 声明一个工作薄
@@ -598,7 +599,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "认证信息模板";
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "展示顺序", "认证项目名称", "认证时间(例：2016-01-04)" };
 		// 声明一个工作薄
@@ -961,7 +962,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 				String sheetName = "借款内容填充模板";
 
-				String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+				String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 				String[] titles = new String[] { "" };
 				// 声明一个工作薄

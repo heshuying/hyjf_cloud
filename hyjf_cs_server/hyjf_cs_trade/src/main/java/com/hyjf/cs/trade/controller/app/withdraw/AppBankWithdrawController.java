@@ -1,33 +1,41 @@
 package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.*;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.WebViewUser;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
+import com.hyjf.cs.trade.vo.AppWithdrawResultVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author pangchengchao
@@ -35,14 +43,214 @@ import java.util.Map;
  */
 @Api(value = "app端用户提现接口",tags = "app端用户提现接口")
 @Controller
-@RequestMapping("/hyjf-app/withdraw")
+@RequestMapping("/hyjf-app/bank/user/withdraw")
 public class AppBankWithdrawController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppBankWithdrawController.class);
     @Autowired
     private BankWithdrawService bankWithdrawService;
+    @Autowired
+    SystemConfig systemConfig;
+    /**
+     * 提现规格URL
+     */
+    private final String WITHDRAW_RULE_URL = "/user/withdraw/withdrawRule";
+
+    /**
+     * logo的路径
+     */
+    private final String BANK_LOG_LOGO_PATH = "/data/upfiles/filetemp/image/bank_log.png";
+    /**
+     * 第三方提供的开户行查询url
+     */
+    private final String THIRD_QUERY_OPEN_BANK_URL = "http://www.tui78.com/bank";
+    /**
+     * 获取提现信息
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getInfoAction")
+    @ApiOperation(value = "获取用户提现信息", notes = "获取用户充值信息")
+    public AppWithdrawResultVO getCashInfo(@RequestHeader(value = "token") String token,HttpServletRequest request) {
+
+        AppWithdrawResultVO result = new AppWithdrawResultVO(AppWithdrawResultVO.APP_SUCCESS, AppWithdrawResultVO.SUCCESS_MSG, "/hyjf-app/bank/user/withdraw/getInfoAction");
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        String order = request.getParameter("order");
+        // 提现金额
+        String getcash = request.getParameter("getcash");
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform)
+                || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString)
+                || Validator.isNull(order)) {
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("请求参数非法");
+            return result;
+        }
+
+        //判断金额格式
+        if(Validator.isNotNull(getcash)){
+            Pattern pattern=Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$"); // 判断小数点后2位的数字的正则表达式
+            Matcher match=pattern.matcher(getcash);
+            if(!match.matches()){
+                result.setStatus(CustomConstants.APP_STATUS_FAIL);
+                result.setStatusDesc("提现金额输入格式有误");
+                return result;
+            }
+        }
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("请求参数非法");
+            return result;
+        }
+
+        // 验证Order
+        if (!SecretUtil.checkOrder(key, token, randomString, order)) {
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("请求参数非法");
+            return result;
+        }
+
+        // 提现规则静态页面的url
+
+        result.setUrl(super.getFrontHost(systemConfig,platform) + WITHDRAW_RULE_URL);
+
+        // 取得用户iD
+        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
+        Integer userId = user.getUserId();
+
+        // 获取用户信息
+        logger.info("提现可用余额："+result.getTotal());
+        // 取得用户当前余额
+        AccountVO account = this.bankWithdrawService.getAccountByUserId(userId);
 
 
+        if (account == null) {
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("您的账户信息存在异常，请联系客服人员处理。");
+            return result;
+        } /*else {
+            //先判断取现金额是否大于可用余额
+            if (StringUtils.isNotBlank(getcash) && new BigDecimal(getcash).compareTo(account.getBankBalance()) > 0) {
+                result.setStatus("1");
+                result.setStatusDesc("提现金额大于可用余额");
+                return result;
+            }
+
+        }*/
+        result.setTotal(CommonUtils.formatAmount(version, account.getBankBalance()));
+        String phoneNum = "";
+        // 取得银行卡信息
+        BankCardVO bankCard = bankWithdrawService.getBankCardVOByUserId(userId);
+        if (bankCard!=null) {
+            // 发卡行的名称
+            result.setBank(bankCard.getBank());
+            // 卡号
+            String cardNo = bankCard.getCardNo();
+            result.setCardNo(cardNo);
+            result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
+            BanksConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
+            if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
+                result.setLogo(systemConfig.getWebHost() + banksConfig.getBankIcon());
+            } else {
+                // 应前台要求，logo路径给绝对路径
+                result.setLogo(systemConfig.getWebHost()  + BANK_LOG_LOGO_PATH);
+            }
+
+            BigDecimal feeWithdraw = BigDecimal.ONE;
+            String feeTemp = bankWithdrawService.getWithdrawFee(userId, cardNo);
+            if (StringUtils.isNotEmpty(feeTemp)) {
+                feeWithdraw = new BigDecimal(feeTemp);
+            }
+
+            logger.info("提现金额 getcash: {}", getcash);
+            //判断金额是否合法优化 add by cwyang 2018-4-2
+            boolean legalAmount = isLegalAmount(getcash);
+            // 如果提现金额是0
+            if ("0".equals(getcash) || StringUtils.isEmpty(getcash) || !CommonUtils.isNumber(getcash) || !legalAmount) {
+                result.setButtonWord("提现");
+                // 提现手续费
+                result.setFee("0.00 元");
+                // 提现金额
+                result.setBalance("0.00 元");
+            } else {
+                result.setButtonWord("确认提现".concat(CommonUtils.formatAmount(version, getcash)).concat("元"));
+
+                String balance = "";
+                if ((new BigDecimal(getcash).subtract(feeWithdraw)).compareTo(BigDecimal.ZERO) < 0) {
+                    balance = "0.00";
+                } else {
+                    // 扣除手续费后的提现金额
+                    BigDecimal transAmt = new BigDecimal(getcash).subtract(feeWithdraw);
+                    balance = CommonUtils.formatAmount(version, transAmt);
+
+                    // 大额支付需要传开户行号
+                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50000)) >= 0)) {
+                        // 是否是大额提现表示 0:非 1:是
+                        result.setIsDisplay("1");
+                        // 开户行号
+                        String payAllianceCode = bankCard.getPayAllianceCode();
+                        logger.info("查询开户行号：{}", payAllianceCode);
+                        result.setOpenCardBankCode(payAllianceCode);
+                        // 未查到到开户行号，则提供第三方网页引导用户自助查询
+                        result.setOpenCardBankCodeUrl(THIRD_QUERY_OPEN_BANK_URL);
+                    } else {
+                        result.setIsDisplay("0");
+                    }
+                }
+                // 提现手续费
+                result.setFee(CommonUtils.formatAmount(version, feeWithdraw) + " 元");
+                // 提现金额
+                result.setBalance(balance + " 元");
+            }
+
+            phoneNum = bankCard.getMobile();
+
+        }else{
+            result.setStatus("1");
+            result.setStatusDesc("您未绑定银行卡，请先绑卡。");
+            return result;
+        }
+
+        if (StringUtils.isBlank(phoneNum)) {
+            // 如果用户未绑卡则取平台手机号
+            phoneNum = user.getMobile();
+        }
+        result.setPhoneNumber(phoneNum);
+        result.setNeedSMSCode("0");
+        return result;
+
+    }
+
+    /**
+     * 判断金额是否合法
+     *
+     * @param getcash
+     * @return
+     */
+    private boolean isLegalAmount(String getcash) {
+
+        try {
+            BigDecimal amount = new BigDecimal(getcash);
+        } catch (Exception e) {
+            logger.info("--------提现金额错误---------");
+            return false;
+        }
+
+        return true;
+    }
     /**
      * 用户银行提现
      * @Description
@@ -76,27 +284,6 @@ public class AppBankWithdrawController extends BaseTradeController {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
         return modelAndView;
-    }
-
-    /**
-     * 用户银行提现同步回调
-     * @Description
-     * @Author pangchengchao
-     * @Version v0.1
-     * @Date
-     */
-    @ApiOperation(value = "用户银行提现同步回调", notes = "用户银行提现同步回调")
-    @PostMapping("/userBankWithdrawReturn")
-    public Map<String, String> userBankWithdrawReturn(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request,
-                                                      @ModelAttribute BankCallBean bean) {
-        logger.info("[app用户银行提现同步回调开始]");
-        logger.info("app端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
-        String isSuccess = request.getParameter("isSuccess");
-        String withdrawmoney = request.getParameter("withdrawmoney");
-        String wifee = request.getParameter("wifee");
-        Map<String, String> result = bankWithdrawService.userBankWithdrawReturn(bean, isSuccess,wifee,withdrawmoney);
-        logger.info("[app用户银行提现同步回调结束]");
-        return result;
     }
 
     /**

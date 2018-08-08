@@ -1,6 +1,7 @@
 package com.hyjf.pay.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -56,6 +57,14 @@ public abstract class BaseMongoDao<T> {
 	
 	public void setMongoTemplate(MongoTemplate mongoTemplate){
 		this.mongoTemplate = mongoTemplate;
+	}
+	
+	public void findAndModify(Query query,Update update){
+		
+//		FindAndModifyOptions fo = new FindAndModifyOptions();
+//		fo.isRemove();
+		
+		this.mongoTemplate.findAndModify(query, update, getEntityClass(), getTableName());
 	}
 	
 	/**

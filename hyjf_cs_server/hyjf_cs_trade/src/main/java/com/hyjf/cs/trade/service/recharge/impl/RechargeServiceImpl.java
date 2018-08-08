@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -153,7 +154,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				//redis防重校验
-				boolean reslut = RedisUtils.tranactionSet("recharge_orderid" + orderId, 10);
+				boolean reslut = RedisUtils.tranactionSet(RedisConstants.RECHARGE_ORDERID + orderId, 10);
 				if(!reslut){
 					return jsonMessage("充值成功", "0");
 				}
@@ -229,7 +230,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 							}
 						}
 					} catch (Exception e) {
-						System.err.println(e);
+						logger.error("充值错误，错误原因："+e);
 					}
 				}
 			} else {
@@ -364,7 +365,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		String name = userInfo.getTruename();
 		// 拼装参数 调用江西银行
 		String retUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeError";
-		String bgRetUrl = systemConfig.getWebHost() + "/recharge/bgreturn" + "?phone="+mobile;
+		String bgRetUrl = systemConfig.getWebHost() + "/bank/user/userDirectRecharge/bgreturn" + "?phone="+mobile;
 		String successfulUrl = super.getFrontHost(systemConfig,"0")+"/user/rechargeSuccess?money="+money;
 
 
@@ -504,7 +505,11 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		AccountRechargeVO vo = amTradeClient.selectByOrderId(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
 		Map<String,String> map = new HashedMap();
-		map.put("error",vo.getMessage());
+		if(vo!=null){
+			map.put("error",vo.getMessage());
+		}else{
+			map.put("error","系统异常，请稍后再试！");
+		}
 		result.setData(map);
 		return result;
 	}

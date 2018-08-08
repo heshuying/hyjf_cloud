@@ -184,7 +184,7 @@ public class AccedeListController extends BaseController{
 		// 表格sheet名称
 		String sheetName = "加入明细";
 		@SuppressWarnings("deprecation")
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();

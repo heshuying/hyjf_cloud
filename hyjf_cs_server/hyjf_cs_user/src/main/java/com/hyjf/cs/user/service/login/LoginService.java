@@ -5,7 +5,7 @@ package com.hyjf.cs.user.service.login;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.cs.user.controller.app.login.UserParameters;
+import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.BaseUserService;
 
 import javax.servlet.http.HttpServletRequest;

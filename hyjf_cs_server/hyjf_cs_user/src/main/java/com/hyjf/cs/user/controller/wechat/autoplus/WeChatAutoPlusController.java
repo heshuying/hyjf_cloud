@@ -13,7 +13,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.app.autoplus.AutoPlusResultBean;
+import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;

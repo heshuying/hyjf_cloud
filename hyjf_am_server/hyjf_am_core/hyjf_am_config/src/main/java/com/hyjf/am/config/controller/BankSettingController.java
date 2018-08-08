@@ -84,13 +84,19 @@ public class BankSettingController {
      * @return
      */
     @RequestMapping("/searchForInsert")
-    public List<JxBankConfigVO> searchForInsert(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response = new AdminBankSettingResponse();
-            JxBankConfig bc = new JxBankConfig();
-            bc.setBankName(adminRequest.getBankName());
-            List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
-            List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
-        return jxBankConfigList;
+    public AdminBankSettingResponse searchForInsert(@RequestBody AdminBankSettingRequest adminRequest) {
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+        JxBankConfig bc = new JxBankConfig();
+        bc.setBankName(adminRequest.getBankName());
+        List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
+        List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
+        if(CollectionUtils.isEmpty(jxBankConfigVO)){
+            response.setResultList(jxBankConfigVO);
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setRtn(Response.FAIL_MSG);
+        return response;
     }
 
     /**

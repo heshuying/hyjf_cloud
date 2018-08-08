@@ -511,6 +511,7 @@
             <columnOverride column="extra_yield_repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
+			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1193,6 +1194,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="inst_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="repay_capital_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_hjh_label" domainObjectName="HjhLabel">
@@ -1406,7 +1408,6 @@
         </table>
 
         <table tableName="ht_r_user" domainObjectName="RUser">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

@@ -30,7 +30,7 @@ import javax.validation.Valid;
  */
 @Api(tags = "APP端项目列表")
 @RestController
-@RequestMapping(ProjectConstant.REQUEST_HOME)
+@RequestMapping(ProjectConstant.REQUEST_HOME )
 public class AppProjectListController extends BaseTradeController {
 
     @Autowired
@@ -43,7 +43,7 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端散标列表", notes = "APP投资散标列表")
-    @PostMapping(value = "/projectlist/borrowProjectList", produces = "application/json; charset=utf-8")
+    @PostMapping(value ="/projectlist/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object homeBorrowProjectList(@ModelAttribute @Valid ProjectListRequest request) {
         // controller 不做业务处理
         JSONObject result = appProjectListService.searchAppProjectList(request);
@@ -52,13 +52,13 @@ public class AppProjectListController extends BaseTradeController {
 
     /**
      * app端获取散标投资详情
-     *
+     * 原接口：com.hyjf.app.project.BorrowProjectController.searchProjectDetail()
      * @param param
      * @return
      */
     @ApiOperation(value = "APP端散标详情", notes = "APP端散标详情")
     @ApiImplicitParam(name = "param", value = "{borrowId:string,borrowType:string<1是债转,0 普通>}", dataType = "Map")
-    @PostMapping(value = "/borrow/{borrowId}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/borrow/{borrowId}", produces = "application/json; charset=utf-8")
     public Object borrowProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "token", required = false) String token) {
         // controller 不做业务处理
         JSONObject result = appProjectListService.getAppProjectDetail(borrowId,request, token);
@@ -71,7 +71,7 @@ public class AppProjectListController extends BaseTradeController {
      * 原接口:com.hyjf.app.project.BorrowProjectController.searchProjectInvestList()
      */
     @ApiOperation(value = "APP端散标投资记录", notes = "APP端散标投资记录")
-    @PostMapping(value = "/borrow/{borrowId}/investRecord", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/borrow/{borrowId}/investRecord", produces = "application/json; charset=utf-8")
     public JSONObject searchProjectInvestList(@PathVariable("borrowId") String borrowNid, HttpServletRequest request, HttpServletResponse response) {
         JSONObject info = new JSONObject();
         Integer currentPage = 1;
@@ -121,7 +121,7 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端债转详情", notes = "APP端债转详情")
-    @PostMapping(value = "/transfer/{transferId}", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/transfer/{transferId}", produces = "application/json; charset=utf-8")
     public Object getCreditDetail(@PathVariable String transferId , @RequestHeader(value = "token", required = false) String token) {
         JSONObject result= appProjectListService.getAppCreditDetail(transferId, token);
         return result;
@@ -133,7 +133,7 @@ public class AppProjectListController extends BaseTradeController {
      *  com.hyjf.app.user.transfer.AppTransferController.investRecord()
      */
     @ApiOperation(value="APP端债转承接记录",notes="APP端债转承接记录")
-    @PostMapping(value = "/transfer/{transferId}/investRecord", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/transfer/{transferId}/investRecord", produces = "application/json; charset=utf-8")
     public BaseResultBeanFrontEnd investRecord(@PathVariable("transferId") String transferId, Integer currentPage, Integer pageSize) {
         return appProjectListService.investRecord(transferId,currentPage,pageSize);
     }
@@ -170,7 +170,7 @@ public class AppProjectListController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "APP端计划详情", notes = "APP端计划详情")
-    @PostMapping(value ="/plan/{planId}", produces = "application/json; charset=utf-8")
+    @GetMapping(value ="/plan/{planId}", produces = "application/json; charset=utf-8")
     public Object getPlanDetail(@PathVariable @Valid String planId , @RequestHeader(value = "token", required = false) String token) {
          JSONObject result = appProjectListService.getAppPlanDetail(planId, token);
         return result;
@@ -181,7 +181,7 @@ public class AppProjectListController extends BaseTradeController {
      * com.hyjf.app.hjhplan.HjhPlanController.searchHjhPlanBorrow()
      */
     @ApiOperation(value = "APP端计划标的组成", notes = "APP端计划标的组成")
-    @RequestMapping(value = "/plan/{planId}/borrowComposition",produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/plan/{planId}/borrowComposition",produces = "application/json; charset=utf-8")
     public HjhPlanBorrowResultBean searchHjhPlanBorrow(
             @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId) {
@@ -195,7 +195,7 @@ public class AppProjectListController extends BaseTradeController {
      * com.hyjf.wechat.controller.hjh.WxHjhPlanController.searchHjhPlanAccede()
      */
     @ApiOperation(value = "APP端汇计划加入记录", notes = "APP端汇计划加入记录")
-    @RequestMapping(value = "/plan/{planId}/investRecord",produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/plan/{planId}/investRecord",produces = "application/json; charset=utf-8")
     public HjhPlanAccedeResultBean searchHjhPlanAccede(
             @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId) {
