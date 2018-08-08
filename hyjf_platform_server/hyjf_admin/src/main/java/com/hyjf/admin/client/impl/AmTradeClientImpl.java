@@ -27,6 +27,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -3070,7 +3071,6 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
-
     /**
      * 计划退出查询判断标的是否还款
      * BorrowNidEqualTo(borrowNid)
@@ -3359,6 +3359,35 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountIsSetPassword/"+accountId+"/"+flag, Integer.class)
                 .getBody();
     }
+
+
+    /**
+     * 汇计划 - 计划还款 - 统计
+     * @param repayRequest
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public Integer getRepayCount(HjhRepayRequest repayRequest) {
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/getRepayCount", repayRequest, Integer.class).getBody();
+    }
+
+    /**
+     * 获取汇计划 -  计划还款(计划退出)列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
+        HjhRepayResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepayList", request, HjhRepayResponse.class).getBody();
+
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     @Override
     public AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest){
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList",adminRequest,AdminBorrowFlowResponse.class)
@@ -4161,6 +4190,20 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
 
+    /**
+     * 指定指端检索 计划还款列表
+     * @param accedeOrderId
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId) {
+        HjhRepayResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepaymentDetails/" + accedeOrderId, HjhRepayResponse.class).getBody();
+        if (response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
 
     @Override
     public Boolean updateAccountCallbackRecharge(Map<String, Object> params) {
@@ -4173,7 +4216,6 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return false;
     }
-
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
         HjhInstConfigResponse response = restTemplate
@@ -4238,34 +4280,6 @@ public class AmTradeClientImpl implements AmTradeClient{
         return null;
     }
 
-    @Override
-    public Integer getRepayCount(HjhRepayRequest repayRequest) {
-        return restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/getRepayCount", repayRequest, Integer.class).getBody();
-    }
-
-    @Override
-    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
-        HjhRepayResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepayList", request, HjhRepayResponse.class).getBody();
-
-        if (response != null){
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
-     * 通过 accedeOrderId 精确检索还款明细
-     * @param accedeOrderId
-     * @return
-     */
-    @Override
-    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId) {
-        HjhRepayResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepaymentDetails/" + accedeOrderId, HjhRepayResponse.class).getBody();
-        if (response != null){
-            return response.getResultList();
-        }
-        return null;
-    }
 
     /**
      * 查询配置中心保证金配置
@@ -4439,5 +4453,45 @@ public class AmTradeClientImpl implements AmTradeClient{
 
 
 
+
+    @Override
+    public int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount) {
+        Integer response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountByCode",bankMerchantAccount, Integer.class)
+                .getBody();
+        return response;
+    }
+
+    /**
+	 * 查询金额总计
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
+		HjhCommissionResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
+						HjhCommissionResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+    /**
+	 * 查询汇计划提成是否已经发放
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids) {
+		TenderCommissionResponse response = restTemplate
+	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryTenderCommissionByPrimaryKey/" + ids, TenderCommissionResponse.class).getBody();
+	    if (response != null) {
+	        return response.getResult();
+	    }
+		return null;
+	}
 }
 

@@ -49,15 +49,7 @@ public interface BorrowInvestService extends BaseService {
      * @param borrowInvestRequest
      * @return
      */
-    List<BorrowInvestCustomize> exportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
-
-    /**
-     * 投资金额合计值取得
-     *
-     * @param borrowInvestRequest
-     * @return
-     */
-    String sumBorrowInvest(BorrowInvestRequest borrowInvestRequest);
+    List<BorrowInvestCustomize> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
      * 获取用户投资协议

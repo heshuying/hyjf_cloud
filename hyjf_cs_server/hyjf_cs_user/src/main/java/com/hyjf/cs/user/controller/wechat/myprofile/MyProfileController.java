@@ -15,17 +15,16 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
 import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
+import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ import java.util.List;
  * @version MyProfileController, v0.1 2018/7/3 15:52
  */
 @Api(value = "wechat端账户总览",tags = "wechat端账户总览")
-@Controller
+@RestController
 @RequestMapping("/hyjf-wechat/myprofile")
 public class MyProfileController extends BaseUserController {
 
@@ -52,9 +51,7 @@ public class MyProfileController extends BaseUserController {
     private SystemConfig systemConfig;
 
 
-    @SignValidate
     @RequestMapping("/profile")
-    @ResponseBody
     public WeChatResult myProfile(HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
@@ -65,7 +62,7 @@ public class MyProfileController extends BaseUserController {
 
         String trueUserName = myProfileService.getUserTrueName(userId);
 
-        MyProfileVO.UserAccountInfo userAccountInfo = myProfileVO.new UserAccountInfo();
+        UserAccountInfoVO userAccountInfo = new UserAccountInfoVO();
 
         userAccountInfo.setTrueUserName(trueUserName);
 
@@ -99,9 +96,7 @@ public class MyProfileController extends BaseUserController {
     }
 
 
-    @SignValidate
     @GetMapping("/couponlist")
-    @ResponseBody
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();
         Integer userId = requestUtil.getRequestUserId(request);

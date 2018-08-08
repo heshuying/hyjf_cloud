@@ -8,13 +8,11 @@ import com.hyjf.admin.service.finance.withdraw.WithdrawService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +51,7 @@ public class WithdrawServiceImpl extends BaseAdminServiceImpl implements Withdra
     }
 
     @Override
-    public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) throws Exception {
+    public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) {
         return false;
     }
 }

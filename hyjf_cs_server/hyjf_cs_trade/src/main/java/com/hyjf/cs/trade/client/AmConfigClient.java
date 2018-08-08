@@ -43,4 +43,6 @@ public interface AmConfigClient {
 	 * @Date 2018/6/5 15:13
 	 */
 	BanksConfigVO getBankNameByBankId(String bankId);
+
+    List<BanksConfigVO> getRechargeQuotaLimit();
 }

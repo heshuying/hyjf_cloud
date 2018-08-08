@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.HjhAccountBalanceCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.admin.HjhInfoAccountBalanceCustomizeMapper;
 import com.hyjf.am.trade.service.admin.AccountBalanceService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
@@ -19,7 +19,7 @@ public class AccountBalanceServiceImpl extends BaseServiceImpl implements Accoun
 
 
     @Autowired
-    protected HjhAccountBalanceCustomizeMapper hjhInfoAccountBalanceCustomizeMapper;
+    protected HjhInfoAccountBalanceCustomizeMapper hjhInfoAccountBalanceCustomizeMapper;
 
     @Override
     public int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request) {

@@ -14,7 +14,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
-import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ResultEnum;
@@ -62,7 +61,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param mobile
      * @return
      */
-    @SignValidate
     @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
     @RequestMapping(value = "/sendcode.do")
     @ResponseBody
@@ -103,7 +101,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param response
      * @return
      */
-    @SignValidate
     @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
     @RequestMapping(value = "userAuthCredit.page")
     public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response){
@@ -150,7 +147,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,@ModelAttribute BankCallBean bean, HttpServletRequest request) {
         bean.convert();
@@ -191,7 +187,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param response
      * @return
      */
-    @SignValidate
     @ApiOperation(value = "自动投资授权接口")
     @RequestMapping(value = "/userAuthInves.page")
     public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
@@ -242,7 +237,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         bean.convert();

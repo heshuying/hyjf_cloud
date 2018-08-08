@@ -10,6 +10,7 @@ import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -87,4 +88,16 @@ public interface BankMerchantAccountService {
      * @date 2018/8/7 19:29
      */
     void updateBankAccountListFailByOrderId(String orderId);
+
+    /**
+     * 更新处理
+     * @param accountCode
+     * @param currBalance
+     * @param balance
+     * @param frost
+     * @return
+     */
+    int updateBankMerchantAccount(String accountCode, BigDecimal currBalance, BigDecimal balance, BigDecimal frost);
+
+    BigDecimal getBankBalance(Integer userId, String accountId);
 }

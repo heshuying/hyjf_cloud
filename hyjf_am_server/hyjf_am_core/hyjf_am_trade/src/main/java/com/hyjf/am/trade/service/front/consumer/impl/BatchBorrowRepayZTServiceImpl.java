@@ -43,13 +43,16 @@ import com.hyjf.am.trade.dao.model.auto.BorrowTenderExample;
 import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
-import com.hyjf.am.trade.dao.model.auto.CreditTenderExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.trade.mq.producer.CouponRepayMessageProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.mq.producer.WrbCallBackProducer;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -89,6 +92,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
     @Autowired
     SystemConfig systemConfig;
+	
+	@Autowired
+	private AccountWebListProducer accountWebListProducer;
+	
+	@Autowired
+	private CouponRepayMessageProducer couponRepayMessageProducer;
+	
+	@Autowired
+	private WrbCallBackProducer wrbCallBackProducer;
     
     
 	@Override
@@ -1466,78 +1478,25 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 管理费大于0时,插入网站收支明细
 		if (manageFee.compareTo(BigDecimal.ZERO) > 0) {
 			// 插入网站收支明细记录
+			AccountWebListVO accountWebList = new AccountWebListVO();
+			accountWebList.setOrdid(creditRepay.getAssignNid() + "_" + periodNow);// 订单号
+			accountWebList.setBorrowNid(borrowNid); // 投资编号
+			accountWebList.setUserId(repayUserId); // 借款人
+			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
+			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
+			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
+			accountWebList.setRemark(borrowNid); // 投资编号
+			accountWebList.setCreateTime(nowTime);
+			accountWebList.setFlag(1);
+			//TODO: 网站首支明细队列
+			try {
+				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
+                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
 			
-			// TODO: 网站收支改成消息队列了
-//			AccountWebList accountWebList = new AccountWebList();
-//			accountWebList.setOrdid(creditRepay.getAssignNid() + "_" + periodNow);// 订单号
-//			accountWebList.setBorrowNid(borrowNid); // 投资编号
-//			accountWebList.setUserId(repayUserId); // 借款人
-//			accountWebList.setAmount(manageFee); // 管理费
-//			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
-//			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
-//			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
-//			accountWebList.setRemark(borrowNid); // 投资编号
-//			accountWebList.setCreateTime(nowTime);
-//			AccountWebListExample example = new AccountWebListExample();
-//			example.createCriteria().andOrdidEqualTo(accountWebList.getOrdid()).andTradeEqualTo(CustomConstants.TRADE_REPAYFEE);
-//			int webListCount = this.accountWebListMapper.countByExample(example);
-//			if (webListCount == 0) {
-//				Integer userId = accountWebList.getUserId();
-//				UsersInfo usersInfo = getUsersInfoByUserId(userId);
-//				if (usersInfo != null) {
-//					Integer attribute = usersInfo.getAttribute();
-//					if (attribute != null) {
-//						// 查找用户的的推荐人
-//						Users users = getUsersByUserId(userId);
-//						Integer refUserId = users.getReferrer();
-//						SpreadsUsersExample spreadsUsersExample = new SpreadsUsersExample();
-//						SpreadsUsersExample.Criteria spreadsUsersExampleCriteria = spreadsUsersExample.createCriteria();
-//						spreadsUsersExampleCriteria.andUserIdEqualTo(userId);
-//						List<SpreadsUsers> sList = spreadsUsersMapper.selectByExample(spreadsUsersExample);
-//						if (sList != null && !sList.isEmpty()) {
-//							refUserId = sList.get(0).getSpreadsUserid();
-//						}
-//						// 如果是线上员工或线下员工，推荐人的userId和username不插
-//						if (users != null && (attribute == 2 || attribute == 3)) {
-//							// 查找用户信息
-//							EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(userId);
-//							if (employeeCustomize != null) {
-//								accountWebList.setRegionName(employeeCustomize.getRegionName());
-//								accountWebList.setBranchName(employeeCustomize.getBranchName());
-//								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-//							}
-//						}
-//						// 如果是无主单，全插
-//						else if (users != null && (attribute == 1)) {
-//							// 查找用户推荐人
-//							EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-//							if (employeeCustomize != null) {
-//								accountWebList.setRegionName(employeeCustomize.getRegionName());
-//								accountWebList.setBranchName(employeeCustomize.getBranchName());
-//								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-//							}
-//						}
-//						// 如果是有主单
-//						else if (users != null && (attribute == 0)) {
-//							// 查找用户推荐人
-//							EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-//							if (employeeCustomize != null) {
-//								accountWebList.setRegionName(employeeCustomize.getRegionName());
-//								accountWebList.setBranchName(employeeCustomize.getBranchName());
-//								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-//							}
-//						}
-//					}
-//					accountWebList.setTruename(usersInfo.getTruename());
-//					accountWebList.setFlag(1);
-//				}
-//				boolean accountWebListFlag = this.accountWebListMapper.insertSelective(accountWebList) > 0 ? true : false;
-//				if (!accountWebListFlag) {
-//					throw new Exception("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTender.getNid() + "]");
-//				}
-//			} else {
-//				throw new Exception("网站收支记录(huiyingdai_account_web_list)已存在!" + "[投资订单号：" + borrowTender.getNid() + "]");
-//			}
 		}
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
 		apicron.setSucCounts(apicron.getSucCounts() + 1);
@@ -2131,9 +2090,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 params.put("borrowNid", borrowNid);
                 // 当前期
                 params.put("periodNow", String.valueOf(periodNow));
-                
-                //TODO:优惠券还款队列
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
+                //TODO: 核对参数
+        		try {
+        			logger.info("发送优惠券还款队列---" + borrowNid);
+        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                }
                 // add by hsy 优惠券还款请求加入到消息队列 end
 
 				// insert by zhangjp 增加优惠券还款区分 start
@@ -2375,7 +2339,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 params.put("borrowNid", borrowNid);
                 // 当前期
                 params.put("periodNow", String.valueOf(periodNow));
-                //TODO:优惠券还款
+                //TODO: 核对参数
+        		try {
+        			logger.info("发送优惠券还款队列---" + borrowNid);
+        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                }
                 
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
                 // add by hsy 优惠券还款请求加入到消息队列 end
@@ -2893,77 +2863,24 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 管理费大于0时,插入网站收支明细
 		if (manageFee.compareTo(BigDecimal.ZERO) > 0) {
 			// 插入网站收支明细记录
-			//TODO: 发送网站收支明细队列
-//			AccountWebList accountWebList = new AccountWebList();
-//			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
-//			accountWebList.setBorrowNid(borrowNid); // 投资编号
-//			accountWebList.setUserId(repayUserId); // 借款人
-//			accountWebList.setAmount(manageFee); // 管理费
-//			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
-//			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
-//			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
-//			accountWebList.setRemark(borrowNid); // 投资编号
-//			accountWebList.setCreateTime(nowTime);
-//			AccountWebListExample example = new AccountWebListExample();
-//			example.createCriteria().andOrdidEqualTo(accountWebList.getOrdid()).andTradeEqualTo(CustomConstants.TRADE_REPAYFEE);
-//			int webListCount = this.accountWebListMapper.countByExample(example);
-//			if (webListCount == 0) {
-//				Integer userId = accountWebList.getUserId();
-//				UsersInfo usersInfo = getUsersInfoByUserId(userId);
-//				if (usersInfo != null) {
-//					Integer attribute = usersInfo.getAttribute();
-//					if (attribute != null) {
-//						// 查找用户的的推荐人
-//						Users users = getUsersByUserId(userId);
-//						Integer refUserId = users.getReferrer();
-//						SpreadsUsersExample spreadsUsersExample = new SpreadsUsersExample();
-//						SpreadsUsersExample.Criteria spreadsUsersExampleCriteria = spreadsUsersExample.createCriteria();
-//						spreadsUsersExampleCriteria.andUserIdEqualTo(userId);
-//						List<SpreadsUsers> sList = spreadsUsersMapper.selectByExample(spreadsUsersExample);
-//						if (sList != null && !sList.isEmpty()) {
-//							refUserId = sList.get(0).getSpreadsUserid();
-//						}
-//						// 如果是线上员工或线下员工，推荐人的userId和username不插
-//						if (users != null && (attribute == 2 || attribute == 3)) {
-//							// 查找用户信息
-//							EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(userId);
-//							if (employeeCustomize != null) {
-//								accountWebList.setRegionName(employeeCustomize.getRegionName());
-//								accountWebList.setBranchName(employeeCustomize.getBranchName());
-//								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-//							}
-//						}
-//						// 如果是无主单，全插
-//						else if (users != null && (attribute == 1)) {
-//							// 查找用户推荐人
-//							EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-//							if (employeeCustomize != null) {
-//								accountWebList.setRegionName(employeeCustomize.getRegionName());
-//								accountWebList.setBranchName(employeeCustomize.getBranchName());
-//								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-//							}
-//						}
-//						// 如果是有主单
-//						else if (users != null && (attribute == 0)) {
-//							// 查找用户推荐人
-//							EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-//							if (employeeCustomize != null) {
-//								accountWebList.setRegionName(employeeCustomize.getRegionName());
-//								accountWebList.setBranchName(employeeCustomize.getBranchName());
-//								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-//							}
-//						}
-//					}
-//					accountWebList.setTruename(usersInfo.getTruename());
-//					accountWebList.setFlag(1);
-//				}
-//				boolean accountWebListFlag = this.accountWebListMapper.insertSelective(accountWebList) > 0 ? true : false;
-//				if (!accountWebListFlag) {
-//					throw new Exception("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTender.getNid() + "]");
-//				}
-//			} else {
-//				throw new Exception("网站收支记录(huiyingdai_account_web_list)已存在!" + "[投资订单号：" + borrowTender.getNid() + "]");
-//			}
+			AccountWebListVO accountWebList = new AccountWebListVO();
+			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
+			accountWebList.setBorrowNid(borrowNid); // 投资编号
+			accountWebList.setUserId(repayUserId); // 借款人
+			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
+			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
+			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
+			accountWebList.setRemark(borrowNid); // 投资编号
+			accountWebList.setCreateTime(nowTime);
+			accountWebList.setFlag(1);
+			//TODO: 网站首支明细队列
+			try {
+				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
+                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
 		}
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
 		apicron.setSucCounts(apicron.getSucCounts() + 1);
@@ -2997,6 +2914,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			//TODO: 风车理财队列
 			try {
 //				rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_WRB_CALLBACK_NOTIFY, JSONObject.toJSONString(params));
+				logger.info("发送风车理财---" + borrowTender.getNid() + "---------" + repayAccount.toString());
+				wrbCallBackProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 			} catch (Exception e) {
 				logger.error("风车理财还款通知入列失败...", e);
 			}

@@ -13,9 +13,11 @@ import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -24,6 +26,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
 import com.hyjf.cs.user.vo.MyProfileVO;
+import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 账户总览
+ * 账户总览service实现类
  * jijun 20180715
  */
 @Service
@@ -57,6 +60,11 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Autowired
     private AmMarketClient amMarketClient;
 
+    /**
+     * 获取用户真实姓名
+     * @param userId
+     * @return
+     */
     @Override
     public String getUserTrueName(Integer userId) {
         String username = "";
@@ -85,6 +93,11 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         return username;
     }
 
+    /**
+     * 中文的正则校验
+     * @param username
+     * @return
+     */
     private boolean isChineseChar(String username) {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(username);
@@ -94,10 +107,16 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         return false;
     }
 
+    /**
+     * 构造userAccountInfo
+     * @param userId
+     * @param userAccountInfo
+     */
     @Override
-    public void buildUserAccountInfo(Integer userId, MyProfileVO.UserAccountInfo userAccountInfo) {
+    public void buildUserAccountInfo(Integer userId, UserAccountInfoVO userAccountInfo) {
         UserVO users=this.getUsersById(userId);
-        Preconditions.checkArgument(users != null, userId + "用户不存在！");
+        CheckUtil.check(users==null, MsgEnum.ERR_USER_NOT_EXISTS,userId);
+        //Preconditions.checkArgument(users != null, userId + "用户不存在！");
         //是否绑定邮箱
         userAccountInfo.setSetEmail(!Strings.isNullOrEmpty(users.getEmail()));
         if (users.getOpenAccount() != null) {
@@ -160,8 +179,8 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     public void buildOutInfo(Integer userId, MyProfileVO myProfileVO) {
 
         AccountVO account=this.amTradeClient.getAccount(userId);
-
-        Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
+        CheckUtil.check(account==null, MsgEnum.ERR_BANK_ACCOUNT_NOT_EXIST,userId);
+        //Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
 
         //资产总额
         myProfileVO.setAccountTotle(account.getBankTotal() == null ? BigDecimal.ZERO : account.getBankTotal());
@@ -272,7 +291,8 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
                 List<String> lstTemp = Lists.newArrayList();
                 for (String system : lstSystem) {
                     String chinesePlat = mapPlatform.get(system);
-                    Preconditions.checkArgument(chinesePlat != null, "字典表中没有值=" + system + "的平台");
+                    CheckUtil.check(chinesePlat==null,MsgEnum.ERR_DIC_NO_MATCH,system);
+                    //Preconditions.checkArgument(chinesePlat != null, "字典表中没有值=" + system + "的平台");
                     lstTemp.add(chinesePlat);
                 }
                 String couponSystem = Joiner.on("/").join(lstTemp);

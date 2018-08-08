@@ -1,12 +1,9 @@
 package com.hyjf.admin.client;
 
-import com.hyjf.admin.beans.request.*;
-import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
-import com.hyjf.am.response.config.*;
-import com.hyjf.am.response.trade.BankInterfaceResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
+import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -1093,5 +1090,16 @@ public interface AmConfigClient {
 	public VersionConfigBeanResponse updateInfo(VersionConfigBeanRequest request);
 
 	public VersionConfigBeanResponse deleteInfo(VersionConfigBeanRequest request);
+
+	/**
+	 * 获取所有问题
+	 * @return
+	 */
+	QuestionResponse getAllQuestion();
+	/**
+	 * 获取所有回答
+	 * @return
+	 */
+	AnswerResponse getAllAnswer();
 
 }

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.service.regist;
+package com.hyjf.cs.user.service.register;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -17,7 +17,7 @@ import com.hyjf.cs.user.vo.RegisterRequest;
  * @author zhangqingqing
  * @version RegistService, v0.1 2018/6/11 15:09
  */
-public interface RegistService extends BaseUserService {
+public interface RegisterService extends BaseUserService {
 
     /**
      * 注册参数检查
@@ -32,6 +32,11 @@ public interface RegistService extends BaseUserService {
      */
     void apiCheckParam(RegisterRequest registerRequest);
 
+    /**
+     * app参数检查
+     * @param registerRequest
+     * @return
+     */
     JSONObject appCheckParam(RegisterRequest registerRequest);
 
     /**
@@ -92,7 +97,20 @@ public interface RegistService extends BaseUserService {
      */
     UserRegistResult wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
 
+    /**
+     * 保存用户信息
+     * @param mobile
+     * @param password
+     * @param verificationCode
+     * @param reffer
+     * @param loginIp
+     * @param platform
+     * @param utm_id
+     * @param utm_source
+     * @return
+     */
     UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source);
+
     /**
      * 登录操作
      * @auth sunpeikai

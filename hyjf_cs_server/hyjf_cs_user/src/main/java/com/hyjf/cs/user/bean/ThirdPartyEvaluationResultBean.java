@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.api.evaluation;
+package com.hyjf.cs.user.bean;
 
 import java.io.Serializable;
 

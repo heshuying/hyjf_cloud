@@ -1,10 +1,12 @@
 package com.hyjf.cs.trade.controller.web.recharge;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -26,7 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -143,6 +147,32 @@ public class WebRechargeController extends BaseTradeController{
 	public WebResult<Object> seachUserBankRechargeErrorMessgae(@RequestBody @Valid BankRechargeVO bankRechargeVO) {
 		logger.info("查询提现失败原因start,logOrdId:{}", bankRechargeVO.getLogOrdId());
 		WebResult<Object> result = userRechargeService.seachUserBankRechargeErrorMessgae(bankRechargeVO.getLogOrdId());
+		return result;
+	}
+
+
+	/**
+	 * @Description web端快捷充值限额
+	 * @Author pangchengchao
+	 * @Version v0.1
+	 * @Date
+	 */
+	@ApiOperation(value = "web端快捷充值限额", notes = "web端快捷充值限额")
+	@PostMapping("/rechargeQuotaLimit")
+	@ResponseBody
+	public WebResult<Object> rechargeQuotaLimit() {
+		logger.info("web端快捷充值限额开始");
+		WebResult<Object> result = new WebResult<Object>();
+		List<BanksConfigVO> list = userRechargeService.getRechargeQuotaLimit();
+		for (BanksConfigVO banksConfig : list) {
+			BigDecimal monthCardQuota = banksConfig.getMonthCardQuota();
+			BigDecimal singleQuota = banksConfig.getSingleQuota();
+			BigDecimal singleCardQuota = banksConfig.getSingleCardQuota();
+			banksConfig.setSingleQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleQuota.divide(new BigDecimal(10000)))));
+			banksConfig.setSingleCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleCardQuota.divide(new BigDecimal(10000)))));
+			banksConfig.setMonthCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(monthCardQuota.divide(new BigDecimal(10000)))));
+		}
+		result.setData(list);
 		return result;
 	}
 }

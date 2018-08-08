@@ -9,7 +9,7 @@ import java.util.List;
  * @author：yinhui
  * @Date: 2018/8/7  11:51
  */
-public interface HjhAccountBalanceCustomizeMapper {
+public interface HjhInfoAccountBalanceCustomizeMapper {
 
     /**
      * 按日统计查询数量

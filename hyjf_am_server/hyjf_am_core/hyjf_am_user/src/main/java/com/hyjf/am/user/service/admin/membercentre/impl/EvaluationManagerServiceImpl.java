@@ -8,6 +8,7 @@ import com.hyjf.am.user.dao.mapper.customize.EvaluationManagerCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
 import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
+import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
 import com.hyjf.am.user.service.admin.membercentre.EvaluationManagerService;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,5 +89,17 @@ public class EvaluationManagerServiceImpl implements EvaluationManagerService {
         } else {
             return null;
         }
+    }
+    /**
+     * 根据id查找用户测评的问题与答案
+     * @param evalationId
+     * @return
+     */
+    @Override
+    public List<UserEvalationQuestionCustomize> getUserQuestionInfoById(int evalationId){
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        mapParam.put("id",evalationId);
+        List<UserEvalationQuestionCustomize>  userEvalationQuestionCustomizeList = evaluationManagerCustomizeMapper.getUserEvalation(mapParam);
+        return userEvalationQuestionCustomizeList;
     }
 }

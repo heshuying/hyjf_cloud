@@ -103,7 +103,7 @@ public class BorrowRegistController {
     @RequestMapping("/sum_borrow_regist_account")
     public BorrowRegistCustomizeResponse sumBorrowRegistAccount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
         BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
-        String sumAccount =  borrowRegistService.sumBorrowRegistAccount(borrowRegistListRequest);
+        String sumAccount =  borrowRegistService.getSumBorrowRegistAccount(borrowRegistListRequest);
         response.setSumAccount(sumAccount);
         return response;
     }
@@ -115,6 +115,6 @@ public class BorrowRegistController {
      */
     @PostMapping("/update_borrow_regist")
     public Response updateBorrowRegist(@RequestBody @Valid BorrowRegistUpdateRequest request) {
-        return borrowRegistService.debtRegist(request);
+        return borrowRegistService.updateBorrowRegist(request);
     }
 }

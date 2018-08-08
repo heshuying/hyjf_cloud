@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
@@ -27,5 +28,11 @@ public interface AdminHjhCommissionMapper {
      * @return
      */
     List<HjhCommissionCustomizeVO> queryPushMoneyDetail(HjhCommissionRequest request);
-
+    
+    /**
+     * 查询金额总计 
+     * @param id
+     * @return
+     */
+    Map<String, Object> queryPushMoneyTotle(HjhCommissionRequest request);
 }

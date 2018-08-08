@@ -74,7 +74,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
      * @return
      */
     @Override
-    public BorrowFullCustomize sumAccount(BorrowFullRequest borrowFullRequest) {
+    public BorrowFullCustomize getSumAccount(BorrowFullRequest borrowFullRequest) {
         return borrowFullCustomizeMapper.sumAccount(borrowFullRequest);
     }
 
@@ -124,7 +124,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
      * @return
      */
     @Override
-    public BorrowFullCustomize sumAmount(String borrowNid) {
+    public BorrowFullCustomize getSumAmount(String borrowNid) {
         return borrowFullCustomizeMapper.sumAmount(borrowNid);
     }
 

@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.manager.banksetting;
 
 import com.hyjf.admin.beans.request.BankSettingRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -27,8 +26,11 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
@@ -40,20 +42,25 @@ import java.util.*;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 22:16
  */
-@Api(value = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
+@Api(description = "配置中心-银行配置 江西银行", tags = "配置中心银-行配置 江西银行")
 @RestController
 @RequestMapping(value = "/hyjf-admin/config/banksetting")
 public class BankSettingController extends BaseController {
-
+    private static final Logger logger = LoggerFactory.getLogger(BankSettingController.class);
     //权限名称
     private static final String PERMISSIONS = "banksetting";
+
     @Autowired
     private BankSettingService bankSettingService;
+
+    @Value("${file.domain.url}")
+    private String DOMAIN_URL;
 
     @ApiOperation(value = "列表(条件)查询;江西银行的银行卡配置表", httpMethod = "GET", notes = "列表(条件)查询;江西银行的银行卡配置表")
     @GetMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initBankSettingList(@ModelAttribute BankSettingRequestBean bankSettingRequestBean) {
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/list");
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
         AdminBankSettingResponse response = this.bankSettingService.selectBankSettingList(request);
@@ -63,7 +70,8 @@ public class BankSettingController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<>(ListResult.build(response.getResultList(), response.getRecordTotal()));
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/list");
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "GET", notes = "画面迁移(含有id更新，不含有id添加)")
@@ -71,21 +79,21 @@ public class BankSettingController extends BaseController {
     @GetMapping("/info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult bankSettingInfo(@ModelAttribute BankSettingRequestBean bankSettingRequestBean) {
-        AdminBankSettingResponse response = null;
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/info");
         AdminBankSettingRequest request = new AdminBankSettingRequest();
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
         BeanUtils.copyProperties(bankSettingRequestBean, request);
         Integer id = request.getId();
         if (id != null) {
             response = this.bankSettingService.getRecord(request);
-            //String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
+            //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
+             response.setFileDomainUrl(DOMAIN_URL);
         }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        return new AdminResult<>(response.getResult());
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/info");
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "添加一条数据", httpMethod = "POST", notes = "添加一条数据")
@@ -93,6 +101,7 @@ public class BankSettingController extends BaseController {
     @PostMapping("/insert")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/insert");
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean,request);
@@ -106,17 +115,18 @@ public class BankSettingController extends BaseController {
         bank.setBankName(request.getBankName());
         List<JxBankConfigVO> banks = bankSettingService.getRecordList(bank, -1, -1);
         if (CollectionUtils.isEmpty(banks)) {
-            // 数据插入
-            response = this.bankSettingService.insertRecord(request);
+            try {
+                // 数据插入
+                response = this.bankSettingService.insertRecord(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if(response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>(FAIL, "银行名称重复");
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-
-        }
-        return new AdminResult<>();
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/insert");
+        return new AdminResult<>(response);
     }
 
     @ApiOperation(value = "修改一条数据", httpMethod = "PUT", notes = "修改一条数据")
@@ -124,6 +134,7 @@ public class BankSettingController extends BaseController {
     @PutMapping("/update")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/update");
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean,request);
@@ -141,10 +152,7 @@ public class BankSettingController extends BaseController {
         if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-
-        }
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/update");
         return new AdminResult<>();
     }
 
@@ -153,6 +161,7 @@ public class BankSettingController extends BaseController {
     @DeleteMapping("/delete")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/delete");
         AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean ,request);
@@ -163,57 +172,53 @@ public class BankSettingController extends BaseController {
         if(response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/delete");
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "提交内容校验", httpMethod = "POST", notes = "提交内容校验")
-    @ApiParam(required = true, name = "bankSettingRequestBean", value = "校验内容")
+    @ApiOperation(value = "保存之前的去重验证", httpMethod = "POST", notes = "保存之前的去重验证")
+    @ApiParam(required = true, name = "bankSettingRequestBean", value = "被校验信息")
     @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/validateBeforeAction");
         JxBankConfigVO jxBankConfig = new JxBankConfigVO();
         BeanUtils.copyProperties(bankSettingRequestBean ,jxBankConfig);
         List<JxBankConfigVO> list = bankSettingService.getRecordList(jxBankConfig, -1, -1);
         if (list != null && list.size() != 0) {
-            response.setMessage("银行名称或银行代码不可重复添加");
             if (bankSettingRequestBean.getId() != null) {
-                Boolean hasnot = false;
+                Boolean hasnot = true;
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getId().equals(bankSettingRequestBean.getId())) {
-                        hasnot = true;
+                        hasnot = false;
                         break;
                     }
                 }
                 if (hasnot) {
-                    return new AdminResult<>(FAIL, FAIL_DESC);
+                    return new AdminResult<>(FAIL, "被修改对象id不存在");
                 }
             } else {
-                return new AdminResult<>(FAIL, FAIL_DESC);
+                return new AdminResult<>(FAIL, "银行名称或银行代码不可重复添加");
             }
         }
-        return new AdminResult<>(response);
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/validateBeforeAction");
+        return new AdminResult<>();
     }
 
     @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
     public AdminResult upLoadFile(HttpServletResponse response, HttpServletRequest request) throws Exception {
-        String s = bankSettingService.uploadFile(request, response);
-        if (response != null) {
-            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
-        } else {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/upLoadFile");
+        String files = bankSettingService.uploadFile(request, response);
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/upLoadFile");
+        return new AdminResult<>(files);
     }
 
     @ApiOperation(value = "列表导出", httpMethod = "GET", notes = "列表导出")
-    @ApiParam(required = true, name = "bankSettingRequestBean", value = "列表导出内容")
     @GetMapping(value = "/exportregist")
     public void exportAction(HttpServletResponse response) throws Exception {
+        logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/exportregist");
         // 表格sheet名称
         String sheetName = "银行配置";
         JxBankConfigVO bankRecharge = new JxBankConfigVO();
@@ -286,6 +291,7 @@ public class BankSettingController extends BaseController {
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/exportregist");
     }
 
     /**

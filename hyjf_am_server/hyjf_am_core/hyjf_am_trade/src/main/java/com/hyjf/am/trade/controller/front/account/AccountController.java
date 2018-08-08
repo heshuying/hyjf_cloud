@@ -9,6 +9,7 @@ import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
@@ -138,6 +139,12 @@ public class AccountController extends BaseController {
     @GetMapping("/updateBankMerchantAccountIsSetPassword/{accountId}/{flag}")
     public Integer updateBankMerchantAccountIsSetPassword(@PathVariable String accountId,@PathVariable Integer flag) {
         int count = accountService.updateBankMerchantAccountIsSetPassword(accountId,flag);
+        return count;
+    }
+
+    @PostMapping(value = "/updateBankMerchantAccountByCode")
+    public int updateBankMerchantAccount(@RequestBody BankMerchantAccount bankMerchantAccount) {
+        int count = accountService.updateBankMerchantAccount(bankMerchantAccount);
         return count;
     }
 

@@ -2,7 +2,6 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.response.HjhRepayResponseBean;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.client.HjhRepayClient;
 import com.hyjf.admin.service.PlanRepayService;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
@@ -22,18 +21,18 @@ public class PlanRepayServiceImpl implements PlanRepayService {
     private AmTradeClient amTradeClient;
 
     @Override
-    public HjhRepayResponseBean selectByExample(HjhRepayRequest request) {
-
-        HjhRepayResponseBean repayResponseBean = new HjhRepayResponseBean();
-
+    public Integer selectRepayCount(HjhRepayRequest request) {
         //查询总条数
         Integer hjhRepayCount = amTradeClient.getRepayCount(request);
-        repayResponseBean.setTotal(hjhRepayCount);
+        return hjhRepayCount;
+    }
+
+
+    @Override
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
+        //查询列表
         List<HjhRepayVO> recordList = amTradeClient.selectByExample(request);
-
-        repayResponseBean.setRecordList(recordList);
-
-        return repayResponseBean;
+        return recordList;
     }
 
     @Override
