@@ -192,7 +192,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserParameters result = new UserParameters();
 		String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
 		imghost = imghost.substring(0, imghost.length() - 1);
-		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppServerHost())
+		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost())
 				+ BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
 		apphost = apphost.substring(0, apphost.length() - 1);
 		String iconUrl = "";
@@ -649,7 +649,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			// 二维码
-			result.setQrCodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
+			result.setQrCodeUrl(systemConfig.getAppFrontHost().replace("{userId}", String.valueOf(userId)));
 		}
 		{
 			// 风险测评结果
