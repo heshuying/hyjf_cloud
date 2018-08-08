@@ -194,4 +194,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AleveCustomizeMapper aleveCustomizeMapper;
+
+	@Autowired
+	protected HjhAccountBalanceCustomizeMapper hjhAccountBalanceCustomizeMapper;
 }
