@@ -556,14 +556,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppHost() + ClientConstants.BANKOPEN_OPEN_ACTION
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
 						+ packageStr(request) + "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
 			}
 		}
 		{
@@ -631,7 +631,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
-							systemConfig.getAppHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
+							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				}
 				// 江西银行绑卡接口修改
 			} else {
@@ -643,7 +643,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
-							systemConfig.getAppHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
+							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				}
 			}
 		}
@@ -745,10 +745,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			// 自动投标授权URL
-			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppHost()
+			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.USER_AUTH_INVES_ACTION + ".do?1=1"));
 			// 缴费授权Url
-			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppHost()
+			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
 		}
 		result.setInvitationCode(userId);
