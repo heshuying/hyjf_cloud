@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
@@ -40,7 +39,7 @@ import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.mq.base.Consumer;
-import com.hyjf.am.user.service.batch.FddCertificateService;
+import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.RSAHelper;

@@ -949,4 +949,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         result.setData(map);
         return result;
     }
+
+    @Override
+    public BanksConfigVO getBanksConfigByBankId(Integer bankId) {
+        return amConfigClient.getBankNameByBankId(bankId+"");
+    }
 }
