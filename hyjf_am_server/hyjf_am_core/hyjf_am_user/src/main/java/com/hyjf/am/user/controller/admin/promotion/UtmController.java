@@ -1,10 +1,10 @@
-package com.hyjf.am.user.controller.promotion;
+package com.hyjf.am.user.controller.admin.promotion;
 
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
-import com.hyjf.am.user.service.promotion.UtmService;
+import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;

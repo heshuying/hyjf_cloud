@@ -1,11 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.promotion.impl;
+package com.hyjf.am.user.service.admin.promotion.impl;
 
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.service.promotion.UtmRegService;
+import com.hyjf.am.user.service.admin.promotion.UtmRegService;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

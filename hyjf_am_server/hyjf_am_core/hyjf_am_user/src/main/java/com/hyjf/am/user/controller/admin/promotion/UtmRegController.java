@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.controller.promotion;
+package com.hyjf.am.user.controller.admin.promotion;
 
 import com.hyjf.am.response.market.UtmRegResponse;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.service.promotion.UtmRegService;
+import com.hyjf.am.user.service.admin.promotion.UtmRegService;
 import com.hyjf.am.vo.user.UtmRegVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;

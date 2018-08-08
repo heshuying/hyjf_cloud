@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.promotion;
+package com.hyjf.am.user.service.admin.promotion;
 
 import com.hyjf.am.user.dao.model.auto.UtmReg;
 
