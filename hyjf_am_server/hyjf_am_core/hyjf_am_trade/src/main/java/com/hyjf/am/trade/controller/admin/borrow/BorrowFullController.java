@@ -71,7 +71,7 @@ public class BorrowFullController {
     @RequestMapping("/sum_account")
     public BorrowFullCustomizeResponse sumAccount(@RequestBody @Valid BorrowFullRequest borrowFullRequest) {
         BorrowFullCustomizeResponse response = new BorrowFullCustomizeResponse();
-        BorrowFullCustomize borrowFullCustomize = borrowFullService.sumAccount(borrowFullRequest);
+        BorrowFullCustomize borrowFullCustomize = borrowFullService.getSumAccount(borrowFullRequest);
         if (borrowFullCustomize != null) {
             BorrowFullCustomizeVO vo = new BorrowFullCustomizeVO();
             BeanUtils.copyProperties(borrowFullCustomize, vo);
@@ -138,7 +138,7 @@ public class BorrowFullController {
     @RequestMapping("/sum_amount/{borrowNid}")
     public BorrowFullCustomizeResponse sumAmount(@PathVariable String borrowNid) {
         BorrowFullCustomizeResponse response = new BorrowFullCustomizeResponse();
-        BorrowFullCustomize borrowFullCustomize = borrowFullService.sumAmount(borrowNid);
+        BorrowFullCustomize borrowFullCustomize = borrowFullService.getSumAmount(borrowNid);
         if (borrowFullCustomize != null) {
             BorrowFullCustomizeVO vo = new BorrowFullCustomizeVO();
             BeanUtils.copyProperties(borrowFullCustomize, vo);
