@@ -110,19 +110,13 @@ public class BankSettingServiceImpl implements BankSettingService {
      * @param request
      * @return
      */
-    //TODO : 修改中
     @Override
     public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        /*ShiroHttpServletRequest shiroRequest = (ShiroHttpServletRequest) request;
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
-        //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
-        String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
-        //TODO String filePhysicalPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.physical.path"));
-        String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
-        //TODO String fileUploadTempPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.upload.temp.path"));
-        String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
+        String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
+        String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
+        String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 
         File logoSaveFile = new File(logoRealPathDir);
@@ -167,8 +161,7 @@ public class BankSettingServiceImpl implements BankSettingService {
             fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
             files.add(fileMeta);
         }
-        return JSONObject.toJSONString(files, true);*/
-        return null;
+        return JSONObject.toJSONString(files, true);
     }
 
 }

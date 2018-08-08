@@ -22,6 +22,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -212,7 +213,11 @@ public class BankSettingController extends BaseController {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/upLoadFile");
         String files = bankSettingService.uploadFile(request, response);
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/upLoadFile");
-        return new AdminResult<>(files);
+        if (StringUtils.isNotBlank(files)) {
+            return new AdminResult<>(SUCCESS, SUCCESS_DESC);
+        } else {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
     }
 
     @ApiOperation(value = "列表导出", httpMethod = "GET", notes = "列表导出")
