@@ -13,5 +13,10 @@ import com.hyjf.cs.user.service.BaseUserService;
  */
 public interface AutoStateQueryService extends BaseUserService {
 
+    /**
+     * 查询授权状态
+     * @param autoStateQuery
+     * @return
+     */
     AutoStateQueryResultBean queryStatus(AutoStateQueryRequest autoStateQuery);
 }

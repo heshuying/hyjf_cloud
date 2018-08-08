@@ -1,6 +1,4 @@
-package com.hyjf.cs.user.controller.api.evaluation;
-
-import com.hyjf.cs.user.bean.BaseBean;
+package com.hyjf.cs.user.bean;
 
 public class ThirdPartyEvaluationRequestBean extends BaseBean {
     private String mobile;

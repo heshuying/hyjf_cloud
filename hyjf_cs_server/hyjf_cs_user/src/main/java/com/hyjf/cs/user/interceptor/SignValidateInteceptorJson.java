@@ -1,11 +1,10 @@
-package com.hyjf.cs.user.controller.wechat.annotation;
+package com.hyjf.cs.user.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
-import com.hyjf.cs.user.util.ResultEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;

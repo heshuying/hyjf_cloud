@@ -1,9 +1,6 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
@@ -32,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -152,6 +150,25 @@ public class BanksConfigController extends BaseConfigController{
             //代表成功
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+
+
+    /**
+     * 获取快捷支付银行
+     */
+    @RequestMapping("/getRechargeQuotaLimit")
+    public BanksConfigResponse getRechargeQuotaLimit(){
+        BanksConfigResponse response = new BanksConfigResponse();
+        List<JxBankConfig> listBankConfig = bankConfigService.getRechargeQuotaLimit(1);
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            response.setResultList(listBanksConfig);
+        }else{
+            response.setResultList(new ArrayList<BanksConfigVO>());
+        }
+        //代表成功
+        response.setRtn(Response.SUCCESS);
         return response;
     }
     /**

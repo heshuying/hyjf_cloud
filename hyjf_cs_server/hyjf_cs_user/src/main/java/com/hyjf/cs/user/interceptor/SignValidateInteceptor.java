@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.wechat.annotation;
+package com.hyjf.cs.user.interceptor;
 
 import com.hyjf.common.util.AppUserToken;
 import com.hyjf.common.util.SecretUtil;

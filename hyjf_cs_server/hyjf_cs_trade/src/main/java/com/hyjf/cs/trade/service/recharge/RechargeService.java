@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.recharge;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -11,6 +12,7 @@ import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,4 +81,10 @@ public interface RechargeService extends BaseTradeService {
 	 * @Date
 	 */
 	WebResult<Object> seachUserBankRechargeErrorMessgae(String logOrdId);
+
+	/**
+	 * 获取快捷充值银行限额
+	 * @return
+	 */
+    List<BanksConfigVO> getRechargeQuotaLimit();
 }
