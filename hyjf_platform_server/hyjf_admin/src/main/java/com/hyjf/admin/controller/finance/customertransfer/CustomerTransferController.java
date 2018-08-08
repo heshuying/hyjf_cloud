@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +75,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-导出转账列表",notes = "用户转账-导出转账列表")
     @PostMapping(value = "/transferlistexport")
-    public void exportTransferList(HttpServletResponse response, @RequestBody CustomerTransferListRequest request){
+    public void exportTransferList(HttpServletResponse response, @RequestBody CustomerTransferListRequest request) throws UnsupportedEncodingException {
         /*
          * 原有注释
          * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
@@ -85,7 +87,7 @@ public class CustomerTransferController extends BaseController {
         // 表格sheet名称
         String sheetName = "转账记录";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
 
         //设置默认查询时间

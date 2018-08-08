@@ -121,7 +121,8 @@ public class AccessFilter extends ZuulFilter {
 			if (secureVisitFlag) {
 				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WECHAT_CHANNEL);
 			}
-			prefix = WECHAT_VISIT_URL;
+			// wechat自带hyjf-wechat 直接返回即可
+			prefix = null;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			prefix = API_VISIT_URL;
 		} else {

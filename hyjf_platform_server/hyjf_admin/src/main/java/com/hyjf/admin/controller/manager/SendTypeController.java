@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * @author by xiehuili on 2018/8/1.
  */
-@Api(value = "配置中心借款项目配置--发标/复审",tags ="流程配置--发标/复审")
+@Api(value = "配置中心借款项目配置--发标/复审",tags = "配置中心借款项目配置--发标/复审")
 @RestController
 @RequestMapping("/hyjf-admin/config/sendtype")
 public class SendTypeController extends BaseController {
@@ -34,8 +34,8 @@ public class SendTypeController extends BaseController {
 
     @Autowired
     private SendTypeService sendTypeService;
-    @ApiOperation(value = "流程配置", notes = "查询发标/复审")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询发标/复审", notes = "查询发标/复审")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult borrowSendInit(@RequestBody BorrowSendTypeRequest adminRequest) {
         BorrowSendTypeResponse resList=sendTypeService.selectBorrowSendList(adminRequest);
@@ -49,8 +49,8 @@ public class SendTypeController extends BaseController {
         return new AdminResult<ListResult<BorrowSendTypeVO>>(ListResult.build(resList.getResultList(), resList.getCount())) ;
     }
 
-    @ApiOperation(value = "流程配置", notes = "查询发标/复审详情")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询发标/复审详情", notes = "查询发标/复审详情")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult borrowSendInfo(@RequestBody BorrowSendTypeRequest adminRequest) {
         BorrowSendTypeResponse resList= new BorrowSendTypeResponse();
@@ -65,7 +65,7 @@ public class SendTypeController extends BaseController {
         }
         return new AdminResult<>(FAIL,adminRequest.getSendCd()+"对应的标的不存在");
     }
-    @ApiOperation(value = "流程配置", notes = "添加 发标/复审")
+    @ApiOperation(value = "添加 发标/复审", notes = "添加 发标/复审")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public BorrowSendTypeResponse insertBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
@@ -95,7 +95,7 @@ public class SendTypeController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "流程配置", notes = "修改 发标/复审")
+    @ApiOperation(value = "修改 发标/复审", notes = "修改 发标/复审")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public BorrowSendTypeResponse updateBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
@@ -119,7 +119,7 @@ public class SendTypeController extends BaseController {
     }
 
 
-    @ApiOperation(value = "流程配置", notes = "删除 发标/复审")
+    @ApiOperation(value = "删除 发标/复审", notes = "删除 发标/复审")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public BorrowSendTypeResponse daleteBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {

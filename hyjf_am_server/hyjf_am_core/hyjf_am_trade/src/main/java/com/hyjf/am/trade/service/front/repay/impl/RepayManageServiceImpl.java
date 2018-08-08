@@ -3625,17 +3625,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         borrowRepayPlan.setAdvanceStatus(0);
     }
 
-    private CreditTender getCreditTender(String assignNid) {
-        CreditTenderExample example = new CreditTenderExample();
-        CreditTenderExample.Criteria crt = example.createCriteria();
-        crt.andAssignNidEqualTo(assignNid);
-        List<CreditTender> creditTenderList = this.creditTenderMapper.selectByExample(example);
-        if (creditTenderList != null && creditTenderList.size() == 1) {
-            return creditTenderList.get(0);
-        }
-        return null;
-    }
-
     /**
      * 统计分期还款用户提前还款的总标
      * @param borrowRepayPlan
@@ -4017,23 +4006,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         crt.andRecoverPeriodEqualTo(period);
         List<BorrowRecoverPlan> borrowRecovers = borrowRecoverPlanMapper.selectByExample(example);
         return borrowRecovers;
-    }
-
-    /**
-     * 计划类债转
-     * 根据承接订单号获取承接记录
-     * @param assignNid
-     * @return
-     */
-    private HjhDebtCreditTender getHjhDebtCreditTender(String assignNid) {
-        HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
-        HjhDebtCreditTenderExample.Criteria crt = example.createCriteria();
-        crt.andAssignOrderIdEqualTo(assignNid);
-        List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(example);
-        if (creditTenderList != null && creditTenderList.size() == 1) {
-            return creditTenderList.get(0);
-        }
-        return null;
     }
 
     /**

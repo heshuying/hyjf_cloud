@@ -35,8 +35,8 @@ public class SubConfigController extends BaseController {
 
     @Autowired
     private SubConfigService subConfigService;
-    @ApiOperation(value = "配置中心分账名单配置", notes = "查询分账名单配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询分账名单配置", notes = "查询分账名单配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<SubCommissionListConfigVo>> subConfigInit(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
         AdminSubConfigResponse resList=subConfigService.selectSubConfigListByParam(adminRequest);
@@ -49,8 +49,8 @@ public class SubConfigController extends BaseController {
         }
         return new AdminResult<ListResult<SubCommissionListConfigVo>>(ListResult.build(resList.getResultList(), resList.getRecordTotal())) ;
     }
-    @ApiOperation(value = "配置中心分账名单配置", notes = "查询分账名单配置")
-    @RequestMapping("/searchAction")
+    @ApiOperation(value = "查询分账名单配置", notes = "查询分账名单配置")
+    @PostMapping("/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<ListResult<SubCommissionListConfigVo>> subConfigSearch(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
         AdminSubConfigResponse resList=subConfigService.selectSubConfigListByParam(adminRequest);
@@ -63,7 +63,7 @@ public class SubConfigController extends BaseController {
         }
         return new AdminResult<ListResult<SubCommissionListConfigVo>>(ListResult.build(resList.getResultList(), resList.getRecordTotal())) ;
     }
-    @ApiOperation(value = "配置中心分账名单配置", notes = "分账名单配置页面")
+    @ApiOperation(value = "分账名单配置页面", notes = "分账名单配置页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<SubCommissionListConfigVo>  subConfigInfo( @RequestBody AdminSubConfigRequest adminRequest) {
@@ -76,7 +76,7 @@ public class SubConfigController extends BaseController {
         }
         return new AdminResult<SubCommissionListConfigVo>(result.getResult()) ;
     }
-    @ApiOperation(value = "配置中心分账名单配置", notes = "分账名单配置添加")
+    @ApiOperation(value = "分账名单配置添加", notes = "分账名单配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
@@ -98,7 +98,7 @@ public class SubConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心分账名单配置", notes = "分账名单配置修改")
+    @ApiOperation(value = "分账名单配置修改", notes = "分账名单配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateSubConfig(HttpServletRequest request, @RequestBody AdminSubConfigRequest adminRequest) {
@@ -113,7 +113,7 @@ public class SubConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心分账名单配置", notes = "分账名单配置删除")
+    @ApiOperation(value = "分账名单配置删除", notes = "分账名单配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteSubConfig(@RequestBody AdminSubConfigRequest adminRequest) {

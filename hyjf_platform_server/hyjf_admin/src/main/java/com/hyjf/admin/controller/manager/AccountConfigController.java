@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/12.
  */
-@Api(value = "配置中心账号平台设置",tags ="配置中心账号平台设置")
+@Api(value = "配置中心账户平台设置",tags ="配置中心账户平台设置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountconfig")
 public class AccountConfigController extends BaseController {
@@ -39,8 +39,8 @@ public class AccountConfigController extends BaseController {
     @Autowired
     private MerchantAccountService merchantAccountService;
 
-    @ApiOperation(value = "配置中心账号平台设置", notes = "查询配置中心账号平台设置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心账户平台设置", notes = "查询配置中心账户平台设置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<MerchantAccountVO>> accountConfigInit(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
@@ -57,8 +57,8 @@ public class AccountConfigController extends BaseController {
         return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心账号平台设置", notes = "查询配置中心账号平台设置列表检索")
-    @RequestMapping("/searchAction")
+    @ApiOperation(value = "查询配置中心账户平台设置列表检索", notes = "查询配置中心账户平台设置列表检索")
+    @PostMapping("/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<MerchantAccountVO>> accountConfigSearch(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
         AdminMerchantAccountRequest request = new AdminMerchantAccountRequest();
@@ -74,7 +74,7 @@ public class AccountConfigController extends BaseController {
         }
         return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
-    @ApiOperation(value = "配置中心账号平台设置", notes = "账号平台设置详情页面")
+    @ApiOperation(value = "账户平台设置详情页面", notes = "账户平台设置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<MerchantAccountVO>  accountConfigInfo(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
@@ -91,7 +91,7 @@ public class AccountConfigController extends BaseController {
         }
         return new AdminResult<MerchantAccountVO>(adminResponse.getResult()) ;
     }
-    @ApiOperation(value = "配置中心账号平台设置", notes = "账号平台设置添加")
+    @ApiOperation(value = "账户平台设置添加", notes = "账户平台设置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<MerchantAccountVO>  insertAccountConfig(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
@@ -118,7 +118,7 @@ public class AccountConfigController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心账号平台设置", notes = "账号平台设置修改")
+    @ApiOperation(value = "账户平台设置修改", notes = "账户平台设置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<MerchantAccountVO>  updateAccountConfig(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
@@ -144,7 +144,7 @@ public class AccountConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心账号平台设置", notes = "账号平台设置修改")
+    @ApiOperation(value = "账户平台设置修改", notes = "账户平台设置修改")
     @PostMapping("/checkAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<MerchantAccountVO>  checkAccountConfig(HttpServletRequest request) {

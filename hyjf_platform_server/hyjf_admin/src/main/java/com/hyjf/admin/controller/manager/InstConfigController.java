@@ -35,8 +35,8 @@ public class InstConfigController extends BaseController {
     @Autowired
     private InstConfigService instConfigService;
 
-    @ApiOperation(value = "配置中心保证金配置", notes = "查询配置中心保证金配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心保证金配置", notes = "查询配置中心保证金配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<HjhInstConfigWrapVo>> instConfigInit( @RequestBody AdminInstConfigListRequest adminRequest) {
         AdminInstConfigDetailResponse response=instConfigService.instConfigInit(adminRequest);
@@ -50,7 +50,7 @@ public class InstConfigController extends BaseController {
         return new AdminResult<ListResult<HjhInstConfigWrapVo>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置详情页面")
+    @ApiOperation(value = "保证金配置详情页面", notes = "保证金配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody AdminInstConfigListRequest adminRequest) {
@@ -64,7 +64,7 @@ public class InstConfigController extends BaseController {
         return new AdminResult<HjhInstConfigWrapVo>(adminResponse.getResult()) ;
     }
 
-    @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置添加")
+    @ApiOperation(value = "保证金配置添加", notes = "保证金配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
@@ -86,7 +86,7 @@ public class InstConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置修改")
+    @ApiOperation(value = "保证金配置修改", notes = "保证金配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateInstConfig(HttpServletRequest request, @RequestBody AdminInstConfigListRequest req) {
@@ -107,7 +107,7 @@ public class InstConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心保证金配置", notes = "保证金配置删除")
+    @ApiOperation(value = "保证金配置删除", notes = "保证金配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteInstConfig( @RequestBody AdminInstConfigListRequest req) {

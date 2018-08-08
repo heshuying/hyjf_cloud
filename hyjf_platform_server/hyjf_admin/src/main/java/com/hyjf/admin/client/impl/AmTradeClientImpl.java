@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
@@ -19,9 +20,11 @@ import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -3352,4 +3355,40 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountIsSetPassword/"+accountId+"/"+flag, Integer.class)
                 .getBody();
     }
+    @Override
+    public AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList",adminRequest,AdminBorrowFlowResponse.class)
+                .getBody();
+    }
+
+    @Override
+    public Integer getBankMerchantAccountListByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/getBnakMerchantAccountList/" + orderId;
+        BankMerchantAccountResponse response = restTemplate.getForEntity(url,BankMerchantAccountResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return  response.getRecordTotal();
+        }
+        return null;
+    }
+
+
+    @Override
+    public Boolean updateAccountCallbackRecharge(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updataAccountByRechargeCallback";
+        logger.info("圈存调用原子层req = [{}]",JSON.toJSONString(params));
+        BankMerchantAccountResponse response = restTemplate.postForEntity(url,params,BankMerchantAccountResponse.class).getBody();
+        logger.info("圈存调用原子层res = [{}]",JSON.toJSONString(response));
+        if(Response.isSuccess(response)){
+            return response.getSuccessFlag();
+        }
+        return false;
+    }
+    @Override
+    public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
+        ChannelStatisticsDetailResponse amTradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/extensioncenter/channelstatisticsdetail/searchaction",
+                request, ChannelStatisticsDetailResponse.class);
+        return amTradeResponse;
+    }
+
 }
+

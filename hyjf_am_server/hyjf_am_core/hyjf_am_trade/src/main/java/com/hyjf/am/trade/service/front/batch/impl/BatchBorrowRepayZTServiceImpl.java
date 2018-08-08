@@ -3177,23 +3177,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		return true;
 	}
 
-	/**
-	 * 获取承接信息
-	 * 
-	 * @param assignNid
-	 * @return
-	 */
-	private CreditTender getCreditTender(String assignNid) {
-		CreditTenderExample example = new CreditTenderExample();
-		CreditTenderExample.Criteria crt = example.createCriteria();
-		crt.andAssignNidEqualTo(assignNid);
-		List<CreditTender> creditTenderList = this.creditTenderMapper.selectByExample(example);
-		if (creditTenderList != null && creditTenderList.size() == 1) {
-			return creditTenderList.get(0);
-		}
-		return null;
-	}
-
 	private List<BorrowCredit> getBorrowCredit(String tenderOrderId, Integer periodNow) {
 		BorrowCreditExample example = new BorrowCreditExample();
 		BorrowCreditExample.Criteria crt = example.createCriteria();
