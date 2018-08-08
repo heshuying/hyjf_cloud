@@ -179,8 +179,8 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     public void buildOutInfo(Integer userId, MyProfileVO myProfileVO) {
 
         AccountVO account=this.amTradeClient.getAccount(userId);
-
-        Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
+        CheckUtil.check(account==null, MsgEnum.ERR_BANK_ACCOUNT_NOT_EXIST,userId);
+        //Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
 
         //资产总额
         myProfileVO.setAccountTotle(account.getBankTotal() == null ? BigDecimal.ZERO : account.getBankTotal());
@@ -291,7 +291,8 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
                 List<String> lstTemp = Lists.newArrayList();
                 for (String system : lstSystem) {
                     String chinesePlat = mapPlatform.get(system);
-                    Preconditions.checkArgument(chinesePlat != null, "字典表中没有值=" + system + "的平台");
+                    CheckUtil.check(chinesePlat==null,MsgEnum.ERR_DIC_NO_MATCH,system);
+                    //Preconditions.checkArgument(chinesePlat != null, "字典表中没有值=" + system + "的平台");
                     lstTemp.add(chinesePlat);
                 }
                 String couponSystem = Joiner.on("/").join(lstTemp);
