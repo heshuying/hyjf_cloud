@@ -9,6 +9,7 @@ import com.hyjf.am.trade.service.front.trade.WeeklyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class WeeklyServiceImpl implements WeeklyService {
         criteria.andStatusEqualTo(1);
         criteria.andCreateTimeBetween(new Date(begin), new Date(end));
         criteria.andAccedeOrderIdIsNull();
-        example.setOrderByClause(" addtime asc ");
+        example.setOrderByClause(" create_time asc ");
         return borrowTenderMapper.selectByExample(example);
 
 
@@ -58,8 +59,9 @@ public class WeeklyServiceImpl implements WeeklyService {
         CreditTenderExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userid);
 //		criteria.andStatusEqualTo(1);
-        criteria.andCreateTimeBetween(new Date(begin), new Date(end));
-        example.setOrderByClause(" add_time asc ");
+
+        criteria.andCreateTimeBetween(new Date(Integer.valueOf(begin)), new Date(Integer.valueOf(end)));
+        example.setOrderByClause(" create_time asc ");
         return creditTenderMapper.selectByExample(example);
 
     }
@@ -80,7 +82,7 @@ public class WeeklyServiceImpl implements WeeklyService {
         BorrowTenderCpnExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userid);
         criteria.andCreateTimeBetween(new Date(begin), new Date(end));
-        example.setOrderByClause(" addtime asc ");
+        example.setOrderByClause(" create_time asc ");
         return borrowTenderCpnMapper.selectByExample(example);
     }
 
