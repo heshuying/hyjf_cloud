@@ -4242,7 +4242,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return false;
     }
-    
+
 	/**
 	 * 汇计划提成列表查询
 	 *
@@ -4494,5 +4494,24 @@ public class AmTradeClientImpl implements AmTradeClient{
 	    }
 		return null;
 	}
+
+
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/8 16:41
+     */
+    @Override
+    public Boolean updateAccountCallbackWithdraw(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updataAccountByWithdrawCallback";
+        logger.info("圈提调用原子层req = [{}]",JSON.toJSONString(params));
+        BankMerchantAccountResponse response = restTemplate.postForEntity(url,params,BankMerchantAccountResponse.class).getBody();
+        logger.info("圈提调用原子层res = [{}]",JSON.toJSONString(response));
+        if(Response.isSuccess(response)){
+            return response.getSuccessFlag();
+        }
+        return false;
+    }
 }
 

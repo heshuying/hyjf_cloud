@@ -1846,7 +1846,7 @@ public interface AmTradeClient {
     DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
 
     /**
-     * 圈提异步回调业务处理
+     * 圈存异步回调业务处理
      * @author zhangyk
      * @date 2018/8/7 18:53
      */
@@ -1858,7 +1858,7 @@ public interface AmTradeClient {
      * @date 2018/8/8 10:22
      */
     Boolean updateBankAccountListFailByOrderId(String orderId);
-    
+
 	/**
 	 * 汇计划提成列表查询
 	 *
@@ -2249,6 +2249,16 @@ public interface AmTradeClient {
      * @return
      */
     STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean);
+
+
+
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/8 16:41
+     */
+    Boolean updateAccountCallbackWithdraw(Map<String,Object> params);
 
 
 }

@@ -202,5 +202,13 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	 */
 	public static final String TXCODE_CREDIT_FOR_LOADPAGE = "creditForLoadPage";
 
+	/**
+	 * 圈提
+	 */
+	public static final String BANK_URL_CREDIT_FOR_UNLOAD_PAGE = "/p2p/page/creditForUnloadPage";
+
+	/** 圈提 */
+	public static final String TXCODE_CREDIT_FOR_UNLOAD_PAGE = "creditForUnloadPage";
+
 
 }
