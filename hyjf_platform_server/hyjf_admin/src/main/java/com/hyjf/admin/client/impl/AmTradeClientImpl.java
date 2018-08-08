@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.client.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
@@ -3374,6 +3375,29 @@ public class AmTradeClientImpl implements AmTradeClient{
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList",adminRequest,AdminBorrowFlowResponse.class)
                 .getBody();
     }
+
+    @Override
+    public Integer getBankMerchantAccountListByOrderId(String orderId) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/getBnakMerchantAccountList/" + orderId;
+        BankMerchantAccountResponse response = restTemplate.getForEntity(url,BankMerchantAccountResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return  response.getRecordTotal();
+        }
+        return null;
+    }
+
+
+    @Override
+    public Boolean updateAccountCallbackRecharge(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/platformtransfer/updataAccountByRechargeCallback";
+        logger.info("圈存调用原子层req = [{}]",JSON.toJSONString(params));
+        BankMerchantAccountResponse response = restTemplate.postForEntity(url,params,BankMerchantAccountResponse.class).getBody();
+        logger.info("圈存调用原子层res = [{}]",JSON.toJSONString(response));
+        if(Response.isSuccess(response)){
+            return response.getSuccessFlag();
+        }
+        return false;
+    }
     @Override
     public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
         ChannelStatisticsDetailResponse amTradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/extensioncenter/channelstatisticsdetail/searchaction",
@@ -3382,3 +3406,4 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
 }
+

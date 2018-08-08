@@ -195,5 +195,12 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	public static final String ACCOUNT_USER_IDENTITY_2 = "2";
 	public static final String ACCOUNT_USER_IDENTITY_1 = "1";
 
+	/** 圈存 */
+	public static final String BANK_URL_TRANSFERENCE = "/p2p/page/creditForLoadPage";
+	/**
+	 * 圈存
+	 */
+	public static final String TXCODE_CREDIT_FOR_LOADPAGE = "creditForLoadPage";
+
 
 }
