@@ -3,7 +3,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.client.AccountBalanceClient;
 import com.hyjf.admin.service.AccountBalanceService;
 import com.hyjf.admin.utils.Page;
-import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
+import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +29,8 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
      * @return
      */
     @Override
-    public HjhAccountBalanceResponse getSearchListByMonth(HjhAccountBalanceRequest request){
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getSearchListByMonth(HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
 
         Integer count = getHjhAccountBalanceMonthCount(request);
         response.setCount(count);
@@ -53,8 +53,8 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
      * @return
      */
     @Override
-    public HjhAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request) {
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request) {
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
 
         Integer count = client.getHjhAccountBalancecountByDay(request);
         response.setCount(count);

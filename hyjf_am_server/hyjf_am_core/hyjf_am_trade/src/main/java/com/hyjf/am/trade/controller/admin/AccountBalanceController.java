@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.controller.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
+import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.AccountBalanceService;
@@ -27,24 +27,24 @@ public class AccountBalanceController  extends BaseController {
     private AccountBalanceService accountBalanceService;
 
     @RequestMapping("/getHjhAccountBalanceMonthCountNew")
-    public HjhAccountBalanceResponse getHjhAccountBalanceMonthCountNew(@RequestBody HjhAccountBalanceRequest request){
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceMonthCountNew(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         int count = accountBalanceService.getHjhAccountBalanceMonthCountNew(request);
         response.setCount(count);
         return response;
     }
 
     @RequestMapping("/getHjhAccountBalanceMonthCount")
-    public HjhAccountBalanceResponse getHjhAccountBalanceMonthCount(@RequestBody HjhAccountBalanceRequest request){
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceMonthCount(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         int count = accountBalanceService.getHjhAccountBalanceMonthCount(request);
         response.setCount(count);
         return response;
     }
 
     @RequestMapping("/getHjhAccountBalanceMonthList")
-    public HjhAccountBalanceResponse getHjhAccountBalanceMonthList(@RequestBody HjhAccountBalanceRequest request){
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceMonthList(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         List<HjhAccountBalanceVO> list = accountBalanceService.getHjhAccountBalanceMonthList(request);
         String returnCode = Response.FAIL;
         if (null != list && list.size() > 0) {
@@ -56,16 +56,16 @@ public class AccountBalanceController  extends BaseController {
     }
 
     @RequestMapping("/getHjhAccountBalancecountByDay")
-    public HjhAccountBalanceResponse getHjhAccountBalancecountByDay(@RequestBody HjhAccountBalanceRequest request){
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getHjhAccountBalancecountByDay(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         int count = accountBalanceService.getHjhAccountBalancecountByDay(request);
         response.setCount(count);
         return response;
     }
 
     @RequestMapping("/getHjhAccountBalanceListByDay")
-    public HjhAccountBalanceResponse getHjhAccountBalanceListByDay(@RequestBody HjhAccountBalanceRequest request){
-        HjhAccountBalanceResponse response = new HjhAccountBalanceResponse();
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceListByDay(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         List<HjhAccountBalanceVO> list = accountBalanceService.getHjhAccountBalanceListByDay(request);
         String returnCode = Response.FAIL;
         if (null != list && list.size() > 0) {

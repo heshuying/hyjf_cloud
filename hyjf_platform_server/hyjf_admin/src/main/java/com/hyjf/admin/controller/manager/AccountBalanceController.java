@@ -6,7 +6,7 @@ import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AccountBalanceService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
+import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import com.hyjf.common.util.CustomConstants;
@@ -45,7 +45,7 @@ public class AccountBalanceController extends BaseController{
     @RequestMapping("/search")
     public AdminResult<ListResult<HjhAccountBalanceVO>> search(HttpServletRequest httpServletRequest, HjhAccountBalanceRequest request){
         String time = httpServletRequest.getParameter("time");
-        HjhAccountBalanceResponse response = null;
+        HjhInfoAccountBalanceResponse response = null;
         if(("month").equals(time)) {
             response = accountBalanceService.getSearchListByMonth(request);
             if (response == null) {

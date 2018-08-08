@@ -1,6 +1,6 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
+import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 
@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface AccountBalanceService {
 
-    HjhAccountBalanceResponse getSearchListByMonth(HjhAccountBalanceRequest request);
+    HjhInfoAccountBalanceResponse getSearchListByMonth(HjhAccountBalanceRequest request);
 
-    HjhAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request);
+    HjhInfoAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request);
 
     List<HjhAccountBalanceVO> getHjhAccountBalanceList(HjhAccountBalanceRequest request);
 
