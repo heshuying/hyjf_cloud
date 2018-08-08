@@ -1773,5 +1773,13 @@ public interface AmTradeClient {
      * @date 2018/8/8 10:22
      */
     Boolean updateBankAccountListFailByOrderId(String orderId);
+    
+	/**
+	 * 汇计划提成列表查询
+	 *
+	 * @param HjhCommissionRequest
+	 * @return HjhCommissionResponse
+	 */
+    HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
 }
 
