@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.front.batch.impl;
+package com.hyjf.am.trade.service.front.consumer.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
-import com.hyjf.am.trade.service.front.batch.BatchBorrowRepayZTService;
+import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.front.batch;
+package com.hyjf.am.trade.service.front.consumer;
 
 import java.util.Map;
 
