@@ -111,11 +111,12 @@ public class BankSettingServiceImpl implements BankSettingService {
      * @return
      */
     @Override
+    //TODO : 修改
     public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        ShiroHttpServletRequest shiroRequest = (ShiroHttpServletRequest) request;
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+         /*ShiroHttpServletRequest shiroRequest = (ShiroHttpServletRequest) request;
+         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
         MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart((HttpServletRequest) shiroRequest.getRequest());
-        //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
+        // String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
         String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
         //TODO String filePhysicalPath = UploadFileUtils.getDoPath(PropUtils.getSystem("file.physical.path"));
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
@@ -166,8 +167,8 @@ public class BankSettingServiceImpl implements BankSettingService {
             fileMeta.setImageSrc(fileDomainUrl + fileUploadTempPath + fileRealName);
             files.add(fileMeta);
         }
-        return JSONObject.toJSONString(files, true);
-
+        return JSONObject.toJSONString(files, true);*/
+        return null;
     }
 
 }
