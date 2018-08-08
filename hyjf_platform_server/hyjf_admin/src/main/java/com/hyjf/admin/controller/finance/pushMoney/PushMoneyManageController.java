@@ -146,7 +146,6 @@ public class PushMoneyManageController extends BaseController {
         PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
         // 将画面请求request赋值给原子层 request
         BeanUtils.copyProperties(requestBean, pushMoneyRequest);
-    public void exportExcel(PushMoneyRequest pushMoneyRequest, HttpServletResponse response) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "直投提成管理";
         // 文件名称
