@@ -18,5 +18,12 @@ public interface HjhCommissionService {
 	 * @return List<HjhAssetTypeVO>
 	 */
 	HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
+	
+    /**
+     * 查询金额总计 
+     * @param id
+     * @return
+     */
+	HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
 
 }

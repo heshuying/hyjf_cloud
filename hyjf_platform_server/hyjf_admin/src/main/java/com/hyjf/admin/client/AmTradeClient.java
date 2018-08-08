@@ -1812,5 +1812,13 @@ public interface AmTradeClient {
      * @return
      */
     int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount);
+
+    /**
+     * 查询金额总计
+     * @author libin
+     * @param id
+     * @return
+     */
+    HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
 }
 

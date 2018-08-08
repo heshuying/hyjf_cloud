@@ -13,9 +13,11 @@ import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -37,7 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 账户总览
+ * 账户总览service实现类
  * jijun 20180715
  */
 @Service
@@ -57,6 +59,11 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Autowired
     private AmMarketClient amMarketClient;
 
+    /**
+     * 获取用户真实姓名
+     * @param userId
+     * @return
+     */
     @Override
     public String getUserTrueName(Integer userId) {
         String username = "";
@@ -85,6 +92,11 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         return username;
     }
 
+    /**
+     * 中文的正则校验
+     * @param username
+     * @return
+     */
     private boolean isChineseChar(String username) {
         Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
         Matcher m = p.matcher(username);
@@ -94,10 +106,16 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         return false;
     }
 
+    /**
+     * 构造userAccountInfo
+     * @param userId
+     * @param userAccountInfo
+     */
     @Override
     public void buildUserAccountInfo(Integer userId, MyProfileVO.UserAccountInfo userAccountInfo) {
         UserVO users=this.getUsersById(userId);
-        Preconditions.checkArgument(users != null, userId + "用户不存在！");
+        CheckUtil.check(users==null, MsgEnum.ERR_USER_NOT_EXISTS,userId);
+        //Preconditions.checkArgument(users != null, userId + "用户不存在！");
         //是否绑定邮箱
         userAccountInfo.setSetEmail(!Strings.isNullOrEmpty(users.getEmail()));
         if (users.getOpenAccount() != null) {

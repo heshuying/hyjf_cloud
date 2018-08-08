@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,28 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
         }
 		List<HjhCommissionCustomizeVO> hjhCommissionList = this.adminHjhCommissionMapper.queryPushMoneyDetail(request);
 		return hjhCommissionList;
+	}
+
+	@Override
+	public Map<String, String> queryPushMoneyTotle(HjhCommissionRequest request, int limitStart, int limitEnd) {
+		// 部门
+		if (Validator.isNotNull(request.getCombotreeSrch())) {
+			if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
+				String[] list = request.getCombotreeSrch().split(StringPool.COMMA);
+				request.setCombotreeListSrch(list);
+			} else {
+				request.setCombotreeListSrch(new String[] { request.getCombotreeSrch() });
+			}
+		}
+        // 封装查询条件
+        if (limitStart == 0 || limitStart > 0) {
+        	request.setLimitStart(limitStart);
+        }
+        if (limitEnd > 0) {
+        	request.setLimitEnd(limitEnd);
+        }
+        Map<String, String> map = this.adminHjhCommissionMapper.queryPushMoneyTotle(request);
+		return map;
 	}
 
 }

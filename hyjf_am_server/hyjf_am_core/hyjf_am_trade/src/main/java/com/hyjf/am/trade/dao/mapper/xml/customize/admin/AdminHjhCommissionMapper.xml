@@ -190,4 +190,30 @@
 		WHERE 1=1 AND tc.commission > 0
 		<include refid="where-all-page-condition-detail"/>
 	</select>
+	
+	<select id="queryPushMoneyTotle" resultType="java.util.HashMap"
+		parameterType="com.hyjf.mybatis.model.customize.PushMoneyCustomize">
+		SELECT
+			sum(tc.account_tender) AS tenderTotle,
+			sum(tc.commission) AS commissionTotle
+		FROM ht_tender_commission tc
+		LEFT JOIN ht_borrow_tender t ON tc.tender_id= t.id
+		LEFT JOIN ht_r_user u ON u.user_id= tc.user_id
+		LEFT JOIN ht_borrow b ON b.borrow_nid= tc.borrow_nid
+		LEFT JOIN ht_hjh_plan hhp ON hhp.plan_nid = tc.borrow_nid
+		LEFT JOIN ht_r_user u2 ON u2.user_id= tc.tender_user_id
+		LEFT JOIN ht_hjh_accede hha ON hha.accede_order_id = tc.ordid
+		WHERE 1=1 AND tc.commission > 0 
+		<include refid="where-all-page-condition-detail"/>
+<!-- 	   <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitEnd}
+	    </if> -->
+	</select>
+	
+	
+	
+	
+	
+	
+	
 </mapper>
