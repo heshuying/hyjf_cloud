@@ -6,7 +6,6 @@ package com.hyjf.admin.controller.finance.hjhcommission;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,7 @@ import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 
@@ -65,7 +65,7 @@ public class HjhCommissionController extends BaseController{
 	@PostMapping(value = "/search")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-	public AdminResult<ListResult<HjhCommissionCustomizeVO>> init(HttpServletRequest request, @RequestBody HjhCommissionViewRequest viewRequest) { 
+	public AdminResult<ListResult<HjhCommissionCustomizeVO>> init(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) { 
 		// 初始化原子层请求实体
 		HjhCommissionRequest form = new HjhCommissionRequest();
 		// 初始化返回LIST
@@ -92,7 +92,7 @@ public class HjhCommissionController extends BaseController{
 	}
 	
 	/**
-	 * 汇计划提成列表 加入金额/提成金额 累计            
+	 * 汇计划提成列表 加入金额/提成金额 累计             已测试
 	 *
 	 * @param request
 	 * @return 
@@ -116,12 +116,44 @@ public class HjhCommissionController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			jsonObject.put("error", FAIL);
 		}
-		jsonObject.put("tenderTotal", "加入金额累计");
-		jsonObject.put("tenderTotal", response.getTenderTotal());
-		jsonObject.put("commissionTotal", "提成金额累计");
-		jsonObject.put("commissionTotal", response.getCommissionTotal());
+		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
 		return jsonObject;
 	}
-
+	
+    /**
+     * 汇计划提成列表-校验发提成状态是不是已经发放   已测试
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "汇计划提成列表", notes = "汇计划提成列表-校验发提成状态是不是已经发放")
+	@PostMapping(value = "/checkstatus")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	public JSONObject checkStatusAction(HttpServletRequest request , @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
+		JSONObject jsonObject = new JSONObject();
+		int ids = 0;
+		int status = 0;
+		if(viewRequest.getIds() == 0){
+			// 前端未传
+			jsonObject.put("error", "请传入ids!");
+		} else {
+			ids = viewRequest.getIds();
+		}
+		TenderCommissionVO tenderCommission = this.hjhCommissionService.queryTenderCommissionByPrimaryKey(ids);
+		if(tenderCommission != null){
+			// 0:未发放;1:已发放;100:删除
+			status = tenderCommission.getStatus();
+			jsonObject.put("msg", "state : 0:未发放;1:已发放;100:删除");
+			jsonObject.put("state", status);
+			jsonObject.put("status", SUCCESS);
+		} else {
+			jsonObject.put("error", "未查询到该记录！");
+			jsonObject.put("status", FAIL);
+		}
+		return jsonObject;
+	}
+	
 }

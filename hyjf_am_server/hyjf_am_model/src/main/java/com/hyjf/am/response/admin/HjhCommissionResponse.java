@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.response.admin;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 /**
@@ -18,11 +21,13 @@ public class HjhCommissionResponse extends Response<HjhCommissionCustomizeVO>{
 	/**
 	 * 加入金额累计 
 	 */
-	private String tenderTotal;
+	/*private BigDecimal tenderTotal;*/
 	/**
 	 * 提成金额累计
 	 */
-	private String commissionTotal;
+	/*private BigDecimal commissionTotal;*/
+	
+	private Map<String , Object> totalMap;
     
     public Integer getCount() {
         return count;
@@ -36,16 +41,22 @@ public class HjhCommissionResponse extends Response<HjhCommissionCustomizeVO>{
 	public void setPlanName(String planName) {
 		this.planName = planName;
 	}
-	public String getTenderTotal() {
+/*	public BigDecimal getTenderTotal() {
 		return tenderTotal;
 	}
-	public void setTenderTotal(String tenderTotal) {
+	public void setTenderTotal(BigDecimal tenderTotal) {
 		this.tenderTotal = tenderTotal;
 	}
-	public String getCommissionTotal() {
+	public BigDecimal getCommissionTotal() {
 		return commissionTotal;
 	}
-	public void setCommissionTotal(String commissionTotal) {
+	public void setCommissionTotal(BigDecimal commissionTotal) {
 		this.commissionTotal = commissionTotal;
+	}*/
+	public Map<String, Object> getTotalMap() {
+		return totalMap;
+	}
+	public void setTotalMap(Map<String, Object> totalMap) {
+		this.totalMap = totalMap;
 	}
 }

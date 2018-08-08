@@ -191,8 +191,7 @@
 		<include refid="where-all-page-condition-detail"/>
 	</select>
 	
-	<select id="queryPushMoneyTotle" resultType="java.util.HashMap"
-		parameterType="com.hyjf.mybatis.model.customize.PushMoneyCustomize">
+	<select id="queryPushMoneyTotle" resultType="java.util.HashMap" parameterType="com.hyjf.am.resquest.admin.HjhCommissionRequest">
 		SELECT
 			sum(tc.account_tender) AS tenderTotle,
 			sum(tc.commission) AS commissionTotle

@@ -19,6 +19,7 @@ import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -1820,5 +1821,13 @@ public interface AmTradeClient {
      * @return
      */
     HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
+    
+    /**
+     * 校验发提成状态是不是已经发放 
+     * @author libin
+     * @param id
+     * @return
+     */
+    TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
 }
 
