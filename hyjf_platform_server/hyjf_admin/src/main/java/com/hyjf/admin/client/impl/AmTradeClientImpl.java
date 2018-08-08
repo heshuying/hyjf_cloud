@@ -3390,5 +3390,20 @@ public class AmTradeClientImpl implements AmTradeClient{
         return amTradeResponse;
     }
 
+
+    /**
+     * 更新明细表为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:22
+     */
+    @Override
+    public Boolean updateBankAccountListFailByOrderId(String orderId) {
+        String url= "http://AM-TRADE/am-trade/platformtransfer/updateMerchantAccountListFail/" + orderId;
+        BankMerchantAccountResponse response = restTemplate.getForEntity(url,BankMerchantAccountResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getSuccessFlag();
+        }
+        return false;
+    }
 }
 

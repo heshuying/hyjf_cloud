@@ -137,4 +137,12 @@ public class PlatformTransferController extends BaseController {
         response.setSuccessFlag(flag);
         return response;
     }
+
+    @GetMapping(value = "/updateMerchantAccountListFail/{orderId}")
+    public BankMerchantAccountResponse  updateMerchantAccountListFail(@PathVariable String orderId){
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        boolean flag = platformTransferService.updateMerchantAccountListFail(orderId);
+        response.setSuccessFlag(flag);
+        return response;
+    }
 }
