@@ -22,8 +22,8 @@ zuul:
     ser:
       path: 123
 ribbon:
-  ConnectTimeout: 30000
-  ReadTimeout: 30000
+  ConnectTimeout: 1000
+  ReadTimeout: 6000
 
 hystrix:
   command:
