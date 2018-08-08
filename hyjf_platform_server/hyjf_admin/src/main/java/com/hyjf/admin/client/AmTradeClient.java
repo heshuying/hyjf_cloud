@@ -1748,4 +1748,28 @@ public interface AmTradeClient {
      * @param flag
      */
     void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
+
+
+    /**
+     * 汇计划 - 计划还款 - 统计
+     * @param repayRequest
+     * @return
+     * @Author : huanghui
+     */
+    Integer getRepayCount(HjhRepayRequest repayRequest);
+    /**
+     * 获取汇计划 -  计划还款(计划退出)列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request);
+
+    /**
+     * 指定指端检索 计划还款列表
+     * @param accedeOrderId
+     * @return
+     * @Author : huanghui
+     */
+    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 }

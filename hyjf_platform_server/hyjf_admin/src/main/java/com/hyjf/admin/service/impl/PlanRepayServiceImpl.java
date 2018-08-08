@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.response.HjhRepayResponseBean;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhRepayClient;
 import com.hyjf.admin.service.PlanRepayService;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
@@ -18,27 +19,27 @@ import java.util.List;
 public class PlanRepayServiceImpl implements PlanRepayService {
 
     @Autowired
-    private HjhRepayClient hjhRepayClient;
+    private AmTradeClient amTradeClient;
 
     @Override
-    public HjhRepayResponseBean selectByExample(HjhRepayRequest request) {
-
-        HjhRepayResponseBean repayResponseBean = new HjhRepayResponseBean();
-
+    public Integer selectRepayCount(HjhRepayRequest request) {
         //查询总条数
-        Integer hjhRepayCount = hjhRepayClient.getRepayCount(request);
-        repayResponseBean.setTotal(hjhRepayCount);
-        List<HjhRepayVO> recordList = hjhRepayClient.selectByExample(request);
+        Integer hjhRepayCount = amTradeClient.getRepayCount(request);
+        return hjhRepayCount;
+    }
 
-        repayResponseBean.setRecordList(recordList);
 
-        return repayResponseBean;
+    @Override
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
+        //查询列表
+        List<HjhRepayVO> recordList = amTradeClient.selectByExample(request);
+        return recordList;
     }
 
     @Override
     public HjhRepayResponseBean selectByAccedeOrderId(String accedeOrderId) {
         HjhRepayResponseBean repayResponseBean = new HjhRepayResponseBean();
-        List<HjhRepayVO> hjhRepayVOList = hjhRepayClient.selectByAccedeOrderId(accedeOrderId);
+        List<HjhRepayVO> hjhRepayVOList = amTradeClient.selectByAccedeOrderId(accedeOrderId);
         repayResponseBean.setRecordList(hjhRepayVOList);
         return repayResponseBean;
     }

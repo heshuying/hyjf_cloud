@@ -15,6 +15,7 @@ import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
@@ -3366,5 +3367,47 @@ public class AmTradeClientImpl implements AmTradeClient{
         Integer response = restTemplate
                 .getForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountIsSetPassword/"+accountId+"/"+flag, Integer.class)
                 .getBody();
+    }
+
+    /**
+     * 汇计划 - 计划还款 - 统计
+     * @param repayRequest
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public Integer getRepayCount(HjhRepayRequest repayRequest) {
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/getRepayCount", repayRequest, Integer.class).getBody();
+    }
+
+    /**
+     * 获取汇计划 -  计划还款(计划退出)列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request) {
+        HjhRepayResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepayList", request, HjhRepayResponse.class).getBody();
+
+        if (response != null){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 指定指端检索 计划还款列表
+     * @param accedeOrderId
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId) {
+        HjhRepayResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhRepay/hjhRepaymentDetails/" + accedeOrderId, HjhRepayResponse.class).getBody();
+        if (response != null){
+            return response.getResultList();
+        }
+        return null;
     }
 }
