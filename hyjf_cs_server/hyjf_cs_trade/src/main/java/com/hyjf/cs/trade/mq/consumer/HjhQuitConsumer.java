@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.BorrowRepayPlanQuitMessageHandle;
+import com.hyjf.cs.trade.mq.handle.BorrowRepayPlanQuitMessageHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
 import org.springframework.stereotype.Component;
 

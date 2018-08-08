@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.handle.AutoSendMessageHandle;
+import com.hyjf.cs.trade.mq.handle.AutoSendMessageHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
 
 /**

@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.handle.impl;
+package com.hyjf.cs.trade.service.borrow.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoPreAuditProducer;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.service.handle.AutoRecordService;
+import com.hyjf.cs.trade.service.borrow.AutoRecordService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
