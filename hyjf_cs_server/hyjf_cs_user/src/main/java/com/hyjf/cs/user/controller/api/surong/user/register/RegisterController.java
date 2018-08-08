@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.api.surong.user.regist;
+package com.hyjf.cs.user.controller.api.surong.user.register;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -8,7 +8,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -32,7 +31,7 @@ import java.util.Map;
 public class RegisterController extends BaseUserController {
 
     @Autowired
-    RegistService registService;
+    RegisterService registerService;
 
     @ApiOperation(value = "用户注册接口", notes = "融东风用户注册第三方")
     @PostMapping("/registerAction")
@@ -95,7 +94,7 @@ public class RegisterController extends BaseUserController {
                 return ret;
             }
             {
-                UserVO regUser = registService.getUsersByMobile(mobile);
+                UserVO regUser = registerService.getUsersByMobile(mobile);
                 if (regUser != null) {
                     String statusDesc = "注册成功";
                     ret.put("status", "0");
@@ -109,18 +108,18 @@ public class RegisterController extends BaseUserController {
                     ret.put("idcard", "");
 
                     //查询开户状态
-                    BankOpenAccountVO bankOpenAccount = registService.getBankOpenAccount(regUser.getUserId());
+                    BankOpenAccountVO bankOpenAccount = registerService.getBankOpenAccount(regUser.getUserId());
                     if(bankOpenAccount!=null){
                         ret.put("chinapnrUsrid", bankOpenAccount.getAccount());
                     }
                     //查询快捷卡
-                    List<BankCardVO> ablist = registService.getBankOpenAccountById(regUser);
+                    List<BankCardVO> ablist = registerService.getBankOpenAccountById(regUser);
                     if(ablist!=null&&ablist.size()>0){
                         ret.put("bankcard", ablist.get(0).getCardNo());
                         ret.put("bank", ablist.get(0).getBank());
                     }
                     //查询客户信息
-                    UserInfoVO userInfoVO = registService.getUserInfo(regUser.getUserId());
+                    UserInfoVO userInfoVO = registerService.getUserInfo(regUser.getUserId());
                     if(userInfoVO!=null){
                         ret.put("username", userInfoVO.getTruename());
                         ret.put("idcard", userInfoVO.getIdcard());
@@ -134,7 +133,7 @@ public class RegisterController extends BaseUserController {
             register.setMobile(mobile);
             register.setPassword(password);
             // 注册
-            UserVO user = registService.surongRegister(register,CustomUtil.getIpAddr(request), request.getParameter("platform"));
+            UserVO user = registerService.surongRegister(register,CustomUtil.getIpAddr(request), request.getParameter("platform"));
 
             if (user != null) {
                 String statusDesc = "注册成功";
