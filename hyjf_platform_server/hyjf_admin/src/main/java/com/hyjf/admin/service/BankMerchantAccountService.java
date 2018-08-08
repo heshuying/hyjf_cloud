@@ -100,4 +100,26 @@ public interface BankMerchantAccountService {
     int updateBankMerchantAccount(String accountCode, BigDecimal currBalance, BigDecimal balance, BigDecimal frost);
 
     BigDecimal getBankBalance(Integer userId, String accountId);
+
+    /**
+     * 统一参数校验
+     * @author zhangyk
+     * @date 2018/8/8 11:40
+     */
+    String checkParam(String amount,String accountCode);
+
+    /**
+     * 提现前处理
+     * @author zhangyk
+     * @date 2018/8/8 15:37
+     */
+    int updateBeforeCash(BankCallBean bean, Map<String, String> params, BankMerchantAccountVO bankMerchantAccount) ;
+
+
+    /**
+     * 提现后回调
+     * @author zhangyk
+     * @date 2018/8/8 16:38
+     */
+    void handlerAfterCash(BankCallBean bean , Map<String,String> params);
 }

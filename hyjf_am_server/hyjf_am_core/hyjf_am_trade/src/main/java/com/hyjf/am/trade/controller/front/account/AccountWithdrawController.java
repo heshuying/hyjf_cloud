@@ -190,12 +190,15 @@ public class AccountWithdrawController extends BaseController {
     @PostMapping("/getWithdrawRecordList")
     public WithdrawCustomizeResponse getWithdrawRecordList(@RequestBody WithdrawBeanRequest request){
         WithdrawCustomizeResponse response = new WithdrawCustomizeResponse();
-        List<WithdrawCustomize> withdrawCustomizes =accountWithdrawService.getWithdrawRecordList(request);
         int count=accountWithdrawService.getWithdrawRecordCount(request);
+        if (count==0){
+            return response;
+        }
+        List<WithdrawCustomize> withdrawCustomizes =accountWithdrawService.getWithdrawRecordList(request);
         String returnCode = "0";
         if (CollectionUtils.isNotEmpty(withdrawCustomizes)){
-            response.setResultList(CommonUtils.convertBeanList(withdrawCustomizes,WithdrawCustomizeVO.class));
             response.setCount(count);
+            response.setResultList(CommonUtils.convertBeanList(withdrawCustomizes,WithdrawCustomizeVO.class));
             response.setRtn(returnCode);
         }
         return response;

@@ -13,7 +13,7 @@ import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -41,7 +41,7 @@ public class WebRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebRegistController.class);
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     /**
      * 初期化,跳转到注册页面

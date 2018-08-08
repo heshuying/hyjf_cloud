@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.client.ActivityListClient;
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.service.ActivityListService;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
@@ -30,7 +31,7 @@ import java.util.LinkedList;
 public class ActivityListServiceImpl implements ActivityListService {
 
     @Autowired
-    ActivityListClient activityListClient;
+    private AmMarketClient amMarketClient;
     @Value("${file.domain.url}")
     private String FILEDOMAILURL;
     @Value("${file.physical.path}")
@@ -40,22 +41,22 @@ public class ActivityListServiceImpl implements ActivityListService {
 
     @Override
     public ActivityListResponse getRecordList(ActivityListRequest activityListRequest) {
-        return activityListClient.getRecordList(activityListRequest);
+        return amMarketClient.getRecordList(activityListRequest);
     }
 
     @Override
     public ActivityListResponse insertRecord(ActivityListRequest request) {
-        return activityListClient.insertRecord(request);
+        return amMarketClient.insertRecord(request);
     }
 
     @Override
     public ActivityListResponse selectActivityById(ActivityListRequest activityListRequest) {
-        return activityListClient.selectActivityById(activityListRequest);
+        return amMarketClient.selectActivityById(activityListRequest);
     }
 
     @Override
     public ActivityListResponse updateActivity(ActivityListRequest activityListRequest) {
-        return activityListClient.updateActivity(activityListRequest);
+        return amMarketClient.updateActivity(activityListRequest);
     }
 
     @Override
@@ -109,6 +110,6 @@ public class ActivityListServiceImpl implements ActivityListService {
 
     @Override
     public ActivityListResponse deleteActivity(ActivityListRequest request) {
-        return activityListClient.deleteActivity(request);
+        return amMarketClient.deleteActivity(request);
     }
 }

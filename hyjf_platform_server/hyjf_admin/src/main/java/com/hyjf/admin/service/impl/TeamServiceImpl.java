@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,38 +21,38 @@ import com.hyjf.am.vo.config.TeamVO;
 @Service
 public class TeamServiceImpl implements TeamService {
 	@Autowired
-	private TeamClient teamClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public TeamResponse searchAction(TeamRequestBean requestBean) {
-		return teamClient.searchAction(requestBean);
+		return amConfigClient.searchAction(requestBean);
 	}
 
 	@Override
 	public TeamResponse insertAction(TeamRequestBean requestBean) {
-		return teamClient.insertAction(requestBean);
+		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
 	public TeamResponse updateAction(TeamRequestBean requestBean) {
-		return teamClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
 	public TeamResponse updateStatus(TeamRequestBean requestBean) {
 		Integer id = requestBean.getId();
-		TeamVO record = teamClient.getRecord(id);
+		TeamVO record = amConfigClient.getTeamRecord(id);
 		if (record.getStatus() == 1) {
 			record.setStatus(0);
 		} else if (record.getStatus() == 0) {
 			record.setStatus(1);
 		}
 		BeanUtils.copyProperties(record, requestBean);
-		return teamClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
 	public TeamResponse deleteById(Integer id) {
-		return teamClient.deleteById(id);
+		return amConfigClient.deleteTeamById(id);
 	}
 }

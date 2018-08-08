@@ -49,9 +49,17 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/bank/merchant/account")
 public class BankMerchantAccountController extends BaseController {
 
-    private static final String METHOD_NAME = "<圈存操作>: ";
+    private static final String RECHARGE_LOG_NAME = "<圈存操作>: ";
+
+    private static final String WITHDRAW_LOG_NAME = "<圈存操作>: ";
 
     private static final String RECHARGE_METHOD_NAME = "/rechargeCallback";
+
+    private static final String WITHDRAW_METHOD_NAME = "/withdrawCallback";
+
+    private static final String OPT_SUCCESS_URL = "/onSuccess.jsp";  // TODO: 2018/8/8 后期确定操作成功页面地址 zyk
+
+    private static final String OPT_ERROR_URL = "/onError.jsp";  // TODO: 2018/8/8 后期确定操作失败页面地址 zyk
 
     private static final String REQUEST_MAPPING = "/hyjf-admin/bank/merchant/account";
 
@@ -177,12 +185,13 @@ public class BankMerchantAccountController extends BaseController {
 
 
     /**
-     * 圈存弹出框
+     * 圈存和圈提统一弹出框
      * @author zhangyk
      * @date 2018/8/7 10:50
      */
     @ApiOperation(value = "圈存弹出窗" ,tags = "圈存弹出窗" )
-    @GetMapping(value = "rechargeInit/{accountCode}")
+    @ResponseBody
+    @GetMapping(value = "/rechargeInit/{accountCode}" , produces = "application/json; charset=utf-8")
     public AdminResult rechargeInit(@PathVariable String accountCode){
         AdminResult adminResult = new AdminResult();
         CheckUtil.check(StringUtils.isNotBlank(accountCode),MsgEnum.ERR_OBJECT_REQUIRED,"账户号accountCode");
@@ -201,15 +210,41 @@ public class BankMerchantAccountController extends BaseController {
 
 
     /**
+     * 统一参数校验
+     * @author zhangyk
+     * @date 2018/8/7 10:50
+     */
+    @ApiOperation(value = "统一参数校验(真正调用圈存和圈提操作之前调用)" ,tags = "统一参数校验(真正调用圈存和圈提操作之前调用)" )
+    @ResponseBody
+    @GetMapping(value = "/checkParam" , produces = "application/json; charset=utf-8")
+    public AdminResult checkAction(HttpServletRequest request){
+        AdminResult adminResult = new AdminResult();
+        JSONObject ret = new JSONObject();
+        String amount = request.getParameter("amount");
+        String accountCode = request.getParameter("accountCode");
+        String msg = bankMerchantAccountService.checkParam(amount, accountCode);
+        String checkStatus = "Y";
+        if (StringUtils.isNotBlank(msg)) {
+            ret.put("info", msg);
+            checkStatus = "N";
+        }
+        ret.put("checkStatus",checkStatus);
+        adminResult.setData(ret);
+        return adminResult;
+    }
+
+
+
+
+    /**
      * 圈存操作
      * @author zhangyk
      * @date 2018/8/7 10:50
      */
     @ApiOperation(value = "圈存操作" ,tags = "圈存操作" )
-    @GetMapping(value = "toRecharge")
+    @GetMapping(value = "/toRecharge" , produces = "application/json; charset=utf-8")
     public AdminResult toRecharge(HttpServletRequest request){
         AdminResult adminResult = new AdminResult();
-        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         String accountCode = request.getParameter("accountCode");
         String transAmt = request.getParameter("amount");// 交易金额
         CheckUtil.check(StringUtils.isAnyBlank(accountCode,transAmt) , MsgEnum.ERR_OBJECT_REQUIRED,"商户号或者交易金额");
@@ -230,6 +265,7 @@ public class BankMerchantAccountController extends BaseController {
         String bankId = "";// 充值银行卡号
         String userName = ""; // 用户名
         String mobile="";
+
         String idNo="";
         String idType="";
         String userId ="0"; // 后续待优化，目前先用0代表，平台用户体现应该插入别的表 hyjf_bank_merchant_account_list
@@ -246,8 +282,8 @@ public class BankMerchantAccountController extends BaseController {
         // 调用江西银行接口(2.3.3.圈存)
         BankCallBean bean = new BankCallBean();
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(0));
-        String errorUrl = systemConfig.getAdminFrontHost()+ "/admin/onError";  // TODO: 2018/8/7   后期确认错误页面地址 zyk
-        String successUrl = systemConfig.getAdminFrontHost() + "/admin/onSuccess" ; // TODO: 2018/8/7 后期去人成功页面 zyk
+        String errorUrl = systemConfig.getAdminFrontHost()+ OPT_ERROR_URL;
+        String successUrl = systemConfig.getAdminFrontHost() + OPT_SUCCESS_URL ;
         String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + RECHARGE_METHOD_NAME;
 
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
@@ -292,7 +328,7 @@ public class BankMerchantAccountController extends BaseController {
             try {
                 map = BankCallUtils.callApiMap(bean);
             } catch (Exception e) {
-                logger.error("{}银行接口调用失败！",METHOD_NAME);
+                logger.error("{}银行接口调用失败！",RECHARGE_LOG_NAME);
                 throw new CheckException("1","调用银行接口失败!");
             }
         }else {
@@ -304,10 +340,13 @@ public class BankMerchantAccountController extends BaseController {
     }
 
 
-
-
-    @RequestMapping(RECHARGE_METHOD_NAME)
+    /**
+     * 圈存异步回调
+     * @author zhangyk
+     * @date 2018/8/8 14:17
+     */
     @ResponseBody
+    @RequestMapping(value = RECHARGE_METHOD_NAME , produces = "application/json; charset=utf-8")
     public BankCallResult rechargeCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info("圈存回调: 接收到参数[{}]",JSON.toJSONString(bean));
         logger.info( "公司账户[{}]充值回调开始", bean.getLogOrderId());
@@ -366,6 +405,192 @@ public class BankMerchantAccountController extends BaseController {
         }
         return result;
     }
+
+
+
+
+    /**
+     * 圈提操作
+     * @author zhangyk
+     * @date 2018/8/8 15:49
+     */
+    @ApiOperation(value = "圈提操作" ,tags = "圈提操作" )
+    @GetMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
+    public AdminResult withDraw(HttpServletRequest request){
+        AdminResult adminResult = new AdminResult();
+        JSONObject result = new JSONObject();
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        String accountCode = request.getParameter("accountCode");
+        String transAmt = request.getParameter("amount");// 交易金额
+        BankMerchantAccountVO bankMerchantAccount = bankMerchantAccountService.getBankMerchantAccount(accountCode);
+        String forgotPwdUrl="";
+        if(bankMerchantAccount.getIsSetPassword()==0){
+            forgotPwdUrl=systemConfig.getAdminHost() + REQUEST_MAPPING + "/setPassword?accountCode="+accountCode ;
+        }else{
+            forgotPwdUrl=systemConfig.getAdminHost() + REQUEST_MAPPING +"/resetPassword?accountCode="+accountCode ;
+        }
+        result.put("availableBalance", df.format(bankMerchantAccount.getAvailableBalance()));
+        result.put("account", accountCode);
+
+
+        BankMerchantAccountInfoVO info=bankMerchantAccountService.getBankMerchantAccountInfoByCode(accountCode);
+
+        // 取得手续费 默认1
+        String fee = "0";
+        // 实际取现金额
+
+        String bankId = "";// 提现银行卡号
+        String userName = ""; // 用户名
+        String mobile="";
+        String idNo="";
+        String idType="";
+        String userId ="0"; // 后续待优化，目前先用0代表，平台用户体现应该插入别的表 hyjf_bank_merchant_account_list
+        if(info!=null){
+            //服务费账户
+            mobile=info.getMobile();
+            idNo=info.getIdNo();
+            idType=info.getIdType();
+            userName = info.getAccountName(); // 用户名
+            bankId = info.getBankCard();// 提现银行卡号
+        } else{
+            throw  new CheckException("账户信息不存在");
+        }
+
+        // 调用汇付接口(提现)
+        String errorUrl = systemConfig.getAdminFrontHost()  + OPT_ERROR_URL;
+        String notifyUrl = systemConfig.getAdminHost() + REQUEST_MAPPING + "/withDrawCallback";
+        String successUrl = systemConfig.getAdminFrontHost() + OPT_SUCCESS_URL;
+
+        // 调用汇付接口(4.2.2 用户绑卡接口)
+        BankCallBean bean = new BankCallBean();
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(0));
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogUserId("0");
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_CREDIT_FOR_UNLOAD_PAGE);
+        bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+        // 银行存管
+        bean.setTxCode(BankCallConstant.TXCODE_CREDIT_FOR_UNLOAD_PAGE);
+        bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
+        bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
+        bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
+        bean.setAccountId(accountCode);// 存管平台分配的账号
+        bean.setCurrency(BankCallConstant.CURRENCY_TYPE_RMB);
+        bean.setCardNo(bankId);// 银行卡号
+        bean.setIdType(idType);// 证件类型25组织机构代码
+        bean.setIdNo(idNo);// 证件号
+        bean.setName(userName);// 姓名
+        bean.setMobile(mobile);// 手机号
+
+        bean.setTxAmount(CustomUtil.formatAmount(transAmt));
+        bean.setTxFee(fee);
+        bean.setForgotPwdUrl(forgotPwdUrl);
+        bean.setRetUrl(errorUrl);// 商户前台台应答地址(必须)
+        bean.setNotifyUrl(notifyUrl); // 商户后台应答地址(必须)
+        bean.setSuccessfulUrl(successUrl);
+
+        bean.setRouteCode("2"); // 2-人行大额通道
+        bean.setCardBankCnaps("313421081204"); // routeCode=2，必输 南昌银行铁路支行
+
+        LogAcqResBean logAcq = new LogAcqResBean();
+
+        logAcq.setCardNo(accountCode);
+        logAcq.setFee("0");
+        bean.setLogAcqResBean(logAcq);
+        // 插值用参数
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", userId);
+        params.put("userName", userName);
+        params.put("ip", CustomUtil.getIpAddr(request));
+        params.put("bankId", bankId);
+        params.put("fee", CustomUtil.formatAmount("0"));
+        params.put("client", "0");
+        // 用户提现前处理
+        int cnt = this.bankMerchantAccountService.updateBeforeCash(bean, params,bankMerchantAccount);
+        Map<String,Object> map = new HashMap<>();
+        if (cnt >0){
+            // 继续调用业务
+            try {
+                map = BankCallUtils.callApiMap(bean);
+            } catch (Exception e) {
+                logger.error("{}银行接口调用失败！",WITHDRAW_LOG_NAME);
+                throw new CheckException("1","调用银行接口失败!");
+            }
+        }else {
+            // 重复操作
+            throw new CheckException("1","请不要重复操作");
+        }
+        adminResult.setData(map);
+        return adminResult;
+
+    }
+
+    /**
+     * 圈提异步回调
+     * @author zhangyk
+     * @date 2018/8/8 15:49
+     */
+    @ApiOperation(value = "提现异步回调", tags = "提现异步回调")
+    @ResponseBody
+    @RequestMapping(value = WITHDRAW_METHOD_NAME , produces = "application/json; charset=utf-8")
+    public BankCallResult withdrawCallBack(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
+        logger.info(bean.getLogOrderId()+ " 公司账户提现回调开始");
+        BankCallResult result = new BankCallResult();
+        bean.convert();
+        // 发送状态
+        String status = BankCallStatusConstant.STATUS_VERTIFY_OK;
+
+        // 成功或审核中或提现失败
+        if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode())) {
+            try {
+                Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
+                // 插值用参数
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("userId", String.valueOf(userId));
+                params.put("ip", CustomUtil.getIpAddr(request));
+
+                // 执行提现后处理
+                this.bankMerchantAccountService.handlerAfterCash(bean, params);
+                // 执行结果(成功)
+                if (BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+                    status = BankCallStatusConstant.STATUS_SUCCESS;
+                } else {
+                    status = BankCallStatusConstant.STATUS_FAIL;
+                }
+                logger.info(bean.getLogOrderId()+ " 成功");
+            } catch (Exception e) {
+                // 执行结果(失败)
+                logger.error("公司账户提现回调"+e.getMessage());
+            }
+
+        } else {
+            logger.info("公司账户提现失败 "+bean.get(BankCallParamConstant.PARAM_RETCODE));
+            // 执行结果(失败)
+            status = BankCallStatusConstant.STATUS_FAIL;
+            // 更新提现失败原因
+            String reason = bean.getRetMsg();
+            if (StringUtils.isNotEmpty(reason)) {
+                if (reason.contains("%")) {
+                    reason = URLCodec.decodeURL(reason);
+                }
+            }
+            if (StringUtils.isNotEmpty(bean.getLogOrderId())) {
+                this.bankMerchantAccountService.updateBankAccountListFailByOrderId(bean.getLogOrderId());
+            }
+            logger.info(bean.getLogOrderId()+ " 失败");
+        }
+
+        if (BankCallStatusConstant.STATUS_SUCCESS.equals(status)) {
+            result.setStatus(true);
+            result.setMessage("恭喜您，提现成功");
+        } else {
+            result.setStatus(true);
+            result.setMessage("银行处理中，请稍后查询交易明细");
+        }
+        return result;
+    }
+
+
 
 
     /**
@@ -457,7 +682,7 @@ public class BankMerchantAccountController extends BaseController {
         int loginUserId = 0;//Integer.parseInt(ShiroUtil.getLoginUserId());
         BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(loginUserId, merrpAccount);
         // 画面验证
-        // TODO: 2018/8/8 zhangqingqing 
+        // TODO: 2018/8/8 zhangqingqing
        /*this.validatorFieldCheck(modelAndView, form, bankBalance);
         if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
             modelAndView.addObject(BankMerchantAccountDefine.RED_POCKET_SEND_FORM, form);
@@ -465,7 +690,7 @@ public class BankMerchantAccountController extends BaseController {
         }*/
         // IP地址
         String ip = CustomUtil.getIpAddr(request);
-        // TODO: 2018/8/8  
+        // TODO: 2018/8/8
       //  String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId()));
         String orderId = "";
         BankCallBean bean = new BankCallBean();

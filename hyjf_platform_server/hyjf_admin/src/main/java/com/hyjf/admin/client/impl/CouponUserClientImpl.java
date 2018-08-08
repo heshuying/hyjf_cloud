@@ -262,7 +262,7 @@ public class CouponUserClientImpl implements CouponUserClient {
      */
     @Override
     public JSONObject getBatchCoupons(Map<String, String> params) {
-        String url = "http://CS-TRADE/cs-user/checkCoupon/getBatchCoupons";
+        String url = "http://AM-TRADE/am-trade/checkCoupon/getBatchCoupons";
         return restTemplate.postForEntity(url,params,JSONObject.class).getBody();
     }
 

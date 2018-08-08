@@ -10,6 +10,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 
 /**
  * @author libin
@@ -21,12 +22,6 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 	@Autowired
 	public AmTradeClient amTradeClient;
 
-	/**
-	 * 汇计划提成列表查询
-	 *
-	 * @param instCodeSrch
-	 * @return List<HjhAssetTypeVO>
-	 */
 	@Override
 	public HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form) {
 		HjhCommissionResponse response = amTradeClient.selectHjhCommissionList(form);
@@ -37,6 +32,12 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
 		HjhCommissionResponse response = amTradeClient.selecthjhCommissionTotal(form);
 		return response;
+	}
+
+	@Override
+	public TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids) {
+		TenderCommissionVO vo = amTradeClient.queryTenderCommissionByPrimaryKey(ids);
+		return vo;
 	}
 
 }

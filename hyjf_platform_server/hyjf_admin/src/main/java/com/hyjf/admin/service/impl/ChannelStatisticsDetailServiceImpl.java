@@ -29,7 +29,7 @@ public class ChannelStatisticsDetailServiceImpl  implements ChannelStatisticsDet
 				userIds[i] = list.get(i).getUserId();
 			}
 			request.setUserIds(userIds);
-			ChannelStatisticsDetailResponse amTradeResponse = amUserClient.searchChannelStatisticsDetail(request);
+			ChannelStatisticsDetailResponse amTradeResponse = amTradeClient.searchChannelStatisticsDetail(request);
 			if(!CollectionUtils.isEmpty( amTradeResponse.getResultList())) {
 				for (int i = 0; i < list.size(); i++) {
 					ChannelStatisticsDetailVO vo = list.get(i);

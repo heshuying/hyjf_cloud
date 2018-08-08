@@ -1,5 +1,7 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BorrowProjectTypeClient;
 import com.hyjf.admin.service.BorrowProjectTypeService;
 import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
@@ -21,7 +23,9 @@ import java.util.List;
 public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
 
     @Autowired
-    private BorrowProjectTypeClient borrowProjectTypeClient;
+    private AmTradeClient amTradeClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
     /**
      * 查询列表
      * @param adminRequest
@@ -30,10 +34,10 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
     @Override
    public BorrowProjectTypeResponse selectProjectTypeList(BorrowProjectTypeRequest adminRequest){
         BorrowProjectTypeResponse  result=new BorrowProjectTypeResponse();
-        List<ParamNameVO> paramNameVO =borrowProjectTypeClient.selectProjectTypeParamList();
+        List<ParamNameVO> paramNameVO =amConfigClient.selectProjectTypeParamList();
         if(!CollectionUtils.isEmpty(paramNameVO)){
             adminRequest.setParamNameVO(paramNameVO);
-            result=borrowProjectTypeClient.selectProjectTypeList(adminRequest);
+            result=amTradeClient.selectProjectTypeList(adminRequest);
         }
         return  result;
     }
@@ -46,7 +50,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public BorrowProjectTypeResponse selectProjectTypeRecord(BorrowProjectTypeRequest adminRequest){
-        return borrowProjectTypeClient.selectProjectTypeRecord(adminRequest);
+        return amTradeClient.selectProjectTypeRecord(adminRequest);
     }
     /**
      * 根据主键判断汇直投项目类型维护中数据是否存在
@@ -54,7 +58,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public boolean isExistsRecord(BorrowProjectTypeVO record){
-        return borrowProjectTypeClient.isExistsRecord(record);
+        return amTradeClient.isExistsRecord(record);
     }
 
     /**
@@ -63,7 +67,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public BorrowProjectTypeVO getRecord(BorrowProjectTypeVO record){
-        return borrowProjectTypeClient.getRecord(record);
+        return amTradeClient.getRecord(record);
     }
 
     /**
@@ -72,14 +76,14 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public List<BorrowProjectRepayVO> selectRepay(String str){
-        return borrowProjectTypeClient.selectRepay(str);
+        return amTradeClient.selectRepay(str);
     }
     /**
      * 查询类型表
      */
     @Override
     public List<BorrowStyleVO> selectStyles(){
-        return borrowProjectTypeClient.selectStyles();
+        return amTradeClient.selectStyles();
     }
     /**
      * 获取数据字典表的下拉列表
@@ -88,7 +92,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public List<ParamNameVO> getParamNameList(String nameClass){
-        return borrowProjectTypeClient.getParamNameList(nameClass);
+        return amConfigClient.getParamNameList(nameClass);
     }
     /**
      * 汇直投项目类型维护插入
@@ -97,7 +101,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record){
-        return borrowProjectTypeClient.insertRecord(record);
+        return amTradeClient.insertRecord(record);
     }
     /**
      * 汇直投项目类型维护修改
@@ -106,7 +110,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public void updateRecord(BorrowProjectTypeRequest record){
-        borrowProjectTypeClient.updateRecord(record);
+        amTradeClient.updateRecord(record);
     }
     /**
      *  汇直投项目类型维护删除
@@ -114,7 +118,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public BorrowProjectTypeResponse deleteProjectType( BorrowProjectTypeRequest adminRequest){
-        return borrowProjectTypeClient.deleteProjectType(adminRequest);
+        return amTradeClient.deleteProjectType(adminRequest);
     }
     /**
      * 检查项目名称唯一性
@@ -123,6 +127,6 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public int borrowCdIsExists(BorrowProjectTypeRequest borrowCd){
-        return borrowProjectTypeClient.borrowCdIsExists(borrowCd);
+        return amTradeClient.borrowCdIsExists(borrowCd);
     }
 }

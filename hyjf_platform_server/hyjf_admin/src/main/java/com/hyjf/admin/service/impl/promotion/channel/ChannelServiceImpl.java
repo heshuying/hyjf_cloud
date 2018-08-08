@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.promotion.channel;
 
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.UtmClient;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
@@ -22,40 +23,40 @@ import java.util.List;
 public class ChannelServiceImpl implements ChannelService {
     private Logger logger = LoggerFactory.getLogger(ChannelServiceImpl.class);
     @Autowired
-    private UtmClient utmClient;
+    private AmUserClient amUserClient;
 
     @Override
     public Integer countList(ChannelCustomizeVO channelCustomizeVO) {
-        return utmClient.getChannelCount(channelCustomizeVO);
+        return amUserClient.getChannelCount(channelCustomizeVO);
     }
 
     @Override
     public List<ChannelCustomizeVO> getByPageList(ChannelCustomizeVO channelCustomizeVO) {
-        return utmClient.getChannelList(channelCustomizeVO);
+        return amUserClient.getChannelList(channelCustomizeVO);
     }
 
     @Override
     public List<UtmPlatVO> getUtmPlat(String sourceId) {
-        return utmClient.getUtmPlat(sourceId);
+        return amUserClient.getUtmPlat(sourceId);
     }
 
     @Override
     public UtmChannelVO getRecord(String utmId) {
-        return utmClient.getRecord(utmId);
+        return amUserClient.getRecord(utmId);
     }
 
     @Override
     public UserVO getUser(String utmReferrer, String userId) {
-        return utmClient.getUser(utmReferrer, userId);
+        return amUserClient.getUser(utmReferrer, userId);
     }
 
     @Override
     public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
-        return utmClient.insertOrUpdateUtm(channelCustomizeVO);
+        return amUserClient.insertOrUpdateUtm(channelCustomizeVO);
     }
 
     @Override
     public boolean deleteAction(ChannelCustomizeVO channelCustomizeVO) {
-        return utmClient.deleteAction(channelCustomizeVO);
+        return amUserClient.deleteAction(channelCustomizeVO);
     }
 }

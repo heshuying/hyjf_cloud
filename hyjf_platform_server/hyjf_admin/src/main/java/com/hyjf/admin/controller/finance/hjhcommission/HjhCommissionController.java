@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.controller.finance.hjhcommission;
 
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhCommissionViewRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -27,14 +30,23 @@ import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 /**
  * @author libin
@@ -65,7 +77,7 @@ public class HjhCommissionController extends BaseController{
 	@PostMapping(value = "/search")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
-	public AdminResult<ListResult<HjhCommissionCustomizeVO>> init(HttpServletRequest request, @RequestBody HjhCommissionViewRequest viewRequest) { 
+	public AdminResult<ListResult<HjhCommissionCustomizeVO>> init(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) { 
 		// 初始化原子层请求实体
 		HjhCommissionRequest form = new HjhCommissionRequest();
 		// 初始化返回LIST
@@ -92,7 +104,7 @@ public class HjhCommissionController extends BaseController{
 	}
 	
 	/**
-	 * 汇计划提成列表 加入金额/提成金额 累计            
+	 * 汇计划提成列表 加入金额/提成金额 累计             已测试
 	 *
 	 * @param request
 	 * @return 
@@ -116,12 +128,258 @@ public class HjhCommissionController extends BaseController{
 		if (!Response.isSuccess(response)) {
 			jsonObject.put("error", FAIL);
 		}
-		jsonObject.put("tenderTotal", "加入金额累计");
-		jsonObject.put("tenderTotal", response.getTenderTotal());
-		jsonObject.put("commissionTotal", "提成金额累计");
-		jsonObject.put("commissionTotal", response.getCommissionTotal());
+		jsonObject.put("totalMap", response.getTotalMap());
 		jsonObject.put("status", SUCCESS);
 		return jsonObject;
 	}
+	
+    /**
+     * 汇计划提成列表-校验发提成状态是不是已经发放   已测试
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "汇计划提成列表", notes = "汇计划提成列表-校验发提成状态是不是已经发放")
+	@PostMapping(value = "/checkstatus")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	public JSONObject checkStatusAction(HttpServletRequest request , @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
+		JSONObject jsonObject = new JSONObject();
+		int ids = 0;
+		int status = 0;
+		if(viewRequest.getIds() == 0){
+			// 前端未传
+			jsonObject.put("error", "请传入ids!");
+		} else {
+			ids = viewRequest.getIds();
+		}
+		TenderCommissionVO tenderCommission = this.hjhCommissionService.queryTenderCommissionByPrimaryKey(ids);
+		if(tenderCommission != null){
+			// 0:未发放;1:已发放;100:删除
+			status = tenderCommission.getStatus();
+			jsonObject.put("msg", "state : 0:未发放;1:已发放;100:删除");
+			jsonObject.put("state", status);
+			jsonObject.put("status", SUCCESS);
+		} else {
+			jsonObject.put("error", "未查询到该记录！");
+			jsonObject.put("status", FAIL);
+		}
+		return jsonObject;
+	}
+	
+    /**
+     * 发提成跳转展示页面(跳转详情画面) 前端自己传也行
+     * @param request
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "汇计划提成列表", notes = "发提成跳转展示页面(跳转详情画面)")
+	@PostMapping(value = "/showpage")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	public JSONObject showPageAction(HttpServletRequest request , @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("ids", viewRequest.getIds());
+		jsonObject.put("planOrderId", viewRequest.getPlanOrderId());
+		jsonObject.put("planNid", viewRequest.getPlanNid());
+		jsonObject.put("borrowStyle", viewRequest.getBorrowStyle());
+		if(StringUtils.isNotEmpty(viewRequest.getLockPeriod())){
+			jsonObject.put("lockPeriod", viewRequest.getLockPeriod().replace(",",""));
+		}
+		if(StringUtils.isNotEmpty(viewRequest.getUsername())){
+			jsonObject.put("username", viewRequest.getUsername().replace(",",""));
+		}
+		jsonObject.put("commission", viewRequest.getCommission());
+		jsonObject.put("expectApr", viewRequest.getExpectApr());
+		jsonObject.put("countInterestTime", viewRequest.getCountInterestTime());
+		return jsonObject;
+	}
+	
+	/**
+	 * 带条件导出
+	 * 1.无法指定相应的列的顺序，
+	 * 2.无法配置，excel文件名，excel sheet名称
+	 * 3.目前只能导出一个sheet
+	 * 4.列的宽度的自适应，中文存在一定问题
+	 * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
+	 * @param request
+	 * @return 带条件导出         已测试
+	 */
+	@ApiOperation(value = "汇计划提成列表", notes = "带条件导出EXCEL")
+	@PostMapping(value = "/export")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody HjhCommissionViewRequest viewRequest) throws Exception {
+		// 表格sheet名称
+		String sheetName = "汇计划提成列表";
+		// 文件名称
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		// 初始化原子层请求实体
+		HjhCommissionRequest form = new HjhCommissionRequest();
+		// 初始化返回LIST
+		List<HjhCommissionCustomizeVO> returnList = null;
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		// 默认为汇计划类的投资
+		form.setTenderType(2);
+		// 列表查询
+		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
+		if(res != null) {
+			returnList = res.getResultList();
+		}
+		// 列头
+        String[] titles =
+                new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(投资时)", "投资人用户名", 
+                		"投资人用户属性(投资时)",
+                		"加入金额", "提成金额",
+                        "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};
+		
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 生成一个表格
+		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, fileName + "_第1页");
+		
+        if (returnList != null && returnList.size() > 0) {
+            int sheetCount = 1;
+            int rowNum = 0;
+            for (int i = 0; i < returnList.size(); i++) {
+                rowNum++;
+                if (i != 0 && i % 60000 == 0) {
+                    sheetCount++;
+                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (fileName + "_第" + sheetCount + "页"));
+                    rowNum = 1;
+                }
+                // 新建一行
+                Row row = sheet.createRow(rowNum);
+                // 循环数据
+                for (int celLength = 0; celLength < titles.length; celLength++) {
+                	HjhCommissionCustomizeVO bean = returnList.get(i);
+                    // 创建相应的单元格
+                    Cell cell = row.createCell(celLength);
 
+                    if (celLength == 0) {
+                        cell.setCellValue(i + 1);
+                    }
+                    //计划订单号
+                    else if (celLength == 1) {
+                        cell.setCellValue(bean.getOrdid());
+                    }
+                    //计划编号
+                    else if (celLength == 2) {
+                        cell.setCellValue(bean.getBorrowNid());
+                    }
+                    //还款方式
+                    else if (celLength == 3) {
+                    	String str = "";
+                    	if ("month".equals(bean.getBorrowStyleHjh())) {
+							str = "等额本息";
+						}else if("season".equals(bean.getBorrowStyleHjh())) {
+							str = "按季还款";
+						}else if("end".equals(bean.getBorrowStyleHjh())) {
+							str = "按月计息，到期还本还息";
+						}else if("endmonth".equals(bean.getBorrowStyleHjh())) {
+							str = "先息后本";
+						}else if("endday".equals(bean.getBorrowStyleHjh())) {
+							str = "按天计息，到期还本还息";
+						}else if("endmonths".equals(bean.getBorrowStyleHjh())) {
+							str = "按月付息到期还本";
+						}else if("principal".equals(bean.getBorrowStyleHjh())) {
+							str = "等额本金";
+						}
+                        cell.setCellValue(str);  
+                    }
+                    //锁定期
+                    else if (celLength == 4) {
+                    	String str = "";
+                    	if (bean.getLockPeriod()==null) {
+                    		cell.setCellValue(str);
+                    	}else { 
+	                		if ("1".equals(bean.getIsMonth())) {
+	                			str = "个月";
+	                		}else if("0".equals(bean.getIsMonth())) {
+	                			str = "天";
+	                		}
+	                		cell.setCellValue(bean.getLockPeriod() + str);}
+                    }
+                  //预期年化收益率
+                    else if (celLength == 5) {
+                    	cell.setCellValue( bean.getExpectApr().toString()+" %");
+                    }
+                    
+                   //提成人
+                    else if (celLength == 6) {
+                    	//UsernameTender 是投资人用户名
+                        /*cell.setCellValue(bean.getUsernameTender());*/
+                        // Username是 提成人用户名
+                        cell.setCellValue(bean.getUsername()); 
+                    }
+                    
+                  //提成人真实姓名
+                    else if (celLength == 7) {
+                    	cell.setCellValue(bean.getTrueNameTender());
+                    }
+                  //提成人用户属性（投资时）
+                    else if (celLength == 8) {
+                        String attribute = "";
+                        if ("0".equals(bean.getAttribute())) {
+                            attribute = "无主单";
+                        } else if ("1".equals(bean.getAttribute())) {
+                            attribute = "有主单";
+                        } else if ("2".equals(bean.getAttribute())) {
+                            attribute = "线下员工";
+                        } else if ("3".equals(bean.getAttribute())) {
+                            attribute = "线上员工";
+                        }
+                        cell.setCellValue(attribute);
+                    }
+                    //投资人用户名
+                    else if (celLength == 9) {
+                        cell.setCellValue(bean.getUsernameTender());
+                    }
+                    //投资人用户属性(投资时)
+                    else if (celLength == 10) {
+                        String attribute = "";
+                        if ("0".equals(bean.getAttributeTender())) {
+                            attribute = "无主单";
+                        } else if ("1".equals(bean.getAttributeTender())) {
+                            attribute = "有主单";
+                        } else if ("2".equals(bean.getAttributeTender())) {
+                            attribute = "线下员工";
+                        } else if ("3".equals(bean.getAttributeTender())) {
+                            attribute = "线上员工";
+                        }
+                        cell.setCellValue(attribute);
+                    }
+                    //加入金额
+                    else if (celLength == 11) {
+                        cell.setCellValue(bean.getAccountTender().toString() + "元");
+                    }
+                    //提成金额
+                    else if (celLength == 12) {
+                        cell.setCellValue(bean.getCommission().toString() + "元");
+                    }
+                   //提成发放状态
+                    else if (celLength == 13) {
+                        cell.setCellValue(bean.getStatusName());
+                    }
+                    //提成发放时间
+                    else if (celLength == 14) {
+                        cell.setCellValue(bean.getSendTimeView());
+                    }
+                    //计划订单加入时间
+                    else if (celLength == 15) {
+                    	cell.setCellValue(bean.getAddTime());
+                    }
+                    //计划订单锁定时间
+                    else if (celLength == 16) {
+                    	cell.setCellValue(bean.getCountInterestTimeView());
+                    }
+                }
+            }
+        }
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}
+	
 }

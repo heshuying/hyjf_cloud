@@ -4,6 +4,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.VipManageClient;
 import com.hyjf.admin.service.VipManageService;
 import com.hyjf.am.response.admin.VipDetailListResponse;
@@ -28,7 +29,7 @@ import java.util.Map;
 public class VipManageServiceImpl implements VipManageService {
 
     @Autowired
-    private VipManageClient vipManageClient;
+    private AmUserClient amUserClient;
 
     @Override
     public JSONObject initVipManage() {
@@ -44,7 +45,7 @@ public class VipManageServiceImpl implements VipManageService {
      */
     @Override
     public VipManageResponse searchList(VipManageRequest vipManageRequest) {
-        return vipManageClient.searchList(vipManageRequest);
+        return amUserClient.searchList(vipManageRequest);
     }
 
     /**
@@ -54,11 +55,11 @@ public class VipManageServiceImpl implements VipManageService {
      */
     @Override
     public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
-        return vipManageClient.searchDetailList(detailListRequest);
+        return amUserClient.searchDetailList(detailListRequest);
     }
 
     @Override
     public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
-        return vipManageClient.searchUpdateGradeList(vgl);
+        return amUserClient.searchUpdateGradeList(vgl);
     }
 }

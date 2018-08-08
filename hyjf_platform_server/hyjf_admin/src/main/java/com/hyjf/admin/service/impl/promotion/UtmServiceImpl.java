@@ -1,7 +1,9 @@
 package com.hyjf.admin.service.impl.promotion;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.UtmClient;
+import com.hyjf.admin.client.impl.AmUserClientImpl;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.vo.admin.UtmVO;
@@ -23,7 +25,7 @@ import java.util.Map;
 public class UtmServiceImpl implements UtmService {
     private Logger logger = LoggerFactory.getLogger(UtmServiceImpl.class);
     @Autowired
-    private UtmClient utmClient;
+    private AmUserClient amUserClient;
     @Override
     public JSONObject getByPageList(Map<String,Object> map, Integer currPage, Integer pageSize){
         JSONObject jsonObject = new JSONObject();
@@ -34,7 +36,7 @@ public class UtmServiceImpl implements UtmService {
             recodeTotal = Integer.parseInt(object.toString());
         }
         if(0 == recodeTotal){
-            UtmResponse utmResponse = utmClient.getCountByParam(map);
+            UtmResponse utmResponse = amUserClient.getCountByParam(map);
             if(null != utmResponse){
                 recodeTotal = utmResponse.getRecordTotal();
             }
@@ -42,7 +44,7 @@ public class UtmServiceImpl implements UtmService {
         //查询当前页数据
         map.put("limitStart",(currPage -1) * pageSize);
         map.put("limitEnd",currPage * pageSize);
-        UtmResponse utmResponse = utmClient.getByPageList(map);
+        UtmResponse utmResponse = amUserClient.getByPageList(map);
         List<UtmVO> list = new ArrayList<UtmVO>();
         if(null != utmResponse){
             list = utmResponse.getResultList();
@@ -58,21 +60,21 @@ public class UtmServiceImpl implements UtmService {
 
     @Override
     public UtmPlatVO getDataById(Integer id) {
-        return utmClient.getDataById(id);
+        return amUserClient.getDataById(id);
     }
 
     @Override
     public int sourceNameIsExists(String sourceName, Integer sourceId) {
-        return utmClient.sourceNameIsExists(sourceName,sourceId);
+        return amUserClient.sourceNameIsExists(sourceName,sourceId);
     }
 
     @Override
     public boolean insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
-        return utmClient.insertOrUpdateUtmPlat(utmPlatVO);
+        return amUserClient.insertOrUpdateUtmPlat(utmPlatVO);
     }
 
     @Override
     public boolean deleteUtmPlatAction(UtmPlatVO utmPlatVO) {
-        return utmClient.utmClientdeleteUtmPlatAction(utmPlatVO);
+        return amUserClient.utmClientdeleteUtmPlatAction(utmPlatVO);
     }
 }

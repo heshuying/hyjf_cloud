@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.service.regist;
+package com.hyjf.cs.user.service.register;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -17,7 +17,7 @@ import com.hyjf.cs.user.vo.RegisterRequest;
  * @author zhangqingqing
  * @version RegistService, v0.1 2018/6/11 15:09
  */
-public interface RegistService extends BaseUserService {
+public interface RegisterService extends BaseUserService {
 
     /**
      * 注册参数检查

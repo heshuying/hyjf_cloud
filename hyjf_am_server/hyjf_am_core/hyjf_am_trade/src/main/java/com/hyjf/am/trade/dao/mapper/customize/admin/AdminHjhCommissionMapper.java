@@ -34,5 +34,5 @@ public interface AdminHjhCommissionMapper {
      * @param id
      * @return
      */
-    Map<String, String> queryPushMoneyTotle(HjhCommissionRequest request);
+    Map<String, Object> queryPushMoneyTotle(HjhCommissionRequest request);
 }
