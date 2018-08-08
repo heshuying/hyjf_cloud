@@ -47,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -512,6 +513,11 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		}
 		result.setData(map);
 		return result;
+	}
+
+	@Override
+	public List<BanksConfigVO> getRechargeQuotaLimit() {
+		return amConfigClient.getRechargeQuotaLimit();
 	}
 
 	public void checkUserMessage(BankCardVO bankCard,Integer userId,String money){

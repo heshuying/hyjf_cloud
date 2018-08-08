@@ -22,10 +22,9 @@ import com.hyjf.cs.user.vo.MyProfileVO;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ import java.util.List;
  * @version MyProfileController, v0.1 2018/7/3 15:52
  */
 @Api(value = "wechat端账户总览",tags = "wechat端账户总览")
-@Controller
+@RestController
 @RequestMapping("/hyjf-wechat/myprofile")
 public class MyProfileController extends BaseUserController {
 
@@ -54,7 +53,6 @@ public class MyProfileController extends BaseUserController {
 
     @SignValidate
     @RequestMapping("/profile")
-    @ResponseBody
     public WeChatResult myProfile(HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
@@ -101,7 +99,6 @@ public class MyProfileController extends BaseUserController {
 
     @SignValidate
     @GetMapping("/couponlist")
-    @ResponseBody
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();
         Integer userId = requestUtil.getRequestUserId(request);
