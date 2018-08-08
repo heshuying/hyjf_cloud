@@ -372,7 +372,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
              * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
              */
-            int count = amTradeClient.countUserInvest(userId, borrowNid);
+            int count = 0;
+            if (userId != null){
+                count = amTradeClient.countUserInvest(userId, borrowNid);
+            }
             Boolean viewableFlag = false;
             String statusDescribe = "";
             DebtCreditRequest request = new DebtCreditRequest();
