@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.batch.bank.autoreview;
+package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;

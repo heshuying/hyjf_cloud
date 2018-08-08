@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.batch.hjh.issuerecover;
+package com.hyjf.am.trade.controller.front.hjh.issuerecover;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.controller.BaseController;

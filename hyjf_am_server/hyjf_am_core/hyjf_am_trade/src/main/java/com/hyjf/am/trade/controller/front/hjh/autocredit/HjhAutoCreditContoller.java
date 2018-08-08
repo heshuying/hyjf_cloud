@@ -1,18 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.batch.hjh.autocredit;
+package com.hyjf.am.trade.controller.front.hjh.autocredit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.consumer.AutoIssueConsumer;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
