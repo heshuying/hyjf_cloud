@@ -4,6 +4,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.vo.MyProfileVO;
+import com.hyjf.cs.user.vo.UserAccountInfoVO;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface MyProfileService extends BaseService {
 
     String getUserTrueName(Integer userId);
 
-    void buildUserAccountInfo(Integer userId, MyProfileVO.UserAccountInfo userAccountInfo);
+    void buildUserAccountInfo(Integer userId, UserAccountInfoVO userAccountInfo);
 
     void buildOutInfo(Integer userId, MyProfileVO myProfileVO);
 

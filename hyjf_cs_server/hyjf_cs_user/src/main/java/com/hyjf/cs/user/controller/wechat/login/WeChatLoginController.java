@@ -14,7 +14,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.interceptor.SignValidate;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -98,7 +97,6 @@ public class WeChatLoginController extends BaseUserController {
      * @param sign
      * @return
      */
-    @SignValidate
     @ResponseBody
     @ApiOperation(value = "登出", notes = "登出")
     @RequestMapping(value = "/doLoginOut.do")
