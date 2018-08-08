@@ -36,7 +36,7 @@ public interface BorrowFullService {
      * @param borrowFullRequest
      * @return
      */
-    BorrowFullCustomize sumAccount(BorrowFullRequest borrowFullRequest);
+    BorrowFullCustomize getSumAccount(BorrowFullRequest borrowFullRequest);
 
     /**
      * 复审详细信息
@@ -68,7 +68,7 @@ public interface BorrowFullService {
      * @param borrowNid
      * @return
      */
-    BorrowFullCustomize sumAmount(String borrowNid);
+    BorrowFullCustomize getSumAmount(String borrowNid);
 
     /**
      * 复审提交

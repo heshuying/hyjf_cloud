@@ -9,8 +9,6 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,8 +24,6 @@ import java.util.List;
  */
 @Service
 public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements HjhCalculateFairValueService {
-
-    Logger logger = LoggerFactory.getLogger(HjhCalculateFairValueServiceImpl.class);
 
     /**
      * 根据加入订单号查询计划加入订单
@@ -533,9 +529,9 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
         }
         // 未防止跟计划订单的退出并发问题
         hjhAccede = this.getHjhAccedeByOrderId(accedeOrderId);
-        // 如果是计划订单已退出,不去做后续更新操作
-        logger.info("计划订单已退出,计划加入订单号:" + accedeOrderId + "].");
         if (hjhAccede.getOrderStatus() == 7) {
+            // 如果是计划订单已退出,不去做后续更新操作
+            logger.info("计划订单已退出,计划加入订单号:" + accedeOrderId + "].");
             return;
         }
         // 清算时

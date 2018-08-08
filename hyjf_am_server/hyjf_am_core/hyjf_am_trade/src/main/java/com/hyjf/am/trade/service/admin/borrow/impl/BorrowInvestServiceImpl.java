@@ -80,7 +80,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
      * @return
      */
     @Override
-    public List<BorrowInvestCustomize> exportBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
+    public List<BorrowInvestCustomize> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest) {
         List<BorrowInvestCustomize> list = borrowInvestCustomizeMapper.exportBorrowInvestList(borrowInvestRequest);
         if (!CollectionUtils.isEmpty(list)) {
             Map<String, String> clientMap = CacheUtil.getParamNameMap("CLIENT");
@@ -94,17 +94,6 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             }
         }
         return list;
-    }
-
-    /**
-     * 投资金额合计值取得
-     *
-     * @param borrowInvestRequest
-     * @return
-     */
-    @Override
-    public String sumBorrowInvest(BorrowInvestRequest borrowInvestRequest) {
-        return borrowInvestCustomizeMapper.sumBorrowInvest(borrowInvestRequest);
     }
 
     /**

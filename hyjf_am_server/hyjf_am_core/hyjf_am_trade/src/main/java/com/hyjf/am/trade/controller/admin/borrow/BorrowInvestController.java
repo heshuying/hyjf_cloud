@@ -95,7 +95,7 @@ public class BorrowInvestController {
     @RequestMapping("/export_borrow_invest_list")
     public BorrowInvestCustomizeResponse getExportBorrowInvestList(@RequestBody @Valid BorrowInvestRequest borrowInvestRequest) {
         BorrowInvestCustomizeResponse response = new BorrowInvestCustomizeResponse();
-        List<BorrowInvestCustomize> list = borrowInvestService.exportBorrowInvestList(borrowInvestRequest);
+        List<BorrowInvestCustomize> list = borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
         if (!CollectionUtils.isEmpty(list)) {
             List<BorrowInvestCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowInvestCustomizeVO.class);
             response.setResultList(voList);
