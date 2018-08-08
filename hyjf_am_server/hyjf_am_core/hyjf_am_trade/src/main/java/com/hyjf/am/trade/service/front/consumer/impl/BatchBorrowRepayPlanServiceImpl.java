@@ -59,12 +59,17 @@ import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.dao.model.auto.HjhRepayExample;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
+import com.hyjf.am.trade.mq.producer.CouponLoansHjhMessageProducer;
+import com.hyjf.am.trade.mq.producer.CouponRepayHjhMessageProducer;
+import com.hyjf.am.trade.mq.producer.CouponRepayMessageProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
 import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.cache.RedisConstants;
@@ -132,8 +137,20 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
     @Autowired
     SystemConfig systemConfig;
 	
-	@Autowired
+//	@Autowired
 //	CommisionComputeService commisionComputeService;//TODO:
+	
+	@Autowired
+	private AccountWebListProducer accountWebListProducer;
+	
+	@Autowired
+	private CouponRepayHjhMessageProducer couponRepayHjhMessageProducer;
+	
+	@Autowired
+	private CouponRepayMessageProducer couponRepayMessageProducer;
+	
+	@Autowired
+	private CouponLoansHjhMessageProducer couponLoansHjhMessageProducer;
 	
 	public static JedisPool pool = RedisUtils.getPool();
 	
@@ -2160,7 +2177,26 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		
 		// 管理费大于0时,插入网站收支明细
 		if (manageFee.compareTo(BigDecimal.ZERO) > 0) {
+
+			// 插入网站收支明细记录
+			AccountWebListVO accountWebList = new AccountWebListVO();
+			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
+			accountWebList.setBorrowNid(borrowNid); // 投资编号
+			accountWebList.setUserId(repayUserId); // 借款人
+			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
+			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
+			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
+			accountWebList.setRemark(borrowNid); // 投资编号
+			accountWebList.setCreateTime(nowTime);
+			accountWebList.setFlag(1);
 			//TODO: 网站首支明细队列
+			try {
+				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
+                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
 			
 		}
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
@@ -2171,8 +2207,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!apicronSuccessFlag) {
 			throw new Exception("批次放款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
 		}
-		logger.info("-----------还款结束---" + apicron.getBorrowNid() + "---------" + repayOrderId);
-		logger.info("---------------------还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",判断复投结束时间:" + dateStr + "-----------");
+		logger.info("还款结束---" + apicron.getBorrowNid() + "---------" + repayOrderId);
+		logger.info("还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",判断复投结束时间:" + dateStr + "-----------");
 //		logger.info("---------------------还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",是否复投.是否冻结:" + isForstTime(hjhAccede.getEndDate()) + "-----------");
 		return true;
 	}
@@ -2231,7 +2267,14 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         params.put("mqMsgId", GetCode.getRandomCode(10));
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
-        //TODO: 优惠券还款队列
+
+		try {
+			logger.info("发送优惠券还款队列---" + hjhAccede.getAccedeOrderId());
+			couponRepayHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+        }
+		//TODO: 核对请求参数
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY_HJH, JSONObject.toJSONString(params));
         // add by cwyang 优惠券还款请求加入到消息队列 end
 	}
@@ -3047,7 +3090,27 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		// 管理费大于0时,插入网站收支明细
 		if (manageFee.compareTo(BigDecimal.ZERO) > 0) {
-			//TODO:网站收支明细
+			
+			AccountWebListVO accountWebList = new AccountWebListVO();
+			accountWebList.setOrdid(creditRepay.getAssignOrderId() + "_" + periodNow);// 订单号
+			accountWebList.setBorrowNid(borrowNid); // 投资编号
+			accountWebList.setUserId(repayUserId); // 借款人
+			accountWebList.setAmount(manageFee); // 管理费
+			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
+			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
+			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
+			accountWebList.setRemark(borrowNid); // 投资编号
+			accountWebList.setCreateTime(nowTime);
+			accountWebList.setFlag(1);
+
+			//TODO: 网站首支明细队列
+			try {
+				logger.info("发送credit收支明细---" + repayUserId + "---------" + manageFee);
+                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            } catch (MQException e) {
+                e.printStackTrace();
+            }
+			
 		}
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
 		apicron.setSucCounts(apicron.getSucCounts() + 1);
@@ -3404,6 +3467,15 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
                 params.put("borrowNid", borrowNid);
                 // 当前期
                 params.put("periodNow", String.valueOf(periodNow));
+                
+                //TODO: 核对参数
+        		try {
+        			logger.info("发送优惠券还款队列---" + borrowNid);
+        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                }
+        		
                 //TODO: 优惠券还款请求
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
                 // add by hsy 优惠券还款请求加入到消息队列 end
@@ -3631,7 +3703,13 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
                 // 当前期
                 params.put("periodNow", String.valueOf(periodNow));
                 
-                //TODO: 优惠券还款队列
+                //TODO: 核对参数
+        		try {
+        			logger.info("发送优惠券还款队列---" + borrowNid);
+        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                }
 //                rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
                 // add by hsy 优惠券还款请求加入到消息队列 end
                 
@@ -4336,8 +4414,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(quitTime));
 			bean.setTenderInterestFmt(waitTotal.toString());
 			
-			//TODO: 协议todo
+			//TODO: 协议确认队列
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
+			
+			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+			
 		}catch (Exception e){
 			e.printStackTrace();
 			logger.info("-------------userid:" + userId + ",生成计划加入协议失败！----------");
@@ -4468,7 +4549,13 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
         
-        //TODO: 优惠券还款
+        //TODO: 优惠券还款 ,为什么会跟放款有关系
+		try {
+			logger.info("发送计划优惠券放款---" + hjhAccede.getAccedeOrderId());
+			couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+        }
 //        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONLOANS_HJH, JSONObject.toJSONString(params));
         // add by cwyang 优惠券放款请求加入到消息队列 end
 	}
