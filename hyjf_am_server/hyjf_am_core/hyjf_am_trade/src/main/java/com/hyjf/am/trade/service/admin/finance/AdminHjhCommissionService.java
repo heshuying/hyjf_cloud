@@ -4,8 +4,10 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 
 /**
@@ -27,4 +29,18 @@ public interface AdminHjhCommissionService {
      * @return
      */
 	List<HjhCommissionCustomizeVO> selectHjhCommissionList(HjhCommissionRequest request,int limitStart,int limitEnd);
+	
+    /**
+     * 查询金额总计 
+     * @param id
+     * @return
+     */
+	Map<String , Object> queryPushMoneyTotle(HjhCommissionRequest request,int limitStart,int limitEnd);
+	
+    /**
+     * 查询汇计划提成是否已经发放
+     * @param id
+     * @return
+     */
+	TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
 }

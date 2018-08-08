@@ -14,7 +14,6 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -27,6 +26,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -3357,6 +3357,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
     }
 
+
     /**
      * 汇计划 - 计划还款 - 统计
      * @param repayRequest
@@ -3453,7 +3454,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 	/**
 	 * 汇计划提成列表查询
 	 *
-	 * @param HjhCommissionRequest
+	 * @param
 	 * @return HjhCommissionResponse
 	 */
 	@Override
@@ -3465,6 +3466,46 @@ public class AmTradeClientImpl implements AmTradeClient{
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response;
 		}
+		return null;
+	}
+
+    @Override
+    public int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount) {
+        Integer response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountByCode",bankMerchantAccount, Integer.class)
+                .getBody();
+        return response;
+    }
+
+    /**
+	 * 查询金额总计
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
+		HjhCommissionResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
+						HjhCommissionResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+	
+    /**
+	 * 查询汇计划提成是否已经发放
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids) {
+		TenderCommissionResponse response = restTemplate
+	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryTenderCommissionByPrimaryKey/" + ids, TenderCommissionResponse.class).getBody();
+	    if (response != null) {
+	        return response.getResult();
+	    }
 		return null;
 	}
 }

@@ -330,7 +330,7 @@ public class BorrowInvestController extends BaseController {
     @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
     @PostMapping("/debt_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
-    public AdminResult debtInfo(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody InvestorRequest investorRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
         BeanUtils.copyProperties(investorRequest, investorDebtBean);
         return borrowInvestService.debtInfo(investorDebtBean);
@@ -360,9 +360,9 @@ public class BorrowInvestController extends BaseController {
     }
 
     @ApiOperation(value = "运营记录-投资明细", notes = "运营记录-投资明细")
-    @PostMapping("/optactioninit")
+    @PostMapping("/optaction_init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult optRecordTender(@RequestBody BorrowInvestRequestBean requestBean) {
+    public AdminResult<BorrowInvestResponseBean> optRecordTender(@RequestBody BorrowInvestRequestBean requestBean) {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(requestBean, borrowInvestRequest);

@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.InvestorDebtBean;
 import com.hyjf.admin.beans.request.InvestorRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
+import com.hyjf.admin.beans.vo.AdminBorrowInvestCustomizeVO;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -43,9 +44,9 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.Validator;
@@ -124,8 +125,10 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         //查询列表 总计
         if (count > 0) {
             List<BorrowInvestCustomizeVO> list = amTradeClient.selectBorrowInvestList(borrowInvestRequest);
+            //对应前端swagger
+            List<AdminBorrowInvestCustomizeVO> voList = CommonUtils.convertBeanList(list,AdminBorrowInvestCustomizeVO.class);
             String sumAccount = amTradeClient.selectBorrowInvestAccount(borrowInvestRequest);
-            responseBean.setRecordList(list);
+            responseBean.setRecordList(voList);
             responseBean.setSumAccount(sumAccount);
         }
         return responseBean;
@@ -151,10 +154,12 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     @Override
     public AdminResult debtInfo(InvestorDebtBean investorDebtBean) {
         List<BankCallBean> results = new ArrayList<BankCallBean>();
+        //项目校验 成功返回"OK" 失败返回错误信息
         String checkResult = this.checkItems(investorDebtBean);
         if (!OK.equals(checkResult)) {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
+        //查询开户信息
         BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccountByUserId(Integer.valueOf(investorDebtBean.getUserId()));
         if (bankOpenAccount == null) {
             return new AdminResult(BaseResult.FAIL, "该用户没有开户信息！");
@@ -169,6 +174,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             }
         }
         BorrowInvestResponseBean responseBean = new BorrowInvestResponseBean();
+        //根据银行返回内容编辑前端展示列表
         responseBean.setDetailList(this.getDetailList(results));
         return new AdminResult(responseBean);
     }
@@ -180,9 +186,11 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
      * @return
      */
     private String checkItems(InvestorDebtBean investorDebtBean) {
+        //校验标的编号
         if (StringUtils.isBlank(investorDebtBean.getBorrowNid())) {
             return "标的编号为空";
         }
+        //校验用户ID
         if (StringUtils.isBlank(investorDebtBean.getUserId())) {
             return "用户ID为空";
         }
@@ -205,22 +213,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         // 银行接口用BEAN
         BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10, BankCallConstant.TXCODE_CREDIT_DETAILS_QUERY, Integer.valueOf(investorDebtBean.getUserId()));
 
-        //共同参数删除
-//        String instCode = PropUtils.getSystem(BankCallConstant.BANK_INSTCODE);//机构代码
-//        String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);//银行代码
-        String txDate = GetOrderIdUtils.getTxDate();
-        String txTime = GetOrderIdUtils.getTxTime();
-        String seqNo = GetOrderIdUtils.getSeqNo(6);
-        String channel = BankCallConstant.CHANNEL_PC;
+        //调用银行接口的共同参数已经删除
         String pageSize = "50";// 页长
         String pageNum = "1";// 页数（暂定一页）
-        //设置查询需要参数
-//        bean.setInstCode(instCode);
-//        bean.setBankCode(bankCode);
-//        bean.setTxDate(txDate);
-//        bean.setTxTime(txTime);
-//        bean.setSeqNo(seqNo);
-//        bean.setChannel(channel);
         bean.setAccountId(accountId);// 借款人电子账号
         bean.setProductId(investorDebtBean.getBorrowNid());
         bean.setState(BankCallConstant.ALL_INVESTOR_DEBT);//目前查所有债权
@@ -390,7 +385,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         if (user == null) {
             return new AdminResult(BaseResult.FAIL, "用户信息不存在");
         }
+        // 获取用户投资协议记录
         TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
+        // 签署成功(status = 2)
         if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
             accedeListService.updateSaveSignInfo(tenderAgreement, borrowNid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
         } else {
@@ -403,7 +400,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             bean.setTenderUserName(user.getUsername());
             bean.setTenderInterest(br.getRecoverInterest());
             bean.setTenderType(0);
-            //法大大
+            // 法大大生成合同
             try {
                 fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
             } catch (MQException e) {
@@ -422,15 +419,16 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
      */
     @Override
     public AdminResult sendAgreement(InvestorRequest investorRequest) {
+        //发送协议字段校验
         String checkResult = this.checkSendAgreement(investorRequest);
         if (!OK.equals(checkResult)) {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
-        String userid = investorRequest.getUserId();
+        String userId = investorRequest.getUserId();
         String nid = investorRequest.getNid();
-        String borrownid = investorRequest.getBorrowNid();
+        String borrowNid = investorRequest.getBorrowNid();
         String email = investorRequest.getEmail();
-        String msg = this.resendMessageAction(userid, nid, borrownid, email);
+        String msg = this.resendMessageAction(userId, nid, borrowNid, email);
 
         if (msg == null) {
             return new AdminResult();
@@ -444,18 +442,19 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     private String resendMessageAction(String userId, String nid, String borrowNid, String sendEmail) {
         try {
             PdfGenerator pdfGenerator = new PdfGenerator();
+            //投资列表查询类
             BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
             borrowInvestRequest.setUserId(Integer.valueOf(userId));
             borrowInvestRequest.setBorrowNid(borrowNid);
             borrowInvestRequest.setNid(nid);
-            // 向每个投资人发送邮件
+            // 向投资人发送邮件
             if (Validator.isNotNull(userId) && NumberUtils.isNumber(userId)) {
-
+                //查询用户
                 UserVO user = amUserClient.findUserById(Integer.valueOf(userId));
-
                 if (user == null) {
                     return "用户不存在！";
                 }
+                //校验用户邮箱地址
                 String email = user.getEmail();
                 if (StringUtils.isNotBlank(sendEmail)) {
                     email = sendEmail;
@@ -465,6 +464,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                 }
                 Map<String, String> msg = new HashMap<String, String>();
                 msg.put(VAL_NAME, user.getUsername());
+                //查询用户信息
                 UserInfoVO usersInfo = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 if (Validator.isNotNull(usersInfo) && Validator.isNotNull(usersInfo.getSex())) {
                     if (usersInfo.getSex() == 2) {
@@ -476,27 +476,29 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                 String fileName = borrowNid + "_" + nid + ".pdf";
                 String filePath = systemConfig.getHYJF_MAKEPDF_TEMPPATH() + "BorrowLoans_"
                         + GetDate.getMillis() + StringPool.FORWARD_SLASH;
-//                // 查询借款人用户名
-//                BorrowCommonCustomize borrowCommonCustomize = new BorrowCommonCustomize();
-//                // 借款编码
-//                borrowCommonCustomize.setBorrowNidSrch(borrowNid);
+
+                //查询借款相关信息
                 List<BorrowListCustomizeVO> recordList = amTradeClient.selectBorrowList(borrowNid);
                 if (recordList != null && recordList.size() == 1) {
+                    //pdf文件信息组装
                     Map<String, Object> contents = new HashMap<String, Object>();
                     contents.put("record", recordList.get(0));
                     contents.put("borrowNid", borrowNid);
                     contents.put("nid", nid);
-                    // 借款人用户名
+                    //借款人用户ID
                     int borrowerUserId = recordList.get(0).getUserId();
-                    contents.put("record", recordList.get(0));
+                    //查询借款人用户信息
                     UserInfoVO borrowerUserinfo = amUserClient.findUsersInfoById(borrowerUserId);
                     UserVO borrowerUser = amUserClient.findUserById(borrowerUserId);
+                    //查询标的信息
                     BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+                    //汇计划的标的 借款人用真实姓名 否则用平台注册用户名
                     if (borrow.getPlanNid() != null) {
                         contents.put("borrowUsername", borrowerUserinfo.getTruename().substring(0, 1) + "**");
                     } else {
                         contents.put("borrowUsername", borrowerUser.getUsername().substring(0, 1) + "**");
                     }
+                    //身份证号
                     contents.put("idCard", borrowerUserinfo.getIdcard());
                     // 本笔的放款完成时间 (协议签订日期)
                     contents.put("recoverTime", recordList.get(0).getRecoverLastTime());
@@ -580,7 +582,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         }
                         pdfUrl = pdfGenerator.generateLocal(fileName, fileType, contents);
                     } else {
-                        //该标的与计划关联，应发计划的居间TENDER_CONTRACT
+                        //该标的与计划关联，应发计划的居间TENDER_CONTRACT 原代码的判断没意义 发送的都是一种协议
 //                        if (borrow.getPlanNid() != null) {
 //                            System.out.println("计划的居间协议");
 //                            pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.TENDER_CONTRACT, contents);
@@ -619,16 +621,18 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     }
 
     private String checkSendAgreement(InvestorRequest investorRequest) {
+        //校验邮箱地址
         if (StringUtils.isBlank(investorRequest.getEmail())) {
             return "邮箱地址为空！";
         }
         if (!Validator.isEmailAddress(investorRequest.getEmail())) {
             return "邮箱格式不正确！";
         }
+        //校验投资订单号与标的编号
         if (StringUtils.isBlank(investorRequest.getNid()) || StringUtils.isBlank(investorRequest.getBorrowNid())) {
             return "传递参数不正确！";
         }
-
+        //校验用户ID
         if (StringUtils.isBlank(investorRequest.getUserId())) {
             return "用户ID为空！";
         }

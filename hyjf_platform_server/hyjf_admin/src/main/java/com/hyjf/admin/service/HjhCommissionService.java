@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 
 /**
  * @author libin
@@ -18,5 +19,21 @@ public interface HjhCommissionService {
 	 * @return List<HjhAssetTypeVO>
 	 */
 	HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
+	
+    /**
+     * 查询金额总计 
+     * @param id
+     * @return
+     */
+	HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
+	
+    /**
+     * 汇计划提成列表-校验发提成状态是不是已经发放
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
 
 }

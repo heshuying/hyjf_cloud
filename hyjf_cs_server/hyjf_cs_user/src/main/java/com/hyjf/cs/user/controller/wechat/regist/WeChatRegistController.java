@@ -27,7 +27,7 @@ import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.UserRegistResult;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -60,7 +60,7 @@ import static com.hyjf.common.constants.CommonConstant.*;
 public class WeChatRegistController extends BaseUserController {
 
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     @Autowired
     private SystemConfig systemConfig;

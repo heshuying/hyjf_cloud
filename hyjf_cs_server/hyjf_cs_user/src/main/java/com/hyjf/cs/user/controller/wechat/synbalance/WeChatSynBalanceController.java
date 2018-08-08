@@ -11,7 +11,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.WxSynBalanceResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.interceptor.SignValidate;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.util.RequestUtil;
@@ -46,7 +45,6 @@ public class WeChatSynBalanceController extends BaseUserController {
     RequestUtil requestUtil;
 
     @ApiOperation(value = "wechat端我的-刷新", notes = "wechat端我的-刷新")
-    @SignValidate
     @PostMapping(value = "/init", produces = "application/json; charset=utf-8")
     public BaseResultBean synBalance(HttpServletRequest request, HttpServletResponse response) {
         WxSynBalanceResultBean result = new WxSynBalanceResultBean();

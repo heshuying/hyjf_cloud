@@ -2,8 +2,10 @@ package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -22,6 +24,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +36,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -251,6 +256,167 @@ public class AppBankWithdrawController extends BaseTradeController {
 
         return true;
     }
+
+
+    /**
+     * 获取提现URL -- 提现前参数校验！
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getCashUrl")
+    public JSONObject getCashUrl(@RequestHeader(value = "token") String token,HttpServletRequest request) {
+        JSONObject ret = new JSONObject();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // order
+        String order = request.getParameter("order");
+        // card 银行卡号
+        String cardNo = request.getParameter("cardNo");
+        // getcash 提现金额
+        String total = request.getParameter("total");
+        // 银联行号
+        String openCardBankCode = request.getParameter("openCardBankCode");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String smsCodeWithDraw = request.getParameter("smsCodeWithDraw");
+
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString)
+                || Validator.isNull(order) || Validator.isNull(cardNo) || Validator.isNull(total) || !CommonUtils.isNumber(total)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            ret.put("request", "/getCashUrl");
+            return ret;
+        }
+        if (new BigDecimal(total).compareTo(BigDecimal.ONE) <= 0) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "提现金额需大于1元！");
+            ret.put("request", "/getCashUrl");
+            return ret;
+        }
+        // 取得用户iD
+        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
+        Integer userId = user.getUserId();
+
+        String transAmt = request.getParameter("total");// 交易金额
+        // 取得用户当前余额
+        AccountVO account = this.bankWithdrawService.getAccountByUserId(userId);
+        // 投标金额大于可用余额
+        if (account == null || new BigDecimal(transAmt).compareTo(account.getBankBalance()) > 0) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "提现金额大于可用金额，请确认后再次提现。");
+            ret.put("request", "/getCashUrl");
+            return ret;
+        }
+        //可用金额
+        BigDecimal total2 = account.getBankBalance();
+        //可提现金额
+        BigDecimal availableCash = null;
+        // 获取用户角色
+        UserInfoVO usersInfo = bankWithdrawService.getUserInfoByUserId(userId);
+        if (usersInfo != null && usersInfo.getRoleId() == 1) {
+            int tenderRecord = bankWithdrawService.getTenderRecord(userId);
+            if (tenderRecord <= 0) {
+                List<AccountRechargeVO> accountRecharges = bankWithdrawService.getRechargeMoney(userId);
+                // 当天充值，提现金额为当前余额减去当日充值金额
+                if (!CollectionUtils.isEmpty(accountRecharges)) {
+                    for (AccountRechargeVO accountRecharge : accountRecharges) {
+                        total2 = total2.subtract(accountRecharge.getBalance());
+                        availableCash = total2;
+                    }
+                    if (StringUtils.isNotBlank(transAmt) && new BigDecimal(transAmt).compareTo(availableCash) > 0) {
+                        ret.put("status", "1");
+                        ret.put("statusDesc", "当天充值资金当天无法提现，请调整取现金额。");
+                        ret.put("request", "/getCashUrl");
+                        return ret;
+                    }
+                }
+            }
+        }
+
+        logger.info("开户行号openCardBankCode is :{}", openCardBankCode);
+        // 人行通道 提现校验
+
+        String routeCode = "";
+        if (new BigDecimal(total).compareTo(new BigDecimal(50000)) > 0) {
+            routeCode = "2";// 路由代码
+        }
+
+        if ("2".equals(routeCode) && StringUtils.isBlank(openCardBankCode)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "大额提现时,开户行号不能为空");
+            ret.put("request", "/getCashUrl");
+            return ret;
+        }
+
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            ret.put("request", "/getCashUrl");
+            return ret;
+        }
+        // 验证Order
+        if (!SecretUtil.checkOrder(key, token, randomString, order)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            ret.put("request", "/getCashUrl");
+            return ret;
+        }
+
+        try {
+            /** 充值接口 */
+            String withdrawUrl = super.getFrontHost(systemConfig,platform) + "/bank/user/withdraw/userBankWithdraw";
+            String uuid = getUUID();
+            RedisUtils.set("widraw"+cardNo, uuid);
+            ret.put("status", "0");
+            ret.put("statusDesc", "成功");
+            ret.put("request", "/getCashUrl");
+            StringBuffer sbUrl = new StringBuffer();
+            sbUrl.append(withdrawUrl);
+            sbUrl.append("?").append("version").append("=").append(version);
+            sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+            sbUrl.append("&").append("platform").append("=").append(platform);
+            sbUrl.append("&").append("randomString").append("=").append(randomString);
+            sbUrl.append("&").append("sign").append("=").append(sign);
+            sbUrl.append("&").append("token").append("=").append(strEncode(token));
+            sbUrl.append("&").append("order").append("=").append(strEncode(order));
+            sbUrl.append("&").append("cardNo").append("=").append(cardNo);
+            sbUrl.append("&").append("total").append("=").append(total);
+            sbUrl.append("&").append("routeCode").append("=").append(routeCode);
+            sbUrl.append("&").append("openCardBankCode").append("=").append(openCardBankCode);
+            sbUrl.append("&").append("phoneNumber").append("=").append(phoneNumber);
+            sbUrl.append("&").append("smsCodeWithDraw").append("=").append(smsCodeWithDraw);
+            logger.info("返回提现url为: {}", sbUrl.toString());
+            ret.put("url", sbUrl.toString());
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "获取提现URL失败");
+        }
+        return ret;
+    }
+    /**
+     * 生成UUID
+     * @return
+     */
+    public static String getUUID(){
+        UUID uuid=UUID.randomUUID();
+        String str = uuid.toString();
+        String uuidStr=str.replace("-", "");
+        return uuidStr;
+    }
+
+
     /**
      * 用户银行提现
      * @Description

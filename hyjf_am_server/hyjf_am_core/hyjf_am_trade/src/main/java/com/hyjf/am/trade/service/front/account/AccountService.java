@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.account;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -92,4 +93,11 @@ public interface AccountService {
      * @return
      */
     int updateBankMerchantAccountIsSetPassword(String accountId, Integer flag);
+
+    /**
+     * 更新BankMerchantAccount信息
+     * @param bankMerchantAccount
+     * @return
+     */
+    int updateBankMerchantAccount(BankMerchantAccount bankMerchantAccount);
 }

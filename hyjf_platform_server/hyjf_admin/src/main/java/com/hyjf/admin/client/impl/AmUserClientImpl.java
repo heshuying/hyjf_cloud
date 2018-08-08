@@ -1331,4 +1331,19 @@ public class AmUserClientImpl implements AmUserClient {
 		return amUserResponse;
 	}
 
+	/**
+	 * 根据id查找用户测评的问题与答案
+	 * @param evalationId
+	 * @author nxl
+	 * @return
+	 */
+	@Override
+	public List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId){
+		String url = "http://AM-USER/am-user/evaluationManager/getUserQuestionInfoById/" + evalationId;
+		UserEvalationQuestionResponse response = restTemplate.getForEntity(url, UserEvalationQuestionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

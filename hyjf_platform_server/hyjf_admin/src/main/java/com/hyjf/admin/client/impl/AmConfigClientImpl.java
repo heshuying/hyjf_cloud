@@ -4,11 +4,7 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.config.AdminSystemResponse;
-import com.hyjf.am.response.config.LinkResponse;
-import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.config.SiteSettingsResponse;
-import com.hyjf.am.response.config.SmsMailTemplateResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
@@ -413,5 +409,35 @@ public class AmConfigClientImpl implements AmConfigClient {
 				return mspResponse;
 			}
 			return null;
+	}
+
+	/**
+	 * 获取所有问题
+	 * @return
+	 */
+	@Override
+	public QuestionResponse getAllQuestion(){
+		QuestionResponse mspResponse = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/quesiontAndAnswer/findAllQuestion" ,QuestionResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取所有回答
+	 * @return
+	 */
+	@Override
+	public AnswerResponse getAllAnswer(){
+		AnswerResponse mspResponse = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/quesiontAndAnswer/findAllAnswer" ,AnswerResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
 	}
 }
