@@ -21,7 +21,7 @@ import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.RegistLandingPageCommitRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.wechat.login.LoginResultBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;

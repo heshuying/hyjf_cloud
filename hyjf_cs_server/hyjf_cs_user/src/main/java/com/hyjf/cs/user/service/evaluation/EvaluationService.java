@@ -5,7 +5,7 @@ package com.hyjf.cs.user.service.evaluation;
 
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
 
 import java.util.List;

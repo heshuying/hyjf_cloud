@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.wechat.login;
+package com.hyjf.cs.user.bean;
 
 
 import com.hyjf.cs.user.result.BaseResultBean;

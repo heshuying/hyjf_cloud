@@ -113,7 +113,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
-    }
+        }
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
@@ -135,7 +135,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
         List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
         BankCardVO bankCard = new BankCardVO();
-        if(bankCards!=null&&!bankCards.isEmpty()) {
+        if (bankCards != null && !bankCards.isEmpty()) {
             bankCard = bankCards.get(0);
             bankCard.setCardNoNotEncrypt(bankCard.getCardNo());
             bankCard.setCardNo(BankCardUtil.getCardNo(bankCard.getCardNo()));
@@ -147,7 +147,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("chinapnr", chinapnr);
 
         UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(user.getUserId());
-        if (userEvalationResult != null && userEvalationResult.getId()!=null&&userEvalationResult.getId() != 0) {
+        if (userEvalationResult != null && userEvalationResult.getId() != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
