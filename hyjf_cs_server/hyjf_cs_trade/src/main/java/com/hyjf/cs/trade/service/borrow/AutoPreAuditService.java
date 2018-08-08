@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.handle;
+package com.hyjf.cs.trade.service.borrow;
 
 import com.hyjf.cs.trade.bean.MQBorrow;
 import com.hyjf.cs.trade.service.BaseTradeService;

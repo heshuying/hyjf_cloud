@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.handle.impl;
+package com.hyjf.cs.trade.service.borrow.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -27,7 +27,7 @@ import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoSendProducer;
-import com.hyjf.cs.trade.service.handle.ApiAssetPushService;
+import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import org.apache.commons.lang3.StringUtils;

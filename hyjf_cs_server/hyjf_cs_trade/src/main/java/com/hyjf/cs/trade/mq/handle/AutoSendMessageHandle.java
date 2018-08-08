@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.handle;
+package com.hyjf.cs.trade.mq.handle;
 
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
@@ -9,8 +9,8 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.ApiAssetClient;
 import com.hyjf.cs.trade.client.AutoSendClient;
-import com.hyjf.cs.trade.service.handle.ApiAssetPushService;
-import com.hyjf.cs.trade.service.handle.AutoSendService;
+import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
+import com.hyjf.cs.trade.service.borrow.AutoSendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

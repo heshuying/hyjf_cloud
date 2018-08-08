@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.handle.impl;
+package com.hyjf.cs.trade.service.borrow.impl;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.cs.trade.bean.MQBorrow;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AutoPreAuditProducer;
-import com.hyjf.cs.trade.service.handle.AutoPreAuditService;
+import com.hyjf.cs.trade.service.borrow.AutoPreAuditService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 
 /**
