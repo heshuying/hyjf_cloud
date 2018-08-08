@@ -699,7 +699,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return

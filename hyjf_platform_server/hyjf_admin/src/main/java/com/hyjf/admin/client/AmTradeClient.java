@@ -1563,13 +1563,6 @@ public interface AmTradeClient {
 
 
 
-    /**
-     * 发提成处理- 计算提成
-     *
-     * @param apicornId,request
-     * @return
-     */
-    int insertTenderCommissionRecord(Integer apicornId, ActivityListRequest request) ;
 
     /**
      * 计划退出查询判断标的是否还款
@@ -1590,7 +1583,14 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
+    Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request);
+
+    /**
+     * 更新借款API表
+     * @param apicornId
+     * @return
+     */
+    Integer  updateBorrowApicronByPrimaryKeySelective(String apicornId);
 
     /**
      * 添加提成数据
@@ -1598,14 +1598,6 @@ public interface AmTradeClient {
      * @return
      */
     int saveTenderCommission(TenderCommissionRequest request);
-
-
-    /**
-     * 更新借款API表
-     * @param request
-     * @return
-     */
-    int updateByPrimaryKeySelective(BorrowApicronRequest request);
 
     /**
      * 獲取銀行開戶信息
