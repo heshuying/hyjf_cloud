@@ -14,7 +14,6 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -3357,6 +3356,7 @@ public class AmTradeClientImpl implements AmTradeClient{
                 .getBody();
     }
 
+
     /**
      * 汇计划 - 计划还款 - 统计
      * @param repayRequest
@@ -3453,7 +3453,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 	/**
 	 * 汇计划提成列表查询
 	 *
-	 * @param HjhCommissionRequest
+	 * @param
 	 * @return HjhCommissionResponse
 	 */
 	@Override
@@ -3467,5 +3467,13 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
+
+    @Override
+    public int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount) {
+        Integer response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/account/updateBankMerchantAccountByCode",bankMerchantAccount, Integer.class)
+                .getBody();
+        return response;
+    }
 }
 

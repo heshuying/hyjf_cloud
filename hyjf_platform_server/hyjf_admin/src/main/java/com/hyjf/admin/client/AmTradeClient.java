@@ -1801,10 +1801,16 @@ public interface AmTradeClient {
 	/**
 	 * 汇计划提成列表查询
 	 *
-	 * @param HjhCommissionRequest
+	 * @param
 	 * @return HjhCommissionResponse
 	 */
     HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
 
+    /**
+     * 更新BankMerchantAccount
+     * @param bankMerchantAccount
+     * @return
+     */
+    int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount);
 }
 

@@ -174,55 +174,6 @@ public class BankMerchantAccountController extends BaseController {
         return result;
     }
 
-    /**
-     * 发红包
-     *
-     * @param request
-     * @param form
-     * @return
-     */
-/*    @RequestMapping(value = "/redPocketSendAction")
-    public AdminResult redPocketSendAction(HttpServletRequest request, @ModelAttribute RedPocketBean form) {
-        AdminResult result = new AdminResult();
-        // 查询商户子账户余额
-        String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
-        BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(Integer.parseInt(ShiroUtil.getLoginUserId()), merrpAccount);
-        // 画面验证
-        this.validatorFieldCheck(modelAndView, form, bankBalance);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
-            modelAndView.addObject(BankMerchantAccountDefine.RED_POCKET_SEND_FORM, form);
-            return modelAndView;
-        }
-        // IP地址
-        String ip = CustomUtil.getIpAddr(request);
-        String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId()));
-        BankCallBean bean = new BankCallBean();
-        // 交易代码
-        bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);
-        // 交易渠道
-        bean.setChannel(BankCallConstant.CHANNEL_PC);
-        // 电子账号
-        bean.setAccountId(merrpAccount);
-        bean.setTxAmount(form.getAmount());
-        bean.setForAccountId(form.getUserAccount());
-        bean.setDesLineFlag("1");
-        bean.setDesLine(orderId);
-        // 订单号
-        bean.setLogOrderId(orderId);
-        bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
-        // 平台
-        bean.setLogClient(0);
-        bean.setLogIp(ip);
-        BankCallBean resultBean;
-        try {
-            resultBean = BankCallUtils.callApiBg(bean);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new CheckException("1","请求红包接口失败");
-        }
-        return result;
-    }*/
-
 
 
     /**
@@ -417,8 +368,133 @@ public class BankMerchantAccountController extends BaseController {
     }
 
 
+    /**
+     * 用户同步余额
+     */
+    @ResponseBody
+    @RequestMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
+    public JSONObject synbalance(HttpServletRequest request) {
+        JSONObject ret = new JSONObject();
+        String accountCode = request.getParameter("accountCode");
+        // 账户可用余额
+        BigDecimal balance = BigDecimal.ZERO;
+        // 账户冻结金额
+        BigDecimal frost = BigDecimal.ZERO;
+        // 账面余额
+        BigDecimal currBalance = BigDecimal.ZERO;
+        BankCallBean bean = new BankCallBean();
+        // 获取共同参数
+        String channel = BankCallConstant.CHANNEL_PC;
+        // 交易代码
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
+        // 交易渠道
+        bean.setChannel(channel);
+        // 电子账号
+        bean.setAccountId(accountCode);
+        // 订单号
+        // TODO: 2018/8/8 zhangqingqing
+        //bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId())));
+        // 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        // TODO: 2018/8/8 zhangqingqing
+        //bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
+        // 平台
+        bean.setLogClient(0);
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            if (resultBean == null) {
+                ret.put("status", 1);
+                ret.put("message", "更新发生错误,请重新操作!");
+                return ret;
+            }
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                // 账户余额
+                balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
+                // 账面余额
+                currBalance = new BigDecimal(resultBean.getCurrBal().replace(",", ""));
+                // 账户冻结金额
+                frost = currBalance.subtract(balance);
+            } else {
+                ret.put("status", 1);
+                ret.put("message", "更新发生错误,请重新操作!");
+                return ret;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int cnt = 0;
+        try {
+            // 更新处理
+            cnt = this.bankMerchantAccountService.updateBankMerchantAccount(accountCode, currBalance, balance, frost);
+        } catch (Exception e) {
+        }
+        // 返现成功
+        if (cnt > 0) {
+            // 成功
+            ret.put("status", 0);
+            ret.put("message", "更新成功");
+        } else {
+            // 成功
+            ret.put("status", 1);
+            ret.put("message", "更新发生错误,请重新操作!");
+        }
+        return ret;
+    }
 
-
+    /**
+     * 发红包
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+    @RequestMapping(value = "/redPocketSendAction")
+    public AdminResult redPocketSendAction(HttpServletRequest request, @ModelAttribute RedPocketBean form) {
+        AdminResult result = new AdminResult();
+        // 查询商户子账户余额
+        String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
+        // TODO: 2018/8/8
+        int loginUserId = 0;//Integer.parseInt(ShiroUtil.getLoginUserId());
+        BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(loginUserId, merrpAccount);
+        // 画面验证
+        // TODO: 2018/8/8 zhangqingqing 
+       /*this.validatorFieldCheck(modelAndView, form, bankBalance);
+        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
+            modelAndView.addObject(BankMerchantAccountDefine.RED_POCKET_SEND_FORM, form);
+            return modelAndView;
+        }*/
+        // IP地址
+        String ip = CustomUtil.getIpAddr(request);
+        // TODO: 2018/8/8  
+      //  String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(ShiroUtil.getLoginUserId()));
+        String orderId = "";
+        BankCallBean bean = new BankCallBean();
+        // 交易代码
+        bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);
+        // 交易渠道
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        bean.setAccountId(merrpAccount);
+        bean.setTxAmount(form.getAmount());
+        bean.setForAccountId(form.getUserAccount());
+        bean.setDesLineFlag("1");
+        bean.setDesLine(orderId);
+        // 订单号
+        bean.setLogOrderId(orderId);
+        // TODO: 2018/8/8
+       // bean.setLogUserId(String.valueOf(ShiroUtil.getLoginUserId()));
+        // 平台
+        bean.setLogClient(0);
+        bean.setLogIp(ip);
+        BankCallBean resultBean;
+        try {
+            resultBean = BankCallUtils.callApiBg(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CheckException("1","请求红包接口失败");
+        }
+        return result;
+    }
 
 
 
