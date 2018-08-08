@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.assetmanage;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -49,7 +50,8 @@ public class WebAssetManageController extends BaseTradeController {
         AccountVO account = assetManageService.getAccount(user.getUserId());
         result.put("account", account);
         result.put("currentTab", currentTab);
-
+        result.put("status", BaseResult.SUCCESS);
+        result.put("statusDesc", BaseResult.SUCCESS_DESC);
         return result;
     }
 
