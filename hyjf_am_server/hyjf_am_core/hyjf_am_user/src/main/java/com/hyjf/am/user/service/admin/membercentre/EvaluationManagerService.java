@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.user.service.admin.membercentre;
 
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.*;
+import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
+import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
+import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +34,10 @@ public interface EvaluationManagerService {
      * 根据用户Id获取用户测评结果
      */
     UserEvalationResult selectUserEvalationResultByUserId(int userId);
+    /**
+     * 根据id查找用户测评的问题与答案
+     * @param evalationId
+     * @return
+     */
+    List<UserEvalationQuestionCustomize> getUserQuestionInfoById(int evalationId);
 }

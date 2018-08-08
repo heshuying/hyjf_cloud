@@ -607,4 +607,11 @@ public interface AmUserClient {
      * @return
      */
     ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
+    /**
+     * 根据id查找用户测评的问题与答案
+     * @param evalationId
+     * @author nxl
+     * @return
+     */
+    List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId);
 }
