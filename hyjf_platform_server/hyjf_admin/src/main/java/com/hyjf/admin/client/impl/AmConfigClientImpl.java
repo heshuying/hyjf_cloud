@@ -1857,4 +1857,22 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentjob/delete/" + id,
 				JobResponse.class);
 	}
+
+	@Override
+	public LinkResponse searchAction(ContentLinksRequestBean requestBean) {
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
+				LinkResponse.class);
+	}
+
+	@Override
+	public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
+				LinkResponse.class);
+	}
+
+	@Override
+	public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
+				LinkResponse.class);
+	}
 }

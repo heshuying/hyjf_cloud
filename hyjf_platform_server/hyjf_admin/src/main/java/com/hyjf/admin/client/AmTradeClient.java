@@ -1846,7 +1846,7 @@ public interface AmTradeClient {
     DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
 
     /**
-     * 圈提异步回调业务处理
+     * 圈存异步回调业务处理
      * @author zhangyk
      * @date 2018/8/7 18:53
      */
