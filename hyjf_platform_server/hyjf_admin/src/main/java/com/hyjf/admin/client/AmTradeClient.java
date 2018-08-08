@@ -1820,5 +1820,13 @@ public interface AmTradeClient {
      * @return
      */
     HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
+
+    /**
+     * 发起平台账户分佣
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    JSONObject subCommission(SubCommissionRequest request);
 }
 

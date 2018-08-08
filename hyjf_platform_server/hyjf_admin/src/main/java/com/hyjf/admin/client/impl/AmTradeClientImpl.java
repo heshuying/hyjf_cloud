@@ -3492,5 +3492,21 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
+
+    /**
+     * 发起平台账户分佣
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public JSONObject subCommission(SubCommissionRequest request) {
+        String url = tradeService + "/subcommission/subCommission";
+        SubCommissionResponse response = restTemplate.postForEntity(url,request,SubCommissionResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getJsonObject();
+        }
+        return null;
+    }
 }
 
