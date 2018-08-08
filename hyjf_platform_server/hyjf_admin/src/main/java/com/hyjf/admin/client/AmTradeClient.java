@@ -1805,6 +1805,13 @@ public interface AmTradeClient {
 	 * @return HjhCommissionResponse
 	 */
     HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
-
+    
+    /**
+     * 查询金额总计 
+     * @author libin
+     * @param id
+     * @return
+     */
+    HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
 }
 

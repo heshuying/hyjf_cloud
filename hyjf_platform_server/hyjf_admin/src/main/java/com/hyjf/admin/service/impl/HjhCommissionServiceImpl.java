@@ -33,4 +33,10 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 		return response;
 	}
 
+	@Override
+	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
+		HjhCommissionResponse response = amTradeClient.selecthjhCommissionTotal(form);
+		return response;
+	}
+
 }

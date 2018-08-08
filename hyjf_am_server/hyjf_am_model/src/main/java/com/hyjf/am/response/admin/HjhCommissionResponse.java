@@ -15,6 +15,14 @@ public class HjhCommissionResponse extends Response<HjhCommissionCustomizeVO>{
     private  Integer  count;
     // 特用
     private  String  planName;
+	/**
+	 * 加入金额累计 
+	 */
+	private String tenderTotal;
+	/**
+	 * 提成金额累计
+	 */
+	private String commissionTotal;
     
     public Integer getCount() {
         return count;
@@ -27,5 +35,17 @@ public class HjhCommissionResponse extends Response<HjhCommissionCustomizeVO>{
 	}
 	public void setPlanName(String planName) {
 		this.planName = planName;
+	}
+	public String getTenderTotal() {
+		return tenderTotal;
+	}
+	public void setTenderTotal(String tenderTotal) {
+		this.tenderTotal = tenderTotal;
+	}
+	public String getCommissionTotal() {
+		return commissionTotal;
+	}
+	public void setCommissionTotal(String commissionTotal) {
+		this.commissionTotal = commissionTotal;
 	}
 }

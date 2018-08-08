@@ -6,6 +6,8 @@ package com.hyjf.admin.controller.finance.hjhcommission;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhCommissionViewRequest;
-import com.hyjf.admin.beans.vo.HjhCommissionVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -54,7 +56,7 @@ public class HjhCommissionController extends BaseController{
 	public static final String PERMISSIONS = "hjhcommission";
 	
 	/**
-	 * 列表查询(初始无参/查询带参 共用)
+	 * 列表查询(初始无参/查询带参 共用)    已测试
 	 *
 	 * @param request
 	 * @return 进入汇计划提成列表
@@ -88,4 +90,38 @@ public class HjhCommissionController extends BaseController{
 			return new AdminResult<ListResult<HjhCommissionCustomizeVO>>(ListResult.build(returnList, 0));
 		}
 	}
+	
+	/**
+	 * 汇计划提成列表 加入金额/提成金额 累计            
+	 *
+	 * @param request
+	 * @return 
+	 */
+	@ApiOperation(value = "汇计划提成列表", notes = "汇计划提成列表 加入金额/提成金额 累计")
+	@PostMapping(value = "/sum")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	public JSONObject getSumTotal(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
+		JSONObject jsonObject = new JSONObject();
+		// 初始化原子层请求实体
+		HjhCommissionRequest form = new HjhCommissionRequest();
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		// 默认为汇计划类的投资
+		form.setTenderType(2);
+		HjhCommissionResponse response = hjhCommissionService.selecthjhCommissionTotal(form);
+		if(response == null) {
+			jsonObject.put("error", FAIL);
+		}
+		if (!Response.isSuccess(response)) {
+			jsonObject.put("error", FAIL);
+		}
+		jsonObject.put("tenderTotal", "加入金额累计");
+		jsonObject.put("tenderTotal", response.getTenderTotal());
+		jsonObject.put("commissionTotal", "提成金额累计");
+		jsonObject.put("commissionTotal", response.getCommissionTotal());
+		jsonObject.put("status", SUCCESS);
+		return jsonObject;
+	}
+
 }

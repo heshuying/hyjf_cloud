@@ -3467,5 +3467,22 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
+	
+    /**
+	 * 查询金额总计 
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form) {
+		HjhCommissionResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selecthjhCommissionTotal" ,form,
+						HjhCommissionResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }
 

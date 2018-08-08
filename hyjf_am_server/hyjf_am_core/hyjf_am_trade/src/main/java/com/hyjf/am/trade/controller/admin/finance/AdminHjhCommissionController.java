@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.finance;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -61,6 +62,42 @@ public class AdminHjhCommissionController {
             }
         }
         return response;
+	}
+	
+    /**
+     * 查询金额总计 
+     * @param id
+     * @return
+     */
+	@RequestMapping(value = "/selecthjhCommissionTotal",method = RequestMethod.POST)
+	public HjhCommissionResponse selecthjhCommissionTotal(@RequestBody @Valid HjhCommissionRequest request){
+		HjhCommissionResponse response = new HjhCommissionResponse();
+		Integer count = adminHjhCommissionService.countTotal(request);
+		// 查询列表传入分页
+		Paginator paginator;
+		if(request.getLimit() == 0){
+			// 前台传分页
+			paginator = new Paginator(request.getCurrPage(), count);
+		} else {
+			// 前台未传分页那默认 10
+			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+		}
+		Map<String , String> totalMap = this.adminHjhCommissionService.queryPushMoneyTotle(request,paginator.getOffset(), paginator.getLimit());
+		if(count > 0){
+            if (totalMap != null) {
+            	response.setTenderTotal(totalMap.get("tenderTotle"));
+            	response.setCommissionTotal(totalMap.get("commissionTotle"));
+                /*response.setCount(count);*/
+                //代表成功
+                response.setRtn(Response.SUCCESS);
+            }
+        }
+        return response;
+		
+		
+		
+		
+		
 	}
 	
 }
