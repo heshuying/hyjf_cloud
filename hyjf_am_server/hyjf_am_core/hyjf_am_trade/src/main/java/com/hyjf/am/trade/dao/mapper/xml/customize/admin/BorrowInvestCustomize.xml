@@ -30,10 +30,10 @@
 			</if>
 			<!-- 投资时间 -->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND bt.create_time <![CDATA[>=]]>  unix_timestamp(#{timeStartSrch})
+				AND bt.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND bt.create_time <![CDATA[<=]]>  unix_timestamp(#{timeEndSrch})+86399
+				AND bt.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<!-- 投资方式 -->
 			<if test="investType != null and investType != ''">

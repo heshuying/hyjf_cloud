@@ -241,7 +241,7 @@ public class ContentArticleController {
      * @param limitEnd
      * @return
      */
-    @PostMapping("/find/{noticeType}/{limitStart}/{limitEnd}")
+    @GetMapping("/find/{noticeType}/{limitStart}/{limitEnd}")
     private ContentArticleResponse appFind(	@PathVariable String noticeType,@PathVariable int limitStart,@PathVariable int limitEnd){
         ContentArticleResponse response = new ContentArticleResponse();
         List<ContentArticle> newsList =

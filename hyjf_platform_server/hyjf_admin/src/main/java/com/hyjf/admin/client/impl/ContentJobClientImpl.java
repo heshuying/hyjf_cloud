@@ -23,26 +23,35 @@ public class ContentJobClientImpl implements ContentJobClient {
 
 	@Override
 	public JobResponse searchAction(ContentJobRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentjob/searchaction", requestBean,
+				JobResponse.class);
 	}
 
 	@Override
 	public JobResponse insertAction(ContentJobRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentjob/insertaction", requestBean,
+				JobResponse.class);
 	}
 
 	@Override
 	public JobResponse updateAction(ContentJobRequestBean requestBean) {
-		return null;
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentjob/insertaction", requestBean,
+				JobResponse.class);
 	}
 
 	@Override
 	public JobsVo getRecord(Integer id) {
+		JobResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentjob/getrecord/" + id,
+				JobResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
 		return null;
 	}
 
 	@Override
 	public JobResponse deleteById(Integer id) {
-		return null;
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentjob/delete/" + id,
+				JobResponse.class);
 	}
 }

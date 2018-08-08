@@ -54,9 +54,9 @@ public class HjhRepayRequest extends BasePage implements Serializable {
      */
     private String actulRepayTimeEnd;
 
-    private int limitStart = -1;
+    private Integer limitStart = -1;
 
-    private int limitEnd = -1;
+    private Integer limitEnd = -1;
 
     public String getAccedeOrderIdSrch() {
         return accedeOrderIdSrch;
@@ -146,19 +146,19 @@ public class HjhRepayRequest extends BasePage implements Serializable {
         this.actulRepayTimeEnd = actulRepayTimeEnd;
     }
 
-    public int getLimitStart() {
+    public Integer getLimitStart() {
         return limitStart;
     }
 
-    public void setLimitStart(int limitStart) {
+    public void setLimitStart(Integer limitStart) {
         this.limitStart = limitStart;
     }
 
-    public int getLimitEnd() {
+    public Integer getLimitEnd() {
         return limitEnd;
     }
 
-    public void setLimitEnd(int limitEnd) {
+    public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
     }
 }

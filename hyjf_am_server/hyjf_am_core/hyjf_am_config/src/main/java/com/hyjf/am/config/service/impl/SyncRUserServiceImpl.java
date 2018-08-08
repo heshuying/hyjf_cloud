@@ -65,7 +65,7 @@ public class SyncRUserServiceImpl implements SyncRUserService {
 
         // String attribute = jsonObj.getString("attribute");
         String userId = jsonObj.getString("userId");
-        String userName = jsonObj.getString("userName");
+        String userName = jsonObj.getString("username");
         String mobile = jsonObj.getString("mobile");
         // String roleId = jsonObj.getString("roleId");
         // String trueName = jsonObj.getString("trueName");

@@ -9,7 +9,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
 import com.hyjf.cs.user.service.myproject.MyProjectService;
 import com.hyjf.cs.user.util.RequestUtil;
 import io.swagger.annotations.Api;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 /**
  * 我的资产接口，散标、计划......
@@ -40,7 +38,6 @@ public class MyProjectController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/queryScatteredProject", method = RequestMethod.GET)
     @ResponseBody
     public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
@@ -93,7 +90,6 @@ public class MyProjectController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/queryPlanedProject", method = RequestMethod.GET)
     @ResponseBody
     public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {

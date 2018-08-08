@@ -53,24 +53,66 @@ public interface AmUserClient {
 	 */
 	UserVO register(RegisterUserRequest request);
 
+	/**
+	 * 根据userId获取userInfo
+	 * @param userId
+	 * @return
+	 */
 	UserInfoVO findUserInfoById(int userId);
 
+	/**
+	 * 保存短信信息
+	 * @param mobile
+	 * @param checkCode
+	 * @param validCodeType
+	 * @param status
+	 * @param platform
+	 * @return
+	 */
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
+	/**
+	 * 校验验证码
+	 * @param mobile
+	 * @param verificationCode
+	 * @param verificationType
+	 * @param platform
+	 * @param searchStatus
+	 * @param updateStatus
+	 * @param isUpdate
+	 * @return
+	 */
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
-
+	/**
+	 * 更新登录信息
+	 * @param userId
+	 * @param ip
+	 */
 	void updateLoginUser(int userId, String ip);
 
+	/**
+	 * 检查用户授权状态
+	 * @param userId
+	 * @return
+	 */
 	HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
 
 	BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
+	/**
+	 * 插入UserAuth信息
+	 * @param hjhUserAuthLog
+	 */
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 
 	HjhUserAuthLogVO selectByExample(String orderId);
 
+	/**
+	 * 更新签约状态和日志表
+	 * @param bean
+	 */
 	void updateUserAuthInves(BankRequest bean);
 
 	/**
@@ -87,24 +129,74 @@ public interface AmUserClient {
 	 */
 	int countByMobile(String mobile);
 
+	/**
+	 * 修改密码
+	 * @param userId
+	 * @param oldPW
+	 * @param newPW
+	 * @return
+	 */
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 
+	/**
+	 * 获取汇付信息
+	 * @param userId
+	 * @return
+	 */
     AccountChinapnrVO getAccountChinapnr(Integer userId);
 
+	/**
+	 * 校验邮箱
+	 * @param email
+	 * @return
+	 */
 	boolean checkEmailUsed(String email);
 
+	/**
+	 * 更新绑定邮箱信息
+	 * @param bean
+	 */
 	void updateBindEmail(BindEmailLogRequest bean);
 
+	/**
+	 * 获取绑定邮箱日志信息表
+	 * @param userId
+	 * @return
+	 */
 	BindEmailLogVO getBindEmailLog(Integer userId);
 
+	/**
+	 * 插入绑定邮箱日志信息表
+	 * @param bean
+	 */
 	void insertBindEmailLog(BindEmailLogRequest bean);
 
+	/**
+	 * 保存紧急联系人
+	 * @param bean
+	 * @return
+	 */
 	int updateUserContract(UsersContractRequest bean);
 
+	/**
+	 * 查询紧急联系人
+	 * @param userId
+	 * @return
+	 */
     UsersContactVO selectUserContact(Integer userId);
 
-    int updateUserNoticeSet(UserNoticeSetRequest requestBean);
+	/**
+	 * 更新用户信息
+	 * @param requestBean
+	 * @return
+	 */
+	int updateUserNoticeSet(UserNoticeSetRequest requestBean);
 
+	/**
+	 * 根据idno获取用户信息
+	 * @param idNo
+	 * @return
+	 */
 	UserInfoVO getUserByIdNo(String idNo);
 
     UserLoginLogVO getUserLoginById(Integer userId);

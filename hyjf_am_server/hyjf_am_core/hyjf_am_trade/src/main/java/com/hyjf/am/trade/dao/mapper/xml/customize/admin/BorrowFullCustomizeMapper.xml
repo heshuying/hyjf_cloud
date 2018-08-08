@@ -16,10 +16,10 @@
 				AND b.borrow_user_name LIKE CONCAT('%', #{usernameSrch}, '%')
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND b.create_time <![CDATA[>=]]> unix_timestamp(#{timeStartSrch})
+				AND b.create_time <![CDATA[>=]]> STR_TO_DATE(#{timeStartSrch}, '%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND b.create_time <![CDATA[<=]]> unix_timestamp(#{timeEndSrch})+86399
+				AND b.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -139,7 +139,7 @@
 			FORMAT(bt.account - bt.loan_fee, 2) AS loan_amount,
 			FORMAT(bt.loan_fee, 2) AS service_charge,
 			bt.client AS operating_deck,
-			FROM_UNIXTIME( bt.create_time, '%Y-%m-%d %H:%i:%s' ) AS operating_time
+			DATE_FORMAT( bt.create_time, '%Y-%m-%d %H:%i:%s' ) AS operating_time
 		FROM ht_borrow b
 		INNER JOIN ht_borrow_tender bt ON bt.borrow_nid = b.borrow_nid
 		WHERE

@@ -111,7 +111,7 @@ public class UserPortraitController extends BaseController {
     @PostMapping(value = "/updateUserPortrait")
     @ResponseBody
     public AdminResult updateUserPortrait(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
-        if (StringUtils.isNotBlank(userPortraitRequestBean.getUserId())) {
+        if (StringUtils.isBlank(userPortraitRequestBean.getUserId())) {
             return new AdminResult<>(FAIL, "请输入用户id");
         }
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();

@@ -3,19 +3,14 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
-import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ChannelStatisticsDetailService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -29,7 +24,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,12 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
-
-import static com.hyjf.admin.controller.productcenter.borrow.borrowrepayment.BorrowRepaymentController.PERMISSIONS;
 
 /**
  * @author tanyy
@@ -85,7 +77,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "PC渠道统计明细";
 		// 文件名称
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
 		ChannelStatisticsDetailResponse channelStatisticsDetailResponse = channelStatisticsDetailService.searchAction(form);
 		List<ChannelStatisticsDetailVO> recordList = channelStatisticsDetailResponse.getResultList();

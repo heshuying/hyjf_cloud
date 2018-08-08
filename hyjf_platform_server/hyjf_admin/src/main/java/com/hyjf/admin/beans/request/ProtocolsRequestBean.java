@@ -3,8 +3,9 @@
  */
 package com.hyjf.admin.beans.request;
 
-import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
+import com.hyjf.am.vo.trade.FddTempletVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -12,7 +13,29 @@ import java.util.List;
  * @author fuqiang
  * @version ProtocolsRequestBean, v0.1 2018/7/10 16:38
  */
-public class ProtocolsRequestBean extends BaseRequest {
+public class ProtocolsRequestBean extends FddTempletVO {
+
+	@ApiModelProperty(value = "页数")
+	private int currPage =1;
+
+	@ApiModelProperty(value = "每页多少条")
+	private int pageSize =10;
+
+	public int getCurrPage() {
+		return currPage;
+	}
+
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
 	private String ids;
 

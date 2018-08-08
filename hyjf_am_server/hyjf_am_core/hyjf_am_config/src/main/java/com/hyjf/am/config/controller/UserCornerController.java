@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * @author: sunpeikai
  * @version: UserCornerController, v0.1 2018/7/26 11:34
  */
-@Api(description = "用户角标")
+@Api(tags ="用户角标")
 @RestController
 @RequestMapping("/am-config/userCorner")
 public class UserCornerController {

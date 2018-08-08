@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -142,7 +143,7 @@ public class WebsiteController extends BaseController {
         }
         AccountWebListResponse accountWebListResponse = websiteService.queryAccountWebList(accountWebList);
         List<AccountWebListVO> recordList = accountWebListResponse.getResultList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "订单号", "分公司", "分部", "团队", "用户名", "姓名", "收支类型", "交易金额", "交易类型", "说明", "发生时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

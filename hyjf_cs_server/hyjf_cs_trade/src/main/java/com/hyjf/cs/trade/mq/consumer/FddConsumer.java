@@ -6,7 +6,7 @@ import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.handle.FddHandle;
+import com.hyjf.cs.trade.mq.handle.FddHandle;
 import com.hyjf.cs.trade.mq.base.Consumer;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import org.apache.commons.lang3.StringUtils;

@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -55,5 +56,5 @@ public interface BaseTradeService extends BaseService{
 
     AccountVO getAccountByUserId(Integer userId);
 
-
+    BankCardVO getBankCardVOByUserId(Integer userId);
 }

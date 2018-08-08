@@ -29,7 +29,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: HtlTradeController, v0.1 2018/7/25 15:22
  */
-@Api(value = "获取我的账单-汇天利",description = "获取我的账单-汇天利")
+@Api(value = "获取我的账单-汇天利",tags ="获取我的账单-汇天利")
 @RestController
 @RequestMapping(value = "/am-trade/htl")
 public class HtlTradeController extends BaseController {

@@ -34,7 +34,7 @@ import java.util.Map;
  * @author hesy
  * @version AppBindCardController, v0.1 2018/7/19 9:34
  */
-@Api(tags = "api端-绑卡")
+@Api(value = "api端-绑卡", tags = "api端-绑卡")
 @RestController
 @RequestMapping("/hyjf-api/server/user/bindcardpage")
 public class ApiBindCardController extends BaseUserController {

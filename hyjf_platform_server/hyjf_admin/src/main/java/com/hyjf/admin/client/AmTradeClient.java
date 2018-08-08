@@ -13,9 +13,11 @@ import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -1561,13 +1563,6 @@ public interface AmTradeClient {
 
 
 
-    /**
-     * 发提成处理- 计算提成
-     *
-     * @param apicornId,request
-     * @return
-     */
-    int insertTenderCommissionRecord(Integer apicornId, ActivityListRequest request) ;
 
     /**
      * 计划退出查询判断标的是否还款
@@ -1588,7 +1583,14 @@ public interface AmTradeClient {
      * @param request
      * @return
      */
-    Integer getCountTenderCommissionBybBorrowNid(TenderCommissionRequest request);
+    Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request);
+
+    /**
+     * 更新借款API表
+     * @param apicornId
+     * @return
+     */
+    Integer  updateBorrowApicronByPrimaryKeySelective(String apicornId);
 
     /**
      * 添加提成数据
@@ -1596,14 +1598,6 @@ public interface AmTradeClient {
      * @return
      */
     int saveTenderCommission(TenderCommissionRequest request);
-
-
-    /**
-     * 更新借款API表
-     * @param request
-     * @return
-     */
-    int updateByPrimaryKeySelective(BorrowApicronRequest request);
 
     /**
      * 獲取銀行開戶信息
@@ -1748,4 +1742,83 @@ public interface AmTradeClient {
      * @param flag
      */
     void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
+
+
+    /**
+     * 汇计划 - 计划还款 - 统计
+     * @param repayRequest
+     * @return
+     * @Author : huanghui
+     */
+    Integer getRepayCount(HjhRepayRequest repayRequest);
+    /**
+     * 获取汇计划 -  计划还款(计划退出)列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request);
+
+    /**
+     * 指定指端检索 计划还款列表
+     * @param accedeOrderId
+     * @return
+     * @Author : huanghui
+     */
+    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
+
+    AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
+
+    /**
+     *
+     * @author zhangyk
+     * @date 2018/8/7 16:37
+     */
+    Integer getBankMerchantAccountListByOrderId(String orderId);
+
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/7 18:53
+     */
+    Boolean updateAccountCallbackRecharge(Map<String,Object> params);
+
+    /**
+     * 更新明细表为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:22
+     */
+    Boolean updateBankAccountListFailByOrderId(String orderId);
+    
+	/**
+	 * 汇计划提成列表查询
+	 *
+	 * @param
+	 * @return HjhCommissionResponse
+	 */
+    HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
+
+    /**
+     * 更新BankMerchantAccount
+     * @param bankMerchantAccount
+     * @return
+     */
+    int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount);
+
+    /**
+     * 查询金额总计
+     * @author libin
+     * @param id
+     * @return
+     */
+    HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
 }
+

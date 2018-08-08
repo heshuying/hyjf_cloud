@@ -143,7 +143,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                 // 银行名称
                 bankCardBean.setBank(bankConfig.getName());
                 // 应前台要求，logo路径给绝对路径
-                bankCardBean.setLogo(systemConfig.getAppHost() + bankConfig.getAppLogo());
+                bankCardBean.setLogo(systemConfig.getAppServerHost() + bankConfig.getAppLogo());
                 bankCardBean.setCardNo(obj.getString("CardId"));
                 bankcards.add(bankCardBean);
                 // 判断是否已经传银行卡code，如果已传则获取该银行的信息
