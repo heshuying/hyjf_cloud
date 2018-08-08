@@ -8,7 +8,8 @@ import com.hyjf.cs.user.vo.MyProfileVO;
 import java.util.List;
 
 /**
- * Created by cuigq on 2018/2/1.
+ * 账户总览service
+ * Created by jijun on 2018/7/5.
  */
 public interface MyProfileService extends BaseService {
 
