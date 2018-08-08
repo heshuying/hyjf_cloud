@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.tradedetail;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -44,6 +45,8 @@ public class TradeDetailController  extends BaseTradeController {
         // 交易类型列表
         List<AccountTradeVO> trades = this.tradeDetailService.selectTradeTypes();
         result.put("trades", trades);
+        result.put("status", BaseResult.SUCCESS);
+        result.put("statusDesc", BaseResult.SUCCESS_DESC);
         return result;
     }
 
