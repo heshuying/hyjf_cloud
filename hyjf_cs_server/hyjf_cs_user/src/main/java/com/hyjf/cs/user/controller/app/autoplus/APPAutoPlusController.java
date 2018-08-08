@@ -15,6 +15,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;

@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.app.login;
+package com.hyjf.cs.user.vo;
 
 /**
  * 用户属性Parameters模型

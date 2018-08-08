@@ -3405,5 +3405,23 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return false;
     }
+    
+	/**
+	 * 汇计划提成列表查询
+	 *
+	 * @param HjhCommissionRequest
+	 * @return HjhCommissionResponse
+	 */
+	@Override
+	public HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form) {
+		HjhCommissionResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selectHjhCommissionList" ,form,
+						HjhCommissionResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }
 

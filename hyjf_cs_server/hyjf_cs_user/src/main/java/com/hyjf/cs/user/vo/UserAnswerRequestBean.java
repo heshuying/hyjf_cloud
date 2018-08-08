@@ -1,4 +1,4 @@
-package com.hyjf.cs.user.controller.app.riskassesment;
+package com.hyjf.cs.user.vo;
 
 /**
  * @author xiasq
