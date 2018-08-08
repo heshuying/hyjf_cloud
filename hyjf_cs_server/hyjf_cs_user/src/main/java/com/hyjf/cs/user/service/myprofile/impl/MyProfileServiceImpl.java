@@ -26,6 +26,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
 import com.hyjf.cs.user.vo.MyProfileVO;
+import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
      * @param userAccountInfo
      */
     @Override
-    public void buildUserAccountInfo(Integer userId, MyProfileVO.UserAccountInfo userAccountInfo) {
+    public void buildUserAccountInfo(Integer userId, UserAccountInfoVO userAccountInfo) {
         UserVO users=this.getUsersById(userId);
         CheckUtil.check(users==null, MsgEnum.ERR_USER_NOT_EXISTS,userId);
         //Preconditions.checkArgument(users != null, userId + "用户不存在！");

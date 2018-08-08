@@ -9,7 +9,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.interceptor.SignValidate;
 import com.hyjf.cs.user.service.myproject.MyProjectService;
 import com.hyjf.cs.user.util.RequestUtil;
 import io.swagger.annotations.Api;
@@ -39,7 +38,6 @@ public class MyProjectController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/queryScatteredProject", method = RequestMethod.GET)
     @ResponseBody
     public WeChatResult queryScatteredProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
@@ -92,7 +90,6 @@ public class MyProjectController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/queryPlanedProject", method = RequestMethod.GET)
     @ResponseBody
     public WeChatResult queryPlanedProject(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {

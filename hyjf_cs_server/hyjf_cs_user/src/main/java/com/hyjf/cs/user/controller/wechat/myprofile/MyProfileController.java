@@ -15,10 +15,10 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.interceptor.SignValidate;
 import com.hyjf.cs.user.service.myprofile.MyProfileService;
 import com.hyjf.cs.user.util.RequestUtil;
 import com.hyjf.cs.user.vo.MyProfileVO;
+import com.hyjf.cs.user.vo.UserAccountInfoVO;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,6 @@ public class MyProfileController extends BaseUserController {
     private SystemConfig systemConfig;
 
 
-    @SignValidate
     @RequestMapping("/profile")
     public WeChatResult myProfile(HttpServletRequest request) {
         WeChatResult result = new WeChatResult();
@@ -63,7 +62,7 @@ public class MyProfileController extends BaseUserController {
 
         String trueUserName = myProfileService.getUserTrueName(userId);
 
-        MyProfileVO.UserAccountInfo userAccountInfo = myProfileVO.new UserAccountInfo();
+        UserAccountInfoVO userAccountInfo = new UserAccountInfoVO();
 
         userAccountInfo.setTrueUserName(trueUserName);
 
@@ -97,7 +96,6 @@ public class MyProfileController extends BaseUserController {
     }
 
 
-    @SignValidate
     @GetMapping("/couponlist")
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();

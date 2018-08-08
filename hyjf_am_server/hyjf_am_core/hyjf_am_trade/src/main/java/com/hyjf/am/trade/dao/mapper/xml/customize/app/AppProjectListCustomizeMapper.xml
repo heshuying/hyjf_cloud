@@ -33,7 +33,7 @@
 			<if test="(type == null or type == '') and projectType=='CFH' ">
 				AND hydb.project_type NOT IN (4,8)
 				AND CASE
-				WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM huiyingdai_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
 					THEN
 						hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 					ELSE
@@ -44,7 +44,7 @@
 			<if test="(type == null or type == '') and projectType=='ZQ' ">
 				AND hydb.project_type NOT IN (4,8)
 				AND CASE
-				WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM huiyingdai_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
 					THEN
 						hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 					ELSE
@@ -248,8 +248,8 @@
 			end project_type_code,
 			IFNULL(hydb.borrow_account_wait,0) borrow_account_wait
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		<include refid="Where_Clause" />
 		ORDER BY
 			hydb.`status` ASC,
@@ -285,8 +285,8 @@
 		SELECT
 			 COUNT(hydb.borrow_nid) AS total
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		<include refid="Where_Clause" />
 	</select>
 	<resultMap id="AppProjectDetailMap" type="com.hyjf.am.trade.dao.model.customize.app.AppProjectDetailCustomize">
@@ -439,7 +439,7 @@
 				SELECT
 					SUBSTRING(FORMAT(m.credit,4),1,LENGTH(FORMAT(m.credit,4))-2)
 				FROM
-					huiyingdai_borrow_maninfo m
+					ht_borrow_maninfo m
 				WHERE
 					m.borrow_nid = hydb.borrow_nid
 			)
@@ -448,7 +448,7 @@
 				SELECT
 					SUBSTRING(FORMAT(u.credit,4),1,LENGTH(FORMAT(u.credit,4))-2)
 				FROM
-					huiyingdai_borrow_users u
+					ht_borrow_users u
 				WHERE
 					u.borrow_nid = hydb.borrow_nid
 			)
@@ -522,10 +522,10 @@
 		) verify_over_time,
 		hydb.borrow_level
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN huiyingdai_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
-		LEFT JOIN huiyingdai_borrow_repay re ON re.borrow_nid = hydb.borrow_nid
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+		LEFT JOIN ht_borrow_repay re ON re.borrow_nid = hydb.borrow_nid
 		WHERE
 			(
 				hydbpt.borrow_project_type = 'HZT'
@@ -586,7 +586,7 @@
 			hydb.disposal_asset_origin AS asset_origin,
 			hydb.disposal_attachment_info AS attachment_info
 		FROM
-			huiyingdai_borrow hydb
+			ht_borrow hydb
 		WHERE
 			hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
 	</select>
@@ -610,92 +610,12 @@
 			<!-- hydb.disposal_note AS remark, -->
 			hydb.disposal_result AS disposal_plan
 		FROM
-			huiyingdai_borrow hydb
+			ht_borrow hydb
 		WHERE
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
-	<resultMap id="AppProjectPersonDetailMap" type="com.hyjf.am.trade.dao.model.customize.app.AppProjectPersonDetailCustomize">
-		<!-- 项目描述 borrowContents-->
-		<id column="borrow_contents" property="borrowContents" jdbcType="VARCHAR" />
-		<!-- 年龄 age   -->
-		<result column="age" property="age" jdbcType="VARCHAR" />
-		<!-- 性别 sex -->
-		<result column="sex" property="sex" jdbcType="VARCHAR" />
-		<!-- 婚姻状况 maritalStatus -->
-		<result column="merry" property="maritalStatus" jdbcType="VARCHAR" />
-		<!-- 工作城市 workingCity -->
-		<result column="working_city" property="workingCity" jdbcType="VARCHAR" />
-		<!-- 财务状况 -->
-		<result column="account_contents" property="accountContents" jdbcType="VARCHAR" />
-		<!-- 姓名-->
-		<result column="true_name" property="trueName" jdbcType="VARCHAR" />
-		<!-- 岗位职业 -->
-		<result column="position" property="position" jdbcType="VARCHAR" />
-		<!-- 身份证号 -->
-		<result column="card_no" property="cardNo" jdbcType="VARCHAR" />
-		<!-- 户籍地-->
-		<result column="domicile" property="domicile" jdbcType="VARCHAR" />
-		<!-- 在平台逾期次数 -->
-		<result column="overdue_times" property="overdueTimes" jdbcType="VARCHAR" />		
-		<!-- 在平台逾期金额-->
-		<result column="overdue_amount" property="overdueAmount" jdbcType="VARCHAR" />		
-		<!-- 涉诉情况 -->
-		<result column="litigation" property="litigation" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 身份证 0未审核 1已审核 -->
-		<result column="is_card" property="isCard" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 收入状况 0未审核 1已审核-->
-		<result column="is_income" property="isIncome" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 信用状况 0未审核 1已审核-->
-		<result column="is_credit" property="isCredit" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 资产状况 0未审核 1已审核-->
-		<result column="is_asset" property="isAsset" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 车辆状况 0未审核 1已审核 -->
-		<result column="is_vehicle" property="isVehicle" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 行驶证 0未审核 1已审核 -->
-		<result column="is_driving_license" property="isDrivingLicense" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 车辆登记证 0未审核 1已审核-->
-		<result column="is_vehicle_registration" property="isVehicleRegistration" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 婚姻状况 0未审核 1已审核 -->
-		<result column="is_merry" property="isMerry" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 工作状况 0未审核 1已审核-->
-		<result column="is_work" property="isWork" jdbcType="VARCHAR" />		
-		<!-- 个贷审核信息 户口本 0未审核 1已审核 -->
-		<result column="is_account_book" property="isAccountBook" jdbcType="VARCHAR" />		
-	</resultMap>
-	<select id="selectProjectPersonDetail" resultMap="AppProjectPersonDetailMap" parameterType="String">
-		SELECT
-			hydb.borrow_contents,
-			hydbm.old AS age,
-			pnr.`name` AS sex,
-			pna.`name` AS merry,
-			CONCAT(hydbm.pro, hydbm.city) AS working_city,
-			hydb.account_contents,
-			hydbm.`name` AS true_name,
-			hydbm.position,
-			hydbm.card_no,
-			hydbm.domicile,
-			hydbm.overdue_times,
-			hydbm.overdue_amount,
-			hydbm.litigation,
-			hydbm.is_card,
-			hydbm.is_income,
-			hydbm.is_credit,
-			hydbm.is_asset,
-			hydbm.is_vehicle,
-			hydbm.is_driving_license,
-			hydbm.is_vehicle_registration,
-			hydbm.is_merry,
-			hydbm.is_work,
-			hydbm.is_account_book
-		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_maninfo hydbm ON hydbm.borrow_nid = hydb.borrow_nid
-		LEFT JOIN hyjf_param_name pnr ON cast(hydbm.sex AS CHAR) = pnr.name_cd AND pnr.name_class = 'SEX_TYPE'
-		LEFT JOIN hyjf_param_name pna ON cast(hydbm.merry AS CHAR) = pna.name_cd AND pna.name_class = 'MERRY_STATUS'
-		WHERE
-			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
-		AND hydb.company_or_personal = 2
-	</select>
+
+
 	<resultMap id="AppProjectCompanyDetailMap" type="com.hyjf.am.trade.dao.model.customize.app.AppProjectCompanyDetailCustomize">
 		<!-- 项目描述 borrowContents -->
 		<id column="borrow_contents" property="borrowContents" jdbcType="VARCHAR" />
@@ -746,6 +666,8 @@
 		<result column="is_supply_contract" property="isSupplyContract" jdbcType="VARCHAR" />
 		
 	</resultMap>
+
+
 	<select id="selectProjectCompanyDetail" resultMap="AppProjectCompanyDetailMap" parameterType="String">
 		SELECT
 			hydb.borrow_contents,
@@ -777,8 +699,8 @@
 			hydbu.is_purchase_contract,
 			hydbu.is_supply_contract
 		FROM
-			huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_users hydbu ON hydb.borrow_nid = hydbu.`borrow_nid`
+			ht_borrow hydb
+		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid = hydbu.`borrow_nid`
 		WHERE
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal = 1
@@ -798,7 +720,7 @@
 			bca.authen_time,
 			'0' AS authen_status
 		FROM
-			huiyingdai_borrow_company_authen bca
+			ht_borrow_company_authen bca
 		WHERE
 			bca.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		ORDER BY
@@ -824,7 +746,7 @@
 			hydb.borrow_measures_mea AS control_measures,
 			hydb.borrow_measures_mort AS control_mort
 		FROM
-			huiyingdai_borrow hydb
+			ht_borrow hydb
 		WHERE
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
@@ -846,7 +768,7 @@
 			bh.houses_cnt,
 			bh.houses_belong
 		FROM
-			huiyingdai_borrow_houses bh
+			ht_borrow_houses bh
 		LEFT JOIN hyjf_param_name pn ON bh.houses_type = pn.name_cd
 		AND pn.name_class = 'HOUSES_TYPE'
 		WHERE
@@ -869,7 +791,7 @@
 			bc.toprice AS evaluation_price,
 			bc.place
 		FROM
-			huiyingdai_borrow_carinfo bc
+			ht_borrow_carinfo bc
 		WHERE
 			bc.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
@@ -891,8 +813,8 @@
 			) AS id_card,
 			SUBSTRING(FORMAT(hydcl.credit_amount,4),1,LENGTH(FORMAT(hydcl.credit_amount,4))-2) AS account
 		FROM
-			huiyingdai_consume_list hydcl
-		LEFT JOIN huiyingdai_borrow hydb ON hydb.consume_id = hydcl.consume_id
+			ht_consume_list hydcl
+		LEFT JOIN ht_borrow_info hydb ON hydb.consume_id = hydcl.consume_id
 		<where>
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</where>
@@ -904,8 +826,8 @@
 		SELECT
 			COUNT(hydcl.id)
 		FROM
-			huiyingdai_consume_list hydcl
-			LEFT JOIN huiyingdai_borrow hydb ON hydb.consume_id= hydcl.consume_id
+			ht_consume_list hydcl
+			LEFT JOIN ht_borrow_info hydb ON hydb.consume_id= hydcl.consume_id
 		<where>
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</where>
@@ -948,7 +870,7 @@
 		SELECT
 			b.files
 		FROM
-			huiyingdai_borrow b
+			ht_borrow_info b
 		WHERE
 			b.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
@@ -957,7 +879,7 @@
 		SELECT
 			b.files
 		FROM
-			hyjf_debt_borrow b
+			ht_debt_borrow b
 		WHERE
 			b.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
@@ -1048,8 +970,8 @@
 	</sql>
 	
 	<sql id="From_Clause">
-		huiyingdai_borrow hydb
-		LEFT JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		ht_borrow_info hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 	</sql>
 	
 	<sql id="WhereList_Clause">
