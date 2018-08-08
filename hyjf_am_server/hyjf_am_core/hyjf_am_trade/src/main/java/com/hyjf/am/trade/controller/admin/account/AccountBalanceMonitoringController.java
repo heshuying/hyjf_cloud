@@ -5,7 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminAccountBalanceMonitoringResponse;
 import com.hyjf.am.resquest.admin.AdminAccountBalanceMonitoringRequest;
 import com.hyjf.am.trade.dao.model.auto.MerchantAccount;
-import com.hyjf.am.trade.service.admin.AccountBalanceMonitoringService;
+import com.hyjf.am.trade.service.admin.account.AccountBalanceMonitoringService;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;

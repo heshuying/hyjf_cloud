@@ -5,7 +5,7 @@ import com.hyjf.am.response.admin.AdminBorrowRepaymentInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentInfoCustomize;
-import com.hyjf.am.trade.service.admin.AdminBorrowRepaymentInfoService;
+import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentInfoService;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
