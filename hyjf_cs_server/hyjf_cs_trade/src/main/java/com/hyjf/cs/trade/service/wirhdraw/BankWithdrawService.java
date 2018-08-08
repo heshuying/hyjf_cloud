@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -11,6 +12,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -137,4 +139,18 @@ public interface BankWithdrawService extends BaseTradeService {
      * @return
      */
     BanksConfigVO getBanksConfigByBankId(Integer bankId);
+    /**
+     * 查询用户投资记录
+     * @param userId
+     * @return
+     */
+    int getTenderRecord(Integer userId);
+
+    /**
+     * 查询用户的24小时内充值记录
+     * @param userId
+     * @return
+     */
+
+    List<AccountRechargeVO> getRechargeMoney(Integer userId);
 }
