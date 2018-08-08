@@ -43,4 +43,12 @@ public interface BatchCenterBorrowRecoverService extends BaseService{
      * @return
      */
     BorrowApicron getRecoverApicronByID(String id);
+
+    /**
+     * 发提成处理- 计算提成,更新借款API表
+     * @auth Zha Daojian
+     * @param
+     * @return
+     */
+    boolean updateBorrowApicronByPrimaryKeySelective(String apicornId);
 }

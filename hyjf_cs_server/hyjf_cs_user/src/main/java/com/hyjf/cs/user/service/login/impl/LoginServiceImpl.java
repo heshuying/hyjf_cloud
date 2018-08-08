@@ -23,7 +23,7 @@ import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
-import com.hyjf.cs.user.controller.app.login.UserParameters;
+import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -192,7 +192,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		UserParameters result = new UserParameters();
 		String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
 		imghost = imghost.substring(0, imghost.length() - 1);
-		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppServerHost())
+		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost())
 				+ BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
 		apphost = apphost.substring(0, apphost.length() - 1);
 		String iconUrl = "";
@@ -556,14 +556,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppHost() + ClientConstants.BANKOPEN_OPEN_ACTION
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
 						+ packageStr(request) + "&mobile=" + result.getMobile());
 			} else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url
 				result.setOpenAccountUrl(
-						systemConfig.getAppHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
 			}
 		}
 		{
@@ -631,7 +631,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
-							systemConfig.getAppHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
+							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				}
 				// 江西银行绑卡接口修改
 			} else {
@@ -643,13 +643,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
-							systemConfig.getAppHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
+							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				}
 			}
 		}
 		{
 			// 二维码
-			result.setQrCodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
+			result.setQrCodeUrl(systemConfig.getAppFrontHost().replace("{userId}", String.valueOf(userId)));
 		}
 		{
 			// 风险测评结果
@@ -745,10 +745,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			// 自动投标授权URL
-			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppHost()
+			result.setAutoInvesUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.USER_AUTH_INVES_ACTION + ".do?1=1"));
 			// 缴费授权Url
-			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppHost()
+			result.setPaymentAuthUrl(CommonUtils.concatReturnUrl(request, systemConfig.getAppFrontHost()
 					+ BaseDefine.REQUEST_HOME + ClientConstants.PAYMENT_AUTH_ACTION + ".do?1=1"));
 		}
 		result.setInvitationCode(userId);

@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.Answer;
+import com.hyjf.am.config.dao.model.auto.Question;
 import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 
@@ -18,4 +20,8 @@ public interface QuestionService {
     List<QuestionCustomize> getNewQuestionList();
 
     List<NewAppQuestionCustomize> getNewAppQuestionList();
+    //查找所有问题
+    List<Question> getAllQuestion();
+    //查找所有回答
+    List<Answer> getAllAnswer();
 }

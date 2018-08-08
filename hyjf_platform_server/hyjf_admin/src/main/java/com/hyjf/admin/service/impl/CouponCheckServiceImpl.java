@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BatchSubUserCouponBean;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.CouponCheckClient;
 import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.am.response.admin.CouponCheckResponse;
@@ -39,6 +40,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Autowired
     CouponCheckClient couponCheckClient;
+    @Autowired
+    AmConfigClient amConfigClient;
     @Value("${file.upload.activity.img.path}")
     private String FILEUPLOADTEMPPATH;
 
@@ -50,7 +53,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
      */
     @Override
     public CouponCheckResponse serchCouponList(AdminCouponCheckRequest adminCouponCheckRequest) {
-        return couponCheckClient.getCouponList(adminCouponCheckRequest);
+        return amConfigClient.getCouponList(adminCouponCheckRequest);
     }
 
     /**
@@ -61,7 +64,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
      */
     @Override
     public CouponCheckResponse deleteCouponList(AdminCouponCheckRequest acr) {
-        return couponCheckClient.deleteCouponList(acr);
+        return amConfigClient.deleteCouponList(acr);
     }
 
     /**
@@ -109,7 +112,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     accr.setFilePath(logoRealPathDir + "/" + fileRealName);
                     accr.setDeFlag(0);
                     accr.setStatus(1);
-                    checkResponse = couponCheckClient.insert(accr);
+                    checkResponse = amConfigClient.insert(accr);
                     checkResponse.getMessage();
                 }
             } else {
@@ -121,7 +124,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public void downloadFile(String id, HttpServletResponse response) {
-        CouponCheckVO couponCheck = couponCheckClient.selectCoupon(Integer.valueOf(id));
+        CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String fileP = "";
         String fileN = "";
         if (couponCheck != null) {
@@ -212,7 +215,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public boolean updateCoupon(AdminCouponCheckRequest request) {
-        return couponCheckClient.updateCoupon(request);
+        CouponCheckResponse response = amConfigClient.updateCoupon(request);
+        boolean result = response.isBool();
+        return result;
     }
 
 

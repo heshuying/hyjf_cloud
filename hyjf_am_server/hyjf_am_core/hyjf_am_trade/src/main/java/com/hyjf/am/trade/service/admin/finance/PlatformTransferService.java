@@ -97,4 +97,19 @@ public interface PlatformTransferService {
      * @date 2018/8/7 18:58
      */
     Boolean updateAccountByRechargeCallback(Map<String,Object> params);
+
+    /**
+     * 更新充值明细为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:30
+     */
+    Boolean updateMerchantAccountListFail(String orderId);
+
+    /**
+     * 圈提异步回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:58
+     */
+    Boolean updateAccountByWithdrawCallback(Map<String,Object> params);
+
 }

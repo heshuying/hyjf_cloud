@@ -29,6 +29,8 @@ public class AssetManageBeanRequest extends BasePage {
 
     private String type;
 
+    private String currentTab;
+
     public String getUserId() {
         return userId;
     }
@@ -134,5 +136,13 @@ public class AssetManageBeanRequest extends BasePage {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCurrentTab() {
+        return currentTab;
+    }
+
+    public void setCurrentTab(String currentTab) {
+        this.currentTab = currentTab;
     }
 }

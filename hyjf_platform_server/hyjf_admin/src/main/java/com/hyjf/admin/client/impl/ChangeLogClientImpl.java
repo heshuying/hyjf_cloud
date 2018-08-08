@@ -19,7 +19,6 @@ public class ChangeLogClientImpl  implements ChangeLogClient{
                 .getBody();
 
         return response;
-		
 	}
 
 }

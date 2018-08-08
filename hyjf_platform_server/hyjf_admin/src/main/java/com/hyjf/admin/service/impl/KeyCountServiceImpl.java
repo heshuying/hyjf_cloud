@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AdminUtmReadPermissionsClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.KeyCountClient;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.KeyCountService;
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class KeyCountServiceImpl implements KeyCountService {
 	@Autowired
-	private KeyCountClient keyCountClient;
+	private AmUserClient amUserClient;
 	@Override
 	public KeyCountResponse searchAction(KeyCountRequest request){
-		return  keyCountClient.searchAction(request);
+		return amUserClient.searchAction(request);
 	}
 
 }

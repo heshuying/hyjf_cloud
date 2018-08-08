@@ -12,7 +12,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 组合层Market用Controller基类
+ * 组合层User用Controller基类
  * @author lb
  * @version BaseMarketController, v0.1 2018/6/1:36
  */

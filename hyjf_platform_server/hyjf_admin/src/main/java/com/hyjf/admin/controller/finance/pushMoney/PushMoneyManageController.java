@@ -56,14 +56,14 @@ public class PushMoneyManageController extends BaseController {
     /**
      * 直投提成管理列表查询
      *
-     * @param request
+     * @param requestBean
      * @return 计划列表         已测试
      */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList(HttpServletRequest request, @RequestBody @Valid PushMoneyRequestBean requestBean) {
+    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList( @RequestBody @Valid PushMoneyRequestBean requestBean) {
         // 初始化原子层请求实体
         PushMoneyRequest form = new PushMoneyRequest();
         // 初始化返回LIST
@@ -91,10 +91,14 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "计算提成", notes = "计算提成")
     @PostMapping(value = "/calculateushmoney")
     @ResponseBody
-    public JSONObject calculatePushMoneyAction(PushMoneyRequest pushMoneyRequest){
+    public JSONObject calculatePushMoney(@RequestBody @Valid PushMoneyRequestBean requestBean){
+        // 初始化原子层请求实体
+        PushMoneyRequest form = new PushMoneyRequest();
+        // 将画面请求request赋值给原子层 request
+        BeanUtils.copyProperties(requestBean, form);
         JSONObject jsonObject = new JSONObject();
         // 提成ID
-        String borrowNid = pushMoneyRequest.getBorrowNid();
+        String borrowNid = form.getBorrowNid();
         // 取得借款API表
         BorrowApicronVO apicron = this.pushMoneyManageService.getBorrowApicronBorrowNid(borrowNid);
         String status= Response.SUCCESS;
@@ -109,7 +113,7 @@ public class PushMoneyManageController extends BaseController {
         int cnt = -1;
         try {
             // 发提成处理
-            cnt = this.pushMoneyManageService.insertTenderCommissionRecord(apicron.getId(), pushMoneyRequest);
+            cnt = this.pushMoneyManageService.insertTenderCommissionRecord(apicron.getId(), form);
         } catch (Exception e) {
             jsonObject.put("record","提成计算失败,请重新操作!");
             status = Response.FAIL;
@@ -131,13 +135,17 @@ public class PushMoneyManageController extends BaseController {
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
      * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
      *
-     * @param pushMoneyRequest
+     * @param requestBean
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理记录导出")
     @PostMapping(value = "/exportpushmoney")
-    public void exportExcel(PushMoneyRequest pushMoneyRequest, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void exportExcel(@RequestBody @Valid PushMoneyRequestBean requestBean, HttpServletResponse response)  throws Exception {
+        // 初始化原子层请求实体
+        PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
+        // 将画面请求request赋值给原子层 request
+        BeanUtils.copyProperties(requestBean, pushMoneyRequest);
         // 表格sheet名称
         String sheetName = "直投提成管理";
         // 文件名称

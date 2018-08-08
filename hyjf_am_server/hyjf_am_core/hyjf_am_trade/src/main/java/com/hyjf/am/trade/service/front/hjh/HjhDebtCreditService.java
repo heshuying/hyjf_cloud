@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.hjh;
 
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
@@ -71,4 +72,11 @@ public interface HjhDebtCreditService {
      * @date 2018/8/1 14:00
      */
     List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
+
+    /**
+     * 根据borrowNid和creditStatus查询债转列表
+     * @author zhangyk
+     * @date 2018/8/8 9:54
+     */
+    List<HjhDebtCredit> selectHjhDebtCreditListByBorrowNidAndStatus(DebtCreditRequest request);
 }

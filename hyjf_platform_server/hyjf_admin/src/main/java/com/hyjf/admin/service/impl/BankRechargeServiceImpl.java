@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.BankRechargeConfigClient;
 import com.hyjf.admin.service.BankRechargeService;
 import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
@@ -18,7 +19,7 @@ import java.util.List;
 public class BankRechargeServiceImpl implements BankRechargeService {
 
     @Autowired
-    private BankRechargeConfigClient bankRechargeConfigClient;
+    private AmConfigClient amConfigClient;
 
     /**
      * 查询快捷充值限额列表
@@ -38,7 +39,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
 //            }
 //        }
 
-        return bankRechargeConfigClient.bankRechargeInit(adminRequest);
+        return amConfigClient.bankRechargeInit(adminRequest);
     }
     /**
      * 查询快捷充值限额详情页面
@@ -47,7 +48,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public AdminBankRechargeConfigResponse selectBankRechargeConfigInfo(AdminBankRechargeConfigRequest adminRequest){
-        return bankRechargeConfigClient.selectBankRechargeConfigInfo(adminRequest);
+        return amConfigClient.selectBankRechargeConfigInfo(adminRequest);
     }
 
     /**
@@ -56,7 +57,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public AdminBankRechargeConfigResponse saveBankRechargeConfig(AdminBankRechargeConfigRequest req){
-        return bankRechargeConfigClient.saveBankRechargeConfig(req);
+        return amConfigClient.saveBankRechargeConfig(req);
     }
 
     /**
@@ -65,7 +66,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public AdminBankRechargeConfigResponse updateBankRechargeConfig(AdminBankRechargeConfigRequest req){
-        return bankRechargeConfigClient.updateBankRechargeConfig(req);
+        return amConfigClient.updateBankRechargeConfig(req);
     }
 
     /**
@@ -74,7 +75,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public AdminBankRechargeConfigResponse deleteBankRechargeConfig(AdminBankRechargeConfigRequest req){
-        return bankRechargeConfigClient.deleteBankRechargeConfig(req);
+        return amConfigClient.deleteBankRechargeConfig(req);
     }
     /**
      * 查询快捷充值限额列表
@@ -83,7 +84,7 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public List<BankRechargeLimitConfigVO> exportRecordList(BankRechargeLimitConfigVO adminRequest){
-        return bankRechargeConfigClient.exportRecordList(adminRequest);
+        return amConfigClient.exportRecordList(adminRequest);
     }
 
     /**
@@ -92,6 +93,6 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public List<BankConfigVO> getBankRecordList(){
-        return bankRechargeConfigClient.getBankRecordList();
+        return amConfigClient.getBankRecordList();
     }
 }

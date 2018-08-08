@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.HolidaysConfigClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.HolidaysConfigService;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class HolidaysConfigServiceImpl extends BaseServiceImpl implements HolidaysConfigService {
 
     @Autowired
-    private HolidaysConfigClient holidaysConfigClient;
+    private AmConfigClient amConfigClient;
     /**
      * 查询列表
      * @param adminRequest
@@ -23,7 +24,7 @@ public class HolidaysConfigServiceImpl extends BaseServiceImpl implements Holida
      */
     @Override
     public HolidaysConfigResponse initHolidaysConfig(AdminHolidaysConfigRequest adminRequest){
-        return holidaysConfigClient.initHolidaysConfig(adminRequest);
+        return amConfigClient.initHolidaysConfig(adminRequest);
     }
     /**
      * 查询节假日配置详情页面
@@ -32,7 +33,7 @@ public class HolidaysConfigServiceImpl extends BaseServiceImpl implements Holida
      */
     @Override
     public HolidaysConfigResponse getHolidaysConfigById(Integer id){
-        return holidaysConfigClient.getHolidaysConfigById(id);
+        return amConfigClient.getHolidaysConfigById(id);
     }
 
     /**
@@ -41,7 +42,7 @@ public class HolidaysConfigServiceImpl extends BaseServiceImpl implements Holida
      */
     @Override
     public HolidaysConfigResponse saveHolidaysConfig(AdminHolidaysConfigRequest req){
-        return holidaysConfigClient.saveHolidaysConfig(req);
+        return amConfigClient.saveHolidaysConfig(req);
     }
 
     /**
@@ -50,7 +51,7 @@ public class HolidaysConfigServiceImpl extends BaseServiceImpl implements Holida
      */
     @Override
     public HolidaysConfigResponse updateHolidaysConfig(AdminHolidaysConfigRequest req){
-        return holidaysConfigClient.updateHolidaysConfig(req);
+        return amConfigClient.updateHolidaysConfig(req);
     }
 
 

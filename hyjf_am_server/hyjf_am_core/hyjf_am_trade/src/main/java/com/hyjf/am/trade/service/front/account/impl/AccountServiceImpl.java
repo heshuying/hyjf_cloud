@@ -130,4 +130,12 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
         return cnt;
     }
 
+    @Override
+    public int updateBankMerchantAccount(BankMerchantAccount bankMerchantAccount) {
+        BankMerchantAccountExample example=new BankMerchantAccountExample();
+        example.createCriteria().andAccountCodeEqualTo(bankMerchantAccount.getAccountCode());
+        int cnt = bankMerchantAccountMapper.updateByExampleSelective(bankMerchantAccount, example);
+        return cnt;
+    }
+
 }

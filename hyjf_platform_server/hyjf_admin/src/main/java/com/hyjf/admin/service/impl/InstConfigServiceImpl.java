@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.InstConfigClient;
 import com.hyjf.admin.service.InstConfigService;
 import com.hyjf.am.response.admin.AdminInstConfigDetailResponse;
@@ -21,10 +22,10 @@ public class InstConfigServiceImpl implements InstConfigService {
      * @return
      */
     @Autowired
-    private InstConfigClient instConfigClient;
+    private AmTradeClient amTradeClient;
     @Override
     public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest){
-        return instConfigClient.instConfigInit(adminRequest);
+        return amTradeClient.instConfigInit(adminRequest);
     }
     /**
      * 查询详情
@@ -33,7 +34,7 @@ public class InstConfigServiceImpl implements InstConfigService {
      */
     @Override
     public AdminInstConfigDetailResponse searchInstConfigInfo(AdminInstConfigListRequest adminRequest){
-        return instConfigClient.searchInstConfigInfo(adminRequest);
+        return amTradeClient.searchInstConfigInfo(adminRequest);
     }
 
     /**
@@ -42,7 +43,7 @@ public class InstConfigServiceImpl implements InstConfigService {
      */
     @Override
     public AdminInstConfigListResponse saveInstConfig(AdminInstConfigListRequest req){
-        return instConfigClient.saveInstConfig(req);
+        return amTradeClient.saveInstConfig(req);
     }
     /**
      * 修改保证金配置
@@ -50,7 +51,7 @@ public class InstConfigServiceImpl implements InstConfigService {
      */
     @Override
     public AdminInstConfigListResponse updateInstConfig(AdminInstConfigListRequest req){
-        return instConfigClient.updateInstConfig(req);
+        return amTradeClient.updateInstConfig(req);
     }
 
     /**
@@ -59,7 +60,7 @@ public class InstConfigServiceImpl implements InstConfigService {
      */
     @Override
     public AdminInstConfigListResponse deleteInstConfig(AdminInstConfigListRequest req){
-        return instConfigClient.deleteInstConfig(req);
+        return amTradeClient.deleteInstConfig(req);
     }
 
 }

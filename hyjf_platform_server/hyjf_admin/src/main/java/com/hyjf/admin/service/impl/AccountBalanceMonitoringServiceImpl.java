@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.request.AccountBalanceMonitoringRequestBean;
 import com.hyjf.admin.client.AccountBalanceMonitoringClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.AccountBalanceMonitoringService;
 import com.hyjf.am.response.admin.AdminAccountBalanceMonitoringResponse;
 import com.hyjf.am.resquest.admin.AdminAccountBalanceMonitoringRequest;
@@ -17,7 +18,7 @@ import java.util.List;
 public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonitoringService {
 
     @Autowired
-   private AccountBalanceMonitoringClient accountBalanceMonitoringClient;
+   private AmTradeClient amTradeClient;
     /**
      * 查询配置中心平台账户配置 余额监控
      * @param adminRequest
@@ -25,7 +26,7 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
      */
     @Override
    public AdminAccountBalanceMonitoringResponse selectaccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest){
-        return accountBalanceMonitoringClient.selectAccountBalanceMonitoringByPage(adminRequest);
+        return amTradeClient.selectAccountBalanceMonitoringByPage(adminRequest);
     }
 
     /**
@@ -35,7 +36,7 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
      */
     @Override
     public AdminAccountBalanceMonitoringResponse selectaccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest){
-        return accountBalanceMonitoringClient.selectaccountBalanceMonitoringById(adminRequest);
+        return amTradeClient.selectaccountBalanceMonitoringById(adminRequest);
     }
 
     /**
@@ -45,7 +46,7 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
      */
     @Override
     public List<AccountBalanceMonitoringRequestBean> searchMerchantAccountList(AdminAccountBalanceMonitoringRequest adminRequest, int limitStart, int limitEnd){
-        return accountBalanceMonitoringClient.searchMerchantAccountList(adminRequest);
+        return amTradeClient.searchMerchantAccountList(adminRequest);
     }
     /**
      * 数据更新 平台账户设置
@@ -54,7 +55,7 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
      */
     @Override
      public AdminAccountBalanceMonitoringResponse updateMerchantAccountList(List<AccountBalanceMonitoringRequestBean> adminRequest){
-        return accountBalanceMonitoringClient.updateMerchantAccountList(adminRequest);
+        return amTradeClient.updateMerchantAccountList(adminRequest);
     }
 
 

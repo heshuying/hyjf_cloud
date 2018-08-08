@@ -2296,7 +2296,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<AccountTradeVO> selectTradeTypes() {
-        String url = "http://AM-TRADE/am-trade/accountTrade/selectTradeTypes";
+        String url = urlBase+"accountTrade/selectTradeTypes";
         AccountTradeResponse response = restTemplate.getForEntity(url,AccountTradeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -2311,7 +2311,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int countUserTradeRecordTotal(TradeDetailBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/tradedetail/countUserTradeRecordTotal";
+        String url = urlBase+"tradedetail/countUserTradeRecordTotal";
         TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
         if (response != null) {
             return response.getUserTradesCount();
@@ -2326,7 +2326,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<WebUserTradeListCustomizeVO> searchUserTradeList(TradeDetailBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/tradedetail/searchUserTradeList";
+        String url = urlBase+"tradedetail/searchUserTradeList";
         TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
 
         if (response != null) {
@@ -2342,7 +2342,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int countUserRechargeRecordTotal(TradeDetailBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/tradedetail/countUserRechargeRecordTotal";
+        String url = urlBase+"tradedetail/countUserRechargeRecordTotal";
         TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
         if (response != null) {
             return response.getRechargeListCount();
@@ -2357,7 +2357,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<WebUserRechargeListCustomizeVO> searchUserRechargeList(TradeDetailBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/tradedetail/searchUserRechargeList";
+        String url = urlBase+"tradedetail/searchUserRechargeList";
         TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
 
         if (response != null) {
@@ -2373,7 +2373,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int countUserWithdrawRecordTotal(TradeDetailBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/tradedetail/countUserWithdrawRecordTotal";
+        String url = urlBase+"tradedetail/countUserWithdrawRecordTotal";
         TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
         if (response != null) {
             return response.getWithdrawListCount();
@@ -2388,7 +2388,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<WebUserWithdrawListCustomizeVO> searchUserWithdrawList(TradeDetailBeanRequest request) {
-        String url = "http://AM-TRADE/am-trade/tradedetail/searchUserWithdrawList";
+        String url = urlBase+"tradedetail/searchUserWithdrawList";
         TenderDetailResponse response = restTemplate.postForEntity(url,request,TenderDetailResponse.class).getBody();
 
         if (response != null) {
@@ -3373,7 +3373,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	/**
 	 * 获取债转承接信息ByAssignOrderId
-	 * @param nid
 	 * by libin
 	 * @return
 	 */
@@ -3389,7 +3388,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 	
 	/**
 	 * 获取债转承接信息AssignNid
-	 * @param nid
 	 * by libin
 	 * @return
 	 */
@@ -3406,7 +3404,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	/**
 	 * 获取协议模板by DisplayName
-	 * @param nid
 	 * @return
 	 */
 	@Override

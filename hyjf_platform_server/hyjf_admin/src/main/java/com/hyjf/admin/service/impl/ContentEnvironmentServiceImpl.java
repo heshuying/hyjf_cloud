@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,38 +21,38 @@ import com.hyjf.am.vo.config.ContentEnvironmentVO;
 @Service
 public class ContentEnvironmentServiceImpl implements ContentEnvironmentService {
 	@Autowired
-	private ContentEnvironmentClient contentEnvironmentClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public ContentEnvironmentResponse searchAction(ContentEnvironmentRequestBean requestBean) {
-		return contentEnvironmentClient.searchAction(requestBean);
+		return amConfigClient.searchAction(requestBean);
 	}
 
 	@Override
 	public ContentEnvironmentResponse insertAction(ContentEnvironmentRequestBean requestBean) {
-		return contentEnvironmentClient.insertAction(requestBean);
+		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
 	public ContentEnvironmentResponse updateAction(ContentEnvironmentRequestBean requestBean) {
-		return contentEnvironmentClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
 	public ContentEnvironmentResponse updateStatus(ContentEnvironmentRequestBean requestBean) {
 		Integer id = requestBean.getId();
-		ContentEnvironmentVO record = contentEnvironmentClient.getRecord(id);
+		ContentEnvironmentVO record = amConfigClient.getRecord(id);
 		if (record.getStatus() == 1) {
 			record.setStatus(0);
 		} else if (record.getStatus() == 0) {
 			record.setStatus(1);
 		}
 		BeanUtils.copyProperties(record, requestBean);
-		return contentEnvironmentClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
 	public ContentEnvironmentResponse deleteById(Integer id) {
-		return contentEnvironmentClient.deleteById(id);
+		return amConfigClient.deleteContentEnvironmentById(id);
 	}
 }

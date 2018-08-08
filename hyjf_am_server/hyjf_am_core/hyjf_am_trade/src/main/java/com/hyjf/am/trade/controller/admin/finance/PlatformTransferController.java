@@ -137,4 +137,26 @@ public class PlatformTransferController extends BaseController {
         response.setSuccessFlag(flag);
         return response;
     }
+
+    @GetMapping(value = "/updateMerchantAccountListFail/{orderId}")
+    public BankMerchantAccountResponse  updateMerchantAccountListFail(@PathVariable String orderId){
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        boolean flag = platformTransferService.updateMerchantAccountListFail(orderId);
+        response.setSuccessFlag(flag);
+        return response;
+    }
+
+
+    /**
+     *  圈提回调处理
+     * @author zhangyk
+     * @date 2018/8/7 19:16
+     */
+    @PostMapping(value = "/updataAccountByWithdrawCallback")
+    public BankMerchantAccountResponse  updataAccountByWithdrawCallback(@RequestBody Map<String,Object> params){
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        boolean flag = platformTransferService.updateAccountByWithdrawCallback(params);
+        response.setSuccessFlag(flag);
+        return response;
+    }
 }

@@ -1,5 +1,7 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.SendTypeClient;
 import com.hyjf.admin.service.SendTypeService;
 import com.hyjf.am.response.admin.BorrowSendTypeResponse;
@@ -19,7 +21,9 @@ import java.util.List;
 public class SendTypeServiceImpl implements SendTypeService {
 
     @Autowired
-    private SendTypeClient sendTypeClient;
+    private AmTradeClient amTradeClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
     /**
      * 查询流程配置中的发标/复审
      * @param adminRequest
@@ -27,7 +31,7 @@ public class SendTypeServiceImpl implements SendTypeService {
      */
     @Override
     public BorrowSendTypeResponse selectBorrowSendList(BorrowSendTypeRequest adminRequest){
-        return sendTypeClient.selectBorrowSendList(adminRequest);
+        return amTradeClient.selectBorrowSendList(adminRequest);
     }
     /**
      * 查询流程配置中的发标/复审页面
@@ -36,7 +40,7 @@ public class SendTypeServiceImpl implements SendTypeService {
      */
     @Override
     public BorrowSendTypeVO getBorrowSendInfo(String sendCd){
-        return sendTypeClient.getBorrowSendInfo(sendCd);
+        return amTradeClient.getBorrowSendInfo(sendCd);
     }
 
     /**
@@ -46,7 +50,7 @@ public class SendTypeServiceImpl implements SendTypeService {
      */
     @Override
     public List<ParamNameVO> getParamNameList(String code){
-        return sendTypeClient.getParamNameList(code);
+        return amConfigClient.getParamNameList(code);
     }
 
     /**
@@ -55,7 +59,7 @@ public class SendTypeServiceImpl implements SendTypeService {
      */
     @Override
     public BorrowSendTypeResponse insertBorrowSend(BorrowSendTypeRequest adminRequest){
-       return sendTypeClient.insertBorrowSend(adminRequest);
+       return amTradeClient.insertBorrowSend(adminRequest);
     }
 
     /**
@@ -64,7 +68,7 @@ public class SendTypeServiceImpl implements SendTypeService {
      */
     @Override
     public BorrowSendTypeResponse updateBorrowSend(BorrowSendTypeRequest adminRequest){
-        return sendTypeClient.updateBorrowSend(adminRequest);
+        return amTradeClient.updateBorrowSend(adminRequest);
     }
     /**
      * 删除
@@ -72,7 +76,7 @@ public class SendTypeServiceImpl implements SendTypeService {
      */
     @Override
     public BorrowSendTypeResponse daleteBorrowSend(String sendCd){
-        return sendTypeClient.daleteBorrowSend(sendCd);
+        return amTradeClient.daleteBorrowSend(sendCd);
     }
 
 

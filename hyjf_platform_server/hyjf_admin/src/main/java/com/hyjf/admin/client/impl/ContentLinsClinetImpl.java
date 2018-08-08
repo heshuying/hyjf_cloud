@@ -23,25 +23,25 @@ public class ContentLinsClinetImpl implements ContentLinsClinet {
 
 	@Override
 	public LinkResponse searchAction(ContentLinksRequestBean requestBean) {
-		return restTemplate.postForObject("http://hyjf-admin/content/contentlinks/searchaction", requestBean,
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/searchaction", requestBean,
 				LinkResponse.class);
 	}
 
 	@Override
 	public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
-		return restTemplate.postForObject("http://hyjf-admin/content/contentlinks/insertaction", requestBean,
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/insertaction", requestBean,
 				LinkResponse.class);
 	}
 
 	@Override
 	public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
-		return restTemplate.postForObject("http://hyjf-admin/content/contentlinks/updateaction", requestBean,
+		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
 				LinkResponse.class);
 	}
 
 	@Override
 	public LinkVO getRecord(Integer id) {
-		LinkResponse response = restTemplate.getForObject("http://hyjf-admin/content/contentlinks/getrecord/" + id,
+		LinkResponse response = restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentlinks/getrecord/" + id,
 				LinkResponse.class);
 		if (response != null) {
 			return response.getResult();
@@ -51,6 +51,6 @@ public class ContentLinsClinetImpl implements ContentLinsClinet {
 
 	@Override
 	public LinkResponse deleteById(Integer id) {
-		return restTemplate.getForObject("http://hyjf-admin/content/contentlinks/delete/" + id, LinkResponse.class);
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentlinks/delete/" + id, LinkResponse.class);
 	}
 }

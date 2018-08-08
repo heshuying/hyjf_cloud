@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AppBorrowImageClient;
 import com.hyjf.admin.service.mobileclient.AppBorrowImageService;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AppBorrowImageServiceImpl implements AppBorrowImageService {
     @Autowired
-    AppBorrowImageClient appBorrowImageClient;
+    AmConfigClient amConfigClient;
 
     /**
      * 获取广告管理列表数据
@@ -23,7 +24,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse getRecordList(AppBorrowImageRequest request) {
-        return appBorrowImageClient.searchList(request);
+        return amConfigClient.searchList(request);
     }
 
     /**
@@ -33,7 +34,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse getRecord(AppBorrowImageRequest request) {
-        return appBorrowImageClient.searchInfo(request);
+        return amConfigClient.searchInfo(request);
     }
 
     /**
@@ -44,7 +45,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse insertRecord(AppBorrowImageRequest record) throws Exception {
-        return appBorrowImageClient.insertInfo(record);
+        return amConfigClient.insertInfo(record);
     }
 
     /**
@@ -55,7 +56,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse updateRecord(AppBorrowImageRequest record) throws Exception {
-        return appBorrowImageClient.updateInfo(record);
+        return amConfigClient.updateInfo(record);
 
     }
 
@@ -67,6 +68,6 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      */
     @Override
     public AppBorrowImageResponse deleteRecord(AppBorrowImageRequest record) throws Exception {
-        return appBorrowImageClient.deleteInfo(record);
+        return amConfigClient.deleteInfo(record);
     }
 }

@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.VersionConfigClient;
 import com.hyjf.admin.service.VersionConfigService;
@@ -21,7 +22,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private VersionConfigClient versionConfigClient;
+    private AmConfigClient amConfigClient;
     /**
      * 查询版本设置列表
      * @param adminRequest
@@ -30,7 +31,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     @Override
     public AdminVersionResponse versionConfigInit(AdminVersionRequest adminRequest){
         AdminVersionResponse response = new AdminVersionResponse();
-        response =versionConfigClient.versionConfigInit(adminRequest);
+        response =amConfigClient.versionConfigInit(adminRequest);
         //数据字典
         List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
         List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
@@ -46,7 +47,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     @Override
     public AdminVersionResponse searchVersionConfigInfo(AdminVersionRequest adminRequest){
         AdminVersionResponse response = new AdminVersionResponse();
-        response= versionConfigClient.searchVersionConfigInfo(adminRequest);
+        response= amConfigClient.searchVersionConfigInfo(adminRequest);
         //数据字典
         List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
         List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
@@ -70,7 +71,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public AdminVersionResponse saveVersionConfig(AdminVersionRequest req){
-        return versionConfigClient.saveVersionConfig(req);
+        return amConfigClient.saveVersionConfig(req);
     }
 
     /**
@@ -79,7 +80,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public AdminVersionResponse updateVersionConfig(AdminVersionRequest req){
-        return versionConfigClient.updateVersionConfig(req);
+        return amConfigClient.updateVersionConfig(req);
     }
 
     /**
@@ -88,7 +89,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public AdminVersionResponse deleteVersionConfig(Integer id){
-        return versionConfigClient.deleteVersionConfig(id);
+        return amConfigClient.deleteVersionConfig(id);
     }
     /**
      * 校验版本号是否唯一
@@ -96,7 +97,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public VersionVO getVersionByCode(Integer vid, Integer type, String version){
-        return versionConfigClient.getVersionByCode(vid,type,version);
+        return amConfigClient.getVersionByCode(vid,type,version);
     }
 
 }

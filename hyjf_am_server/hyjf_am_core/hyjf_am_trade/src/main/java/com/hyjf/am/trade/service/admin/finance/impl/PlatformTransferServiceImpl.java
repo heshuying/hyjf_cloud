@@ -207,6 +207,11 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     }
 
 
+    /**
+     * 圈存异步回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:58
+     */
     @Override
     public Boolean updateAccountByRechargeCallback(Map<String, Object> params) {
         Integer userId = (Integer) params.get("userId");
@@ -256,6 +261,89 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 boolean isBankMerchantAccountListFlag = bankMerchantAccountListMapper.updateByPrimaryKeySelective(bankMerchantAccountList) > 0 ? true : false;
                 if (!isBankMerchantAccountListFlag) {
                     throw new RuntimeException("圈存成功后，查询红包明细表失败,操作回滚");
+                }
+                return Boolean.TRUE;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 更新充值明细为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:30
+     */
+    @Override
+    public Boolean updateMerchantAccountListFail(String orderId) {
+        BankMerchantAccountListExample accountWithdrawExample = new BankMerchantAccountListExample();
+        accountWithdrawExample.createCriteria().andOrderIdEqualTo(orderId);
+        BankMerchantAccountList bankMerchantAccountList = new BankMerchantAccountList();
+        bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_FAIL);
+        bankMerchantAccountList.setUpdateUserName("0");
+        bankMerchantAccountList.setUpdateTime(new Date());
+        int ret = bankMerchantAccountListMapper.updateByExampleSelective(bankMerchantAccountList, accountWithdrawExample);
+        return ret > 0 ? true : false;
+    }
+
+
+    /**
+     * 圈提异步回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:58
+     */
+    @Override
+    public Boolean updateAccountByWithdrawCallback(Map<String, Object> params) {
+        Integer userId = (Integer) params.get("userId");
+        String orderId = (String) params.get(BankCallParamConstant.PARAM_LOGORDERID);
+        String accountId = (String) params.get(BankCallParamConstant.PARAM_ACCOUNTID);
+        String txAmount = (String) params.get(BankCallParamConstant.PARAM_TXAMOUNT);
+        String feeAmount = (String) params.get(BankCallParamConstant.PARAM_TXFEE);
+
+        BankMerchantAccountListExample accountWithdrawExample = new BankMerchantAccountListExample();
+        accountWithdrawExample.createCriteria().andOrderIdEqualTo(orderId);
+        List<BankMerchantAccountList> listAccountWithdraw = this.bankMerchantAccountListMapper.selectByExample(accountWithdrawExample);
+        if (listAccountWithdraw != null && listAccountWithdraw.size() > 0) {
+            // 提现信息
+            BankMerchantAccountList accountWithdraw = listAccountWithdraw.get(0);
+            // 如果信息未被处理
+            if (CustomConstants.BANK_MER_TRANS_STATUS_SUCCESS.equals(accountWithdraw.getStatus())) {
+                return Boolean.TRUE;
+            } else {
+                BankMerchantAccountExample bankMerchantAccountExample = new BankMerchantAccountExample();
+                BankMerchantAccountExample.Criteria bankMerchantAccountCriteria = bankMerchantAccountExample.createCriteria();
+                bankMerchantAccountCriteria.andAccountCodeEqualTo(accountId);
+                BankMerchantAccount bankMerchantAccount = this.bankMerchantAccountMapper.selectByExample(bankMerchantAccountExample).get(0);
+
+                // 提现金额
+                BigDecimal transAmt = new BigDecimal(txAmount);
+                // 提现手续费
+                BigDecimal feeAmt = new BigDecimal(feeAmount);
+                // 支出金额
+                BigDecimal outAmt = transAmt.add(feeAmt);
+
+                // 更新账户信息
+                bankMerchantAccount.setAccountBalance(bankMerchantAccount.getAccountBalance().subtract(outAmt));
+                bankMerchantAccount.setAvailableBalance(bankMerchantAccount.getAvailableBalance().subtract(outAmt));
+                bankMerchantAccountCriteria.andUpdateTimeEqualTo(bankMerchantAccount.getUpdateTime());
+                bankMerchantAccount.setUpdateTime(new Date());
+                boolean isAccountUpdateFlag = this.bankMerchantAccountMapper.updateByExampleSelective(bankMerchantAccount, bankMerchantAccountExample) > 0 ? true : false;
+
+                if (!isAccountUpdateFlag) {
+                    throw new RuntimeException("圈提成功后,插入交易明细表失败~!, 操作回滚");
+                }
+
+                BankMerchantAccountList bankMerchantAccountList = new BankMerchantAccountList();
+                bankMerchantAccountList.setId(accountWithdraw.getId());
+                bankMerchantAccountList.setOrderId(orderId);
+                bankMerchantAccountList.setBankAccountBalance(bankMerchantAccount.getAvailableBalance());
+                bankMerchantAccountList.setBankAccountFrost(bankMerchantAccount.getFrost());
+                bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_STATUS_SUCCESS);
+                bankMerchantAccountList.setUpdateUserId(userId);
+                bankMerchantAccountList.setUpdateTime(new Date());
+                boolean isBankMerchantAccountListFlag = bankMerchantAccountListMapper.updateByPrimaryKeySelective(bankMerchantAccountList) > 0 ? true : false;
+                if (!isBankMerchantAccountListFlag) {
+                    throw new RuntimeException("圈提成功后，查询红包明细表失败,操作回滚");
                 }
                 return Boolean.TRUE;
             }
