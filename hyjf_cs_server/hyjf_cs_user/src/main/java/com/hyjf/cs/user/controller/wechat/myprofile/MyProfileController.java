@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -59,8 +60,7 @@ public class MyProfileController extends BaseUserController {
         MyProfileVO myProfileVO = new MyProfileVO();
         Integer userId = requestUtil.getRequestUserId(request);
         if(userId==null){
-            result.buildErrorResponse(MsgEnum.ERR_USER_NOT_LOGIN);
-            return result;
+            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
 
         String trueUserName = myProfileService.getUserTrueName(userId);
