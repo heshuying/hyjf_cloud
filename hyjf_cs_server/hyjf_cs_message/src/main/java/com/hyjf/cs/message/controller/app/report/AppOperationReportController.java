@@ -40,8 +40,8 @@ public class AppOperationReportController extends BaseController {
 		OperationReportRequest request = new OperationReportRequest();
 		String param1 =httpServletRequest.getParameter("isRelease");
 		String param2 =httpServletRequest.getParameter("paginatorPage");
-		request.setIsRelease(param1==null?1:Integer.valueOf(param1));
-		request.setCurrPage(param2==null?1:Integer.valueOf(param2));
+		request.setIsRelease(param1==null?null:Integer.valueOf(param1));
+		request.setCurrPage(param2==null?0:Integer.valueOf(param2));
 		OperationReportResponse response = operationReportService.getRecordListByReleaseJson(request);
 		return response;
 
