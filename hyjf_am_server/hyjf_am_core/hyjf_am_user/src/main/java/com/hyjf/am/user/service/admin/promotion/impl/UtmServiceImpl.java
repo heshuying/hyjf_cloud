@@ -1,9 +1,9 @@
-package com.hyjf.am.user.service.promotion.impl;
+package com.hyjf.am.user.service.admin.promotion.impl;
 
 import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.user.service.promotion.UtmService;
+import com.hyjf.am.user.service.admin.promotion.UtmService;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;

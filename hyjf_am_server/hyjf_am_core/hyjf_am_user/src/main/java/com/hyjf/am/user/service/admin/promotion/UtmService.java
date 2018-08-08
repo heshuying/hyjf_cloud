@@ -1,4 +1,4 @@
-package com.hyjf.am.user.service.promotion;
+package com.hyjf.am.user.service.admin.promotion;
 
 import com.hyjf.am.user.dao.model.auto.Utm;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
