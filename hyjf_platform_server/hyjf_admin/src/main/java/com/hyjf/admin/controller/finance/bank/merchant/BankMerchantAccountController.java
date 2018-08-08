@@ -400,7 +400,7 @@ public class BankMerchantAccountController extends BaseController {
                 }
             }
             if (StringUtils.isNotEmpty(bean.getLogOrderId())) {
-                //this.bankMerchantAccountService.updateAccountWithdrawByOrdId(bean.getLogOrderId(), reason);
+                this.bankMerchantAccountService.updateBankAccountListFailByOrderId(bean.getLogOrderId());
             }
             logger.info(bean.getLogOrderId()+ " 失败");
         }

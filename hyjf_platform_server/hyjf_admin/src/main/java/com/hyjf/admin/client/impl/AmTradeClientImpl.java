@@ -3390,5 +3390,38 @@ public class AmTradeClientImpl implements AmTradeClient{
         return amTradeResponse;
     }
 
+
+    /**
+     * 更新明细表为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:22
+     */
+    @Override
+    public Boolean updateBankAccountListFailByOrderId(String orderId) {
+        String url= "http://AM-TRADE/am-trade/platformtransfer/updateMerchantAccountListFail/" + orderId;
+        BankMerchantAccountResponse response = restTemplate.getForEntity(url,BankMerchantAccountResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getSuccessFlag();
+        }
+        return false;
+    }
+    
+	/**
+	 * 汇计划提成列表查询
+	 *
+	 * @param HjhCommissionRequest
+	 * @return HjhCommissionResponse
+	 */
+	@Override
+	public HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form) {
+		HjhCommissionResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/selectHjhCommissionList" ,form,
+						HjhCommissionResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }
 
