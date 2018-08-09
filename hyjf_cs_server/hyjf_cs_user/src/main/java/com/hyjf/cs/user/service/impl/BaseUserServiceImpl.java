@@ -250,7 +250,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		// 交易渠道000001手机APP 000002网页
 		bean.setChannel(client);
 		bean.setCardNo(cardNo);
-		bean.setReqType("2"); // 参照生产环境类型改为2
+		if(null!=cardNo){
+			// 绑卡接口参照生产环境类型改为2
+			bean.setReqType("2");
+		}
 		bean.setSrvTxCode(srvTxCode);
 		// 交易渠道
 		bean.setMobile(mobile);

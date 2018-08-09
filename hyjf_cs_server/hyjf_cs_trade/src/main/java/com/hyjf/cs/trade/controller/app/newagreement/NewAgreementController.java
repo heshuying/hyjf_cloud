@@ -52,7 +52,7 @@ import java.util.Map;
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(tags = "APP端协议接口")
+@Api(description = "APP端协议接口", tags = "APP端协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
