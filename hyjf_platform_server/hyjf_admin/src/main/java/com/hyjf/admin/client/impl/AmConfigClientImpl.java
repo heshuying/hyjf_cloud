@@ -1,47 +1,113 @@
 package com.hyjf.admin.client.impl;
 
-import com.hyjf.admin.beans.request.*;
-import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.BankConfigResponse;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
-import com.hyjf.am.response.config.*;
-import com.hyjf.am.response.trade.BankInterfaceResponse;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.config.*;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.response.user.MspResponse;
-import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.resquest.user.MspRequest;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.VersionVO;
-import com.hyjf.am.vo.config.*;
-import com.hyjf.am.vo.trade.BankConfigVO;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
-import com.hyjf.am.vo.trade.account.BankInterfaceVO;
-import com.hyjf.common.validator.Validator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import redis.clients.jedis.Jedis;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.hyjf.admin.beans.request.ContentEnvironmentRequestBean;
+import com.hyjf.admin.beans.request.ContentJobRequestBean;
+import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
+import com.hyjf.admin.beans.request.ContentLinksRequestBean;
+import com.hyjf.admin.beans.request.ContentPartnerRequestBean;
+import com.hyjf.admin.beans.request.ContentQualifyRequestBean;
+import com.hyjf.admin.beans.request.EventRequestBean;
+import com.hyjf.admin.beans.request.SiteSettingRequestBean;
+import com.hyjf.admin.beans.request.TeamRequestBean;
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.admin.AdminBankRechargeConfigResponse;
+import com.hyjf.am.response.admin.AdminBankSettingResponse;
+import com.hyjf.am.response.admin.AdminFeeConfigResponse;
+import com.hyjf.am.response.admin.AdminOperationLogResponse;
+import com.hyjf.am.response.admin.AdminVersionResponse;
+import com.hyjf.am.response.admin.BankConfigResponse;
+import com.hyjf.am.response.admin.CategoryResponse;
+import com.hyjf.am.response.admin.ContentArticleResponse;
+import com.hyjf.am.response.admin.ContentEnvironmentResponse;
+import com.hyjf.am.response.admin.ContentQualifyResponse;
+import com.hyjf.am.response.admin.CouponCheckResponse;
+import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
+import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
+import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.config.AdminUtmReadPermissionsResponse;
+import com.hyjf.am.response.config.AnswerResponse;
+import com.hyjf.am.response.config.AppBorrowImageResponse;
+import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.response.config.JobResponse;
+import com.hyjf.am.response.config.LandingPageResponse;
+import com.hyjf.am.response.config.LinkResponse;
+import com.hyjf.am.response.config.MessagePushTemplateResponse;
+import com.hyjf.am.response.config.ParamNameResponse;
+import com.hyjf.am.response.config.QuestionResponse;
+import com.hyjf.am.response.config.SiteSettingsResponse;
+import com.hyjf.am.response.config.SmsMailTemplateResponse;
+import com.hyjf.am.response.config.SmsTemplateResponse;
+import com.hyjf.am.response.config.SubmissionsResponse;
+import com.hyjf.am.response.config.TeamResponse;
+import com.hyjf.am.response.config.TreeResponse;
+import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.trade.BankInterfaceResponse;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
+import com.hyjf.am.resquest.admin.AdminBankRechargeConfigRequest;
+import com.hyjf.am.resquest.admin.AdminBankRetcodeConfigRequest;
+import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
+import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
+import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
+import com.hyjf.am.resquest.admin.AdminHolidaysConfigRequest;
+import com.hyjf.am.resquest.admin.AdminVersionRequest;
+import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
+import com.hyjf.am.resquest.admin.BankInterfaceRequest;
+import com.hyjf.am.resquest.admin.CategoryBeanRequest;
+import com.hyjf.am.resquest.admin.ContentHelpBeanRequest;
+import com.hyjf.am.resquest.config.AdminSystemRequest;
+import com.hyjf.am.resquest.config.AdminUtmReadPermissionsRequest;
+import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.resquest.config.MailTemplateRequest;
+import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
+import com.hyjf.am.resquest.config.SmsTemplateRequest;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.vo.admin.CategoryVO;
+import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
+import com.hyjf.am.vo.config.BankRechargeLimitConfigVO;
+import com.hyjf.am.vo.config.ContentEnvironmentVO;
+import com.hyjf.am.vo.config.ContentQualifyVO;
+import com.hyjf.am.vo.config.CouponCheckVO;
+import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.am.vo.config.JobsVo;
+import com.hyjf.am.vo.config.LinkVO;
+import com.hyjf.am.vo.config.MessagePushTagVO;
+import com.hyjf.am.vo.config.MessagePushTemplateVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.config.SiteSettingsVO;
+import com.hyjf.am.vo.config.SmsMailTemplateVO;
+import com.hyjf.am.vo.config.SmsTemplateVO;
+import com.hyjf.am.vo.config.TeamVO;
+import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.am.vo.trade.account.BankInterfaceVO;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author zhangqingqing
@@ -244,197 +310,7 @@ public class AmConfigClientImpl implements AmConfigClient {
        return null;
 	}
 	
-	@Override
-	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/init" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
 
-	@Override
-	public MspApplytResponse infoAction() {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/infoAction" ,null,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/deleteRecordAction" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/validateBeforeAction" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/applyInfo" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/shareUser" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspApplytResponse download(MspApplytRequest mspApplytRequest) {
-		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/download" ,mspApplytRequest,
-						MspApplytResponse.class)
-				.getBody();
-		if (mspApplytResponse != null) {
-			return mspApplytResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse searchAction(MspRequest mspRequest) {
-		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction" ,mspRequest,
-						MspResponse.class)
-				.getBody();
-		if (mspResponse != null) {
-			return mspResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse infoAction(MspRequest mspRequest) {
-		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/infoAction" ,mspRequest,
-						MspResponse.class)
-				.getBody();
-		if (mspResponse != null) {
-			return mspResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse insertAction(MspRequest mspRequest) {
-		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction" ,mspRequest,
-						MspResponse.class)
-				.getBody();
-		if (mspResponse != null) {
-			return mspResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse updateAction(MspRequest mspRequest) {
-		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/insertAction" ,mspRequest,
-						MspResponse.class)
-				.getBody();
-		if (mspResponse != null) {
-			return mspResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse configureNameError(MspRequest mspRequest) {
-		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/configureNameError" ,mspRequest,
-						MspResponse.class)
-				.getBody();
-		if (mspResponse != null) {
-			return mspResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse deleteAction(MspRequest mspRequest) {
-		 MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/deleteAction" ,mspRequest,
-						MspResponse.class)
-				.getBody();
-		if (mspResponse != null) {
-			return mspResponse;
-		}
-		return null;
-	}
-
-	@Override
-	public MspResponse checkAction(MspRequest mspRequest) {
-		 MspResponse mspResponse = restTemplate
-					.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/checkAction" ,mspRequest,
-							MspResponse.class)
-					.getBody();
-			if (mspResponse != null) {
-				return mspResponse;
-			}
-			return null;
-	}
 
 	@Override
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request) {

@@ -93,7 +93,7 @@ public class MspApplyController  {
 		int count = this.mspApplyService.countByExample(ma);
 		mr.setRecordTotal(count);
 		if (count >0) {
-			Paginator paginator = new Paginator(form.getCurrPage(), count);
+			Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
 			List<MspApply> recordList  = this.mspApplyService.getRecordList(ma, paginator.getOffset(),
 					paginator.getLimit(),start,end);
 			List<MspApplyVO> adminVo= CommonUtils.convertBeanList(recordList,MspApplyVO.class);
@@ -131,8 +131,8 @@ public class MspApplyController  {
 		MspApplytResponse result = new MspApplytResponse();
 		// 调用api 请求安融 查询方法
 		String postResult =queryUser(ParamUtil.getQueryUserParm(form));
-		postResult = postResult.substring(1, postResult.length()-1);
-		postResult = postResult.replaceAll("\\\\", "");
+//		postResult = postResult.substring(1, postResult.length()-1);
+//		postResult = postResult.replaceAll("\\\\", "");
 		JSONObject postResultJson = JSONObject.parseObject(postResult);
 		
 		if(!validatorApiResult(postResultJson)){
@@ -154,7 +154,7 @@ public class MspApplyController  {
 	}
 
 	private boolean validatorApiResult(JSONObject postResultJson) {
-	    if(postResultJson.containsKey(AnRongDefine.SUCCESS) && postResultJson.getBooleanValue(AnRongDefine.SUCCESS)){
+	    if(postResultJson.containsKey(AnRongDefine.RESULT_JSON_KEY_SUCCESS) && postResultJson.getBooleanValue(AnRongDefine.RESULT_JSON_KEY_SUCCESS)){
 	        // 成功
 	        return true;
 	    }

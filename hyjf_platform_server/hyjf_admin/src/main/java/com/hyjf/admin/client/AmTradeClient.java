@@ -2373,5 +2373,7 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountRechargeVO> getAccountRecharge(int userId);
+
+    Integer updateSubCommission(SubCommissionVO subCommissionVO);
 }
 
