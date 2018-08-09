@@ -24,10 +24,15 @@ public class RepayCalendarClientImpl implements RepayCalendarClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
     @Override
     public Integer countRepaymentCalendar(Map<String, Object> params) {
         AppReapyCalendarResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/am-trade/user/repayCalendar/countRepaymentCalendar",
+                "http://AM-TRADE/am-trade/user/repayCalendar/countRepaymentCalendar",
                 AppReapyCalendarResponse.class);
         if (response != null) {
             return response.getCount();
@@ -35,10 +40,15 @@ public class RepayCalendarClientImpl implements RepayCalendarClient {
         return null;
     }
 
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
     @Override
     public List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params) {
         AppReapyCalendarResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/am-trade/user/repayCalendar/searchRepaymentCalendar",
+                "http://AM-TRADE/am-trade/user/repayCalendar/searchRepaymentCalendar",
                 AppReapyCalendarResponse.class);
         if (response != null) {
             return response.getResultList();
@@ -46,10 +56,15 @@ public class RepayCalendarClientImpl implements RepayCalendarClient {
         return null;
     }
 
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
     @Override
     public Integer searchNearlyRepaymentTime(Map<String, Object> params) {
         AppReapyCalendarResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/am-trade/user/repayCalendar/searchNearlyRepaymentTime",
+                "http://AM-TRADE/am-trade/user/repayCalendar/searchNearlyRepaymentTime",
                 AppReapyCalendarResponse.class);
         if (response != null) {
             return response.getCount();

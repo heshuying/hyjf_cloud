@@ -49,9 +49,14 @@ public class AppMyPlanController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyPlanList", produces = "application/json; charset=utf-8")
-    public MyPlanListResultBean getMyPlanList( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    @ResponseBody
+    public MyPlanListResultBean getMyPlanList( HttpServletRequest request,
+                                               @RequestHeader(value = "token", required = false) String token,
+                                               @RequestHeader(value = "userId", required = false) Integer userId) {
         MyPlanListResultBean result = new MyPlanListResultBean();
-        result.setStatus(CustomConstants.APP_STATUS_SUCCESS);      result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
+        result.setRequest("/hyjf-app/user/plan/getMyPlanList");
+        result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
+        result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
         // 计划的状态：1为持有中，2为已退出
         String type = request.getParameter("type");
@@ -61,15 +66,6 @@ public class AppMyPlanController extends BaseTradeController {
         if (Validator.isNull(sign) || Validator.isNull(type) || !Arrays.asList("1", "2").contains(type)) {
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
             result.setStatusDesc(ILLEGAL_PARAMETER_STATUS_DESC);
-            return result;
-        }
-        Integer userId = null;
-        try {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-            userId = webViewUserVO.getUserId();
-        } catch (Exception e) { // token失效
-            result.setStatus(CustomConstants.APP_STATUS_FAIL);
-            result.setStatusDesc(TOKEN_ISINVALID_STATUS);
             return result;
         }
         if (userId == null) {
@@ -167,8 +163,8 @@ public class AppMyPlanController extends BaseTradeController {
      */
     private AssetManageBeanRequest buildQueryParameter(HttpServletRequest request) {
         AssetManageBeanRequest params = new AssetManageBeanRequest();
-        Integer page = Integer.parseInt(request.getParameter("page"));
-        Integer pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Integer page = Integer.parseInt(request.getParameter("page")==null?"1":request.getParameter("page"));
+        Integer pageSize = Integer.parseInt(request.getParameter("pageSize")==null?"10":request.getParameter("pageSize"));
         params.setLimitStart((page - 1) * pageSize);
         params.setLimitEnd(pageSize);
         return params;
