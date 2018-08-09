@@ -33,6 +33,7 @@
 		<result column="roleId" property="roleId" />
 		<result column="borrowNid" property="borrowNid" />
 	</resultMap>
+
 	<select id="selectUserTradeList" resultMap="UserTradeListMap" parameterType="Map" >
 		SELECT
 		hydal.id,
