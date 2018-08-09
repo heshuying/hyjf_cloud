@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.tradedetail;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version TradeDetail, v0.1 2018/6/27 10:10
  */
-@Api(value = "Web交易明细页面")
+@Api(tags = "Web交易明细页面")
 @RestController
 @RequestMapping("/hyjf-web/tradedetail")
 public class TradeDetailController  extends BaseTradeController {
@@ -44,6 +45,8 @@ public class TradeDetailController  extends BaseTradeController {
         // 交易类型列表
         List<AccountTradeVO> trades = this.tradeDetailService.selectTradeTypes();
         result.put("trades", trades);
+        result.put("status", BaseResult.SUCCESS);
+        result.put("statusDesc", BaseResult.SUCCESS_DESC);
         return result;
     }
 

@@ -3,8 +3,10 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 
 /**
  * @author libin
@@ -25,5 +27,21 @@ public interface HjhCommissionService {
      * @return
      */
 	HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
+	
+    /**
+     * 汇计划提成列表-校验发提成状态是不是已经发放
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
+	
+	/**
+	 * 获取部门列表
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+	JSONArray getCrmDepartmentList(String[] list);
 
 }

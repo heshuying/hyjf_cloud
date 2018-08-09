@@ -28,8 +28,8 @@ public class AccountTradeController extends BaseController {
     @Autowired
     private AccountTradeService accountTradeService;
 
-    @GetMapping("/selectTradeTypes/{borrowUserId}")
-    public AccountTradeResponse selectTradeTypes(Integer borrowUserId) {
+    @GetMapping("/selectTradeTypes")
+    public AccountTradeResponse selectTradeTypes() {
         AccountTradeResponse response = new AccountTradeResponse();
         List<AccountTrade> list = accountTradeService.selectTradeTypes();
         if(!CollectionUtils.isEmpty(list)){

@@ -30,8 +30,9 @@ public class AppMyProjectDetailController extends BaseTradeController {
     /**
      * 用户中心我的散标详情
      * @date 2018/7/2 16:27
+     * 原接口：com.hyjf.app.user.credit.AppTenderCreditBorrowController.searchTenderCreditDetail()
      */
-    @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
+    @ApiOperation(value = "App端:获取我的散标详情", notes = "App端:获取我的散标详情")
     @PostMapping(value = "/{borrowId}", produces = "application/json; charset=utf-8")
     public Object MyProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader("userId") String userId){
        JSONObject result = appMyProjectService.getMyProjectDetail(borrowId,request,userId);

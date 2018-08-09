@@ -6,14 +6,14 @@ package com.hyjf.am.trade.service.admin.finance.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountDirectionalTransferMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhCommissionMapper;
+import com.hyjf.am.trade.dao.model.auto.TenderCommission;
 import com.hyjf.am.trade.service.admin.finance.AdminHjhCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
@@ -66,7 +66,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 	}
 
 	@Override
-	public Map<String, String> queryPushMoneyTotle(HjhCommissionRequest request, int limitStart, int limitEnd) {
+	public Map<String, Object> queryPushMoneyTotle(HjhCommissionRequest request, int limitStart, int limitEnd) {
 		// 部门
 		if (Validator.isNotNull(request.getCombotreeSrch())) {
 			if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
@@ -83,8 +83,24 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
         if (limitEnd > 0) {
         	request.setLimitEnd(limitEnd);
         }
-        Map<String, String> map = this.adminHjhCommissionMapper.queryPushMoneyTotle(request);
+        Map<String, Object> map = this.adminHjhCommissionMapper.queryPushMoneyTotle(request);
 		return map;
+	}
+
+	@Override
+	public TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids) {
+		TenderCommissionVO vo = new TenderCommissionVO();
+		TenderCommission tenderCommission = this.tenderCommissionMapper.selectByPrimaryKey(ids);
+		if(tenderCommission != null){
+			BeanUtils.copyProperties(tenderCommission, vo);
+		}
+		return vo;
+	}
+
+	@Override
+	public List<OADepartmentCustomizeVO> getCrmDepartmentList(HjhCommissionRequest request) {
+		List<OADepartmentCustomizeVO> departmentList = this.adminHjhCommissionMapper.getCrmDepartmentList();
+		return departmentList;
 	}
 
 }

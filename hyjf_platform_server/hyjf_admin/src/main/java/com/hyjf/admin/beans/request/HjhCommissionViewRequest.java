@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.hyjf.admin.beans.vo.HjhCommissionVO;
@@ -32,6 +33,9 @@ public class HjhCommissionViewRequest extends HjhCommissionVO implements Seriali
     
 	@ApiModelProperty(value = "planNid")
     private String planNid;
+	
+	@ApiModelProperty(value = "commission")
+	private BigDecimal commission;
 	
 	private List<HjhCommissionVO> recordList;
 
@@ -73,5 +77,13 @@ public class HjhCommissionViewRequest extends HjhCommissionVO implements Seriali
 
 	public void setRecordList(List<HjhCommissionVO> recordList) {
 		this.recordList = recordList;
+	}
+
+	public BigDecimal getCommission() {
+		return commission;
+	}
+
+	public void setCommission(BigDecimal commission) {
+		this.commission = commission;
 	}
 }

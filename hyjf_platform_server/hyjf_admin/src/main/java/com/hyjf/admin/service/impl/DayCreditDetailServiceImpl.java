@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.DayCreditDetailClient;
 import com.hyjf.admin.service.DayCreditDetailService;
 import com.hyjf.am.response.admin.DayCreditDetailResponse;
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Service;
 public class DayCreditDetailServiceImpl implements DayCreditDetailService {
 
     @Autowired
-    private DayCreditDetailClient dayCreditDetailClient;
+    private AmTradeClient amTradeClient;
 
     @Override
     public DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request) {
-        DayCreditDetailResponse response = dayCreditDetailClient.hjhDayCreditDetailList(request);
+        DayCreditDetailResponse response = amTradeClient.hjhDayCreditDetailList(request);
         return response;
     }
 }

@@ -5,6 +5,7 @@ package com.hyjf.admin.client;
 
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.vo.user.HjhInstConfigVO;
 
 /**
  * @author fuqiang
@@ -33,4 +34,11 @@ public interface StzfWhiteConfigClient {
 	 * @return
 	 */
 	STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean);
+
+	/**
+	 * 获取机构信息
+	 * @param instcode
+	 * @return
+	 */
+    HjhInstConfigVO selectHjhInstConfig(String instcode);
 }

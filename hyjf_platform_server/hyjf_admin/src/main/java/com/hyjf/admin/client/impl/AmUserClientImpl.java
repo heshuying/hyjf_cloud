@@ -4,11 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.resquest.admin.VipDetailListRequest;
+import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -20,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1324,11 +1333,270 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForObject("http://AM-USER/am-user/content/whereaboutspage/delete/" + id,
 				WhereaboutsPageResponse.class);
 	}
+
+	@Override
+	public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountCount";
+		Integer result = restTemplate.postForEntity(url,bankAccountManageRequest,Integer.class).getBody();
+		return result;
+	}
+
+	@Override
+	public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
+		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountInfos";
+		BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
+		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountDetails";
+		BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+		String url = "http://AM-USER/am-user/bankaccountmanage/getbankopenaccount/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
+		ChangeLogResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/changelog/init",clr, ChangeLogResponse.class)
+				.getBody();
+		return response;
+	}
+
 	@Override
 	public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
 		ChannelStatisticsDetailResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/channelstatisticsdetail/searchaction",
 				request, ChannelStatisticsDetailResponse.class);
 		return amUserResponse;
+	}
+
+	/**
+	 * 根据id查找用户测评的问题与答案
+	 * @param evalationId
+	 * @author nxl
+	 * @return
+	 */
+	@Override
+	public List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId){
+		String url = "http://AM-USER/am-user/evaluationManager/getUserQuestionInfoById/" + evalationId;
+		UserEvalationQuestionResponse response = restTemplate.getForEntity(url, UserEvalationQuestionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+	@Override
+	public KeyCountResponse searchAction(KeyCountRequest request) {
+		KeyCountResponse response = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/keycount/searchaction",
+				request, KeyCountResponse.class);
+		return  response;
+
+	}
+
+	/**
+	 * 根据用户名查询id
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public UserResponse findUserByCondition(String userName) {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/findByCondition/"+userName, UserResponse.class);
+	}
+
+	/**
+	 * 根据用户id查询用户
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserResponse findUserByUserId(Integer userId) {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/findById/"+userId, UserResponse.class);
+	}
+
+	public UtmResponse getByPageList(Map<String, Object> map) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public UtmResponse getCountByParam(Map<String, Object> map) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/getcount", map, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public Integer getChannelCount(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/channel/getchannelcount", channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getRecordTotal();
+		}
+		return null;
+	}
+
+	@Override
+	public List<ChannelCustomizeVO> getChannelList(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<UtmPlatVO> getUtmPlat(String sourceId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmplat/"+sourceId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UtmChannelVO getRecord(String utmId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return (UtmChannelVO)response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserVO getUser(String utmReferrer, String userId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return (UserVO)response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutm/",channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	@Override
+	public boolean deleteAction(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutm/",channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	@Override
+	public UtmPlatVO getDataById(Integer id) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyid/"+id, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return (UtmPlatVO)response.getResult();
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public int sourceNameIsExists(String sourceName, Integer sourceId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/sourcenameisexists/"+sourceName+"/"+sourceId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getRecordTotal();
+		}else{
+			return 0;
+		}
+	}
+
+	@Override
+	public boolean insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutmplat/",utmPlatVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	@Override
+	public boolean utmClientdeleteUtmPlatAction(UtmPlatVO utmPlatVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutmplat/",utmPlatVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	/**
+	 * 查找VIP信息
+	 * @param vipManageRequest
+	 * @return
+	 */
+	@Override
+	public VipManageResponse searchList(VipManageRequest vipManageRequest) {
+		String url = "http://AM-USER/am-user/vipManage/getUserList";
+		VipManageResponse response = restTemplate.postForEntity(url,vipManageRequest,VipManageResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
+		String url = "http://AM-USER/am-user/vipManage/vipDetailList";
+		VipDetailListResponse response = restTemplate.postForEntity(url,detailListRequest,VipDetailListResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
+		String url = "http://AM-USER/am-user/vipManage/vipUpdateGradeList";
+		VipUpdateGradeListResponse response = restTemplate.postForEntity(url,vgl,VipUpdateGradeListResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
 	}
 
 }

@@ -97,7 +97,7 @@ public class AutoPreAuditMessageConsumer extends Consumer {
                     // 自动初审
                     logger.info(borrow.getBorrowNid() + " 开始自动初审 " + borrowInfo.getInstCode());
                     if (borrow == null) {
-                        logger.info(borrow.getBorrowNid() + " 该资产在表里不存在！！");
+                        logger.info(" 该资产在表里不存在！！");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 

@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +12,10 @@ import com.hyjf.am.resquest.user.ChangeLogRequest;
 @Service
 public class ChangeLogServiceImpl  implements ChangeLogService{
 	@Autowired
-	private ChangeLogClient changeLogClient;
+	private AmUserClient amUserClient;
 	@Override
 	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
-		return changeLogClient.getChangeLogList(clr);
+		return amUserClient.getChangeLogList(clr);
 	}
 
 }

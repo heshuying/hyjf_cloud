@@ -14,7 +14,7 @@ import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +43,7 @@ public class AppRegistController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);
 
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     @Autowired
     private SystemConfig systemConfig;

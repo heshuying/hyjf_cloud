@@ -13,6 +13,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +28,9 @@ public class BankSettingController {
 
     @Autowired
     private BankSettingService bankSettingService;
+
+    @Value("${file.domain.url}")
+    private String DOMAIN_URL;
 
     /**
      *(条件)列表查询
@@ -50,16 +54,22 @@ public class BankSettingController {
             bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
             recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(),
                     paginator.getLimit());
-           // String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
-            if(!CollectionUtils.isEmpty(recordList)){
+            if(CollectionUtils.isNotEmpty(recordList)){
                 List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
+                response.setPaginator(paginator);
                 response.setResultList(jxBankConfigList);
-                response.setRecordTotal(recordList.size());
-                response.setRtn(Response.SUCCESS);
+                response.setBanksettingForm(adminRequest);
+                //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
+                response.setFileDomainUrl(DOMAIN_URL);
+                return response;
             }
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
@@ -71,11 +81,13 @@ public class BankSettingController {
     public AdminBankSettingResponse bankSettingInfo(@RequestBody AdminBankSettingRequest adminRequest) {
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
         JxBankConfig jxBankConfigList = bankSettingService.bankSettingInfo(adminRequest);
-        if(null != jxBankConfigList){
+        if(jxBankConfigList != null){
             JxBankConfigVO jxBankConfigVO = CommonUtils.convertBean(jxBankConfigList, JxBankConfigVO.class);
             response.setResult(jxBankConfigVO);
-            response.setRtn(Response.SUCCESS);
+            return response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -90,12 +102,7 @@ public class BankSettingController {
         bc.setBankName(adminRequest.getBankName());
         List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
         List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
-        if(CollectionUtils.isEmpty(jxBankConfigVO)){
-            response.setResultList(jxBankConfigVO);
-            return response;
-        }
-        response.setRtn(Response.FAIL);
-        response.setRtn(Response.FAIL_MSG);
+        response.setResultList(jxBankConfigVO);
         return response;
     }
 
@@ -109,11 +116,13 @@ public class BankSettingController {
         try{
             int result =this.bankSettingService.insertBankSetting(adminRequest);
             if(result > 0 ){
-                response.setRtn(Response.SUCCESS);
+                return response;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -126,13 +135,15 @@ public class BankSettingController {
     public AdminBankSettingResponse updateBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
         try{
-            int result =this.bankSettingService.updateBankSetting(adminRequest);
+            int result = this.bankSettingService.updateBankSetting(adminRequest);
             if(result > 0 ){
-                response.setRtn(Response.SUCCESS);
+                return response;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -146,8 +157,10 @@ public class BankSettingController {
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
         if(adminRequest.getId() != null){
             this.bankSettingService.deleteFeeConfig(adminRequest.getId());
-            response.setRtn(Response.SUCCESS);
+            return  response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return  response;
     }
 
