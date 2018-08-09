@@ -33,9 +33,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +79,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+    @Override
+	public List<ParamNameVO> getParamName(String other1) {
+    	String url = "http://AM-CONFIG/am-config/config/getParamName/" + other1;
+    	ParamNameResponse response = restTemplate.getForEntity(url,ParamNameResponse.class).getBody();
+    	if (Validator.isNotNull(response)) {
+    		return response.getResultList();
+		}
+		return null;
+	}
 
     /**
      * 查询邮件配置
@@ -1875,6 +1887,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
 				LinkResponse.class);
 	}
+
 
 	/**
 	 * 查询配置中心操作日志配置

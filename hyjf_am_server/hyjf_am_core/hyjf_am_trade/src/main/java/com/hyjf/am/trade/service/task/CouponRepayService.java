@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoy
@@ -38,4 +39,12 @@ public interface CouponRepayService {
      * @return
      */
     List<BatchCouponTimeoutCommonCustomize> selectCouponQuota(int threeBeginDate, int threeEndDate);
+
+    /**
+     * 优惠券单独投资放款
+     *
+     * @param paramMap
+     * @return
+     */
+    List<String> selectNidForCouponOnly(Map<String, Object> paramMap);
 }

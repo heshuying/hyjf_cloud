@@ -7,9 +7,13 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
 import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
+import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
@@ -893,4 +897,11 @@ public interface AmUserClient {
      * @return
      */
     UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request);
+
+    /**
+     * 查询用户画像评分列表
+     * @param request
+     * @return
+     */
+    UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request);
 }

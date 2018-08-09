@@ -319,4 +319,12 @@ public class BankConfigServiceImpl implements BankConfigService {
 		return jxBankConfigList;
 	}
 
+	@Override
+	public List<ParamName> getParamName(String other1) {
+		ParamNameExample example = new ParamNameExample();
+		ParamNameExample.Criteria cra = example.createCriteria();
+		cra.andOther1EqualTo(other1);
+		return this.paramNameMapper.selectByExample(example);
+	}
+
 }

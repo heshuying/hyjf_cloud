@@ -1398,6 +1398,23 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 查询用户画像评分列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request) {
+		String url = "http://AM-USER/am-user/userPortraitManage/selectUserPortraitScoreRecordList";
+		UserPortraitScoreResponse response = restTemplate.postForEntity(url,request,UserPortraitScoreResponse.class).getBody();
+		if (response != null) {
+			response.getResultList();
+			return response;
+		}
+		return null;
+	}
+
 	@Override
 	public KeyCountResponse searchAction(KeyCountRequest request) {
 		KeyCountResponse response = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/keycount/searchaction",
