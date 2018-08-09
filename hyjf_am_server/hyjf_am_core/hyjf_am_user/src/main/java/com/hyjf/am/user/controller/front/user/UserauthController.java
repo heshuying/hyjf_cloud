@@ -54,7 +54,7 @@ public class UserauthController extends BaseController {
 		Map<String, Object> authUser = this.buildQueryCondition(adminUserAuthListRequest);
 		int recordTotal = this.userauthService.countRecordTotal(authUser);
 		if (recordTotal > 0) {
-			Paginator paginator = new Paginator(adminUserAuthListRequest.getCurrPage(),adminUserAuthListRequest.getPageSize(), recordTotal);
+			Paginator paginator = new Paginator(adminUserAuthListRequest.getCurrPage(),recordTotal,adminUserAuthListRequest.getPageSize());
 			List<AdminUserAuthListCustomize> recordList = this.userauthService.getRecordList(authUser,
 					paginator.getOffset(), paginator.getLimit());
 			AdminUserAuthListResponse aualr = new AdminUserAuthListResponse();
@@ -67,7 +67,7 @@ public class UserauthController extends BaseController {
 			}
 			return aualr;
 		}
-		return null;
+		return new AdminUserAuthListResponse();
 
 	}
 
@@ -211,7 +211,7 @@ public class UserauthController extends BaseController {
 	        authUser.put("orderStatus", form.getOrderStatus());
 	        int recordTotal = this.userauthService.countRecordTotalLog(authUser);
 	        if (recordTotal > 0) {
-	            Paginator paginator = new Paginator(form.getPaginatorPage(), recordTotal);
+	            Paginator paginator = new Paginator(form.getCurrPage(),recordTotal,form.getPageSize());
 	            List<AdminUserAuthLogListCustomize> recordList = this.userauthService.getRecordListLog(authUser, paginator.getOffset(), paginator.getLimit());
 	            List<AdminUserAuthLogListVO> avo = null;
 				BeanUtils.copyProperties(recordList, avo);
@@ -220,7 +220,7 @@ public class UserauthController extends BaseController {
 	            ap.setRtn(Response.SUCCESS);
 	            return ap;
 	        }
-	        return null;
+	        return new AdminUserAuthLogListResponse();
 
 	}
 }
