@@ -18,7 +18,12 @@ public class RepayListRequest extends BasePage {
     String borrowNid;
     Integer limitStart;
     Integer limitEnd;
-
+    //用户角色 2借款人，3垫付机构
+    public String roleId;
+    /**
+     * 还款时间排序 0:升序 1:降序
+     */
+    private String repayOrder;
     public String getUserId() {
         return userId;
     }
@@ -97,5 +102,21 @@ public class RepayListRequest extends BasePage {
 
     public void setRepayStatus(String repayStatus) {
         this.repayStatus = repayStatus;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRepayOrder() {
+        return repayOrder;
+    }
+
+    public void setRepayOrder(String repayOrder) {
+        this.repayOrder = repayOrder;
     }
 }
