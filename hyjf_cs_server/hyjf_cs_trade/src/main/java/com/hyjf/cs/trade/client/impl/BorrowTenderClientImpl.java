@@ -5,6 +5,7 @@ import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
@@ -137,5 +138,15 @@ public class BorrowTenderClientImpl implements BorrowTenderClient {
 		}
 		return null;
 	}
+
+    @Override
+    public List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest) {
+        return null;
+    }
+
+    @Override
+    public void couponOnlyRepay(List<String> recoverNidList) {
+
+    }
 
 }

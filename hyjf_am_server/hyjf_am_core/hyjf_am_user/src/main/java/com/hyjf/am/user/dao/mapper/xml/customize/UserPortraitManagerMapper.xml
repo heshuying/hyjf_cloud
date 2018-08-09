@@ -29,6 +29,17 @@
 		<result column="invite_customer" jdbcType="INTEGER" property="inviteCustomer" />
 		<result column="remark" jdbcType="VARCHAR" property="remark" />
 		<result column="mobile" jdbcType="CHAR" property="mobile" />
+		<result column="bank_total" jdbcType="DECIMAL" property="bankTotal" />
+		<result column="fund_retention" jdbcType="DECIMAL" property="fundRetention" />
+		<result column="last_repay_time" jdbcType="INTEGER" property="lastRepayTime" />
+		<result column="invite_regist" jdbcType="INTEGER" property="inviteRegist" />
+		<result column="invite_recharge" jdbcType="INTEGER" property="inviteRecharge" />
+		<result column="invite_tender" jdbcType="INTEGER" property="inviteTender" />
+		<result column="yield" jdbcType="DECIMAL" property="yield" />
+		<result column="attribute" jdbcType="TINYINT" property="attribute" />
+		<result column="bank_balance" jdbcType="DECIMAL" property="bankBalance" />
+		<result column="account_await" jdbcType="DECIMAL" property="accountAwait" />
+		<result column="bank_frost" jdbcType="DECIMAL" property="bankFrost" />
 	</resultMap>
 	<sql id="Where_Clause_UserPortrait">
 		<where>
@@ -75,13 +86,26 @@
 			customer_complaint,
 			invite_customer,
 			remark,
-			INSERT (hup.mobile, 3, 5, '****') AS mobile
+			INSERT (hup.mobile, 4, 4, '****') AS mobile
 		FROM
 			ht_user_portrait hup
 		<include refid="Where_Clause_UserPortrait"/>
 		ORDER BY hup.user_id DESC
 		<if test="limitStart != null and limitEnd !=null ">
 			limit #{limitStart},#{limitEnd}
+		</if>
+	</select>
+
+	<select id="selectInvest" resultType="java.math.BigDecimal" parameterType="java.util.Map">
+		SELECT
+		p.invest_sum
+		FROM ht_user_portrait p
+		WHERE 1 = 1
+		<if test="sex != null and sex != ''">
+			AND sex = #{sex}
+		</if>
+		<if test="age != null">
+			AND age = #{age}
 		</if>
 	</select>
 </mapper>

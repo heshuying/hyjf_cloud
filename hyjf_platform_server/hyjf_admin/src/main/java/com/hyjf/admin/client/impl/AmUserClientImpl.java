@@ -8,10 +8,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.resquest.admin.VipDetailListRequest;
-import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
@@ -1401,6 +1398,23 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 查询用户画像评分列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request) {
+		String url = "http://AM-USER/am-user/userPortraitManage/selectUserPortraitScoreRecordList";
+		UserPortraitScoreResponse response = restTemplate.postForEntity(url,request,UserPortraitScoreResponse.class).getBody();
+		if (response != null) {
+			response.getResultList();
+			return response;
+		}
+		return null;
+	}
+
 	@Override
 	public KeyCountResponse searchAction(KeyCountRequest request) {
 		KeyCountResponse response = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/keycount/searchaction",

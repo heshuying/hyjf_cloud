@@ -3,17 +3,11 @@ package com.hyjf.admin.client;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.admin.VipDetailListResponse;
-import com.hyjf.am.response.admin.VipManageResponse;
-import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.resquest.admin.VipDetailListRequest;
-import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
@@ -891,4 +885,11 @@ public interface AmUserClient {
      * @return
      */
     List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId);
+
+    /**
+     * 查询用户画像评分列表
+     * @param request
+     * @return
+     */
+    UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request);
 }
