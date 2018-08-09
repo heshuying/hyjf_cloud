@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/redPacket")
+@RequestMapping("/cs-trade/redPacket")
 public class RedPacketSmsNoticeBatchController {
     private static final Logger logger = LoggerFactory.getLogger(RedPacketSmsNoticeBatchController.class);
 
