@@ -2367,7 +2367,6 @@ public interface AmTradeClient {
      */
     List<HjhAssetTypeVO> getHjhAssetType();
 
-	Integer updateSubCommission(SubCommissionVO subCommissionVO);
 
 	
     /**
