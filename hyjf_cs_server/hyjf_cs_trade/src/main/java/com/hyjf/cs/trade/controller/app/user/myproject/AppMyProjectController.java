@@ -46,10 +46,12 @@ public class AppMyProjectController extends BaseTradeController {
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyProject", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public MyProjectResponse queryScatteredProject( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    public MyProjectResponse queryScatteredProject( HttpServletRequest request,
+                                                    @RequestHeader(value = "token", required = false) String token,
+                                                    @RequestHeader(value = "userId", required = false) Integer userId) {
 
         MyProjectResponse response = new MyProjectResponse();
-
+        response.setRequest("/hyjf-app/user/invest/getMyProject");
         // 状态：1为当前持有，2为已回款，3为转让记录
         String type = request.getParameter("type");
         // 唯一标识
@@ -62,9 +64,6 @@ public class AppMyProjectController extends BaseTradeController {
             response.setStatusDesc("参数非法");
             return response;
         }
-        WebViewUserVO webViewUserVO=appMyProjectService.getUsersByToken(token);
-        Integer userId = webViewUserVO.getUserId();
-        //Integer userId = Integer.valueOf(request.getParameter("userId"));
         // 构建查询条件
         AssetManageBeanRequest  params = buildQueryParameter(request);
         params.setUserId(userId+"");
@@ -336,8 +335,8 @@ public class AppMyProjectController extends BaseTradeController {
      */
     private AssetManageBeanRequest buildQueryParameter(HttpServletRequest request) {
         AssetManageBeanRequest params = new AssetManageBeanRequest();
-        Integer page = Integer.parseInt(request.getParameter("page"));
-        Integer pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Integer page = Integer.parseInt(request.getParameter("page")==null?"1":request.getParameter("page"));
+        Integer pageSize = Integer.parseInt(request.getParameter("pageSize")==null?"10":request.getParameter("pageSize"));
         params.setLimitStart((page - 1) * pageSize);
         params.setLimitEnd(pageSize);
         return params;
