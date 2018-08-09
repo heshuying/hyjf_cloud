@@ -3369,8 +3369,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String, Object> params) {
         String url = BASE_URL +"/app/selectProjectInvestList";
         AppProjectInvestListCustomizeResponse response = restTemplate.postForEntity(url,params,AppProjectInvestListCustomizeResponse.class).getBody();
-        if (response!=null){
-            response.getResultList();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
