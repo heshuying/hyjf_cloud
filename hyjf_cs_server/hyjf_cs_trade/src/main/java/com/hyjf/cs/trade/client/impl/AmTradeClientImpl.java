@@ -824,6 +824,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 获取用户还款列表
+     * @param projectBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> selectUserRepayedList(RepayListRequest projectBean){
+        RepayListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/selectUserRepayedList",projectBean, RepayListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
     /**
      * 根据订单号查询充值信息
      * @param orderId

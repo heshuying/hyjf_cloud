@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.repay;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
@@ -35,6 +36,9 @@ public interface RepayManageService {
     List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean);
 
     Integer selectOrgRepayedCount(RepayListRequest requestBean);
+
+    int countUserRepayedListTotal(RepayListRequest projectBean);// 查询记录总数（个人和机构）
+    List<RepayListCustomizeVO> searchUserRepayList(RepayListRequest projectBean, int limitStart, int limitEnd);
 
     boolean updateRepayMoney(RepayBean repay, BankCallBean bean) throws Exception;
 

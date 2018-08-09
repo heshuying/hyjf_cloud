@@ -410,4 +410,34 @@
 			b.`status` = 4
 		AND u.user_id = #{userId}
 	</select>
+	<select id="countOrgRepayProjectRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hydb.borrow_nid) AS total
+		FROM
+		ht_borrow hydb
+		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
+		INNER JOIN ht_r_user u ON hbi.repay_org_user_id= u.user_id
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
+		AND CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN hba.period_now = 1
+		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		END
+		<include refid="Where_Clause_Repay_List" />
+	</select>
+	<select id="countUserRepayProjectRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		COUNT(hydb.borrow_nid) AS total
+		FROM
+		ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
+		AND CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN hba.period_now = 1
+		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		END
+		<include refid="Where_Clause_Repay_List" />
+	</select>
 </mapper>
