@@ -2267,6 +2267,13 @@ public interface AmTradeClient {
     STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean);
 
     /**
+     * 获取机构信息
+     * @param instcode
+     * @return
+     */
+    HjhInstConfigVO selectHjhInstConfig(String instcode);
+
+    /**
      * 批量审核优惠券
      * @param params
      * @param params
