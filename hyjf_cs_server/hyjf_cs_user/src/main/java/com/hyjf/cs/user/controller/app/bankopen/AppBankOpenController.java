@@ -52,10 +52,10 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "app端获取开户信息", notes = "获取开户信息")
     @PostMapping(value = "/userInfo")
     @ResponseBody
-    public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        logger.info("openAccount userInfo start, token is :{}", token);
+    public AppResult<String> userInfo(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+        logger.info("openAccount userInfo start, userId is :{}", userId);
         AppResult<String> result = new AppResult<String>();
-        UserVO userVO = bankOpenService.getUsers(token);
+        UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
             logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
@@ -74,15 +74,15 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "app端用户开户", notes = "app端-用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         AppResult<Object> result = new AppResult<Object>();
         // 验证请求参数
-        if (token == null) {
+        if (userId == null) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         // 获取登录信息
-        UserVO user = bankOpenService.getUsers(token);
+        UserVO user = bankOpenService.getUsersById(userId);
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
         // 拼装参数 调用江西银行
