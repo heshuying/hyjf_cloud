@@ -1823,7 +1823,7 @@
 		<!-- 债转详情URL -->
 		CONCAT(#{host},'?creditNid=',hbc.credit_nid,'&amp;sign=',#{sign}) AS creditRecordInfoUrl
 		FROM
-		huiyingdai_borrow_credit hbc
+		ht_borrow_credit hbc
 		<where>
 			<if test="userId != null and userId != ''">
 				AND hbc.credit_user_id = #{userId}
@@ -1854,9 +1854,9 @@
 		SELECT
 		*
 		FROM
-		huiyingdai_borrow_recover hbr
-		LEFT JOIN huiyingdai_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
-		LEFT JOIN huiyingdai_borrow hb ON hbr.borrow_nid = hb.borrow_nid
+		ht_borrow_recover hbr
+		LEFT JOIN ht_borrow_tender ht ON ht.borrow_nid = hbr.borrow_nid AND ht.nid = hbr.nid
+		LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
 	<!-- 获取可转让的投资查询条件 -->
@@ -1894,7 +1894,7 @@
 			SELECT
 			hbrp.recover_status AS recoverPlanStatus
 			FROM
-			huiyingdai_borrow_recover_plan hbrp
+			ht_borrow_recover_plan hbrp
 			WHERE
 			hbrp.borrow_nid = hbr.borrow_nid
 			AND hbrp.tender_id = hbr.tender_id
@@ -2113,18 +2113,18 @@
 		SELECT
 		ten.nid
 		FROM
-		huiyingdai_borrow_tender ten
-		LEFT JOIN huiyingdai_borrow_recover_plan rec
+		ht_borrow_tender ten
+		LEFT JOIN ht_borrow_recover_plan rec
 		ON ten.nid = rec.nid
 		AND rec.recover_account > rec.credit_amount
 		AND rec.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow_recover re ON ten.nid = re.nid
+		INNER JOIN ht_borrow_recover re ON ten.nid = re.nid
 		AND re.recover_account > re.credit_amount
 		AND re.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
 		LEFT JOIN (SELECT hbc.tender_nid,
 		MIN(hbc.credit_capital_assigned) credit_capital_assigned,
-		MIN(hbc.credit_status) credit_status FROM huiyingdai_borrow_credit hbc
+		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
@@ -2143,8 +2143,8 @@
 		SELECT
 		ten.credit_tender_nid AS nid
 		FROM
-		huiyingdai_credit_tender ten
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.bid_nid
+		ht_credit_tender ten
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
 		WHERE ten.user_id= #{userId}
 		AND borrow.`status` = 4
 		AND ten.assign_interest>0
@@ -2161,7 +2161,7 @@
 		hbtc.nid
 		FROM
 		hyjf_borrow_tender_cpn hbtc
-		INNER JOIN huiyingdai_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
 		LEFT JOIN hyjf_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN hyjf_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN hyjf_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -2182,11 +2182,11 @@
 		hiii.tender_nid AS nid
 		FROM
 		hyjf_increase_interest_invest hiii
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
 		INNER JOIN (select * from hyjf_increase_interest_loan where user_id=#{userId}
 		) hiil ON hiil.invest_order_id=hiii.order_id
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
+		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
 		WHERE borrow.`status` = 4
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
@@ -2265,11 +2265,11 @@
 		IFNULL(rec.recover_capital_wait,ten.account)+
 		IFNULL( rec.recover_interest_wait, ten.recover_account_interest )-
 		(SELECT IFNULL(SUM(ct.assign_interest - ct.assign_repay_interest),0)
-		FROM huiyingdai_credit_tender ct
+		FROM ht_credit_tender ct
 		WHERE rec.nid = ct.credit_tender_nid
 		)-
 		(SELECT IFNULL(SUM(ct.assign_capital - ct.assign_repay_capital),0)
-		FROM huiyingdai_credit_tender ct
+		FROM ht_credit_tender ct
 		WHERE rec.nid = ct.credit_tender_nid
 		) total_wait,
 		'' AS coupon_name,
@@ -2278,18 +2278,18 @@
 		ten.nid as order_id,
 		'' as assign_nid
 		FROM
-		huiyingdai_borrow_tender ten
-		LEFT JOIN huiyingdai_borrow_recover_plan rec
+		ht_borrow_tender ten
+		LEFT JOIN ht_borrow_recover_plan rec
 		ON ten.nid = rec.nid
 		AND rec.recover_account > rec.credit_amount
 		AND rec.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow_recover re ON ten.nid = re.nid
+		INNER JOIN ht_borrow_recover re ON ten.nid = re.nid
 		AND re.recover_account > re.credit_amount
 		AND re.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
 		LEFT JOIN (SELECT hbc.tender_nid,
 		MIN(hbc.credit_capital_assigned) credit_capital_assigned,
-		MIN(hbc.credit_status) credit_status FROM huiyingdai_borrow_credit hbc
+		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
@@ -2320,8 +2320,8 @@
 		ten.credit_tender_nid as order_id,
 		ten.assign_nid
 		FROM
-		huiyingdai_credit_tender ten
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.bid_nid
+		ht_credit_tender ten
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
 		WHERE ten.user_id= #{userId}
 		AND borrow.`status` = 4
 		AND ten.assign_interest>0
@@ -2363,7 +2363,7 @@
 		'' AS assign_nid
 		FROM
 		hyjf_borrow_tender_cpn hbtc
-		INNER JOIN huiyingdai_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
 		LEFT JOIN hyjf_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN hyjf_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN hyjf_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -2397,11 +2397,11 @@
 		'' as assign_nid
 		FROM
 		hyjf_increase_interest_invest hiii
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
 		INNER JOIN (select * from hyjf_increase_interest_loan where user_id=#{userId}
 		) hiil ON hiil.invest_order_id=hiii.order_id
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
+		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
 		WHERE borrow.`status` = 4
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL
@@ -2497,18 +2497,18 @@
 		SELECT
 		IFNULL(rec.recover_time,re.recover_time) as nearly_date
 		FROM
-		huiyingdai_borrow_tender ten
-		LEFT JOIN huiyingdai_borrow_recover_plan rec
+		ht_borrow_tender ten
+		LEFT JOIN ht_borrow_recover_plan rec
 		ON ten.nid = rec.nid
 		AND rec.recover_account > rec.credit_amount
 		AND rec.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow_recover re ON ten.nid = re.nid
+		INNER JOIN ht_borrow_recover re ON ten.nid = re.nid
 		AND re.recover_account > re.credit_amount
 		AND re.recover_account_wait> 0
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.borrow_nid
 		LEFT JOIN (SELECT hbc.tender_nid,
 		MIN(hbc.credit_capital_assigned) credit_capital_assigned,
-		MIN(hbc.credit_status) credit_status FROM huiyingdai_borrow_credit hbc
+		MIN(hbc.credit_status) credit_status FROM ht_borrow_credit hbc
 		GROUP BY hbc.tender_nid
 		) hbc ON ten.nid=hbc.tender_nid
 		WHERE
@@ -2521,8 +2521,8 @@
 		SELECT
 		borrow.repay_last_time as nearly_date
 		FROM
-		huiyingdai_credit_tender ten
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = ten.bid_nid
+		ht_credit_tender ten
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = ten.bid_nid
 		WHERE ten.user_id= #{userId}
 		AND borrow.`status` = 4
 		AND ten.assign_interest>0
@@ -2534,7 +2534,7 @@
 		MAX(hcr.recover_time)  as nearly_date
 		FROM
 		hyjf_borrow_tender_cpn hbtc
-		INNER JOIN huiyingdai_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
+		INNER JOIN ht_borrow hb ON hbtc.borrow_nid = hb.borrow_nid
 		LEFT JOIN hyjf_coupon_recover hcr ON hbtc.nid=hcr.tender_id
 		INNER JOIN hyjf_coupon_tender hct ON hct.order_id = hbtc.nid
 		INNER JOIN hyjf_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -2549,11 +2549,11 @@
 		borrow.repay_last_time as nearly_date
 		FROM
 		hyjf_increase_interest_invest hiii
-		INNER JOIN huiyingdai_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
+		INNER JOIN ht_borrow borrow ON borrow.borrow_nid = hiii.borrow_nid
 		INNER JOIN (select * from hyjf_increase_interest_loan where user_id=#{userId}
 		) hiil ON hiil.invest_order_id=hiii.order_id
-		INNER JOIN huiyingdai_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
-		LEFT JOIN huiyingdai_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
+		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
 		WHERE borrow.`status` = 4
 		AND hiii.user_id=#{userId}
 		AND borrow.plan_nid IS NULL

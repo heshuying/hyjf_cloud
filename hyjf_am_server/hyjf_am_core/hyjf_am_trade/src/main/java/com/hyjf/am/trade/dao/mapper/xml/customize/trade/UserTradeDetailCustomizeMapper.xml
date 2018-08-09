@@ -33,11 +33,13 @@
 		<result column="roleId" property="roleId" />
 		<result column="borrowNid" property="borrowNid" />
 	</resultMap>
+
 	<select id="selectUserTradeList" resultMap="UserTradeListMap" parameterType="Map" >
 		SELECT
 		hydal.id,
-		#{trade,jdbcType=VARCHAR} AS roleId,
-		hydal.create_time' AS time,
+		#{roleId,jdbcType=VARCHAR} AS roleId,
+		#{trade,jdbcType=VARCHAR} AS trade,
+		hydal.create_time AS time,
 		CASE
 		WHEN hydal.`type` = 1 THEN
 		'+'
@@ -61,8 +63,8 @@
 		hydal.trade_status AS trade_status,
 		hydal.remark
 		FROM
-		huiyingdai_account_list hydal
-		LEFT JOIN huiyingdai_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
+		ht_account_list hydal
+		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
 		<include refid="Where_Clause_Trade_List" />
 		ORDER BY
 		hydal.create_time DESC,hydal.id DESC
@@ -75,8 +77,8 @@
 		SELECT
 		COUNT(hydal.id)
 		FROM
-		huiyingdai_account_list hydal
-		LEFT JOIN huiyingdai_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
+		ht_account_list hydal
+		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
 		<include refid="Where_Clause_Trade_List" />
 	</select>
 
@@ -105,14 +107,14 @@
 	<select id="searchUserRechargeList" resultMap="UserRechargeListMap" parameterType="Map" >
 		SELECT
 		hydar.id,
-		hydar.create_timeAS time,
+		hydar.create_time AS time,
 		hydar.money AS money,
 		hydar.balance AS balance,
 		hydar.fee AS fee,
 		hydar.is_bank AS is_bank,
 		hydar.`status` AS `status`
 		FROM
-		huiyingdai_account_recharge hydar
+		ht_account_recharge hydar
 		<include refid="Where_Clause_Recharge_List" />
 		ORDER BY
 		hydar.create_time DESC,hydar.id DESC
@@ -124,7 +126,7 @@
 		SELECT
 		COUNT(hydar.id)
 		FROM
-		huiyingdai_account_recharge hydar
+		ht_account_recharge hydar
 		<include refid="Where_Clause_Recharge_List" />
 	</select>
 
