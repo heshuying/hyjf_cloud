@@ -190,7 +190,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Override
 	public UserParameters getUserParameters(Integer userId, String platform, HttpServletRequest request) {
 		UserParameters result = new UserParameters();
-		String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
+		String imghost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost());
 		imghost = imghost.substring(0, imghost.length() - 1);
 		String apphost = UploadFileUtils.getDoPath(systemConfig.getAppFrontHost())
 				+ BaseDefine.REQUEST_HOME.substring(1, BaseDefine.REQUEST_HOME.length()) + "/";
