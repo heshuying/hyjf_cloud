@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.response.admin;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.SubCommissionVO;
 
@@ -11,4 +12,13 @@ import com.hyjf.am.vo.admin.SubCommissionVO;
  * @version: SubCommissionResponse, v0.1 2018/7/10 10:03
  */
 public class SubCommissionResponse extends Response<SubCommissionVO> {
+    private JSONObject jsonObject;
+
+    public JSONObject getJsonObject() {
+        return jsonObject;
+    }
+
+    public void setJsonObject(JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
+    }
 }

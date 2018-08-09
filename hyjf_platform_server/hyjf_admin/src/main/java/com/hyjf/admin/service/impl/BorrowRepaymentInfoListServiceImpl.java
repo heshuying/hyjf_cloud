@@ -19,14 +19,12 @@ import java.util.List;
  */
 @Service
 public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoListService {
-    @Autowired
-    private HjhInstConfigClient hjhInstConfigClient;
 
     @Autowired
     private AmTradeClient amTradeClient;
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
+        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
 

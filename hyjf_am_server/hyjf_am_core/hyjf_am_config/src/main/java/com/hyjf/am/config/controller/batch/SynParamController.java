@@ -23,6 +23,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author dxj
@@ -94,12 +95,11 @@ public class SynParamController extends BaseConfigController {
             maps.put("uu", "僵死sdf"+ p1);
             MessageContent message = new MessageContent(MQConstant.TEST_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(maps));
             
-//            try {
-////                testProducer2.messageSend(message);
-////                testProducer2
-//            } catch (MQException e) {
-//                 e.printStackTrace();
-//            }
+            try {
+                testProducer.messageSend(message);
+            } catch (MQException e) {
+                 e.printStackTrace();
+            }
             
         }
         

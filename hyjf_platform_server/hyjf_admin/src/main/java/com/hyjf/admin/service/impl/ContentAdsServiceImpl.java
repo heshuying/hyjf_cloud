@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.ContentAdsClient;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.am.response.admin.ContentAdsResponse;
@@ -17,25 +18,25 @@ import org.springframework.stereotype.Service;
 public class ContentAdsServiceImpl implements ContentAdsService {
 
     @Autowired
-    private ContentAdsClient contentAdsClient;
+    private AmMarketClient amMarketClient;
 
     @Override
     public ContentAdsResponse searchAction(ContentAdsRequest request) {
-        return contentAdsClient.searchAction(request);
+        return amMarketClient.searchAction(request);
     }
 
     @Override
     public ContentAdsResponse inserAction(ContentAdsRequest request) {
-        return contentAdsClient.inserAction(request);
+        return amMarketClient.inserAction(request);
     }
 
     @Override
     public ContentAdsResponse updateAction(ContentAdsRequest request) {
-        return contentAdsClient.updateAction(request);
+        return amMarketClient.updateAction(request);
     }
 
     @Override
     public ContentAdsResponse deleteById(Integer id) {
-        return contentAdsClient.deleteById(id);
+        return amMarketClient.deleteById(id);
     }
 }

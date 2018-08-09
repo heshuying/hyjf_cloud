@@ -1,9 +1,11 @@
 package com.hyjf.cs.trade.controller.web.assetmanage;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.ObligatoryRightAjaxBean;
 import com.hyjf.cs.trade.bean.PlanAjaxBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -40,16 +42,18 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户资产信息", notes = "获取用户资产信息")
     @PostMapping(value = "/init")
-    public Map<String,Object> init(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public Map<String,Object> init(@RequestHeader(value = "token", required = true) String token,
+                                   @RequestBody @Valid AssetManageBeanRequest form, HttpServletRequest request) {
         logger.info("web获取用户资产信息, token is :{}", JSONObject.toJSONString(token));
         Map<String,Object> result = new HashMap<>();
         WebViewUserVO user=assetManageService.getUsersByToken(token);
 
-        String currentTab = request.getParameter("currentTab");
+        String currentTab = form.getCurrentTab();
         AccountVO account = assetManageService.getAccount(user.getUserId());
-        result.put("account", account);
+        result.put("data", account);
         result.put("currentTab", currentTab);
-
+        result.put("status", BaseResult.SUCCESS);
+        result.put("statusDesc", BaseResult.SUCCESS_DESC);
         return result;
     }
 

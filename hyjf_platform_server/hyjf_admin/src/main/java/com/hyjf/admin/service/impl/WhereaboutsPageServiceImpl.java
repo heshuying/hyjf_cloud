@@ -3,25 +3,14 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
-import com.hyjf.admin.client.ContentLandingPageClient;
-import com.hyjf.admin.client.WhereaboutsPageClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.service.ContentLandingPageService;
 import com.hyjf.admin.service.WhereaboutsPageService;
-import com.hyjf.am.response.admin.CouponCheckResponse;
-import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.config.WhereaboutsPictureResponse;
-import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
 import com.hyjf.am.vo.config.WhereaboutsPagePictureVo;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.validator.Validator;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +33,7 @@ import java.util.LinkedList;
 @Service
 public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 	@Autowired
-	private WhereaboutsPageClient whereaboutsPageClient;
+	private AmUserClient amUserClient;
 
 	@Autowired
 	SystemConfig systemConfig;
@@ -52,26 +41,26 @@ public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
 	private String FILEUPLOADTEMPPATH;
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.searchAction(requestBean);
+		return amUserClient.searchAction(requestBean);
 	}
 
 	@Override
 	public WhereaboutsPageResponse insertAction(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.insertAction(requestBean);
+		return amUserClient.insertAction(requestBean);
 	}
 
 	@Override
 	public WhereaboutsPageResponse updateAction(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.updateAction(requestBean);
+		return amUserClient.updateAction(requestBean);
 	}
 	@Override
 	public WhereaboutsPageResponse updateStatus(WhereaboutsPageRequestBean requestBean) {
-		return whereaboutsPageClient.updateStatus(requestBean);
+		return amUserClient.updateStatus(requestBean);
 	}
 
 	@Override
 	public WhereaboutsPageResponse deleteById(Integer id) {
-		return whereaboutsPageClient.deleteById(id);
+		return amUserClient.deleteById(id);
 	}
 
 	/**

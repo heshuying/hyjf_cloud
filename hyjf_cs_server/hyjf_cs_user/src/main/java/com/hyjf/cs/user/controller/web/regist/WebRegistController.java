@@ -13,7 +13,7 @@ import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,7 +41,7 @@ public class WebRegistController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WebRegistController.class);
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     /**
      * 初期化,跳转到注册页面
@@ -90,9 +89,9 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public WebResult register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
+        WebResult result = new WebResult();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);
         String password = registerRequest.getPassword();
@@ -102,9 +101,7 @@ public class WebRegistController extends BaseUserController {
         WebViewUserVO webViewUserVO = registService.register(registerRequest, GetCilentIP.getIpAddr(request));
         if (webViewUserVO != null) {
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
-            Map<String,Object> resultMap = new HashMap<>();
-            resultMap.put("token",webViewUserVO.getToken());
-            result.setData(resultMap);
+            result.setData(webViewUserVO);
         } else {
             logger.error("Web端用户注册失败...");
             result.setStatus(ApiResult.FAIL);

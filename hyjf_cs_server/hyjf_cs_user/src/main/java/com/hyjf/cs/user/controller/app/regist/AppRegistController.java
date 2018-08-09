@@ -14,7 +14,7 @@ import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,7 +43,7 @@ public class AppRegistController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);
 
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -135,7 +135,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", "");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
@@ -163,7 +163,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", operationUrl);
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());

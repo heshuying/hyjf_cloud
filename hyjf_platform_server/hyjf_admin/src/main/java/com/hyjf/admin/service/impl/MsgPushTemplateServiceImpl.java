@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.MsgPushTemplateClient;
 import com.hyjf.admin.service.MsgPushTemplateService;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
@@ -21,27 +22,27 @@ import java.util.List;
 public class MsgPushTemplateServiceImpl implements MsgPushTemplateService {
 
 	@Autowired
-	private MsgPushTemplateClient msgPushTemplateClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public List<MessagePushTemplateVO> findAll() {
-		return msgPushTemplateClient.findAll();
+		return amConfigClient.findAll();
 	}
 
 	@Override
 	public List<MessagePushTemplateVO> findMsgPushTemplate(MsgPushTemplateRequest request) {
 	    if (request != null) {
             String tagName = request.getTagName();
-			MessagePushTagVO tag = msgPushTemplateClient.findMsgTagByTagName(tagName);
+			MessagePushTagVO tag = amConfigClient.findMsgTagByTagName(tagName);
 			if (tag != null && tag.getTagName() != null) {
 				request.setTagCode(tag.getTagName());
 			}
         }
-		return msgPushTemplateClient.findMsgPushTemplate(request);
+		return amConfigClient.findMsgPushTemplate(request);
 	}
 
 	@Override
 	public void insertMsgPushTemplate(MsgPushTemplateRequest request) {
-		msgPushTemplateClient.insertMsgPushTemplate(request);
+		amConfigClient.insertMsgPushTemplate(request);
 	}
 }

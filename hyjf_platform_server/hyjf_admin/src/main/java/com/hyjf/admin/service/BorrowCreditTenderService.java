@@ -6,6 +6,7 @@ import com.hyjf.admin.common.result.AdminResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 public interface BorrowCreditTenderService {
 
@@ -21,7 +22,7 @@ public interface BorrowCreditTenderService {
      * @author zhangyk
      * @date 2018/7/11 20:41
      */
-    void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response);
+    void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) throws UnsupportedEncodingException;
 
 
     /**
@@ -44,7 +45,7 @@ public interface BorrowCreditTenderService {
      * @author zhangyk
      * @date 2018/7/13 10:49
      */
-    void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response);
+    void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException;
 
 
     /**

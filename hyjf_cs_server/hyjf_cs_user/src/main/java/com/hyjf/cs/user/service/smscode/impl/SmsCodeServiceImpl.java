@@ -14,7 +14,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -25,7 +24,6 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.smscode.SmsCodeService;
-import com.hyjf.cs.user.vo.SmsRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,34 +79,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 
         // 发送
         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-    }
-
-    @Override
-    public void appCheckParam(SmsRequest request, String verificationType, String verificationCode, String mobile, String key) {
-        // 版本号
-        String version = request.getVersion();
-        // 网络状态
-        String netStatus = request.getNetStatus();
-        // 平台
-        String platform = request.getPlatform();
-        // 随机字符串
-        String randomString = request.getRandomString();
-        // Order
-        String order = request.getOrder();
-        CheckUtil.check(StringUtils.isNotBlank(version) && StringUtils.isNotBlank(netStatus) && StringUtils.isNotBlank(platform) && StringUtils.isNotBlank(randomString) && StringUtils.isNotBlank(order), MsgEnum.STATUS_CE000001);
-        CheckUtil.check(StringUtils.isNotBlank(verificationType), MsgEnum.ERR_OBJECT_REQUIRED, "验证码类型");
-        CheckUtil.check(StringUtils.isNotBlank(verificationCode), MsgEnum.ERR_OBJECT_REQUIRED, "验证码");
-        List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
-                CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
-        //无效的验证码类型
-        CheckUtil.check(Validator.isNotNull(verificationType) && codeTypes.contains(verificationType), MsgEnum.ERR_OBJECT_INVALID, "验证码类型");
-        CheckUtil.check(null != key, MsgEnum.STATUS_CE000001);
-
-        // 业务逻辑
-        // 解密
-        mobile = DES.decodeValue(key, mobile);
-        CheckUtil.check(StringUtils.isNotBlank(mobile), MsgEnum.ERR_OBJECT_REQUIRED,"手机号");
-        CheckUtil.check(Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
     }
 
     /**

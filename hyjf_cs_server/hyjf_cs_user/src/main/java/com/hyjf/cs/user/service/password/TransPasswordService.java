@@ -14,7 +14,7 @@ public interface TransPasswordService {
 	
     /**
      * 通过手机号获取用户
-     * @param newPW
+     * @param mobile
      * @return
      */
 	UserVO findUserByMobile(String mobile);

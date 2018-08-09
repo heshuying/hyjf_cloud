@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ContentArticleClient;
 import com.hyjf.admin.service.ContentArticleService;
 import com.hyjf.am.response.admin.ContentArticleResponse;
@@ -18,27 +19,27 @@ import org.springframework.stereotype.Service;
 public class ContentArticleServiceImpl implements ContentArticleService {
 
     @Autowired
-    private ContentArticleClient contentArticleClient;
+    private AmConfigClient amConfigClient;
 
     @Override
     public ContentArticleResponse searchAction(ContentArticleRequest contentArticleRequestBean) {
 
-        return contentArticleClient.searchAction(contentArticleRequestBean);
+        return amConfigClient.searchAction(contentArticleRequestBean);
     }
 
     @Override
     public ContentArticleResponse inserAction(ContentArticleRequest contentArticleRequestBean) {
-        return contentArticleClient.inserAction(contentArticleRequestBean);
+        return amConfigClient.inserAction(contentArticleRequestBean);
     }
 
     @Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
-        return contentArticleClient.updateAction(contentArticleRequestBean);
+        return amConfigClient.updateAction(contentArticleRequestBean);
     }
 
     @Override
     public ContentArticleResponse deleteById(Integer id) {
-        return contentArticleClient.deleteById(id);
+        return amConfigClient.deleteContentArticleById(id);
     }
 
 }

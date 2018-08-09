@@ -25,6 +25,8 @@ public class ActivityListResponse extends Response<ActivityListVO> {
         return count;
     }
 
+    private String title;
+
     public void setCount(int count) {
         this.count = count;
     }
@@ -59,5 +61,13 @@ public class ActivityListResponse extends Response<ActivityListVO> {
 
     public void setActivityList(List<ActivityListBeanVO> activityList) {
         this.activityList = activityList;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

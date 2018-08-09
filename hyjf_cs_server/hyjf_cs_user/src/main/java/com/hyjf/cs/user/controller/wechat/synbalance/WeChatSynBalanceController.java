@@ -11,7 +11,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.WxSynBalanceResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.util.RequestUtil;
@@ -21,7 +20,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +45,6 @@ public class WeChatSynBalanceController extends BaseUserController {
     RequestUtil requestUtil;
 
     @ApiOperation(value = "wechat端我的-刷新", notes = "wechat端我的-刷新")
-    @SignValidate
     @PostMapping(value = "/init", produces = "application/json; charset=utf-8")
     public BaseResultBean synBalance(HttpServletRequest request, HttpServletResponse response) {
         WxSynBalanceResultBean result = new WxSynBalanceResultBean();

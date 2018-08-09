@@ -21,13 +21,13 @@ import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.RegistLandingPageCommitRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.wechat.login.LoginResultBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.UserRegistResult;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.util.ResultEnum;
 import com.hyjf.cs.user.vo.RegisterRequest;
@@ -35,8 +35,6 @@ import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,9 +59,8 @@ import static com.hyjf.common.constants.CommonConstant.*;
 @RequestMapping("/hyjf-wechat/userRegist")
 public class WeChatRegistController extends BaseUserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WeChatRegistController.class);
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -135,7 +132,7 @@ public class WeChatRegistController extends BaseUserController {
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
             baseMapBean.set("imageUrlOperation", "");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.setStatus("000");
             ret.setStatusDesc(statusDesc);
             ret.setSuccessUrl(baseMapBean.getUrl());
@@ -154,7 +151,7 @@ public class WeChatRegistController extends BaseUserController {
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
             baseMapBean.set("imageUrlOperation", operationUrl);
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.setStatus("000");
             ret.setStatusDesc(statusDesc);
             ret.setSuccessUrl(baseMapBean.getUrl());
@@ -339,12 +336,7 @@ public class WeChatRegistController extends BaseUserController {
 //                CommonSoaUtils.sendUserCouponNoRet(paramBean);
 
                     // 发放注册888红包
-                    try {
-                        sendCoupon(user);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        logger.error("注册发放888红包失败");
-                    }
+                    sendCoupon(user);
 
                     AdsRequest adsRequest = new AdsRequest();
                     adsRequest.setCode("registpop");

@@ -42,8 +42,8 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
     public AmUserClient amUserClient;
 
 
-    @Autowired
-    private BankAccountManageClient bankAccountManageClient;
+//    @Autowired
+//    private BankAccountManageClient bankAccountManageClient;
 
 
 
@@ -158,7 +158,8 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
                 //如果没有提成人，返回
                 continue;
             }
-            BankOpenAccountVO bankOpenAccountInfo = bankAccountManageClient.getBankOpenAccount(tenderCommissionRequest.getUserId());
+            // 投资人的账户信息
+            BankOpenAccountVO bankOpenAccountInfo = amTradeClient.getBankOpenAccount(tenderCommissionRequest.getUserId());
             if(bankOpenAccountInfo != null){
                 tenderCommissionRequest.setAccountId(bankOpenAccountInfo.getAccount());
             }
@@ -173,7 +174,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
                     is51);
 
             if (tenderCommissionRequest.getCommission()!=null && tenderCommissionRequest.getCommission().compareTo(BigDecimal.ZERO) > 0) {
-                Integer counts = amTradeClient.getCountTenderCommissionBybBorrowNid(tenderCommissionRequest);
+                Integer counts = amTradeClient.getCountTenderCommissionByTenderIdAndTenderType(tenderCommissionRequest);
                 if (counts == 0) {
                     // 执行插入
                     ret += this.amTradeClient.saveTenderCommission(tenderCommissionRequest);
@@ -184,10 +185,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
         }
 
         // 更新借款API表
-        BorrowApicronRequest borrowApicronRequest = new BorrowApicronRequest();
-        borrowApicronRequest.setId(apicornId);
-        borrowApicronRequest.setWebStatus(1);
-        ret += this.amTradeClient.updateByPrimaryKeySelective(borrowApicronRequest);
+        ret += this.amTradeClient.updateBorrowApicronByPrimaryKeySelective(apicornId+"");
 
         return ret;
     }

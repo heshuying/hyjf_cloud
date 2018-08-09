@@ -5,6 +5,10 @@ import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 
 import java.util.List;
 
+/**
+ * 已迁移
+ * @Author : huanghui
+ */
 public interface HjhRepayClient {
 
     Integer getRepayCount(HjhRepayRequest repayRequest);

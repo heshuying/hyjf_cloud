@@ -41,6 +41,8 @@ public class DataCenterCouponCustomizeVO extends BaseVO {
     private String expireReciveMoney;
     //累计真实投资金额
     private String realTenderMoney;
+    //活动id
+    private Integer activityId;
     /**
      * 检索条件 时间开始
      */
@@ -191,5 +193,13 @@ public class DataCenterCouponCustomizeVO extends BaseVO {
 
     public void setFailureRate(String failureRate) {
         this.failureRate = failureRate;
+    }
+
+    public Integer getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
     }
 }

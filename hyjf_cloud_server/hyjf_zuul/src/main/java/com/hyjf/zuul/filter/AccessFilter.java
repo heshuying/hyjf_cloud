@@ -6,6 +6,7 @@ import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.AppUserToken;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.SignValue;
 import com.netflix.zuul.ZuulFilter;
@@ -20,6 +21,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -33,17 +35,52 @@ public class AccessFilter extends ZuulFilter {
 	@Value("${ignore.urls.app.key}")
 	private String appKeyIgnoreUrls;
 
+	/**
+	 * 不同客户端的请求包含不同的关键字（域名）
+	 */
 	private static final String APP_CHANNEL = "app";
 	private static final String WEB_CHANNEL = "web";
-	private static final String WEB_VISIT_URL = "/hyjf-web";
-	private static final String WECHAT_CHANNEL = "wechat";
-	private static final String WECHAT_VISIT_URL = "/hyjf-wechat";
 	private static final String API_CHANNEL = "api";
+	private static final String WECHAT_CHANNEL = "wechat";
+
+	/**
+	 * 各客户端增加的前缀 微信和app自带hyjf-xx请求，不用处理
+	 */
+	private static final String WEB_VISIT_URL = "/hyjf-web";
 	private static final String API_VISIT_URL = "/hyjf-api";
+
+	/**
+	 * app共同字段
+	 */
+	private static final String VERSION = "version";
+	private static final String SIGN = "sign";
+	private static final String TOEKN = "token";
+	private static final String KEY = "key";
+	private static final String INITKEY = "initKey";
+	private static final String PLATFORM = "platform";
+	private static final String RANDOM_STRING = "randomString";
+	private static final String SECRET_KEY = "secretKey";
+	private static final String APP_ID = "appId";
+	private static final String JUMP_COMMEND = "jumpcommend";
+
+	/**
+	 * app的设备所属渠道-马甲
+	 */
+	private static final String HYJF = "hyjf";
+	private static final String HYJF_YXB = "hyjfYXB";
+	private static final String HYJF_ZNB = "hyjfZNB";
+	private static final String HYJF_ZYB = "hyjfZYB";
+	private static final String HYJF_ZZB = "hyjfZZB";
+	private static final String HYJF_TEST = "hyjfTEST";
+
+	/**
+	 * 过滤器类型
+	 */
+	private static final String PRE = "pre";
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return PRE;
 	}
 
 	@Override
@@ -60,10 +97,9 @@ public class AccessFilter extends ZuulFilter {
 	 * 过滤
 	 *
 	 * @return
-	 * @throws ZuulException
 	 */
 	@Override
-	public Object run() throws ZuulException {
+	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 		// 请求uri
@@ -84,44 +120,51 @@ public class AccessFilter extends ZuulFilter {
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix;
 		if (requestUrl.contains(APP_CHANNEL)) {
+
+			// app 共同参数
+			String version = request.getParameter(VERSION);
+			String sign = request.getParameter(SIGN);
+
 			Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
 			if (!appKeyIgnoreUrls.contains(requestUri)) {
-				String sign = request.getParameter("sign");
 				if (sign == null) {
 					logger.error("sign is empty");
 					// 不对其进行路由
 					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
-				SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN+sign, SignValue.class);
-				ctx.addZuulRequestHeader("key", signValue.getKey());
-				ctx.addZuulRequestHeader("initKey", signValue.getInitKey());
-				ctx.addZuulRequestHeader("version", signValue.getVersion());
-				ctx.addZuulRequestHeader("token", signValue.getToken());
-				ctx.addZuulRequestHeader("sign", sign);
+				SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
+				ctx.addZuulRequestHeader(KEY, signValue.getKey());
+				ctx.addZuulRequestHeader(INITKEY, signValue.getInitKey());
+				ctx.addZuulRequestHeader(VERSION, signValue.getVersion());
+				ctx.addZuulRequestHeader(TOEKN, signValue.getToken());
+				ctx.addZuulRequestHeader(SIGN, sign);
 
 				if (secureVisitFlag) {
-					setUserIdByToken(request, ctx, secureVisitFlag,APP_CHANNEL);
+					setUserIdByToken(request, ctx, secureVisitFlag, APP_CHANNEL);
 				}
 			} else {
 				// 获取最优服务器
-				ctx.addZuulRequestHeader("platform", request.getParameter("platform"));
-				ctx.addZuulRequestHeader("randomString", request.getParameter("randomString"));
-				ctx.addZuulRequestHeader("secretKey", request.getParameter("secretKey"));
-				ctx.addZuulRequestHeader("appId", request.getParameter("appId"));
-				ctx.addZuulRequestHeader("version", request.getParameter("version"));
+				ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
+				ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
+				ctx.addZuulRequestHeader(SECRET_KEY, request.getParameter(SECRET_KEY));
+				ctx.addZuulRequestHeader(APP_ID, request.getParameter(APP_ID));
+				ctx.addZuulRequestHeader(VERSION, version);
 			}
+
+			addCommonResponse(ctx, version);
 			// app自带hyjf-app 直接返回即可
 			return null;
 		} else if (requestUrl.contains(WEB_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WEB_CHANNEL);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
 			}
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
 			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag,WECHAT_CHANNEL);
+				ctx = setUserIdByToken(request, ctx, secureVisitFlag, WECHAT_CHANNEL);
 			}
-			prefix = WECHAT_VISIT_URL;
+			// wechat自带hyjf-wechat 直接返回即可
+			prefix = null;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			prefix = API_VISIT_URL;
 		} else {
@@ -135,13 +178,60 @@ public class AccessFilter extends ZuulFilter {
 	}
 
 	/**
+	 * 返回app,h5访问必须的jumpcommend
+	 * 
+	 * @param ctx
+	 * @return
+	 */
+	private Object addCommonResponse(RequestContext ctx, String version) {
+		HttpServletResponse response = ctx.getResponse();
+		response.setHeader(JUMP_COMMEND, getLinkJumpPrefix(version));
+		response.setHeader(VERSION, version);
+		return response;
+	}
+
+	/**
+	 * 获取app h5 需要的JUMP_COMMEND
+	 * 
+	 * @param version
+	 * @return
+	 */
+	public String getLinkJumpPrefix(String version) {
+
+		if (!StringUtils.isEmpty(version)) {
+			// 取渠道号
+			String vers[] = version.split("\\.");
+			if (vers != null && vers.length > 3) {
+				String pcode = vers[3];
+
+				if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_39)) {
+					return HYJF;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_YXB)) {
+					return HYJF_YXB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_ZNB)) {
+					return HYJF_ZNB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_ZYB)) {
+					return HYJF_ZYB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_ZZB)) {
+					return HYJF_ZZB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_TEST)) {
+					return HYJF_TEST;
+				}
+			}
+
+		}
+		return HYJF;
+	}
+
+	/**
 	 * zuul拦截, 不对其进行路由
+	 * 
 	 * @param ctx
 	 * @param gatewayCode
 	 * @param errorMessage
 	 * @return
 	 */
-	private Object buildErrorRequestContext(RequestContext ctx, int gatewayCode, String errorMessage){
+	private Object buildErrorRequestContext(RequestContext ctx, int gatewayCode, String errorMessage) {
 		ctx.setSendZuulResponse(false);
 		ctx.setResponseStatusCode(gatewayCode);
 		ctx.setResponseBody(errorMessage);
@@ -157,38 +247,39 @@ public class AccessFilter extends ZuulFilter {
 	 *            true 登录才能访问 false 登录不登录均可访问
 	 * @return
 	 */
-	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary,String channel) {
+	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary,
+			String channel) {
 		String token = "";
-		if (APP_CHANNEL.equals(channel)){
-			token = request.getParameter("token");
-		}else if(WECHAT_CHANNEL.equals(channel)){
-            String sign = request.getParameter("sign");
-            Integer userId = null;
-            String accountId = null;
-            if (StringUtils.isBlank(sign)) {
-                sign = (String) request.getAttribute("sign");
-            }
-            if (StringUtils.isNotBlank(sign)) {
-                // 获取用户ID
-                AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-                if (appUserToken != null) {
-                    userId = appUserToken.getUserId();
-                    accountId = appUserToken.getAccountId();
-                }
-                if (userId != null && userId - 0 > 0) {
-                    // 需要刷新 sign
-                    SecretUtil.refreshSign(sign);
-                }
-                request.setAttribute("userId", userId);
-                request.setAttribute("accountId", accountId);
-                ctx.addZuulRequestHeader("userId", userId + "");
-                ctx.addZuulRequestHeader("accountId", accountId);
-            }else {
-                this.buildErrorRequestContext(ctx, 400, "sign is empty!");
-            }
-            return ctx;
-        }else {
-			token = request.getHeader("token");
+		if (APP_CHANNEL.equals(channel)) {
+			token = request.getParameter(TOEKN);
+		} else if (WECHAT_CHANNEL.equals(channel)) {
+			String sign = request.getParameter(SIGN);
+			Integer userId = null;
+			String accountId = null;
+			if (StringUtils.isBlank(sign)) {
+				sign = (String) request.getAttribute(SIGN);
+			}
+			if (StringUtils.isNotBlank(sign)) {
+				// 获取用户ID
+				AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
+				if (appUserToken != null) {
+					userId = appUserToken.getUserId();
+					accountId = appUserToken.getAccountId();
+				}
+				if (userId != null && userId - 0 > 0) {
+					// 需要刷新 sign
+					SecretUtil.refreshSign(sign);
+				}
+				request.setAttribute("userId", userId);
+				request.setAttribute("accountId", accountId);
+				ctx.addZuulRequestHeader("userId", userId + "");
+				ctx.addZuulRequestHeader("accountId", accountId);
+			} else {
+				this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+			}
+			return ctx;
+		} else {
+			token = request.getHeader(TOEKN);
 		}
 		if (StringUtils.isBlank(token) && isNecessary) {
 			logger.error("token is empty...");

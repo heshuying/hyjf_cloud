@@ -76,13 +76,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (StringUtils.isBlank(platform)) {
             platform = request.getParameter("platform");
         }
-        String HOST = "";
-        //新旧版本HOST获取
-        if (version != null && "3.0.5".compareTo(version) <= 0) {
-            HOST = systemConfig.webHost;
-        } else {
-            HOST = systemConfig.httpWebHost;
-        }
+        String HOST = systemConfig.getAppFrontHost();
+
         //首页展示的项目集合
         List<AppProjectListCustomizeVO> list = new ArrayList<>();
 

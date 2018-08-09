@@ -26,12 +26,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
  * @version: PlatformTransferController, v0.1 2018/7/9 11:07
  */
-@Api(value = "资金中心-转账管理-平台转账",description = "资金中心-转账管理-平台转账")
+@Api(value = "资金中心-转账管理-平台转账",tags ="资金中心-转账管理-平台转账")
 @RestController
 @RequestMapping(value = "/am-trade/platformtransfer")
 public class PlatformTransferController extends BaseController {
@@ -109,5 +110,53 @@ public class PlatformTransferController extends BaseController {
     @PostMapping(value = "/insertbankmerchantaccountlist")
     public Integer insertBankMerchantAccountList(@RequestBody BankMerchantAccountListVO bankMerchantAccountListVO){
         return platformTransferService.insertBankMerchantAccountList(bankMerchantAccountListVO);
+    }
+
+    /**
+     * 根据orderId查询红包充值明细
+     * @author zhangyk
+     * @date 2018/8/7 16:47
+     */
+    @GetMapping(value = "/getBnakMerchantAccountList/{orderId}")
+    public BankMerchantAccountResponse getBnakMerchantAccountListByOrderId(@PathVariable String orderId){
+        Integer count = platformTransferService.getBankMerchantAccountListCountByOrderId(orderId);
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        response.setRecordTotal(count);
+        return response;
+    }
+
+    /**
+     *  圈存回调处理
+     * @author zhangyk
+     * @date 2018/8/7 19:16
+     */
+    @PostMapping(value = "/updataAccountByRechargeCallback")
+    public BankMerchantAccountResponse  updataAccountByRechargeCallback(@RequestBody Map<String,Object> params){
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        boolean flag = platformTransferService.updateAccountByRechargeCallback(params);
+        response.setSuccessFlag(flag);
+        return response;
+    }
+
+    @GetMapping(value = "/updateMerchantAccountListFail/{orderId}")
+    public BankMerchantAccountResponse  updateMerchantAccountListFail(@PathVariable String orderId){
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        boolean flag = platformTransferService.updateMerchantAccountListFail(orderId);
+        response.setSuccessFlag(flag);
+        return response;
+    }
+
+
+    /**
+     *  圈提回调处理
+     * @author zhangyk
+     * @date 2018/8/7 19:16
+     */
+    @PostMapping(value = "/updataAccountByWithdrawCallback")
+    public BankMerchantAccountResponse  updataAccountByWithdrawCallback(@RequestBody Map<String,Object> params){
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        boolean flag = platformTransferService.updateAccountByWithdrawCallback(params);
+        response.setSuccessFlag(flag);
+        return response;
     }
 }

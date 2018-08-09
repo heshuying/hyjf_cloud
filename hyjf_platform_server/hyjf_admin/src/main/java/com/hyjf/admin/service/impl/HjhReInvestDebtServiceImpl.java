@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhReInvestDebtClient;
 import com.hyjf.admin.service.HjhReInvestDebtService;
 import com.hyjf.am.response.admin.HjhReInvestDebtResponse;
@@ -14,11 +15,11 @@ import org.springframework.stereotype.Service;
 public class HjhReInvestDebtServiceImpl implements HjhReInvestDebtService {
 
     @Autowired
-    private HjhReInvestDebtClient hjhReInvestDebtClient;
+    private AmTradeClient amTradeClient;
 
     @Override
     public HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request) {
-        HjhReInvestDebtResponse response = hjhReInvestDebtClient.hjhReInvestDebtList(request);
+        HjhReInvestDebtResponse response = amTradeClient.hjhReInvestDebtList(request);
         return response;
     }
 }

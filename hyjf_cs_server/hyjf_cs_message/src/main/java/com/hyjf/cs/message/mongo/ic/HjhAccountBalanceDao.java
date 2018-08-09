@@ -9,6 +9,7 @@ import com.hyjf.cs.message.bean.ic.BankSmsAuthCode;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @author liubin
  * @version HjhAccountBalanceDao, v0.1 2018/8/2 11:14
  */
+@Repository
 public class HjhAccountBalanceDao extends BaseMongoDao<HjhAccountBalanceVO>{
 
     @Override

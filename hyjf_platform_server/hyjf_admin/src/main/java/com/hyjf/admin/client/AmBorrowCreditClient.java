@@ -19,9 +19,5 @@ public interface AmBorrowCreditClient {
 
      BorrowCreditSumVO getBorrwoCreditTotalSum(BorrowCreditAmRequest request);
 
-     Integer countBorrowCreditInfo(BorrowCreditAmRequest request);
-
-     List<BorrowCreditInfoVO> searchBorrowCreditInfoList(BorrowCreditAmRequest request);
-
      BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request);
 }

@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -12,6 +13,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AccountClient;
+import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -35,6 +37,9 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
 
     @Autowired
     public AmTradeClient amTradeClient;
+
+    @Autowired
+    public AmConfigClient amConfigClient;
 
     @Autowired
     AccountClient accountClient;
@@ -160,6 +165,13 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     public AccountVO getAccountByUserId(Integer userId){
         return accountClient.getAccountByUserId(userId);
     }
+
+    @Override
+    public BankCardVO getBankCardVOByUserId(Integer userId) {
+        BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
+        return bankCard;
+    }
+
     /**
      * 获取前端的地址
      * @param sysConfig

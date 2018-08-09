@@ -1,12 +1,15 @@
 package com.hyjf.am.trade.service.front.account;
 
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
+import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -77,4 +80,49 @@ public interface AccountService {
      * @return
      */
     int updateOfLoansTender(AccountVO accountVO);
+
+    /**
+     *根据accountCode获取子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountInfoVO getBankMerchantAccountInfo(String accountCode);
+
+    /**
+     * 更新子账户信息-已设置交易密码
+     * @param accountId
+     * @param flag
+     * @return
+     */
+    int updateBankMerchantAccountIsSetPassword(String accountId, Integer flag);
+
+    /**
+     * 更新BankMerchantAccount信息
+     * @param bankMerchantAccount
+     * @return
+     */
+    int updateBankMerchantAccount(BankMerchantAccount bankMerchantAccount);
+
+    /**
+     * 根据订单号查询提现订单
+     * @param nid
+     * @param userId
+     * @return
+     */
+    AccountWithdraw queryAccountwithdrawByNid(String nid, Integer userId);
+
+    /**
+     * 提现成功后,更新用户账户信息,提现记录
+     * @param param
+     * @return
+     */
+    boolean updateAccountAfterWithdraw(Map<String,String> param);
+
+    /**
+     * 充值失败,更新充值订单
+     * @param userId
+     * @param nid
+     * @return
+     */
+    boolean updateAccountAfterWithdrawFail(Integer userId, String nid) throws Exception;
 }

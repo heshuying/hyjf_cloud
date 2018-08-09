@@ -258,7 +258,7 @@ public class AssetListController extends BaseController {
 		BeanUtils.copyProperties(viewRequest, form);
 		// 获取查询的列表
 		AssetListCustomizeResponse res = assetListService.findAssetList(form);
-		if(response != null) {
+		if(res != null) {
 			assetList = res.getResultList();
 		}
 		// 列头

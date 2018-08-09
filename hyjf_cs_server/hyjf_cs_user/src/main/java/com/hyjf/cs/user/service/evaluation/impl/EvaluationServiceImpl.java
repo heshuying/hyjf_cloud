@@ -26,7 +26,7 @@ import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;

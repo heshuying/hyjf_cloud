@@ -153,7 +153,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public EventVO selectPercentage(int percentage, int begin, int end, int userId) {
 		EventVO response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/content/contentevent/selectPercentage/"+percentage+"/" + begin+"/"+end+"/"+userId,
+				.getForEntity("http://AM-TRADE/am-trade/wxWeekly/selectPercentage/"+percentage+"/" + begin+"/"+end+"/"+userId,
 						EventVO.class)
 				.getBody();
 		return response;

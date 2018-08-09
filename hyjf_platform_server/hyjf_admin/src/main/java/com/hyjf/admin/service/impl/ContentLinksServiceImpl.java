@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,38 +21,38 @@ import com.hyjf.am.vo.config.LinkVO;
 @Service
 public class ContentLinksServiceImpl implements ContentLinksService {
     @Autowired
-    private ContentLinsClinet contentLinsClinet;
+    private AmConfigClient amConfigClient;
 
     @Override
     public LinkResponse searchAction(ContentLinksRequestBean requestBean) {
-        return contentLinsClinet.searchAction(requestBean);
+        return amConfigClient.searchAction(requestBean);
     }
 
     @Override
     public LinkResponse insertAction(ContentLinksRequestBean requestBean) {
-        return contentLinsClinet.insertAction(requestBean);
+        return amConfigClient.insertAction(requestBean);
     }
 
     @Override
     public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
-        return contentLinsClinet.updateAction(requestBean);
+        return amConfigClient.updateAction(requestBean);
     }
 
     @Override
     public LinkResponse updateStatus(ContentLinksRequestBean requestBean) {
         Integer id = requestBean.getId();
-        LinkVO record = contentLinsClinet.getRecord(id);
+        LinkVO record = amConfigClient.getLinkRecord(id);
         if (record.getStatus() == 1) {
             record.setStatus(0);
         } else if (record.getStatus() == 0) {
             record.setStatus(1);
         }
         BeanUtils.copyProperties(record, requestBean);
-        return contentLinsClinet.updateAction(requestBean);
+        return amConfigClient.updateAction(requestBean);
     }
 
     @Override
     public LinkResponse deleteById(Integer id) {
-        return contentLinsClinet.deleteById(id);
+        return amConfigClient.deleteLinkById(id);
     }
 }

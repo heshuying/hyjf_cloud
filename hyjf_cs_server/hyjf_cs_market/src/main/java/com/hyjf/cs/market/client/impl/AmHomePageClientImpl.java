@@ -32,7 +32,7 @@ public class AmHomePageClientImpl implements AmHomePageClient {
     @Override
     public List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads) {
         AppAdsCustomizeResponse response = restTemplate.postForObject(
-                "http://AM-MARKET/am-market/am-market/homepage/getStartPage", ads,
+                "http://AM-MARKET/am-market/homepage/getStartPage", ads,
                 AppAdsCustomizeResponse.class);
         if (response != null) {
             return response.getResultList();

@@ -8,13 +8,11 @@ import com.hyjf.admin.service.finance.withdraw.WithdrawService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
 import com.hyjf.am.response.admin.WithdrawCustomizeResponse;
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
-import com.hyjf.am.vo.admin.finance.withdraw.WithdrawCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,21 +37,21 @@ public class WithdrawServiceImpl extends BaseAdminServiceImpl implements Withdra
 
     @Override
     public AccountVO getAccountByUserId(Integer userId) {
-        return null;
+        return amTradeClient.getAccountByUserId(userId);
     }
 
     @Override
     public AccountWithdrawVO queryAccountwithdrawByNid(String nid, Integer userId) {
-        return null;
+        return amTradeClient.queryAccountwithdrawByNid(nid,userId);
     }
 
     @Override
-    public boolean updateAccountAfterWithdraw(Integer userId, String nid, Map<String, String> param) {
-        return false;
+    public boolean updateAccountAfterWithdraw(Map<String, String> param) {
+        return amTradeClient.updateAccountAfterWithdraw(param);
     }
 
     @Override
-    public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) throws Exception {
-        return false;
+    public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) {
+        return amTradeClient.updateAccountAfterWithdrawFail(userId,nid);
     }
 }

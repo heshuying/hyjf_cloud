@@ -26,7 +26,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.service.password.TransPasswordService;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -62,7 +62,7 @@ public class TransPasswordController extends BaseUserController{
     private TransPasswordService transPasswordService;
     
 	@Autowired
-    RegistService registService;
+    RegisterService registService;
 	
     @Autowired
     PassWordService passWordService;
