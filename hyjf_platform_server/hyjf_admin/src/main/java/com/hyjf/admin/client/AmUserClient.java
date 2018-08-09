@@ -7,14 +7,9 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.VipDetailListResponse;
 import com.hyjf.am.response.admin.VipManageResponse;
 import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
-import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.resquest.admin.VipDetailListRequest;
-import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
-import com.hyjf.am.resquest.config.SubmissionsRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
@@ -891,4 +886,11 @@ public interface AmUserClient {
      * @return
      */
     List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId);
+
+    /**
+     *  分账名单配置添加  查询用户名信息
+     * @param request
+     * @return
+     */
+    UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request);
 }

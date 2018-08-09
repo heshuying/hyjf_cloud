@@ -17,8 +17,8 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
+import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -2310,5 +2310,50 @@ public interface AmTradeClient {
 	 * @return
 	 */
     OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form);
+    /**
+     * 查询列表
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 页面详情
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest adminRequest);
+    /**
+     *  分账名单配置添加
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     * 分账名单配置修改
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     * 分账名单配置删除
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 查询配置中心操作日志配置
+     * @param adminRequest
+     * @return
+     */
+    public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest);
+    /**
+     * 产品类型   asset_type  asset_type_name资产类型名称
+     *
+     * @param
+     * @return List<HjhAssetTypeVO>
+     */
+    List<HjhAssetTypeVO> getHjhAssetType();
 }
 

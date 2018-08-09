@@ -1411,8 +1411,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public HolidaysConfigResponse getHolidaysConfigById(Integer id){
-		String url = "http://AM-CONFIG/am-config/holidaysConfig/info";
-		HolidaysConfigResponse response = restTemplate.postForEntity(url,id,HolidaysConfigResponse.class).getBody();
+		String url = "http://AM-CONFIG/am-config/holidaysConfig/info/"+id;
+		HolidaysConfigResponse response = restTemplate.getForEntity(url,HolidaysConfigResponse.class).getBody();
 		if (response != null) {
 			return response;
 		}
@@ -1874,5 +1874,15 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
 				LinkResponse.class);
+	}
+
+	/**
+	 * 查询配置中心操作日志配置
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map){
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list",map,AdminOperationLogResponse.class).getBody();
 	}
 }

@@ -25,6 +25,7 @@ import com.hyjf.am.vo.trade.account.BankInterfaceVO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1168,5 +1169,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	LinkResponse updateAction(ContentLinksRequestBean requestBean);
+
+	/**
+	 * 查询配置中心操作日志配置
+	 * @param map
+	 * @return
+	 */
+	public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map);
 
 }

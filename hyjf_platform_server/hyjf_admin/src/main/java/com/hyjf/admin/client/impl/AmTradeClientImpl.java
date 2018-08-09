@@ -4593,4 +4593,75 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
+    /**
+     * 分页查询列表
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest request){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/list",request, AdminSubConfigResponse.class)
+                .getBody();
+    }
+    /**
+     * 页面详情
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest request){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/info",request, AdminSubConfigResponse.class)
+                .getBody();
+    }
+
+    /**
+     *  分账名单配置添加
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest request){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/insert",request, AdminSubConfigResponse.class)
+                .getBody();
+    }
+    /**
+     * 分账名单配置修改
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest request){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/update",request, AdminSubConfigResponse.class)
+                .getBody();
+    }
+    /**
+     * 分账名单配置删除
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest request){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/delete",request, AdminSubConfigResponse.class)
+                .getBody();
+    }
+    /**
+     * 查询配置中心操作日志配置
+     * @param map
+     * @return
+     */
+    @Override
+    public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/operationlog/selectInstAndAssertType", adminRequest, AdminOperationLogResponse.class).getBody().getResultList();
+    }
+    /**
+     * 产品类型   asset_type  asset_type_name资产类型名称
+     *
+     * @param
+     * @return List<HjhAssetTypeVO>
+     */
+    @Override
+    public List<HjhAssetTypeVO> getHjhAssetType(){
+        String url = "http://AM-TRADE/am-trade/config/operationlog/getHjhAssetType";
+        return restTemplate.getForEntity(url,List.class).getBody();
+    }
 }

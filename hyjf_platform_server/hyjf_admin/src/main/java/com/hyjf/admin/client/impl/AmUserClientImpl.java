@@ -8,10 +8,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.resquest.admin.VipDetailListRequest;
-import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
@@ -1598,5 +1595,13 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	/**
+	 *  分账名单配置添加  查询用户名信息
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request){
+		return restTemplate.postForEntity("http://AM-USER/am-user/config/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
+	}
 }

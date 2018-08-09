@@ -37,18 +37,21 @@ public class SubConfigClientImpl implements SubConfigClient {
                 .getBody();
     }
     /**
+     *  分账名单配置添加  查询用户名信息
+     * @param request
+     * @return
+     */
+    @Override
+    public UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request){
+        return restTemplate.postForEntity("http://AM-USER/am-user/config/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
+    }
+    /**
      *  分账名单配置添加
      * @param request
      * @return
      */
     @Override
     public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest request){
-        // 查询用户名信息
-        UserInfoCustomizeResponse userResponse= restTemplate.postForEntity("http://AM-USER/am-user/config/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
-        if (userResponse != null&& userResponse.getResult().getUserId() !=null) {
-            // 设置用户名信息
-            request.setUserId(userResponse.getResult().getUserId());
-        }
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/subconfig/insert",request, AdminSubConfigResponse.class)
                 .getBody();
     }
