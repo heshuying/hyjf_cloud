@@ -51,7 +51,7 @@ public class BankMerchantAccountController extends BaseController {
 
     private static final String RECHARGE_LOG_NAME = "<圈存操作>: ";
 
-    private static final String WITHDRAW_LOG_NAME = "<圈存操作>: ";
+    private static final String WITHDRAW_LOG_NAME = "<圈提操作>: ";
 
     private static final String RECHARGE_METHOD_NAME = "/rechargeCallback";
 
@@ -412,7 +412,7 @@ public class BankMerchantAccountController extends BaseController {
     /**
      * 圈提操作
      * @author zhangyk
-     * @date 2018/8/8 15:49
+     * @date 2018/8/8 15:49selectUserHjhInvistDetail
      */
     @ApiOperation(value = "圈提操作" ,tags = "圈提操作" )
     @GetMapping(value = "/withdraw" , produces = "application/json; charset=utf-8")
