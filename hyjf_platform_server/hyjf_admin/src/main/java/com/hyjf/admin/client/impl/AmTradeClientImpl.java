@@ -18,7 +18,10 @@ import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.HjhRepayResponse;
-import com.hyjf.am.response.trade.account.*;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -4876,8 +4879,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.getForEntity(url,List.class).getBody();
     }
 
-
-	 @Override
+    @Override
 	    public List<AccountRechargeVO> getAccountRecharge(int userId) {
 	        String url = "http://AM-TRADE/am-trade/accountRecharge/getAccountRechargeByUserId/" + userId;
 	        AccountRechargeResponse response = restTemplate.getForEntity(url,AccountRechargeResponse.class).getBody();
@@ -4886,5 +4888,4 @@ public class AmTradeClientImpl implements AmTradeClient {
 	        }
 	        return null;
 	    }
-
 }

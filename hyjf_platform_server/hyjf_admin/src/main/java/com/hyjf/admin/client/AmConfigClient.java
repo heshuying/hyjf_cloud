@@ -21,7 +21,6 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
-import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1184,4 +1183,5 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<ParamNameVO> getParamName(String other1);
+
 }
