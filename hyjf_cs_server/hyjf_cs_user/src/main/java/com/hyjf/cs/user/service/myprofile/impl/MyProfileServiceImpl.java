@@ -175,6 +175,11 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 
     }
 
+    /**
+     *
+     * @param userId
+     * @param myProfileVO
+     */
     @Override
     public void buildOutInfo(Integer userId, MyProfileVO myProfileVO) {
 
@@ -217,7 +222,11 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 
     }
 
-
+    /**
+     * //活动集合转成 <id,title>格式的map
+     * @param activityListVOs
+     * @return
+     */
     private Map<Integer,String> convertToIdTitleMap(List<ActivityListVO> activityListVOs) {
         Map<Integer,String> result = new HashMap<Integer,String>();
         if (CollectionUtils.isNotEmpty(activityListVOs)){

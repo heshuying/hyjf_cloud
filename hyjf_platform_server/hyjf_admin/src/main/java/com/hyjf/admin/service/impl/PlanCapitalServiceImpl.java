@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.client.HjhPlanCapitalClient;
 import com.hyjf.admin.service.PlanCapitalService;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
@@ -15,12 +16,12 @@ import org.springframework.stereotype.Service;
 public class PlanCapitalServiceImpl implements PlanCapitalService {
 
     @Autowired
-    private HjhPlanCapitalClient hjhPlanCapitalClient;
+    private CsMessageClient csMessageClient;
 
     @Override
     public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
 
-        HjhPlanCapitalResponse recordList = hjhPlanCapitalClient.getPlanCapitalList(hjhPlanCapitalRequest);
+        HjhPlanCapitalResponse recordList = csMessageClient.getPlanCapitalList(hjhPlanCapitalRequest);
 
         return recordList;
     }

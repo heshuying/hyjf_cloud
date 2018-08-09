@@ -91,7 +91,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "会员详情", notes = "会员详情")
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
-    public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(@RequestBody String userId) {
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         UserManagerDetailCustomizeVO userManagerDetailCustomizeVO = new UserManagerDetailCustomizeVO();
@@ -184,7 +184,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "修改更新用户信息", notes = "修改更新用户信息")
     @PostMapping(value = "/updateUser")
     @ResponseBody
-    public AdminResult updataUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserManagerUpdateRequestBean requestBean) {
+    public AdminResult updataUserInfo(HttpServletRequest request, @RequestBody UserManagerUpdateRequestBean requestBean) {
         UserManagerUpdateRequest userRequest = new UserManagerUpdateRequest();
         BeanUtils.copyProperties(requestBean, userRequest);
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -203,7 +203,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取推荐人信息", notes = "获取推荐人信息")
     @PostMapping(value = "/initModifyre")
     @ResponseBody
-    public AdminResult<InitModifyreResponseBean> initModifyre(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public AdminResult<InitModifyreResponseBean> initModifyre(@RequestBody String userId) {
         InitModifyreResponseBean initModifyreResponseBean = new InitModifyreResponseBean();
         //推荐人信息
         UserRecommendCustomizeVO userRecommendVO = userCenterService.selectUserRecommendByUserId(userId);
@@ -232,7 +232,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "修改用户推荐人", notes = "修改用户推荐人")
     @PostMapping(value = "/updateModifyre")
     @ResponseBody
-    public AdminResult updateRe(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminUserRecommendRequestBean requestBean) {
+    public AdminResult updateRe(HttpServletRequest request, @RequestBody AdminUserRecommendRequestBean requestBean) {
         AdminUserRecommendRequest adminUserRecommendRequest = new AdminUserRecommendRequest();
         BeanUtils.copyProperties(requestBean, adminUserRecommendRequest);
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -257,7 +257,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取用户身份证信息", notes = "获取用户身份证信息")
     @PostMapping(value = "/searchIdCard")
     @ResponseBody
-    public  AdminResult<InitModifyreResponseBean> searchIdCard(HttpServletRequest request, HttpServletResponse response, @RequestBody String userId) {
+    public  AdminResult<InitModifyreResponseBean> searchIdCard(@RequestBody String userId) {
         InitModifyreResponseBean initModifyreResponseBean = new InitModifyreResponseBean();
         //根据用户id查询用户详情信息
         UserRecommendCustomizeShowVO userRecommendCustomizeShowVO = new UserRecommendCustomizeShowVO();
@@ -292,7 +292,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "修改用户身份证", notes = "修改用户身份证")
     @PostMapping(value = "/modifyIdCard")
     @ResponseBody
-    public AdminResult modifyIdCard(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminUserRecommendRequestBean requestBean) {
+    public AdminResult modifyIdCard(HttpServletRequest request, @RequestBody AdminUserRecommendRequestBean requestBean) {
         AdminUserRecommendRequest adminUserRecommendRequest = new AdminUserRecommendRequest();
         BeanUtils.copyProperties(requestBean, adminUserRecommendRequest);
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -319,7 +319,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkReAction")
     @ResponseBody
     @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
-    public AdminResult checkReAction(@RequestHeader(value = "userId") String userId, HttpServletRequest request, @RequestBody String userName) {
+    public AdminResult checkReAction(@RequestHeader(value = "userId") String userId,@RequestBody String userName) {
         //校验推荐人
         if (Validator.isNotNull(userId)) {
             if (StringUtils.isNotEmpty(userName)) {
@@ -347,7 +347,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    public AdminResult checkAction(@RequestHeader(value = "userId") String userId, HttpServletRequest request, @RequestBody String mobile) {
+    public AdminResult checkAction(@RequestHeader(value = "userId") String userId,  @RequestBody String mobile) {
         // 检查手机号码唯一性
         int cnt = userCenterService.countUserByMobile(Integer.parseInt(userId), mobile);
         if (cnt > 0) {
