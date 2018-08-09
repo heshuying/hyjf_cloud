@@ -5,6 +5,9 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
 
 import java.io.Serializable;
 
@@ -91,6 +94,24 @@ public class SubCommissionRequest extends BasePage implements Serializable {
      */
     private int limitStart = -1;
     private int limitEnd = -1;
+
+    // 请求银行的bean
+    private BankCallBeanVO requestBean;
+
+    // 银行返回的bean
+    private BankCallBeanVO resultBean;
+
+    // 调用银行接口成功
+    private boolean callBankSuccess;
+
+    // 银行返回的错误代码对应的错误信息
+    private String errorMsg;
+
+    // 网站收支  账户分佣时用
+    private AccountWebListVO accountWebList;
+
+    // 登录者信息 账户分佣时用
+    private AdminSystemVO adminSystemVO;
 
     public String getReceiveUserNameSrch() {
         return receiveUserNameSrch;
@@ -218,5 +239,53 @@ public class SubCommissionRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public BankCallBeanVO getRequestBean() {
+        return requestBean;
+    }
+
+    public void setRequestBean(BankCallBeanVO requestBean) {
+        this.requestBean = requestBean;
+    }
+
+    public BankCallBeanVO getResultBean() {
+        return resultBean;
+    }
+
+    public void setResultBean(BankCallBeanVO resultBean) {
+        this.resultBean = resultBean;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
+    public boolean isCallBankSuccess() {
+        return callBankSuccess;
+    }
+
+    public void setCallBankSuccess(boolean callBankSuccess) {
+        this.callBankSuccess = callBankSuccess;
+    }
+
+    public AccountWebListVO getAccountWebList() {
+        return accountWebList;
+    }
+
+    public void setAccountWebList(AccountWebListVO accountWebList) {
+        this.accountWebList = accountWebList;
+    }
+
+    public AdminSystemVO getAdminSystemVO() {
+        return adminSystemVO;
+    }
+
+    public void setAdminSystemVO(AdminSystemVO adminSystemVO) {
+        this.adminSystemVO = adminSystemVO;
     }
 }

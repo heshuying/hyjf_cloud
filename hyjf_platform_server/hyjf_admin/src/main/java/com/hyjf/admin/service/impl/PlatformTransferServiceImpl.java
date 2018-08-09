@@ -10,6 +10,7 @@ import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.mq.AccountWebListProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlatformTransferService;
@@ -34,8 +35,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,7 +53,6 @@ import java.util.UUID;
  */
 @Service
 public class PlatformTransferServiceImpl extends BaseServiceImpl implements PlatformTransferService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -63,7 +61,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private CsMessageClient csMessageClient;
+    private SystemConfig systemConfig;
 
     @Autowired
     private AccountWebListProducer accountWebListProducer;

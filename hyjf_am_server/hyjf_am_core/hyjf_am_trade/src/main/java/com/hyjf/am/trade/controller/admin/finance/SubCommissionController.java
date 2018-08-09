@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SubCommissionListConfigResponse;
 import com.hyjf.am.response.admin.SubCommissionResponse;
@@ -76,25 +77,13 @@ public class SubCommissionController extends BaseController {
     @GetMapping(value = "/searchsubcommissionbyorderid/{orderId}")
     public SubCommissionResponse searchSubCommissionByOrderId(@PathVariable String orderId){
         SubCommissionResponse response = new SubCommissionResponse();
-        List<SubCommission> subCommissionList = subCommissionService.searchSubCommissionByOrderId(orderId);
-        if(subCommissionList != null && subCommissionList.size() == 1){
-            SubCommissionVO subCommissionVO = CommonUtils.convertBean(subCommissionList.get(0),SubCommissionVO.class);
+        SubCommission subCommission = subCommissionService.searchSubCommissionByOrderId(orderId);
+        if(subCommission != null){
+            SubCommissionVO subCommissionVO = CommonUtils.convertBean(subCommission,SubCommissionVO.class);
             response.setResult(subCommissionVO);
             response.setRtn(Response.SUCCESS);
         }
         return response;
-    }
-
-    /**
-     * 更新分佣数据
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    @ApiOperation(value = "更新分佣数据",notes = "更新分佣数据")
-    @PostMapping(value = "/updatesubcommission")
-    public Integer updateSubCommission(@RequestBody SubCommissionVO subCommissionVO){
-        return subCommissionService.updateSubCommission(subCommissionVO);
     }
 
     /**
@@ -133,6 +122,21 @@ public class SubCommissionController extends BaseController {
             response.setResultList(subCommissionVOList);
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+    /**
+     * 发起平台账户分佣
+     * @auth sunpeikai
+     * @param request 参数
+     * @return
+     */
+    @ApiOperation(value = "平台转账-发起平台账户分佣",notes = "平台转账-发起平台账户分佣")
+    @PostMapping(value = "/subCommission")
+    public SubCommissionResponse subCommission(@RequestBody SubCommissionRequest request){
+        SubCommissionResponse response = new SubCommissionResponse();
+        JSONObject jsonObject = subCommissionService.subCommission(request);
+        response.setJsonObject(jsonObject);
+        response.setRtn(Response.SUCCESS);
         return response;
     }
 
