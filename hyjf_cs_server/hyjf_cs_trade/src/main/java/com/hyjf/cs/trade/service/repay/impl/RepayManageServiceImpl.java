@@ -3460,15 +3460,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     public BorrowApicronVO selectBorrowApicron(String bankSeqNO) {
         return amTradeClient.selectBorrowApicron(bankSeqNO);
     }
-    /**
-     * 获取用户还款列表
-     * @param projectBean
-     * @return
-     */
-    @Override
-    public List<RepayListCustomizeVO> selectUserRepayedList(RepayListRequest projectBean){
-        return amTradeClient.selectUserRepayedList(projectBean);
-    }
+
     /**
      * 批次状态查询
      * @param apicron

@@ -12,7 +12,6 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -150,26 +149,6 @@ public class RepayManageController extends BaseController {
         RepayListResponse responseBean = new RepayListResponse();
         Integer result = repayManageService.selectOrgRepayedCount(requestBean);
         return result;
-    }
-
-    /**
-     * 获取用户还款列表
-     * @param projectBean
-     * @return
-     */
-    @RequestMapping(value = "/selectUserRepayedList")
-    public RepayListResponse selectUserRepayedList(@RequestBody RepayListRequest projectBean){
-        RepayListResponse response = new RepayListResponse();
-        int recordTotal = this.repayManageService.countUserRepayedListTotal(projectBean);// 查询记录总数（个人和机构）
-        if(recordTotal > 0){
-            Paginator paginator = new Paginator(projectBean.getCurrPage(), recordTotal, projectBean.getPageSize());
-            // 获取借款人用户待还款（或已还款 ）by role ,status的项目列表
-            // 获取垫付机构用户待垫付（或已垫付 ）by role ,status的项目列表      ---->应该这个字段realAccountYes
-            List<RepayListCustomizeVO> recordList = repayManageService.searchUserRepayList(projectBean, 0, recordTotal);
-            response.setResultList(recordList);
-            return response;
-        }
-        return null;
     }
 
     /**
