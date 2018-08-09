@@ -1,11 +1,11 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SpreadsLogExample {
+public class CommissionLogExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -16,7 +16,7 @@ public class SpreadsLogExample {
 
     protected int limitEnd = -1;
 
-    public SpreadsLogExample() {
+    public CommissionLogExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

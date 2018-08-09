@@ -126,9 +126,6 @@ public class AutoMapper {
     protected SmsCodeMapper smsCodeMapper;
 
     @Autowired
-    protected SpreadsLogMapper spreadsLogMapper;
-
-    @Autowired
     protected SpreadsUserMapper spreadsUserMapper;
 
     @Autowired

@@ -12,7 +12,6 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import com.hyjf.am.config.mq.base.Consumer;
 import com.hyjf.common.constants.MQConstant;

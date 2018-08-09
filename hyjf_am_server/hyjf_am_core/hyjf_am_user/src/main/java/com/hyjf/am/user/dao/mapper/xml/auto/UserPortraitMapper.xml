@@ -129,33 +129,34 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait" >
-    insert into ht_user_portrait (user_id, user_name, age, 
-      sex, education, occupation, 
-      city, interest, interest_sum, 
-      invest_sum, recharge_sum, withdraw_sum, 
-      login_active, customer_source, last_login_time, 
-      last_recharge_time, last_withdraw_time, invest_platform, 
-      invest_age, trade_number, current_owner, 
-      add_wechat, invest_process, customer_complaint, 
-      invite_customer, remark, mobile
-      )
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
-      #{sex,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, 
-      #{city,jdbcType=VARCHAR}, #{interest,jdbcType=VARCHAR}, #{interestSum,jdbcType=DECIMAL}, 
-      #{investSum,jdbcType=DECIMAL}, #{rechargeSum,jdbcType=DECIMAL}, #{withdrawSum,jdbcType=DECIMAL}, 
-      #{loginActive,jdbcType=VARCHAR}, #{customerSource,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=INTEGER}, 
-      #{lastRechargeTime,jdbcType=INTEGER}, #{lastWithdrawTime,jdbcType=INTEGER}, #{investPlatform,jdbcType=INTEGER}, 
-      #{investAge,jdbcType=TINYINT}, #{tradeNumber,jdbcType=INTEGER}, #{currentOwner,jdbcType=VARCHAR}, 
-      #{addWechat,jdbcType=VARCHAR}, #{investProcess,jdbcType=VARCHAR}, #{customerComplaint,jdbcType=VARCHAR}, 
-      #{inviteCustomer,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}
-      )
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_user_portrait (user_name, age, sex, 
+      education, occupation, city, 
+      interest, interest_sum, invest_sum, 
+      recharge_sum, withdraw_sum, login_active, 
+      customer_source, last_login_time, last_recharge_time, 
+      last_withdraw_time, invest_platform, invest_age, 
+      trade_number, current_owner, add_wechat, 
+      invest_process, customer_complaint, invite_customer, 
+      remark, mobile)
+    values (#{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, 
+      #{education,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{interest,jdbcType=VARCHAR}, #{interestSum,jdbcType=DECIMAL}, #{investSum,jdbcType=DECIMAL}, 
+      #{rechargeSum,jdbcType=DECIMAL}, #{withdrawSum,jdbcType=DECIMAL}, #{loginActive,jdbcType=VARCHAR}, 
+      #{customerSource,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=INTEGER}, #{lastRechargeTime,jdbcType=INTEGER}, 
+      #{lastWithdrawTime,jdbcType=INTEGER}, #{investPlatform,jdbcType=INTEGER}, #{investAge,jdbcType=TINYINT}, 
+      #{tradeNumber,jdbcType=INTEGER}, #{currentOwner,jdbcType=VARCHAR}, #{addWechat,jdbcType=VARCHAR}, 
+      #{investProcess,jdbcType=VARCHAR}, #{customerComplaint,jdbcType=VARCHAR}, #{inviteCustomer,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_user_portrait
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        user_id,
-      </if>
       <if test="userName != null" >
         user_name,
       </if>
@@ -236,9 +237,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
