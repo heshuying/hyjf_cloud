@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.app.tender.invest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -10,8 +11,10 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.annotation.RequestLimit;
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
+import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -22,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -42,7 +46,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token,TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
@@ -104,10 +108,11 @@ public class AppBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
-        logger.info("APP端获取投资信息");
+    public AppResult<AppInvestInfoResultVO> getInvestInfo(@RequestHeader(value = "token", required = true) String token, TenderRequest tender, HttpServletRequest request) {
+        logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
         tender.setToken(token);
-        return borrowTenderService.getInvestInfo(tender);
+        AppResult<AppInvestInfoResultVO> result = borrowTenderService.getInvestInfoApp(tender);
+        return result;
     }
 
 }
