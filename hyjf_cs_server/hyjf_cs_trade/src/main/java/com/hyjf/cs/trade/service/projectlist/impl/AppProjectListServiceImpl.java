@@ -1971,4 +1971,81 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     }
 
 
+    /**
+     * 承接记录列表
+     * @author zhangyk
+     * @date 2018/8/9 10:39
+     */
+    @Override
+    public JSONObject searchProjectUndertakeList(String borrowNid, HttpServletRequest request) {
+        JSONObject info = new JSONObject();
+        CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_REQUIRED,"标的编号");
+        Integer currentPage = 1;
+        if (request.getParameter("currentPage") != null) {
+            currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        }
+        Integer size = 10;
+        if (request.getParameter("pageSize") != null) {
+            size = Integer.parseInt(request.getParameter("pageSize"));
+        }
+        info.put("status", BaseResultBeanFrontEnd.SUCCESS);
+        info.put("statusDesc", BaseResultBeanFrontEnd.SUCCESS_MSG);
+
+        Map<String, Object> mapParam = new HashMap<String, Object>();
+        mapParam.put("page", currentPage);
+        mapParam.put("pageSize", size);
+        mapParam.put("borrowNid", borrowNid);
+        this.createProjectUndertakePage(info, mapParam);
+        return null;
+    }
+
+
+    /**
+     * 承接记录列表分页
+     * @param info
+     * @param mapParam
+     */
+    private void createProjectUndertakePage(JSONObject info, Map<String, Object> mapParam) {
+        String borrowNid =  mapParam.get("borrowNid").toString();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid",borrowNid);
+        int undertRecordCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(params);
+        String strAccount = amTradeClient.sumUndertakeAccount(borrowNid);
+        String strUndertakeAccount = DF_FOR_VIEW.format(new BigDecimal("0"));
+        if (StringUtils.isNotEmpty(strAccount)) {
+            BigDecimal bdAccount = new BigDecimal(strAccount);
+            strUndertakeAccount = DF_FOR_VIEW.format(bdAccount);
+        }
+        if (undertRecordCount > 0) {
+            // 查询相应的汇直投列表数据
+            int limit = Integer.parseInt(mapParam.get("pageSize").toString());
+            int page = Integer.parseInt(mapParam.get("page").toString());
+            int offSet = (page - 1) * limit;
+            if (offSet == 0 || offSet > 0) {
+                params.put("limitStart", offSet);
+            }
+            if (limit > 0) {
+                params.put("limitEnd", limit);
+            }
+            List<ProjectUndertakeListVO> undertRecordList = amTradeClient.selectProjectUndertakeList(params);
+            info.put("list", undertRecordList);
+            // 总承接金额
+            info.put("undertakeAccount", String.valueOf(strUndertakeAccount));
+            // 承接总人次
+            info.put("userCount", undertRecordCount);
+            // 判断本次查询是否已经全部查出数据
+            if ((page * limit) > undertRecordCount) {
+                info.put("isEnd", true);
+            } else {
+                info.put("isEnd", false);
+            }
+        } else {
+            info.put("list", new ArrayList<ProjectUndertakeListVO>());
+            // 总承接金额
+            info.put("undertakeAccount", "0");
+            // 承接总人次
+            info.put("userCount", 0);
+            info.put("isEnd", true);
+        }
+    }
 }
