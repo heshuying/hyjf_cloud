@@ -51,6 +51,7 @@ public class AppBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "app端获取开户信息", notes = "获取开户信息")
     @PostMapping(value = "/userInfo")
+    @ResponseBody
     public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
         AppResult<String> result = new AppResult<String>();
@@ -72,6 +73,7 @@ public class AppBankOpenController extends BaseUserController {
 
     @ApiOperation(value = "app端用户开户", notes = "app端-用户开户")
     @PostMapping(value = "/openBankAccount")
+    @ResponseBody
     public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         AppResult<Object> result = new AppResult<Object>();
@@ -117,6 +119,7 @@ public class AppBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "we端开户查询开户失败原因", notes = "web端-查询开户失败原因")
     @PostMapping("/seachFiledMess")
+    @ResponseBody
     public AppResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
         WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
