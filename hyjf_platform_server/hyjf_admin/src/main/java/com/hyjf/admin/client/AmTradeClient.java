@@ -2311,5 +2311,12 @@ public interface AmTradeClient {
      * @return
      */
     boolean updateAccountAfterWithdrawFail(Integer userId, String nid);
+    
+	/**
+	 * 获取部门列表
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+    OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form);
 }
 

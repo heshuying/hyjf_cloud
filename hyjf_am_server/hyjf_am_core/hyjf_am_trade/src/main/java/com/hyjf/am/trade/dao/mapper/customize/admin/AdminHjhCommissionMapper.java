@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 
 /**
@@ -35,4 +36,12 @@ public interface AdminHjhCommissionMapper {
      * @return
      */
     Map<String, Object> queryPushMoneyTotle(HjhCommissionRequest request);
+    
+    /**
+     * 查询所有部门信息
+     *
+     * @param oaDepartmentCustomize
+     * @return
+     */
+    List<OADepartmentCustomizeVO> getCrmDepartmentList();
 }

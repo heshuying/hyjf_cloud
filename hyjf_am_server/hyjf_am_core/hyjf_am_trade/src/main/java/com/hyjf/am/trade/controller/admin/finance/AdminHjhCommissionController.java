@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.controller.admin.finance;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
+import com.hyjf.am.response.admin.OADepartmentResponse;
 import com.hyjf.am.response.admin.TenderCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
-import com.hyjf.am.trade.dao.model.auto.TenderCommission;
 import com.hyjf.am.trade.service.admin.finance.AdminHjhCommissionService;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 
@@ -115,5 +115,19 @@ public class AdminHjhCommissionController {
 		}
 		return response;
 	}
-
+	
+	/**
+	 * @Author: libin
+	 * @Desc :获取部门列表    
+	 */
+	@RequestMapping(value = "/getCrmDepartmentList",method = RequestMethod.POST)
+	public OADepartmentResponse getCrmDepartmentList(@RequestBody @Valid HjhCommissionRequest request){
+		OADepartmentResponse response = new OADepartmentResponse();
+		List<OADepartmentCustomizeVO> list = adminHjhCommissionService.getCrmDepartmentList(request);
+		if(list.size() > 0){
+			response.setResultList(list);
+		}
+		return response;
+	}
+	
 }
