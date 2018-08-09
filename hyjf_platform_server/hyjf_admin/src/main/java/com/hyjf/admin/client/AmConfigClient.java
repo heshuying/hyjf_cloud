@@ -100,6 +100,11 @@ import java.util.Map;
 =======
 >>>>>>> origin/master
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author zhangqingqing
  * @version AmConfigClient, v0.1 2018/4/23 20:00
@@ -183,7 +188,22 @@ public interface AmConfigClient {
 	ParamNameResponse getNameCd(String code);
 
    	AdminSystemResponse isExistsApplicant(String applicant);
-
+   	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse infoAction();
+	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest);
+	public MspApplytResponse download(MspApplytRequest mspApplytRequest);
+	public MspResponse searchAction(MspRequest mspRequest);
+	public MspResponse infoAction(MspRequest mspRequest);
+	public MspResponse insertAction(MspRequest mspRequest);
+	public MspResponse updateAction(MspRequest mspRequest);
+	public MspResponse configureNameError(MspRequest mspRequest);
+	public MspResponse deleteAction(MspRequest mspRequest);
+	public MspResponse checkAction(MspRequest mspRequest);
 
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request);
 	/**

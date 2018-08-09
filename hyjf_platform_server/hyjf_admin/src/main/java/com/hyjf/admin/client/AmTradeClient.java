@@ -2367,13 +2367,14 @@ public interface AmTradeClient {
      */
     List<HjhAssetTypeVO> getHjhAssetType();
 
+	Integer updateSubCommission(SubCommissionVO subCommissionVO);
+
+	
     /**
      * 查询用户充值记录
      * @param userId
      * @return
      */
     List<AccountRechargeVO> getAccountRecharge(int userId);
-
-    Integer updateSubCommission(SubCommissionVO subCommissionVO);
 }
 
