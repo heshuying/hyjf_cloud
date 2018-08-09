@@ -11,11 +11,8 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
@@ -30,11 +27,6 @@ import java.util.List;
  */
 @Service
 public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhAutoEndCreditService {
-
-    Logger logger = LoggerFactory.getLogger(HjhAutoEndCreditServiceImpl.class);
-
-    // TODO redis 连接池获取
-    public static JedisPool pool = RedisUtils.getPool();
 
     /**
      * 检索当天的未完全承接完成的债转
@@ -127,8 +119,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         String oldOpenAmount = RedisUtils.get(RedisConstants.HJH_PLAN + planNid);
         logger.info("债权停止后，更新计划开放额度，计划编号:[" + planNid + "],Redis原开放额度:" + oldOpenAmount + "，应减额度:" + liquidationFairValue.toString());
         // 3.减扣redis相应计划可投金额
-        redisSub(RedisConstants.HJH_PLAN + planNid, liquidationFairValue.toString());
-
+        RedisUtils.add(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), liquidationFairValue.negate().toString());
         // 4.更新原始加入订单的清算状态
         // 更新计划订单的状态
         // 只有是退出中状态,并且清算标志位是已完成,计划订单的清算标志位才能更新
@@ -200,41 +191,5 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
             }
         }
         return sumAssignPrice;
-    }
-
-
-    /**
-     * 并发情况下保证设置一个值
-     *
-     * @param key
-     * @param value
-     */
-    private void redisSub(String key, String value) {
-        Jedis jedis = pool.getResource();
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(0);
-            if (balance != null) {
-                bal = new BigDecimal(balance);
-            }
-            BigDecimal val = new BigDecimal(value);
-
-            Transaction tx = jedis.multi();
-            String valbeset = bal.subtract(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    // 成功后
-                    break;
-                } else {
-                    jedis.unwatch();
-                }
-            }
-        }
     }
 }

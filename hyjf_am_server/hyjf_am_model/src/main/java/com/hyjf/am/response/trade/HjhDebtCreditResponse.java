@@ -14,6 +14,8 @@ public class HjhDebtCreditResponse extends Response<HjhDebtCreditVO> {
 
     private Integer tenderCount;
 
+    private String sum;
+
 
     public Integer getTenderCount() {
         return tenderCount;
@@ -21,5 +23,13 @@ public class HjhDebtCreditResponse extends Response<HjhDebtCreditVO> {
 
     public void setTenderCount(Integer tenderCount) {
         this.tenderCount = tenderCount;
+    }
+
+    public String getSum() {
+        return sum;
+    }
+
+    public void setSum(String sum) {
+        this.sum = sum;
     }
 }

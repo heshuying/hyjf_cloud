@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -44,6 +45,7 @@ public class AppMyProjectController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyProject", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public MyProjectResponse queryScatteredProject( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
 
         MyProjectResponse response = new MyProjectResponse();

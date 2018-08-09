@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
  */
 @DisallowConcurrentExecution  // 禁止并发执行
 public class AutoTenderJob extends BaseJob implements Job {
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
