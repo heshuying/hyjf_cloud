@@ -3,27 +3,6 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.HjhLabelViewRequest;
 import com.hyjf.admin.beans.vo.AdminHjhLabelCustomizeVO;
@@ -45,9 +24,23 @@ import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.calculate.DateUtils;
-import org.springframework.beans.BeanUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 /**
  * @author libin
  * @version HjhLabelController.java, v0.1 2018年6月30日 上午9:14:22
@@ -72,7 +65,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表初始化")
 	@PostMapping(value = "/init")
-	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public JSONObject init(HttpServletRequest request) {
 		JSONObject jsonObject = new JSONObject();
@@ -108,7 +100,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表下拉联动")
 	@PostMapping(value = "/link")
-	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public JSONObject assetTypeAction(HttpServletRequest request, @RequestBody HjhLabelViewRequest form) {
 		JSONObject jsonObject = new JSONObject();
@@ -143,7 +134,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表查询")
 	@PostMapping(value = "/search")
-	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public AdminResult<ListResult<AdminHjhLabelCustomizeVO>> selectLabelConfigList(HttpServletRequest request, @RequestBody HjhLabelViewRequest viewRequest) {
 		// 初始化原子层请求实体
@@ -176,7 +166,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "生成添加/修改画面")
 	@PostMapping(value = "/info")
-	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
 	public JSONObject getAddOrModifyView(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
@@ -253,7 +242,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "添加画面确认后添加标签")
 	@PostMapping(value = "/insert")
-	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public JSONObject addNewLabel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
@@ -483,7 +471,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "修改画面确认后修改标签")
 	@PostMapping(value = "/update")
-	@ResponseBody
 	public JSONObject modifyLabel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest infoRequest = new HjhLabelInfoRequest();
@@ -552,7 +539,6 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "启用/禁用")
 	@PostMapping(value = "/status")
-	@ResponseBody
 	public JSONObject updateStatus(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhLabelViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest infoRequest = new HjhLabelInfoRequest();
