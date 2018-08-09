@@ -98,4 +98,12 @@ public interface AppProjectListService extends BaseTradeService {
      * @return
      */
     BaseResultBeanFrontEnd investRecord(String transferId, Integer currentPage, Integer pageSize);
+
+
+    /**
+     * 承接记录列表
+     * @author zhangyk
+     * @date 2018/8/9 10:39
+     */
+    JSONObject searchProjectUndertakeList(String borrowNid,HttpServletRequest request);
 }

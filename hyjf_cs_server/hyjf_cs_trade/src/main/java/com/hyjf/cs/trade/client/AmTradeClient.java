@@ -1529,4 +1529,18 @@ public interface AmTradeClient {
      * @date 2018/7/5 15:32
      */
     List<AppAdsCustomizeVO> getBannerList(AdsRequest request);
+
+    /**
+     * 获取承接中的总额度
+     * @author zhangyk
+     * @date 2018/8/9 11:48
+     */
+    String sumUndertakeAccount(String borrowNid);
+
+    /**
+     * 承接中的列表
+     * @author zhangyk
+     * @date 2018/8/9 13:58
+     */
+    List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> params);
 }
