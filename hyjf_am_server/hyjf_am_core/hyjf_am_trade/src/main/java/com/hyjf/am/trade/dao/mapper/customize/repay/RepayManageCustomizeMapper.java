@@ -24,9 +24,4 @@ public interface RepayManageCustomizeMapper {
     BigDecimal selectOrgRepayFeeWaitTotal(Map<String,Object> paraMap);
 
     BigDecimal selectRepayOrgRepaywait(Integer userId);
-    /** 查询借款人借款数量   */
-    int countUserRepayProjectRecordTotal(Map<String, Object> params);
-
-    /**  查询垫付机构借款数  */
-    int countOrgRepayProjectRecordTotal(Map<String, Object> params);
 }

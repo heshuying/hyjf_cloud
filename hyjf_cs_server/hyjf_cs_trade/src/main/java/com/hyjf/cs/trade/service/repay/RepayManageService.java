@@ -59,6 +59,4 @@ public interface RepayManageService extends BaseTradeService {
     BorrowApicronVO selectBorrowApicron(String bankSeqNO);
 
     BankCallBean batchQuery(BorrowApicronVO apicron);
-
-    List<RepayListCustomizeVO> selectUserRepayedList(RepayListRequest projectBean);// 查询记录（个人和机构）
 }
