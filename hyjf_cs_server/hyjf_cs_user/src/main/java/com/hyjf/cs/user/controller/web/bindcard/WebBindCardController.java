@@ -1,7 +1,9 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
@@ -115,6 +117,13 @@ public class WebBindCardController extends BaseUserController {
         
         // 绑卡请求后业务处理
 		try {
+//			BankCallBean bankBean = new BankCallBean();
+//			bankBean.setAccountId("6212461910000080264");
+//			bankBean.setLogUserId("5274");
+//			LogAcqResBean resBean = new LogAcqResBean();
+//			bankBean.setLogAcqResBean(resBean);
+//			resBean.setCardNo("6225880142489757");
+//			resBean.setMobile("18911288535");
 			bindCardService.updateAfterBindCard(bankBean);
 		} catch (Exception e) {
 			result.setStatus(ApiResult.FAIL);
