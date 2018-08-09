@@ -20,6 +20,7 @@ import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -39,6 +40,7 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -4247,7 +4249,7 @@ public class AmTradeClientImpl implements AmTradeClient{
         }
         return false;
     }
-    
+
 	/**
 	 * 汇计划提成列表查询
 	 *
@@ -4470,6 +4472,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
 	 * 查询金额总计
+	 * @param id
 	 * @return
 	 */
 	@Override
@@ -4502,6 +4505,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
 	 * 查询汇计划提成是否已经发放
+	 * @param id
 	 * @return
 	 */
 	@Override
@@ -4543,5 +4547,39 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url = "http://AM-TRADE/am-user/checkCoupon/getBatchCoupons";
         return restTemplate.postForEntity(url,params,JSONObject.class).getBody();
     }
+
+    /**
+     * 根据订单号查询提现订单
+     * @param nid
+     * @param userId
+     * @return
+     */
+    @Override
+    public AccountWithdrawVO queryAccountwithdrawByNid(String nid, Integer userId) {
+        String url = "http://AM-TRADE/am-trade/account/queryAccountwithdrawByNid/"+nid+"/"+userId;
+        AccountWithdrawResponse response = restTemplate.getForEntity(url,AccountWithdrawResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 提现成功后,更新用户账户信息,提现记录
+     * @param param
+     * @return
+     */
+    @Override
+    public boolean updateAccountAfterWithdraw(Map<String, String> param) {
+        String url = "http://AM-TRADE/am-trade/account/updateAccountAfterWithdraw";
+        return restTemplate.postForEntity(url,param,Boolean.class).getBody();
+    }
+
+    @Override
+    public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) {
+        String url = "http://AM-TRADE/am-trade/account/updateAccountAfterWithdrawFail/"+userId+"/"+nid;
+        return restTemplate.getForEntity(url,Boolean.class).getBody();
+    }
+
 }
 

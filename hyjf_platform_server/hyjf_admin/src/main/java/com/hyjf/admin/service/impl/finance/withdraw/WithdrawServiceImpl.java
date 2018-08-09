@@ -37,21 +37,21 @@ public class WithdrawServiceImpl extends BaseAdminServiceImpl implements Withdra
 
     @Override
     public AccountVO getAccountByUserId(Integer userId) {
-        return null;
+        return amTradeClient.getAccountByUserId(userId);
     }
 
     @Override
     public AccountWithdrawVO queryAccountwithdrawByNid(String nid, Integer userId) {
-        return null;
+        return amTradeClient.queryAccountwithdrawByNid(nid,userId);
     }
 
     @Override
-    public boolean updateAccountAfterWithdraw(Integer userId, String nid, Map<String, String> param) {
-        return false;
+    public boolean updateAccountAfterWithdraw(Map<String, String> param) {
+        return amTradeClient.updateAccountAfterWithdraw(param);
     }
 
     @Override
     public boolean updateAccountAfterWithdrawFail(Integer userId, String nid) {
-        return false;
+        return amTradeClient.updateAccountAfterWithdrawFail(userId,nid);
     }
 }

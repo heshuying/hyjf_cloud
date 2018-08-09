@@ -121,11 +121,13 @@ public class WithdrawController extends BaseController {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("userName", loginUser);
 		param.put("ip", ip);
+		param.put("userId",String.valueOf(userId));
+		param.put("nid",nid);
 		// 确认充值 ; 0表示充值失败
 		boolean isAccountUpdate = false;
 		if (status == 1) {
 			try {
-				isAccountUpdate = this.withdrawService.updateAccountAfterWithdraw(userId, nid, param);
+				isAccountUpdate = this.withdrawService.updateAccountAfterWithdraw(param);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

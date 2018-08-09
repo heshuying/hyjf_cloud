@@ -47,7 +47,7 @@ public interface WithdrawService extends BaseAdminService {
 	 * @param nid
 	 * @return
 	 */
-	public boolean updateAccountAfterWithdraw(Integer userId, String nid, Map<String, String> param);
+	public boolean updateAccountAfterWithdraw(Map<String, String> param);
 
 	/**
 	 * 提现失败后,更新用户的提现记录
