@@ -282,42 +282,7 @@ public class RepayManageController extends BaseTradeController {
         result.setPage(page);
         return result;
     }
-    /**
-     * 获取用户本期还款金额
-     * @param token
-     * @param requestBean
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "获取用户本期还款金额", notes = "获取用户本期还款金额")
-    @PostMapping(value = "/repay_money_total", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getRepayMoneyTotal(@RequestHeader(value = "token", required = true) String token, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
-        WebResult<Map<String,Object>> result = new WebResult<>();
-        Map<String,Object> resultMap = new HashMap<>();
-        BigDecimal repayMoneyTotal=new BigDecimal(0);
-        int repayMoneyNum=0;
-        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
-        logger.info("获取用户本期还款金额开始，userId:{}", userVO.getUserId());
-        if(userVO != null){
-            requestBean.setUserId(userVO.getUserId().toString());
-            requestBean.setRoleId(userVO.getRoleId());
-            requestBean.setRepayStatus("0");
-            requestBean.setBorrowNid(requestBean.getBorrowNid());
-            requestBean.setEndDate(requestBean.getEndDate());
-            requestBean.setStartDate(requestBean.getStartDate());
-            List<RepayListCustomizeVO> resultList = repayManageService.selectUserRepayedList(requestBean);// 查询记录（个人和机构）
-            if(!CollectionUtils.isEmpty(resultList)){
-                repayMoneyNum=resultList.size();
-                for (RepayListCustomizeVO customize : resultList) {
-                    repayMoneyTotal=repayMoneyTotal.add(new BigDecimal(customize.getRealAccountYes()));
-                }
-            }
-        }
-        resultMap.put("repayMoneyTotal",repayMoneyTotal);
-        resultMap.put("repayMoneyNum",repayMoneyNum);
-        result.setData(resultMap);
-        return result;
-    }
+
     /**
      * 还款详情页面数据
      * @auther: hesy

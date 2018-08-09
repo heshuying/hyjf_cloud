@@ -302,13 +302,6 @@ public interface AmTradeClient {
     BorrowApicronVO selectBorrowApicron(String bankSeqNO);
 
     /**
-     * 获取用户还款列表
-     * @param projectBean
-     * @return
-     */
-    List<RepayListCustomizeVO> selectUserRepayedList(RepayListRequest projectBean);
-
-    /**
      * 根据订单号查询充值信息
      * @param orderId
      * @return
