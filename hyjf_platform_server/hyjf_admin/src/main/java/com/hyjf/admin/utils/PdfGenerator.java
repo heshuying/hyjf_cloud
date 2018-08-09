@@ -86,9 +86,11 @@ public class PdfGenerator {
                 if (file.exists()) {
                     file.delete();
                 }
+                throw e;
             }
         } catch (Exception e) {
             logger.error("生成PDF文件：" + e);
+            throw e;
         } finally {
             if (outputStream != null) {
                 try {
@@ -99,7 +101,6 @@ public class PdfGenerator {
                 }
             }
         }
-        return null;
     }
 
     /**
@@ -170,9 +171,9 @@ public class PdfGenerator {
             logger.info("-----------加签后生成的pdf地址：" + pdfUrl);
             return pdfUrl;
         } catch (Exception e) {
-            logger.error("PDF文件加章处理：" + e);
+            logger.error("PDF文件请求加章处理：" + e);
+            return null;
         }
-        return null;
     }
 
 }

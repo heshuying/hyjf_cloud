@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -35,5 +36,12 @@ public interface HjhCommissionService {
      * @return
      */
 	TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
+	
+	/**
+	 * 获取部门列表
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+	JSONArray getCrmDepartmentList(String[] list);
 
 }

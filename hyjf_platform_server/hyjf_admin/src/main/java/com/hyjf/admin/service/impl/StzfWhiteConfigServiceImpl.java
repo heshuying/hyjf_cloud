@@ -40,6 +40,6 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 
 	@Override
 	public HjhInstConfigVO selectHjhInstConfig(String instcode) {
-		return null;
+		return amTradeClient.selectHjhInstConfig(instcode);
 	}
 }

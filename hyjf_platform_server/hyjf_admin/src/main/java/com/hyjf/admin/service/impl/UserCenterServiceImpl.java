@@ -65,6 +65,10 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
 
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
+    /**
+     * 初始化用户管理页面
+     * @return
+     */
     @Override
     public UserManagerInitResponseBean initUserManaget(){
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();

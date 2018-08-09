@@ -4459,7 +4459,16 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
 
-
+    @Override
+    public HjhInstConfigVO selectHjhInstConfig(String instcode) {
+        HjhInstConfigResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/hjhInstConfig/selectInstConfigByInstCode" + instcode,
+                HjhInstConfigResponse.class);
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
 
 
     @Override
@@ -4580,6 +4589,21 @@ public class AmTradeClientImpl implements AmTradeClient{
         String url = "http://AM-TRADE/am-trade/account/updateAccountAfterWithdrawFail/"+userId+"/"+nid;
         return restTemplate.getForEntity(url,Boolean.class).getBody();
     }
-
+    
+	/**
+	 * 获取部门列表
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+	@Override
+	public OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form) {
+		OADepartmentResponse response = restTemplate
+				.postForEntity("http://AM-TRADE/am-trade/hjhCommission/getCrmDepartmentList" ,form,
+						OADepartmentResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
 }
-

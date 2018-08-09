@@ -5,6 +5,7 @@ import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpContentCustomize;
 import com.hyjf.am.config.service.ContentArticleService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.ContentArticleCustomizeResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -139,7 +140,9 @@ public class ContentArticleController {
             response.setCount(count);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
@@ -156,17 +159,19 @@ public class ContentArticleController {
             response.setResultList(voList);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
      * 上下翻页
      * @param params
-     * @param offset
      * @return
      */
     @RequestMapping("/getContentArticleFlip")
-    public ContentArticleCustomizeResponse getContentArticleFlip(@RequestBody Map<String, Object> params, String offset) {
+    public ContentArticleCustomizeResponse getContentArticleFlip(@RequestBody Map<String, Object> params) {
+        String offset = (String) params.get("offset");
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
         ContentArticleCustomize list = contentArticleService.getContentArticleFlip(params, offset);
         if (list != null) {
@@ -174,7 +179,9 @@ public class ContentArticleController {
             response.setResult(voList);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**

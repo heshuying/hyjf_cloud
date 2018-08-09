@@ -14,9 +14,24 @@ import java.util.Map;
  */
 public interface RepayCalendarClient {
 
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
     Integer countRepaymentCalendar(Map<String, Object> params);
 
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
     List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params);
 
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
     Integer searchNearlyRepaymentTime(Map<String, Object> params);
 }

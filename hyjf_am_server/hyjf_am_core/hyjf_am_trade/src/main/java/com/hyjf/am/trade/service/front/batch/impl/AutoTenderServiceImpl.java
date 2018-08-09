@@ -2384,46 +2384,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             return result;
         }
         logger.info("[" + hjhAccede.getAccedeOrderId() + "] " + "复投减开封额度！,计划编号:" + hjhAccede.getPlanNid() + "redis原开放额度:" + oldOpenAmount + "，应减额度:" + subAmount.toString());
-        redisSub(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), subAmount.toString());//增加redis相应计划可投金额
+        RedisUtils.add(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), subAmount.negate().toString());//增加redis相应计划可投金额
         return result;
-    }
-
-    /**
-     * 并发情况下保证设置一个值
-     *
-     * @param key
-     * @param value
-     */
-    private void redisSub(String key, String value) {
-
-        Jedis jedis = pool.getResource();
-
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
-
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(0);
-            if (balance != null) {
-                bal = new BigDecimal(balance);
-            }
-            BigDecimal val = new BigDecimal(value);
-
-            Transaction tx = jedis.multi();
-            String valbeset = bal.subtract(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    // 成功后
-                    break;
-                } else {
-                    jedis.unwatch();
-                }
-            }
-        }
     }
 
     /**

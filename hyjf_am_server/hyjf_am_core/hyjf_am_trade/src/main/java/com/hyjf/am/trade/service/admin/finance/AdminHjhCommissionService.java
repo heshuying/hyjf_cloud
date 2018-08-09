@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 
@@ -43,4 +44,10 @@ public interface AdminHjhCommissionService {
      * @return
      */
 	TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
+	
+	/**
+	 * @Author: libin
+	 * @Desc :获取部门列表    
+	 */
+	List<OADepartmentCustomizeVO> getCrmDepartmentList(HjhCommissionRequest request);
 }

@@ -176,10 +176,10 @@ public class AppMyPlanController extends BaseTradeController {
 
 
     /**
-     * App端:获取我的散标详情
+     * App端:获取我的计划详情
      * @author zhangyk
      * @date 2018/7/30 18:27
-     * 原接口：com.hyjf.app.user.credit.AppTenderCreditBorrowController.searchTenderCreditDetail()
+     * 原接口：com.hyjf.app.user.plan.MyPlanController.getMyPlanDetail()
      */
     @ApiOperation(value = "App端:获取我的计划详情", notes = "App端:获取我的计划详情")
     @PostMapping(value = "/{orderId}", produces = "application/json; charset=utf-8")

@@ -106,13 +106,13 @@
 		SELECT
 		*
 		FROM
-		huiyingdai_content_article
+		ht_content_article
 		WHERE
 		id = (
 		SELECT
 		id
 		FROM
-		huiyingdai_content_article
+		ht_content_article
 		WHERE
 		1=1
 		AND id <![CDATA[>]]> #{messageId}
@@ -129,13 +129,13 @@
 		SELECT
 		*
 		FROM
-		huiyingdai_content_article
+		ht_content_article
 		WHERE
 		id = (
 		SELECT
 		id
 		FROM
-		huiyingdai_content_article
+		ht_content_article
 		WHERE
 		1=1
 		AND id <![CDATA[<]]> #{messageId}
