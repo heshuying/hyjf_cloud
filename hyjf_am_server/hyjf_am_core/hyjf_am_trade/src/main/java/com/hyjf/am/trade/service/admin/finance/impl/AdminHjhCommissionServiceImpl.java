@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.trade.dao.model.auto.TenderCommission;
 import com.hyjf.am.trade.service.admin.finance.AdminHjhCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 import com.hyjf.common.util.StringPool;
@@ -94,6 +95,12 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 			BeanUtils.copyProperties(tenderCommission, vo);
 		}
 		return vo;
+	}
+
+	@Override
+	public List<OADepartmentCustomizeVO> getCrmDepartmentList(HjhCommissionRequest request) {
+		List<OADepartmentCustomizeVO> departmentList = this.adminHjhCommissionMapper.getCrmDepartmentList();
+		return departmentList;
 	}
 
 }

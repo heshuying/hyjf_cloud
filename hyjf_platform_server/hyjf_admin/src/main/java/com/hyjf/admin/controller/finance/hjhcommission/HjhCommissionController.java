@@ -47,7 +47,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-
+import com.hyjf.common.validator.Validator;
+import com.alibaba.fastjson.JSONArray;
 /**
  * @author libin
  * @version HjhCommissionController.java, v0.1 2018年8月7日 下午2:38:45
@@ -380,6 +381,39 @@ public class HjhCommissionController extends BaseController{
         }
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+	}
+	
+    /**
+     * 取得部门信息   已测试
+     *
+     * @param request
+     * @param form 
+     * @return
+     */
+	@ApiOperation(value = "汇计划提成列表", notes = "取得部门信息")
+	@PostMapping(value = "/getcrmdepartmentlist")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+	public JSONObject getCrmDepartmentListAction(@RequestBody HjhCommissionViewRequest viewRequest) {
+		JSONObject jsonObject = new JSONObject();
+		// 部门
+        String[] list = new String[] {};
+        if (Validator.isNotNull(viewRequest.getDepIds())) {
+            if (viewRequest.getDepIds().contains(StringPool.COMMA)) {
+                list = viewRequest.getDepIds().split(StringPool.COMMA);
+            } else {
+                list = new String[] { viewRequest.getDepIds() };
+            }
+        }
+        JSONArray ja = this.hjhCommissionService.getCrmDepartmentList(list);
+        if (ja != null) {
+        	jsonObject.put("部门信息", ja.toString());
+        	jsonObject.put("status", SUCCESS);
+        } else {
+			jsonObject.put("error", "未查询到该记录！");
+			jsonObject.put("status", FAIL);
+        }
+		return jsonObject;
 	}
 	
 }
