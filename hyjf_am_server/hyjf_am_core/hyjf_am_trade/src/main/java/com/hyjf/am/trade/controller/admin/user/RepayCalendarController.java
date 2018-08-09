@@ -27,6 +27,11 @@ public class RepayCalendarController extends BaseController {
     @Autowired
     RepayCalendarService repayCalendarService;
 
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/repayCalendar/countBorrowRepayment")
     public AppReapyCalendarResponse countRepaymentCalendar(@RequestBody Map<String, Object> params){
         logger.info("请求参数:" + JSONObject.toJSON(params));
@@ -36,6 +41,11 @@ public class RepayCalendarController extends BaseController {
         return response;
     }
 
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/repayCalendar/searchRepaymentCalendar")
     public AppReapyCalendarResponse searchRepaymentCalendar(@RequestBody Map<String, Object> params){
         logger.info("请求参数:" + JSONObject.toJSON(params));
@@ -45,6 +55,11 @@ public class RepayCalendarController extends BaseController {
         return response;
     }
 
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
     @RequestMapping(value = "/repayCalendar/searchNearlyRepaymentTime")
     public AppReapyCalendarResponse searchNearlyRepaymentTime(@RequestBody Map<String, Object> params){
         logger.info("请求参数:" + JSONObject.toJSON(params));
