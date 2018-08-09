@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
-
 import static com.hyjf.am.bean.result.BaseResult.FAIL_DESC;
 import static com.hyjf.am.response.Response.FAIL;
 
@@ -25,27 +24,25 @@ import static com.hyjf.am.response.Response.FAIL;
  * @author dangzw
  * @version AppContentArticleController, v0.1 2018/7/30 23:13
  */
-@Api(tags = "APP端协议接口")
+@Api(description = "APP端", tags = "APP端")
 @RestController
-@RequestMapping(value = "/find/contentArticle")
+@RequestMapping(value = "/hyjf-app/find/contentArticle")
 
 public class AppContentArticleController extends BaseMarketController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppContentArticleController.class);
 
-    /** 类名 */
-    public static final String THIS_CLASS = AppContentArticleController.class.getName();
     /** 获取文章详情  */
     public static final String GET_CONTENT_ARTICLE_ID_ACTION = "/{articleType}/{articleId}";
 
     @Autowired
     private AppContentArticleService appContentArticleService;
 
-    @ApiOperation(value = "APP端协议接口", notes = "协议列表内容的获取")
+    @ApiOperation(value = "文章详情页", httpMethod = "GET", notes = "文章详情页")
+    @GetMapping(value = GET_CONTENT_ARTICLE_ID_ACTION)
     @ResponseBody
-    @PostMapping(value = GET_CONTENT_ARTICLE_ID_ACTION)
     public AppResult getContentArticleById(@PathVariable("contentArticleId") Integer contentArticleId, @PathVariable("type") Integer type) {
-        logger.info("*******************************协议列表内容的获取************************************");
+        logger.info(AppContentArticleController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         AppContentArticleResponse response = new AppContentArticleResponse();
         response.setRtn(AppContentArticleResponse.SUCCESS);
         response.setMessage(AppContentArticleResponse.SUCCESS_MSG);
@@ -70,7 +67,7 @@ public class AppContentArticleController extends BaseMarketController {
         if (!Response.isSuccess(response)) {
             return new AppResult<>(FAIL, response.getMessage());
         }
-        logger.info(THIS_CLASS, GET_CONTENT_ARTICLE_ID_ACTION);
+        logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         return new AppResult<>(response) ;
     }
 

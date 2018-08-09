@@ -955,31 +955,40 @@ public class RedisUtils {
 
         Jedis jedis = pool.getResource();
 
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
+        try {
+            while ("OK".equals(jedis.watch(key))) {
+                List<Object> results = null;
 
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(0);
-            if (balance != null) {
-                bal = new BigDecimal(balance);
-            }
-            BigDecimal val = new BigDecimal(value);
+                String balance = jedis.get(key);
+                BigDecimal bal = new BigDecimal(0);
+                if (balance != null) {
+                    bal = new BigDecimal(balance);
+                }
+                BigDecimal val = new BigDecimal(value);
 
-            Transaction tx = jedis.multi();
-            String valbeset = bal.add(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    // 成功后
-                    break;
-                } else {
+                Transaction tx = jedis.multi();
+                String valbeset = bal.add(val).toString();
+                tx.set(key, valbeset);
+                results = tx.exec();
+                if (results == null || results.isEmpty()) {
                     jedis.unwatch();
+                } else {
+                    String ret = (String) results.get(0);
+                    if (ret != null && "OK".equals(ret)) {
+                        // 成功后
+                        break;
+                    } else {
+                        jedis.unwatch();
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
         }
     }
 }
