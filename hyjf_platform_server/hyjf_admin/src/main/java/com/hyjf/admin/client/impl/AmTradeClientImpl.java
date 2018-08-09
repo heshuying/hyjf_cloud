@@ -674,19 +674,6 @@ public class AmTradeClientImpl implements AmTradeClient{
     }
 
     /**
-     * 更新分佣数据
-     * @auth sunpeikai
-     * @param subCommissionVO 待更新的数据参数
-     * @return
-     */
-    @Override
-    public Integer updateSubCommission(SubCommissionVO subCommissionVO) {
-        String url = "http://AM-TRADE/am-trade/subcommission/updatesubcommission";
-        Integer response = restTemplate.postForEntity(url,subCommissionVO,Integer.class).getBody();
-        return response;
-    }
-
-    /**
      * 根据筛选条件查询分佣数据count
      * @auth sunpeikai
      * @param request 筛选条件

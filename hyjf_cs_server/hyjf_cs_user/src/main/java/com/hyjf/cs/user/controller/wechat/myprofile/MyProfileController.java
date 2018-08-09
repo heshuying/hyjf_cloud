@@ -6,12 +6,14 @@ package com.hyjf.cs.user.controller.wechat.myprofile;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -59,17 +61,17 @@ public class MyProfileController extends BaseUserController {
         if(userId==null){
             throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
-
-        String trueUserName = myProfileService.getUserTrueName(userId);
+        //用户真实姓名
+        String trueUserName = myProfileService.getUserCallName(userId);
 
         UserAccountInfoVO userAccountInfo = new UserAccountInfoVO();
 
         userAccountInfo.setTrueUserName(trueUserName);
-
+        //设置用户账户信息
         myProfileService.buildUserAccountInfo(userId, userAccountInfo);
 
         myProfileVO.setUserAccountInfo(userAccountInfo);
-
+        //设置用户账户信息
         myProfileService.buildOutInfo(userId, myProfileVO);
 
         result.setData(myProfileVO);
@@ -81,35 +83,56 @@ public class MyProfileController extends BaseUserController {
 
 
     private void getIconUrl(Integer userId, MyProfileVO myProfileVO) {
-        UserVO user = myProfileService.getUsers(Integer.valueOf(userId));
+        UserVO user = myProfileService.getUsersById(userId);
         String imghost = UploadFileUtils.getDoPath(systemConfig.getHeadUrl());
         String imagePath="";
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             // 实际物理路径前缀
             String fileUploadRealPath = UploadFileUtils.getDoPath(systemConfig.getUploadHeadPath());
             imagePath = imghost + fileUploadRealPath + user.getIconUrl();
-
         }
         myProfileVO.getUserAccountInfo().setIconUrl(imagePath);
         myProfileVO.getUserAccountInfo().setQrcodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
-
     }
 
-
+    /**
+     * 优惠券列表
+     * @param request
+     * @return
+     */
     @GetMapping("/couponlist")
     public WeChatResult getCouponList(HttpServletRequest request) {
         WeChatResult resultBean = new WeChatResult();
         Integer userId = requestUtil.getRequestUserId(request);
+        if (userId==null){
+            resultBean.setStatus(BaseResult.FAIL);
+            resultBean.setStatusDesc("不存在的用户!");
+            return resultBean;
+        }
         String resultStr = myProfileService.getUserCouponsData("0", 1, 100, userId, "");
         JSONObject resultJson = JSONObject.parseObject(resultStr);
+        if (resultJson==null){
+            resultBean.setStatus(BaseResult.FAIL);
+            resultBean.setStatusDesc("获取用户优惠券数据失败!");
+            return resultBean;
+        }
         JSONArray data = resultJson.getJSONArray("data");
+        if (data==null){
+            resultBean.setStatus(BaseResult.FAIL);
+            resultBean.setStatusDesc("获取用户优惠券数据失败!");
+            return resultBean;
+        }
         List<CouponUserForAppCustomizeVO> configs = JSON.parseArray(data.toJSONString(), CouponUserForAppCustomizeVO.class);
         List<CouponUserListCustomizeVO> lstCoupon =createCouponUserListCustomize(configs);
         resultBean.setData(lstCoupon);
         return resultBean;
     }
 
-
+    /**
+     * 创建自定义的优惠券列表
+     * @param configs
+     * @return
+     */
     private List<CouponUserListCustomizeVO> createCouponUserListCustomize(
             List<CouponUserForAppCustomizeVO> configs) {
         List<CouponUserListCustomizeVO> list=new ArrayList<CouponUserListCustomizeVO>();

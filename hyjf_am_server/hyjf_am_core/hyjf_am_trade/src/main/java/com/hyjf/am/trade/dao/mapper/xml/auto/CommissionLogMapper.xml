@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.user.dao.mapper.auto.SpreadsLogMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.CommissionLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="spreads_user_id" property="spreadsUserId" jdbcType="INTEGER" />
@@ -87,13 +87,13 @@
     tender_id, repay_id, account_all, account_capital, account_interest, account, remark, 
     create_ip, pay_status, is_valid, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLogExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLogExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ht_spreads_log
+    from ht_commission_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -107,24 +107,24 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from ht_spreads_log
+    from ht_commission_log
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ht_spreads_log
+    delete from ht_commission_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLogExample" >
-    delete from ht_spreads_log
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLogExample" >
+    delete from ht_commission_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_spreads_log (user_id, spreads_user_id, nid, 
+    insert into ht_commission_log (user_id, spreads_user_id, nid, 
       `type`, spreads_type, account_type, 
       scales, borrow_nid, tender_id, 
       repay_id, account_all, account_capital, 
@@ -139,11 +139,11 @@
       #{createIp,jdbcType=VARCHAR}, #{payStatus,jdbcType=TINYINT}, #{isValid,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_spreads_log
+    insert into ht_commission_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
         user_id,
@@ -269,14 +269,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLogExample" resultType="java.lang.Integer" >
-    select count(*) from ht_spreads_log
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_commission_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update ht_spreads_log
+    update ht_commission_log
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -347,7 +347,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update ht_spreads_log
+    update ht_commission_log
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       spreads_user_id = #{record.spreadsUserId,jdbcType=INTEGER},
@@ -373,8 +373,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
-    update ht_spreads_log
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    update ht_commission_log
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
@@ -439,8 +439,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.SpreadsLog" >
-    update ht_spreads_log
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.CommissionLog" >
+    update ht_commission_log
     set user_id = #{userId,jdbcType=INTEGER},
       spreads_user_id = #{spreadsUserId,jdbcType=INTEGER},
       nid = #{nid,jdbcType=VARCHAR},

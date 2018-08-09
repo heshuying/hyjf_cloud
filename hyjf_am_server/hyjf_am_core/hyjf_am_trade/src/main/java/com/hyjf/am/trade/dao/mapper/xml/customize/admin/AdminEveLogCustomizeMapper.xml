@@ -38,7 +38,7 @@
 		<include refid="where-all-page-condition"/>
 	</select>
 
-	<select id="selectBankEveInfoList" resultMap="com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize"	parameterType="Map">
+	<select id="selectBankEveInfoList" resultType="com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize"	parameterType="Map">
 		SELECT
 		FROM_UNIXTIME(
 		cendt,

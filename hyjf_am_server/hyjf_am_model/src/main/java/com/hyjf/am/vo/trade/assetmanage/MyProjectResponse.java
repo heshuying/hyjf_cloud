@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.trade.assetmanage;
 
+import com.hyjf.common.util.CustomConstants;
+
 import java.util.List;
 
 /**
@@ -20,7 +22,10 @@ public class MyProjectResponse  {
 
     private String request;
 
-    public MyProjectResponse() {}
+    public MyProjectResponse() {
+        this.status=CustomConstants.APP_STATUS_SUCCESS;
+        this.statusDesc=CustomConstants.APP_STATUS_DESC_SUCCESS;
+    }
 
     public int getProjectTotal() {
         return projectTotal;

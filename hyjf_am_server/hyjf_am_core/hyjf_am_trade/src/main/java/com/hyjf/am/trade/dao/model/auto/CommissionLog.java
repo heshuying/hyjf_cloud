@@ -1,10 +1,10 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SpreadsLog implements Serializable {
+public class CommissionLog implements Serializable {
     private Integer id;
 
     private Integer userId;
