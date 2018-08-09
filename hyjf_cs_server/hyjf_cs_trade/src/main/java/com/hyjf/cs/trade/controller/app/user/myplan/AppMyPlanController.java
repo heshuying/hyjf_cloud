@@ -49,6 +49,7 @@ public class AppMyPlanController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyPlanList", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public MyPlanListResultBean getMyPlanList( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
         MyPlanListResultBean result = new MyPlanListResultBean();
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);      result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
