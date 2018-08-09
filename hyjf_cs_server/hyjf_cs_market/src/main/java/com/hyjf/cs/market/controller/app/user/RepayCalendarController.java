@@ -12,6 +12,8 @@ import com.hyjf.cs.market.service.RepayCalendarService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,19 +24,21 @@ import java.util.*;
  * @author dangzw
  * @version RepayCalendarController, v0.1 2018/7/27 11:30
  */
-@Api(value = "app", tags = "app")
+@Api(description = "app日历", tags = "app日历")
 @RestController
-@RequestMapping("/hyjf-app/user")
+@RequestMapping(value = "/hyjf-app/user")
 public class RepayCalendarController extends BaseMarketController {
-
+    private static final Logger logger = LoggerFactory.getLogger(RepayCalendarController.class);
     @Autowired
     private RepayCalendarService repayCalendarService;
 
+    //TODO : 未测完
     @ResponseBody
-    @ApiOperation(value = "日历", notes = "日历")
-    @RequestMapping(value = "/repayCalendar/getRepayCalendar", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "日历", httpMethod = "GET", notes = "日历")
+    @GetMapping(value = "/repayCalendar/getRepayCalendar?")
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month, HttpServletRequest request) {
+        logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");
         logger.info("getRepayCalendar start, year is :{}, month is :{}", year, month);
         JSONObject info = new JSONObject();
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
@@ -85,8 +89,8 @@ public class RepayCalendarController extends BaseMarketController {
         this.createRepayCalendar(info, params, year, month);
 
         info.put(CustomConstants.APP_REQUEST, "/hyjf-app/user/repayCalendar/getRepayCalendar");
+        logger.info(RepayCalendarController.class.toString(), "endLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");
         return info;
-
     }
 
     /**
@@ -119,12 +123,12 @@ public class RepayCalendarController extends BaseMarketController {
      * @param params
      */
     private void createRepayCalendar(JSONObject info, Map<String, Object> params, String year, String month) {
-
+        //查询回款日历总数
         Integer recordTotal = repayCalendarService.countRepaymentCalendar(params);
         if (recordTotal > 0) {
-
+            //查询回款日历明细
             List<AppReapyCalendarResultVO> repayPlanDetail = repayCalendarService.searchRepaymentCalendar(params);
-
+            //返回用户最近回款时间戳-秒
             info.put("beginTime", repayCalendarService.searchNearlyRepaymentTime(params));
 
             info.put("repayPlanDetail", repayPlanDetail);

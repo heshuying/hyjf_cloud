@@ -120,9 +120,24 @@ public interface AssetManageCustomizeMapper {
 
     int countAppMyPlan(AssetManageBeanRequest request);
 
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
     Integer countRepaymentCalendar(Map<String, Object> params);
 
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
     List<AppRepayCalendarCustomize> selectRepaymentCalendar(Map<String, Object> params);
 
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
     Integer selectNearlyRepaymentTime(Map<String, Object> params);
 }
