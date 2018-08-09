@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +19,15 @@ import com.hyjf.am.response.config.SiteSettingsResponse;
 @Service
 public class SiteSettingServiceImpl implements SiteSettingService {
 	@Autowired
-	private SiteSettingClient siteSettingClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public SiteSettingsResponse selectSiteSetting() {
-		return siteSettingClient.selectSiteSetting();
+		return amConfigClient.selectSiteSetting();
 	}
 
 	@Override
 	public SiteSettingsResponse updateAction(SiteSettingRequestBean requestBean) {
-		return siteSettingClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 }

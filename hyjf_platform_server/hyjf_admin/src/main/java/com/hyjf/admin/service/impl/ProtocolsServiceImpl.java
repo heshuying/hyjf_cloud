@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.ProtocolsClient;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
@@ -24,13 +25,13 @@ import java.util.Objects;
 @Service
 public class ProtocolsServiceImpl implements ProtocolsService {
 	@Autowired
-	private ProtocolsClient protocolsClient;
+	private AmTradeClient amTradeClient;
 	@Autowired
 	private AmConfigClient amConfigClient;
 
 	@Override
 	public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
-		FddTempletCustomizeResponse response = protocolsClient.selectFddTempletList(request);
+		FddTempletCustomizeResponse response = amTradeClient.selectFddTempletList(request);
 		if (response != null) {
 			List<FddTempletCustomizeVO> voList = response.getResultList();
 			if (!CollectionUtils.isEmpty(voList)) {
@@ -59,11 +60,11 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 
 	@Override
 	public FddTempletCustomizeResponse insertAction(ProtocolsRequestBean requestBean) {
-		return protocolsClient.insertAction(requestBean);
+		return amTradeClient.insertAction(requestBean);
 	}
 
 	@Override
 	public FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean) {
-		return protocolsClient.updateAction(requestBean);
+		return amTradeClient.updateAction(requestBean);
 	}
 }

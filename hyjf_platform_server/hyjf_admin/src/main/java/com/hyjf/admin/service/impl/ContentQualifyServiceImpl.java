@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,41 +21,41 @@ import com.hyjf.am.vo.config.ContentQualifyVO;
 @Service
 public class ContentQualifyServiceImpl implements ContentQualifyService {
 	@Autowired
-	private ContentQualifyClient contentQualifyClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public ContentQualifyResponse searchAction(ContentQualifyRequestBean requestBean) {
-		return contentQualifyClient.searchAction(requestBean);
+		return amConfigClient.searchAction(requestBean);
 	}
 
 	@Override
 	public ContentQualifyResponse insertAction(ContentQualifyRequestBean requestBean) {
-		return contentQualifyClient.insertAction(requestBean);
+		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
 	public ContentQualifyResponse updateAction(ContentQualifyRequestBean requestBean) {
-		return contentQualifyClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 	@Override
 	public ContentQualifyResponse updateStatus(ContentQualifyRequestBean requestBean) {
 		if (requestBean != null && requestBean.getId() != null) {
 			Integer id = requestBean.getId();
-			ContentQualifyVO record = contentQualifyClient.getRecord(id);
+			ContentQualifyVO record = amConfigClient.getContentQualifyRecord(id);
 			if (record.getStatus() == 1) {
 				record.setStatus(0);
 			} else {
 				record.setStatus(1);
 			}
 			BeanUtils.copyProperties(record, requestBean);
-			return contentQualifyClient.updateAction(requestBean);
+			return amConfigClient.updateAction(requestBean);
 		}
 		return null;
 	}
 
 	@Override
 	public ContentQualifyResponse deleteById(Integer id) {
-		return contentQualifyClient.deleteById(id);
+		return amConfigClient.deleteContentQualifyById(id);
 	}
 }

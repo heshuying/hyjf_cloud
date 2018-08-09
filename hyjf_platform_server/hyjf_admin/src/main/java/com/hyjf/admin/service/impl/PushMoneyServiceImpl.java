@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +19,20 @@ import com.hyjf.am.response.trade.PushMoneyResponse;
 @Service
 public class PushMoneyServiceImpl implements PushMoneyService {
 	@Autowired
-	private PushMoneyClient pushMoneyClient;
+	private AmTradeClient amTradeClient;
 
 	@Override
 	public PushMoneyResponse getRecordList() {
-		return pushMoneyClient.getRecordList();
+		return amTradeClient.getRecordList();
 	}
 
 	@Override
 	public PushMoneyResponse insertPushMoney(PushMoneyRequestBean requestBean) {
-		return pushMoneyClient.insertPushMoney(requestBean);
+		return amTradeClient.insertPushMoney(requestBean);
 	}
 
 	@Override
 	public PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean) {
-		return pushMoneyClient.updatePushMoney(requestBean);
+		return amTradeClient.updatePushMoney(requestBean);
 	}
 }

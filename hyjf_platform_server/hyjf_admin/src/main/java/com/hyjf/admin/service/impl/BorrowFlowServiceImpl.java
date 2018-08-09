@@ -26,8 +26,6 @@ import java.util.List;
 @Service
 public class BorrowFlowServiceImpl implements BorrowFlowService {
     @Autowired
-    private BorrowFlowClient borrowFlowClient;
-    @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
     private AmConfigClient amConfigClient;
@@ -40,7 +38,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public List<BorrowProjectTypeVO> borrowProjectTypeList(String borrowTypeCd){
-        return borrowFlowClient.borrowProjectTypeList(borrowTypeCd);
+        return amTradeClient.borrowProjectTypeList(borrowTypeCd);
     }
 
     /**
@@ -50,7 +48,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public List<HjhInstConfigVO> hjhInstConfigList(String instCode){
-        return borrowFlowClient.hjhInstConfigList(instCode);
+        return amTradeClient.hjhInstConfigList(instCode);
     }
 
     /**
@@ -61,7 +59,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public int countRecordByPK(String instCode, Integer assetType){
-        return borrowFlowClient.countRecordByPK(instCode,assetType);
+        return amTradeClient.countRecordByPK(instCode,assetType);
     }
     /**
      * 根据资金来源查询产品类型
@@ -70,7 +68,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public List<HjhAssetTypeVO> hjhAssetTypeList(String instCode){
-        return borrowFlowClient.hjhAssetTypeList(instCode);
+        return amTradeClient.hjhAssetTypeList(instCode);
     }
     /**
      * 分页查询
@@ -109,7 +107,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public AdminBorrowFlowResponse selectBorrowFlowInfo(AdminBorrowFlowRequest adminRequest){
-        return borrowFlowClient.selectBorrowFlowInfo(adminRequest);
+        return amTradeClient.selectBorrowFlowInfo(adminRequest);
     }
     /**
      * 添加
@@ -118,7 +116,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public void insertRecord(AdminBorrowFlowRequest adminRequest){
-         borrowFlowClient.insertRecord(adminRequest);
+        amTradeClient.insertRecord(adminRequest);
     }
     /**
      * 修改
@@ -127,7 +125,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public void updateRecord(AdminBorrowFlowRequest adminRequest){
-        borrowFlowClient.updateRecord(adminRequest);
+        amTradeClient.updateRecord(adminRequest);
     }
     /**
      * 删除
@@ -136,7 +134,7 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
    public void deleteRecord(AdminBorrowFlowRequest adminRequest){
-        borrowFlowClient.deleteRecord(adminRequest);
+        amTradeClient.deleteRecord(adminRequest);
     }
 
 }

@@ -3,6 +3,8 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.BankAccountManageClient;
 import com.hyjf.admin.controller.LoginController;
 import com.hyjf.admin.service.BankAccountManageService;
@@ -43,26 +45,28 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
     public static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
-    BankAccountManageClient bankAccountManageClient;
+    AmUserClient amUserClient;
+    @Autowired
+    AmTradeClient amTradeClient;
 
     @Override
     public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
-        return this.bankAccountManageClient.queryAccountCount(bankAccountManageRequest);
+        return this.amUserClient.queryAccountCount(bankAccountManageRequest);
     }
 
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
-        return this.bankAccountManageClient.queryAccountInfos(bankAccountManageRequest);
+        return this.amUserClient.queryAccountInfos(bankAccountManageRequest);
     }
 
     @Override
     public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
-        return this.bankAccountManageClient.queryAccountDetails(bankAccountManageRequest);
+        return this.amUserClient.queryAccountDetails(bankAccountManageRequest);
     }
 
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        return this.bankAccountManageClient.getBankOpenAccount(userId);
+        return this.amUserClient.getBankOpenAccount(userId);
     }
 
     @Override
@@ -71,12 +75,12 @@ public class BankAccountManageServiceImpl implements BankAccountManageService {
         accountVO.setUserId(userId);
         accountVO.setBalance(balance);
         accountVO.setFrost(frost);
-        return this.bankAccountManageClient.updateAccount(accountVO);
+        return this.amTradeClient.updateAccountManage(accountVO);
     }
 
     @Override
     public String updateAccountCheck(Integer userId, String startTime, String endTime) {
-        return this.bankAccountManageClient.updateAccountCheck(userId,startTime,endTime);
+        return this.amTradeClient.updateAccountCheck(userId,startTime,endTime);
     }
 
 }

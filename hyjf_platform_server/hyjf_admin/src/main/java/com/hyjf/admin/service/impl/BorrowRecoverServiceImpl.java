@@ -22,11 +22,10 @@ import java.util.List;
 public class BorrowRecoverServiceImpl implements BorrowRecoverService {
     @Autowired
     private AmTradeClient amTradeClient;
-    @Autowired
-    private HjhInstConfigClient hjhInstConfigClient;
+
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
+        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
 

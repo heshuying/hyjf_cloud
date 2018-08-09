@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BorrowStyleClient;
 import com.hyjf.admin.service.BorrowStyleService;
 import com.hyjf.am.response.admin.AdminBorrowStyleResponse;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class BorrowStyleServiceImpl implements BorrowStyleService {
 
     @Autowired
-    private BorrowStyleClient borrowStyleClient;
+    private AmTradeClient amTradeClient;
 
     /**
      * 查询列表
@@ -23,7 +24,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public AdminBorrowStyleResponse borrowStyelInit(AdminBorrowStyleRequest adminRequest){
-        return  borrowStyleClient.borrowStyelInit(adminRequest);
+        return amTradeClient.borrowStyelInit(adminRequest);
     }
     /**
      * 根据id查询还款方式
@@ -32,7 +33,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public AdminBorrowStyleResponse searchBorrowStyleInfo(AdminBorrowStyleRequest adminRequest){
-        return  borrowStyleClient.searchBorrowStyleInfo(adminRequest);
+        return amTradeClient.searchBorrowStyleInfo(adminRequest);
     }
     /**
      * 保存还款方式
@@ -41,7 +42,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public AdminBorrowStyleResponse insertBorrowStyle(AdminBorrowStyleRequest adminRequest){
-        return  borrowStyleClient.insertBorrowStyle(adminRequest);
+        return amTradeClient.insertBorrowStyle(adminRequest);
     }
     /**
      * 修改还款方式
@@ -50,7 +51,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public AdminBorrowStyleResponse updateBorrowStyle(AdminBorrowStyleRequest adminRequest){
-        return  borrowStyleClient.updateBorrowStyle(adminRequest);
+        return amTradeClient.updateBorrowStyle(adminRequest);
     }
     /**
      * 根据id删除还款方式
@@ -58,7 +59,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public AdminBorrowStyleResponse deleteBorrowStyle(Integer id){
-        return  borrowStyleClient.deleteBorrowStyle(id);
+        return  amTradeClient.deleteBorrowStyle(id);
     }
     /**
      * 根据id修改还款方式状态
@@ -67,7 +68,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public AdminBorrowStyleResponse modifyBorrowStyle(Integer id){
-        return  borrowStyleClient.modifyBorrowStyle(id);
+        return  amTradeClient.modifyBorrowStyle(id);
     }
     /**
      * 根据主键判断权限维护中权限是否存在
@@ -76,7 +77,7 @@ public class BorrowStyleServiceImpl implements BorrowStyleService {
      */
     @Override
     public boolean isExistsPermission(AdminBorrowStyleRequest adminRequest){
-        return  borrowStyleClient.validatorFieldCheck(adminRequest);
+        return  amTradeClient.validatorFieldCheck(adminRequest);
     }
 
 

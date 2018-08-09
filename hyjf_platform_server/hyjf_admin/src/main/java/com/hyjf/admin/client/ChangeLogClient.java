@@ -5,6 +5,6 @@ import com.hyjf.am.resquest.user.ChangeLogRequest;
 
 public interface ChangeLogClient {
 
-	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) ;
+	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr);
 
 }

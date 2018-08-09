@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +21,21 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 
 	@Autowired
-	private StzfWhiteConfigClient stzfWhiteConfigClient;
+	private AmTradeClient amTradeClient;
 
 	@Override
 	public STZHWhiteListResponse selectSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-		return stzfWhiteConfigClient.selectSTZHWhiteList(requestBean);
+		return amTradeClient.selectSTZHWhiteList(requestBean);
 	}
 
 	@Override
 	public STZHWhiteListResponse insertSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-		return stzfWhiteConfigClient.insertSTZHWhiteList(requestBean);
+		return amTradeClient.insertSTZHWhiteList(requestBean);
 	}
 
 	@Override
 	public STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean) {
-		return stzfWhiteConfigClient.updateSTZHWhiteList(requestBean);
+		return amTradeClient.updateSTZHWhiteList(requestBean);
 	}
 
 	@Override

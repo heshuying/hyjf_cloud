@@ -1,6 +1,7 @@
 package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AdminUtmReadPermissionsClient;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ChannelStatisticsDetailClient;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.ChannelStatisticsDetailService;
@@ -14,25 +15,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminUtmReadPermissionsServiceImpl implements AdminUtmReadPermissionsService {
 	@Autowired
-	private AdminUtmReadPermissionsClient adminUtmReadPermissionsClient;
+	private AmConfigClient amConfigClient;
 	@Override
 	public AdminUtmReadPermissionsResponse searchAction(AdminUtmReadPermissionsRequest request){
-		return  adminUtmReadPermissionsClient.searchAction(request);
+		return  amConfigClient.searchAction(request);
 	}
 
 	@Override
 	public AdminUtmReadPermissionsResponse insertAction(AdminUtmReadPermissionsRequest requestBean) {
-		return adminUtmReadPermissionsClient.insertAction(requestBean);
+		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
 	public AdminUtmReadPermissionsResponse updateAction(AdminUtmReadPermissionsRequest requestBean) {
-		return adminUtmReadPermissionsClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 
 	@Override
 	public AdminUtmReadPermissionsResponse deleteById(Integer id) {
-		return adminUtmReadPermissionsClient.deleteById(id);
+		return amConfigClient.deleteById(id);
 	}
 }
