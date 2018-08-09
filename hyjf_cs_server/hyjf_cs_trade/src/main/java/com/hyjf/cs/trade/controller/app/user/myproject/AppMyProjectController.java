@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -44,6 +45,7 @@ public class AppMyProjectController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyProject", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public MyProjectResponse queryScatteredProject( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
 
         MyProjectResponse response = new MyProjectResponse();
@@ -60,7 +62,7 @@ public class AppMyProjectController extends BaseTradeController {
             response.setStatusDesc("参数非法");
             return response;
         }
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO webViewUserVO=appMyProjectService.getUsersByToken(token);
         Integer userId = webViewUserVO.getUserId();
         //Integer userId = Integer.valueOf(request.getParameter("userId"));
         // 构建查询条件

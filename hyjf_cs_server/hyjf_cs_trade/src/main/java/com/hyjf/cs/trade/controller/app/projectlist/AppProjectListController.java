@@ -95,6 +95,18 @@ public class AppProjectListController extends BaseTradeController {
 
 
     /**
+     * 计划的标的组成列表中，有可能包含债转标的
+     * @author zhangyk
+     * @date 2018/8/9 10:36
+     */
+    @ApiOperation(value = "新增承接记录列表显示", tags = "新增承接记录列表显示" )
+    @PostMapping(value = "/borrow/{borrowId}/getBorrowUndertake" , produces = "application/json; charset=utf-8")
+    public JSONObject searchProjectUndertakeList(@PathVariable("borrowId") String borrowNid, HttpServletRequest request) {
+       JSONObject result =  appProjectListService.searchProjectUndertakeList(borrowNid,request);
+       return result;
+    }
+
+    /**
      * app端债转列表数据
      * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
