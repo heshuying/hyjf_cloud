@@ -14,6 +14,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditExample;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditService;
+import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 
@@ -193,5 +194,49 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         criteria.andBorrowNidEqualTo(request.getBorrowNid());
         List<HjhDebtCredit> listHjhDebtCredit = this.hjhDebtCreditMapper.selectByExample(hjhDebtCreditExample);
         return listHjhDebtCredit;
+    }
+
+
+    /**
+     * 查询承接记录数
+     * @author zhangyk
+     * @date 2018/8/9 11:08
+     */
+    @Override
+    public int countCreditTenderByBorrowNidAndUserId(Map<String, Object> params) {
+        HjhDebtCreditTenderExample hjhDebtCreditTenderExample = new HjhDebtCreditTenderExample();
+        HjhDebtCreditTenderExample.Criteria criteria = hjhDebtCreditTenderExample.createCriteria();
+        String borrowNid = (String) params.get("borrowNid");
+        Integer userId = params.get("userId")== null? null : (Integer) params.get("userId");
+        criteria.andBorrowNidEqualTo(borrowNid);
+        if (userId != null){
+            criteria.andUserIdEqualTo(userId);
+        }
+        int count = hjhDebtCreditTenderMapper.countByExample(hjhDebtCreditTenderExample);
+        return count;
+    }
+
+
+    /**
+     * 查询承接中的总额
+     * @author zhangyk
+     * @date 2018/8/9 11:55
+     */
+    @Override
+    public String sumUnderTakeAmountByBorrowNid(String borrowNid) {
+        int sum = borrowCreditCustomizeMapper.sumUnderTakeAmount(borrowNid);
+        return String.valueOf(sum);
+    }
+
+
+    /**
+     * 承接总的列表
+     * @author zhangyk
+     * @date 2018/8/9 14:04
+     */
+    @Override
+    public List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String, Object> params) {
+        List<ProjectUndertakeListVO> list = borrowCreditCustomizeMapper.selectProjectUndertakeList(params);
+        return list;
     }
 }

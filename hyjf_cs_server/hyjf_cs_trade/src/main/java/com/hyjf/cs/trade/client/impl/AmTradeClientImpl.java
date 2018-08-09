@@ -3585,4 +3585,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 获取承接中的总额度
+     * @author zhangyk
+     * @date 2018/8/9 11:48
+     */
+    @Override
+    public String sumUndertakeAccount(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/sumUndertakeAmount/" + borrowNid;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url,HjhDebtCreditResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getSum();
+        }
+        return null;
+    }
+
+
+    /**
+     * 承接中的列表
+     * @author zhangyk
+     * @date 2018/8/9 13:58
+     */
+    @Override
+    public List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/selectProjectUndertakeList";
+        HjhCreditUnderTakeResponse response = restTemplate.postForEntity(url,params,HjhCreditUnderTakeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }
