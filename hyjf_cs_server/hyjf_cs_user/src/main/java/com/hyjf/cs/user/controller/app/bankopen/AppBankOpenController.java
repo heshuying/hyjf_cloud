@@ -5,9 +5,11 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -21,10 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,5 +109,21 @@ public class AppBankOpenController extends BaseUserController {
         }
         logger.info("app端开户end");
         return result;
+    }
+
+    /**
+     * @Description 查询开户失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "we端开户查询开户失败原因", notes = "web端-查询开户失败原因")
+    @PostMapping("/seachFiledMess")
+    public AppResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+        AppResult<Object> appResult = new AppResult<>();
+        appResult.setData(result.getData());
+        appResult.setStatus(result.getStatus());
+        appResult.setStatusDesc(result.getStatusDesc());
+        return appResult;
     }
 }
