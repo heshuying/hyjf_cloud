@@ -10,7 +10,6 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.mq.MailProducer;
-import com.hyjf.admin.mq.Producer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.resquest.admin.CustomerTransferListRequest;
@@ -29,8 +28,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +43,6 @@ import java.util.UUID;
  */
 @Service
 public class CustomerTransferServiceImpl extends BaseServiceImpl implements CustomerTransferService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmUserClient amUserClient;

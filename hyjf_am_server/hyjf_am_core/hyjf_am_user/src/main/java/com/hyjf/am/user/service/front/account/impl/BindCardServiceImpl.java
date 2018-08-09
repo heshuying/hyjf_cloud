@@ -111,6 +111,7 @@ public class BindCardServiceImpl implements BindCardService {
 	 */
 	@Override
 	public int updateUserCard(BankCard bankCard) {
+		bankCard.setUpdateTime(new Date());
 		return this.bankCardMapper.updateByPrimaryKeySelective(bankCard);
 	}
 	

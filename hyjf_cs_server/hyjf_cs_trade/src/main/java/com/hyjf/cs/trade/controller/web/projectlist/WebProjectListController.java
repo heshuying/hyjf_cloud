@@ -36,7 +36,7 @@ public class WebProjectListController extends BaseTradeController {
      private WebProjectListService webProjectListService;
 
     /**
-     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)
+     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)(可能没有用了 ，后期废掉)
      * @param request
      * @return
      */
@@ -49,7 +49,7 @@ public class WebProjectListController extends BaseTradeController {
     }
 
     /**
-     * 获取新手专区列表
+     * 获取新手专区列表(据说projectType = 14代表新手标)
      * @param request
      * @return
      */
@@ -57,19 +57,22 @@ public class WebProjectListController extends BaseTradeController {
     @PostMapping(value = "/getNewProjectList", produces = "application/json; charset=utf-8")
     public Object newBorrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
+        request.setProjectType("HZT");
+        request.setBorrowClass("NEW");
         WebResult result =  webProjectListService.searchProjectList(request);
         return result;
     }
 
     /**
-     * 获取散标投资列表
+     * 散标专区散标投资列表
      * @param request
      * @return
      */
-    @ApiOperation(value = "获取散标投资列表", notes = "散标投资列表")
+    @ApiOperation(value = "获取散标专区散标投资列表", notes = "获取散标专区散标投资列表")
     @PostMapping(value = "/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object borrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
+        request.setProjectType("HZT");
         WebResult result =  webProjectListService.searchProjectList(request);
         return result;
     }

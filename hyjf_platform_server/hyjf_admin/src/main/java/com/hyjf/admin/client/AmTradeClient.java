@@ -333,14 +333,6 @@ public interface AmTradeClient {
     SubCommissionVO searchSubCommissionByOrderId(String orderId);
 
     /**
-     * 更新分佣数据
-     * @auth sunpeikai
-     * @param subCommissionVO 待更新的数据参数
-     * @return
-     */
-    Integer updateSubCommission(SubCommissionVO subCommissionVO);
-
-    /**
      *  获取银行转账异常列表 jijun 20180710
      * @param request
      * @return
