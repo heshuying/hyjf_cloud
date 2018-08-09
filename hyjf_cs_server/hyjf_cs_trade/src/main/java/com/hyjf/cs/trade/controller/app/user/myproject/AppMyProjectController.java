@@ -62,7 +62,7 @@ public class AppMyProjectController extends BaseTradeController {
             response.setStatusDesc("参数非法");
             return response;
         }
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+        WebViewUserVO webViewUserVO=appMyProjectService.getUsersByToken(token);
         Integer userId = webViewUserVO.getUserId();
         //Integer userId = Integer.valueOf(request.getParameter("userId"));
         // 构建查询条件

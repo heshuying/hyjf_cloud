@@ -66,7 +66,7 @@ public class AppMyPlanController extends BaseTradeController {
         }
         Integer userId = null;
         try {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            WebViewUserVO webViewUserVO=appMyPlanService.getUsersByToken(token);
             userId = webViewUserVO.getUserId();
         } catch (Exception e) { // token失效
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
