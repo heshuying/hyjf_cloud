@@ -1,6 +1,7 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
@@ -37,6 +38,12 @@ public interface SubmissionsService {
      * @param submissions
      */
     boolean updateSubmissions(SubmissionsWithBLOBs submissions);
+
+    /**
+     * 添加意见反馈
+     * @return
+     */
+     int addSubmission(Submissions submissions);
 
 
 }
