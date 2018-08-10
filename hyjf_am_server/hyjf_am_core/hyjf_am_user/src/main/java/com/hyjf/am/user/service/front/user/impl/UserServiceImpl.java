@@ -1399,7 +1399,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				userLog.setContent("注册成功");
 				System.out.println("saveRegistUser***********************************预插入userLog："
 						+ JSON.toJSONString(userLog));
-				usersLogMapper.insertSelective(userLog);
+				userLogMapper.insertSelective(userLog);
 			}
 		} catch (Exception e) {
 			// e.printStackTrace();

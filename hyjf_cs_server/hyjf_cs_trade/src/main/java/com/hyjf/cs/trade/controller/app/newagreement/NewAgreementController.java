@@ -68,8 +68,8 @@ public class NewAgreementController extends BaseTradeController{
 	@Autowired
 	private NewAgreementService agreementService;
 	
-    @Autowired
-    BankWithdrawService bankWithdrawService;
+/*    @Autowired
+    BankWithdrawService bankWithdrawService;*/
 	
 	@Autowired
     SystemConfig systemConfig;
@@ -311,7 +311,7 @@ public class NewAgreementController extends BaseTradeController{
                     // 转让人信息详情
                     UserInfoVO creditUserInfo = this.agreementService.getUsersInfoByUserId(hjhDebtCreditTender.getCreditUserId());
                     // 转让人
-                    UserVO creditUser = this.bankWithdrawService.getUserByUserId(hjhDebtCreditTender.getCreditUserId());
+                    UserVO creditUser = this.agreementService.getUserByUserId(hjhDebtCreditTender.getCreditUserId());
                     // 承接人信息详情
                     UserInfoVO usersInfo = this.agreementService.getUsersInfoByUserId(hjhDebtCreditTender.getUserId());
                     // 承接人

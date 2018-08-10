@@ -3,13 +3,11 @@
  */
 package com.hyjf.am.user.service.front.ca.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.service.front.ca.CertificateAuthorityService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.CertificateAuthorityVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,9 +16,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CertificateAuthorityServiceImpl extends BaseServiceImpl implements CertificateAuthorityService {
-
-    @Autowired
-    private CertificateAuthorityMapper certificateAuthorityMapper;
 
     /**
      * CertificateAuthority更新-法大大CA认证MQ用
