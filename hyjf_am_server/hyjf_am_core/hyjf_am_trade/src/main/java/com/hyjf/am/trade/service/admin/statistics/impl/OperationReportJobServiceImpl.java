@@ -1,8 +1,8 @@
 package com.hyjf.am.trade.service.admin.statistics.impl;
 
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
-import com.hyjf.am.trade.dao.mapper.customize.trade.OperationReportInfoJobCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.OperationReportJobCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.OperationReportInfoJobCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.OperationReportJobCustomizeMapper;
 import com.hyjf.am.trade.service.admin.statistics.OperationReportJobService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import org.springframework.stereotype.Service;

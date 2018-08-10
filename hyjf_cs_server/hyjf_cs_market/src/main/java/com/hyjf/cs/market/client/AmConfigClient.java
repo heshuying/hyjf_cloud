@@ -141,4 +141,11 @@ public interface AmConfigClient {
      * @return
      */
     public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form);
+
+    /**
+     * 添加反馈信息
+     * @param submissionsVO
+     * @return
+     */
+    int addSubmission(SubmissionsVO submissionsVO);
 }

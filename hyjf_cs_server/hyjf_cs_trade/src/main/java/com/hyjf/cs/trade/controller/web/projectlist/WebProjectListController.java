@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.controller.web.projectlist;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
 import com.hyjf.cs.trade.bean.WebCreditRequestBean;
 import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -77,6 +78,7 @@ public class WebProjectListController extends BaseTradeController {
         return result;
     }
 
+
     /**
      * web端新手标和散标标的详情
      * @author zhangyk
@@ -88,6 +90,17 @@ public class WebProjectListController extends BaseTradeController {
         WebResult result =  webProjectListService.getBorrowDetail(map,userId);
         return result;
     }
+
+
+    @ApiOperation(value = "新手标和散标标的详情:投资记录" , notes = "新手标和散标标的详情:投资记录")
+    @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
+    public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
+        WebResult result = webProjectListService.getBorrowInvest(form,userId);
+        return result;
+    }
+
+
+
 
     /**
      * 散标专区-债权转让列表

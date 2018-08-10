@@ -20,6 +20,7 @@ import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -3369,8 +3370,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String, Object> params) {
         String url = BASE_URL +"/app/selectProjectInvestList";
         AppProjectInvestListCustomizeResponse response = restTemplate.postForEntity(url,params,AppProjectInvestListCustomizeResponse.class).getBody();
-        if (response!=null){
-            response.getResultList();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
@@ -3449,7 +3450,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public AppNewAgreementVO setProtocolImg(String aliasName) {
-        String url = urlBase + "new/agreement/setProtocolImg/" + aliasName;
+        String url = "http://AM-TRADE/am-tradenew/new/agreement/setProtocolImg/" + aliasName;
         AppNewAgreementResponse response = restTemplate.getForEntity(url, AppNewAgreementResponse.class).getBody();
         if (response != null) {
             return response.getResult();
@@ -3613,6 +3614,131 @@ public class AmTradeClientImpl implements AmTradeClient {
         HjhCreditUnderTakeResponse response = restTemplate.postForEntity(url,params,HjhCreditUnderTakeResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查看机构表是否存在
+     *
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    @Override
+    public HjhAssetBorrowTypeVO selectAssetBorrowType(String instCode, Integer assetType) {
+        String url = "http://AM-TRADE/am-trade/assetPush/selectAssetBorrowType/" + instCode + "/" + assetType;
+        HjhAssetBorrowTypeResponse response = restTemplate.getForEntity(url, HjhAssetBorrowTypeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取还款方式,项目类型
+     *
+     * @param borrowcCd
+     * @return
+     */
+    @Override
+    public List<BorrowProjectRepayVO> selectProjectRepay(String borrowcCd) {
+        String url = "http://AM-TRADE/am-trade/assetPush/selectProjectRepay/" + borrowcCd;
+        BorrowProjectRepayReponse response = restTemplate.getForEntity(url, BorrowProjectRepayReponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询用户受托支付电子账户是否授权
+     *
+     * @param instCode
+     * @param entrustedAccountId
+     * @return
+     */
+    @Override
+    public STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId) {
+        String url = "http://AM-TRADE/am-trade/assetPush/selectStzfWhiteList/" + instCode + "/" + entrustedAccountId;
+        STZHWhiteListResponse response = restTemplate.getForEntity(url, STZHWhiteListResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 推送资产
+     *
+     * @param record
+     * @return
+     */
+    @Override
+    public int insertAssert(HjhPlanAssetVO record) {
+        String url = "http://AM-TRADE/am-trade/assetPush/insertAssert";
+        Integer result = restTemplate.postForEntity(url, record, Integer.class).getBody();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
+    /**
+     * 推送商家信息
+     *
+     * @param riskInfo
+     */
+    @Override
+    public void insertRiskInfo(List<InfoBean> riskInfo) {
+        String url = "http://AM-TRADE/am-trade/assetPush/insertRiskInfo";
+        restTemplate.postForEntity(url, riskInfo, Integer.class).getBody();
+    }
+
+    /**
+     * 检查是否存在重复资产
+     *
+     * @param assetId
+     * @return
+     */
+    @Override
+    public HjhPlanAssetVO checkDuplicateAssetId(String assetId) {
+        String url = "http://AM-TRADE/am-trade/assetPush/checkDuplicateAssetId/" + assetId;
+        HjhPlanAssetResponse response = restTemplate.getForEntity(url, HjhPlanAssetResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 录标时添加企业资产
+     *
+     * @param borrowUserVO
+     * @return
+     */
+    @Override
+    public int insertCompanyInfoToBorrowUsers(BorrowUserVO borrowUserVO) {
+        String url = urlBase + "assetPush/insertCompanyInfoToBorrowUsers";
+        IntegerResponse response = restTemplate.postForEntity(url, borrowUserVO, IntegerResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResultInt().intValue();
+    }
+
+
+    /**
+     * 根据borrowNid查询风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:21
+     */
+    @Override
+    public BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoBLOBByborrowNid/" + borrowNid;
+        BorrowInfoWithBLOBResponse response = restTemplate.getForEntity(url,BorrowInfoWithBLOBResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
         }
         return null;
     }

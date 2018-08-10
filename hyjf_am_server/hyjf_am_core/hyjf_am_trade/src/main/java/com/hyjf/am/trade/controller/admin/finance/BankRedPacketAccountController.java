@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.admin.finance;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BankMerchantAccountListCustomizeResponse;
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.BankMerchantAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;

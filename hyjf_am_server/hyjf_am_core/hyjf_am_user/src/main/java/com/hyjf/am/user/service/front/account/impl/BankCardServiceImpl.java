@@ -1,15 +1,13 @@
 package com.hyjf.am.user.service.front.account.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.service.front.account.BankCardService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 银行卡接口实现类
@@ -17,10 +15,7 @@ import com.hyjf.am.user.service.front.account.BankCardService;
  */
 
 @Service
-public class BankCardServiceImpl implements BankCardService {
-
-	@Autowired
-	private BankCardMapper bankCardMapper;
+public class BankCardServiceImpl extends BaseServiceImpl implements BankCardService {
 
 	@Override
 	public BankCard getBankCard(Integer userId, String bankId) {

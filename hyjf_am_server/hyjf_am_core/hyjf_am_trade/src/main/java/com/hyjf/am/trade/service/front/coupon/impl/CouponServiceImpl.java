@@ -1,9 +1,9 @@
 package com.hyjf.am.trade.service.front.coupon.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.trade.CouponCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.CouponCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponService;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;

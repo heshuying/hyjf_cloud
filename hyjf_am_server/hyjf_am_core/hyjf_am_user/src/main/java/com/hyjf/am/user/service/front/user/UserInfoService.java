@@ -1,18 +1,19 @@
 package com.hyjf.am.user.service.front.user;
 
-import java.util.List;
-
 import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
-import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
+import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
 
 /**
  * @author xiasq
  * @version UserInfoService, v0.1 2018/4/23 9:56
  */
-public interface UserInfoService {
+public interface UserInfoService extends BaseService{
     UserInfo findUserInfoById(int userId);
 
     /**
@@ -66,4 +67,12 @@ public interface UserInfoService {
      * @return
      */
     EmployeeCustomize selectEmployeeByUserId(Integer userId);
+
+    /**
+     * 通过用户id获得用户真实姓名和身份证号
+     *
+     * @param userId
+     * @return
+     */
+    UserInfo selectUserInfoByUserId(Integer userId);
 }

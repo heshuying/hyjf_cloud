@@ -6,10 +6,10 @@ package com.hyjf.am.trade.service.admin.borrow;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowInvestCustomize;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebProjectRepayListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserInvestListCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;

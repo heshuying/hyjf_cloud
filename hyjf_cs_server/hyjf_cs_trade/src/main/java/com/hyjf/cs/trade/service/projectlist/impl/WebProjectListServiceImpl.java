@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.HjhAccedeRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -21,6 +22,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -513,6 +515,53 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
 
     /**
+     * 获取新手标和散标详情：投资记录
+     *
+     * @author zhangyk
+     * @date 2018/8/9 16:58
+     */
+    @Override
+    public WebResult getBorrowInvest(BorrowInvestReqBean form, String userId) {
+        WebResult result = new WebResult();
+        WebBorrowInvestResult info = new WebBorrowInvestResult();
+        this.createProjectInvestPage(result,info, form, userId);
+        return result;
+    }
+
+    private void createProjectInvestPage(WebResult result,WebBorrowInvestResult info, BorrowInvestReqBean form, String userId) {
+        String borrowNid = form.getBorrowNid();
+        Page page = Page.initPage(form.getCurrPage(), form.getPageSize());
+        CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        BorrowVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
+        if (borrow != null) {
+            info.setInvestTotal(df.format(borrow.getBorrowAccountYes()));
+            info.setInvestTimes(String.valueOf(borrow.getTenderTimes()));
+        } else {
+            info.setInvestTotal(df.format(new BigDecimal("0")));
+            info.setInvestTimes("0");
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid", borrowNid);
+        int recordTotal = amTradeClient.countProjectInvestRecordTotal(params);
+        if (recordTotal > 0) {
+            params.put("limitStart", page.getOffset());
+            params.put("limitEnd", page.getLimit());
+            List<AppProjectInvestListCustomizeVO> list = amTradeClient.selectProjectInvestList(params);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<ProjectInvestListVO> voList = CommonUtils.convertBeanList(list, ProjectInvestListVO.class);
+                CommonUtils.convertNullToEmptyString(voList);
+                info.setProjectInvestList(voList);
+            }
+        } else {
+            info.setProjectInvestList(new ArrayList<ProjectInvestListVO>());
+        }
+        page.setTotal(recordTotal);
+        result.setPage(page);
+        result.setData(info);
+    }
+
+    /**
      * 散标专区债权转让列表数据
      *
      * @author zhangyk
@@ -581,7 +630,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Integer projectType = borrow.getProjectType();
         BorrowInfoResponse borrowInfoResponse = baseClient.getExe("http://AM-TRADE/am-trade/borrow/getBorrowInfoByNid/" + borrowNid, BorrowInfoResponse.class);
         BorrowInfoVO borrowInfoVO = borrowInfoResponse.getResult();
-        if (Validator.isNull(borrowInfoVO)){
+        if (Validator.isNull(borrowInfoVO)) {
             throw new RuntimeException("标的info不存在");
         }
         // 企业标的用户标的区分
@@ -788,6 +837,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     /**
      * web端债转详情:承接记录
+     *
      * @author zhangyk
      * @date 2018/6/26 9:56
      */

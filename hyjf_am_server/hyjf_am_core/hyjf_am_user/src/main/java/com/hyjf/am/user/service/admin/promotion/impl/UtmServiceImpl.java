@@ -1,9 +1,8 @@
 package com.hyjf.am.user.service.admin.promotion.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.service.admin.promotion.UtmService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
@@ -13,7 +12,6 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -30,8 +28,7 @@ import java.util.Map;
  */
 @Service
 public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
-    @Resource
-    private UtmRegCustomizeMapper utmRegCustomizeMapper;
+
     @Override
     public List<UtmVO> getByPageList(Map<String, Object> map) {
         List<UtmVO> list = utmRegCustomizeMapper.getByPageList(map);

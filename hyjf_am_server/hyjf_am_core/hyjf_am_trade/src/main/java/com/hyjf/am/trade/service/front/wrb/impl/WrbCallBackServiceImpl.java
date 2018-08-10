@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.service.front.wrb.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowTenderCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BorrowTenderCustomizeMapper;
 import com.hyjf.am.trade.service.front.wrb.WrbCallBackService;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.service.front.trade.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.trade.MyRewardCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.MyRewardCustomizeMapper;
 import com.hyjf.am.trade.service.front.trade.MyRewardService;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import org.springframework.stereotype.Service;

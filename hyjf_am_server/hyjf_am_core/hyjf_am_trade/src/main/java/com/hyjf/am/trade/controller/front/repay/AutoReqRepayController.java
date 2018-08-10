@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.controller.front.repay;
 
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.trade.AutoReqRepayBorrowCustomize;
+import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoReqRepayService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,7 +9,7 @@ import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminTransferExceptionLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.service.admin.exception.AdminTransferExceptionLogService;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;

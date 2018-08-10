@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.admin;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.FddTempletCustomize;
+import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 
 /**
  * @author fuqiang

@@ -27,7 +27,7 @@ public interface OperationReportService {
 	 *
 	 * @return
 	 */
-	public OperationReportResponse getRecordListByReleaseJson(OperationReportRequest request);
+	public JSONObject getRecordListByReleaseJson(OperationReportRequest request);
 
     /**
      * 统计全部个数

@@ -59,6 +59,17 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "限制条数(选传)查询")
 	private int limit;
 
+	@ApiModelProperty(value = "用户类型(选传)查询")
+	private int userType;
+
+	public int getUserType() {
+		return userType;
+	}
+
+	public void setUserType(int userType) {
+		this.userType = userType;
+	}
+
 	public String getAssetIdSrch() {
 		return assetIdSrch;
 	}

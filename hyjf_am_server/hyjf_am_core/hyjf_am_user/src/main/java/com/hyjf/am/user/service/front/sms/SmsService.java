@@ -1,10 +1,12 @@
 package com.hyjf.am.user.service.front.sms;
 
+import com.hyjf.am.user.service.BaseService;
+
 /**
  * @author xiasq
  * @version SmsService, v0.1 2018/4/12 17:32
  */
-public interface SmsService {
+public interface SmsService extends BaseService{
     int save(String mobile, String verificationType, String verificationCode, String platform, Integer status);
 
     /**

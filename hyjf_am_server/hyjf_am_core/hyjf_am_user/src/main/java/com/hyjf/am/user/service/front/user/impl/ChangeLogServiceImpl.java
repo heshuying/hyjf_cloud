@@ -1,25 +1,17 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import java.util.List;
-
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.hyjf.am.user.dao.mapper.auto.UserChangeLogMapper;
-import com.hyjf.am.user.dao.mapper.customize.ChangeLogCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UserChangeLog;
 import com.hyjf.am.user.dao.model.auto.UserChangeLogExample;
 import com.hyjf.am.user.dao.model.customize.ChangeLogCustomize;
 import com.hyjf.am.user.service.front.user.ChangeLogService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogService {
-	@Autowired
-	private UserChangeLogMapper usersChangeLogMapper;
-	@Autowired
-	private ChangeLogCustomizeMapper changeLogCustomizeMapper;
 
     /**
      * 获取用户信息修改列表

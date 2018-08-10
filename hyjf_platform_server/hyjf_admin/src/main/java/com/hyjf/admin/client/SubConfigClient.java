@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
+import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 
 /**
@@ -14,6 +15,12 @@ public interface SubConfigClient {
      * @return
      */
     AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest adminRequest);
+    /**
+     *  分账名单配置添加  查询用户名信息
+     * @param request
+     * @return
+     */
+    UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request);
     /**
      * 页面详情
      * @param adminRequest

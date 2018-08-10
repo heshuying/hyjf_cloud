@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 
 /**
  * @author libin
@@ -43,5 +45,17 @@ public interface HjhCommissionService {
 	 * @return
 	 */
 	JSONArray getCrmDepartmentList(String[] list);
+	
+	/**
+	 * 根据userId获取提成方式
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+	Integer queryCrmCuttype(Integer userId);
 
+	/**
+	 * 发提成
+	 * @return
+	 */
+	Integer updateTenderCommissionRecord(TenderCommissionVO commission, BankCallBean resultBean, ChinapnrBean chinapnrBean);
 }

@@ -2,6 +2,8 @@ package com.hyjf.am.user.dao.auto;
 
 
 import com.hyjf.am.user.dao.mapper.auto.*;
+import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
+import com.hyjf.am.user.service.front.account.BindCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -201,6 +203,35 @@ public class AutoMapper {
     protected VipUserUpgradeMapper vipUserUpgradeMapper;
 
     @Autowired
-    protected UserLogMapper usersLogMapper;
+    protected UserChangeLogMapper usersChangeLogMapper;
+
+    @Autowired
+    protected WhereaboutsPageConfigMapper whereaboutsPageConfigMapper;
+
+    @Autowired
+    protected WhereaboutsPagePictureMapper whereaboutsPagePictureMapper;
+
+    @Autowired
+    protected UserMapper usersMapper;
+
+    @Autowired
+    protected BindCardService bindCardService;
+
+    @Autowired
+    protected UserInfoMapper usersInfoMapper;
+
+    @Autowired
+    protected AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
+
+    @Autowired
+    protected MspConfigureMapper mspConfigureMapperAuto;
+
+    @Autowired
+    protected MspQuerydetailMapper mspQueryDetailMapper;
+    @Autowired
+    protected MspBlackdataMapper mspBlackDataMapper;
+
+
+
 }
 

@@ -87,16 +87,12 @@ public class SubConfigController {
     @RequestMapping("/insert")
     public AdminSubConfigResponse insertSubConfig(@RequestBody AdminSubConfigRequest req) {
         AdminSubConfigResponse resp = new AdminSubConfigResponse();
-        try{
-            // 插入
-            int cot = this.subConfigService.insertSubConfigRecord(req);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 插入
+        int cot = this.subConfigService.insertSubConfigRecord(req);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }
@@ -108,16 +104,12 @@ public class SubConfigController {
     @RequestMapping("/update")
     public AdminSubConfigResponse updateSubConfig(@RequestBody AdminSubConfigRequest req) {
         AdminSubConfigResponse resp = new AdminSubConfigResponse();
-        try{
-            // 修改
-            int cot = this.subConfigService.updateSubConfigRecord(req);
-            if(cot > 0 ){
-                resp.setRtn("SUCCESS");
-            }else{
-                resp.setRtn("FAIL");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        // 修改
+        int cot = this.subConfigService.updateSubConfigRecord(req);
+        if(cot > 0 ){
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }
@@ -128,13 +120,11 @@ public class SubConfigController {
     @RequestMapping("/delete")
     public AdminSubConfigResponse deleteSubConfig(@RequestBody AdminSubConfigRequest req) {
         AdminSubConfigResponse resp = new AdminSubConfigResponse();
-        try{
-            if(req.getId() != null){
-                this.subConfigService.deleteSubConfigRecord(req.getId());
-                resp.setRtn("SUCCESS");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        if(req.getId() != null){
+            this.subConfigService.deleteSubConfigRecord(req.getId());
+            resp.setRtn(Response.SUCCESS);
+        }else{
+            resp.setRtn(Response.FAIL);
         }
         return resp;
     }

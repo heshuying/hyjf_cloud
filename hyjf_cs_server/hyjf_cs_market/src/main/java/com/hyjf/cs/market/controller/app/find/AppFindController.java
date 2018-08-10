@@ -36,8 +36,8 @@ public class AppFindController extends BaseMarketController {
     @Autowired
     private AppFindService appFindService;
 
-    @ApiOperation(value = "知识列表", httpMethod = "GET", notes = "知识列表")
-    @GetMapping(value = "/contentArticle/getContentArticleListByType")
+    @ApiOperation(value = "知识列表", httpMethod = "POST", notes = "知识列表")
+    @PostMapping(value = "/contentArticle/getContentArticleListByType")
     @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
     public JSONObject getContentArticleListByType(@ModelAttribute AppContentArticleBean form) {
@@ -96,8 +96,8 @@ public class AppFindController extends BaseMarketController {
 
     }
 
-    @ApiOperation(value = "上下翻页", httpMethod = "GET", notes = "上下翻页")
-    @GetMapping(value = "/contentArticle/getContentArticleFlip")
+    @ApiOperation(value = "上下翻页", httpMethod = "POST", notes = "上下翻页")
+    @PostMapping(value = "/contentArticle/getContentArticleFlip")
     @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
     public JSONObject getContentArticleFlip(@ModelAttribute AppContentArticleBean form) {

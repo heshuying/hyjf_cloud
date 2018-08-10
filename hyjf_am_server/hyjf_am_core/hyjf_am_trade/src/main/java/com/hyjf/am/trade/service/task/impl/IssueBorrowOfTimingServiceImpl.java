@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.BorrowCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MessageConstant;

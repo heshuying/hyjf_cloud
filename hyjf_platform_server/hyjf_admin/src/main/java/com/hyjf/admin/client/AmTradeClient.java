@@ -17,8 +17,10 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
+import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -29,6 +31,7 @@ import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -331,6 +334,14 @@ public interface AmTradeClient {
      * @return
      */
     SubCommissionVO searchSubCommissionByOrderId(String orderId);
+
+    /**
+     * 更新分佣数据
+     * @auth sunpeikai
+     * @param subCommissionVO 待更新的数据参数
+     * @return
+     */
+    Integer updateSubCommission(SubCommissionVO subCommissionVO);
 
     /**
      *  获取银行转账异常列表 jijun 20180710
@@ -2310,5 +2321,74 @@ public interface AmTradeClient {
 	 * @return
 	 */
     OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form);
+    /**
+     * 查询列表
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 页面详情
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest adminRequest);
+    /**
+     *  分账名单配置添加
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     * 分账名单配置修改
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     * 分账名单配置删除
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 查询配置中心操作日志配置
+     * @param adminRequest
+     * @return
+     */
+    public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest);
+    /**
+     * 产品类型   asset_type  asset_type_name资产类型名称
+     *
+     * @param
+     * @return List<HjhAssetTypeVO>
+     */
+    List<HjhAssetTypeVO> getHjhAssetType();
+
+
+	
+    /**
+     * 查询用户充值记录
+     * @param userId
+     * @return
+     */
+    List<AccountRechargeVO> getAccountRecharge(int userId);
+    
+	/**
+	 * 根据userId获取提成方式
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+    Integer queryCrmCuttype(Integer userId);
+    
+	/**
+     * 发提成
+     * @auth libin
+     * @param accountVO 账户信息
+     * @return
+     */
+    Integer updateTenderCommissionRecord(CommissionComboRequest request);
 }
 

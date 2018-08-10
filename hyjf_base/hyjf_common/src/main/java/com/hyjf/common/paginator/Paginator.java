@@ -127,7 +127,12 @@ public class Paginator implements java.io.Serializable {
      * 取得最小。
      */
     public int getLimit() {
-        return limit;
+    	if(limit==-1) {
+    		return totalCount;
+    	}else {
+    		return limit;
+    	}
+        
     }
 
     /**

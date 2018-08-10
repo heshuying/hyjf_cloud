@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.HjhPlanCapitalCustomizeMapper">
+    <!--汇计划资本按天统计及预估表列表  -->
+    <resultMap id="selectPlanCapitalMap" type="com.hyjf.am.vo.trade.HjhPlanCapitalVO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="plan_nid" property="planNid" jdbcType="VARCHAR"/>
+        <result column="plan_name" property="planName" jdbcType="VARCHAR"/>
+        <result column="lock_period" property="lockPeriod" jdbcType="TINYINT"/>
+        <result column="is_month" property="isMonth" jdbcType="TINYINT"/>
+        <result column="reinvest_account" property="reinvestAccount" jdbcType="DECIMAL"/>
+        <result column="credit_account" property="creditAccount" jdbcType="DECIMAL"/>
+        <result column="create_user" property="createUser" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+        <result column="update_user" property="updateUser" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="INTEGER"/>
+        <result column="del_flg" property="delFlg" jdbcType="TINYINT"/>
+    </resultMap>
+
+	<!--实际旧(债转出多少)-->
+    <select id="selectPlanCapitalForActList" resultMap="selectPlanCapitalMap" parameterType="java.util.Date">
+		SELECT
+			*, SUM(r_account) reinvest_account,
+			-- 按日期计划合计实际复投金额
+			SUM(c_account) credit_account -- 按日期计划合计实际债转金额
+		FROM
+			(
+				-- 实际原始标的复投
+				SELECT
+					DATE_FORMAT(
+						bt.create_time,
+						'%Y-%m-%d'
+					) `date`,
+					ha.plan_nid plan_nid,
+					hp.plan_name plan_name,
+					hp.lock_period lock_period,
+					hp.is_month is_month,
+					bt.account r_account,
+					0 c_account,
+					1 flag
+				FROM
+					ht_borrow_tender bt
+				JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id
+				JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+				WHERE
+					bt.create_time BETWEEN #{date}
+				AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+				AND bt.tender_type = 1
+				UNION ALL
+					-- 实际债转标的复投
+					SELECT
+						DATE_FORMAT(
+							hdct.create_time,
+							'%Y-%m-%d'
+						) `date`,
+						hp.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						hdct.assign_pay r_account,
+						0 c_account,
+						2 flag
+					FROM
+						ht_hjh_debt_credit_tender hdct
+					JOIN ht_hjh_plan hp ON hp.plan_nid = hdct.assign_plan_nid
+					WHERE
+						hdct.create_time BETWEEN #{date}
+					AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+					AND hdct.tender_type = 1
+					UNION ALL
+						-- 实际债转标的初投+复投
+						SELECT
+							DATE_FORMAT(
+								hdct.create_time,
+								'%Y-%m-%d'
+							) `date`,
+							hp.plan_nid plan_nid,
+							hp.plan_name plan_name,
+							hp.lock_period lock_period,
+							hp.is_month is_month,
+							0 r_account,
+							hdct.assign_pay c_account,
+							3 flag
+						FROM
+							ht_hjh_debt_credit_tender hdct
+						LEFT
+						JOIN ht_hjh_plan hp ON hp.plan_nid = hdct.assign_plan_nid
+						WHERE
+							hdct.create_time BETWEEN #{date}
+						AND FROM_UNIXTIME(UNIX_TIMESTAMP(#{date}) + 86399)
+			) t
+		GROUP BY
+			t.plan_nid
+	</select>
+
+	<!--实际新（债转清算出多少）-->
+	<!--<select id="selectPlanCapitalForActList" resultMap="selectPlanCapitalMap" parameterType="java.util.Date">-->
+
+		<!--SELECT-->
+			<!--*, SUM(r_account) reinvest_account,-->
+			<!--&#45;&#45; 按日期计划合计实际复投金额-->
+			<!--SUM(c_account) credit_account &#45;&#45; 按日期计划合计实际债转金额-->
+		<!--FROM-->
+			<!--(-->
+				<!--&#45;&#45; 实际原始标的复投-->
+				<!--SELECT-->
+					<!--DATE_FORMAT(-->
+						<!--FROM_UNIXTIME(bt.addtime),-->
+						<!--'%Y-%m-%d'-->
+					<!--) `date`,-->
+					<!--ha.plan_nid plan_nid,-->
+					<!--hp.plan_name plan_name,-->
+					<!--hp.lock_period lock_period,-->
+					<!--hp.is_month is_month,-->
+					<!--bt.account r_account,-->
+					<!--0 c_account,-->
+					<!--1 flag-->
+				<!--FROM-->
+					<!--huiyingdai_borrow_tender bt-->
+				<!--JOIN hyjf_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id-->
+				<!--JOIN hyjf_hjh_plan hp ON ha.plan_nid = hp.plan_nid-->
+				<!--WHERE-->
+					<!--bt.addtime BETWEEN UNIX_TIMESTAMP(#{date})-->
+				<!--AND UNIX_TIMESTAMP(#{date}) + 86399-->
+				<!--AND bt.tender_type = 1-->
+				<!--UNION ALL-->
+					<!--&#45;&#45; 实际债转标的复投-->
+					<!--SELECT-->
+						<!--DATE_FORMAT(-->
+							<!--FROM_UNIXTIME(hdct.create_time),-->
+							<!--'%Y-%m-%d'-->
+						<!--) `date`,-->
+						<!--hp.plan_nid plan_nid,-->
+						<!--hp.plan_name plan_name,-->
+						<!--hp.lock_period lock_period,-->
+						<!--hp.is_month is_month,-->
+						<!--hdct.assign_pay r_account,-->
+						<!--0 c_account,-->
+						<!--2 flag-->
+					<!--FROM-->
+						<!--hyjf_hjh_debt_credit_tender hdct-->
+					<!--JOIN hyjf_hjh_plan hp ON hp.plan_nid = hdct.assign_plan_nid-->
+					<!--WHERE-->
+						<!--hdct.create_time BETWEEN UNIX_TIMESTAMP(#{date})-->
+					<!--AND UNIX_TIMESTAMP(#{date}) + 86399-->
+					<!--AND hdct.tender_type = 1-->
+					<!--UNION ALL-->
+						<!--&#45;&#45; 实际债转标的初投+复投-->
+						<!--SELECT-->
+							<!--DATE_FORMAT(-->
+								<!--FROM_UNIXTIME(hdct.create_time),-->
+								<!--'%Y-%m-%d'-->
+							<!--) `date`,-->
+							<!--hp.plan_nid plan_nid,-->
+							<!--hp.plan_name plan_name,-->
+							<!--hp.lock_period lock_period,-->
+							<!--hp.is_month is_month,-->
+							<!--0 r_account,-->
+							<!--hdct.liquidation_fair_value c_account,-->
+							<!--3 flag-->
+						<!--FROM-->
+							<!--hyjf_hjh_debt_credit hdct-->
+						<!--JOIN hyjf_hjh_plan hp ON hp.plan_nid = hdct.plan_nid-->
+						<!--WHERE-->
+							<!--hdct.create_time BETWEEN UNIX_TIMESTAMP(#{date})-->
+						<!--AND UNIX_TIMESTAMP(#{date}) + 86399-->
+			<!--) t-->
+		<!--GROUP BY-->
+			<!--t.plan_nid-->
+	<!--</select>-->
+
+	<!--预估-->
+	<select id="selectPlanCapitalForProformaList" resultMap="selectPlanCapitalMap" parameterType="java.util.Date">
+		SELECT
+			*, SUM(r_account) reinvest_account,
+			-- 按日期计划合计预算复投金额;
+			SUM(c_account) credit_account -- 按日期计划合计预算债转金额;
+		FROM
+			(
+				-- ====预计复投总额 = 预计还款总额（不分期） + 预计还款总额（分期） - 预计非复投的债转的还款总额 - 预计非复投的原始的还款总额（不分期） - 预计非复投的原始的还款总额（分期） + 预计非复投的原始的还款总额（分期）多减部分=====;
+				-- ====预计复投总额 = a + f - b - c - d + e ==（a+f=总还款）===;
+				-- ****预计还款总额（不分期）****;
+				SELECT
+					DATE_FORMAT(
+						FROM_UNIXTIME(bt.recover_time),
+						'%Y-%m-%d'
+					) `date`,
+					ha.plan_nid plan_nid,
+					hp.plan_name plan_name,
+					hp.lock_period lock_period,
+					hp.is_month is_month,
+					-- 复投金额预估;
+					bt.recover_account AS r_account,
+					-- 债转金额预估;
+					0 c_account,
+					'a' flag -- 预算复投;
+				FROM
+						ht_borrow_recover bt
+					JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+				WHERE
+						bt.recover_status = 0 -- 未还款;
+					AND bt.recover_time BETWEEN UNIX_TIMESTAMP(#{fromDate}) -- 还款日期;
+					AND UNIX_TIMESTAMP(#{toDate}) + 86399 -- 还款日期;
+					AND NOT EXISTS(
+						SELECT 1 FROM ht_borrow_recover_plan plan
+						WHERE
+							plan.borrow_nid = bt.borrow_nid
+						AND plan.recover_status = 0 -- 未还款;
+						AND plan.recover_period = bt.recover_period
+						AND plan.user_id = bt.user_id
+						AND plan.tender_id = bt.tender_id
+						LIMIT 1
+					)
+			  UNION ALL
+				-- ****预计还款总额（分期）****
+				SELECT
+					DATE_FORMAT(
+						FROM_UNIXTIME(plan.recover_time),
+						'%Y-%m-%d'
+					) `date`,
+					ha.plan_nid plan_nid,
+					hp.plan_name plan_name,
+					hp.lock_period lock_period,
+					hp.is_month is_month,
+					plan.recover_account AS r_account,
+					-- 分期债转金额预估
+					0 c_account,
+					'f' flag -- 预算复投
+				FROM
+						ht_borrow_recover_plan plan
+					JOIN ht_hjh_accede ha ON
+						plan.accede_order_id = ha.accede_order_id
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+				WHERE
+						plan.recover_status = 0 -- 未还款;
+					AND plan.recover_time BETWEEN UNIX_TIMESTAMP(#{fromDate}) -- 还款日期
+					AND UNIX_TIMESTAMP(#{toDate}) + 86399 -- 还款日期
+			UNION ALL
+				-- ****预计非复投的债转的还款总额****;
+				-- ****计划订单结束日前3天后的还款（减全部债转还款）****;
+				SELECT
+					DATE_FORMAT(
+						FROM_UNIXTIME(cr.assign_repay_time),
+						'%Y-%m-%d'
+					) `date`,
+					ha.plan_nid plan_nid,
+					hp.plan_name plan_name,
+					hp.lock_period lock_period,
+					hp.is_month is_month,
+					-- 复投金额预估;
+					cr.repay_account * -1 AS r_account,
+					0 c_account,
+					'b' flag -- 预算复投;
+				FROM
+						ht_hjh_debt_credit_repay cr
+					JOIN ht_hjh_accede ha ON cr.assign_plan_order_id = ha.accede_order_id -- 标的还款日期在计划订单锁定期前三天的金额不计入;
+					AND cr.assign_repay_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+				WHERE
+						cr.repay_status = 0 -- 未还款;
+					AND cr.del_flag = 0 -- 未删除;
+					AND cr.assign_repay_time BETWEEN UNIX_TIMESTAMP(#{fromDate}) -- 还款日期;
+					AND UNIX_TIMESTAMP(#{toDate}) + 86399 -- 还款日期;
+			UNION ALL
+				-- ****预计非复投的原始的还款总额（分期）****;
+				-- ****计划订单结束日前3天后的还款（减不分期原始还款）****;
+				SELECT
+					DATE_FORMAT(
+						FROM_UNIXTIME(bt.recover_time),
+						'%Y-%m-%d'
+					) `date`,
+					ha.plan_nid plan_nid,
+					hp.plan_name plan_name,
+					hp.lock_period lock_period,
+					hp.is_month is_month,
+					-- 复投金额预估;
+					(bt.recover_account - bt.credit_amount - bt.credit_interest_amount) * -1 AS r_account,
+					-- 债转金额预估;
+					0 c_account,
+					'c' flag -- 预算复投;
+				FROM
+						ht_borrow_recover bt
+					JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id -- 标的还款日期在计划订单锁定期前三天的金额不计入;
+					AND bt.recover_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+				WHERE
+						bt.recover_status = 0 -- 未还款;
+					AND bt.recover_time BETWEEN UNIX_TIMESTAMP(#{fromDate}) -- 还款日期;
+					AND UNIX_TIMESTAMP(#{toDate}) + 86399 -- 还款日期;
+					AND NOT EXISTS(
+						SELECT 1 FROM ht_borrow_recover_plan plan
+						WHERE
+								plan.borrow_nid = bt.borrow_nid
+						AND plan.recover_status = 0 -- 未还款;
+						AND plan.recover_period = bt.recover_period
+						AND plan.user_id = bt.user_id
+						AND plan.tender_id = bt.tender_id
+						LIMIT 1
+					)
+			UNION ALL
+			-- ****预计非复投的原始的还款总额（分期）****;
+			-- 计划订单结束日前3天后的还款（减分期原始标的还款）;
+				SELECT
+						DATE_FORMAT(
+							FROM_UNIXTIME(plan.recover_time),
+							'%Y-%m-%d'
+						) `date`,
+						ha.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						plan.recover_account * -1 AS r_account,
+						-- 分期债转金额预估;
+						0 c_account,
+						'd' flag -- 预算复投;
+				FROM
+						ht_borrow_recover_plan plan
+
+					JOIN ht_hjh_accede ha ON
+							plan.accede_order_id = ha.accede_order_id -- 标的还款日期在计划订单锁定期前三天后的金额（排除）;
+					AND plan.recover_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+				WHERE
+						plan.recover_status = 0 -- 未还款;
+					AND plan.recover_time BETWEEN UNIX_TIMESTAMP(#{fromDate}) -- 还款日期;
+					AND UNIX_TIMESTAMP(#{toDate}) + 86399 -- 还款日期;
+			UNION ALL
+				-- ****预计非复投的原始的还款总额（分期）多减部分****;
+				-- 计划订单结束日前3天后的还款（多减的分期债转）;
+				SELECT
+						DATE_FORMAT(
+							FROM_UNIXTIME(plan.recover_time),
+							'%Y-%m-%d'
+						) `date`,
+						ha.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						cr.repay_account AS r_account,
+						-- 分期债转金额预估;
+						0 c_account,
+						'e' flag -- 预算复投;
+				FROM
+						ht_borrow_recover_plan plan
+					JOIN ht_hjh_accede ha ON
+							plan.accede_order_id = ha.accede_order_id -- 标的还款日期在计划订单锁定期前三天后的金额（排除）;
+					AND plan.recover_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+					JOIN ht_hjh_debt_credit_repay cr ON
+							cr.borrow_nid = plan.borrow_nid -- 标的号;
+						AND cr.invest_order_id = plan.nid -- 原始标的投资订单号;
+						AND cr.repay_period = plan.recover_period -- 当前期数;
+						AND cr.repay_status = 0 -- 未还款;
+						AND cr.del_flag = 0 -- 未删除;
+				WHERE
+						plan.recover_status = 0 -- 未还款;
+					AND plan.recover_time BETWEEN UNIX_TIMESTAMP(#{fromDate}) -- 还款日期;
+					AND UNIX_TIMESTAMP(#{toDate}) + 86399 -- 还款日期;
+
+			UNION ALL
+
+					-- *********************分割线**********************;
+					-- ****拉取预算债转金额信息****;
+					SELECT
+						ha.end_date `date`,
+						ha.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						0 r_account,
+						should_pay_capital c_account,
+						'A' flag -- 预算债转;
+					FROM
+						ht_hjh_accede ha
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+					WHERE
+						ha.end_date BETWEEN #{fromDate} -- 退出时间;
+					AND #{toDate} -- 退出时间;
+			UNION ALL
+					-- ****结束订单前3天的还款金额（原始不分期  2个sql排除逾期还款）****;
+					SELECT
+						ha.end_date `date`,
+						ha.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						0 r_account,
+						br.recover_capital * -1 c_account,
+						'B' flag -- 预算债转;
+					FROM
+						ht_hjh_accede ha
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+					JOIN ht_borrow_recover br ON
+							br.accede_order_id = ha.accede_order_id
+					AND br.recover_status = 0 -- 未还款;
+					AND br.recover_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+ 					AND br.credit_amount = 0 -- 非债转
+					AND NOT EXISTS(
+						SELECT 1 FROM ht_borrow_recover_plan plan
+						WHERE
+							plan.borrow_nid = br.borrow_nid
+						AND plan.recover_status = 0 -- 未还款;
+						AND plan.recover_period = br.recover_period
+						AND plan.user_id = br.user_id
+						AND plan.tender_id = br.tender_id
+						LIMIT 1
+					)
+					WHERE
+						ha.end_date BETWEEN #{fromDate} -- 退出时间;
+					AND #{toDate} -- 退出时间;
+			UNION ALL
+					-- ****结束订单前3天的还款金额（原始分期  2个sql排除逾期还款）****;
+					SELECT
+						ha.end_date `date`,
+						ha.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						0 r_account,
+						plan.recover_capital * -1 c_account,
+						'C' flag -- 预算债转;
+					FROM
+						ht_hjh_accede ha
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+					JOIN ht_borrow_recover_plan plan ON
+							plan.accede_order_id = ha.accede_order_id
+					AND plan.recover_status = 0 -- 未还款;
+					AND plan.recover_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+					AND NOT EXISTS(
+								SELECT 1 FROM ht_hjh_debt_credit_repay cr
+								WHERE cr.borrow_nid = plan.borrow_nid -- 标的号;
+									AND cr.invest_order_id = plan.nid -- 原始标的投资订单号;
+									AND cr.repay_period = plan.recover_period -- 当前期数;
+									AND cr.repay_status = 0 -- 未还款;
+									AND cr.del_flag = 0 -- 未删除;
+									LIMIT 1
+								) -- 非债转
+					WHERE
+						ha.end_date BETWEEN #{fromDate} -- 退出时间;
+					AND #{toDate} -- 退出时间;
+			UNION ALL
+					-- ****结束订单前3天的还款金额（债转）****;
+					SELECT
+						ha.end_date `date`,
+						ha.plan_nid plan_nid,
+						hp.plan_name plan_name,
+						hp.lock_period lock_period,
+						hp.is_month is_month,
+						0 r_account,
+						-- ct.assign_capital / dc.liquidates_capital * ;
+						cr.repay_capital * -1 c_account,
+						'D' flag -- 预算债转;
+					FROM
+						ht_hjh_accede ha
+					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+					JOIN ht_hjh_debt_credit_repay cr ON
+							cr.assign_plan_order_id = ha.accede_order_id
+					AND cr.repay_status = 0 -- 未还款;
+					AND cr.del_flag = 0 -- 未删除;
+					AND cr.assign_repay_time BETWEEN UNIX_TIMESTAMP(date_add(ha.end_date, INTERVAL -3 DAY)) AND UNIX_TIMESTAMP(ha.end_date) + 86399
+-- 					JOIN ht_hjh_debt_credit dc ON
+-- 							dc.credit_nid = cr.credit_nid
+-- 					AND dc.del_flag = 0 -- 未删除;
+-- 					JOIN ht_hjh_debt_credit_tender ct ON
+-- 						ct.assign_order_id = cr.assign_order_id
+					WHERE
+						ha.end_date BETWEEN #{fromDate} -- 退出时间;
+					AND #{toDate} -- 退出时间;
+			) t
+		GROUP BY
+			`date`,
+			plan_nid
+		ORDER BY
+			`date`,
+			plan_nid
+	</select>
+</mapper>

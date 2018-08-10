@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.trade;
 
+import com.hyjf.am.response.admin.AdminOperationLogResponse;
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.trade.service.admin.OperationLogService;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
@@ -31,13 +32,16 @@ public class OperationLogController {
         return this.operationLogService.getHjhAssetType();
     }
     /**
-     * 查询 资产来源 instCode 和 assetType的值
+     * 查询 资产来源 instCode 和 assetType的值AdminOperationLogResponse
      * @return
      */
     @RequestMapping("/selectInstAndAssertType")
-    public List<FeerateModifyLogVO> selectInstAndAssertType(@RequestBody AdminOperationLogRequest adminRequest) {
+    public AdminOperationLogResponse selectInstAndAssertType(@RequestBody AdminOperationLogRequest adminRequest) {
         //查询 资产来源
-        return this.operationLogService.selectInstAndAssertType(adminRequest);
+        List<FeerateModifyLogVO> feerateModifyLogVOList = this.operationLogService.selectInstAndAssertType(adminRequest);
+        AdminOperationLogResponse response = new AdminOperationLogResponse();
+        response.setResultList(feerateModifyLogVOList);
+        return response;
     }
 
 

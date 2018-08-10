@@ -11,7 +11,7 @@ import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
 import com.hyjf.am.vo.trade.ProjectCompanyDetailVO;
@@ -306,11 +306,21 @@ public class BorrowController extends BaseController {
 	 * @date 2018/7/5 18:00
 	 */
 	@GetMapping("/getBorrowAccountList/{borrowNid}")
-	public Object getBorrowAccountList(@PathVariable String borrowNid){
+	public BorrowAccountResponse getBorrowAccountList(@PathVariable String borrowNid){
 		BorrowAccountResponse response = new BorrowAccountResponse();
 		List<AccountBorrow> accountBorrows = borrowService.getAccountBorrowList(borrowNid);
 		if (CollectionUtils.isNotEmpty(accountBorrows)){
 			response.setResultList(CommonUtils.convertBeanList(accountBorrows,AccountBorrowVO.class));
+		}
+		return response;
+	}
+
+	@GetMapping("/getBorrowInfoBLOBByborrowNid/{borrowNid}")
+	public BorrowInfoWithBLOBResponse  getBorrowInfoBLOBByborrowNid(@PathVariable String borrowNid){
+		BorrowInfoWithBLOBResponse response = new BorrowInfoWithBLOBResponse();
+		BorrowInfoWithBLOBs borrowInfoWithBLOBs = borrowService.getBorrowInfoWithBLOBs(borrowNid);
+		if (borrowInfoWithBLOBs != null){
+			response.setResult(CommonUtils.convertBean(borrowInfoWithBLOBs,BorrowInfoWithBLOBsVO.class));
 		}
 		return response;
 	}

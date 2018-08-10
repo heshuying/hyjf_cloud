@@ -16,9 +16,10 @@ import com.hyjf.am.user.dao.model.auto.MspZhixinginfos;
 import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
 import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail;
 import com.hyjf.am.user.dao.model.auto.MspAnliinfos;
+import com.hyjf.am.user.service.BaseService;
 
 
-public interface MspApplyService {
+public interface MspApplyService extends BaseService{
 
 	  /**
      * 获取手续费列表列表

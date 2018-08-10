@@ -30,18 +30,18 @@ public class SmsMailTemplateServiceImpl implements SmsMailTemplateService {
 
     @Override
     public SmsMailTemplate findSmsMailTemplateByCode(String mailCode) {
-        SmsMailTemplate smsMailTemplate = RedisUtils.getObj(RedisConstants.SMS_MAIL_TEMPLATE, SmsMailTemplate.class);
+        SmsMailTemplate smsMailTemplate = RedisUtils.getObj(RedisConstants.SMS_MAIL_TEMPLATE + mailCode, SmsMailTemplate.class);
         if (smsMailTemplate == null) {
             SmsMailTemplateExample example = new SmsMailTemplateExample();
             example.createCriteria().andMailValueEqualTo(mailCode);
             List<SmsMailTemplate> smsMailTemplateList = smsMailTemplateMapper.selectByExample(example);
             if (!CollectionUtils.isEmpty(smsMailTemplateList)) {
                 smsMailTemplate = smsMailTemplateList.get(0);
-                RedisUtils.setObjEx(RedisConstants.SMS_MAIL_TEMPLATE, smsMailTemplate, 24*60*60);
+                RedisUtils.setObjEx(RedisConstants.SMS_MAIL_TEMPLATE + mailCode, smsMailTemplate, 24*60*60);
                 return smsMailTemplate;
             }
         }
-        return null;
+        return smsMailTemplate;
     }
 
 	@Override

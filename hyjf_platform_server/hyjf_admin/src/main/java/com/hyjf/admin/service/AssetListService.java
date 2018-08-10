@@ -35,7 +35,7 @@ public interface AssetListService {
 	/**
 	 * 资产列表查询
 	 *
-	 * @param instCodeSrch
+	 * @param form
 	 * @return List<HjhAssetTypeVO>
 	 */
 	AssetListCustomizeResponse findAssetList(AssetListRequest form);
@@ -43,7 +43,7 @@ public interface AssetListService {
 	/**
 	 * param原相关查询
 	 *
-	 * @param instCodeSrch
+	 * @param param
 	 * @return List<HjhAssetTypeVO>
 	 */
 	Map<String, String> getParamNameMap(String param);

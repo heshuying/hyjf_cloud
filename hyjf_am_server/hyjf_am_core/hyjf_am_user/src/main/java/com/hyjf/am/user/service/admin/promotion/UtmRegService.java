@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.admin.promotion;
 
 import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.service.BaseService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author fuqiang
  * @version UtmRegService, v0.1 2018/7/17 9:14
  */
-public interface UtmRegService {
+public interface UtmRegService extends BaseService {
     /**
      * 获取utm注册列表
      * @return

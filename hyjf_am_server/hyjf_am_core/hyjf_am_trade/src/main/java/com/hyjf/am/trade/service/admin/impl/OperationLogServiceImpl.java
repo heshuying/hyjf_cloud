@@ -2,7 +2,7 @@ package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.OperationLogCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.OperationLogCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetTypeExample;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
@@ -11,7 +11,6 @@ import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,29 +49,23 @@ public class OperationLogServiceImpl implements OperationLogService {
         List<FeerateModifyLogVO> list = new ArrayList<FeerateModifyLogVO>();
         List<HjhInstConfig> instList= operationLogCustomizeMapper.selectInstCodeList(adminRequest);
         List<HjhAssetType> assertTypeList= operationLogCustomizeMapper.selectAssertTypeList(adminRequest);
-        int size =0;
-       if(instList.size()>0||assertTypeList.size()>0){
-           if(instList.size()>=assertTypeList.size()){
-               size=instList.size();
-           }else {
-               size=assertTypeList.size();
-           }
-           for(int i=0; i<size;i++){
+        for(int i=0; i<instList.size();i++){
                FeerateModifyLogVO vo= new FeerateModifyLogVO();
                if(!CollectionUtils.isEmpty(instList)){
                    vo.setInstName(instList.get(i).getInstName());
                    vo.setInstCode(instList.get(i).getInstCode());
                }
                if(!CollectionUtils.isEmpty(assertTypeList)){
-                   if(vo.getInstCode().equals(assertTypeList.get(i).getInstCode())){
-                       vo.setAssetTypeName(assertTypeList.get(i).getAssetTypeName());
-                       vo.setAssetType(assertTypeList.get(i).getAssetType());
+                   for(int j=0; j<assertTypeList.size();j++){
+                       if(vo.getInstCode().equals(assertTypeList.get(j).getInstCode())){
+                           vo.setAssetTypeName(assertTypeList.get(j).getAssetTypeName());
+                           vo.setAssetType(assertTypeList.get(j).getAssetType());
+                           break;
+                       }
                    }
                }
                list.add(vo);
-               vo=null;
-           }
-       }
+         }
          return list;
     }
 }

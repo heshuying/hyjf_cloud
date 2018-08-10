@@ -8,8 +8,6 @@ import com.hyjf.am.response.admin.BankConfigResponse;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.response.user.MspApplytResponse;
@@ -77,6 +75,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
     }
+
+    @Override
+	public List<ParamNameVO> getParamName(String other1) {
+    	String url = "http://AM-CONFIG/am-config/config/getParamName/" + other1;
+    	ParamNameResponse response = restTemplate.getForEntity(url,ParamNameResponse.class).getBody();
+    	if (Validator.isNotNull(response)) {
+    		return response.getResultList();
+		}
+		return null;
+	}
 
     /**
      * 查询邮件配置
@@ -1411,8 +1419,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public HolidaysConfigResponse getHolidaysConfigById(Integer id){
-		String url = "http://AM-CONFIG/am-config/holidaysConfig/info";
-		HolidaysConfigResponse response = restTemplate.postForEntity(url,id,HolidaysConfigResponse.class).getBody();
+		String url = "http://AM-CONFIG/am-config/holidaysConfig/info/"+id;
+		HolidaysConfigResponse response = restTemplate.getForEntity(url,HolidaysConfigResponse.class).getBody();
 		if (response != null) {
 			return response;
 		}
@@ -1874,5 +1882,16 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public LinkResponse updateAction(ContentLinksRequestBean requestBean) {
 		return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentlinks/updateaction", requestBean,
 				LinkResponse.class);
+	}
+
+
+	/**
+	 * 查询配置中心操作日志配置
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map){
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list",map,AdminOperationLogResponse.class).getBody();
 	}
 }
