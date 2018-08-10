@@ -77,7 +77,7 @@
         </where>
     </sql>
     <resultMap id="PushMoneyMapDetailResult"
-               type="com.hyjf.am.trade.dao.model.customize.trade.PushMoneyCustomize">
+               type="com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize">
         <result column="id" property="id" />
         <result column="borrow_nid" property="borrowNid" />
         <!--<result column="ordid" property="ordid" />-->

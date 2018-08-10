@@ -2351,7 +2351,9 @@ public interface AmTradeClient {
      * @param
      * @return
      */
+/*
     int queryCrmCuttype(Integer userId);
+*/
 
     /**
      * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean

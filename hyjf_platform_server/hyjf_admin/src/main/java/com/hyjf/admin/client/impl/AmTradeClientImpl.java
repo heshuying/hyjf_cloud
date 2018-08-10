@@ -4863,7 +4863,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param
      * @return
      */
-    @Override
+/*    @Override
     public int queryCrmCuttype(Integer userId) {
         String url = tradeService + "/pushMoneyRecord/queryCrmCuttype/" + userId;
         PushMoneyResponse response = restTemplate.getForEntity(url,PushMoneyResponse.class).getBody();
@@ -4871,7 +4871,7 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getCuttype();
         }
         return 0;
-    }
+    }*/
 
     /**
      * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
