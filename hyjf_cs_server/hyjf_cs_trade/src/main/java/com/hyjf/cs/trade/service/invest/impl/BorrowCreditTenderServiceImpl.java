@@ -827,35 +827,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         accountWebList.setTradeType("债转服务费");
                         accountWebList.setUserId(creditTender.getUserId());
                         accountWebList.setUsrcustid(creditTenderLog.getAccountId());
-
-                        UserInfoVO usersInfo = amUserClient.findUsersInfoById(userId);
-                        if (usersInfo != null) {
-                            Integer attribute = usersInfo.getAttribute();
-                            if (attribute != null) {
-                                // 如果是线上员工或线下员工，推荐人的userId和username不插
-                                if (userInfoCustomize != null && (attribute == 2 || attribute == 3)) {
-                                    // 查找用户信息
-                                    accountWebList.setRegionName(userInfoCustomize.getRegionName());
-                                    accountWebList.setBranchName(userInfoCustomize.getBranchName());
-                                    accountWebList.setDepartmentName(userInfoCustomize.getDepartmentName());
-                                }
-                                // 如果是无主单，全插
-                                else if (userInfoCustomize != null && (attribute == 1)) {
-                                    // 查找用户推荐人
-                                    accountWebList.setRegionName(userInfoCustomize.getRegionName());
-                                    accountWebList.setBranchName(userInfoCustomize.getBranchName());
-                                    accountWebList.setDepartmentName(userInfoCustomize.getDepartmentName());
-                                }
-                                // 如果是有主单
-                                else if (userInfoCustomize != null && (attribute == 0)) {
-                                    // 查找用户推荐人
-                                    accountWebList.setRegionName(userInfoCustomize.getRegionName());
-                                    accountWebList.setBranchName(userInfoCustomize.getBranchName());
-                                    accountWebList.setDepartmentName(userInfoCustomize.getDepartmentName());
-                                }
-                            }
-                            accountWebList.setTruename(usersInfo.getTruename());
-                        }
                         accountWebList.setRemark(creditTender.getCreditNid());
                         accountWebList.setNote(null);
                         accountWebList.setCreateTime(nowTime);
