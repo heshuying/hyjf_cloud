@@ -1158,9 +1158,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowApicronResponse getBorrowApicronByID(String id) {
-        BorrowApicronResponse response = restTemplate.
-                postForEntity(tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID", id, BorrowApicronResponse.class).
-                getBody();
+        String url = tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID" + id;
+        BorrowApicronResponse response = restTemplate.getForEntity(url,  BorrowApicronResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
