@@ -306,11 +306,21 @@ public class BorrowController extends BaseController {
 	 * @date 2018/7/5 18:00
 	 */
 	@GetMapping("/getBorrowAccountList/{borrowNid}")
-	public Object getBorrowAccountList(@PathVariable String borrowNid){
+	public BorrowAccountResponse getBorrowAccountList(@PathVariable String borrowNid){
 		BorrowAccountResponse response = new BorrowAccountResponse();
 		List<AccountBorrow> accountBorrows = borrowService.getAccountBorrowList(borrowNid);
 		if (CollectionUtils.isNotEmpty(accountBorrows)){
 			response.setResultList(CommonUtils.convertBeanList(accountBorrows,AccountBorrowVO.class));
+		}
+		return response;
+	}
+
+	@GetMapping("/getBorrowInfoBLOBByborrowNid/{borrowNid}")
+	public BorrowInfoWithBLOBResponse  getBorrowInfoBLOBByborrowNid(@PathVariable String borrowNid){
+		BorrowInfoWithBLOBResponse response = new BorrowInfoWithBLOBResponse();
+		BorrowInfoWithBLOBs borrowInfoWithBLOBs = borrowService.getBorrowInfoWithBLOBs(borrowNid);
+		if (borrowInfoWithBLOBs != null){
+			response.setResult(CommonUtils.convertBean(borrowInfoWithBLOBs,BorrowInfoWithBLOBsVO.class));
 		}
 		return response;
 	}

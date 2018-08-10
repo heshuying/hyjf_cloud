@@ -3616,4 +3616,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    /**
+     * 根据borrowNid查询风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:21
+     */
+    @Override
+    public BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoBLOBByborrowNid/" + borrowNid;
+        BorrowInfoWithBLOBResponse response = restTemplate.getForEntity(url,BorrowInfoWithBLOBResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }
