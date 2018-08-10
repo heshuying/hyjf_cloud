@@ -67,4 +67,12 @@ public interface UserInfoService extends BaseService{
      * @return
      */
     EmployeeCustomize selectEmployeeByUserId(Integer userId);
+
+    /**
+     * 通过用户id获得用户真实姓名和身份证号
+     *
+     * @param userId
+     * @return
+     */
+    UserInfo selectUserInfoByUserId(Integer userId);
 }

@@ -228,4 +228,22 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     UserEvalationResult skipEvaluate(Integer userId, Integer countScore);
+
+	/**
+	 * 通过用户id获得借款人的开户电子账号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	BankOpenAccount selectBankAccountById(Integer userId);
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	CorpOpenAccountRecord selectUserBusiNameByUsername(String userName);
+
+
 }

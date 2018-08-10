@@ -17,7 +17,7 @@ public interface AssetListServiceCustomizeMapper {
 	/**
 	 * 查询资产列表
 	 * @author libin
-	 * @param callCenterAccountDetailRequest
+	 * @param mapParam
 	 * @return
 	 */
 	List<AssetListCustomizeVO> queryAssetList(Map<String, Object> mapParam);
@@ -25,7 +25,7 @@ public interface AssetListServiceCustomizeMapper {
 	/**
 	 * 查询资产详情
 	 * @author libin
-	 * @param callCenterAccountDetailRequest
+	 * @param mapParam
 	 * @return
 	 */
 	AssetDetailCustomizeVO selectAssetDetail(Map<String, Object> mapParam);
@@ -33,15 +33,15 @@ public interface AssetListServiceCustomizeMapper {
 	/**
 	 * COUNT
 	 * 
-	 * @param map
+	 * @param request
 	 * @return
 	 */
 	Integer countAssetList(AssetListRequest request);
 	
 	/**
-	 * COUNT
-	 * 
-	 * @param map
+	 * SUM
+	 *
+	 * @param request
 	 * @return
 	 */
 	BigDecimal getSumAccount(AssetListRequest request);

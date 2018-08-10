@@ -114,4 +114,23 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		return employeeCustomizeMapper.selectEmployeeByUserId(userId);
 	}
 
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfo selectUserInfoByUserId(Integer userId) {
+		UserInfoExample example = new UserInfoExample();
+		UserInfoExample.Criteria crt = example.createCriteria();
+		crt.andUserIdEqualTo(userId);
+		List<UserInfo> list = userInfoMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+
 }

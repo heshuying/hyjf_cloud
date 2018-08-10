@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +62,9 @@ public class ActivityListServiceImpl implements ActivityListService {
 
     @Override
     public String uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+
         String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
         String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);

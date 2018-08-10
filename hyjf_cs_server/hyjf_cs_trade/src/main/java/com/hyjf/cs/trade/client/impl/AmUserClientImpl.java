@@ -531,4 +531,85 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 查询用户信息（user表）
+	 *
+	 * @param truename
+	 * @param idcard
+	 * @return
+	 */
+	@Override
+	public UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard) {
+		String url = "http://AM-USER/am-user/userInfo/selectUserInfoByNameAndCard/" + truename + "/" + idcard;
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询用户信息（userinfo表）
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserVO selectUsersById(Integer userId) {
+		String url = "http://AM-USER/am-user/user/findById/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public UserVO selectUserInfoByUsername(String userName) {
+		String url = "http://AM-USER/am-user/user/selectUserInfoByUsername/" + userName;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoVO selectUserInfoByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectUserInfoByUserId/" + userId;
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName) {
+		String url = "http://AM-USER/am-user/corpOpenAccountRecord/selectUserBusiNameByUsername/" + userName;
+		CorpOpenAccountRecordResponse response = restTemplate.getForEntity(url, CorpOpenAccountRecordResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

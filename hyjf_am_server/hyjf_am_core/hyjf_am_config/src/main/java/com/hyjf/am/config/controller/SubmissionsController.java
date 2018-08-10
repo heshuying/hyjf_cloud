@@ -1,25 +1,20 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
-import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.jws.Oneway;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lisheng
@@ -30,7 +25,6 @@ import java.util.Map;
 public class SubmissionsController {
     @Autowired
     private SubmissionsService submissionsService;
-
 
     /**
      * 查询列表数据
@@ -87,6 +81,16 @@ public class SubmissionsController {
 
         }
         return response;
+    }
+
+    /**
+     * 添加意见反馈
+     * @return
+     */
+    @PostMapping("/addSubmission")
+    public Integer addSubmission(@RequestBody SubmissionsVO form) {
+        Submissions submissions = CommonUtils.convertBean(form, Submissions.class);
+        return submissionsService.addSubmission(submissions);
     }
 
 }
