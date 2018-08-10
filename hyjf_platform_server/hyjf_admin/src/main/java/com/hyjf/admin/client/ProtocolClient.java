@@ -1,8 +1,6 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.trade.service.front.config;
+package com.hyjf.admin.client;
 
+import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
@@ -10,16 +8,10 @@ import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import java.util.List;
 
 /**
- * @author libin
- * @version ProtocolTemplateService.java, v0.1 2018年7月26日 下午5:11:19
+ * @author：yinhui
+ * @Date: 2018/8/8  16:50
  */
-public interface ProtocolTemplateService {
-	
-    /**
-     * 查询协议模板
-     * @date 2018/7/4 15:38
-     */
-	List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
+public interface ProtocolClient {
 
     /**
      * 统计全部个数
@@ -35,7 +27,7 @@ public interface ProtocolTemplateService {
      *
      * @return
      */
-    ProtocolTemplateCommonVO getProtocolTemplateById(Integer id);
+    ProtocolTemplateCommonVO getProtocolTemplateById(AdminProtocolRequest request);
 
     /**
      * 查询协议模板数量
@@ -49,7 +41,7 @@ public interface ProtocolTemplateService {
      *
      * @return
      */
-    ProtocolTemplateCommonVO getProtocolTemplateByProtocolName(AdminProtocolRequest request);
+    ProtocolTemplateVO getProtocolTemplateByProtocolName(AdminProtocolRequest request);
 
     /**
      * 保存 协议模板、协议版本、协议日志
@@ -74,8 +66,8 @@ public interface ProtocolTemplateService {
 
     /**
      * 删除协议模板
-     * @param request
+     *
      * @return
      */
-    ProtocolTemplateCommonVO deleteProtocolTemplate(AdminProtocolRequest request);
+    AdminProtocolResponse deleteProtocolTemplate(AdminProtocolRequest request);
 }
