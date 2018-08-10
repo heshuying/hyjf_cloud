@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.TenderCommissionRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.vo.trade.CreditTenderLogVO;
@@ -68,4 +69,15 @@ public interface BorrowTenderClient {
 	CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
 
 
+	/**
+	 * 优惠券单独投资放款
+	 * @return
+	 */
+    List<String> selectNidForCouponOnly(CouponRepayRequest couponRepayRequest);
+
+	/**
+	 * 体验金按受益期限还款
+	 * @param recoverNidList
+	 */
+	void couponOnlyRepay(List<String> recoverNidList);
 }

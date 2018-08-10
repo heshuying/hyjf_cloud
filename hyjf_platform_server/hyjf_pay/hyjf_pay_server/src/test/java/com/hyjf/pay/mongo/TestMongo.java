@@ -50,15 +50,15 @@ public class TestMongo {
         
         BankExclusiveLog oneEN = dao.findOne(query);
         
-        logger.info(oneEN.getCmdid());
+        logger.info(oneEN.getId()+"    "+oneEN.getCmdid());
         
         Query query2 = new Query();
         Update update = new Update();
-        query2.addCriteria(criteria);
-        query2.limit(4);
+        query2.addCriteria(Criteria.where("_id").is(oneEN.getId()));
+//        query2.limit(4);
 //        query2.limit(1);
         
-        update.set("cmdid", "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjsdf/m").addToSet("aaa", 12).set("bbbb", "sdfsadf ");
+        update.set("cmdid", "jjjjjjjjjjAAAAAAAAAAAAAAAAAAAAAAAAA").addToSet("aaa", 12).set("bbbb", "sdfsadf ");
         
         
         dao.findAndModify(query2, update);

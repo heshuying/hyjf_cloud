@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.hyjf.am.user.dao.mapper.customize.UserEntryCustomizeMapper">
+	<resultMap id="employeeMapResult" type="com.hyjf.am.user.dao.model.auto.UserInfo">
+		<!-- 用户ID -->
+		<result column="userId" property="userId" />
+		<!-- 用户属性 -->
+		<result column="attribute" property="attribute" /> 
+	</resultMap>
+	<select id="queryEmployeeList" resultMap="employeeMapResult" parameterType="java.lang.Integer">
+		SELECT
+			oau.hyd_id AS userId,
+		CASE WHEN oad.cuttype = 1 THEN
+			3
+		ELSE
+			2
+		END AS attribute
+		FROM
+			ht_r_oa_users oau
+		INNER JOIN ht_r_oa_department oad ON oau.departmentid = oad.id
+		WHERE
+			oau.user_status IN (
+				'E',
+				'Q1',
+				'Q11',
+				'Q2',
+				'Q21',
+				'Q3'
+			)
+			AND oau.user_type = 2
+	</select>
+
+	<update id="updateSpreadAttribute" parameterType="java.lang.Integer">
+		UPDATE ht_user_info u
+		INNER JOIN ht_spreads_user s on u.user_id=s.user_id
+		SET u.attribute = 1
+		WHERE spreads_user_id = #{referrer}
+	</update>
+	
+	<select id="queryEmployeeById" resultMap="employeeMapResult" parameterType="java.lang.Integer">
+		SELECT
+			oau.hyd_id AS userId,
+		CASE WHEN oad.cuttype = 1 THEN
+			3
+		ELSE
+			2
+		END AS attribute
+		FROM
+			ht_r_oa_users oau
+		INNER JOIN ht_r_oa_department oad ON oau.departmentid = oad.id
+		WHERE
+			oau.user_status IN (
+				'E',
+				'Q1',
+				'Q11',
+				'Q2',
+				'Q21',
+				'Q3'
+			)
+			AND oau.user_type = 2
+			AND oau.id = #{userId}
+	</select>
+
+</mapper>
+

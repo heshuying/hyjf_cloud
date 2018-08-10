@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentInfoCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentInfoCustomize;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentInfoService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;

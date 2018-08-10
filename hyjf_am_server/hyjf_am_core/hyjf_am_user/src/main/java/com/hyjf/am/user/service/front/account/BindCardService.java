@@ -3,12 +3,13 @@ package com.hyjf.am.user.service.front.account;
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardLog;
+import com.hyjf.am.user.service.BaseService;
 
 /**
  * 绑卡接口
  * @author hesy
  */
-public interface BindCardService {
+public interface BindCardService extends BaseService {
 
 	BankCard queryUserCardValid(Integer userId, String cardNo);
 

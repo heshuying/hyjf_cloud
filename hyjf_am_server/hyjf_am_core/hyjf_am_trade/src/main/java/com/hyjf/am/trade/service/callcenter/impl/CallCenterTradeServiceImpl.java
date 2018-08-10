@@ -4,10 +4,9 @@
 package com.hyjf.am.trade.service.callcenter.impl;
 
 import com.hyjf.am.resquest.callcenter.*;
-import com.hyjf.am.trade.dao.mapper.customize.callcenter.*;
-import com.hyjf.am.trade.dao.mapper.customize.trade.RUserCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.model.auto.RUser;
-import com.hyjf.am.trade.dao.model.customize.callcenter.*;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.common.cache.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.front.batch;
 
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;

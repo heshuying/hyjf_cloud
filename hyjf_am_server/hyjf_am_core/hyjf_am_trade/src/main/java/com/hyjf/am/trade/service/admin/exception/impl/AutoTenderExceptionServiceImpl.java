@@ -5,12 +5,12 @@ package com.hyjf.am.trade.service.admin.exception.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhPlanBorrowTmpMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAutoTenderExceptionMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AdminAutoTenderExceptionMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmpExample;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminPlanAccedeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;

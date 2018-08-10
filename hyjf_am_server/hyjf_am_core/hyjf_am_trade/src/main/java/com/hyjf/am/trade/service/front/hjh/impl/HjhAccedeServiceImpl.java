@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.front.hjh.impl;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

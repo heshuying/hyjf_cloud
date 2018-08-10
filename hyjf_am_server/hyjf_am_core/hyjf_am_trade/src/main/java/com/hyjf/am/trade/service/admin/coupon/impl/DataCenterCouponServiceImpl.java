@@ -6,7 +6,8 @@ package com.hyjf.am.trade.service.admin.coupon.impl;
 
 
 import com.hyjf.am.resquest.trade.DataCenterCouponRequest;
-import com.hyjf.am.trade.dao.mapper.customize.coupon.DataCenterCouponCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.DataCenterCouponCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.service.admin.coupon.DataCenterCouponService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class DataCenterCouponServiceImpl extends BaseServiceImpl implements Data
     private DataCenterCouponCustomizeMapper dataCenterCouponMapper;
 
     @Override
-    public List<com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize> getDataCenterCouponList(DataCenterCouponRequest request) {
+    public List<DataCenterCouponCustomize> getDataCenterCouponList(DataCenterCouponRequest request) {
         if (request != null) {
             String type = request.getType();
             Map<String, Object> params = new HashMap<>();

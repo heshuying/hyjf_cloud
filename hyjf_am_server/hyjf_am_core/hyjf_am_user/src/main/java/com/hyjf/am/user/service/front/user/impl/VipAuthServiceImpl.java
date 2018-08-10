@@ -1,11 +1,10 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.VipManageCustomizeMapper;
 import com.hyjf.am.user.service.front.user.VipAuthService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.VipAuthVO;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +15,7 @@ import java.util.Map;
  * @Description: VipAuthServiceImpl
  */
 @Service
-public class VipAuthServiceImpl implements VipAuthService {
-
-    @Resource
-    private VipManageCustomizeMapper vipManageCustomizeMapper;
+public class VipAuthServiceImpl extends BaseServiceImpl implements VipAuthService {
 
     @Override
     public List<VipAuthVO> getVipAuthList(String vipId) {

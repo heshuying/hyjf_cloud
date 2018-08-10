@@ -5,10 +5,8 @@ package com.hyjf.am.user.service.front.account.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.user.utils.IdCard15To18;
@@ -18,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -28,29 +25,6 @@ import java.util.UUID;
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
-    @Autowired
-    private BankOpenAccountLogMapper bankOpenAccountLogMapper;
-
-    @Autowired
-    private UserMapper usersMapper;
-
-    @Autowired
-    private UserInfoMapper usersInfoMapper;
-
-    @Autowired
-    private BankOpenAccountMapper bankOpenAccountMapper;
-
-    @Autowired
-    private UtmRegMapper utmRegMapper;
-
-    @Autowired
-    private BankCardMapper bankCardMapper;
-
-    @Autowired
-    protected CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-
-    @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
 
     @Override
     public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {

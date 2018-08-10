@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.finance;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
 import com.hyjf.am.trade.dao.model.auto.SubCommission;
 import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
@@ -38,17 +39,7 @@ public interface SubCommissionService {
      * @param orderId 订单号
      * @return
      */
-    List<SubCommission> searchSubCommissionByOrderId(String orderId);
-
-
-    /**
-     * 更新分佣数据
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-    Integer updateSubCommission(SubCommissionVO subCommissionVO);
-
+    SubCommission searchSubCommissionByOrderId(String orderId);
 
     /**
      * 根据筛选条件查询分佣数据count
@@ -65,4 +56,11 @@ public interface SubCommissionService {
      * @return
      */
     List<SubCommission> searchSubCommissionList(SubCommissionRequest request);
+    /**
+     * 发起平台账户分佣
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    JSONObject subCommission(SubCommissionRequest request);
 }

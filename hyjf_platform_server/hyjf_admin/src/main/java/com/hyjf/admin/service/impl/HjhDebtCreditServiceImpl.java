@@ -7,11 +7,13 @@ import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther:yangchangwei
@@ -45,15 +47,13 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
 
 
         //转让状态
-        List<ParamNameVO> hjhDebtCreditStatus = this.getParamNameList(CustomConstants.HJH_DEBT_CREDIT_STATUS);
+        Map<String, String> creditMap = CacheUtil.getParamNameMap(CustomConstants.HJH_DEBT_CREDIT_STATUS);
+        Map<String, String> repayMap = CacheUtil.getParamNameMap(CustomConstants.HJH_DEBT_REPAY_STATUS);
         //汇计划债转还款状态
-        List<ParamNameVO> hjhDebtRepayStatus = this.getParamNameList(CustomConstants.HJH_DEBT_REPAY_STATUS);
         for (HjhDebtCreditVo vo: hjhDebtCreditVoList
              ) {
-            String repayStatusName = this.getParamName(vo.getRepayStatus(),hjhDebtRepayStatus);
-            String creditStatusName = this.getParamName(vo.getCreditStatus(), hjhDebtCreditStatus);
-            vo.setRepayStatusName(repayStatusName);
-            vo.setCreditStatusName(creditStatusName);
+            vo.setRepayStatusName(repayMap.get(vo.getRepayStatus()));
+            vo.setCreditStatusName(creditMap.get(vo.getCreditStatus()));
         }
     }
 

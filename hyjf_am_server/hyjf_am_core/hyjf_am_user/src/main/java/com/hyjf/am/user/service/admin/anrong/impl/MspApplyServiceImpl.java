@@ -1,85 +1,15 @@
 package com.hyjf.am.user.service.admin.anrong.impl;
 
-import java.util.List;
-
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.admin.anrong.MspApplyService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hyjf.am.user.dao.mapper.auto.MspAbnormalcreditMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspAbnormalcreditdetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspAnliinfosMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspApplyMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspApplydetailsMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspBlackdataMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspConfigureMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspFqzMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspNormalcreditdetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspQuerydetailMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspRegionMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspShixininfosMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspTitleMapper;
-import com.hyjf.am.user.dao.mapper.auto.MspZhixinginfosMapper;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcredit;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditExample;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspAbnormalcreditdetailExample;
-import com.hyjf.am.user.dao.model.auto.MspAnliinfos;
-import com.hyjf.am.user.dao.model.auto.MspAnliinfosExample;
-import com.hyjf.am.user.dao.model.auto.MspApply;
-import com.hyjf.am.user.dao.model.auto.MspApplyExample;
-import com.hyjf.am.user.dao.model.auto.MspApplydetails;
-import com.hyjf.am.user.dao.model.auto.MspApplydetailsExample;
-import com.hyjf.am.user.dao.model.auto.MspBlackdata;
-import com.hyjf.am.user.dao.model.auto.MspBlackdataExample;
-import com.hyjf.am.user.dao.model.auto.MspConfigure;
-import com.hyjf.am.user.dao.model.auto.MspConfigureExample;
-import com.hyjf.am.user.dao.model.auto.MspFqz;
-import com.hyjf.am.user.dao.model.auto.MspFqzExample;
-import com.hyjf.am.user.dao.model.auto.MspNormalcreditdetail;
-import com.hyjf.am.user.dao.model.auto.MspNormalcreditdetailExample;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetail;
-import com.hyjf.am.user.dao.model.auto.MspQuerydetailExample;
-import com.hyjf.am.user.dao.model.auto.MspRegion;
-import com.hyjf.am.user.dao.model.auto.MspRegionExample;
-import com.hyjf.am.user.dao.model.auto.MspShixininfos;
-import com.hyjf.am.user.dao.model.auto.MspShixininfosExample;
-import com.hyjf.am.user.dao.model.auto.MspTitle;
-import com.hyjf.am.user.dao.model.auto.MspTitleExample;
-import com.hyjf.am.user.dao.model.auto.MspZhixinginfos;
-import com.hyjf.am.user.dao.model.auto.MspZhixinginfosExample;
-import com.hyjf.am.user.service.admin.anrong.MspApplyService;
+import java.util.List;
 
 @Service
-public class MspApplyServiceImpl implements MspApplyService {
-	@Autowired
-	private MspApplyMapper mspApplyMapper;
-	@Autowired
-	private MspRegionMapper mspRegionMapper;
-	@Autowired
-	private MspConfigureMapper mspConfigureMapperAuto;
-	@Autowired
-	private MspFqzMapper mspFqzMapper;
-	@Autowired
-	private MspAnliinfosMapper mspAnliInfosMapper;
-	@Autowired
-	private MspShixininfosMapper mspShixinInfosMapper;
-	@Autowired
-	private MspZhixinginfosMapper mspZhixinginfosMapper;
-	@Autowired
-	private MspTitleMapper mspTitleMapper;
-	@Autowired
-	private MspNormalcreditdetailMapper mspNormalcreditdetailMapper;
-	@Autowired
-	private MspApplydetailsMapper mspApplyDetailsMapper;
-	@Autowired
-	private MspQuerydetailMapper mspQueryDetailMapper;
-	@Autowired
-	private MspBlackdataMapper mspBlackDataMapper;
-	@Autowired
-	private MspAbnormalcreditdetailMapper mspAbnormalCreditDetailMapper;
-	@Autowired
-	private MspAbnormalcreditMapper mspAbnormalCreditMapper;
+public class MspApplyServiceImpl extends BaseServiceImpl implements MspApplyService {
 
 	/**
 	 * 获取列表列表
@@ -214,14 +144,14 @@ public class MspApplyServiceImpl implements MspApplyService {
 	public List<MspAnliinfos> getAnliInfos(String applyId) {
 		MspAnliinfosExample me = new MspAnliinfosExample();
 		me.or().andApplyIdEqualTo(applyId);
-		return mspAnliInfosMapper.selectByExample(me);
+		return mspAnliinfosMapper.selectByExample(me);
 	}
 
 	@Override
 	public List<MspShixininfos> getShixinInfos(String applyId) {
 		MspShixininfosExample me = new MspShixininfosExample();
 		me.or().andApplyIdEqualTo(applyId);
-		return mspShixinInfosMapper.selectByExample(me);
+		return mspShixininfosMapper.selectByExample(me);
 	}
 
 	@Override
@@ -249,7 +179,7 @@ public class MspApplyServiceImpl implements MspApplyService {
 	public List<MspApplydetails> getApplyDetails(String applyId) {
 		MspApplydetailsExample me = new MspApplydetailsExample();
 		me.or().andApplyIdEqualTo(applyId);
-		return mspApplyDetailsMapper.selectByExample(me);
+		return mspApplydetailsMapper.selectByExample(me);
 	}
 
 	@Override
@@ -270,14 +200,14 @@ public class MspApplyServiceImpl implements MspApplyService {
 	public List<MspAbnormalcreditdetail> getAbnormalCreditDetail(String applyId) {
 		MspAbnormalcreditdetailExample me = new MspAbnormalcreditdetailExample();
 		me.or().andAbcdIdEqualTo(applyId);
-		return mspAbnormalCreditDetailMapper.selectByExample(me);
+		return mspAbnormalcreditdetailMapper.selectByExample(me);
 	}
 
 	@Override
 	public List<MspAbnormalcredit> getAbnormalCredit(String applyId) {
 		MspAbnormalcreditExample me = new MspAbnormalcreditExample();
 		me.or().andApplyIdEqualTo(applyId);
-		return mspAbnormalCreditMapper.selectByExample(me);
+		return mspAbnormalcreditMapper.selectByExample(me);
 	}
 
 	@Override

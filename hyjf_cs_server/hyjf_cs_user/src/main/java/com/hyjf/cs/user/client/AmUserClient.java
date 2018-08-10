@@ -211,16 +211,41 @@ public interface AmUserClient {
 
 	List<EvalationVO> getEvalationRecord();
 
+	/**
+	 * 获取测评结果
+	 * @param evalationType
+	 * @return
+	 */
     EvalationVO getEvalationByEvalationType(String evalationType);
 
-    UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+	/**
+	 * 插入测评信息
+	 * @param userEvalationRequest
+	 * @return
+	 */
+	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
 
 	UserInfoVO findUserInfoByCardNo(String cradNo);
 
+	/**
+	 * 保存开户日志
+	 * @param request
+	 * @return
+	 */
 	int updateUserAccountLog(BankOpenRequest request);
 
+	/**
+	 * 根据电子账户号查询用户ID
+	 * @param accountId
+	 * @return
+	 */
 	BankOpenAccountVO selectByAccountId(String accountId);
 
+	/**
+	 * 风险测评结果
+	 * @param userId
+	 * @return
+	 */
 	UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 
 	void deleteUserEvalationResultByUserId(Integer userId);
@@ -249,8 +274,19 @@ public interface AmUserClient {
 	 */
 	Integer saveCardNoToBank(BankCardRequest request);
 
+	/**
+	 * 待解绑卡校验
+	 * @param userId
+	 * @param cardNo
+	 * @return
+	 */
     BankCardVO queryUserCardValid(String userId, String cardNo);
 
+	/**
+	 * 已绑卡校验
+	 * @param userId
+	 * @return
+	 */
 	int countUserCardValid(String userId);
 
 	int deleteUserCardByUserId(String userId);
@@ -274,13 +310,33 @@ public interface AmUserClient {
      */
 	String getBankOpenAccountFiledMess(String logOrdId);
 
+	/**
+	 * 判断企业用户是否已开户
+	 * @param userId
+	 * @return
+	 */
 	int isCompAccount(Integer userId);
 
+	/**
+	 * 根据渠道号检索推广渠道是否存在
+	 * @param utmId
+	 * @return
+	 */
 	UtmPlatVO selectUtmPlatByUtmId(String utmId);
 
+	/**
+	 * 我的邀请列表
+	 * @param requestBean
+	 * @return
+	 */
     List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 
-    int selectMyInviteCount(MyInviteListRequest requestBean);
+	/**
+	 * 我的邀请记录总数
+	 * @param requestBean
+	 * @return
+	 */
+	int selectMyInviteCount(MyInviteListRequest requestBean);
 
     /**
 	 * 查询同步银行卡号
@@ -386,15 +442,50 @@ public interface AmUserClient {
 	 */
     List<AccountBankVO> selectAccountBank(Integer userId, int status);
 
-    List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
 
-    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+	/**
+	 * 获取开户账号
+	 * @param accountId
+	 * @return
+	 */
+	BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+
+	/**
+	 * 根据绑定信息取得用户id
+	 * @param bindUniqueId
+	 * @param bindPlatformId
+	 * @return
+	 */
 	Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId);
 
+	/**
+	 * 插入各种信息
+	 * @param userId
+	 * @param bindPlatformId
+	 * @return
+	 */
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
+	/**
+	 * 授权
+	 * @param userId
+	 * @param bindUniqueId
+	 * @param pid
+	 * @return
+	 */
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
 
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @return
+	 */
 	BankCardVO getBankCardByUserId(Integer userId);
 
 	/**
@@ -406,8 +497,7 @@ public interface AmUserClient {
 
 	/**
 	 * 插入各种信息
-	 * @auth sunpeikai
-	 * @param
+	 * @param userActionUtmRequest
 	 * @return
 	 */
 	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);

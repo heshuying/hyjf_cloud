@@ -3,7 +3,7 @@ package com.hyjf.am.trade.service.front.coupon.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
-import com.hyjf.am.trade.dao.mapper.customize.coupon.MyCouponListCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.MyCouponListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;

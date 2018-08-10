@@ -1,11 +1,10 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
-import java.util.List;
-import java.util.Map;
-
+import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
+import java.util.List;
+import java.util.Map;
 
 public interface UserInfoCustomizeMapper {
 
@@ -20,7 +19,7 @@ public interface UserInfoCustomizeMapper {
     /**
      * 查询员工信息
      *
-     * @param referrerName
+     * @param
      * @return
      */
     public UserInfoCustomize queryUserInfoByEmployeeName(@Param("employeeName") String employeeName);
@@ -28,7 +27,7 @@ public interface UserInfoCustomizeMapper {
     /**
      * 查询员工部门信息
      *
-     * @param userInfoCustomize
+     * @param
      * @return
      */
     public List<UserInfoCustomize> queryDepartmentInfoByUserId(@Param("userId") Integer userId);

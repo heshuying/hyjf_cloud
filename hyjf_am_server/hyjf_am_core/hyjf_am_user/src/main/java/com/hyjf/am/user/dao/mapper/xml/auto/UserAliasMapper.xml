@@ -103,17 +103,20 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserAlias" >
-    insert into ht_user_alias (user_id, sign, `alias`, 
-      client, package_code)
-    values (#{userId,jdbcType=INTEGER}, #{sign,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, 
-      #{client,jdbcType=VARCHAR}, #{packageCode,jdbcType=VARCHAR})
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_user_alias (sign, `alias`, client, 
+      package_code)
+    values (#{sign,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, #{client,jdbcType=VARCHAR}, 
+      #{packageCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserAlias" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into ht_user_alias
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        user_id,
-      </if>
       <if test="sign != null" >
         sign,
       </if>
@@ -128,9 +131,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
       <if test="sign != null" >
         #{sign,jdbcType=VARCHAR},
       </if>

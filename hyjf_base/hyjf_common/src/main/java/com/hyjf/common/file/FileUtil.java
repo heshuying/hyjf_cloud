@@ -330,7 +330,7 @@ public class FileUtil {
      * @throws IOException
      */
     public static boolean getRemoteFile(String strUrl, String fileName) throws IOException {
-    	System.out.println("-------------getRemoteFile地址："+strUrl + "######" +fileName);
+    	logger.info("-------------getRemoteFile地址："+strUrl + "-----" +fileName);
 		URL url = new URL(strUrl);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		// 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
@@ -353,7 +353,7 @@ public class FileUtil {
 				output.write(buffer, 0, count);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("文件获取失败:", e);
 		} finally {
 			if (input != null) {
 				input.close();

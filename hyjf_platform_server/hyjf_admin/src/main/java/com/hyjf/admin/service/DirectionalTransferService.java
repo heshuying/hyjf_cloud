@@ -16,10 +16,15 @@ public interface DirectionalTransferService {
     /**
      * 查询条数
      * @auth sunpeikai
-     * @param
+     * @param request 筛选条件
      * @return
      */
     Integer getDirectionalTransferCount(DirectionalTransferListRequest request);
-
+    /**
+     * 查询定向转账列表
+     * @auth sunpeikai
+     * @param request 筛选条件
+     * @return
+     */
     List<AccountDirectionalTransferVO> searchDirectionalTransferList(DirectionalTransferListRequest request);
 }

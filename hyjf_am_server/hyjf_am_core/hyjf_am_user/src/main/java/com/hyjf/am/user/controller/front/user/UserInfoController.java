@@ -20,7 +20,7 @@ import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
-import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;

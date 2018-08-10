@@ -47,7 +47,7 @@ public class HjhAutoCreditContoller extends BaseController {
                     List<String> creditList = this.hjhAutoCreditService.updateAutoCredit(hjhAccede, hjhAccede.getCreditCompleteFlag());
                     // 清算的债转编号不为空
                     if (CollectionUtils.isNotEmpty(creditList)) {
-                        for (int j = 0; i < creditList.size(); j++) {
+                        for (int j = 0; j < creditList.size(); j++) {
                             try {
                                 // 债转编号
                                 String creditNid = creditList.get(j);

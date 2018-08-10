@@ -6,13 +6,10 @@ import java.util.Map;
 
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.trade.dao.mapper.auto.HjhPlanAssetMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AssetListServiceCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample;
 import com.hyjf.am.trade.service.admin.AssetListService;

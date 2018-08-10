@@ -7,7 +7,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;

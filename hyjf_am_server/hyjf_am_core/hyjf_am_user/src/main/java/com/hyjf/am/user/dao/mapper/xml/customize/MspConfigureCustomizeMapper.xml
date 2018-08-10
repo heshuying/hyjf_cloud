@@ -491,11 +491,7 @@
 		    (select region_name from ht_msp_region hmr where hmr.region_id=hfml.credit_address) credit_address, 
 		    guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
 		    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
-		    update_time, 
-		    <!-- id, configure_name, loan_type, service_type, approval_result, loan_money, loan_time_limit, 
-		    credit_address, guarantee_type, unredeemed_money, repayment_status, overdue_amount, 
-		    overdue_date, overdue_length, overdue_reason, create_user, create_time, update_user, 
-		    update_time, del_flg, -->
+		    update_time,
 		    CASE loan_type WHEN '01' THEN '经营' WHEN '02' THEN '消费' WHEN '99' THEN '其他' ELSE '其他' END loan_type_name,
 		    CASE service_type WHEN '01' THEN '信用额度' WHEN '02' THEN '一般借贷' WHEN '03' THEN '消费信贷' WHEN '04' THEN '循环贷' WHEN '05' THEN '其他' ELSE '其他' END  service_type_name,
 		    CASE approval_result WHEN '01' THEN '审批通过' WHEN '02' THEN '审批拒绝' WHEN '04' THEN '重新审批' WHEN '05' THEN '客户取消' ELSE '其他' END approval_result_name,

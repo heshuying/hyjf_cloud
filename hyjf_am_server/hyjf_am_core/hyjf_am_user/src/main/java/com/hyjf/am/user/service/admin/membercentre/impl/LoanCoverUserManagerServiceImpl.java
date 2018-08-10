@@ -4,18 +4,16 @@
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
 import com.hyjf.am.user.service.admin.membercentre.LoanCoverUserManagerService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -29,12 +27,7 @@ import java.util.List;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class LoanCoverUserManagerServiceImpl implements LoanCoverUserManagerService {
-
-    @Autowired
-    private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
-    @Autowired
-    private CertificateAuthorityMapper certificateAuthorityMapper;
+public class LoanCoverUserManagerServiceImpl extends BaseServiceImpl implements LoanCoverUserManagerService {
 
     private static Logger logger = LoggerFactory.getLogger(LoanCoverUserManagerServiceImpl.class);
 

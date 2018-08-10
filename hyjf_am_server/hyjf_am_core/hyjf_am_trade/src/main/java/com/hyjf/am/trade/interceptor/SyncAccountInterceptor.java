@@ -57,7 +57,8 @@ public class SyncAccountInterceptor implements Interceptor {
                 logger.info("=====" + INTERCEPTOR_NAME + "拦截到账户更新请求,准备发送账户信息到mq,进行crm账户余额同步处理=====");
                 logger.info("====="+INTERCEPTOR_NAME+" paramObj=[{}] =====", JSON.toJSON(paramObj));
                 jsonStr = JSON.toJSONString(boundSql.getParameterObject());
-                syncAccountProducer.messageSend(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC,UUID.randomUUID().toString(),jsonStr.getBytes()));
+                // 延迟等级为9 (5分钟)
+                syncAccountProducer.messageSendDelay(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC,UUID.randomUUID().toString(),jsonStr.getBytes()) , 9);
                 logger.info("=====" + INTERCEPTOR_NAME + "发送账户信息[{}]到mq [成功]=====", jsonStr);
             }
         } catch (Exception e) {

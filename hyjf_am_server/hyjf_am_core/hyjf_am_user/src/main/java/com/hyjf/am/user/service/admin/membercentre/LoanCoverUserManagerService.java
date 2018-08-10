@@ -6,6 +6,7 @@ package com.hyjf.am.user.service.admin.membercentre;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
+import com.hyjf.am.user.service.BaseService;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * @version UserManagerService, v0.1 2018/6/20 9:47
  *          后台管理系统：会员中心->借款盖章用户
  */
-public interface LoanCoverUserManagerService {
+public interface LoanCoverUserManagerService extends BaseService {
 
     /**
      * 根据筛选条件查找借款盖章用户

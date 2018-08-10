@@ -4,7 +4,7 @@ import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.trade.account.AppAccountTradeListCustomizeResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
-import com.hyjf.am.trade.dao.model.customize.app.AppAccountTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppAccountTradeListCustomize;
 import com.hyjf.am.trade.service.front.account.AccountTradeService;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;

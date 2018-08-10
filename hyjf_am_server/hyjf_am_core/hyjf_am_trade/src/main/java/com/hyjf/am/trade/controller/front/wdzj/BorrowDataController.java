@@ -4,8 +4,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WDZJBorrowListDataCustomize;
+import com.hyjf.am.trade.dao.model.customize.WDZJPreapysListCustomize;
 import com.hyjf.am.trade.service.front.wdzj.BorrowDataService;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
@@ -38,7 +38,7 @@ public class BorrowDataController extends BaseController {
     @RequestMapping("/get_borrowlist")
     public BorrowDataResponse selectBorrowList(@RequestBody Map<String,Object> requestBean){
         BorrowDataResponse response = new BorrowDataResponse();
-        List<BorrowListCustomize> listResult = borrowDataService.selectBorrowList(requestBean);
+        List<WDZJBorrowListDataCustomize> listResult = borrowDataService.selectBorrowList(requestBean);
         if(!CollectionUtils.isEmpty(listResult)){
             response.setResultList(CommonUtils.convertBeanList(listResult,BorrowListCustomizeVO.class));
         }
@@ -75,7 +75,7 @@ public class BorrowDataController extends BaseController {
     @RequestMapping("/get_preapyslist")
     public PreapysListResponse selectPreapysList(@RequestBody Map<String, Object> requestBean){
         PreapysListResponse response = new PreapysListResponse();
-        List<PreapysListCustomize> listResult = borrowDataService.selectPreapysList(requestBean);
+        List<WDZJPreapysListCustomize> listResult = borrowDataService.selectPreapysList(requestBean);
         if(!CollectionUtils.isEmpty(listResult)){
             response.setResultList(CommonUtils.convertBeanList(listResult,PreapysListCustomizeVO.class));
         }

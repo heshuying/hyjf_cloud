@@ -3369,8 +3369,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String, Object> params) {
         String url = BASE_URL +"/app/selectProjectInvestList";
         AppProjectInvestListCustomizeResponse response = restTemplate.postForEntity(url,params,AppProjectInvestListCustomizeResponse.class).getBody();
-        if (response!=null){
-            response.getResultList();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
@@ -3613,6 +3613,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         HjhCreditUnderTakeResponse response = restTemplate.postForEntity(url,params,HjhCreditUnderTakeResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据borrowNid查询风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:21
+     */
+    @Override
+    public BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoBLOBByborrowNid/" + borrowNid;
+        BorrowInfoWithBLOBResponse response = restTemplate.getForEntity(url,BorrowInfoWithBLOBResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
         }
         return null;
     }
