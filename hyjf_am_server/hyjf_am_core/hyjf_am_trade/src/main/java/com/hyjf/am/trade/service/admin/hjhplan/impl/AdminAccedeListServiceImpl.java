@@ -36,7 +36,13 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 	@Autowired
 	private HjhAccedeMapper hjhAccedeMapper;
 	
-
+	/**
+	 * 检索加入明细件数
+	 * 
+	 * @Title countAccedeRecord
+	 * @param form
+	 * @return
+	 */
 	@Override
 	public Integer countAccedeListTotal(AccedeListRequest form) {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -88,6 +94,10 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		return count;
 	}
 
+	/**
+	 * 加入明细列表
+	 * @return
+	 */
 	@Override
 	public List<AccedeListCustomizeVO> selectAccedeListList(AccedeListRequest form, int limitStart, int limitEnd) {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -141,7 +151,11 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		
 		return this.adminPlanAccedeListCustomizeMapper.selectAccedeRecordList(param);
 	}
-
+	
+    /**
+	 * 加入明细列表不分页
+	 * @return
+	 */
 	@Override
 	public List<AccedeListCustomizeVO> selectAccedeListByParamWithoutPage(AccedeListRequest request) {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -192,6 +206,10 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		return this.adminPlanAccedeListCustomizeMapper.selectAccedeRecordList(param);
 	}
 
+    /**
+	 * 加入明细列表列总计
+	 * @return
+	 */
 	@Override
 	public HjhAccedeSumVO getCalcSumByParam(AccedeListRequest request) {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -230,6 +248,10 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		return this.adminPlanAccedeListCustomizeMapper.sumAccedeRecord(param);
 	}
 
+    /**
+	 * 更新协议发送状态
+	 * @return
+	 */
 	@Override
 	public int updateSendStatusByParam(AccedeListRequest request) {
 		HjhAccede hjhAccede = new HjhAccede();
@@ -246,6 +268,10 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		return ret;
 	}
 
+    /**
+	 * 查询用户投资详情
+	 * @return
+	 */
 	@Override
 	public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
 		UserHjhInvistDetailVO vo = this.adminPlanAccedeListCustomizeMapper.selectUserHjhInvistDetail(request);
