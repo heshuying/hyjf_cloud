@@ -5,8 +5,6 @@ package com.hyjf.am.trade.service.impl;
 
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -22,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 资金服务:BaseService实现类

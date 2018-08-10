@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.List;
 
-public class BorrowListCustomize implements Serializable {
+public class WDZJBorrowListDataCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private String projectId;
@@ -23,7 +23,7 @@ public class BorrowListCustomize implements Serializable {
     private String successTime;
     private String reward;
     
-    private List<TenderListCustomize> subscribes;
+    private List<WDZJTenderListDataCustomize> subscribes;
 
 	public String getProjectId() {
 		return encryptBorrowNid(projectId);
@@ -105,11 +105,11 @@ public class BorrowListCustomize implements Serializable {
 		this.successTime = successTime;
 	}
 
-	public List<TenderListCustomize> getSubscribes() {
+	public List<WDZJTenderListDataCustomize> getSubscribes() {
 		return subscribes;
 	}
 
-	public void setSubscribes(List<TenderListCustomize> subscribes) {
+	public void setSubscribes(List<WDZJTenderListDataCustomize> subscribes) {
 		this.subscribes = subscribes;
 	}
 

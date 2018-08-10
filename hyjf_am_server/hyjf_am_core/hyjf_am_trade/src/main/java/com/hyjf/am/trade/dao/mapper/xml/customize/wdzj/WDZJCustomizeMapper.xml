@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.mybatis.mapper.customize.apiweb.wdzj.WDZJCustomizeMapper" >
-	<resultMap id="BorrowListResultMap" type="com.hyjf.mybatis.model.customize.apiweb.wdzj.BorrowListCustomize" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper" >
+	<resultMap id="BorrowListResultMap" type="com.hyjf.am.trade.dao.model.customize.wdzj.WDZJBorrowListDataCustomize" >
 		<collection property="subscribes" column="borrow_nid"  select="selectTenderList" />
 	</resultMap>
-	<resultMap id="TenderListResultMap" type="com.hyjf.mybatis.model.customize.apiweb.wdzj.TenderListCustomize" >
+	<resultMap id="TenderListResultMap" type="com.hyjf.am.trade.dao.model.customize.wdzj.WDZJTenderListDataCustomize" >
 	</resultMap>
-	<resultMap id="PreapysListCustomize" type="com.hyjf.mybatis.model.customize.apiweb.wdzj.PreapysListCustomize" >
+	<resultMap id="PreapysListCustomize" type="com.hyjf.am.trade.dao.model.customize.wdzj.WDZJPreapysListCustomize" >
 	</resultMap>
 	<select id="selectBorrowList" parameterType="map" resultMap="BorrowListResultMap">
 		SELECT
