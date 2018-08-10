@@ -3,12 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin.exception;
 
-import com.hyjf.am.response.admin.TenderExceptionSolveResponse;
-import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
-import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminPlanAccedeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 
 import java.util.List;
 import java.util.Map;

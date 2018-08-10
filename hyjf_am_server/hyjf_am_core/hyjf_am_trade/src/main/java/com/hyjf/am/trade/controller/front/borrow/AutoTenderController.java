@@ -15,7 +15,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoTenderService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;

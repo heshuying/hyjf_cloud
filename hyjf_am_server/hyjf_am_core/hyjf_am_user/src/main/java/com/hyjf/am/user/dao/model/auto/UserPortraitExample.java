@@ -1884,6 +1884,666 @@ public class UserPortraitExample {
             addCriterion("mobile not between", value1, value2, "mobile");
             return (Criteria) this;
         }
+
+        public Criteria andBankTotalIsNull() {
+            addCriterion("bank_total is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalIsNotNull() {
+            addCriterion("bank_total is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalEqualTo(BigDecimal value) {
+            addCriterion("bank_total =", value, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalNotEqualTo(BigDecimal value) {
+            addCriterion("bank_total <>", value, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalGreaterThan(BigDecimal value) {
+            addCriterion("bank_total >", value, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_total >=", value, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalLessThan(BigDecimal value) {
+            addCriterion("bank_total <", value, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_total <=", value, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalIn(List<BigDecimal> values) {
+            addCriterion("bank_total in", values, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalNotIn(List<BigDecimal> values) {
+            addCriterion("bank_total not in", values, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_total between", value1, value2, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankTotalNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_total not between", value1, value2, "bankTotal");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionIsNull() {
+            addCriterion("fund_retention is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionIsNotNull() {
+            addCriterion("fund_retention is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionEqualTo(BigDecimal value) {
+            addCriterion("fund_retention =", value, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionNotEqualTo(BigDecimal value) {
+            addCriterion("fund_retention <>", value, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionGreaterThan(BigDecimal value) {
+            addCriterion("fund_retention >", value, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("fund_retention >=", value, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionLessThan(BigDecimal value) {
+            addCriterion("fund_retention <", value, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("fund_retention <=", value, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionIn(List<BigDecimal> values) {
+            addCriterion("fund_retention in", values, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionNotIn(List<BigDecimal> values) {
+            addCriterion("fund_retention not in", values, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("fund_retention between", value1, value2, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andFundRetentionNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("fund_retention not between", value1, value2, "fundRetention");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeIsNull() {
+            addCriterion("last_repay_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeIsNotNull() {
+            addCriterion("last_repay_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeEqualTo(Integer value) {
+            addCriterion("last_repay_time =", value, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeNotEqualTo(Integer value) {
+            addCriterion("last_repay_time <>", value, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeGreaterThan(Integer value) {
+            addCriterion("last_repay_time >", value, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("last_repay_time >=", value, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeLessThan(Integer value) {
+            addCriterion("last_repay_time <", value, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("last_repay_time <=", value, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeIn(List<Integer> values) {
+            addCriterion("last_repay_time in", values, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeNotIn(List<Integer> values) {
+            addCriterion("last_repay_time not in", values, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeBetween(Integer value1, Integer value2) {
+            addCriterion("last_repay_time between", value1, value2, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastRepayTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("last_repay_time not between", value1, value2, "lastRepayTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistIsNull() {
+            addCriterion("invite_regist is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistIsNotNull() {
+            addCriterion("invite_regist is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistEqualTo(Integer value) {
+            addCriterion("invite_regist =", value, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistNotEqualTo(Integer value) {
+            addCriterion("invite_regist <>", value, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistGreaterThan(Integer value) {
+            addCriterion("invite_regist >", value, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_regist >=", value, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistLessThan(Integer value) {
+            addCriterion("invite_regist <", value, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_regist <=", value, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistIn(List<Integer> values) {
+            addCriterion("invite_regist in", values, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistNotIn(List<Integer> values) {
+            addCriterion("invite_regist not in", values, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistBetween(Integer value1, Integer value2) {
+            addCriterion("invite_regist between", value1, value2, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRegistNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_regist not between", value1, value2, "inviteRegist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeIsNull() {
+            addCriterion("invite_recharge is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeIsNotNull() {
+            addCriterion("invite_recharge is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeEqualTo(Integer value) {
+            addCriterion("invite_recharge =", value, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeNotEqualTo(Integer value) {
+            addCriterion("invite_recharge <>", value, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeGreaterThan(Integer value) {
+            addCriterion("invite_recharge >", value, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_recharge >=", value, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeLessThan(Integer value) {
+            addCriterion("invite_recharge <", value, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_recharge <=", value, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeIn(List<Integer> values) {
+            addCriterion("invite_recharge in", values, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeNotIn(List<Integer> values) {
+            addCriterion("invite_recharge not in", values, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeBetween(Integer value1, Integer value2) {
+            addCriterion("invite_recharge between", value1, value2, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRechargeNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_recharge not between", value1, value2, "inviteRecharge");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderIsNull() {
+            addCriterion("invite_tender is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderIsNotNull() {
+            addCriterion("invite_tender is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderEqualTo(Integer value) {
+            addCriterion("invite_tender =", value, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderNotEqualTo(Integer value) {
+            addCriterion("invite_tender <>", value, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderGreaterThan(Integer value) {
+            addCriterion("invite_tender >", value, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderGreaterThanOrEqualTo(Integer value) {
+            addCriterion("invite_tender >=", value, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderLessThan(Integer value) {
+            addCriterion("invite_tender <", value, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderLessThanOrEqualTo(Integer value) {
+            addCriterion("invite_tender <=", value, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderIn(List<Integer> values) {
+            addCriterion("invite_tender in", values, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderNotIn(List<Integer> values) {
+            addCriterion("invite_tender not in", values, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderBetween(Integer value1, Integer value2) {
+            addCriterion("invite_tender between", value1, value2, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteTenderNotBetween(Integer value1, Integer value2) {
+            addCriterion("invite_tender not between", value1, value2, "inviteTender");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldIsNull() {
+            addCriterion("yield is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldIsNotNull() {
+            addCriterion("yield is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldEqualTo(BigDecimal value) {
+            addCriterion("yield =", value, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldNotEqualTo(BigDecimal value) {
+            addCriterion("yield <>", value, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldGreaterThan(BigDecimal value) {
+            addCriterion("yield >", value, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("yield >=", value, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldLessThan(BigDecimal value) {
+            addCriterion("yield <", value, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("yield <=", value, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldIn(List<BigDecimal> values) {
+            addCriterion("yield in", values, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldNotIn(List<BigDecimal> values) {
+            addCriterion("yield not in", values, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("yield between", value1, value2, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andYieldNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("yield not between", value1, value2, "yield");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeIsNull() {
+            addCriterion("`attribute` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeIsNotNull() {
+            addCriterion("`attribute` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeEqualTo(Integer value) {
+            addCriterion("`attribute` =", value, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeNotEqualTo(Integer value) {
+            addCriterion("`attribute` <>", value, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeGreaterThan(Integer value) {
+            addCriterion("`attribute` >", value, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("`attribute` >=", value, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeLessThan(Integer value) {
+            addCriterion("`attribute` <", value, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeLessThanOrEqualTo(Integer value) {
+            addCriterion("`attribute` <=", value, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeIn(List<Integer> values) {
+            addCriterion("`attribute` in", values, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeNotIn(List<Integer> values) {
+            addCriterion("`attribute` not in", values, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeBetween(Integer value1, Integer value2) {
+            addCriterion("`attribute` between", value1, value2, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andAttributeNotBetween(Integer value1, Integer value2) {
+            addCriterion("`attribute` not between", value1, value2, "attribute");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceIsNull() {
+            addCriterion("bank_balance is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceIsNotNull() {
+            addCriterion("bank_balance is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceEqualTo(BigDecimal value) {
+            addCriterion("bank_balance =", value, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceNotEqualTo(BigDecimal value) {
+            addCriterion("bank_balance <>", value, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceGreaterThan(BigDecimal value) {
+            addCriterion("bank_balance >", value, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_balance >=", value, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceLessThan(BigDecimal value) {
+            addCriterion("bank_balance <", value, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_balance <=", value, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceIn(List<BigDecimal> values) {
+            addCriterion("bank_balance in", values, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceNotIn(List<BigDecimal> values) {
+            addCriterion("bank_balance not in", values, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_balance between", value1, value2, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankBalanceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_balance not between", value1, value2, "bankBalance");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitIsNull() {
+            addCriterion("account_await is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitIsNotNull() {
+            addCriterion("account_await is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitEqualTo(BigDecimal value) {
+            addCriterion("account_await =", value, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitNotEqualTo(BigDecimal value) {
+            addCriterion("account_await <>", value, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitGreaterThan(BigDecimal value) {
+            addCriterion("account_await >", value, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("account_await >=", value, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitLessThan(BigDecimal value) {
+            addCriterion("account_await <", value, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("account_await <=", value, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitIn(List<BigDecimal> values) {
+            addCriterion("account_await in", values, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitNotIn(List<BigDecimal> values) {
+            addCriterion("account_await not in", values, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("account_await between", value1, value2, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountAwaitNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("account_await not between", value1, value2, "accountAwait");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostIsNull() {
+            addCriterion("bank_frost is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostIsNotNull() {
+            addCriterion("bank_frost is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostEqualTo(BigDecimal value) {
+            addCriterion("bank_frost =", value, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostNotEqualTo(BigDecimal value) {
+            addCriterion("bank_frost <>", value, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostGreaterThan(BigDecimal value) {
+            addCriterion("bank_frost >", value, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_frost >=", value, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostLessThan(BigDecimal value) {
+            addCriterion("bank_frost <", value, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("bank_frost <=", value, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostIn(List<BigDecimal> values) {
+            addCriterion("bank_frost in", values, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostNotIn(List<BigDecimal> values) {
+            addCriterion("bank_frost not in", values, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_frost between", value1, value2, "bankFrost");
+            return (Criteria) this;
+        }
+
+        public Criteria andBankFrostNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("bank_frost not between", value1, value2, "bankFrost");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

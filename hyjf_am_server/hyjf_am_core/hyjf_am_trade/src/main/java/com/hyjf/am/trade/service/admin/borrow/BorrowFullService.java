@@ -5,7 +5,7 @@ package com.hyjf.am.trade.service.admin.borrow;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowFullCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowFullCustomize;
 
 import java.util.List;
 

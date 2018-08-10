@@ -5,10 +5,10 @@ package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.resquest.trade.HjhPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanAccedeCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.DebtPlanBorrowCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.UserHjhInvistDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.DebtPlanAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.DebtPlanBorrowCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.UserHjhInvistDetailCustomize;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;

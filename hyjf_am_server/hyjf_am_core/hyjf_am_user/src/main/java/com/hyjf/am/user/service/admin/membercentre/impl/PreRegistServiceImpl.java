@@ -1,15 +1,10 @@
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.PreRegistMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmPlatMapper;
-import com.hyjf.am.user.dao.mapper.customize.AdminPreRegistCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
 import com.hyjf.am.user.service.admin.membercentre.PreRegistService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,17 +15,8 @@ import java.util.Map;
 
 
 @Service
-public class PreRegistServiceImpl implements PreRegistService {
-	@Autowired
-	private AdminPreRegistCustomizeMapper adminPreRegistCustomizeMapper;
-	@Autowired
-	private UserMapper usersMapper;
-	@Autowired
-	private UtmPlatMapper utmPlatMapper;
-	@Autowired
-	private UtmMapper utmMapper;
-	@Autowired
-	private PreRegistMapper preRegistMapper;
+public class PreRegistServiceImpl extends BaseServiceImpl implements PreRegistService {
+
     /**
      * 获取预注册条数
      * 

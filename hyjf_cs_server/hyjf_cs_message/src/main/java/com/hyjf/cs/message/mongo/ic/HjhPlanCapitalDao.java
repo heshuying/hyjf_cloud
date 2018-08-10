@@ -3,6 +3,7 @@ package com.hyjf.cs.message.mongo.ic;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -31,10 +32,11 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapitalVO> {
         return  mongoTemplate.count(query, getEntityClass());
     }
 
-    public List<HjhPlanCapitalVO> findAllList(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
+    public List<HjhPlanCapitalVO> findAllList(HjhPlanCapitalRequest request){
         Query query = new Query();
-        Criteria criteria = createCriteria(hjhPlanCapitalVO);
-        query.addCriteria(criteria);
+        Criteria criteria = new Criteria();
+        criteria.and("date").gte(request.getDateFromSrch());
+        criteria.and("date").lte(request.getDateToSrch());
 
         return mongoTemplate.find(query, getEntityClass());
     }

@@ -6,6 +6,7 @@ package com.hyjf.am.user.service.admin.membercentre;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
 import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
 import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
+import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @version UserManagerService, v0.1 2018/6/20 9:47
  *          后台管理系统：会员中心->会员管理
  */
-public interface EvaluationManagerService {
+public interface EvaluationManagerService extends BaseService{
 
     /**
      * 根据筛选条件查找测评信息

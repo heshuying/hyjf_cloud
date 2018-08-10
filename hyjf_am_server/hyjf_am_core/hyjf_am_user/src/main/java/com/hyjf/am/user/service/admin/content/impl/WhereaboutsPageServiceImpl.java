@@ -6,20 +6,15 @@ package com.hyjf.am.user.service.admin.content.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmMapper;
-import com.hyjf.am.user.dao.mapper.auto.WhereaboutsPageConfigMapper;
-import com.hyjf.am.user.dao.mapper.auto.WhereaboutsPagePictureMapper;
-import com.hyjf.am.user.dao.mapper.customize.WhereaboutsPageConfigCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.admin.content.WhereaboutsPageService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,17 +24,8 @@ import java.util.List;
  * @version WhereaboutsPageServiceImpl, v0.1 2018/7/16 14:34
  */
 @Service
-public class WhereaboutsPageServiceImpl implements WhereaboutsPageService {
-	@Autowired
-	private WhereaboutsPageConfigMapper whereaboutsPageConfigMapper;
-	@Autowired
-	private WhereaboutsPageConfigCustomizeMapper whereaboutsPageConfigCustomizeMapper;
-	@Autowired
-	private UtmMapper utmMapper;
-	@Autowired
-	private UserMapper userMapper;
-	@Autowired
-	private WhereaboutsPagePictureMapper whereaboutsPagePictureMapper;
+public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements WhereaboutsPageService {
+
 	@Override
 	public WhereaboutsPageResponse searchAction(WhereaboutsPageRequest request) {
 		WhereaboutsPageResponse response = new WhereaboutsPageResponse();

@@ -8,7 +8,7 @@ import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAllocationEngineMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhRegionMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhPlanService;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;

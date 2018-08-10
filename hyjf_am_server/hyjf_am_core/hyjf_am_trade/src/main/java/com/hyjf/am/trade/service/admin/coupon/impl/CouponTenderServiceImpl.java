@@ -1,13 +1,12 @@
 package com.hyjf.am.trade.service.admin.coupon.impl;
 
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.coupon.CouponTenderCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.CouponTenderCustomizeMapper;
 import com.hyjf.am.trade.service.admin.coupon.CouponTenderService;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

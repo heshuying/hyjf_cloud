@@ -10,7 +10,7 @@ import com.hyjf.am.resquest.trade.TenderCancelRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 import com.hyjf.am.trade.service.front.account.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CouponUserCustomizeVO;

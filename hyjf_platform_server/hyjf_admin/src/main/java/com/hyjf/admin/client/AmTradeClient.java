@@ -2375,5 +2375,20 @@ public interface AmTradeClient {
      * @return
      */
     List<AccountRechargeVO> getAccountRecharge(int userId);
+    
+	/**
+	 * 根据userId获取提成方式
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+    Integer queryCrmCuttype(Integer userId);
+    
+	/**
+     * 发提成
+     * @auth libin
+     * @param accountVO 账户信息
+     * @return
+     */
+    Integer updateTenderCommissionRecord(CommissionComboRequest request);
 }
 

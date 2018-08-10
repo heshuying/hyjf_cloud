@@ -9,17 +9,20 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.response.admin.OADepartmentResponse;
 import com.hyjf.am.response.admin.TenderCommissionResponse;
+import com.hyjf.am.resquest.admin.CommissionComboRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.trade.service.admin.finance.AdminHjhCommissionService;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
@@ -39,6 +42,13 @@ public class AdminHjhCommissionController {
 	
 	@Autowired
 	AdminHjhCommissionService adminHjhCommissionService;
+	
+	private static final Logger logger = LoggerFactory.getLogger(AdminHjhCommissionController.class);
+	
+    /**
+     * 类名
+     */
+    private static final String THIS_CLASS = AdminHjhCommissionController.class.getName();
 	
 	/**
 	 * @Author: libin
@@ -130,4 +140,33 @@ public class AdminHjhCommissionController {
 		return response;
 	}
 	
+   /**
+	 * 提成发放方式
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("/queryCrmCuttype/{userId}")
+	public TenderCommissionResponse queryCrmCuttype(@PathVariable Integer userId) {
+		TenderCommissionResponse response = new TenderCommissionResponse();
+		Integer type = adminHjhCommissionService.queryCrmCuttype(userId);
+		response.setType(type);
+		return response;
+	}
+	
+   /**
+	 * 发提成
+	 * @param id
+	 * @return
+	 */
+	@PostMapping(value = "/updateTenderCommissionRecord")
+	public Integer updateTenderCommissionRecord(@RequestBody CommissionComboRequest request){
+		int flg = 0;
+		try {
+			// 发提成处理
+			flg = adminHjhCommissionService.updateTenderCommissionRecord(request);
+		} catch (Exception e) {
+			logger.error(THIS_CLASS, "/updateTenderCommissionRecord", e);
+        }
+		return flg;
+	}
 }

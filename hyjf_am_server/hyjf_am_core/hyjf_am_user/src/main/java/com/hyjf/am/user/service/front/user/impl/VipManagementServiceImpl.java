@@ -3,15 +3,12 @@
  */
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.VipDetailListCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.VipManageCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.VipUpdateGradeListCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.VipDetailListCustomize;
 import com.hyjf.am.user.dao.model.customize.VipManageListCustomize;
 import com.hyjf.am.user.dao.model.customize.VipUpdateGradeListCustomize;
 import com.hyjf.am.user.service.front.user.VipManagementService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -23,14 +20,7 @@ import java.util.Map;
  * @version vipManagementServiceImpl, v0.1 2018/7/2 17:49
  */
 @Service
-public class VipManagementServiceImpl implements VipManagementService {
-
-    @Autowired
-    private VipManageCustomizeMapper vipManageCustomizeMapper;
-    @Autowired
-    private VipDetailListCustomizeMapper vipDetailListCustomizeMapper;
-    @Autowired
-    private VipUpdateGradeListCustomizeMapper vipUpdateGradeListCustomizeMapper;
+public class VipManagementServiceImpl extends BaseServiceImpl implements VipManagementService {
 
     /**
      * 根据条件查询列表总数

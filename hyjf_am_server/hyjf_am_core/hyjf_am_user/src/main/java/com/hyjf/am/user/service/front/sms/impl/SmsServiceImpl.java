@@ -1,12 +1,11 @@
 package com.hyjf.am.user.service.front.sms.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.SmsCodeMapper;
 import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.front.sms.SmsService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.MD5;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +17,7 @@ import java.util.List;
  * @version SmsServiceImpl, v0.1 2018/4/12 17:32
  */
 @Service
-public class SmsServiceImpl implements SmsService {
-	@Autowired
-	private SmsCodeMapper smsCodeMapper;
+public class SmsServiceImpl extends BaseServiceImpl implements SmsService {
 
 	@Override
 	public int save(String mobile, String verificationType, String verificationCode, String platform, Integer status) {

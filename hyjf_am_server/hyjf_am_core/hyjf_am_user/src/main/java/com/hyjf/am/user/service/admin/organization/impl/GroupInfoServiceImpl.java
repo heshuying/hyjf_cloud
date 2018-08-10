@@ -3,12 +3,10 @@
  */
 package com.hyjf.am.user.service.admin.organization.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.service.admin.organization.GroupInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +18,6 @@ import java.util.List;
  */
 @Service
 public class GroupInfoServiceImpl extends BaseServiceImpl implements GroupInfoService {
-
-    @Autowired
-    private ROaDepartmentMapper rOaDepartmentMapper;
 
     /**
      * 查询集团组织结构List

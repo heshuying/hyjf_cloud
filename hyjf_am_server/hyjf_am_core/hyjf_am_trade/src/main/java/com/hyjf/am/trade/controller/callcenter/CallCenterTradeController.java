@@ -8,7 +8,7 @@ import com.hyjf.am.response.trade.RUserResponse;
 import com.hyjf.am.resquest.callcenter.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.RUser;
-import com.hyjf.am.trade.dao.model.customize.callcenter.*;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.callcenter.CallCenterTradeService;
 import com.hyjf.am.vo.callcenter.*;
 import com.hyjf.am.vo.trade.RUserVO;

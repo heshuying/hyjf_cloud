@@ -5,8 +5,8 @@ package com.hyjf.am.trade.service.front.batch.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
@@ -30,9 +30,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
 import java.util.*;

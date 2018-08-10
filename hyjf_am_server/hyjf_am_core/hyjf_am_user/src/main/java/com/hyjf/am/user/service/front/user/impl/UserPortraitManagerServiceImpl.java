@@ -5,25 +5,19 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserPortraitManagerMapper;
 import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
 import com.hyjf.am.user.dao.model.auto.UserPortrait;
 import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 import com.hyjf.am.user.service.front.user.UserPortraitManagerService;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -39,14 +33,7 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->用户画像 接口实现
  */
 @Service
-public class UserPortraitManagerServiceImpl implements UserPortraitManagerService {
-
-    @Autowired
-    private UserPortraitManagerMapper userPortraitManagerMapper;
-    @Autowired
-    private UserPortraitMapper userPortraitMapper;
-    @Autowired
-    private SpreadsUserMapper spreadsUserMapper;
+public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements UserPortraitManagerService {
 
     private static Logger logger = LoggerFactory.getLogger(UserPortraitManagerServiceImpl.class);
 

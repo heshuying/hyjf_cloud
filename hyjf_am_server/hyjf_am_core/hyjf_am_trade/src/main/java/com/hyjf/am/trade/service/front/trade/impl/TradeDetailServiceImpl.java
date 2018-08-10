@@ -2,12 +2,10 @@ package com.hyjf.am.trade.service.front.trade.impl;
 
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
-import com.hyjf.am.trade.dao.mapper.auto.AccountTradeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.UserTradeDetailCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.app.AppTradeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserRechargeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserTradeListCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.WebUserWithdrawListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
 import com.hyjf.am.trade.service.front.trade.TradeDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
