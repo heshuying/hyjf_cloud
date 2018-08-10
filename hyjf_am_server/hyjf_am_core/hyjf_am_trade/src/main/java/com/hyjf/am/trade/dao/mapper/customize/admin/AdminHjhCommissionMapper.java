@@ -44,4 +44,11 @@ public interface AdminHjhCommissionMapper {
      * @return
      */
     List<OADepartmentCustomizeVO> getCrmDepartmentList();
+    
+    /**
+     * 根据用户id查询其在crm中的员工属性
+     * @param id
+     * @return
+     */
+    Integer queryCuttype(Integer userId);
 }

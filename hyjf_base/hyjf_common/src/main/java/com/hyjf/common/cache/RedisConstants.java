@@ -258,4 +258,11 @@ public class RedisConstants {
      * 用户画像评分
      */
     public static final String USERPORTRAIT_SCORE = "userPortrait_score";
+    
+    /**
+	 * 汇计划提成
+	 * 之前是大寫PUSH_MONEY
+	 * add by libin
+	 */
+	public static final String PUSH_MONEY_ = "push_money:";
 }

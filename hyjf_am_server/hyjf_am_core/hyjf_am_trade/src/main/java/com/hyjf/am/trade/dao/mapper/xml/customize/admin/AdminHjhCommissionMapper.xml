@@ -245,4 +245,12 @@
 	  <result column="position_category" property="positionCategory" jdbcType="INTEGER" />
 	  <result column="listorder" property="listorder" jdbcType="INTEGER" />
 	</resultMap>
+	
+	<!-- 根据用户id 查询其在crm的员工属性   提成发放方式（1线上2线下）   -->
+	<select id="queryCuttype" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+		SELECT CASE d.cuttype WHEN 1 THEN 3 WHEN 2 THEN 2 ELSE 0 END as cuttype
+		FROM ht_r_oa_users ou 
+		INNER JOIN ht_r_oa_department d on ou.departmentid= d.id
+		WHERE ou.hyd_id= #{userId}
+	</select>
 </mapper>
