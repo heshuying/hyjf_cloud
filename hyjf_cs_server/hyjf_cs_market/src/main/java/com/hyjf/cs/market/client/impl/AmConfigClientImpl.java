@@ -219,4 +219,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
         return null;
     }
+	/**
+	 * 添加反馈信息
+	 * @param submissionsVO
+	 * @return
+	 */
+	@Override
+	public int addSubmission(SubmissionsVO submissionsVO){
+		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
+		return response;
+	}
 }
