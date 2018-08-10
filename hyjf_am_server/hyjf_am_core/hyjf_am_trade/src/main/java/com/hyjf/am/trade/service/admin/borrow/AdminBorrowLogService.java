@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin.borrow;
 
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowLogCustomize;
 
 import java.util.List;
 

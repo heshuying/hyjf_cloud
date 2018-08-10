@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 
-import com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.EveLogCustomize;
 
 import java.util.List;
 import java.util.Map;

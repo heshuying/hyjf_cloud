@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.app.AppRepayCalendarCustomize;
+import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
 import com.hyjf.am.trade.service.admin.RepayCalendarService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;

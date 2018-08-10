@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;

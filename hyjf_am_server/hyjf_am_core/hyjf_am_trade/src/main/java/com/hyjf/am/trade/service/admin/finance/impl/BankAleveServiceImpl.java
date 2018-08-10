@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.admin.AleveLogCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
+import com.hyjf.am.trade.dao.mapper.customize.AleveLogCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankAleveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

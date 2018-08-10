@@ -2,7 +2,7 @@ package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.OperationLogCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.OperationLogCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetType;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetTypeExample;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
@@ -11,7 +11,6 @@ import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

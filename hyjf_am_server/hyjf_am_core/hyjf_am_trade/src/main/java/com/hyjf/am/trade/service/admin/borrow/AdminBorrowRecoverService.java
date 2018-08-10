@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin.borrow;
 
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRecoverCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize;
 
 import java.util.List;
 

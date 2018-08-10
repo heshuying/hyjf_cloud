@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.trade.service.task;
 
-import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
+import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
 
 import java.math.BigDecimal;
 import java.util.List;

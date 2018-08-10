@@ -11,7 +11,7 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
 
 import java.util.List;
 import java.util.Map;

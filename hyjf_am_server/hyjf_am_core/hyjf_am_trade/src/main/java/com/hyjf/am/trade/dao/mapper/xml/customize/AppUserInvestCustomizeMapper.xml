@@ -38,7 +38,7 @@
 		</where>
 	</sql>
 
-	<resultMap id="AlreadyRepayListMap" type="com.hyjf.am.trade.dao.model.customize.app.AppAlreadyRepayListCustomize">
+	<resultMap id="AlreadyRepayListMap" type="com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize">
 		<id column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
 		<result column="interest" property="interest" jdbcType="VARCHAR" />

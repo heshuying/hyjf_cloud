@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.AccountRechargeCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AccountRechargeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
 import com.hyjf.am.trade.service.front.account.AccountRecharge;
 import org.springframework.beans.factory.annotation.Autowired;

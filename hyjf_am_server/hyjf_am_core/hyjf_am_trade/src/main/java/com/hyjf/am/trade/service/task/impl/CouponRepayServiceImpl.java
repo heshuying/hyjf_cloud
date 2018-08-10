@@ -3,11 +3,11 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.trade.BatchCouponTimeoutCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.BatchTyjRepayCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
+import com.hyjf.am.trade.dao.mapper.customize.BatchCouponTimeoutCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BatchTyjRepayCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.CouponRecoverCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
 import com.hyjf.am.trade.service.task.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.hyjf.am.trade.service.task.issuerecover.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueMessageService;
 import com.hyjf.common.bean.RedisBorrow;

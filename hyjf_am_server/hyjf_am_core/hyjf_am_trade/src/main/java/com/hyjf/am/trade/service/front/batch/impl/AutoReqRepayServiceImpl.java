@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.front.batch.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.AutoReqRepayBorrowCustomize;
+import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoReqRepayService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;

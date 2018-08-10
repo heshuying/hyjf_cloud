@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.admin.AccedeListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminPlanAccedeListCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AdminPlanAccedeListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminAccedeListService;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;

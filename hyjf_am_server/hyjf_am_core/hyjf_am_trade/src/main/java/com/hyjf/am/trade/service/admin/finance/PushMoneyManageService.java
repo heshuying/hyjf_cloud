@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.PushMoneyCustomize;
+import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 
 import java.util.List;
 

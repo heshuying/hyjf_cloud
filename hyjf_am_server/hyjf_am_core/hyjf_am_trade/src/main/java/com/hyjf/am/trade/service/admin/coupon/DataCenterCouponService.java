@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.admin.coupon;
 
 import com.hyjf.am.resquest.trade.DataCenterCouponRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
+import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
