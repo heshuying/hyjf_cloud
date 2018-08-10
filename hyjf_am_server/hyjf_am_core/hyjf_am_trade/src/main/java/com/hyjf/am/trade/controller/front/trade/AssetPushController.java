@@ -8,6 +8,7 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.asset.AssetPushService;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -164,5 +165,38 @@ public class AssetPushController extends BaseController {
            return assetPushService.updateHjhPlanAssetnew(hjhPlanAsset);
         }
         return 0;
+    }
+
+    /**
+     * 检查是否存在重复资产
+     * @param assetId
+     * @return
+     */
+    @RequestMapping("/checkDuplicateAssetId/{assetId}")
+    public HjhPlanAssetResponse checkDuplicateAssetId(@PathVariable String assetId) {
+        HjhPlanAssetResponse response = new HjhPlanAssetResponse();
+        List<HjhPlanAsset> hjhPlanAssetList = assetPushService.checkDuplicateAssetId(assetId);
+        if (!CollectionUtils.isEmpty(hjhPlanAssetList)) {
+            List<HjhPlanAssetVO> voList = CommonUtils.convertBeanList(hjhPlanAssetList, HjhPlanAssetVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 录标时添加企业资产
+     *
+     * @param borrowUserVO
+     * @return
+     */
+    @PostMapping("/insertCompanyInfoToBorrowUsers")
+    public int insertCompanyInfoToBorrowUsers(@RequestBody BorrowUserVO borrowUserVO) {
+        int result = 0;
+        if (borrowUserVO != null) {
+            BorrowUser borrowUser = new BorrowUser();
+            BeanUtils.copyProperties(borrowUserVO, borrowUser);
+            result =  assetPushService.insertCompanyInfoToBorrowUsers(borrowUser);
+        }
+        return result;
     }
 }

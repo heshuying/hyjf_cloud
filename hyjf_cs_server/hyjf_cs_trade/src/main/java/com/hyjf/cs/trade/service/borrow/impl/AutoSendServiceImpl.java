@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,7 +243,13 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         // 借款表插入
         autoSendClient.insertSelective(borrowVO);
         // 个人信息
-        this.insertBorrowManinfo(borrowNid, hjhPlanAssetVO, borrowVO);
+        if(hjhPlanAssetVO.getBorrowCompanyName() == null || hjhPlanAssetVO.getBorrowCompanyName().equals("")){
+            // 个人信息
+            this.insertBorrowManinfo(borrowNid, hjhPlanAssetVO, borrowVO);
+        }else{
+            //企业信息
+            this.insertBorrowCompanyManinfo(borrowNid, hjhPlanAssetVO, borrowVO);
+        }
 
         // 更新资产表
         HjhPlanAssetVO hjhPlanAssetnewVO = new HjhPlanAssetVO();
@@ -461,6 +468,143 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
         }
         autoSendClient.insertBorrowManinfo(borrowManinfo);
         return 0;
+    }
+
+    /**
+     * 企业信息
+     * @param borrowNid
+     * @param hjhPlanAsset
+     * @param borrow
+     * @return
+     */
+    public int insertBorrowCompanyManinfo(String borrowNid, HjhPlanAssetVO hjhPlanAsset, BorrowVO borrow) {
+        _log.info("插入企业信息", JSONObject.toJSON(hjhPlanAsset));
+        // 公司信息
+        BorrowUserVO borrowUsers = new BorrowUserVO();
+
+        borrowUsers.setBorrowNid(borrowNid);
+        borrowUsers.setBorrowPreNid(borrow.getBorrowPreNid());
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getBorrowCompanyName())) {
+            borrowUsers.setUsername(hjhPlanAsset.getBorrowCompanyName());
+        } else {
+            borrowUsers.setUsername(StringUtils.EMPTY);
+        }
+        //注册资本货币单位 	元-美元
+        borrowUsers.setCurrencyName("元");
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getRegisteredCapital())) {
+            borrowUsers.setRegCaptial(hjhPlanAsset.getRegisteredCapital());
+        } else {
+            borrowUsers.setRegCaptial(StringUtils.EMPTY);
+        }
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getIndustryInvolved())) {
+            borrowUsers.setIndustry(hjhPlanAsset.getIndustryInvolved());
+        } else {
+            borrowUsers.setIndustry(StringUtils.EMPTY);
+        }
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getIsComplaint())) {
+            borrowUsers.setLitigation(hjhPlanAsset.getIsComplaint());
+        } else {
+            borrowUsers.setLitigation(StringUtils.EMPTY);
+        }
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getOverdueReport())) {
+            borrowUsers.setCreReport(hjhPlanAsset.getOverdueReport());
+        } else {
+            borrowUsers.setCreReport(StringUtils.EMPTY);
+        }
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getRegistrationDate())) {
+            borrowUsers.setComRegTime(hjhPlanAsset.getRegistrationDate());
+        } else {
+            borrowUsers.setComRegTime(StringUtils.EMPTY);
+        }
+        //统一社会信用代码
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getUnifiedSocialCreditCode())) {
+            borrowUsers.setSocialCreditCode(hjhPlanAsset.getUnifiedSocialCreditCode());
+        } else {
+            borrowUsers.setSocialCreditCode(StringUtils.EMPTY);
+        }
+        //法人
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getLegalPerson())) {
+            borrowUsers.setLegalPerson(hjhPlanAsset.getLegalPerson());
+        } else {
+            borrowUsers.setLegalPerson(StringUtils.EMPTY);
+        }
+        //主营业务
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getMainBusiness())) {
+            borrowUsers.setMainBusiness(hjhPlanAsset.getMainBusiness());
+        } else {
+            borrowUsers.setMainBusiness(StringUtils.EMPTY);
+        }
+        //在平台逾期次数
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getOverdueTimes())) {
+            borrowUsers.setOverdueTimes(hjhPlanAsset.getOverdueTimes());
+        } else {
+            borrowUsers.setOverdueTimes(StringUtils.EMPTY);
+        }
+        //在平台逾期金额
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getOverdueAmount())) {
+            borrowUsers.setOverdueAmount(hjhPlanAsset.getOverdueAmount());
+        } else {
+            borrowUsers.setOverdueAmount(StringUtils.EMPTY);
+        }
+
+        //企贷审核信息  0未审核 1已审核
+        //企业证件
+        borrowUsers.setIsCertificate(1);
+
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getIsManaged())) {
+            borrowUsers.setIsOperation(Integer.valueOf(1));
+        } else {
+            borrowUsers.setIsOperation(0);
+        }
+        if (StringUtils.isNotEmpty(hjhPlanAsset.getFinancialSituation())) {
+            borrowUsers.setIsFinance(1);
+        } else {
+            borrowUsers.setIsFinance(0);
+        }
+        //企业信用
+        borrowUsers.setIsEnterpriseCreidt(1);
+        //法人信息
+        borrowUsers.setIsLegalPerson(1);
+        //资产状况
+        borrowUsers.setIsAsset(1);
+        //购销合同
+        borrowUsers.setIsPurchaseContract(1);
+        //供销合同
+        borrowUsers.setIsSupplyContract("1");
+        //征信报告逾期情况
+        borrowUsers.setOverdueReport("暂未提供");
+        //重大负债情况
+        borrowUsers.setDebtSituation("无");
+        //其他平台借款情况
+        borrowUsers.setOtherBorrowed("无");
+        //借款资金运用情况
+        borrowUsers.setIsFunds("正常");
+        //借款人经营状况及财务状况
+        borrowUsers.setIsManaged("正常");
+        //借款人还款能力变化情况
+        borrowUsers.setIsAbility("正常");
+        //借款人逾期情况
+        borrowUsers.setIsOverdue("暂无");
+        //借款人涉诉情况
+        borrowUsers.setIsComplaint("暂无");
+        //借款人受行政处罚情况
+        borrowUsers.setIsPunished("暂无");
+        // add by nxl 20180808 互金系统添加企业注册地址地址和企业注册编码 Start
+        if (StringUtils.isNotBlank(hjhPlanAsset.getRegistrationAddress())) {
+            borrowUsers.setRegistrationAddress(hjhPlanAsset.getRegistrationAddress());
+        }
+        if (StringUtils.isNotBlank(hjhPlanAsset.getCorporateCode())) {
+            borrowUsers.setCorporateCode(hjhPlanAsset.getCorporateCode());
+        }
+        // add by nxl 20180808 互金系统添加企业注册地址地址和企业注册编码 End
+        //添加操作
+        return amTradeClient.insertCompanyInfoToBorrowUsers(borrowUsers);
     }
 
     /**
@@ -874,8 +1018,14 @@ public class AutoSendServiceImpl extends BaseTradeServiceImpl implements AutoSen
 
         // 运营标签->hjh 默认不填
         borrow.setOperationLabel("0");
-        // 企业还是  默认是个人
-        borrow.setCompanyOrPersonal("2");
+        // 判断是企业还是个人
+        if(hjhPlanAssetVO.getBorrowCompanyName() == null || hjhPlanAssetVO.getBorrowCompanyName().equals("")){
+            // 个人信息
+            borrow.setCompanyOrPersonal("2");
+        }else{
+            //企业信息
+            borrow.setCompanyOrPersonal("1");
+        }
 
         // 定时发标
         borrow.setOntime(0);

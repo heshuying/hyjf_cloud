@@ -3,11 +3,13 @@ package com.hyjf.am.user.controller.front.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -728,6 +730,43 @@ public class UserController extends BaseController {
             response.setResult(userVO);
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+
+    /**
+     * 通过用户id获得借款人的开户电子账号
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectBankAccountById/{userId}")
+    public BankOpenAccountResponse selectBankAccountById(@PathVariable Integer userId) {
+        BankOpenAccountResponse response = new BankOpenAccountResponse();
+        BankOpenAccount bankOpenAccount = userService.selectBankAccountById(userId);
+        if(bankOpenAccount != null){
+            response.setResult(CommonUtils.convertBean(bankOpenAccount, BankOpenAccountVO.class));
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
+    }
+
+    /**
+     * 查看用户对应的企业编号
+     *
+     * @param userName
+     * @return
+     */
+    @RequestMapping("/selectUserBusiNameByUsername/{userName}")
+    public CorpOpenAccountRecordResponse selectUserBusiNameByUsername(@PathVariable String userName) {
+        CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
+        CorpOpenAccountRecord corp = userService.selectUserBusiNameByUsername(userName);
+        if(corp != null){
+            response.setResult(CommonUtils.convertBean(corp, CorpOpenAccountRecordVO.class));
+            return response;
+        }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 }
