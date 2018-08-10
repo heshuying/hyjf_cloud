@@ -28,16 +28,14 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -4468,7 +4466,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
 	 * 查询金额总计
-	 * @param id
+	 * @param form
 	 * @return
 	 */
 	@Override
@@ -4501,7 +4499,7 @@ public class AmTradeClientImpl implements AmTradeClient{
 
     /**
 	 * 查询汇计划提成是否已经发放
-	 * @param id
+	 * @param ids
 	 * @return
 	 */
 	@Override
@@ -4593,4 +4591,90 @@ public class AmTradeClientImpl implements AmTradeClient{
 		}
 		return null;
 	}
+
+	/**
+	 * 直投提成列表count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+    @Override
+    public int getPushMoneyListCount(PushMoneyRequest request) {
+        PushMoneyResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/getPushMoneyListCount" ,request,
+                        PushMoneyResponse.class)
+                .getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    /**
+     * 直投提成列表list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request) {
+        PushMoneyResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/searchPushMoneyList" ,request,
+                        PushMoneyResponse.class)
+                .getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 直投提成列表查询总金额
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public Map<String, Object> queryPushMoneyTotle(PushMoneyRequest request) {
+        PushMoneyResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/pushMoneyRecord/queryPushMoneyTotle" ,request,
+                        PushMoneyResponse.class)
+                .getBody();
+        if (Response.isSuccess(response)) {
+            return response.getMap();
+        }
+        return null;
+    }
+
+    /**
+     * 根据userid查询 crm  cuttype
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int queryCrmCuttype(Integer userId) {
+        String url = tradeService + "/pushMoneyRecord/queryCrmCuttype/" + userId;
+        PushMoneyResponse response = restTemplate.getForEntity(url,PushMoneyResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCuttype();
+        }
+        return 0;
+    }
+
+    /**
+     * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int updateTenderCommissionRecord(PushMoneyRequest pushMoneyRequest) {
+        String url = tradeService + "/pushMoneyRecord/updateTenderCommissionRecord";
+        PushMoneyResponse response = restTemplate.postForEntity(url,pushMoneyRequest,PushMoneyResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getCnt();
+        }
+        return 0;
+    }
 }

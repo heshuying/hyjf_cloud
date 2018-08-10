@@ -3,12 +3,15 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,5 +42,35 @@ public interface PushMoneyManageService {
      */
      int insertTenderCommissionRecord(Integer apicornId, PushMoneyRequest request);
 
+     /**
+      * 直投提成列表count
+      * @auth sunpeikai
+      * @param
+      * @return
+      */
+     int getPushMoneyListCount(PushMoneyRequest request);
 
+     /**
+      * 直投提成列表list
+      * @auth sunpeikai
+      * @param
+      * @return
+      */
+     List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request);
+
+     /**
+      * 直投提成列表总额
+      * @auth sunpeikai
+      * @param
+      * @return
+      */
+     Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request);
+
+     /**
+      * 发提成
+      * @auth sunpeikai
+      * @param id 提成id
+      * @return
+      */
+     JSONObject pushMoney(HttpServletRequest request, Integer id,Integer loginUserId);
 }

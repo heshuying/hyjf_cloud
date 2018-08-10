@@ -17,15 +17,14 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -2310,5 +2309,45 @@ public interface AmTradeClient {
 	 * @return
 	 */
     OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form);
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPushMoneyListCount(PushMoneyRequest request);
+
+    /**
+     * 直投提成列表list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request);
+
+    /**
+     * 直投提成列表查询总金额
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request);
+
+    /**
+     * 根据userid查询 crm  cuttype
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int queryCrmCuttype(Integer userId);
+
+    /**
+     * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateTenderCommissionRecord(PushMoneyRequest pushMoneyRequest);
 }
 
