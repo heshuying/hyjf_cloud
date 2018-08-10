@@ -3450,7 +3450,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public AppNewAgreementVO setProtocolImg(String aliasName) {
-        String url = urlBase + "new/agreement/setProtocolImg/" + aliasName;
+        String url = "http://AM-TRADE/am-tradenew/new/agreement/setProtocolImg/" + aliasName;
         AppNewAgreementResponse response = restTemplate.getForEntity(url, AppNewAgreementResponse.class).getBody();
         if (response != null) {
             return response.getResult();
