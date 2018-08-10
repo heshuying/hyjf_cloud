@@ -23,6 +23,10 @@ public class CertificateAuthorityExceptionRequest  extends BasePage implements S
     private String trueNameSrch;
     // 状态(检索用)
     private String statusSrch;
+    //用户类型
+    private String idTypeSrch;
+    // 客户编号
+    private String customerIdSrch;
     // 检索开始时间
     private String startTimeSrch;
     // 检索结束时间
@@ -31,7 +35,23 @@ public class CertificateAuthorityExceptionRequest  extends BasePage implements S
     // 用户ID
     private String userId;
 
-    /**
+    public String getIdTypeSrch() {
+		return idTypeSrch;
+	}
+
+	public void setIdTypeSrch(String idTypeSrch) {
+		this.idTypeSrch = idTypeSrch;
+	}
+
+	public String getCustomerIdSrch() {
+		return customerIdSrch;
+	}
+
+	public void setCustomerIdSrch(String customerIdSrch) {
+		this.customerIdSrch = customerIdSrch;
+	}
+
+	/**
      * 翻页机能用的隐藏变量
      */
     private int paginatorPage = 1;

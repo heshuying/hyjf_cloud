@@ -66,12 +66,12 @@ public class CertificateAuthorityExceptionController extends BaseController {
     @PostMapping("/search")
 	@ApiOperation(value = "CA认证记录列表", notes = "CA认证记录列表")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CertificateAuthorityVO>> init(@RequestBody CertificateAuthorityExceptionBean certificateAuthorityExceptionBean) {
-    	CertificateAuthorityExceptionRequest aprlr = new CertificateAuthorityExceptionRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(certificateAuthorityExceptionBean, aprlr);
+    public AdminResult<ListResult<CertificateAuthorityVO>> init(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean) {
+//    	CertificateAuthorityExceptionRequest aprlr = new CertificateAuthorityExceptionRequest();
+//		// 可以直接使用
+//		BeanUtils.copyProperties(certificateAuthorityExceptionBean, aprlr);
 
-		CertificateAuthorityResponse prs = certificateAuthorityExceptionService.getRecordList(aprlr);
+		CertificateAuthorityResponse prs = certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -119,7 +119,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
     @PostMapping("/exportAction")
  	@ApiOperation(value = "CA导出列表", notes = "CA导出列表")
  	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportExcel(@RequestBody CertificateAuthorityExceptionBean certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void exportExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // 表格sheet名称
         String sheetName = "CA认证记录";
@@ -127,11 +127,9 @@ public class CertificateAuthorityExceptionController extends BaseController {
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
         // 需要输出的结果列表
 		// 可以直接使用
-        CertificateAuthorityExceptionRequest aprlr = new CertificateAuthorityExceptionRequest();
-    	aprlr.setCurrPage(-1);
-    	aprlr.setPageSize(-1);
-		BeanUtils.copyProperties(certificateAuthorityExceptionBean, aprlr);
-        List<CertificateAuthorityVO> recordList =certificateAuthorityExceptionService.getRecordList(aprlr).getResultList();
+        certificateAuthorityExceptionBean.setCurrPage(-1);
+        certificateAuthorityExceptionBean.setPageSize(-1);
+        List<CertificateAuthorityVO> recordList =certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean).getResultList();
         String[] titles = new String[] { "序号", "用户名", "CA认证手机号", "姓名/名称","证件号码" ,"用户类型", "邮箱", "客户编号", "状态", "申请时间", "备注" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

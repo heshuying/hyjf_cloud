@@ -14,10 +14,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,7 +46,7 @@ public class HolidaysConfigController extends BaseConfigController {
      * @return
      */
     @RequestMapping ("/list")
-    public HolidaysConfigResponse selectHolidaysConfigListByPage( AdminHolidaysConfigRequest adminRequest) {
+    public HolidaysConfigResponse selectHolidaysConfigListByPage(@RequestBody AdminHolidaysConfigRequest adminRequest) {
         HolidaysConfigResponse response = new HolidaysConfigResponse();
         List<HolidaysConfig> holidaysConfigList = holidaysConfigService.selectHolidaysConfigListByPage(new HolidaysConfig(), -1, -1);
         if (!CollectionUtils.isEmpty(holidaysConfigList)) {
@@ -68,8 +65,8 @@ public class HolidaysConfigController extends BaseConfigController {
      * @param id
      * @return
      */
-    @RequestMapping ("/info")
-    public HolidaysConfigResponse selectHolidaysConfigInfo( Integer id) {
+    @RequestMapping ("/info/{id}")
+    public HolidaysConfigResponse selectHolidaysConfigInfo(@PathVariable Integer id) {
         HolidaysConfigResponse response = new HolidaysConfigResponse();
         HolidaysConfig holidaysConfig = holidaysConfigService.selectHolidaysConfigInfo(id);
         if (null != holidaysConfig) {
@@ -86,18 +83,13 @@ public class HolidaysConfigController extends BaseConfigController {
      * @return
      */
     @RequestMapping ("/insert")
-    public HolidaysConfigResponse insertHolidaysConfigInfo( AdminHolidaysConfigRequest req) {
+    public HolidaysConfigResponse insertHolidaysConfigInfo(@RequestBody AdminHolidaysConfigRequest req) {
         HolidaysConfigResponse response = new HolidaysConfigResponse();
-
-        try{
-            int result =holidaysConfigService.insertHolidaysConfigInfo(req);
-            if(result > 0){
-                response.setRtn("SUCCESS");
-            }
-            response.setRtn("FAIL");
-        }catch (Exception e){
-            response.setRtn("FAIL");
+        int result =holidaysConfigService.insertHolidaysConfigInfo(req);
+        if(result > 0){
+            response.setRtn(Response.SUCCESS);
         }
+        response.setRtn(Response.FAIL);
         return response;
     }
     /**
@@ -106,18 +98,13 @@ public class HolidaysConfigController extends BaseConfigController {
      * @return
      */
     @RequestMapping ("/update")
-    public HolidaysConfigResponse updateHolidaysConfigInfo( AdminHolidaysConfigRequest req) {
+    public HolidaysConfigResponse updateHolidaysConfigInfo(@RequestBody AdminHolidaysConfigRequest req) {
         HolidaysConfigResponse response = new HolidaysConfigResponse();
-
-        try{
-            int result =holidaysConfigService.updateHolidaysConfigInfo(req);
-            if(result > 0){
-                response.setRtn("SUCCESS");
-            }
-            response.setRtn("FAIL");
-        }catch (Exception e){
-            response.setRtn("FAIL");
+        int result =holidaysConfigService.updateHolidaysConfigInfo(req);
+        if(result > 0){
+            response.setRtn(Response.SUCCESS);
         }
+        response.setRtn(Response.FAIL);
         return response;
     }
 

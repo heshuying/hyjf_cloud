@@ -253,4 +253,9 @@ public class RedisConstants {
      * 定时发标key
      */
     public static final String ON_TIME = "ON_TIME:";
+
+    /**
+     * 用户画像评分
+     */
+    public static final String USERPORTRAIT_SCORE = "userPortrait_score";
 }

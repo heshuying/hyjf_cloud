@@ -1,17 +1,17 @@
 package com.hyjf.am.trade.controller.front.repay;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.validation.Valid;
-
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
+import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.trade.bean.repay.RepayBean;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -21,11 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.trade.RepayListResponse;
-import com.hyjf.am.resquest.trade.RepayListRequest;
-import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.front.repay.RepayManageService;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 还款管理

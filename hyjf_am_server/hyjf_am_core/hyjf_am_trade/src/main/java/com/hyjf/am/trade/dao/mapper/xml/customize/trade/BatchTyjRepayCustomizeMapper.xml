@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.mybatis.mapper.customize.batch.BatchTyjRepayCustomizeMapper">
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.trade.BatchTyjRepayCustomizeMapper">
 
 	<!-- 查询体验金按收益期限还款的投资 -->
 	<select id="selectNidForTyj" resultType="java.lang.String" parameterType="java.util.Map">

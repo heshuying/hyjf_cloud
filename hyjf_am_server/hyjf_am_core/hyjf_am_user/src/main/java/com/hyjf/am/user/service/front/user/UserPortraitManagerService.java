@@ -3,10 +3,12 @@
  */
 package com.hyjf.am.user.service.front.user;
 
+import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.UserPortrait;
+import com.hyjf.am.user.dao.model.customize.UserPortraitScoreCustomize;
 
 import java.util.List;
 import java.util.Map;
@@ -44,4 +46,13 @@ public interface UserPortraitManagerService {
      * 修改用户画像
      */
     int updateUserPortrait(UserPortraitRequest request);
+
+    /**
+     * 根据条件获取用户画像评分列表
+     * @param userPortrait
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    List<UserPortraitScoreCustomize> selectUserPortraitScoreList(Map<String, Object> userPortrait, UserPortraitScoreRequest request, int limitStart, int limitEnd);
 }

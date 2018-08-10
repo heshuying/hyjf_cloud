@@ -122,7 +122,7 @@ public class BankRetcodeConfigController extends BaseController {
             // 失败返回
             return new AdminResult<>(FAIL, "校验失败");
         }
-        // 插入数据----之后的分页查询，通过前端调用
+        // 插入数据
         if (StringUtils.isNotEmpty(adminRequest.getRetCode())) {
             response = this.bankRetcodeConfigService.insertBankReturnCodeConfig(adminRequest);
         }
@@ -131,9 +131,9 @@ public class BankRetcodeConfigController extends BaseController {
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
-
         }
-        return new AdminResult<>();
+        response =bankRetcodeConfigService.selectBankRetcodeListByPage(adminRequest);
+        return new AdminResult<BankReturnCodeConfigResponse>(response);
     }
 
     @ApiOperation(value = "返回码配置修改", notes = "返回码配置修改")
@@ -165,9 +165,9 @@ public class BankRetcodeConfigController extends BaseController {
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
-
         }
-        return new AdminResult<>();
+        response =bankRetcodeConfigService.selectBankRetcodeListByPage(adminRequest);
+        return new AdminResult<BankReturnCodeConfigResponse>(response);
     }
 
     /**

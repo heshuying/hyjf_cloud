@@ -49,4 +49,16 @@ public interface CouponRepayService {
      * @return
      */
     void updateCouponRecoverMoney(String borrowNid, Integer periodNow, CouponTenderCustomizeVO ct) throws Exception;
+
+    /**
+     * 优惠券单独投资放款
+     * @return
+     */
+    List<String> selectNidForCouponOnly();
+
+    /**
+     * 体验金按受益期限还款
+     * @param recoverNidList
+     */
+    void couponOnlyRepay(List<String> recoverNidList);
 }

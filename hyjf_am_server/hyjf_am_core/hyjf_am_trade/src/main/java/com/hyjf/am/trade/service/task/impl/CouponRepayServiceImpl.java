@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.task.impl;
 
 import com.hyjf.am.trade.dao.mapper.customize.trade.BatchCouponTimeoutCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.trade.BatchTyjRepayCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.trade.CouponRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.trade.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
@@ -27,6 +28,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     private CouponRecoverCustomizeMapper couponRecoverCustomizeMapper;
     @Autowired
     private BatchCouponTimeoutCustomizeMapper batchCouponTimeoutCustomizeMapper;
+    @Autowired
+    private BatchTyjRepayCustomizeMapper batchTyjRepayCustomizeMapper;
 
     @Override
     public List<CouponRecoverCustomize> selectCouponInterestWaitToday(long timeStart, long timeEnd) {
@@ -53,5 +56,10 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         map.put("threeEndDate", threeEndDate);
         List<BatchCouponTimeoutCommonCustomize> batchCouponTimeoutCommonCustomizes = batchCouponTimeoutCustomizeMapper.selectCouponQuota(map);
         return null;
+    }
+
+    @Override
+    public List<String> selectNidForCouponOnly(Map<String, Object> paramMap) {
+        return batchTyjRepayCustomizeMapper.selectNidForTyj(paramMap);
     }
 }

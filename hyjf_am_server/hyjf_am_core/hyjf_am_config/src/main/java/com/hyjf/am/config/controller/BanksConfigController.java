@@ -211,6 +211,19 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+
+    @GetMapping("/getParamName/{other1}")
+    public ParamNameResponse getParamName(@PathVariable String other1) {
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamName> paramNameList = bankConfigService.getParamName(other1);
+        if (CollectionUtils.isNotEmpty(paramNameList)) {
+            List<ParamNameVO> paramNameVOList = CommonUtils.convertBeanList(paramNameList,ParamNameVO.class);
+            response.setResultList(paramNameVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
     /**
      * 分页查询银行配置列表
      */
