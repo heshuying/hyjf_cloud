@@ -4,6 +4,8 @@
 package com.hyjf.am.trade.service.front.config;
 
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.resquest.admin.ProtocolLogRequest;
+import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 
@@ -78,4 +80,17 @@ public interface ProtocolTemplateService {
      * @return
      */
     ProtocolTemplateCommonVO deleteProtocolTemplate(AdminProtocolRequest request);
+
+    /**
+     *  统计模板日志
+     *
+     * @return
+     */
+    Integer countRecordLog(ProtocolLogRequest request);
+
+    /**
+     * 查询所有协议日志
+     * @date 2018/7/4 15:38
+     */
+    List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
 }

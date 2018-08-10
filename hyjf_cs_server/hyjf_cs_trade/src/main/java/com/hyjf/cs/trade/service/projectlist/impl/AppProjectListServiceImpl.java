@@ -183,10 +183,6 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 if (users.getBankOpenAccount() != null && users.getBankOpenAccount() == 1) {
                     isOpened = true;
                 }
-                //是否授权
-               /* if (users.getAuthStatus() != null && users.getAuthStatus() == 1) {
-                    isAutoInves = true;
-                }  */// TODO: 2018/6/29 字段不存在 待处理
                 //是否允许使用
                 if (users.getStatus() != null && users.getStatus() == 0) {
                     isAllowed = true;
@@ -307,14 +303,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
             //项目介绍
             intrTableData = ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
-            // TODO: 2018/6/29 由于生成实体不全 暂时不处理  zyk
             // 风控信息
-           /* AppRiskControlCustomize riskControl = projectService.selectRiskControl(borrowNid);
-            if(riskControl!=null){
-                riskControl.setControlMeasures(riskControl.getControlMeasures()==null?"":riskControl.getControlMeasures().replace("\r\n", ""));
-                riskControl.setControlMort(riskControl.getControlMort()==null?"":riskControl.getControlMort().replace("\r\n", ""));
+            BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+            Map<String,String> riskControl = new HashMap<>();
+            if (borrowInfoWithBLOBsVO != null){
+                riskControl.put("controlMeasures",borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
+                riskControl.put("controlMort",borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
+                riskControl.put("partner",borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
+                riskControl.put("agencyIntroduction",borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
+                riskControl.put("operatingProcess",borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
             }
-            jsonObject.put("riskControl", riskControl);*/
+            jsonObject.put("riskControl", riskControl);
 
             //处理借款信息
             List<BorrowProjectDetailBean> projectDetailList = new ArrayList<>();

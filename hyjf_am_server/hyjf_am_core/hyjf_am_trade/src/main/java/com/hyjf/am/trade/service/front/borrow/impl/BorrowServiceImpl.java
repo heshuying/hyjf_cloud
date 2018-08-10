@@ -531,4 +531,22 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         List<AccountBorrow> accountBorrows = accountBorrowMapper.selectByExample(example);
         return  accountBorrows;
     }
+
+
+    /**
+     * 查询订单风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:40
+     */
+    @Override
+    public BorrowInfoWithBLOBs getBorrowInfoWithBLOBs(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfoWithBLOBs> list = borrowInfoMapper.selectByExampleWithBLOBs(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
 }

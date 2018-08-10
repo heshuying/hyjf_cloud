@@ -4,10 +4,13 @@
 package com.hyjf.am.trade.controller.front.protocol;
 
 import com.hyjf.am.response.admin.AdminProtocolResponse;
+import com.hyjf.am.response.admin.ProtocolLogResponse;
 import com.hyjf.am.response.trade.ProtocolTemplateResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
+import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import io.swagger.annotations.Api;
@@ -155,6 +158,34 @@ public class ProtocolTemplateController extends BaseController {
         AdminProtocolResponse response = new AdminProtocolResponse();
         ProtocolTemplateCommonVO vo = this.protocolTemplateService.deleteProtocolTemplate(request);
         response.setResult(vo);
+        return response;
+    }
+
+    /**
+     * 查询协议日志模板数量
+     *
+     * @return
+     */
+    @RequestMapping("/countRecordLog")
+    public ProtocolLogResponse countRecordLog(@RequestBody ProtocolLogRequest request) {
+
+        ProtocolLogResponse response = new ProtocolLogResponse();
+        Integer count = this.protocolTemplateService.countRecordLog(request);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 查询全部协议日志模板
+     *
+     * @return
+     */
+    @RequestMapping("/getProtocolLogVOAll")
+    public ProtocolLogResponse getProtocolTemplateByProtocolName(@RequestBody ProtocolLogRequest request) {
+
+        ProtocolLogResponse response = new ProtocolLogResponse();
+        List<ProtocolLogVO>  list = this.protocolTemplateService.getProtocolLogVOAll(request);
+        response.setResultList(list);
         return response;
     }
 

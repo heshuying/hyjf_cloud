@@ -141,4 +141,11 @@ public interface BorrowService extends BaseService {
 	 * 放款列表
 	 */
 	public List<AccountBorrow> getAccountBorrowList(String borrowNid);
+	
+	/**  
+	 * 查询订单风控信息
+	 * @author zhangyk
+	 * @date 2018/8/10 15:40
+	 */  
+	public BorrowInfoWithBLOBs getBorrowInfoWithBLOBs(String borrowNid);
 }
