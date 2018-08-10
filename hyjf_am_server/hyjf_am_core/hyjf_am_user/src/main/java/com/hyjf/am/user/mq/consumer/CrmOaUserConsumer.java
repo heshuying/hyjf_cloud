@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.mq.transactionmq;
+package com.hyjf.am.user.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.ROaUsers;
