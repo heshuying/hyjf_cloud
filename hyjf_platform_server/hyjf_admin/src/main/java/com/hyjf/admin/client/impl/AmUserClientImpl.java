@@ -709,7 +709,7 @@ public class AmUserClientImpl implements AmUserClient {
 	/*
 	 * @Override public BanksConfigVO getBanksConfigByBankId(int bankId) {
 	 * BanksConfigResponse response = restTemplate
-	 * .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" +
+	 * .getForEntity("http://AM-USER/AM-USER/config/getBanksConfigByBankId/" +
 	 * bankId, BanksConfigResponse.class).getBody(); if (response != null) { return
 	 * response.getResult(); } return null; }
 	 */
@@ -1711,7 +1711,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/init" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/init" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1723,7 +1723,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse infoAction() {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/infoAction" ,null,
+				.postForEntity("http://AM-USER/am-user/mspapply/infoAction" ,null,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1735,7 +1735,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/insertAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1747,7 +1747,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/insertAction" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/insertAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1759,7 +1759,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/deleteRecordAction" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/deleteRecordAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1771,7 +1771,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/validateBeforeAction" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/validateBeforeAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1783,7 +1783,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/applyInfo" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/applyInfo" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1795,7 +1795,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/shareUser" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/shareUser" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1807,7 +1807,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse download(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapply/download" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/download" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1819,7 +1819,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse searchAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/searchAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1831,7 +1831,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse infoAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/infoAction" ,mspRequest,
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/infoAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1843,7 +1843,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse insertAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/searchAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1855,7 +1855,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse updateAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/insertAction" ,mspRequest,
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/insertAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1867,7 +1867,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse configureNameError(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/configureNameError" ,mspRequest,
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/configureNameError" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1879,7 +1879,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse deleteAction(MspRequest mspRequest) {
 		 MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/deleteAction" ,mspRequest,
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/deleteAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1891,7 +1891,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse checkAction(MspRequest mspRequest) {
 		 MspResponse mspResponse = restTemplate
-					.postForEntity("http://AM-CONFIG/am-user/mspapplyconfigure/checkAction" ,mspRequest,
+					.postForEntity("http://AM-USER/am-user/mspapplyconfigure/checkAction" ,mspRequest,
 							MspResponse.class)
 					.getBody();
 			if (mspResponse != null) {
