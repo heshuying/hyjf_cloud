@@ -470,5 +470,8 @@ public class AutoMapper {
     @Resource
     protected BorrowFullCustomizeMapper borrowFullCustomizeMapper;
     
+    @Resource
+    protected CommissionLogMapper commissionLogMapper;
+    
 }
 

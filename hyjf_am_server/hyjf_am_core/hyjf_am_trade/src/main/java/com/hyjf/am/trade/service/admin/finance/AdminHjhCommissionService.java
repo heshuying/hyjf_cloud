@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.admin.finance;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.resquest.admin.CommissionComboRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
@@ -50,4 +51,18 @@ public interface AdminHjhCommissionService {
 	 * @Desc :获取部门列表    
 	 */
 	List<OADepartmentCustomizeVO> getCrmDepartmentList(HjhCommissionRequest request);
+	
+    /**
+     * 根据用户id查询其在crm中的员工属性
+     * @param id
+     * @return
+     */
+	Integer queryCrmCuttype(Integer userId);
+	
+    /**
+     * 发提成
+     * @param id
+     * @return
+     */
+	Integer updateTenderCommissionRecord(CommissionComboRequest request);
 }
