@@ -90,7 +90,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @date 2018/7/2 11:33
      */
     @Override
-    public JSONObject getProjectDetail(String borrowNid, String type, String token) {
+    public JSONObject getProjectDetail(String borrowNid, String type, Integer userId) {
         CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_PARAM_NUM);
         JSONObject userValidation = new JSONObject();
 
@@ -104,13 +104,12 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         boolean isAutoInves = false;
         boolean isInvested = false;
         boolean isPaymentAuth = false;
-        Integer userId = null;
         // 判断用户是否登录
         WebViewUser webViewUser = null;
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(token)) {
-            webViewUser = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUser.class);
-        }
-        userId = webViewUser.getUserId();
+		if (userId != null) {
+			webViewUser = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUser.class);
+		}
+         
         if (userId != null && userId > 0) {
             UserVO users = amUserClient.findUserById(userId);
             if (users != null) {
@@ -120,7 +119,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
                 // 检查用户角色是否能投资  合规接口改造之后需要判断
                 UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
-                if (userInfo.getRoleId() == 3) {// 担保机构用户
+                // 担保机构用户
+                if (userInfo.getRoleId() == 3) {
                     //borrowDetailResultBean.setStatus("99");
                     //borrowDetailResultBean.setStatusDesc("担保机构用户不能进行投资");
                     //borrowDetailResultBean.setIsAllowedTender(Boolean.FALSE);
@@ -425,7 +425,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     }
 
     @Override
-    public JSONObject getPlanDetail(String planId, String token) {
+    public JSONObject getPlanDetail(String planId, Integer userId) {
         JSONObject jsonObject = new JSONObject();
         Map<String, Object> resultMap = new HashMap<>();
         CheckUtil.check(StringUtils.isNotBlank(planId), MsgEnum.ERR_PARAM_NUM);
@@ -439,7 +439,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         // 计划基本信息
         this.setPlanInfo(resultMap, customize);
         // 用户的用户验证
-        this.setUserValidationInfo(resultMap, token);
+        this.setUserValidationInfo(resultMap, userId);
 
         jsonObject.put("object", resultMap);
         jsonObject.put(CustomConstants.APP_STATUS, HomePageDefine.WECHAT_STATUS_SUCCESS);
@@ -730,7 +730,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @date 2018/7/24 10:46
      */
     @Override
-    public WechatHomePageResult getHomeProejctList(int currPage, int pageSize, String showPlanFlag, String token) {
+    public WechatHomePageResult getHomeProejctList(int currPage, int pageSize, String showPlanFlag, Integer userId) {
         WechatHomePageResult result = new WechatHomePageResult();
         Page page = Page.initPage(currPage, pageSize);
         WechatHomePageResult vo = new WechatHomePageResult();
@@ -739,15 +739,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         result = getProjectListAsyn(result, currPage, pageSize, showPlanFlag);
 
         if (currPage == 1) {
-            //获取用户id
-            WebViewUser webViewUser = null;
-            Integer userId = null;
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(token)) {
-                webViewUser = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUser.class);
-            }
-            if (webViewUser != null) {
-                userId = webViewUser.getUserId();
-            }
             String HOST = systemConfig.getWebHost();
             //判断用户是否登录
             if (userId == null || userId <= 0) {
@@ -757,10 +748,12 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 //查询用户是否开户
                 UserVO userVO = amUserClient.findUserById(userId);
                 Integer userType = userVO == null ? 0 : userVO.getBankOpenAccount();
-                if (userType == 0) {//未开户
+                //未开户
+                if (userType == 0) {
                     //获取新手标
                     vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
-                } else if (userType == 1) {//已开户
+                    //已开户
+                } else if (userType == 1) {
                     //获取用户累计投资条数
                     Integer count = amTradeClient.getTotalInverestCount(String.valueOf(userId));
                     if (count == null || count <= 0) {
@@ -784,8 +777,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setHost(systemConfig.getWebHost());
 
         String code = "";
-
-        if ("0".equals(type)) {// 未注册
+        // 未注册
+        if ("0".equals(type)) {
             code = "wechat_regist_888";
         } else if ("1".equals(type)) {
             code = "wechat_open_888";
@@ -865,24 +858,20 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      *
      * @param token
      */
-    private void setUserValidationInfo(Map<String, Object> resultMap, String token) {
+    private void setUserValidationInfo(Map<String, Object> resultMap, Integer userId) {
 
         UserLoginInfo userLoginInfo = new UserLoginInfo();
         boolean loginFlag = false;
         UserVO userVO = null;
-        Integer userId = null;
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-            if (webViewUserVO != null) {
-                userId = webViewUserVO.getUserId();
-                userVO = amUserClient.findUserById(userId);
-                if (userVO != null) {
-                    loginFlag = true;
-                }
-            }
-        }
+		if (userId != null) {
+			userVO = amUserClient.findUserById(userId);
+			if (userVO != null) {
+				loginFlag = true;
+			}
+		}
         // 1. 检查登录状态
-        if (!loginFlag) {  // 未登录
+        // 未登录
+        if (!loginFlag) {
             userLoginInfo.setLogined(Boolean.FALSE);
         } else {
             userLoginInfo.setLogined(Boolean.TRUE);

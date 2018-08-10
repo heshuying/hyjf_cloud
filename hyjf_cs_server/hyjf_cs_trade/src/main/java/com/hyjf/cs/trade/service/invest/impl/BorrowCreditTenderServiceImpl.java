@@ -98,7 +98,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public WebResult<Map<String, Object>> borrowCreditTender(TenderRequest request)  {
-        WebViewUserVO loginUser = RedisUtils.getObj(request.getToken(), WebViewUserVO.class);
+        WebViewUserVO loginUser = request.getUser();
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
         // 检查请求参数是否正确

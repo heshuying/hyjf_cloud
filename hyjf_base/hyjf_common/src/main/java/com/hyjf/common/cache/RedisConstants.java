@@ -186,12 +186,12 @@ public class RedisConstants {
      * 协议模板---协议文件存储Redis前缀
      */
     public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
-    
+
 
     /**
-     * 用户token令牌前缀
+     * 用户令牌前缀
      */
-    public static final String USER_TOKEN_REDIS = "user_token_";
+    public static final String USERID_KEY = "userId_";
 
     /**
      * 放款批次号key

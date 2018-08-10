@@ -1,17 +1,10 @@
 package com.hyjf.zuul.filter;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.config.GatewayApiConfigVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.AppUserToken;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.util.SignValue;
-import com.netflix.zuul.ZuulFilter;
-import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.exception.ZuulException;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +13,18 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.GatewayApiConfigVO;
+import com.hyjf.common.bean.AccessToken;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.jwt.JwtHelper;
+import com.hyjf.common.util.AppUserToken;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.SecretUtil;
+import com.hyjf.common.util.SignValue;
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
 
 /**
  * @author xiasq
@@ -133,12 +135,13 @@ public class AccessFilter extends ZuulFilter {
 					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
 				SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
+
 				ctx.addZuulRequestHeader(KEY, signValue.getKey());
 				ctx.addZuulRequestHeader(INITKEY, signValue.getInitKey());
 				ctx.addZuulRequestHeader(VERSION, signValue.getVersion());
 				ctx.addZuulRequestHeader(TOEKN, signValue.getToken());
 				ctx.addZuulRequestHeader(SIGN, sign);
-
+                ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
 				if (secureVisitFlag) {
 					setUserIdByToken(request, ctx, secureVisitFlag, APP_CHANNEL);
 				}
@@ -287,8 +290,10 @@ public class AccessFilter extends ZuulFilter {
 			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
 			return ctx;
 		}
-		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-		if (webViewUserVO == null) {
+
+		// jwt解析token
+		AccessToken accessToken = JwtHelper.parseToken(token);
+		if (accessToken == null) {
 			if (isNecessary) {
 				logger.error("user is not exist...");
 				// 不对其进行路由
@@ -298,8 +303,8 @@ public class AccessFilter extends ZuulFilter {
 				return ctx;
 			}
 		}
-		ctx.addZuulRequestHeader("userId", webViewUserVO.getUserId() + "");
-		logger.info(String.format("user token:%s userId:%s", token, webViewUserVO.getUserId()));
+		ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
+		logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
 		return ctx;
 	}
 

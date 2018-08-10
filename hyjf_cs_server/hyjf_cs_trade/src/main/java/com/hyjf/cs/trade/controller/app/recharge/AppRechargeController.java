@@ -104,10 +104,10 @@ public class AppRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "用户充值", notes = "用户充值")
 	@PostMapping("/bank/user/userDirectRecharge/recharge")
-	public ModelAndView recharge(@RequestHeader(value = "token") String token,HttpServletRequest request, String mobile, String money) throws Exception {
+	public ModelAndView recharge(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, String mobile, String money) throws Exception {
 		logger.info("app充值服务");
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,mobile,money);
+		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,mobile,money);
 		ModelAndView modelAndView = new ModelAndView();
 		try {
 			modelAndView = BankCallUtils.callApi(bean);

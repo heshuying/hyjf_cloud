@@ -42,12 +42,11 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "wechat端-散标投资", notes = "wechat端-散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setToken(token);
-
+        tender.setUser(borrowTenderService.getUserFromCache(userId));
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowTender(tender);
@@ -82,31 +81,30 @@ public class WechatBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "wechat端-散标投资获取投资结果", notes = "wechat端-散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
                                                                @RequestParam String logOrdId,
-                                                               @RequestParam String borrowNid,
-                                                               HttpServletRequest request) {
+                                                               @RequestParam String borrowNid) {
         logger.info("wechat端-请求获取投资结果接口，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
         return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
     }
 
     @ApiOperation(value = "wechat端-散标投资获取投资成功结果", notes = "wechat端-散标投资获取投资成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid) {
         logger.info("wechat端-散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
         return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
     }
 
     @ApiOperation(value = "wechat端-获取投资信息", notes = "wechat端-获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-获取投资信息");
-        tender.setToken(token);
+        tender.setUser(borrowTenderService.getUserFromCache(userId));
         return borrowTenderService.getInvestInfo(tender);
     }
 

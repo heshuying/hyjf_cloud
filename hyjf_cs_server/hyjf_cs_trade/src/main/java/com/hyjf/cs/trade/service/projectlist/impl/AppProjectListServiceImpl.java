@@ -150,7 +150,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/28 16:15
      */
     @Override
-    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest req, String token) {
+    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest req, Integer userId) {
         JSONObject jsonObject = new JSONObject();
         JSONObject userValidation = new JSONObject();
         String type = req.getParameter("borrowType");
@@ -162,14 +162,13 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         boolean isRiskTested = false;
         boolean isAutoInves = false;
         boolean isInvested = false;
-        Integer paymentAuthStatus = 0; //  0：未授权1：已授权
-        Integer userId = null;
-        Integer roleId = 0; //  用户角色
+        //  0：未授权1：已授权
+        Integer paymentAuthStatus = 0;
+        //  用户角色
+        Integer roleId = 0;
         // 判断用户是否登录
         WebViewUser webViewUser = null;
-        if (StringUtils.isNotBlank(token)) {
-            webViewUser = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUser.class);
-        }
+
         if (webViewUser != null) {
             userId = webViewUser.getUserId();
             isLogined = true;
@@ -1129,12 +1128,12 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/30 10:41
      */
     @Override
-    public JSONObject getAppCreditDetail(String creditNid, String token) {
+    public JSONObject getAppCreditDetail(String creditNid, Integer userId) {
         JSONObject resultMap = new JSONObject();
 
         CheckUtil.check(StringUtils.isNotBlank(creditNid), MsgEnum.ERR_PARAM_NUM);
 
-        resultMap.put("userValidation", this.createUserValidation(token));
+        resultMap.put("userValidation", this.createUserValidation(userId));
 
         AppCreditDetailCustomizeVO appCreditDetailCustomizeVO = amTradeClient.selectHjhCreditByCreditNid(creditNid);
 
@@ -1298,22 +1297,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @author zhangyk
      * @date 2018/6/30 10:42
      */
-    private JSONObject createUserValidation(String token) {
+    private JSONObject createUserValidation(Integer userId) {
         JSONObject userValidation = new JSONObject();
 
         boolean loginFlag = false;
         UserVO userVO = null;
-        Integer userId = null;
-        if (StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-            if (webViewUserVO != null) {
-                userId = webViewUserVO.getUserId();
-                userVO = amUserClient.findUserById(userId);
-                if (userVO != null) {
-                    loginFlag = true;
-                }
-            }
-        }
+		if (userId != null) {
+			userVO = amUserClient.findUserById(userId);
+			if (userVO != null) {
+				loginFlag = true;
+			}
+		}
 
         if (!loginFlag) {
             userValidation.put("isLogined", false);
@@ -1501,7 +1495,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @date 2018/6/29 18:54
      */
     @Override
-    public JSONObject getAppPlanDetail(String planNid, String token) {
+    public JSONObject getAppPlanDetail(String planNid, Integer userId) {
         JSONObject result = new JSONObject();
         //Map<String, Object> resultMap = new HashMap<>();
         CheckUtil.check(StringUtils.isNotBlank(planNid), MsgEnum.ERR_PARAM_NUM);
@@ -1517,7 +1511,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 计划基本信息
         this.setPlanInfo(result, customize);
         // 用户的用户验证
-        this.setUserValidationInfo(result, token);
+        this.setUserValidationInfo(result, userId);
 
         result.put(CustomConstants.APP_STATUS,BaseResult.SUCCESS);
         result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -1765,22 +1759,17 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      *
      * @param token
      */
-    private void setUserValidationInfo(JSONObject resultMap, String token) {
+    private void setUserValidationInfo(JSONObject resultMap, Integer userId) {
 
         UserLoginInfo userLoginInfo = new UserLoginInfo();
         boolean loginFlag = false;
         UserVO userVO = null;
-        Integer userId = null;
-        if (StringUtils.isNotBlank(token)) {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-            if (webViewUserVO != null) {
-                userId = webViewUserVO.getUserId();
-                userVO = amUserClient.findUserById(userId);
-                if (userVO != null) {
-                    loginFlag = true;
-                }
-            }
-        }
+		if (userId != null) {
+			userVO = amUserClient.findUserById(userId);
+			if (userVO != null) {
+				loginFlag = true;
+			}
+		}
         // 1. 检查登录状态
         if (!loginFlag) {  // 未登录
             userLoginInfo.setLogined(Boolean.FALSE);

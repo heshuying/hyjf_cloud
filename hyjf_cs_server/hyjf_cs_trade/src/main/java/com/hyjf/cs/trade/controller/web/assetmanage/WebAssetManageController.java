@@ -42,11 +42,11 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户资产信息", notes = "获取用户资产信息")
     @PostMapping(value = "/init")
-    public Map<String,Object> init(@RequestHeader(value = "token", required = true) String token,
-                                   @RequestBody @Valid AssetManageBeanRequest form, HttpServletRequest request) {
-        logger.info("web获取用户资产信息, token is :{}", JSONObject.toJSONString(token));
+    public Map<String,Object> init(@RequestHeader(value = "userId") Integer userId,
+                                   @RequestBody @Valid AssetManageBeanRequest form) {
+        logger.info("web获取用户资产信息, userId is :{}", JSONObject.toJSONString(userId));
         Map<String,Object> result = new HashMap<>();
-        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        WebViewUserVO user=assetManageService.getUserFromCache(userId);
 
         String currentTab = form.getCurrentTab();
         AccountVO account = assetManageService.getAccount(user.getUserId());
@@ -65,11 +65,10 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户当前持有债权列表分页数据", notes = "获取用户当前持有债权列表分页数据")
     @PostMapping(value = "/getCurrentHoldObligatoryRight", produces = "application/json;charset=utf-8")
-    public ObligatoryRightAjaxBean getCurrentHoldObligatoryRight(@RequestHeader(value = "token", required = true) String token,
-                                                                 @RequestBody @Valid AssetManageBeanRequest form,
-                                                                 HttpServletRequest request) {
-        logger.info("web获取用户当前持有债权列表分页数据, token is :{}", JSONObject.toJSONString(token));
-        WebViewUserVO user=assetManageService.getUsersByToken(token);
+    public ObligatoryRightAjaxBean getCurrentHoldObligatoryRight(@RequestHeader(value = "userId") Integer userId,
+                                                                 @RequestBody @Valid AssetManageBeanRequest form) {
+        logger.info("web获取用户当前持有债权列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
+        WebViewUserVO user=assetManageService.getUserFromCache(userId);
         form.setUserId(user.getUserId().toString());
         ObligatoryRightAjaxBean result  = assetManageService.createCurrentHoldObligatoryRightListPage(form);
         return result;
@@ -83,13 +82,13 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户已回款债权列表分页数据", notes = "获取用户已回款债权列表分页数据")
     @PostMapping(value = "/getRepayMent", produces = "application/json;charset=utf-8")
-    public ObligatoryRightAjaxBean getRepayMent(@RequestHeader(value = "token", required = true) String token,
+    public ObligatoryRightAjaxBean getRepayMent(@RequestHeader(value = "userId") Integer userId,
                                                 @RequestBody @Valid AssetManageBeanRequest form,
                                                 HttpServletRequest request) {
 
-        logger.info("web获取用户已回款债权列表分页数据, token is :{}", JSONObject.toJSONString(token));
+        logger.info("web获取用户已回款债权列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         // 用户ID
-        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        WebViewUserVO user=assetManageService.getUserFromCache(userId);
         form.setUserId(user.getUserId().toString());
         ObligatoryRightAjaxBean result  =assetManageService.createRepayMentListPage(form);
 
@@ -103,12 +102,11 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户转让记录债权页面json数据", notes = "获取用户转让记录债权页面json数据")
     @PostMapping(value = "/getCreditRecordList", produces = "application/json;charset=utf-8")
-    public ObligatoryRightAjaxBean getCreditRecordList(@RequestHeader(value = "token", required = true) String token,
-                                                @RequestBody @Valid AssetManageBeanRequest form,
-                                                HttpServletRequest request) {
-        logger.info("web获取用户转让记录债权页面json数据, token is :{}", JSONObject.toJSONString(token));
+    public ObligatoryRightAjaxBean getCreditRecordList(@RequestHeader(value = "userId") Integer userId,
+                                                @RequestBody @Valid AssetManageBeanRequest form) {
+        logger.info("web获取用户转让记录债权页面json数据, userId is :{}", JSONObject.toJSONString(userId));
         // 用户ID
-        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        WebViewUserVO user=assetManageService.getUserFromCache(userId);
         form.setUserId(user.getUserId().toString());
         ObligatoryRightAjaxBean result  =assetManageService.getCreditRecordList(form);
 
@@ -122,13 +120,12 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户当前持有计划列表分页数据", notes = "获取用户当前持有计划列表分页数据")
     @PostMapping(value = "/getCurrentHoldPlan", produces = "application/json;charset=utf-8")
-    public PlanAjaxBean getCurrentHoldPlan(@RequestHeader(value = "token", required = true) String token,
-                                           @RequestBody @Valid AssetManageBeanRequest form,
-                                           HttpServletRequest request) {
+    public PlanAjaxBean getCurrentHoldPlan(@RequestHeader(value = "userId") Integer userId,
+                                           @RequestBody @Valid AssetManageBeanRequest form) {
 
-        logger.info("web获取用户当前持有计划列表分页数据, token is :{}", JSONObject.toJSONString(token));
+        logger.info("web获取用户当前持有计划列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         // 用户ID
-        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        WebViewUserVO user=assetManageService.getUserFromCache(userId);
         PlanAjaxBean result = new PlanAjaxBean();
         if(user == null){
             return result;
@@ -146,13 +143,12 @@ public class WebAssetManageController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户已回款计划页面json数据", notes = "获取用户已回款计划页面json数据")
     @PostMapping(value = "/getRepayMentPlan", produces = "application/json;charset=utf-8")
-    public PlanAjaxBean getRepayMentPlan(@RequestHeader(value = "token", required = true) String token,
-                                           @RequestBody @Valid AssetManageBeanRequest form,
-                                           HttpServletRequest request) {
+    public PlanAjaxBean getRepayMentPlan(@RequestHeader(value = "userId") Integer userId,
+                                           @RequestBody @Valid AssetManageBeanRequest form) {
 
-        logger.info("web获取用户已回款计划页面json数据, token is :{}", JSONObject.toJSONString(token));
+        logger.info("web获取用户已回款计划页面json数据, userId is :{}", JSONObject.toJSONString(userId));
         // 用户ID
-        WebViewUserVO user=assetManageService.getUsersByToken(token);
+        WebViewUserVO user=assetManageService.getUserFromCache(userId);
         PlanAjaxBean result = new PlanAjaxBean();
         if(user == null){
             return result;

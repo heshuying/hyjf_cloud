@@ -32,8 +32,8 @@ public class WechatProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "微信端:获取首页<散标>详情", notes = "微信端:获取首页<散标>详情")
     @PostMapping(value = "/borrow/{borrowId}.do", produces = "application/json; charset=utf-8")
-    public Object getProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "token", required = false) String token){
-        JSONObject jsonObject = wechatProjectListService.getProjectDetail(borrowId,request.getParameter(ProjectConstant.PARAM_BORROW_TYPE),token);
+    public Object getProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) Integer userId){
+        JSONObject jsonObject = wechatProjectListService.getProjectDetail(borrowId,request.getParameter(ProjectConstant.PARAM_BORROW_TYPE),userId);
         return jsonObject;
     }
 
@@ -57,8 +57,8 @@ public class WechatProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "微信端:获取首页<计划>详情", notes = "微信端:获取首页<计划>详情")
     @PostMapping(value = "/plan/{planId}", produces = "application/json; charset=utf-8")
-    public Object getPlanDetail(@PathVariable String planId,  @RequestHeader(value = "token", required = false) String token){
-        JSONObject jsonObject = wechatProjectListService.getPlanDetail(planId,token);
+    public Object getPlanDetail(@PathVariable String planId,  @RequestHeader(value = "userId", required = false) Integer userId){
+        JSONObject jsonObject = wechatProjectListService.getPlanDetail(planId,userId);
         return jsonObject;
     }
 
