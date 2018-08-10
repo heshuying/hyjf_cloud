@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper" >
-  <resultMap id="UsersPortraitMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyjf.am.user.dao.mapper.auto.UserPortraitMapper">
+  <resultMap id="BaseResultMap" type="com.hyjf.am.user.dao.model.auto.UserPortrait">
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="age" jdbcType="INTEGER" property="age" />
@@ -100,11 +100,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    user_id, user_name, age, sex, education, occupation, city, interest, interest_sum,
-    invest_sum, recharge_sum, withdraw_sum, login_active, customer_source, last_login_time,
-    last_recharge_time, last_withdraw_time, invest_platform, invest_age, trade_number,
-    current_owner, add_wechat, invest_process, customer_complaint, invite_customer, remark,
-    mobile, bank_total, fund_retention, last_repay_time, invite_regist, invite_recharge,
+    user_id, user_name, age, sex, education, occupation, city, interest, interest_sum, 
+    invest_sum, recharge_sum, withdraw_sum, login_active, customer_source, last_login_time, 
+    last_recharge_time, last_withdraw_time, invest_platform, invest_age, trade_number, 
+    current_owner, add_wechat, invest_process, customer_complaint, invite_customer, remark, 
+    mobile, bank_total, fund_retention, last_repay_time, invite_regist, invite_recharge, 
     invite_tender, yield, `attribute`, bank_balance, account_await, bank_frost
   </sql>
   <select id="selectByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" resultMap="BaseResultMap">
@@ -113,7 +113,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from hyjf_users_portrait
+    from ht_user_portrait
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -125,17 +125,17 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
-    from hyjf_users_portrait
+    from ht_user_portrait
     where user_id = #{userId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from hyjf_users_portrait
+    delete from ht_user_portrait
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample">
-    delete from hyjf_users_portrait
+    delete from ht_user_portrait
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -144,38 +144,38 @@
     <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_users_portrait (user_name, age, sex,
-    education, occupation, city,
-    interest, interest_sum, invest_sum,
-    recharge_sum, withdraw_sum, login_active,
-    customer_source, last_login_time, last_recharge_time,
-    last_withdraw_time, invest_platform, invest_age,
-    trade_number, current_owner, add_wechat,
-    invest_process, customer_complaint, invite_customer,
-    remark, mobile, bank_total,
-    fund_retention, last_repay_time, invite_regist,
-    invite_recharge, invite_tender, yield,
-    `attribute`, bank_balance, account_await,
-    bank_frost)
-    values (#{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR},
-    #{education,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
-    #{interest,jdbcType=VARCHAR}, #{interestSum,jdbcType=DECIMAL}, #{investSum,jdbcType=DECIMAL},
-    #{rechargeSum,jdbcType=DECIMAL}, #{withdrawSum,jdbcType=DECIMAL}, #{loginActive,jdbcType=VARCHAR},
-    #{customerSource,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=INTEGER}, #{lastRechargeTime,jdbcType=INTEGER},
-    #{lastWithdrawTime,jdbcType=INTEGER}, #{investPlatform,jdbcType=INTEGER}, #{investAge,jdbcType=TINYINT},
-    #{tradeNumber,jdbcType=INTEGER}, #{currentOwner,jdbcType=VARCHAR}, #{addWechat,jdbcType=VARCHAR},
-    #{investProcess,jdbcType=VARCHAR}, #{customerComplaint,jdbcType=VARCHAR}, #{inviteCustomer,jdbcType=INTEGER},
-    #{remark,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankTotal,jdbcType=DECIMAL},
-    #{fundRetention,jdbcType=DECIMAL}, #{lastRepayTime,jdbcType=INTEGER}, #{inviteRegist,jdbcType=INTEGER},
-    #{inviteRecharge,jdbcType=INTEGER}, #{inviteTender,jdbcType=INTEGER}, #{yield,jdbcType=DECIMAL},
-    #{attribute,jdbcType=TINYINT}, #{bankBalance,jdbcType=DECIMAL}, #{accountAwait,jdbcType=DECIMAL},
-    #{bankFrost,jdbcType=DECIMAL})
+    insert into ht_user_portrait (user_name, age, sex, 
+      education, occupation, city, 
+      interest, interest_sum, invest_sum, 
+      recharge_sum, withdraw_sum, login_active, 
+      customer_source, last_login_time, last_recharge_time, 
+      last_withdraw_time, invest_platform, invest_age, 
+      trade_number, current_owner, add_wechat, 
+      invest_process, customer_complaint, invite_customer, 
+      remark, mobile, bank_total, 
+      fund_retention, last_repay_time, invite_regist, 
+      invite_recharge, invite_tender, yield, 
+      `attribute`, bank_balance, account_await, 
+      bank_frost)
+    values (#{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, 
+      #{education,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{interest,jdbcType=VARCHAR}, #{interestSum,jdbcType=DECIMAL}, #{investSum,jdbcType=DECIMAL}, 
+      #{rechargeSum,jdbcType=DECIMAL}, #{withdrawSum,jdbcType=DECIMAL}, #{loginActive,jdbcType=VARCHAR}, 
+      #{customerSource,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=INTEGER}, #{lastRechargeTime,jdbcType=INTEGER}, 
+      #{lastWithdrawTime,jdbcType=INTEGER}, #{investPlatform,jdbcType=INTEGER}, #{investAge,jdbcType=TINYINT}, 
+      #{tradeNumber,jdbcType=INTEGER}, #{currentOwner,jdbcType=VARCHAR}, #{addWechat,jdbcType=VARCHAR}, 
+      #{investProcess,jdbcType=VARCHAR}, #{customerComplaint,jdbcType=VARCHAR}, #{inviteCustomer,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{mobile,jdbcType=CHAR}, #{bankTotal,jdbcType=DECIMAL}, 
+      #{fundRetention,jdbcType=DECIMAL}, #{lastRepayTime,jdbcType=INTEGER}, #{inviteRegist,jdbcType=INTEGER}, 
+      #{inviteRecharge,jdbcType=INTEGER}, #{inviteTender,jdbcType=INTEGER}, #{yield,jdbcType=DECIMAL}, 
+      #{attribute,jdbcType=TINYINT}, #{bankBalance,jdbcType=DECIMAL}, #{accountAwait,jdbcType=DECIMAL}, 
+      #{bankFrost,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
     <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into hyjf_users_portrait
+    insert into ht_user_portrait
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="userName != null">
         user_name,
@@ -404,13 +404,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hyjf.am.user.dao.model.auto.UserPortraitExample" resultType="java.lang.Integer">
-    select count(*) from hyjf_users_portrait
+    select count(*) from ht_user_portrait
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update hyjf_users_portrait
+    update ht_user_portrait
     <set>
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=INTEGER},
@@ -532,51 +532,51 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update hyjf_users_portrait
+    update ht_user_portrait
     set user_id = #{record.userId,jdbcType=INTEGER},
-    user_name = #{record.userName,jdbcType=VARCHAR},
-    age = #{record.age,jdbcType=INTEGER},
-    sex = #{record.sex,jdbcType=VARCHAR},
-    education = #{record.education,jdbcType=VARCHAR},
-    occupation = #{record.occupation,jdbcType=VARCHAR},
-    city = #{record.city,jdbcType=VARCHAR},
-    interest = #{record.interest,jdbcType=VARCHAR},
-    interest_sum = #{record.interestSum,jdbcType=DECIMAL},
-    invest_sum = #{record.investSum,jdbcType=DECIMAL},
-    recharge_sum = #{record.rechargeSum,jdbcType=DECIMAL},
-    withdraw_sum = #{record.withdrawSum,jdbcType=DECIMAL},
-    login_active = #{record.loginActive,jdbcType=VARCHAR},
-    customer_source = #{record.customerSource,jdbcType=VARCHAR},
-    last_login_time = #{record.lastLoginTime,jdbcType=INTEGER},
-    last_recharge_time = #{record.lastRechargeTime,jdbcType=INTEGER},
-    last_withdraw_time = #{record.lastWithdrawTime,jdbcType=INTEGER},
-    invest_platform = #{record.investPlatform,jdbcType=INTEGER},
-    invest_age = #{record.investAge,jdbcType=TINYINT},
-    trade_number = #{record.tradeNumber,jdbcType=INTEGER},
-    current_owner = #{record.currentOwner,jdbcType=VARCHAR},
-    add_wechat = #{record.addWechat,jdbcType=VARCHAR},
-    invest_process = #{record.investProcess,jdbcType=VARCHAR},
-    customer_complaint = #{record.customerComplaint,jdbcType=VARCHAR},
-    invite_customer = #{record.inviteCustomer,jdbcType=INTEGER},
-    remark = #{record.remark,jdbcType=VARCHAR},
-    mobile = #{record.mobile,jdbcType=CHAR},
-    bank_total = #{record.bankTotal,jdbcType=DECIMAL},
-    fund_retention = #{record.fundRetention,jdbcType=DECIMAL},
-    last_repay_time = #{record.lastRepayTime,jdbcType=INTEGER},
-    invite_regist = #{record.inviteRegist,jdbcType=INTEGER},
-    invite_recharge = #{record.inviteRecharge,jdbcType=INTEGER},
-    invite_tender = #{record.inviteTender,jdbcType=INTEGER},
-    yield = #{record.yield,jdbcType=DECIMAL},
-    `attribute` = #{record.attribute,jdbcType=TINYINT},
-    bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
-    account_await = #{record.accountAwait,jdbcType=DECIMAL},
-    bank_frost = #{record.bankFrost,jdbcType=DECIMAL}
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      age = #{record.age,jdbcType=INTEGER},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      education = #{record.education,jdbcType=VARCHAR},
+      occupation = #{record.occupation,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      interest = #{record.interest,jdbcType=VARCHAR},
+      interest_sum = #{record.interestSum,jdbcType=DECIMAL},
+      invest_sum = #{record.investSum,jdbcType=DECIMAL},
+      recharge_sum = #{record.rechargeSum,jdbcType=DECIMAL},
+      withdraw_sum = #{record.withdrawSum,jdbcType=DECIMAL},
+      login_active = #{record.loginActive,jdbcType=VARCHAR},
+      customer_source = #{record.customerSource,jdbcType=VARCHAR},
+      last_login_time = #{record.lastLoginTime,jdbcType=INTEGER},
+      last_recharge_time = #{record.lastRechargeTime,jdbcType=INTEGER},
+      last_withdraw_time = #{record.lastWithdrawTime,jdbcType=INTEGER},
+      invest_platform = #{record.investPlatform,jdbcType=INTEGER},
+      invest_age = #{record.investAge,jdbcType=TINYINT},
+      trade_number = #{record.tradeNumber,jdbcType=INTEGER},
+      current_owner = #{record.currentOwner,jdbcType=VARCHAR},
+      add_wechat = #{record.addWechat,jdbcType=VARCHAR},
+      invest_process = #{record.investProcess,jdbcType=VARCHAR},
+      customer_complaint = #{record.customerComplaint,jdbcType=VARCHAR},
+      invite_customer = #{record.inviteCustomer,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=CHAR},
+      bank_total = #{record.bankTotal,jdbcType=DECIMAL},
+      fund_retention = #{record.fundRetention,jdbcType=DECIMAL},
+      last_repay_time = #{record.lastRepayTime,jdbcType=INTEGER},
+      invite_regist = #{record.inviteRegist,jdbcType=INTEGER},
+      invite_recharge = #{record.inviteRecharge,jdbcType=INTEGER},
+      invite_tender = #{record.inviteTender,jdbcType=INTEGER},
+      yield = #{record.yield,jdbcType=DECIMAL},
+      `attribute` = #{record.attribute,jdbcType=TINYINT},
+      bank_balance = #{record.bankBalance,jdbcType=DECIMAL},
+      account_await = #{record.accountAwait,jdbcType=DECIMAL},
+      bank_frost = #{record.bankFrost,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
-    update hyjf_users_portrait
+    update ht_user_portrait
     <set>
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
@@ -693,7 +693,7 @@
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.user.dao.model.auto.UserPortrait">
-    update hyjf_users_portrait
+    update ht_user_portrait
     set user_name = #{userName,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},
       sex = #{sex,jdbcType=VARCHAR},
@@ -733,4 +733,5 @@
       bank_frost = #{bankFrost,jdbcType=DECIMAL}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+
 </mapper>
