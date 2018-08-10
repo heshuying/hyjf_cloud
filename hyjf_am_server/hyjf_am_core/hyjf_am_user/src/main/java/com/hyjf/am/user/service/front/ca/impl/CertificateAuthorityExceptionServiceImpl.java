@@ -1,28 +1,27 @@
 package com.hyjf.am.user.service.front.ca.impl;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.FddCertificateProducer;
 import com.hyjf.am.user.service.front.ca.CertificateAuthorityExceptionService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.FddCertificateProducer;
-import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetDate;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * CA认证异常Service实现类
@@ -30,11 +29,9 @@ import com.hyjf.common.util.GetDate;
  * @author dongzeshan
  */
 @Service
-public class CertificateAuthorityExceptionServiceImpl  implements CertificateAuthorityExceptionService {
+public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl implements CertificateAuthorityExceptionService {
 	  private static final Logger logger = LoggerFactory.getLogger(CertificateAuthorityExceptionServiceImpl.class);
 
-    @Autowired
-    private CertificateAuthorityMapper certificateAuthorityMapper;
     /**
      * 检索CA异常件数
      *
@@ -58,6 +55,14 @@ public class CertificateAuthorityExceptionServiceImpl  implements CertificateAut
         if (StringUtils.isNotBlank(form.getTrueNameSrch())) {
             cra.andTrueNameLike("%" + form.getTrueNameSrch() + "%");
         }
+        // 用户类型
+        if (StringUtils.isNotBlank(form.getIdTypeSrch())) {
+            cra.andIdTypeEqualTo(Integer.valueOf(form.getIdTypeSrch()));
+        }
+        // 客户编号
+        if (StringUtils.isNotBlank(form.getCustomerIdSrch())) {
+            cra.andCustomerIdEqualTo(form.getCustomerIdSrch());
+        }
         // 检索条件转账时间开始
         if (StringUtils.isNotBlank(form.getStartTimeSrch())) {
             try {
@@ -75,7 +80,7 @@ public class CertificateAuthorityExceptionServiceImpl  implements CertificateAut
 			}
         }
 
-        cra.andCodeNotEqualTo("1000");
+        cra.andCodeEqualTo("1000");
         return this.certificateAuthorityMapper.countByExample(example);
     }
 
@@ -105,6 +110,14 @@ public class CertificateAuthorityExceptionServiceImpl  implements CertificateAut
         if (StringUtils.isNotBlank(form.getTrueNameSrch())) {
             cra.andTrueNameLike("%" + form.getTrueNameSrch() + "%");
         }
+        // 用户类型
+        if (StringUtils.isNotBlank(form.getIdTypeSrch())) {
+            cra.andIdTypeEqualTo(Integer.valueOf(form.getIdTypeSrch()));
+        }
+        // 客户编号
+        if (StringUtils.isNotBlank(form.getCustomerIdSrch())) {
+            cra.andCustomerIdEqualTo(form.getCustomerIdSrch());
+        }
         // 检索条件转账时间开始
         if (StringUtils.isNotBlank(form.getStartTimeSrch())) {
             try {
@@ -123,7 +136,7 @@ public class CertificateAuthorityExceptionServiceImpl  implements CertificateAut
 				e.printStackTrace();
 			}
         }
-        cra.andCodeNotEqualTo("1000");
+        cra.andCodeEqualTo("1000");
         if (limitStart >= 0) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);

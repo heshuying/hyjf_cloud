@@ -9,7 +9,7 @@ import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminCouponRepayMonitorCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminCouponRepayMonitorCustomize;
 import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
 import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;

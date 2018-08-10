@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.service.report.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.*;
@@ -66,11 +67,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	}
 
 	@Override
-	public OperationReportResponse getRecordListByReleaseJson(OperationReportRequest request) {
-		OperationReportResponse response = new OperationReportResponse();
+	public JSONObject getRecordListByReleaseJson(OperationReportRequest request) {
+		JSONObject response = new JSONObject();
 		if(request.getIsRelease()==null){
-			response.setRtn("1");
-			response.setMessage("发布状态为空");
+			response.put("success", "success");
+			response.put("isRelease", "发布状态为空");
 			return response;
 		}
 		Map<String, Object> map = new HashMap<String ,Object>();
@@ -82,7 +83,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 
 		List<OperationReportColumnEntity> list = operationReportColumnMongDao.find(query);
 		Integer count = list.size();
-		response.setCount(count);
+		//response.setCount(count);
 		if (count != null && count > 0) {
 			//是否有分页参数
 			if (!"null".equals(String.valueOf(map.get("paginatorPage")))) {
@@ -182,10 +183,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					return o;
 				}
 			});
-			response.setResultList(recordList);
+			response.put("recordList", recordList);
+			response.put("success", "success");
 		} else {
-			response.setRtn("0");
-			response.setMessage("暂无任何数据");
+			response.put("success", "success");
+			response.put("countIsZero", "暂无任何数据");
 		}
 		return response;
 	}

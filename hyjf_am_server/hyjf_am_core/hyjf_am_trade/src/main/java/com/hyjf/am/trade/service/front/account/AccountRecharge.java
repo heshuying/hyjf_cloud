@@ -17,4 +17,12 @@ public interface AccountRecharge {
      * @return
      */
     BigDecimal getRechargePrice(List<Integer> list);
+
+    /**
+     * /**
+     * 根据用户id获取用户充值
+     * @param userId
+     * @return
+     */
+    List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> getAccountRechargeByUserId(Integer userId);
 }

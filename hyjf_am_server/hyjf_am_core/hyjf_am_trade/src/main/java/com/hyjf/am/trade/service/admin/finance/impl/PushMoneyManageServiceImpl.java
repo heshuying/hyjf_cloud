@@ -14,6 +14,8 @@ import com.hyjf.am.trade.dao.model.customize.trade.PushMoneyCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AppMessageProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
+import com.hyjf.am.trade.dao.mapper.customize.PushMoneyCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.finance.PushMoneyManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.TenderCommissionVO;

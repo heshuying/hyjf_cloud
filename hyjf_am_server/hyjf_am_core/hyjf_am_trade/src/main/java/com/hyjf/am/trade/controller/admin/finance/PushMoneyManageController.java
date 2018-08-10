@@ -9,7 +9,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.trade.PushMoneyCustomize;
+import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 import com.hyjf.am.trade.service.admin.finance.PushMoneyManageService;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.common.paginator.Paginator;
@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 

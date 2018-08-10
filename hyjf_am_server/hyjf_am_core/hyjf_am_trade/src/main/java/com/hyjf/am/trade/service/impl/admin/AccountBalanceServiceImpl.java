@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.impl.admin;
 
 import com.hyjf.am.resquest.admin.HjhAccountBalanceRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.HjhInfoAccountBalanceCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.HjhInfoAccountBalanceCustomizeMapper;
 import com.hyjf.am.trade.service.admin.AccountBalanceService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhAccountBalanceVO;

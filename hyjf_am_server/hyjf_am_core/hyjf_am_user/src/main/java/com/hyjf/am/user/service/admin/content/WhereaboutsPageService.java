@@ -6,12 +6,13 @@ package com.hyjf.am.user.service.admin.content;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.resquest.admin.WhereaboutsPageRequest;
 import com.hyjf.am.user.dao.model.auto.WhereaboutsPageConfig;
+import com.hyjf.am.user.service.BaseService;
 
 /**
  * @author tanyy
  * @version WhereaboutsPageService, v0.1 2018/7/16 14:33
  */
-public interface WhereaboutsPageService {
+public interface WhereaboutsPageService extends BaseService{
 	/**
 	 * 根据条件查询移动端着陆页管理
 	 *

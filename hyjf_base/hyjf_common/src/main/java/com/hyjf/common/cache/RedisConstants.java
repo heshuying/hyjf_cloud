@@ -191,7 +191,7 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
-    public static final String USER_TOKEN_REDIS = "user_token_";
+    public static final String USER_TOKEN_REDIS = "user_token:";
 
     /**
      * 放款批次号key
@@ -209,7 +209,7 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀
      */
-    public static final String PASSWORD_ERR_COUNT = "password_err_count_";
+    public static final String PASSWORD_ERR_COUNT = "password_err_count:";
 
     /**
      * 邮件配置key
@@ -234,7 +234,7 @@ public class RedisConstants {
     /**
      * 邮件模版key
      */
-    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template";
+    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template:";
 
     /**
      * 运营报告定时任务key
@@ -253,4 +253,16 @@ public class RedisConstants {
      * 定时发标key
      */
     public static final String ON_TIME = "ON_TIME:";
+
+    /**
+     * 用户画像评分
+     */
+    public static final String USERPORTRAIT_SCORE = "userPortrait_score";
+    
+    /**
+	 * 汇计划提成
+	 * 之前是大寫PUSH_MONEY
+	 * add by libin
+	 */
+	public static final String PUSH_MONEY_ = "push_money:";
 }

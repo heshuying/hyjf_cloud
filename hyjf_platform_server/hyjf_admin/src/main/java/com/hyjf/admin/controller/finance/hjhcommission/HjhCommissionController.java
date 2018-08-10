@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.hjhcommission;
 
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
@@ -24,17 +25,29 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.AccedeListService;
+import com.hyjf.admin.service.BankAccountManageService;
+import com.hyjf.admin.service.BankMerchantAccountService;
 import com.hyjf.admin.service.HjhCommissionService;
+import com.hyjf.admin.service.TransferExceptionLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringPool;
 
 import io.swagger.annotations.Api;
@@ -47,7 +60,14 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.alibaba.fastjson.JSONArray;
 /**
  * @author libin
@@ -58,15 +78,30 @@ import com.alibaba.fastjson.JSONArray;
 @RequestMapping("/hyjf-admin/hjhcommission")
 public class HjhCommissionController extends BaseController{
 	
-	// 原 private PushMoneyManageHjhService pushMoneyService;
     @Autowired
     private HjhCommissionService hjhCommissionService;
-
-    //@Autowired
-    //private ReturncashService returncashService;
     
-	// 权限
+	@Autowired
+	private AccedeListService accedeListService;
+	
+    @Autowired
+    BankAccountManageService bankAccountManageService;
+    
+    @Autowired
+    private BankMerchantAccountService bankMerchantAccountService;
+    
+    @Autowired
+    private TransferExceptionLogService transferLogService;
+    
+	@Autowired
+	private SystemConfig systemConfig;
+
+	/*权限*/
 	public static final String PERMISSIONS = "hjhcommission";
+	
+	private static final Logger logger = LoggerFactory.getLogger(HjhCommissionController.class);
+	/*类名*/
+    private static final String THIS_CLASS = HjhCommissionController.class.getName();
 	
 	/**
 	 * 列表查询(初始无参/查询带参 共用)    已测试
@@ -416,4 +451,171 @@ public class HjhCommissionController extends BaseController{
 		return jsonObject;
 	}
 	
+	
+	
+    /**
+     * 汇计划发提成
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "汇计划提成列表", notes = "汇计划发提成")
+	@PostMapping(value = "/confirmpushmoney")
+	@ResponseBody
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CONFIRM)
+    public JSONObject confirmPushMoneyAction(HttpServletRequest request, @RequestBody HjhCommissionViewRequest viewRequest) {
+		// 调用基类方法获取登录者userid
+		int loginUserId = Integer.valueOf(this.getUser(request).getId());
+		// 调用基类方法获取登录者userName
+		String loginUserName = this.getUser(request).getUsername();
+		// 初始化原子层请求实体
+		HjhCommissionRequest form = new HjhCommissionRequest();
+		// 将画面检索参数request赋值给原子层 request
+		BeanUtils.copyProperties(viewRequest, form);
+		// 默认为汇计划类的投资
+		form.setTenderType(2);
+        JSONObject ret = new JSONObject();
+        // 提成ID 主键查询提成表
+        Integer id = form.getIds();
+        /*原TenderCommission tenderCommission = this.pushMoneyService.queryTenderCommissionByPrimaryKey(id);*/
+        TenderCommissionVO tenderCommission = this.hjhCommissionService.queryTenderCommissionByPrimaryKey(id);
+        // 如果 未发放 //且 提成>0
+        if (tenderCommission != null && tenderCommission.getStatus() == 0 && tenderCommission.getAccountTender().compareTo(BigDecimal.ZERO) > 0) {
+            Integer userId = tenderCommission.getUserId();
+            /** 验证员工在平台的身份属性是否和crm的一致 如果不一致则不发提成 begin */
+			/** redis 锁 */
+            /*原boolean reslut = RedisUtils.tranactionSet("PUSH_MONEY:" + id, 5);*/
+			boolean reslut = RedisUtils.tranactionSet(RedisConstants.PUSH_MONEY_ + id, 5);
+			// 如果没有设置成功，说明有请求来设置过
+			if(!reslut){
+				ret.put("status", "error");
+				ret.put("result", "数据已发生变化,请刷新页面!");
+				return ret;
+			}
+            /*原UsersInfo usersInfo = this.pushMoneyService.getUsersInfoByUserId(userId);*/
+			// 获取用户信息
+			UserInfoVO usersInfo = this.accedeListService.getUsersInfoByUserId(userId);
+			// 获取用户信息详情
+			UserInfoCustomizeVO userInfoCustomize=transferLogService.queryUserInfoByUserId(userId);
+            // cuttype 提成发放方式（3线上2线下）
+            Integer cuttype = this.hjhCommissionService.queryCrmCuttype(userId);
+            if (usersInfo.getAttribute() != null && usersInfo.getAttribute() > 1) {
+                if (usersInfo.getAttribute() != cuttype) {
+                    ret.put("status", "error");
+                    ret.put("result", "该用户属性异常！");
+                    logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("该用户平台属性与CRM 不符！[userId=" + userId + "]"));              
+/*                    原LogUtil.errorLog(THIS_CLASS, PushMoneyManageHjhDefine.CONFIRM_PUSHMONEY, new Exception(
+                            "该用户平台属性与CRM 不符！[userId=" + userId + "]"));*/
+                    return ret;
+                }
+            }
+            /** 验证员工在平台的身份属性是否和crm的一致 如果不一致则不发提成 end */
+            /*原BankOpenAccount bankOpenAccountInfo = returncashService.getBankOpenAccount(userId);*/
+            // 取得用户在银行的账户信息
+            BankOpenAccountVO bankOpenAccountInfo = bankAccountManageService.getBankOpenAccount(userId);
+            if (bankOpenAccountInfo != null && !Validator.isNull(bankOpenAccountInfo.getAccount())) {
+                // 查询商户子账户余额
+            	/*原String merrpAccount = PropUtils.getSystem(BankCallConstant.BANK_MERRP_ACCOUNT);*/
+            	String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
+            	/*原BigDecimal bankBalance = pushMoneyService.getBankBalance(Integer.parseInt(ShiroUtil.getLoginUserId()), merrpAccount);*/
+            	BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(loginUserId, merrpAccount);
+                // 如果接口调用成功
+                if (bankBalance != null) {
+                    // 检查余额是否充足
+                    if (bankBalance.compareTo(tenderCommission.getCommission()) < 0) {
+                    	logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("推广提成子账户余额不足,请先充值或向该子账户转账"));
+                    	ret.put("status", "error");
+                        ret.put("result", "推广提成子账户余额不足,请先充值或向该子账户转账");
+                        return ret;
+                    }
+                } else {
+                    logger.info("没有查询到商户可用余额");
+                    logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("调用银行接口发生错误"));
+                    ret.put("status", "error");
+                    ret.put("result", "没有查询到商户可用余额");
+                    return ret;
+                }
+                // IP地址
+                String ip = CustomUtil.getIpAddr(request);
+                String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+                BankCallBean bean = new BankCallBean();
+                bean.setVersion(BankCallConstant.VERSION_10);// 版本号
+                bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);// 交易代码
+                bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
+                bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
+                bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
+                bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
+                bean.setAccountId(merrpAccount);// 电子账号
+                bean.setTxAmount(tenderCommission.getCommission().toString());
+                bean.setForAccountId(bankOpenAccountInfo.getAccount());
+                bean.setDesLineFlag("1");
+                bean.setDesLine(tenderCommission.getOrdid());
+                bean.setLogOrderId(orderId);// 订单号
+                bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+                bean.setLogUserId(String.valueOf(userId));
+                bean.setLogClient(0);// 平台
+                bean.setLogIp(ip);
+                
+                BankCallBean resultBean;
+                try {
+                    resultBean = BankCallUtils.callApiBg(bean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ret.put("status", "error");
+                    ret.put("result", "请求红包接口失败");
+                    return ret;
+                }
+                if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                	logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("调用红包接口发生错误"));
+                    ret.put("status", "error");
+                    ret.put("result", "调用红包接口发生错误");
+                    return ret;
+                }
+                int cnt = 0;
+                // 接口返回正常时,执行更新操作
+                try {
+                	tenderCommission.setLoginUserName(loginUserName);
+                	tenderCommission.setAccount(bankOpenAccountInfo.getAccount());
+                	if(userInfoCustomize != null){
+                		tenderCommission.setUserName(StringUtils.isEmpty(userInfoCustomize.getUserName()) ? "" : userInfoCustomize.getUserName());
+                		tenderCommission.setRegionName(StringUtils.isEmpty(userInfoCustomize.getRegionName()) ? "" : userInfoCustomize.getRegionName());
+                		tenderCommission.setBranchName(StringUtils.isEmpty(userInfoCustomize.getBranchName()) ? "" : userInfoCustomize.getBranchName());
+                		tenderCommission.setDepartmentName(StringUtils.isEmpty(userInfoCustomize.getDepartmentName()) ? "" : userInfoCustomize.getDepartmentName());
+                		tenderCommission.setTrueName(StringUtils.isEmpty(userInfoCustomize.getTrueName()) ? "" : userInfoCustomize.getTrueName());
+                		tenderCommission.setSex(StringUtils.isEmpty(userInfoCustomize.getSex()) ? "" : userInfoCustomize.getSex());
+                		tenderCommission.setMobile(StringUtils.isEmpty(userInfoCustomize.getMobile()) ? "" : userInfoCustomize.getMobile());
+                		if(userInfoCustomize.getAttribute()!= null){
+                			tenderCommission.setAttribute(userInfoCustomize.getAttribute());
+                		} else {
+                			tenderCommission.setAttribute(99);
+                		}
+                	}
+                    // 发提成处理
+                    cnt = this.hjhCommissionService.updateTenderCommissionRecord(tenderCommission, resultBean, null);
+                } catch (Exception e) {
+                	logger.error(THIS_CLASS, "/confirmpushmoney", e);
+                }
+                // 返现成功
+                if (cnt > 0) {
+                    ret.put("status", "success");
+                    ret.put("result", "发提成操作成功!");
+                    logger.info("提成发放成功，用户id：" + userId + " 金额:"  + tenderCommission.getCommission().toString());
+                } else {
+                    ret.put("status", "error");
+                    ret.put("result", "发提成时发生错误,请重新操作!");
+                    logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("发提成时发生错误,请重新操作!"));
+                }
+                /*LogUtil.endLog(this.getClass().getName(), PushMoneyManageHjhDefine.CONFIRM_PUSHMONEY);*/
+                return ret;
+            }else {
+                ret.put("status", "error");
+                ret.put("result", "该用户未开户");
+                logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("参数不正确[userId="
+                        + userId + "]"));
+                return ret;
+            }
+        }
+        return ret;
+    }
 }

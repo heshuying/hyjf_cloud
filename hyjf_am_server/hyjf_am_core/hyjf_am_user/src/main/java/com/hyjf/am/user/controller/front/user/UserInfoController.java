@@ -2,6 +2,7 @@ package com.hyjf.am.user.controller.front.user;
 
 import java.util.List;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.user.controller.BaseController;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,7 +21,7 @@ import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
-import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.vo.user.EmployeeCustomizeVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -143,5 +144,23 @@ public class UserInfoController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/selectUserInfoByUserId/{userId}")
+	public UserInfoResponse selectUserInfoByUserId(@PathVariable Integer userId){
+		UserInfoResponse response = new UserInfoResponse();
+		UserInfo userInfo=userInfoService.selectUserInfoByUserId(userId);
+		if(userInfo != null){
+			response.setResult(CommonUtils.convertBean(userInfo, UserInfoVO.class));
+			return response;
+		}
+		response.setRtn(Response.FAIL);
+		response.setMessage(Response.FAIL_MSG);
+		return response;
+	}
 
 }

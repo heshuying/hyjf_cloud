@@ -11,6 +11,9 @@
 
 package com.hyjf.am.resquest.user;
 
+import java.math.BigDecimal;
+
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.user.AdminPreRegistListVO;
 import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
 
@@ -18,7 +21,7 @@ import com.hyjf.am.vo.user.AdminUserAuthLogListVO;
  * @author wangqi
  */
 
-public class AdminUserAuthLogListRequest extends AdminUserAuthLogListVO {
+public class AdminUserAuthLogListRequest extends BasePage  {
 
 	/**
 	 * 
@@ -59,7 +62,87 @@ public class AdminUserAuthLogListRequest extends AdminUserAuthLogListVO {
 	public void setPaginatorPage(int paginatorPage) {
 		this.paginatorPage = paginatorPage;
 	}
+	/** 订单号 */
+	public String orderId;
+	/** 订单号 */
+	public String orderStatus;
+	/** 签约类型 */
+	public String authType;
+	/** 用户名 */
+	private String userName;
+	/** 单笔投标金额上限 */
+	private BigDecimal autoInvesMoney;
+	/** 总投标金额上限 */
+	private BigDecimal autoInvesMoneyAll;
+	/** 操作平台 */
+	private String operateEsb;
+	/** 授权时间 */
+	private String creditTime;
 
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getAuthType() {
+		return authType;
+	}
+
+	public void setAuthType(String authType) {
+		this.authType = authType;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public BigDecimal getAutoInvesMoney() {
+		return autoInvesMoney;
+	}
+
+	public void setAutoInvesMoney(BigDecimal autoInvesMoney) {
+		this.autoInvesMoney = autoInvesMoney;
+	}
+
+	public BigDecimal getAutoInvesMoneyAll() {
+		return autoInvesMoneyAll;
+	}
+
+	public void setAutoInvesMoneyAll(BigDecimal autoInvesMoneyAll) {
+		this.autoInvesMoneyAll = autoInvesMoneyAll;
+	}
+
+	public String getOperateEsb() {
+		return operateEsb;
+	}
+
+	public void setOperateEsb(String operateEsb) {
+		this.operateEsb = operateEsb;
+	}
+
+	public String getCreditTime() {
+		return creditTime;
+	}
+
+	public void setCreditTime(String creditTime) {
+		this.creditTime = creditTime;
+	}
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 
 	
 }

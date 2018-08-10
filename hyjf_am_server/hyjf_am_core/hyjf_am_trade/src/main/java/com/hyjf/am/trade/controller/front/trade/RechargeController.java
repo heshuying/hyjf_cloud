@@ -130,4 +130,6 @@ public class RechargeController extends BaseController {
         boolean flag = rechargeService.updateBanks(accountRecharge,ip);
         return flag;
     }
+
+
 }

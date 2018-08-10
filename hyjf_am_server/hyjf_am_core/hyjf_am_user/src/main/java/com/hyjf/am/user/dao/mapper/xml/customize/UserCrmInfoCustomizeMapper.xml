@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper">
 
     <resultMap id="UserCrmInfoMapResult"
-               type="com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize">
+               type="com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize">
         <result column="user_id" property="userId" /> <!-- 用户名 -->
         <result column="username" property="userName" /> <!-- 用户名 -->
         <result column="truename" property="trueName" /> <!--   -->

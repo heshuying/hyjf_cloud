@@ -6,8 +6,8 @@ package com.hyjf.am.trade.service.front.coupon;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponUserListCustomize;
+import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponUserListCustomize;
 
 import java.util.List;
 import java.util.Map;

@@ -5,7 +5,7 @@ package com.hyjf.am.trade.service.admin.extensioncenter.impl;
 
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.ChannelStatisticsDetailCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.ChannelStatisticsDetailCustomizeMapper;
 import com.hyjf.am.trade.service.admin.extensioncenter.ChannelStatisticsDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;

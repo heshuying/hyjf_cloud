@@ -6,10 +6,11 @@ package com.hyjf.am.trade.controller.front.account;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.account.AccountRecharge;
+import com.hyjf.am.vo.admin.AccountRechargeVO;
+import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,6 +36,22 @@ public class AccountRechargeController extends BaseController {
         BigDecimal rechargePrice = accountRecharge.getRechargePrice(list);
         if (rechargePrice != null) {
             response.setRechargePrice(rechargePrice);
+        }
+        return response;
+    }
+
+    /**
+     * 根据用户id获取用户充值
+     * @param userId
+     * @return
+     */
+    @GetMapping("/getAccountRechargeByUserId/{userId}")
+    public com.hyjf.am.response.admin.AccountRechargeResponse getAccountRechargeByUserId(@PathVariable Integer userId) {
+        com.hyjf.am.response.admin.AccountRechargeResponse response = new com.hyjf.am.response.admin.AccountRechargeResponse();
+        List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> list = accountRecharge.getAccountRechargeByUserId(userId);
+        if (CollectionUtils.isNotEmpty(list)) {
+            List<AccountRechargeVO> voList = CommonUtils.convertBeanList(list,AccountRechargeVO.class);
+            response.setResultList(voList);
         }
         return response;
     }

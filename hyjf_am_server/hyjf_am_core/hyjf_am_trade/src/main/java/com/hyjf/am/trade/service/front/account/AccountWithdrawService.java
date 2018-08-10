@@ -5,7 +5,7 @@ import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
-import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;
+import com.hyjf.am.trade.dao.model.customize.WithdrawCustomize;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.front.coupon;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountVO;

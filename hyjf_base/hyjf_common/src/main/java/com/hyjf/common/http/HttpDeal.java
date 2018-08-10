@@ -104,7 +104,7 @@ public class HttpDeal {
 				content = EntityUtils.toString(response.getEntity(), StringPool.UTF8);
 			}
 		} catch (Exception e) {
-
+			logger.error("调用异常...", e);
 		} finally {
 			if (response != null) {
 				try {

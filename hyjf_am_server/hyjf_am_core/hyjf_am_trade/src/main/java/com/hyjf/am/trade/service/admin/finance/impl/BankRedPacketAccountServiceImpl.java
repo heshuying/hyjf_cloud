@@ -4,9 +4,9 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BankMerchantAccountListCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BankMerchantAccountListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample;
-import com.hyjf.am.trade.dao.model.customize.admin.BankMerchantAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

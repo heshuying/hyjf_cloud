@@ -8,6 +8,7 @@ import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.trade.service.front.config.NewAgreementService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +29,8 @@ public class NewAgreementController {
      * @param aliasName
      * @return
      */
-    @RequestMapping(value = "/setProtocolImg")
-    public AppReapyCalendarResponse setProtocolImg(@RequestParam String aliasName){
+    @RequestMapping(value = "/setProtocolImg/{aliasName}")
+    public AppReapyCalendarResponse setProtocolImg(@PathVariable String aliasName){
         AppReapyCalendarResponse response = new AppReapyCalendarResponse();
         NewAgreementResultBean newAgreenmentServiceList = newAgreenmentService.setProtocolImg(aliasName);
         if (newAgreenmentServiceList != null){

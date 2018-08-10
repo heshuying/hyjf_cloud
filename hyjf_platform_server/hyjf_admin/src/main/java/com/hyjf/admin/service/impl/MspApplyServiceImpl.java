@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.MspApplyService;
 import com.hyjf.am.response.user.MspApplytResponse;
 import com.hyjf.am.response.user.MspResponse;
@@ -13,7 +14,7 @@ import com.hyjf.am.resquest.user.MspRequest;
 @Service
 public class MspApplyServiceImpl implements MspApplyService{
 	@Autowired
-	private AmConfigClient mspApplyClient;
+	private AmUserClient mspApplyClient;
 	@Override
 	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
 		return mspApplyClient.getRecordList(mspApplytRequest);
@@ -63,7 +64,7 @@ public class MspApplyServiceImpl implements MspApplyService{
 	@Override
 	public MspResponse insertAction(MspRequest mspRequest) {
 		
-		return mspApplyClient.infoAction(mspRequest);
+		return mspApplyClient.insertAction(mspRequest);
 	}
 	@Override
 	public MspResponse updateAction(MspRequest mspRequest) {

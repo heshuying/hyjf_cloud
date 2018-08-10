@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.task;
 import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
 import com.hyjf.am.trade.dao.model.auto.AleveLog;
 import com.hyjf.am.trade.dao.model.auto.EveLog;
-import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;

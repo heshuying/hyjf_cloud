@@ -12,7 +12,7 @@ import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 import com.hyjf.am.trade.service.admin.coupon.AdminCouponUserService;
 import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;

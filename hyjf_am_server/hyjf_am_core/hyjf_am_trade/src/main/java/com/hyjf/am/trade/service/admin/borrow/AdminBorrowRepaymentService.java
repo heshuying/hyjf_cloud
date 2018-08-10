@@ -4,9 +4,9 @@ import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentCustomize;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowRepaymentPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminRepayDelayCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminRepayDelayCustomize;
 
 import java.text.ParseException;
 import java.util.List;

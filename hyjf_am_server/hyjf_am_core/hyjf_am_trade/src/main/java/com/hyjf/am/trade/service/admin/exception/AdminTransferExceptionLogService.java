@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.admin.exception;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminTransferExceptionLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 
 import java.util.List;

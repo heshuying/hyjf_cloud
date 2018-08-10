@@ -5,7 +5,7 @@ package com.hyjf.am.trade.service.front.account;
 
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponUserCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 
 import java.util.List;
 
