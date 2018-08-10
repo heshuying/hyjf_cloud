@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.controller.app.report;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
@@ -36,13 +37,13 @@ public class AppOperationReportController extends BaseController {
 
 	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表")
 	@GetMapping("/reportList")
-	public OperationReportResponse listByRelease(HttpServletRequest httpServletRequest) {
+	public JSONObject listByRelease(HttpServletRequest httpServletRequest) {
 		OperationReportRequest request = new OperationReportRequest();
 		String param1 =httpServletRequest.getParameter("isRelease");
 		String param2 =httpServletRequest.getParameter("paginatorPage");
 		request.setIsRelease(param1==null?null:Integer.valueOf(param1));
 		request.setCurrPage(param2==null?0:Integer.valueOf(param2));
-		OperationReportResponse response = operationReportService.getRecordListByReleaseJson(request);
+		JSONObject response = operationReportService.getRecordListByReleaseJson(request);
 		return response;
 
 	}
