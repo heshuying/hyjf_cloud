@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.service;
 
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -46,4 +47,19 @@ public interface HjhPlanCapitalService {
      */
     List<HjhPlanCapitalVO> getPlanCapitalForProformaList(Date fromDate, Date toDate);
 
+
+    /**
+     * 获取汇计划 - 计划资金 条数
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    Integer getPlanCapitalCount(HjhPlanCapitalRequest request);
+    /**
+     * 获取资金计划列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest request);
 }

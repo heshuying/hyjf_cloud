@@ -9,6 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  *
+ * 汇计划 - 资金计划 (已迁移)
+ * @Author : huanghui
  */
 @Service
 public class HjhPlanCapitalClientImpl implements HjhPlanCapitalClient {

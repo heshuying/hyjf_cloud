@@ -3,6 +3,9 @@ package com.hyjf.admin.client;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 
+/**
+ * 汇计划 - 资金计划 (已迁移)
+ */
 public interface HjhPlanCapitalClient {
 
     /**
