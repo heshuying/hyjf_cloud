@@ -7,11 +7,14 @@ import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 协议模板管理
@@ -67,9 +70,11 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "配置中心-协议模板管理", notes = "配置中心-协议模板管理 添加协议模板")
     @RequestMapping("/insertAction")
-    public AdminProtocolResponse insertAction( AdminProtocolRequest request){
+    public AdminProtocolResponse insertAction(AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        protocolService.insertProtocolTemplate(request);
+        AdminSystemVO user = getUser(httpServletRequest);
+        String userId = user.getId();
+        protocolService.insertProtocolTemplate(request,userId);
 
 
         return response;
@@ -82,9 +87,11 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "配置中心-协议模板管理", notes = "配置中心-协议模板管理 修改协议模板")
     @RequestMapping("/updateAction")
-    public AdminProtocolResponse updateProtocolTemplate( AdminProtocolRequest request){
+    public AdminProtocolResponse updateProtocolTemplate( AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        protocolService.updateProtocolTemplate(request);
+        AdminSystemVO user = getUser(httpServletRequest);
+        String userId = user.getId();
+        protocolService.updateProtocolTemplate(request,userId);
         return response;
     }
 
@@ -95,9 +102,11 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "配置中心-协议模板管理", notes = "配置中心-协议模板管理 删除协议模板")
     @RequestMapping("/deleteAction")
-    public AdminProtocolResponse deleteAction( AdminProtocolRequest request){
+    public AdminProtocolResponse deleteAction( AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
-        protocolService.deleteProtocolTemplate(request);
+        AdminSystemVO user = getUser(httpServletRequest);
+        String userId = user.getId();
+        protocolService.deleteProtocolTemplate(request,userId);
         return response;
     }
 }
