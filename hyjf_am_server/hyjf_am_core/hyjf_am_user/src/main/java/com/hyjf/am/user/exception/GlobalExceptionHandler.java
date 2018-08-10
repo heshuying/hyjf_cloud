@@ -1,4 +1,4 @@
-package com.hyjf.am.user;
+package com.hyjf.am.user.exception;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;

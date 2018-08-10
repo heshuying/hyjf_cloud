@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.front.wdzj.impl;
 
-import com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize;
+import com.hyjf.am.trade.dao.model.customize.wdzj.WDZJBorrowListDataCustomize;
+import com.hyjf.am.trade.dao.model.customize.wdzj.WDZJPreapysListCustomize;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.front.wdzj.BorrowDataService;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class BorrowDataServiceImpl extends BaseServiceImpl implements BorrowData
      * 查询标的列表数据
      */
     @Override
-    public List<BorrowListCustomize> selectBorrowList(Map<String, Object> paraMap){
+    public List<WDZJBorrowListDataCustomize> selectBorrowList(Map<String, Object> paraMap){
         return wdzjCustomizeMapper.selectBorrowList(paraMap);
     }
 
@@ -45,7 +45,7 @@ public class BorrowDataServiceImpl extends BaseServiceImpl implements BorrowData
      * 当日提前还款列表
      */
     @Override
-    public List<PreapysListCustomize> selectPreapysList(Map<String, Object> paraMap) {
+    public List<WDZJPreapysListCustomize> selectPreapysList(Map<String, Object> paraMap) {
         return wdzjCustomizeMapper.selectPreapysList(paraMap);
     }
 

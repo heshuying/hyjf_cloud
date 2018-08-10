@@ -23,7 +23,7 @@ public class SyncAccountProducer extends Producer {
     }
 
     @Override
-    public boolean messageSend(MessageContent messageContent) throws MQException {
-        return super.messageSend(messageContent);
+    public boolean messageSendDelay(MessageContent messageContent,int delayLevel) throws MQException {
+        return super.messageSendDelay(messageContent,delayLevel);
     }
 }
