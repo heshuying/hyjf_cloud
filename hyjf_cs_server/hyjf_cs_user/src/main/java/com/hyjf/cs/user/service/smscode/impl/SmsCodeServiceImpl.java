@@ -152,10 +152,10 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT + ip, (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
         }
         // 判断最大发送数max_phone_count
-        String count = RedisUtils.get(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT);
+        String count = RedisUtils.get( RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, "0");
+            RedisUtils.set( RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, "0");
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
@@ -177,7 +177,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             } catch (Exception e) {
                 CheckUtil.check(false, MsgEnum.ERR_SMSCODE_SEND_TOO_MANNY);
             }
-            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
         }
 
         // 发送checkCode最大时间间隔，默认60秒
@@ -302,10 +302,10 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT + ip, (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
         }
         // 判断最大发送数max_phone_count
-        String count = RedisUtils.get(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT);
+        String count = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
         if (StringUtils.isBlank(count) || !Validator.isNumber(count)) {
             count = "0";
-            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, "0");
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
@@ -333,7 +333,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                     ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
                     return ret;
             }
-            RedisUtils.set(mobile + RedisConstants.CACHE_MAX_PHONE_COUNT, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+            RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
         }
 
         // 发送checkCode最大时间间隔，默认60秒

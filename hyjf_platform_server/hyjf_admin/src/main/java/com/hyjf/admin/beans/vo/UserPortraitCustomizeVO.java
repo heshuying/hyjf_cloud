@@ -65,6 +65,28 @@ public class UserPortraitCustomizeVO implements Serializable {
     private String remark;
     @ApiModelProperty(value = "手机号")
     private String mobile;
+    @ApiModelProperty(value = "账户总额")
+    private BigDecimal bankTotal;
+    @ApiModelProperty(value = "资金留存比")
+    private BigDecimal fundRetention;
+    @ApiModelProperty(value = "最后一次还款时间")
+    private Integer lastRepayTime;
+    @ApiModelProperty(value = "邀请注册人数")
+    private Integer inviteRegist;
+    @ApiModelProperty(value = "邀请充值数")
+    private Integer inviteRecharge;
+    @ApiModelProperty(value = "邀请投资数")
+    private Integer inviteTender;
+    @ApiModelProperty(value = "客均收益率")
+    private BigDecimal yield;
+    @ApiModelProperty(value = "是否有主单")
+    private Integer attribute;
+    @ApiModelProperty(value = "账户余额")
+    private BigDecimal bankBalance;
+    @ApiModelProperty(value = "银行待还金额")
+    private BigDecimal accountAwait;
+    @ApiModelProperty(value = "银行冻结金额")
+    private BigDecimal bankFrost;
 
     private static final long serialVersionUID = 1L;
 
@@ -282,5 +304,93 @@ public class UserPortraitCustomizeVO implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile == null ? null : mobile.trim();
+    }
+
+    public BigDecimal getBankTotal() {
+        return bankTotal;
+    }
+
+    public void setBankTotal(BigDecimal bankTotal) {
+        this.bankTotal = bankTotal;
+    }
+
+    public BigDecimal getFundRetention() {
+        return fundRetention;
+    }
+
+    public void setFundRetention(BigDecimal fundRetention) {
+        this.fundRetention = fundRetention;
+    }
+
+    public Integer getLastRepayTime() {
+        return lastRepayTime;
+    }
+
+    public void setLastRepayTime(Integer lastRepayTime) {
+        this.lastRepayTime = lastRepayTime;
+    }
+
+    public Integer getInviteRegist() {
+        return inviteRegist;
+    }
+
+    public void setInviteRegist(Integer inviteRegist) {
+        this.inviteRegist = inviteRegist;
+    }
+
+    public Integer getInviteRecharge() {
+        return inviteRecharge;
+    }
+
+    public void setInviteRecharge(Integer inviteRecharge) {
+        this.inviteRecharge = inviteRecharge;
+    }
+
+    public Integer getInviteTender() {
+        return inviteTender;
+    }
+
+    public void setInviteTender(Integer inviteTender) {
+        this.inviteTender = inviteTender;
+    }
+
+    public BigDecimal getYield() {
+        return yield;
+    }
+
+    public void setYield(BigDecimal yield) {
+        this.yield = yield;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
+
+    public BigDecimal getBankBalance() {
+        return bankBalance;
+    }
+
+    public void setBankBalance(BigDecimal bankBalance) {
+        this.bankBalance = bankBalance;
+    }
+
+    public BigDecimal getAccountAwait() {
+        return accountAwait;
+    }
+
+    public void setAccountAwait(BigDecimal accountAwait) {
+        this.accountAwait = accountAwait;
+    }
+
+    public BigDecimal getBankFrost() {
+        return bankFrost;
+    }
+
+    public void setBankFrost(BigDecimal bankFrost) {
+        this.bankFrost = bankFrost;
     }
 }
