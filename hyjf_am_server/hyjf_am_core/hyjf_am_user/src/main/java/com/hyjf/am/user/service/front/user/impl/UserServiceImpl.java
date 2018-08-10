@@ -1428,4 +1428,41 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+	/**
+	 * 通过用户id获得借款人的开户电子账号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccount selectBankAccountById(Integer userId) {
+		BankOpenAccountExample example = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = example.createCriteria();
+		crt.andUserIdEqualTo(userId);
+		List<BankOpenAccount> list = this.bankOpenAccountMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else return null;
+	}
+
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public CorpOpenAccountRecord selectUserBusiNameByUsername(String userName) {
+		CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
+		CorpOpenAccountRecordExample.Criteria crt = example.createCriteria();
+		crt.andUsernameEqualTo(userName);
+		List<CorpOpenAccountRecord> list = corpOpenAccountRecordMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
 }

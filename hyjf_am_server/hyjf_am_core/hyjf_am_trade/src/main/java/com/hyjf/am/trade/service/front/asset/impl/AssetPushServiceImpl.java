@@ -159,4 +159,33 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     public int updateHjhPlanAssetnew(HjhPlanAsset hjhPlanAsset) {
         return hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset);
     }
+
+    /**
+     * 检查是否存在重复资产
+     * @param assetId
+     * @return
+     */
+    @Override
+    public List<HjhPlanAsset> checkDuplicateAssetId(String assetId) {
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        HjhPlanAssetExample.Criteria crt = example.createCriteria();
+        crt.andAssetIdEqualTo(assetId);
+        List<HjhPlanAsset> list = hjhPlanAssetMapper.selectByExample(example);
+        if(list.size() > 0){
+            return list;
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * 录标时添加企业资产
+     *
+     * @param borrowUser
+     * @return
+     */
+    @Override
+    public int insertCompanyInfoToBorrowUsers(BorrowUser borrowUser) {
+        return borrowUserMapper.insertSelective(borrowUser);
+    }
 }
