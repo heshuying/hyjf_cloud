@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.wdzj.WDZJCustomizeMapper" >
-  <resultMap id="BorrowListResultMap" type="com.hyjf.am.trade.dao.model.customize.wdzj.BorrowListCustomize" >
-    <collection property="subscribes" column="borrow_nid"  select="selectTenderList" />
-  </resultMap> 
-  <resultMap id="TenderListResultMap" type="com.hyjf.am.trade.dao.model.customize.wdzj.TenderListCustomize" >
-  </resultMap>
-  <resultMap id="PreapysListCustomize" type="com.hyjf.am.trade.dao.model.customize.wdzj.PreapysListCustomize" >
-  </resultMap>
-  <select id="selectBorrowList" parameterType="map" resultMap="BorrowListResultMap">
-	SELECT
+<mapper namespace="com.hyjf.mybatis.mapper.customize.apiweb.wdzj.WDZJCustomizeMapper" >
+	<resultMap id="BorrowListResultMap" type="com.hyjf.mybatis.model.customize.apiweb.wdzj.BorrowListCustomize" >
+		<collection property="subscribes" column="borrow_nid"  select="selectTenderList" />
+	</resultMap>
+	<resultMap id="TenderListResultMap" type="com.hyjf.mybatis.model.customize.apiweb.wdzj.TenderListCustomize" >
+	</resultMap>
+	<resultMap id="PreapysListCustomize" type="com.hyjf.mybatis.model.customize.apiweb.wdzj.PreapysListCustomize" >
+	</resultMap>
+	<select id="selectBorrowList" parameterType="map" resultMap="BorrowListResultMap">
+		SELECT
 		hb.borrow_nid AS projectId,
 		hb.borrow_nid AS userName,
 		hb.borrow_nid,
@@ -18,84 +18,374 @@
 		hb.borrow_account_scale AS `schedule`,
 		CONCAT(hb.borrow_apr, '%') AS interestRate,
 		hb.borrow_period AS deadline,
-	
-	IF (
+
+		IF (
 		hb.borrow_style = 'endday',
 		'天',
 		'月'
-	) AS deadlineUnit,
-	 CASE
-	WHEN hb.borrow_style = 'end' THEN
+		) AS deadlineUnit,
+		CASE
+		WHEN hb.borrow_style = 'end' THEN
 		'1'
-	WHEN hb.borrow_style = 'endday' THEN
+		WHEN hb.borrow_style = 'endday' THEN
 		'1'
-	WHEN hb.borrow_style = 'endmonth' THEN
+		WHEN hb.borrow_style = 'endmonth' THEN
 		'5'
-	WHEN hb.borrow_style = 'principal' THEN
+		WHEN hb.borrow_style = 'principal' THEN
 		'6'
-	WHEN hb.borrow_style = 'month' THEN
+		WHEN hb.borrow_style = 'month' THEN
 		'2'
-	ELSE
+		ELSE
 		''
-	END AS `repaymentType`,
-	 CASE
-	WHEN hb.asset_attributes = '1' THEN
+		END AS `repaymentType`,
+		CASE
+		WHEN hb.asset_attributes = '1' THEN
 		'抵押标'
-	WHEN hb.asset_attributes = '2' THEN
+		WHEN hb.asset_attributes = '2' THEN
 		'质押标'
-	WHEN hb.asset_attributes = '3' THEN
+		WHEN hb.asset_attributes = '3' THEN
 		'信用标'
-	WHEN hb.asset_attributes = '4' THEN
+		WHEN hb.asset_attributes = '4' THEN
 		'债权转让标'
-	WHEN hb.asset_attributes = '5' THEN
+		WHEN hb.asset_attributes = '5' THEN
 		'净值标'
-	ELSE
-		''
-	END AS `type`,
-	 CONCAT(
+		ELSE
+		'信用标'
+		END AS `type`,
+		CONCAT(
 		'https://www.hyjf.com/bank/web/borrow/getBorrowDetail.do?borrowNid=',
 		hb.borrow_nid
-	) AS loanUrl,
-	 FROM_UNIXTIME(
-	  UNIX_TIMESTAMP(br.create_time),
+		) AS loanUrl,
+		FROM_UNIXTIME(
+		br.addtime,
 		'%Y-%m-%d %H:%i:%s'
-	) AS successTime,
-	0 AS reward
+		) AS successTime,
+		0 AS reward
+		FROM
+		ht_borrow_repay br
+		JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
+		WHERE
+		br.addtime >= #{timeStart}
+		AND br.addtime <![CDATA[<=]]> #{timeEnd}
+		UNION ALL
+		SELECT
+		tt.projectId,
+		tt.userName,
+		tt.borrow_nid,
+		tt.title,
+		tt.amount,
+		tt.`schedule`,
+		tt.interestRate,
+		tt.deadline,
+		tt.deadlineUnit,
+		tt.repaymentType,
+		tt.`type`,
+		tt.loanUrl,
+		FROM_UNIXTIME(
+		tt.end_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS successTime,
+		tt.reward
+		FROM
+		(
+		SELECT
+		bc.credit_nid AS projectId,
+		bc.credit_nid AS userName,
+		bc.credit_nid AS borrow_nid,
+		hb.finance_purpose AS title,
+		bc.credit_capital AS amount,
+		100 AS `schedule`,
+		CONCAT(bc.bid_apr, '%') AS interestRate,
+		bc.credit_term AS deadline,
+		'天' AS deadlineUnit,
+		1 AS repaymentType,
+		'债权转让标' AS `type`,
+		CONCAT(
+		'https://www.hyjf.com/bank/user/credit/webcredittender.do?creditNid=',
+		bc.credit_nid
+		) AS loanUrl,
+		(
+		SELECT
+		ct.add_time
+		FROM
+		ht_credit_tender ct
+		WHERE
+		ct.credit_nid = bc.credit_nid
+		ORDER BY
+		ct.assign_id DESC
+		LIMIT 1
+		) AS end_time,
+		0 AS reward
+		FROM
+		ht_borrow_credit bc
+		INNER JOIN ht_borrow hb ON bc.bid_nid = hb.borrow_nid
+		WHERE
+		bc.credit_status = '2'
+		) tt
+		WHERE
+		tt.end_time >= #{timeStart}
+		AND tt.end_time <![CDATA[<=]]> #{timeEnd}
+		UNION ALL
+		SELECT
+		tt.projectId,
+		tt.userName,
+		tt.borrow_nid,
+		tt.title,
+		tt.amount,
+		tt.`schedule`,
+		tt.interestRate,
+		tt.deadline,
+		tt.deadlineUnit,
+		tt.repaymentType,
+		tt.`type`,
+		tt.loanUrl,
+		FROM_UNIXTIME(
+		tt.end_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS successTime,
+		tt.reward
+		FROM
+		(
+		SELECT
+		dc.credit_nid AS projectId,
+		dc.credit_nid AS userName,
+		dc.credit_nid AS borrow_nid,
+		b.finance_purpose AS title,
+		dc.credit_capital AS amount,
+		100 AS `schedule`,
+		CONCAT(dc.actual_apr, '%') AS interestRate,
+		dc.remain_days AS deadline,
+		'天' AS deadlineUnit,
+		'1' AS `repaymentType`,
+		'债权转让标' AS `type`,
+		CONCAT(
+		'https://www.hyjf.com/bank/web/borrow/getBorrowDetail.do?borrowNid=',
+		b.borrow_nid
+		) AS loanUrl,
+		(
+		SELECT
+		ct.create_time
+		FROM
+		ht_hjh_debt_credit_tender ct
+		WHERE
+		ct.credit_nid = dc.credit_nid
+		ORDER BY
+		ct.id DESC
+		LIMIT 1
+		) AS end_time,
+		0 AS reward
+		FROM
+		ht_hjh_debt_credit dc
+		INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+		INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		WHERE
+		dc.credit_status = 2
+		) tt
+
+		WHERE tt.end_time >= #{timeStart}
+		AND tt.end_time <![CDATA[<=]]> #{timeEnd}
+		<if test="limitStart != null and limitStart >= 0">
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+	<select id="countBorrowList" parameterType="map" resultType="int">
+  SELECT COUNT(t2.projectId) from (SELECT
+		hb.borrow_nid AS projectId
 	FROM
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-	  UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
-	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
-	<if test="limitStart != null and limitStart >= 0">
-		LIMIT #{limitStart} , #{limitEnd}
-	</if>
-  </select>
-  
-  <select id="countBorrowList" parameterType="map" resultType="int">
-	SELECT
-		count(br.id)
-	FROM
-		ht_borrow_repay br
-	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
-	WHERE
-		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
-	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
+		br.addtime >= #{timeStart}
+	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+	UNION ALL
+		SELECT
+			tt.projectId
+		FROM
+			(
+				SELECT
+					bc.credit_nid AS projectId,
+					bc.credit_nid AS userName,
+					bc.credit_nid AS borrow_nid,
+					hb.finance_purpose AS title,
+					bc.credit_capital AS amount,
+					100 AS `schedule`,
+					CONCAT(bc.bid_apr, '%') AS interestRate,
+					bc.credit_term AS deadline,
+					'天' AS deadlineUnit,
+					1 AS repaymentType,
+					'债权转让标' AS `type`,
+					CONCAT(
+						'https://www.hyjf.com/bank/user/credit/webcredittender.do?creditNid=',
+						bc.credit_nid
+					) AS loanUrl,
+					(
+						SELECT
+							ct.add_time
+						FROM
+							ht_credit_tender ct
+						WHERE
+							ct.credit_nid = bc.credit_nid
+						ORDER BY
+							ct.assign_id DESC
+						LIMIT 1
+					) AS end_time,
+					0 AS reward
+				FROM
+					ht_borrow_credit bc
+				INNER JOIN ht_borrow hb ON bc.bid_nid = hb.borrow_nid
+				WHERE
+					bc.credit_status = '2'
+			) tt
+		WHERE
+		  tt.end_time >= #{timeStart}
+			AND tt.end_time <![CDATA[<=]]> #{timeEnd}
+		UNION ALL
+			SELECT
+				tt.projectId
+			FROM
+				(
+					SELECT
+						dc.credit_nid AS projectId,
+						dc.credit_nid AS userName,
+						dc.credit_nid AS borrow_nid,
+						b.finance_purpose AS title,
+						dc.credit_capital AS amount,
+						100 AS `schedule`,
+						CONCAT(dc.actual_apr, '%') AS interestRate,
+						dc.remain_days AS deadline,
+						'天' AS deadlineUnit,
+						'1' AS `repaymentType`,
+						'债权转让标' AS `type`,
+						CONCAT(
+							'https://www.hyjf.com/bank/web/borrow/getBorrowDetail.do?borrowNid=',
+							b.borrow_nid
+						) AS loanUrl,
+						(
+							SELECT
+								ct.create_time
+							FROM
+								ht_hjh_debt_credit_tender ct
+							WHERE
+								ct.credit_nid = dc.credit_nid
+							ORDER BY
+								ct.id DESC
+							LIMIT 1
+						) AS end_time,
+						0 AS reward
+					FROM
+						ht_hjh_debt_credit dc
+					INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+					INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+					LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+					WHERE
+						dc.credit_status = 2
+				) tt
+
+			WHERE tt.end_time >= #{timeStart}
+	        AND tt.end_time <![CDATA[<=]]> #{timeEnd}) t2
   </select>
 
-  <select id="sumBorrowAmount" parameterType="map" resultType="string">
-	SELECT
-		IFNULL(SUM(hb.account),0) amountTotal
+	<select id="sumBorrowAmount" parameterType="map" resultType="string">
+	select IFNULL(SUM(t2.amount),0) amountTotal from (SELECT
+		hb.account AS amount
 	FROM
 		ht_borrow_repay br
 	JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 	WHERE
-		UNIX_TIMESTAMP(br.create_time) >= #{timeStart}
-	AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> #{timeEnd}
+		br.addtime >= #{timeStart}
+	AND br.addtime <![CDATA[<=]]> #{timeEnd}
+	UNION ALL
+		SELECT
+			tt.amount
+		FROM
+			(
+				SELECT
+					bc.credit_nid AS projectId,
+					bc.credit_nid AS userName,
+					bc.credit_nid AS borrow_nid,
+					hb.finance_purpose AS title,
+					bc.credit_capital AS amount,
+					100 AS `schedule`,
+					CONCAT(bc.bid_apr, '%') AS interestRate,
+					bc.credit_term AS deadline,
+					'天' AS deadlineUnit,
+					1 AS repaymentType,
+					'债权转让标' AS `type`,
+					CONCAT(
+						'https://www.hyjf.com/bank/user/credit/webcredittender.do?creditNid=',
+						bc.credit_nid
+					) AS loanUrl,
+					(
+						SELECT
+							ct.add_time
+						FROM
+							ht_credit_tender ct
+						WHERE
+							ct.credit_nid = bc.credit_nid
+						ORDER BY
+							ct.assign_id DESC
+						LIMIT 1
+					) AS end_time,
+					0 AS reward
+				FROM
+					ht_borrow_credit bc
+				INNER JOIN ht_borrow hb ON bc.bid_nid = hb.borrow_nid
+				WHERE
+					bc.credit_status = '2'
+			) tt
+		WHERE
+		  tt.end_time >= #{timeStart}
+			AND tt.end_time <![CDATA[<=]]> #{timeEnd}
+		UNION ALL
+			SELECT
+				tt.amount
+			FROM
+				(
+					SELECT
+						dc.credit_nid AS projectId,
+						dc.credit_nid AS userName,
+						dc.credit_nid AS borrow_nid,
+						b.finance_purpose AS title,
+						dc.credit_capital AS amount,
+						100 AS `schedule`,
+						CONCAT(dc.actual_apr, '%') AS interestRate,
+						dc.remain_days AS deadline,
+						'天' AS deadlineUnit,
+						'1' AS `repaymentType`,
+						'债权转让标' AS `type`,
+						CONCAT(
+							'https://www.hyjf.com/bank/web/borrow/getBorrowDetail.do?borrowNid=',
+							b.borrow_nid
+						) AS loanUrl,
+						(
+							SELECT
+								ct.create_time
+							FROM
+								ht_hjh_debt_credit_tender ct
+							WHERE
+								ct.credit_nid = dc.credit_nid
+							ORDER BY
+								ct.id DESC
+							LIMIT 1
+						) AS end_time,
+						0 AS reward
+					FROM
+						ht_hjh_debt_credit dc
+					INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+					INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+					LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+					WHERE
+						dc.credit_status = 2
+				) tt
+
+			WHERE tt.end_time >= #{timeStart}
+	        AND tt.end_time <![CDATA[<=]]> #{timeEnd}) t2
   </select>
-  
-  
-  <select id="selectTenderList" parameterType="map" resultMap="TenderListResultMap">
+
+
+	<select id="selectTenderList" parameterType="map" resultMap="TenderListResultMap">
   	SELECT
 		ui.idcard AS subscribeUserName,
 		t.account AS amount,
@@ -104,41 +394,82 @@
 			t.addtime,
 			'%Y-%m-%d %H:%i:%s'
 		) AS addDate,
-		'1' AS status,
-	
-	IF (
-		hu.inst_code='11000001',
-		1,
-		IF(t.accede_order_id IS NULL,0,1)
-	) AS type
+		'1' AS STATUS,
+
+		IF (
+			hu.inst_code = '11000001',
+			1,
+
+		IF (
+			t.accede_order_id IS NULL,
+			0,
+			1
+		)
+		) AS type
 	FROM
 		ht_borrow_tender t
 	JOIN ht_users hu ON t.user_id = hu.user_id
 	JOIN ht_users_info ui ON ui.user_id = hu.user_id
 	WHERE t.borrow_nid = #{projectId}
-  </select>
-  <select id="selectPreapysList" parameterType="map" resultMap="PreapysListCustomize">
+	UNION ALL
 		SELECT
-			hb.borrow_nid AS projectId,
-		'天' AS deadlineUnit,
-		 ROUND(
-			(
-				br.repay_yestime - br.create_time
-			) / (60 * 60 * 24)
-		 ) AS deadline
+			ui.idcard AS subscribeUserName,
+			ct.assign_capital AS amount,
+			ct.assign_capital AS validAmount,
+			FROM_UNIXTIME(
+				ct.add_time,
+				'%Y-%m-%d %H:%i:%s'
+			) AS addDate,
+			'1' AS STATUS,
+			0 AS type
 		FROM
-			ht_borrow_repay br
+			ht_credit_tender ct
+		INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid
+		AND bc.credit_nid = ct.credit_nid
+		JOIN ht_users hu ON ct.user_id = hu.user_id
+		JOIN ht_users_info ui ON ui.user_id = hu.user_id
+		WHERE ct.credit_nid = #{projectId}
+		UNION ALL
+			SELECT
+				ui.idcard AS subscribeUserName,
+				ct.assign_capital AS amount,
+				ct.assign_capital AS validAmount,
+				FROM_UNIXTIME(
+					ct.create_time,
+					'%Y-%m-%d %H:%i:%s'
+				) AS addDate,
+				'1' AS STATUS,
+				0 AS type
+			FROM
+				ht_hjh_debt_credit_tender ct
+			INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid
+			AND bc.credit_nid = ct.credit_nid
+			JOIN ht_users hu ON ct.user_id = hu.user_id
+			JOIN ht_users_info ui ON ui.user_id = hu.user_id
+			WHERE ct.credit_nid = #{projectId}
+  </select>
+	<select id="selectPreapysList" parameterType="map" resultMap="PreapysListCustomize">
+		SELECT
+		hb.borrow_nid AS projectId,
+		'天' AS deadlineUnit,
+		ROUND(
+		(
+		br.repay_yestime - br.create_time
+		) / (60 * 60 * 24)
+		) AS deadline
+		FROM
+		ht_borrow_repay br
 		JOIN ht_borrow hb ON br.borrow_nid = hb.borrow_nid
 		WHERE
-			br.advance_status = '1'
+		br.advance_status = '1'
 		AND br.repay_status = '1'
 		AND repay_yestime >= #{timeStart}
 		AND repay_yestime <![CDATA[<=]]> #{timeEnd}
-	<if test="limitStart != null and limitStart >= 0">
-		LIMIT #{limitStart} , #{limitEnd}
-	</if>
-  </select>
-  <select id="countPreapysList" parameterType="map" resultType="int">
+		<if test="limitStart != null and limitStart >= 0">
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+	<select id="countPreapysList" parameterType="map" resultType="int">
 		SELECT
 			COUNT(1)
 		FROM
