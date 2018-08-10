@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.user.service.admin.promotion.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.UtmRegCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UtmReg;
 import com.hyjf.am.user.service.admin.promotion.UtmRegService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,9 +17,7 @@ import java.util.List;
  * @version UtmRegServiceImpl, v0.1 2018/7/17 9:15
  */
 @Service
-public class UtmRegServiceImpl implements UtmRegService {
-    @Autowired
-    private UtmRegCustomizeMapper utmRegCustomizeMapper;
+public class UtmRegServiceImpl extends BaseServiceImpl implements UtmRegService {
 
     @Override
     public List<UtmReg> getUtmRegList(Integer sourceId, String type) {

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AppCouponRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.WebViewUser;
@@ -44,17 +45,46 @@ public class CouponController extends BaseTradeController {
      */
     @ApiOperation(value = "获取我的优惠券列表", notes = "获取我的优惠券列表")
     @PostMapping("/getUserCoupons")
-    public WebResult<Map<String,Object>> getUserCoupons(@RequestHeader(value = "token") String token, HttpServletRequest request) throws Exception {
+    public WebResult<Map<String,Object>> getUserCoupons(HttpServletRequest request) throws Exception {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
+            result.setStatus("1");
+            result.setStatusDesc("请求参数非法");
+            return result;
+        }
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        if (Validator.isNull(key)) {
+            result.setStatus("1");
+            result.setStatusDesc("请求参数非法");
+            return result;
+        }
         logger.info("获取我的优惠券列表");
         String couponStatus = "0";
         Integer page = 1;
         Integer pageSize = 100;
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
-        if(null != user && null != user.getUserId()){
+        // 取得用户ID
+        Integer userId = SecretUtil.getUserId(sign);
+        if(null != userId){
             Map<String,Object> resultMap = new HashMap<String,Object>();
-            Integer count =  appCouponService.countMyCoupon(user.getUserId(),couponStatus);
-            List<CouponUserForAppCustomizeVO> couponList = appCouponService.getMyCoupon(user.getUserId(),page,pageSize,couponStatus);
+            Integer count =  appCouponService.countMyCoupon(userId,couponStatus);
+            List<CouponUserForAppCustomizeVO> couponList = appCouponService.getMyCoupon(userId,page,pageSize,couponStatus);
             resultMap.put("couponTotal",count);
             resultMap.put("couponStatus",couponStatus);
             resultMap.put("couponList",couponList);

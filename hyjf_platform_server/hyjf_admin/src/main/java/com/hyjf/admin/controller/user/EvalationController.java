@@ -85,7 +85,10 @@ public class EvalationController extends BaseController {
         if (null != userEvalationResultVO&&userEvalationResultVO.getUserId().toString().equals(userId)) {
             BeanUtils.copyProperties(userEvalationResultVO, userEvalationResultCustomizeVO);
             List<UserEvalationQuestionVO> listUserEvalationQuestionVO =  evalationService.getUserQuestionInfoById(userEvalationResultCustomizeVO.getId());
-            List<UserEvalationQuestionCustomizeVO> evalationQuestionCustomizeVOList = CommonUtils.convertBeanList(listUserEvalationQuestionVO,UserEvalationQuestionCustomizeVO.class);
+            List<UserEvalationQuestionCustomizeVO> evalationQuestionCustomizeVOList = new ArrayList<UserEvalationQuestionCustomizeVO>();
+            if(null!=listUserEvalationQuestionVO&&listUserEvalationQuestionVO.size()>0){
+                evalationQuestionCustomizeVOList = CommonUtils.convertBeanList(listUserEvalationQuestionVO,UserEvalationQuestionCustomizeVO.class);
+            }
             evalationDetailResponseBean.setUserEvalationResultCustomizeVO(userEvalationResultCustomizeVO);
             evalationDetailResponseBean.setIsEvalation("1");
             evalationDetailResponseBean.setUserEvalationQuestionCustomizeVO(evalationQuestionCustomizeVOList);

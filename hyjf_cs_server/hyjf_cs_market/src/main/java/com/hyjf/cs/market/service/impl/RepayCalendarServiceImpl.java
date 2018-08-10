@@ -22,16 +22,31 @@ public class RepayCalendarServiceImpl implements RepayCalendarService {
     @Autowired
     private RepayCalendarClient repayCalendarClient;
 
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
     @Override
     public Integer countRepaymentCalendar(Map<String, Object> params) {
         return repayCalendarClient.countRepaymentCalendar(params);
     }
 
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
     @Override
     public List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params) {
         return repayCalendarClient.searchRepaymentCalendar(params);
     }
 
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
     @Override
     public Integer searchNearlyRepaymentTime(Map<String, Object> params) {
         return repayCalendarClient.searchNearlyRepaymentTime(params);

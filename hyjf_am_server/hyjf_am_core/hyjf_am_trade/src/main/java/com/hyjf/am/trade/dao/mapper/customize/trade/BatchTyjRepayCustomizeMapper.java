@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.trade;
 
+import com.hyjf.am.trade.dao.model.customize.trade.CouponRecoverCustomize;
+
 import java.util.List;
 import java.util.Map;
 

@@ -47,6 +47,7 @@ public class WeChatBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
     @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
+    @ResponseBody
     public WeChatResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         logger.info("openAccount userInfo start, token is :{}", token);
         WeChatResult<String> result = new WeChatResult<String>();
@@ -68,6 +69,7 @@ public class WeChatBankOpenController extends BaseUserController {
 
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/openBankAccount")
+    @ResponseBody
     public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         ModelAndView reuslt = new ModelAndView();

@@ -209,10 +209,48 @@
 	    </if> -->
 	</select>
 	
+	<!-- 查询部门信息  -->
+	<select id="getCrmDepartmentList" resultMap="DepartmentMap" >
+		SELECT
+			id,
+			parentid,
+			name,
+			description,
+			ishead,
+			ishr,
+			isfinance,
+			cuttype,
+			provinceid,
+			cityid,
+			header,
+			manager,
+			position_category,
+			listorder
+		FROM
+			ht_r_oa_department
+	</select>
+	<resultMap id="DepartmentMap" type="com.hyjf.am.vo.admin.OADepartmentCustomizeVO" >
+	  <id column="id" property="id" jdbcType="INTEGER" />
+	  <result column="parentid" property="parentid" jdbcType="INTEGER" />
+	  <result column="name" property="name" jdbcType="VARCHAR" />
+	  <result column="description" property="description" jdbcType="VARCHAR" />
+	  <result column="ishead" property="ishead" jdbcType="INTEGER" />
+	  <result column="ishr" property="ishr" jdbcType="INTEGER" />
+	  <result column="isfinance" property="isfinance" jdbcType="INTEGER" />
+	  <result column="cuttype" property="cuttype" jdbcType="INTEGER" />
+	  <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+	  <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+	  <result column="header" property="header" jdbcType="VARCHAR" />
+	  <result column="manager" property="manager" jdbcType="VARCHAR" />
+	  <result column="position_category" property="positionCategory" jdbcType="INTEGER" />
+	  <result column="listorder" property="listorder" jdbcType="INTEGER" />
+	</resultMap>
 	
-	
-	
-	
-	
-	
+	<!-- 根据用户id 查询其在crm的员工属性   提成发放方式（1线上2线下）   -->
+	<select id="queryCuttype" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+		SELECT CASE d.cuttype WHEN 1 THEN 3 WHEN 2 THEN 2 ELSE 0 END as cuttype
+		FROM ht_r_oa_users ou 
+		INNER JOIN ht_r_oa_department d on ou.departmentid= d.id
+		WHERE ou.hyd_id= #{userId}
+	</select>
 </mapper>

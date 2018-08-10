@@ -3,11 +3,6 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -29,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,18 +35,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	@Resource
-	private CertificateAuthorityMapper certificateAuthorityMapper;
-	@Resource
-	private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
-	@Resource
-	private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
-	@Resource
-	private UserMapper userMapper;
-	@Resource
-	private SpreadsUserMapper spreadsUserMapper;
-
-
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;

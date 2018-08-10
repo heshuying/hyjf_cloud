@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
 import java.util.List;
 
@@ -48,10 +49,6 @@ public interface CsMessageClient {
      */
     String getRetCode(String logOrdId);
 
-    /**
-     * 获取汇计划--计划资金列表
-     */
-    HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 
     /**
      * 获取全部列表
@@ -143,4 +140,21 @@ public interface CsMessageClient {
      * @return
      */
     JSONObject findSmsLog(SmsLogRequest request);
+
+    /**
+     * 获取汇计划 - 资金计划 条数
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    Integer getPlanCapitalCount(HjhPlanCapitalRequest request);
+
+    /**
+     * 获取汇计划--计划资金列表
+     * @param hjhPlanCapitalRequest
+     * @return
+     * @Author : huanghui
+     */
+    List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
+
 }

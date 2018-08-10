@@ -6,6 +6,7 @@ package com.hyjf.cs.message.service.Impl;
 import java.util.Date;
 import java.util.List;
 
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +85,27 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
         HjhPlanCapitalResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForProformaList/" + fromDate + "/" + toDate
                 , HjhPlanCapitalResponse.class);
         return response.getResultList();
+    }
+
+    /**
+     * 汇计划 - 资金计划count
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public Integer getPlanCapitalCount(HjhPlanCapitalRequest request) {
+        return null;
+    }
+
+    /**
+     * 汇计划 - 获取资金计划类表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest request) {
+        return this.hjhPlanCapitalDao.findAllList(request);
     }
 }

@@ -238,28 +238,4 @@ public class MongoSeachController extends BaseController {
         }
         return response;
     }
-
-
-    /**
-     * 汇计划 -- 资金列表
-     * @param hjhPlanCapitalVO
-     * @return
-     * @Author : huanghui
-     */
-    @RequestMapping(value = "/getPlanCapitalList")
-    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalCustomizeVO hjhPlanCapitalVO){
-        HjhPlanCapitalResponse hjhPlanCapitalResponse = new HjhPlanCapitalResponse();
-
-        int recordTotal = (int) hjhPlanCapitalDao.getCount(hjhPlanCapitalVO);
-
-/*        if (recordTotal > 0) {
-            List<HjhPlanCapital> responseList = hjhPlanCapitalDao.findAllList(hjhPlanCapitalVO);
-
-            if (responseList != null) {
-                List<HjhPlanCapitalCustomizeVO> voList = CommonUtils.convertBeanList(responseList, HjhPlanCapitalCustomizeVO.class);
-                hjhPlanCapitalResponse.setResultList(voList);
-            }
-        }*/
-        return hjhPlanCapitalResponse;
-    }
 }

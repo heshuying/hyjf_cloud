@@ -5,9 +5,6 @@ import com.hyjf.am.user.dao.mapper.auto.UserAliasMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.*;
-import com.hyjf.am.user.dao.mapper.customize.batch.TzjCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.batch.UserEntryCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.batch.UserLeaveCustomizeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,4 +39,77 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserCustomizeMapper userCustomizeMapper;
+
+    @Autowired
+    protected BankAccountManageCustomizeMapper bankAccountManageCustomizeMapper;
+
+    @Autowired
+    protected BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
+
+    @Autowired
+    protected CallCenterCustomizeMapper callCenterCustomizeMapper;
+
+    @Autowired
+    protected CallCenterAccountHuifuMapper callCenterAccountHuifuMapper;
+
+    @Autowired
+    protected BankOpenRecordCustomizeMapper bankOpenRecordCustomizeMapper;
+
+    @Autowired
+    protected ChangeLogCustomizeMapper changeLogCustomizeMapper;
+
+    @Autowired
+    protected ChannelCustomizeMapper channelCustomizeMapper;
+
+    @Autowired
+    protected ChannelStatisticsDetailCustomizeMapper channelStatisticsDetailCustomizeMapper;
+
+    @Autowired
+    protected EmployeeCustomizeMapper employeeCustomizeMapper;
+
+    @Autowired
+    protected UserCrmInfoCustomizeMapper userCrmInfoCustomizeMapper;
+
+    @Autowired
+    protected UserInfoCustomizeMapper userInfoCustomizeMapper;
+
+    @Autowired
+    protected EvaluationManagerCustomizeMapper evaluationManagerCustomizeMapper;
+
+    @Autowired
+    protected KeyCountCustomMapper keyCountCustomMapper;
+
+    @Autowired
+    protected MyInviteCustomizeMapper myInviteCustomizeMapper;
+
+    @Autowired
+    protected RegistRecordCustomizeMapper registRecordCustomizeMapper;
+
+    @Autowired
+    protected SubConfigCustomizeMapper subConfigCustomizeMapper;
+
+    @Autowired
+    protected UserPortraitManagerMapper userPortraitManagerMapper;
+
+    @Autowired
+    protected UtmPlatCustomizeMapper utmPlatCustomizeMapper;
+
+    @Autowired
+    protected VipManageCustomizeMapper vipManageCustomizeMapper;
+
+    @Autowired
+    protected VipDetailListCustomizeMapper vipDetailListCustomizeMapper;
+
+    @Autowired
+    protected VipUpdateGradeListCustomizeMapper vipUpdateGradeListCustomizeMapper;
+
+    @Autowired
+    protected WhereaboutsPageConfigCustomizeMapper whereaboutsPageConfigCustomizeMapper;
+
+    @Autowired
+    protected AdminPreRegistCustomizeMapper adminPreRegistCustomizeMapper;
+
+    @Autowired
+    protected AdminUserAuthCustomizeMapper adminUserAuthCustomizeMapper;
+
 }

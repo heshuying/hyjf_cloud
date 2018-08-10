@@ -66,6 +66,7 @@ public class HomePageController extends BaseMarketController {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );
             ads.put("limitEnd", 1);
+            //TODO ads.put("host", HOST_URL);
             ads.put("host", "http://cdn.huiyingdai.com/");
             ads.put("code", "startpage");
             if ("2".equals(platform)) {

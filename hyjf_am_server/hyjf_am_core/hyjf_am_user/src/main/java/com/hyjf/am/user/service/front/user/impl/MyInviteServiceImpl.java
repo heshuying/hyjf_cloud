@@ -1,11 +1,10 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.MyInviteCustomizeMapper;
 import com.hyjf.am.user.service.front.user.MyInviteService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +15,7 @@ import java.util.Map;
  * @version MyInviteServiceImpl, v0.1 2018/6/22 20:08
  */
 @Service
-public class MyInviteServiceImpl implements MyInviteService {
-    @Resource
-    MyInviteCustomizeMapper myInviteCustomizeMapper;
+public class MyInviteServiceImpl extends BaseServiceImpl implements MyInviteService {
 
     /**
      * 邀请记录列表

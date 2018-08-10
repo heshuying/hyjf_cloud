@@ -8,6 +8,8 @@ public class TenderCommissionResponse extends Response<TenderCommissionVO> {
     private int count;
 
     private int flag;
+    
+    private int type;
 
     public int getCount() {
         return count;
@@ -24,4 +26,12 @@ public class TenderCommissionResponse extends Response<TenderCommissionVO> {
     public void setFlag(int flag) {
         this.flag = flag;
     }
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 }

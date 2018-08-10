@@ -126,9 +126,6 @@ public class AutoMapper {
     protected SmsCodeMapper smsCodeMapper;
 
     @Autowired
-    protected SpreadsLogMapper spreadsLogMapper;
-
-    @Autowired
     protected SpreadsUserMapper spreadsUserMapper;
 
     @Autowired
@@ -205,5 +202,18 @@ public class AutoMapper {
 
     @Autowired
     protected UserLogMapper usersLogMapper;
+
+    @Autowired
+    protected UserChangeLogMapper usersChangeLogMapper;
+
+    @Autowired
+    protected WhereaboutsPageConfigMapper whereaboutsPageConfigMapper;
+
+    @Autowired
+    protected WhereaboutsPagePictureMapper whereaboutsPagePictureMapper;
+
+    @Autowired
+    protected UserMapper usersMapper;
+
 }
 

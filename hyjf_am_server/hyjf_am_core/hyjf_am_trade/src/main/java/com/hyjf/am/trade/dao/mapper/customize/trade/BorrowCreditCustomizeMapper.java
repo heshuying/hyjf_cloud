@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditCustomize;
 import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
+import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 
 import java.util.List;
@@ -27,4 +28,8 @@ public interface BorrowCreditCustomizeMapper {
     List<AdminBorrowCreditCustomize> searchBorrowCreditInfo4Admin(BorrowCreditAmRequest request);
 
     BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request);
+
+    int sumUnderTakeAmount(String borrowNid);
+
+    List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> map);
 }

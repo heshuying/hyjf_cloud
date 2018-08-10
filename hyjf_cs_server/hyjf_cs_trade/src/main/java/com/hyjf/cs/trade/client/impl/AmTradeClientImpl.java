@@ -1635,6 +1635,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";
+        UserHjhInvistDetailCustomizeResponse response = restTemplate.postForEntity(url,params,UserHjhInvistDetailCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
         return null;
     }
     /**
@@ -3365,8 +3369,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String, Object> params) {
         String url = BASE_URL +"/app/selectProjectInvestList";
         AppProjectInvestListCustomizeResponse response = restTemplate.postForEntity(url,params,AppProjectInvestListCustomizeResponse.class).getBody();
-        if (response!=null){
-            response.getResultList();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
@@ -3576,6 +3580,37 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<AppAdsCustomizeVO> getBannerList(AdsRequest request) {
         AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchBanner",request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取承接中的总额度
+     * @author zhangyk
+     * @date 2018/8/9 11:48
+     */
+    @Override
+    public String sumUndertakeAccount(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/sumUndertakeAmount/" + borrowNid;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url,HjhDebtCreditResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getSum();
+        }
+        return null;
+    }
+
+
+    /**
+     * 承接中的列表
+     * @author zhangyk
+     * @date 2018/8/9 13:58
+     */
+    @Override
+    public List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String, Object> params) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/selectProjectUndertakeList";
+        HjhCreditUnderTakeResponse response = restTemplate.postForEntity(url,params,HjhCreditUnderTakeResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
         }
