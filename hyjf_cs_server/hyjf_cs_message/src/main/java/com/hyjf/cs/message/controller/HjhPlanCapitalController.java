@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.message.controller;
 
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.GetDate;
@@ -11,6 +13,7 @@ import com.hyjf.cs.message.service.HjhAccountBalanceService;
 import com.hyjf.cs.message.service.HjhPlanCapitalService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -112,5 +115,30 @@ public class HjhPlanCapitalController extends BaseController {
         return false;
     }
 
+    /**
+     * 汇计划 -- 资金计划 count
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/getPlanCapitalCount")
+    public Integer getPlanCapitalCount(@RequestBody HjhPlanCapitalRequest request){
+        return this.hjhPlanCapitalService.getPlanCapitalCount(request);
+    }
+    /**
+     * 汇计划 -- 资金计划列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/getPlanCapitalList")
+    public HjhPlanCapitalResponse getPlanCapitalList(@RequestBody  HjhPlanCapitalRequest request){
+        HjhPlanCapitalResponse hjhPlanCapitalResponse = new HjhPlanCapitalResponse();
+
+        List<HjhPlanCapitalVO> recordList = this.hjhPlanCapitalService.getPlanCapitalList(request);
+        hjhPlanCapitalResponse.setResultList(recordList);
+
+        return hjhPlanCapitalResponse;
+    }
 
 }
