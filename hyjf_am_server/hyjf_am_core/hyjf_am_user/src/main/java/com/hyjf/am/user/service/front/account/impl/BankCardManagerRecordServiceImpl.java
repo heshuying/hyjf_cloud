@@ -5,12 +5,11 @@ package com.hyjf.am.user.service.front.account.impl;
 
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
-import com.hyjf.am.user.dao.mapper.customize.BankCardManagerCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.dao.model.auto.BankCardLogExample;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
 import com.hyjf.am.user.service.front.account.BankCardManagerRecordService;
-import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +28,9 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class BankCardManagerRecordServiceImpl implements BankCardManagerRecordService {
+public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements BankCardManagerRecordService {
 
-    @Autowired
-    private BankCardManagerCustomizeMapper bankCardManagerCustomizeMapper;
+
     @Autowired
     private BankCardLogMapper bankCardLogMapper;
 

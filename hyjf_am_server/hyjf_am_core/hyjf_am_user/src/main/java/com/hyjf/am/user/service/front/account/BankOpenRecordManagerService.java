@@ -3,9 +3,8 @@
  */
 package com.hyjf.am.user.service.front.account;
 
-import com.hyjf.am.resquest.user.AccountRecordRequest;
-import com.hyjf.am.resquest.user.BankAccountRecordRequest;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
+import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
  * @author nxl
  * @version UserCenterService, v0.1 2018/6/20 15:34
  */
-public interface BankOpenRecordManagerService {
+public interface BankOpenRecordManagerService extends BaseService{
     /**
      * 查找江西银行开户记录
      *

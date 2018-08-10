@@ -4,13 +4,11 @@
 package com.hyjf.am.user.service.front.user.impl;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.mapper.auto.*;
-import com.hyjf.am.user.dao.mapper.customize.UserManagerCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.batch.UserLeaveCustomizeMapper;
+import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
+import com.hyjf.am.resquest.user.UpdCompanyRequest;
+import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
-import com.hyjf.am.user.dao.model.customize.batch.UserUpdateParamCustomize;
 import com.hyjf.am.user.service.front.user.UserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
@@ -21,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -36,30 +33,7 @@ import java.util.Map;
 @Service
 public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
 
-    @Autowired
-    private UserManagerCustomizeMapper userManagerCustomizeMapper;
-    @Autowired
-    private CorpOpenAccountRecordMapper corpOpenAccountRecordMapper;
-    @Autowired
-    private BindUserMapper bindUserMapper;
-    @Autowired
-    private CertificateAuthorityMapper certificateAuthorityMapper;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private UserInfoMapper userInfoMapper;
-    @Autowired
-    private BankOpenAccountMapper bankOpenAccountMapper;
-
-    @Autowired
-    private SpreadsUserMapper spreadsUserMapper;
-    @Autowired
-    private UserLeaveCustomizeMapper userLeaveCustomizeMapper;
-    @Autowired
-    private SpreadsUserLogMapper spreadsUserLogMapper;
-
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
-
 
     /**
      * 根据筛选条件查找会员列表

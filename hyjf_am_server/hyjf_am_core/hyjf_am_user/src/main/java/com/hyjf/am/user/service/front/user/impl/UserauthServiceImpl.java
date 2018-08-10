@@ -1,10 +1,5 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.BankOpenAccountMapper;
-import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.AdminUserAuthCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthListCustomize;
 import com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize;
@@ -13,12 +8,10 @@ import com.hyjf.am.user.dao.model.customize.AdminUserRePayAuthCustomize;
 import com.hyjf.am.user.service.front.user.UserauthService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
-
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +22,6 @@ import java.util.Map;
 
 @Service
 public class UserauthServiceImpl extends BaseServiceImpl implements UserauthService {
-	@Autowired
-	private AdminUserAuthCustomizeMapper adminUserAuthCustomizeMapper;
-	@Autowired
-	private HjhUserAuthMapper hjhUserAuthMapper;
-	@Autowired
-	private HjhUserAuthLogMapper hjhUserAuthLogMapper;
-	@Autowired
-	private UserMapper usersMapper;
-	@Autowired
-	private BankOpenAccountMapper bankOpenAccountMapper;
 
 	@Value("${hyjf.bank.instcode}")
 	private String instCode;

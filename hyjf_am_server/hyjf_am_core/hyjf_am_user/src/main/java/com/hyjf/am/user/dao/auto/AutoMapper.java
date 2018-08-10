@@ -202,5 +202,18 @@ public class AutoMapper {
 
     @Autowired
     protected UserLogMapper usersLogMapper;
+
+    @Autowired
+    protected UserChangeLogMapper usersChangeLogMapper;
+
+    @Autowired
+    protected WhereaboutsPageConfigMapper whereaboutsPageConfigMapper;
+
+    @Autowired
+    protected WhereaboutsPagePictureMapper whereaboutsPagePictureMapper;
+
+    @Autowired
+    protected UserMapper usersMapper;
+
 }
 

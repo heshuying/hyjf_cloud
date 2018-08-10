@@ -8,7 +8,7 @@ import com.hyjf.am.response.user.BankOpenAccountResponse;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
+import com.hyjf.am.user.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.user.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;

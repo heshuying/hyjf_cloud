@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.dao.model.customize.admin.finance;
+package com.hyjf.am.user.dao.model.customize;
 
 import java.math.BigDecimal;
 

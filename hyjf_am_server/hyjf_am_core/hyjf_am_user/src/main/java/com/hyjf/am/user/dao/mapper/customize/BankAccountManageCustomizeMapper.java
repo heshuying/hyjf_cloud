@@ -1,10 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.dao.mapper.customize.admin.finance;
+package com.hyjf.am.user.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
+import com.hyjf.am.user.dao.model.customize.BankAccountManageCustomize;
 
 import java.util.List;
 

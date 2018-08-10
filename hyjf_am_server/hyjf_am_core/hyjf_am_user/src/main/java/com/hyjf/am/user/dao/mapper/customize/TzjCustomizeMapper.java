@@ -1,9 +1,9 @@
-package com.hyjf.am.user.dao.mapper.customize.batch;
+package com.hyjf.am.user.dao.mapper.customize;
+
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.Set;
-
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author xiasq
