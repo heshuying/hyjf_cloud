@@ -51,9 +51,9 @@ public class HomePageController extends BaseMarketController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "获取起始页广告信息", httpMethod = "GET", notes = "获取起始页广告信息")
+    @ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
     @ApiParam(required = true, name = "request", value = "查询条件")
-    @GetMapping(value = "/getStartPage")
+    @PostMapping(value = "/getStartPage")
     public JSONObject getStartPage(HttpServletRequest request) {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
         JSONObject result = new JSONObject();

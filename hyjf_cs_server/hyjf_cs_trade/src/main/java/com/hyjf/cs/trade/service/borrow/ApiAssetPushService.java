@@ -24,7 +24,7 @@ public interface ApiAssetPushService extends BaseTradeService {
     void sendToMQ(HjhPlanAssetVO record);
 
     /**
-     * 资产推送
+     * 个人资产推送
      *
      * @param pushRequestBean
      */
@@ -46,4 +46,11 @@ public interface ApiAssetPushService extends BaseTradeService {
      * @param mqGroup
      */
     void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String mqGroup);
+
+    /**
+     * 企业资产推送
+     *
+     * @param pushRequestBean
+     */
+    PushResultBean companyAssetPush(PushRequestBean pushRequestBean);
 }

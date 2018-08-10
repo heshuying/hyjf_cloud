@@ -82,10 +82,10 @@ public class NewAgreementController extends BaseTradeController{
      * @param response
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "居间服务借款协议")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "居间服务借款协议")
     @ResponseBody
     @PostMapping("/interServiceLoanAgreement")
-    public NewAgreementResultBean interServiceLoanAgreement(HttpServletRequest request, HttpServletResponse response) {
+    public NewAgreementResultBean interServiceLoanAgreement(HttpServletRequest request) {
     	logger.info("*******************************居间服务借款协议************************************");
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
@@ -550,7 +550,7 @@ public class NewAgreementController extends BaseTradeController{
      * @param request
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "我的计划-计划详情-资产列表-协议（转让）列表")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "我的计划-计划详情-资产列表-协议（转让）列表")
     @ResponseBody
     @PostMapping("/userCreditContractList")
     public NewAgreementResultBean userCreditContractList(HttpServletRequest request) {
@@ -1015,7 +1015,7 @@ public class NewAgreementController extends BaseTradeController{
      * @param aliasName
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "获得 协议模板pdf显示地址")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获得 协议模板pdf显示地址")
     @ResponseBody
     @PostMapping("/gotAgreementPdfOrImg")
     public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam String aliasName) {
@@ -1149,7 +1149,7 @@ public class NewAgreementController extends BaseTradeController{
         return listImg;
     }
 
-    @ApiOperation(value = "APP端协议接口", notes = "获取协议模板")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获取协议模板")
     @ResponseBody
     @PostMapping("/getAgreementTemplateApi")
     public AppResult getAgreementTemplateApi(@RequestParam String aliasName) {
@@ -1166,7 +1166,7 @@ public class NewAgreementController extends BaseTradeController{
         return new AppResult(response.getResultList());
     }
 
-    @ApiOperation(value = "APP端协议接口", notes = "查看协议模板接口")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "查看协议模板接口")
     @ResponseBody
     @PostMapping("/getdisplayNameDynamic")
     public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {

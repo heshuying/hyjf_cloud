@@ -5,14 +5,14 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.*;
+import org.apache.rocketmq.client.producer.TransactionMQProducer;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -38,16 +38,16 @@ public abstract class TransactionProducer {
 		producer.setNamesrvAddr(namesrvAddr);
 		producer.setVipChannelEnabled(false);
 		producer.setInstanceName(wrapper.getInstanceName());
-		producer.setCheckThreadPoolMinSize(2);
-		producer.setCheckThreadPoolMaxSize(2);
-		producer.setCheckRequestHoldMax(2000);
-		// 设置事务决断处理类
-		producer.setTransactionCheckListener(msg -> {
-			// 现在的版本取消了回查,这块不再执行，如果需要，自定义回查的代码，目前暂时不用
-			logger.info("message callback, do nothing...");
-			logger.info("server checking TrMsg %s%n", msg);
-			return LocalTransactionState.UNKNOW;
-		});
+//		producer.setCheckThreadPoolMinSize(2);
+//		producer.setCheckThreadPoolMaxSize(2);
+//		producer.setCheckRequestHoldMax(2000);
+//		// 设置事务决断处理类
+//		producer.setTransactionCheckListener(msg -> {
+//			// 现在的版本取消了回查,这块不再执行，如果需要，自定义回查的代码，目前暂时不用
+//			logger.info("message callback, do nothing...");
+//			logger.info("server checking TrMsg %s%n", msg);
+//			return LocalTransactionState.UNKNOW;
+//		});
 		producer.start();
 	}
 
@@ -62,15 +62,15 @@ public abstract class TransactionProducer {
 	 * @return
 	 * @throws MQClientException
 	 */
-	protected TransactionSendResult send(Message message, LocalTransactionExecuter localTransactionExecuter)
-			throws MQClientException {
-		logger.info("mq address--->{}, 开始发送事务消息, message is :{}", namesrvAddr, message);
-		TransactionSendResult transactionSendResult = producer.sendMessageInTransaction(message,
-				localTransactionExecuter, null);
-
-		logger.info("事务消息发送结果: {}", JSONObject.toJSONString(transactionSendResult));
-		return transactionSendResult;
-	}
+//	protected TransactionSendResult send(Message message, LocalTransactionExecuter localTransactionExecuter)
+//			throws MQClientException {
+//		logger.info("mq address--->{}, 开始发送事务消息, message is :{}", namesrvAddr, message);
+//		TransactionSendResult transactionSendResult = producer.sendMessageInTransaction(message,
+//				localTransactionExecuter, null);
+//
+//		logger.info("事务消息发送结果: {}", JSONObject.toJSONString(transactionSendResult));
+//		return transactionSendResult;
+//	}
 
 	/**
 	 *
@@ -80,16 +80,16 @@ public abstract class TransactionProducer {
 	 * @return
 	 * @throws MQException
 	 */
-	protected TransactionSendResult messageSend(MassageContent messageContent, LocalTransactionExecuter localTransactionExecuter)
-			throws MQException {
-		try {
-			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
-					messageContent.body);
-			return send(message, localTransactionExecuter);
-		} catch (MQClientException e) {
-			throw new MQException("mq send error", e);
-		}
-	}
+//	protected TransactionSendResult messageSend(MassageContent messageContent, LocalTransactionExecuter localTransactionExecuter)
+//			throws MQException {
+//		try {
+//			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
+//					messageContent.body);
+//			return send(message, localTransactionExecuter);
+//		} catch (MQClientException e) {
+//			throw new MQException("mq send error", e);
+//		}
+//	}
 
 	public TransactionMQProducer getTransactionMQProducer() throws MQClientException {
 		return producer;
