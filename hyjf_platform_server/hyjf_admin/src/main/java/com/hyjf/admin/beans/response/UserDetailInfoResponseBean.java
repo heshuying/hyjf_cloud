@@ -38,6 +38,9 @@ public class UserDetailInfoResponseBean {
     //公司信息
     @ApiModelProperty(value = "公司信息")
     private CorpOpenAccountRecordCustomizeVO enterpriseInformation;
+    //文件服务器
+    @ApiModelProperty(value = "文件服务器")
+    private String hostUrl;
 
     public UserManagerDetailCustomizeVO getUserManagerDetailVO() {
         return userManagerDetailVO;
@@ -93,5 +96,13 @@ public class UserDetailInfoResponseBean {
 
     public void setCertificateAuthorityVO(CertificateAuthorityCustomizeVO certificateAuthorityVO) {
         this.certificateAuthorityVO = certificateAuthorityVO;
+    }
+
+    public String getHostUrl() {
+        return hostUrl;
+    }
+
+    public void setHostUrl(String hostUrl) {
+        this.hostUrl = hostUrl;
     }
 }

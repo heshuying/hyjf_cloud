@@ -16,6 +16,7 @@ import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -93,21 +94,6 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     public String getRetCode(String logOrdId) {
         String response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/search/getRetCode/" + logOrdId,String.class).getBody();
         return response;
-    }
-
-    /**
-     * 获取汇计划--计划资金列表
-     * @param hjhPlanCapitalRequest
-     * @return
-     */
-    @Override
-    public HjhPlanCapitalResponse getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
-        HjhPlanCapitalResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/getPlanCapitalList",
-                hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
-        if (response != null){
-            return response;
-        }
-        return null;
     }
 
     @Override
@@ -191,6 +177,32 @@ public class  CsMessageClientImpl  implements CsMessageClient {
     public JSONObject findSmsLog(SmsLogRequest request) {
         return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/sms_log/find", request, JSONObject.class)
                 .getBody();
+    }
+
+    /**
+     * 获取汇计划--计划资金列表
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer getPlanCapitalCount(HjhPlanCapitalRequest request){
+        return restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjh_plan_capital/getPlanCapitalCount", request, Integer.class).getBody();
+    }
+
+    /**
+     * 获取汇计划--计划资金列表(从MongoDB读取数据)
+     * @param hjhPlanCapitalRequest
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest) {
+        HjhPlanCapitalResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjh_plan_capital/getPlanCapitalList",
+                hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
+        if (response != null){
+            return response.getResultList();
+        }
+        return null;
     }
 
 }
