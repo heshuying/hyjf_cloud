@@ -60,33 +60,13 @@
 	<!--查询用户画像记录 -->
 	<select id="selectUserPortraitList" resultMap="UsersPortraitMap" parameterType="Map">
 		SELECT
-			hup.user_id,
-			user_name,
-			age,
-			sex,
-			education,
-			occupation,
-			city,
-			interest,
-			interest_sum,
-			invest_sum,
-			recharge_sum,
-			withdraw_sum,
-			login_active,
-			customer_source,
-			ROUND((unix_timestamp(now()) - last_login_time) / (60 * 60 * 24)) AS last_login_time,
-			ROUND((	unix_timestamp(now()) - last_recharge_time) / (60 * 60 * 24)) AS last_recharge_time,
-			ROUND((	unix_timestamp(now()) - last_withdraw_time) / (60 * 60 * 24)) AS last_withdraw_time,
-			invest_platform,
-			invest_age,
-			trade_number,
-			current_owner,
-			add_wechat,
-			invest_process,
-			customer_complaint,
-			invite_customer,
-			remark,
-			INSERT (hup.mobile, 4, 4, '****') AS mobile
+		hup.user_id,user_name,age,sex,education,occupation,city,interest,interest_sum,invest_sum,recharge_sum,withdraw_sum,login_active,
+		customer_source,ROUND((unix_timestamp(now())-last_login_time)/(60*60*24)) AS last_login_time,
+		ROUND((unix_timestamp(now())-last_recharge_time)/(60*60*24)) AS last_recharge_time,
+		ROUND((unix_timestamp(now())-last_withdraw_time)/(60*60*24)) AS last_withdraw_time,
+		invest_platform,invest_age,trade_number,current_owner,add_wechat,invest_process,customer_complaint,invite_customer,remark,
+		INSERT(hup.mobile, 4, 4, '****') as mobile,bank_total,ROUND((hup.fund_retention),2) AS fund_retention,hup.last_repay_time,
+		invite_regist,invite_recharge,invite_tender,hup.yield,attribute,hup.bank_balance,hup.account_await,hup.bank_frost
 		FROM
 			ht_user_portrait hup
 		<include refid="Where_Clause_UserPortrait"/>

@@ -12,6 +12,7 @@ import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
@@ -55,6 +56,8 @@ public class UserCenterController extends BaseController {
 //    private static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
     @Autowired
     private UserCenterService userCenterService;
+    @Autowired
+    private SystemConfig systemConfig;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
@@ -146,8 +149,9 @@ public class UserCenterController extends BaseController {
             BeanUtils.copyProperties(certificateAuthorityVO, certificateAuthorityCustomizeVO);
         }
         userDetailInfoResponseBean.setCertificateAuthorityVO(certificateAuthorityCustomizeVO);
-        // todo 文件服务器
-
+        // 文件服务器
+        String fileDomainUrl = systemConfig.getFtpurl() + systemConfig.getFtpbasepathimg();
+        userDetailInfoResponseBean.setHostUrl(fileDomainUrl);
         return new AdminResult<UserDetailInfoResponseBean>(userDetailInfoResponseBean);
     }
 
@@ -251,7 +255,7 @@ public class UserCenterController extends BaseController {
     /**
      * 获取用户身份证信息
      *
-     * @param request
+     * @param userId
      * @return 进入用户详情页面
      */
     @ApiOperation(value = "获取用户身份证信息", notes = "获取用户身份证信息")

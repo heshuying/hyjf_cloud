@@ -95,7 +95,7 @@ public class PlanRepayController extends BaseController {
      * @return
      */
     @ApiOperation(value = "订单退出", notes = "订单退出查询列表")
-    @RequestMapping(value = "/search")
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
     public JSONObject search(@RequestBody @Valid HjhRepayRequestBean repayRequestBean){
 

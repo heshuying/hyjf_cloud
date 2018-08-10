@@ -1,12 +1,12 @@
 package com.hyjf.am.trade.dao.model.customize.wdzj;
 
-public class PreapysListCustomize {
+public class WDZJPreapysListCustomize {
 
 	String projectId;
 	int deadline;
 	String deadlineUnit;
 	public String getProjectId() {
-		return BorrowListCustomize.encryptBorrowNid(projectId);
+		return WDZJBorrowListDataCustomize.encryptBorrowNid(projectId);
 	}
 	public void setProjectId(String projectId) {
 		this.projectId = projectId;

@@ -1,14 +1,12 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.BasePage;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 汇计划--计划资金
+ * 产品中心 --> 汇计划 --> 资金计划
  * @Author : huanghui
  */
-public class HjhPlanCapitalRequest extends BasePage implements Serializable {
+public class HjhPlanCapitalRequestBean {
 
     /**
      * 检索条件 计划编号
@@ -36,15 +34,6 @@ public class HjhPlanCapitalRequest extends BasePage implements Serializable {
 
     /** 总计：债转总额 */
     private BigDecimal sumCreditAccount;
-
-    /**
-     *  日期KEY1
-     */
-    private String dateKey;
-
-    private Integer limitStart = -1;
-
-    private Integer limitEnd = -1;
 
     public String getPlanNidSrch() {
         return planNidSrch;
@@ -100,29 +89,5 @@ public class HjhPlanCapitalRequest extends BasePage implements Serializable {
 
     public void setSumCreditAccount(BigDecimal sumCreditAccount) {
         this.sumCreditAccount = sumCreditAccount;
-    }
-
-    public String getDateKey() {
-        return dateKey;
-    }
-
-    public void setDateKey(String dateKey) {
-        this.dateKey = dateKey;
-    }
-
-    public Integer getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(Integer limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public Integer getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(Integer limitEnd) {
-        this.limitEnd = limitEnd;
     }
 }
