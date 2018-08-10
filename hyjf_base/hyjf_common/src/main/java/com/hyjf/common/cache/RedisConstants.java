@@ -191,7 +191,7 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
-    public static final String USER_TOKEN_REDIS = "user_token_";
+    public static final String USER_TOKEN_REDIS = "user_token:";
 
     /**
      * 放款批次号key
@@ -209,7 +209,7 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀
      */
-    public static final String PASSWORD_ERR_COUNT = "password_err_count_";
+    public static final String PASSWORD_ERR_COUNT = "password_err_count:";
 
     /**
      * 邮件配置key
