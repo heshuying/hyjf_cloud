@@ -38,8 +38,8 @@ public class  AppTradeDetailController extends BaseTradeController {
 
 
     @ApiOperation(value = "获取交易类型", notes = "获取交易类型")
-    @GetMapping("/getTradeTypes")
-    public JSONObject searchTradeTypes() {
+    @PostMapping("/getTradeTypes")
+    public JSONObject searchTradeTypes(HttpServletRequest request, HttpServletResponse response) {
         JSONObject info = new JSONObject();
         List<AppAccountTradeListCustomizeVO> tradeTypes = tradeDetailService.searchAppTradeTypes();
         info.put("tradeTypes", tradeTypes);
