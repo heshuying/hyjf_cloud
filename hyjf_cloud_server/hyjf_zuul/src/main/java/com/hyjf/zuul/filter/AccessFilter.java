@@ -59,10 +59,15 @@ public class AccessFilter extends ZuulFilter {
 	private static final String TOEKN = "token";
 	private static final String KEY = "key";
 	private static final String INITKEY = "initKey";
+	/** （0:pc 1:Android 2:IOS 3:微信） */
 	private static final String PLATFORM = "platform";
 	private static final String RANDOM_STRING = "randomString";
+	/** 安全码（经过appId和appKey算出来，然后连接上随机字符串，进行ASCII码生序排列） */
 	private static final String SECRET_KEY = "secretKey";
 	private static final String APP_ID = "appId";
+	private static final String NET_STATUS = "netStatus";
+	/** order生成规则：token+随机字符串连接在一起，然后经过ASCII码升序排序，最后经过key加密（当没有token时，规则是随机字符串连接在一起，然后经过ASCII码升序排序，最后经过key加密） */
+	private static final String ORDER = "order";
 	private static final String JUMP_COMMEND = "jumpcommend";
 
 	/**
@@ -135,23 +140,26 @@ public class AccessFilter extends ZuulFilter {
 					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
 				SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
-
+				ctx.addZuulRequestHeader(TOEKN, signValue.getToken());
+				ctx.addZuulRequestHeader(SIGN, sign);
 				ctx.addZuulRequestHeader(KEY, signValue.getKey());
 				ctx.addZuulRequestHeader(INITKEY, signValue.getInitKey());
 				ctx.addZuulRequestHeader(VERSION, signValue.getVersion());
-				ctx.addZuulRequestHeader(TOEKN, signValue.getToken());
-				ctx.addZuulRequestHeader(SIGN, sign);
-                ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
+				ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
+				ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
+                ctx.addZuulRequestHeader(NET_STATUS, request.getParameter(NET_STATUS));
+                ctx.addZuulRequestHeader(ORDER, request.getParameter(ORDER));
+
 				if (secureVisitFlag) {
 					setUserIdByToken(request, ctx, secureVisitFlag, APP_CHANNEL);
 				}
 			} else {
 				// 获取最优服务器
+				ctx.addZuulRequestHeader(VERSION, version);
 				ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
 				ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
 				ctx.addZuulRequestHeader(SECRET_KEY, request.getParameter(SECRET_KEY));
 				ctx.addZuulRequestHeader(APP_ID, request.getParameter(APP_ID));
-				ctx.addZuulRequestHeader(VERSION, version);
 			}
 
 			addCommonResponse(ctx, version);
