@@ -16,6 +16,8 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.hyjf.admin.controller.BaseController.*;
 
@@ -91,12 +94,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     @Override
     public void queryBatchCenterStatusName(List<BatchBorrowRecoverVo> listAccountDetail,String nameClass) {
         //获取放款相关状态描述
-        List<ParamNameVO> paramNameList = this.getParamNameList(nameClass);
-
+        Map<String, String> paramNameMap = CacheUtil.getParamNameMap(nameClass);
         for (BatchBorrowRecoverVo vo:
              listAccountDetail) {
-            String paramName = this.getParamName(vo.getStatus(), paramNameList);
-            vo.setStatusStr(paramName);
+            vo.setStatusStr(paramNameMap.get(vo.getStatus()));
         }
     }
 
@@ -257,10 +258,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status",SUCCESS);
         //批次状态
-        List<ParamNameVO> recoverStatusList = this.getParamNameList(nameClass);
-        if(recoverStatusList != null && recoverStatusList.size() > 0){
+        Map<String, String> paramNameMap = CacheUtil.getParamNameMap(nameClass);
+        if(paramNameMap != null && paramNameMap.size() > 0){
             jsonObject.put("批次状态列表","recoverStatusList");
-            jsonObject.put("recoverStatusList",recoverStatusList);
+            jsonObject.put("recoverStatusList",paramNameMap);
         }else {
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取转让状态列表失败！");
