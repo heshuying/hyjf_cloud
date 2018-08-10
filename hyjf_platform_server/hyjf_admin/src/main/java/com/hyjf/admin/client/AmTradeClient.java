@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -2431,5 +2432,28 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateTenderCommissionRecord(CommissionComboRequest request);
+
+    CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
+
+    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+
+    List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
+
+    CouponConfigResponse selectCouponConfig(String couponCode);
+
+    CouponUserResponse insertCouponUser(CouponUserRequest couponUserRequest);
+
+    CouponUserResponse getCouponUserByCouponCode(String couponCode);
+
+    CouponUserCustomizeResponse selectCouponUserById(Integer couponUserId);
+
+    CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean);
+
+    /**
+     * 查询优惠券已发行数量
+     * @param param
+     * @return
+     */
+    CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode);
 }
 

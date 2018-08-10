@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BatchSubUserCouponBean;
 import com.hyjf.admin.client.AmMarketClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CouponUserClient;
 import com.hyjf.admin.service.coupon.CouponUserService;
 import com.hyjf.am.response.admin.AdminCouponUserCustomizeResponse;
@@ -28,6 +30,8 @@ import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -52,11 +56,13 @@ import java.util.*;
 public class CouponUserServiceImpl implements CouponUserService {
 
     private final Logger logger = LoggerFactory.getLogger(CouponUserServiceImpl.class);
-    @Autowired
-    private CouponUserClient couponUserClient;
 
     @Autowired
     private AmMarketClient amMarketClient;
+    @Autowired
+    private AmUserClient amUserClient;
+    @Autowired
+    private AmTradeClient amTradeClient;
 
     /**
      * 获取优惠券用户列表
@@ -66,7 +72,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest) {
-        CouponUserCustomizeResponse response = couponUserClient.searchList(couponUserBeanRequest);
+        CouponUserCustomizeResponse response = amTradeClient.searchList(couponUserBeanRequest);
         List<CouponUserCustomizeVO> list=response.getResultList();
         if (CollectionUtils.isNotEmpty(list)){
             //获取活动集合
@@ -110,7 +116,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserCustomizeResponse deleteById(int id, String remark, String userId) {
-        return couponUserClient.deleteById(id, remark, userId);
+        return amTradeClient.deleteById(id, remark, userId);
     }
 
     /**
@@ -121,8 +127,8 @@ public class CouponUserServiceImpl implements CouponUserService {
     @Override
     public AdminCouponUserCustomizeResponse getRecordList(CouponConfigRequest request) {
         AdminCouponUserCustomizeResponse response = new AdminCouponUserCustomizeResponse();
-        List<CouponConfigCustomizeVO> adminCouponUserCustomizeVOS = couponUserClient.getCouponConfig(request);
-        List<ActivityListCustomizeVO> activityListCustomizeVOS = couponUserClient.getActivityList(new ActivityListCustomizeVO());
+        List<CouponConfigCustomizeVO> adminCouponUserCustomizeVOS = (List<CouponConfigCustomizeVO>) amTradeClient.getCouponConfig(request);
+        List<ActivityListCustomizeVO> activityListCustomizeVOS = amMarketClient.getActivityList(new ActivityListCustomizeVO());
         if (!CollectionUtils.isEmpty(adminCouponUserCustomizeVOS) && !CollectionUtils.isEmpty(activityListCustomizeVOS)) {
             response.getResult().setCouponConfigCustomizeVOS(adminCouponUserCustomizeVOS);
             response.getResult().setActivityListCustomizeVOS(activityListCustomizeVOS);
@@ -136,8 +142,8 @@ public class CouponUserServiceImpl implements CouponUserService {
      * @return
      */
     @Override
-    public UserResponse getUser(String userName) {
-        return couponUserClient.getUserByUserName(userName);
+    public UserVO getUser(String userName) {
+        return amUserClient.getUserByUserName(userName);
     }
 
     /**
@@ -146,8 +152,8 @@ public class CouponUserServiceImpl implements CouponUserService {
      * @return
      */
     @Override
-    public UserInfoResponse getUserInfo(Integer userId) {
-        return couponUserClient.getUserInfoByUserId(userId);
+    public UserInfoVO getUserInfo(Integer userId) {
+        return amUserClient.selectUsersInfoByUserId(userId);
     }
 
     /**
@@ -157,7 +163,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public UtmResponse getChannelName(Integer userId) {
-        return couponUserClient.getChannelNameByUserId(userId);
+        return amUserClient.getChannelNameByUserId(userId);
     }
 
     /**
@@ -167,7 +173,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponConfigResponse getCouponConfig(String couponCode) {
-        return couponUserClient.selectCouponConfig(couponCode);
+        return amTradeClient.selectCouponConfig(couponCode);
     }
 
     /**
@@ -177,7 +183,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserResponse insertCouponUser(CouponUserRequest couponUserRequest) {
-        return couponUserClient.insertCouponUser(couponUserRequest);
+        return amTradeClient.insertCouponUser(couponUserRequest);
     }
 
     /**
@@ -187,7 +193,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserResponse getCouponUserByCouponCode(String couponCode) {
-        return couponUserClient.getCouponUserByCouponCode(couponCode);
+        return amTradeClient.getCouponUserByCouponCode(couponCode);
     }
 
     /**
@@ -197,7 +203,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponTenderDetailVo getCouponTenderDetailCustomize(Map<String,Object> paramMap) {
-        CouponTenderResponse response = couponUserClient.getCouponTenderDetailCustomize(paramMap);
+        CouponTenderResponse response = amTradeClient.getCouponTenderDetailCustomize(paramMap);
         return response.getDetail();
     }
 
@@ -208,7 +214,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public List<CouponRecoverVO> getCouponRecoverCustomize(Map<String, Object> paramMap) {
-        CouponTenderResponse couponTenderResponse = couponUserClient.getCouponRecoverCustomize(paramMap);
+        CouponTenderResponse couponTenderResponse = amTradeClient.getCouponRecoverCustomize(paramMap);
         if(null != couponTenderResponse){
             return couponTenderResponse.getCouponRecoverList();
         }
@@ -222,7 +228,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserVO selectCouponUserById(Integer couponUserId) {
-        CouponUserCustomizeResponse response = couponUserClient.selectCouponUserById(couponUserId);
+        CouponUserCustomizeResponse response = amTradeClient.selectCouponUserById(couponUserId);
         if (null != response) {
             return response.getCouponUser();
         }
@@ -236,7 +242,7 @@ public class CouponUserServiceImpl implements CouponUserService {
      */
     @Override
     public CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean) {
-        return couponUserClient.auditRecord(adminCouponUserRequestBean);
+        return amTradeClient.auditRecord(adminCouponUserRequestBean);
     }
 
     /**
@@ -310,7 +316,7 @@ public class CouponUserServiceImpl implements CouponUserService {
             params.put("userId",loginUserId);
 
             // 请求路径
-            JSONObject result = couponUserClient.getBatchCoupons(params);
+            JSONObject result = amTradeClient.getBatchCoupons(params);
             return JSONObject.toJSONString(result, true);
         }
 

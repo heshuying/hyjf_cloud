@@ -17,6 +17,8 @@ import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,9 +37,9 @@ public interface CouponUserService {
 
     AdminCouponUserCustomizeResponse getRecordList(CouponConfigRequest request);
 
-    UserResponse getUser(String userName);
+    UserVO getUser(String userName);
 
-    UserInfoResponse getUserInfo(Integer userId);
+    UserInfoVO getUserInfo(Integer userId);
 
     UtmResponse getChannelName(Integer userId);
 

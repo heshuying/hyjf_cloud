@@ -13,6 +13,7 @@ import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.AccountRechargeResponse;
+import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanDetailResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
@@ -36,7 +37,10 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AccountTradeVO;
+import com.hyjf.am.vo.trade.BankCreditEndVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -4986,4 +4990,146 @@ public class AmTradeClientImpl implements AmTradeClient {
 		Integer response = restTemplate.postForEntity(url,request,Integer.class).getBody();
 		return response;
 	}
+
+	/**
+     * 获取优惠券用户列表
+     *
+     * @param couponUserBeanRequest
+     * @return
+     */
+    @Override
+    public CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUserList";
+        CouponUserCustomizeResponse response = restTemplate.postForEntity(url, couponUserBeanRequest, CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据id删除一条优惠券
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public CouponUserCustomizeResponse deleteById(int id, String remark, String userId) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/deleteCouponUser/" + id + remark + userId;
+        CouponUserCustomizeResponse response = restTemplate.getForEntity(url, CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取优惠券配置列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/adminCouponConfig";
+        CouponConfigCustomizeResponse response = restTemplate.postForEntity(url, request, CouponConfigCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据优惠券编码查询优惠券
+     *
+     * @param couponCode
+     * @return
+     */
+    @Override
+    public CouponConfigResponse selectCouponConfig(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/selectCouponConfig/" + couponCode;
+        CouponConfigResponse configResponse = restTemplate.getForEntity(url, CouponConfigResponse.class).getBody();
+        if (configResponse != null) {
+            return configResponse;
+        }
+        return null;
+    }
+
+    /**
+     * 发放一条优惠券
+     *
+     * @param couponUserRequest
+     * @return
+     */
+    @Override
+    public CouponUserResponse insertCouponUser(CouponUserRequest couponUserRequest) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/insertCouponUser";
+        CouponUserResponse response = restTemplate.postForEntity(url, couponUserRequest, CouponUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据优惠券编码查询用户优惠券
+     * @param couponCode
+     * @return
+     */
+    @Override
+    public CouponUserResponse getCouponUserByCouponCode(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/getCouponUsrByCouponCode/" + couponCode;
+        CouponUserResponse response = restTemplate.getForEntity(url,CouponUserResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据用户优惠券id查询用户优惠券详情
+     * @param couponUserId
+     * @return
+     */
+    @Override
+    public CouponUserCustomizeResponse selectCouponUserById(Integer couponUserId) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/selectCouponUserById/"+couponUserId;
+        CouponUserCustomizeResponse response = restTemplate.getForEntity(url,CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 用户优惠券审批
+     * @param adminCouponUserRequestBean
+     * @return
+     */
+    @Override
+    public CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean) {
+        String url = "http://AM-TRADE/am-trade/adminCouponUser/auditRecord";
+        CouponUserCustomizeResponse response = restTemplate.postForEntity(url,adminCouponUserRequestBean,CouponUserCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询优惠券已发行数量
+     * @param param
+     * @return
+     */
+    @Override
+    public CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode) {
+        String url = "http://AM-TRADE/am-trade/couponConfig/checkCouponSendExcess/" + couponCode;
+        CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
 }
