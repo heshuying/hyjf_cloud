@@ -4,16 +4,12 @@
 package com.hyjf.am.user.service.front.account.impl;
 
 import com.hyjf.am.resquest.user.BankCardLogRequest;
-import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
 import com.hyjf.am.user.dao.model.auto.BankCardLog;
 import com.hyjf.am.user.dao.model.auto.BankCardLogExample;
 import com.hyjf.am.user.dao.model.customize.BankcardManagerCustomize;
 import com.hyjf.am.user.service.front.account.BankCardManagerRecordService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -29,13 +25,6 @@ import java.util.Map;
  */
 @Service
 public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements BankCardManagerRecordService {
-
-
-    @Autowired
-    private BankCardLogMapper bankCardLogMapper;
-
-    private static Logger logger = LoggerFactory.getLogger(BankCardManagerRecordServiceImpl.class);
-
 
     /**
      * 根据筛选条件查找汇付银行卡信息列表
