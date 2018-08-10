@@ -5,7 +5,7 @@ package com.hyjf.am.user.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.customize.admin.finance.BankAccountManageCustomize;
+import com.hyjf.am.user.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;

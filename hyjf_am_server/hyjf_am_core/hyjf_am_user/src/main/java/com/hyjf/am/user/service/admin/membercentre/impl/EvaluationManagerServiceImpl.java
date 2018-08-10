@@ -3,18 +3,14 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import com.hyjf.am.user.dao.mapper.auto.UserEvalationResultMapper;
-import com.hyjf.am.user.dao.mapper.customize.EvaluationManagerCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
 import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
 import com.hyjf.am.user.dao.model.customize.EvalationResultCustomize;
 import com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize;
 import com.hyjf.am.user.service.admin.membercentre.EvaluationManagerService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,15 +23,7 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class EvaluationManagerServiceImpl implements EvaluationManagerService {
-
-    @Autowired
-    private EvaluationManagerCustomizeMapper evaluationManagerCustomizeMapper;
-    @Autowired
-    private  UserEvalationResultMapper userEvalationResultMapper;
-
-    private static Logger logger = LoggerFactory.getLogger(EvaluationManagerServiceImpl.class);
-
+public class EvaluationManagerServiceImpl extends BaseServiceImpl implements EvaluationManagerService {
 
     /**
      * 根据筛选条件查找会员列表

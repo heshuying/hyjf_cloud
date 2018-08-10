@@ -4,12 +4,11 @@
 package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;

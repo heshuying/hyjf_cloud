@@ -4,7 +4,7 @@ import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.trade.SynBalanceService;
 import com.hyjf.am.vo.trade.account.AccountVO;

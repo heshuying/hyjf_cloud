@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowLogResponse;
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowLogCustomize;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowLogService;
 import com.hyjf.am.vo.admin.BorrowLogCustomizeVO;
 import com.hyjf.common.util.CommonUtils;

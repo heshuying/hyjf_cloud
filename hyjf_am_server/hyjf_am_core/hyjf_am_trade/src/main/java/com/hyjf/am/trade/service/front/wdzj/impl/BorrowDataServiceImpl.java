@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.front.wdzj.impl;
 
-import com.hyjf.am.trade.dao.model.customize.wdzj.WDZJBorrowListDataCustomize;
-import com.hyjf.am.trade.dao.model.customize.wdzj.WDZJPreapysListCustomize;
+import com.hyjf.am.trade.dao.model.customize.WDZJBorrowListDataCustomize;
+import com.hyjf.am.trade.dao.model.customize.WDZJPreapysListCustomize;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.front.wdzj.BorrowDataService;
 import org.springframework.stereotype.Service;

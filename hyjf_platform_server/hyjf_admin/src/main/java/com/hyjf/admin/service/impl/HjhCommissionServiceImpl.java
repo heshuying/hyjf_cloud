@@ -15,13 +15,18 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.response.admin.OADepartmentResponse;
+import com.hyjf.am.resquest.admin.CommissionComboRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.common.http.HtmlUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
+
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 /**
  * @author libin
  * @version HjhCommissionServiceImpl.java, v0.1 2018年8月7日 下午2:45:19
@@ -110,5 +115,59 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 			}
 		}
 		return ja;
+	}
+
+	/**
+	 * 根据userId获取提成方式
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+	@Override
+	public Integer queryCrmCuttype(Integer userId) {
+		Integer type = amTradeClient.queryCrmCuttype(userId);
+		return type;
+	}
+
+	/**
+	 * 汇计划发提成
+	 * @return
+	 */
+	@Override
+	public Integer updateTenderCommissionRecord(TenderCommissionVO commission, BankCallBean resultBean,
+			ChinapnrBean chinapnrBean) {
+		Integer ret = 0;
+		// 初始化请求综合体
+		CommissionComboRequest request = new CommissionComboRequest();
+		// 将参数拼装
+		if(commission != null){
+			request.setTenderCommission(commission);
+		}
+		if(resultBean != null){
+			request.setTxAmount(resultBean.getTxAmount());
+			request.setSeqNo(resultBean.getSeqNo());
+			request.setTxDate(resultBean.getTxDate());
+			request.setTxTime(resultBean.getTxTime());
+			request.setLogIp(resultBean.getLogIp());
+			request.setAccountId(resultBean.getAccountId());
+		}
+		if(chinapnrBean !=null){
+			request.setTransAmt(chinapnrBean.getTransAmt());
+			request.setChinapnrlogIp(chinapnrBean.getLogIp());
+		}
+		// 单独放到request中，不用bean copy ，因为原生 commission 不易修改
+		if(StringUtils.isNotEmpty(commission.getAccount())){
+			request.setAccount(commission.getAccount());
+		}
+		// 单独放到request中，防止 bean copy，因为原生 commission 不易修改
+		request.setUserName(commission.getUserName());
+		request.setRegionName(commission.getRegionName());
+		request.setBranchName(commission.getBranchName());
+		request.setDepartmentName(commission.getBranchName());
+		request.setTrueName(commission.getTrueName());
+		request.setSex(commission.getSex());
+		request.setMobile(commission.getMobile());
+		request.setAttribute(commission.getAttribute());
+		ret = amTradeClient.updateTenderCommissionRecord(request);
+		return ret;
 	}
 }

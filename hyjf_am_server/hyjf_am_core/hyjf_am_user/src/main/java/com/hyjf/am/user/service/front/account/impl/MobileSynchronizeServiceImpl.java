@@ -4,17 +4,13 @@
 package com.hyjf.am.user.service.front.account.impl;
 
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
-import com.hyjf.am.user.dao.mapper.auto.AccountMobileSynchMapper;
 import com.hyjf.am.user.dao.model.auto.AccountMobileSynch;
 import com.hyjf.am.user.dao.model.auto.AccountMobileSynchExample;
 import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.am.user.service.front.account.MobileSynchronizeService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,14 +20,7 @@ import java.util.List;
  * @version MobileSynchronizeServiceImpl, v0.1 2018/6/22 11:40
  */
 @Service
-public class MobileSynchronizeServiceImpl implements MobileSynchronizeService {
-    Logger logger = LoggerFactory.getLogger(MobileSynchronizeServiceImpl.class);
-
-    @Autowired
-    AccountMobileSynchMapper accountMobileSynchMapper;
-
-    @Autowired
-    BindCardService bindCardService;
+public class MobileSynchronizeServiceImpl extends BaseServiceImpl implements MobileSynchronizeService {
 
     @Override
     public List<AccountMobileSynch> searchAccountMobileSynch(String flag) {

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.WithdrawCustomizeMapper">
+	<resultMap id="selectWithdrawListMap" type="com.hyjf.am.trade.dao.model.customize.WithdrawCustomize">
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="user_id" property="userId" jdbcType="INTEGER" />
+	    <result column="username" property="username" jdbcType="VARCHAR" />
+	    <result column="mobile" property="mobile" jdbcType="VARCHAR" /><!-- 手机号 -->
+	    <result column="roleid" property="roleid" jdbcType="VARCHAR" /><!-- 角色 -->
+		<result column="user_attribute" property="userAttribute" /> <!-- 用户属性（当前） -->
+		<result column="user_region_name" property="userRegionName" /> <!-- 用户所属一级分部（当前）-->
+		<result column="user_branch_name" property="userBranchName" /> <!-- 用户所属二级分部（当前） -->
+		<result column="user_department_name" property="userDepartmentName" /> <!-- 用户所属团队（当前） -->
+		<result column="referrer_name" property="referrerName" jdbcType="VARCHAR" /> <!-- 推荐人用户名（当前） -->
+		<result column="referrer_user_id" property="referrerUserId" jdbcType="VARCHAR" /> <!-- 推荐人ID（当前） -->
+		<result column="referrer_true_name" property="referrerTrueName" jdbcType="VARCHAR" /><!-- 推荐人姓名（当前） -->
+		<result column="referrer_region_name" property="referrerRegionName" jdbcType="VARCHAR" /><!-- 推荐人所属一级分部（当前） -->
+		<result column="referrer_branch_name" property="referrerBranchName" jdbcType="VARCHAR" /><!-- 推荐人所属二级分部（当前） -->
+		<result column="referrer_department_name" property="referrerDepartmentName" jdbcType="VARCHAR" /><!-- 推荐人所属团队（当前） -->
+	    <result column="ordid" property="ordid" jdbcType="VARCHAR" />
+	    <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
+	    <result column="total" property="total" jdbcType="DECIMAL" />
+	    <result column="fee" property="fee" jdbcType="DECIMAL" />
+	    <result column="credited" property="credited" jdbcType="DECIMAL" />
+	    <result column="bank" property="bank" jdbcType="VARCHAR" />
+	    <result column="account" property="account" jdbcType="VARCHAR" />
+	    <result column="addtime_str" property="addtimeStr" jdbcType="VARCHAR" />
+	    <result column="client_str" property="clientStr" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="status_str" property="statusStr" jdbcType="VARCHAR" />
+	    <result column="reason" property="reason" jdbcType="VARCHAR" />
+	    <result column="bank_flag" property="bankFlag" jdbcType="INTEGER" />
+	    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+	    <result column="seq_no" property="seqNo" jdbcType="INTEGER" />
+	    <result column="tx_date" property="txDateS" jdbcType="VARCHAR" />
+	    <result column="tx_time" property="txTimeS" jdbcType="VARCHAR" />
+	    <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Withdraw_Where_Clause" >
+	    <where>
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND u.username like CONCAT('%', #{usernameSrch}, '%')
+			</if>
+			<if test="ordidSrch != null and ordidSrch != ''">
+				AND a.nid like CONCAT('%', #{ordidSrch}, '%')
+			</if>
+			<if test="clientSrch != null and clientSrch != ''">
+				AND a.client = #{clientSrch}
+			</if>
+			<if test="statusSrch != null and statusSrch != ''">
+				AND a.`status` = #{statusSrch}
+			</if>
+			<if test="userProperty != null and userProperty != ''">
+				AND ui.attribute = #{userProperty,jdbcType=INTEGER}
+			</if>
+			<if test="statusExceptionSrch != null and statusExceptionSrch != ''">
+				AND a.`status` in (0, 1)
+			</if>
+			<if test="addtimeStartSrch != null and addtimeStartSrch != ''">
+				AND FROM_UNIXTIME( a.addtime, '%Y-%m-%d' ) <![CDATA[>=]]> #{addtimeStartSrch}
+			</if>
+			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
+				AND FROM_UNIXTIME( a.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{addtimeEndSrch}
+			</if>
+			<if test="bankFlagSrch != null and bankFlagSrch != ''">
+				AND a.bank_flag = #{bankFlagSrch}
+			</if>
+			<if test="accountIdSrch != null and accountIdSrch != ''">
+				AND a.account = #{accountIdSrch}
+			</if>
+			<if test="bankSeqNoSrch != null and bankSeqNoSrch != ''">
+				AND a.bank_seq_no = #{bankSeqNoSrch}
+			</if>
+			<if test="withdrawType != null">
+				AND a.withdraw_type = #{withdrawType}
+			</if>
+	    </where>
+	</sql>
+
+	<select id="selectWithdrawCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.WithdrawBeanRequest">
+		SELECT
+			count(a.id) as cnt
+		FROM
+			huiyingdai_account_withdraw a
+		LEFT JOIN huiyingdai_users u ON a.user_id = u.user_id
+		LEFT JOIN huiyingdai_users_info ui ON  a.user_id=ui.user_id
+		<include refid="Withdraw_Where_Clause" />
+	</select>
+	<select id="selectWithdrawList" resultMap="selectWithdrawListMap" parameterType="com.hyjf.am.resquest.admin.WithdrawBeanRequest">
+		
+            SELECT
+            a.user_id,
+			a.bank_flag,
+			a.account_id,
+			a.seq_no,
+			DATE_FORMAT(a.tx_date,'%Y-%m-%d') as tx_date,
+			CONCAT(MID(lpad(a.tx_time,6,0),1,2),':',MID(lpad(a.tx_time,6,0),3,2),':',MID(lpad(a.tx_time,6,0),5,2)) as tx_time,
+			a.bank_seq_no,
+			a.addtime,
+			a.id,
+			u.username,		   
+			pna.`name` AS user_property,
+			u.mobile,
+			CASE  ui.role_id
+           WHEN 1 THEN '投资人'
+           WHEN 2 THEN '借款人'
+      	 	 END AS roleid ,
+			ui.attribute AS user_attribute,
+			CASE WHEN ui.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `user_region_name`,
+			CASE WHEN ui.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `user_branch_name`,
+			CASE WHEN ui.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `user_department_name`,
+			spu.username AS referrer_name,
+			su.spreads_userid AS referrer_user_id,
+			ui2.truename AS referrer_true_name,
+			`od6`.`name` AS `referrer_region_name`,
+			`od5`.`name` AS `referrer_branch_name`,
+			`od4`.`name` AS `referrer_department_name`,
+			a.nid AS ordid,
+			a.total,
+			a.fee,
+			a.credited,
+			a.bank AS bank,
+			a.account,
+			FROM_UNIXTIME(
+				a.addtime,
+				'%Y-%m-%d %H:%i:%s'
+			) AS addtime_str,
+			clientname.`name` AS client_str,
+			a.`status` AS `status`,
+			statusname.`name` AS status_str,
+			a.reason AS reason,
+			a.withdraw_type AS withdrawType
+		FROM
+			huiyingdai_account_withdraw a
+		LEFT JOIN huiyingdai_users u ON a.user_id = u.user_id
+		LEFT JOIN huiyingdai_users_info ui ON  a.user_id=ui.user_id
+		LEFT JOIN huiyingdai_bank_config p ON a.bank = p.`code`
+	    LEFT JOIN hyjf_param_name pna ON cast(ui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
+		LEFT JOIN hyjf_param_name clientname ON clientname.name_class = 'CLIENT' AND clientname.name_cd = a.client AND clientname.del_flag = '0'
+		LEFT JOIN hyjf_param_name statusname ON statusname.name_class = 'WITHDRAW_STATUS' AND statusname.name_cd = a.`status` AND statusname.del_flag = '0'
+		LEFT JOIN huiyingdai_spreads_users su ON su.user_id = u.user_id
+		LEFT JOIN huiyingdai_users spu ON spu.user_id = su.spreads_userid
+		LEFT JOIN huiyingdai_users_info ui2 ON ui2.user_id = su.spreads_userid
+		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_users` `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `hyjf_crm`.`oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+		LEFT JOIN `hyjf_crm`.`oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
+		LEFT JOIN `hyjf_crm`.`oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`
+		<include refid="Withdraw_Where_Clause" />
+		ORDER BY
+			a.addtime DESC
+		<if test="limitStart >= 0" >
+	      limit #{limitStart} , #{limitEnd}
+	    </if>
+	</select>
+
+
+	<resultMap id="thirdPartyWithdrawRecordMap" type="com.hyjf.am.trade.dao.model.customize.UserWithdrawRecordCustomize">
+	    <result column="username" property="username" jdbcType="VARCHAR" />
+	    <result column="truename" property="truename" jdbcType="VARCHAR" />
+	    <result column="total" property="total" jdbcType="DECIMAL" />
+	    <result column="credited" property="credited" jdbcType="DECIMAL" />
+	    <result column="fee" property="fee" jdbcType="DECIMAL" />
+	    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+	    <result column="bank" property="bank" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="addtime" property="withdrawTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getThirdPartyUserWithdrawRecord" resultMap="thirdPartyWithdrawRecordMap" parameterType="Map">
+		SELECT
+			hu.username username,
+			hui.truename truename,
+			haw.total total,
+			haw.credited credited,
+			haw.fee fee,
+			IFNULL(hbc.card_no,'银行卡已删除') card_no,
+			haw.bank bank,
+			statusname.`name` status,
+			FROM_UNIXTIME(
+				haw.addtime,
+				'%Y-%m-%d %H:%i:%s'
+			) AS addtime,
+			haw.bank_flag
+		FROM
+			huiyingdai_account_withdraw haw
+		LEFT JOIN huiyingdai_users hu ON haw.user_id = hu.user_id
+		LEFT JOIN huiyingdai_users_info hui ON haw.user_id = hui.user_id
+		LEFT JOIN hyjf_bank_card hbc ON haw.bank_id=hbc.id
+		LEFT JOIN hyjf_param_name statusname ON statusname.name_class = 'WITHDRAW_STATUS' AND statusname.name_cd = haw.`status` AND statusname.del_flag = '0'
+		WHERE haw.bank_flag=1
+			 
+		<if test="userId != null and userId != ''">
+			AND haw.user_id = #{userId}
+		</if>	
+		<if test="status != null and status != ''">
+			AND haw.status = #{status}
+		</if>	
+		<if test="limitStart != null and limitEnd !=null" >
+	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+	    </if>
+	</select>
+
+
+
+
+</mapper>

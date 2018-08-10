@@ -1158,9 +1158,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowApicronResponse getBorrowApicronByID(String id) {
-        BorrowApicronResponse response = restTemplate.
-                postForEntity(tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID", id, BorrowApicronResponse.class).
-                getBody();
+        String url = tradeService + "/adminBatchBorrowRecover/getRecoverApicronByID" + id;
+        BorrowApicronResponse response = restTemplate.getForEntity(url,  BorrowApicronResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
@@ -4888,4 +4887,21 @@ public class AmTradeClientImpl implements AmTradeClient {
 	        }
 	        return null;
 	    }
+    
+	@Override
+	public Integer queryCrmCuttype(Integer userId) {
+		TenderCommissionResponse response = restTemplate
+	            .getForEntity("http://AM-TRADE/am-trade/hjhCommission/queryCrmCuttype/" + userId, TenderCommissionResponse.class).getBody();
+	    if (response != null) {
+	        return response.getType();
+	    }
+		return null;
+	}
+
+	@Override
+	public Integer updateTenderCommissionRecord(CommissionComboRequest request) {
+		String url = "http://AM-TRADE/am-trade/hjhCommission/updateTenderCommissionRecord";
+		Integer response = restTemplate.postForEntity(url,request,Integer.class).getBody();
+		return response;
+	}
 }

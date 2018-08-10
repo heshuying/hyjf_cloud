@@ -1543,4 +1543,11 @@ public interface AmTradeClient {
      * @date 2018/8/9 13:58
      */
     List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> params);
+
+    /**
+     * 根据borrowNid查询风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:21
+     */
+    BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
 }

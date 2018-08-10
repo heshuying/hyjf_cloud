@@ -9,7 +9,7 @@ import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;

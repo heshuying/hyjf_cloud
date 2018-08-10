@@ -5,7 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetBorrowtypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.HjhAssetBorrowTypeCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.HjhAssetBorrowTypeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFlowService;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;

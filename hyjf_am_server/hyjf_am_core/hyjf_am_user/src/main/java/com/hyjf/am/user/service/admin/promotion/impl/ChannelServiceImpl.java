@@ -3,12 +3,11 @@
  */
 package com.hyjf.am.user.service.admin.promotion.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.ChannelCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.ChannelCustomize;
 import com.hyjf.am.user.service.admin.promotion.ChannelService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,10 +15,7 @@ import java.util.List;
  * @version ChannelServiceImpl, v0.1 2018/7/9 12:00
  */
 @Service
-public class ChannelServiceImpl implements ChannelService {
-
-    @Resource
-    ChannelCustomizeMapper channelCustomizeMapper;
+public class ChannelServiceImpl extends BaseServiceImpl implements ChannelService {
 
     @Override
     public String selectChannelName(Integer userId) {

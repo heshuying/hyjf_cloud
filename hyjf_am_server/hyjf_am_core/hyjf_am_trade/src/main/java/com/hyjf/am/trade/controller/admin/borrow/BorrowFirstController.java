@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.admin.borrow;
 import com.hyjf.am.response.admin.BorrowFirstCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
 import com.hyjf.common.util.CommonUtils;

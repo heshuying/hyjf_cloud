@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
-import com.hyjf.am.trade.dao.mapper.customize.admin.SubCommissionListConfigCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.SubCommissionListConfigCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.SubCommissionListConfig;
 import com.hyjf.am.trade.service.admin.SubConfigService;
 import org.springframework.beans.BeanUtils;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

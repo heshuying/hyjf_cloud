@@ -6,7 +6,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectRepayMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowProjectTypeCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BorrowProjectTypeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowProjectTypeService;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;

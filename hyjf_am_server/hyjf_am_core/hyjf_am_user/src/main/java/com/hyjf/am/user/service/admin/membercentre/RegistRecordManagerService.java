@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.admin.membercentre;
 
 import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
+import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @version UserManagerService, v0.1 2018/6/20 9:47
  *          后台管理系统：会员中心->注册记录
  */
-public interface RegistRecordManagerService {
+public interface RegistRecordManagerService extends BaseService {
 
     /**
      * 根据筛选条件查找会员列表

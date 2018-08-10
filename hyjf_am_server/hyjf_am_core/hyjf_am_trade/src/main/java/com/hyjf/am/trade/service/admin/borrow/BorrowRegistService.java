@@ -8,7 +8,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;

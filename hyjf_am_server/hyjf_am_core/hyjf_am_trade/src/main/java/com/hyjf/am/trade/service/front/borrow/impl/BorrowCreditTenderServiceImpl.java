@@ -2,9 +2,9 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CreditRepayMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.BorrowCreditTenderCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CreditRepayExample;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;

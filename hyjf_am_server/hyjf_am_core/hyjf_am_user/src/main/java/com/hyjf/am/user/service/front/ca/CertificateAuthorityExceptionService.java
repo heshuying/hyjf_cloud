@@ -1,18 +1,19 @@
 package com.hyjf.am.user.service.front.ca;
 
 
-import java.text.ParseException;
-import java.util.List;
-
 import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.service.BaseService;
 import com.hyjf.common.exception.MQException;
+
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * CA认证异常处理Service
  * @author dongzeshan
  */
-public interface CertificateAuthorityExceptionService {
+public interface CertificateAuthorityExceptionService extends BaseService {
     /**
      * 检索CA异常列表数量
      * @param form
