@@ -37,10 +37,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -4945,7 +4942,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     /**
      * 查询配置中心操作日志配置
-     * @param map
      * @return
      */
     @Override
@@ -5119,7 +5115,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * 查询优惠券已发行数量
-     * @param param
      * @return
      */
     @Override
