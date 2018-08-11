@@ -34,7 +34,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(value = "Web端散标投资")
+@Api(tags = "Web端-散标投资")
 @RestController
 @RequestMapping("/hyjf-web/tender/borrow")
 public class BorrowTenderController extends BaseTradeController {
@@ -46,11 +46,11 @@ public class BorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "web端散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setToken(token);
+        tender.setToken(userId+"");
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         WebResult<Map<String,Object>> result = null;
