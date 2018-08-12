@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class BaseRequest {
 
-    @ApiModelProperty(value = "页数")
+    @ApiModelProperty(value = "aa")
     private int currPage =1;
 
     @ApiModelProperty(value = "每页多少条")
