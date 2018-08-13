@@ -32,7 +32,7 @@ public class BorrowLogCustomize {
      */
     private String createUserName;
 
-    private int delFlg;
+    private int delFlag;
     public String getBorrowNid() {
         return borrowNid;
     }
@@ -81,11 +81,11 @@ public class BorrowLogCustomize {
         this.createUserName = createUserName;
     }
 
-    public int getDelFlg() {
-        return delFlg;
+    public int getDelFlag() {
+        return delFlag;
     }
 
-    public void setDelFlg(int delFlg) {
-        this.delFlg = delFlg;
+    public void setDelFlag(int delFlag) {
+        this.delFlag = delFlag;
     }
 }
