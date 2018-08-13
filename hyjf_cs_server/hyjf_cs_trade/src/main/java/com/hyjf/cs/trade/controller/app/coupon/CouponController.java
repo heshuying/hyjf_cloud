@@ -3,11 +3,11 @@ package com.hyjf.cs.trade.controller.app.coupon;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AppCouponRequest;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import io.swagger.annotations.Api;
@@ -71,7 +71,8 @@ public class CouponController extends BaseTradeController {
 
     @ApiOperation(value = "APP根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表", notes = "根据borrowNid和用户id获取用户可用优惠券和不可用优惠券列表")
     @PostMapping("/getProjectAvailableUserCoupon")
-    public JSONObject getProjectAvailableUserCoupon(@RequestHeader(value = "token") String token, @RequestBody AppCouponRequest appCouponRequest) throws Exception {
+    public JSONObject getProjectAvailableUserCoupon(@RequestHeader(value = "userId") Integer userId,
+                                                    @RequestBody AppCouponRequest appCouponRequest) throws Exception {
         JSONObject ret = new JSONObject();
         // 检查参数正确性
         if ( Validator.isNull(appCouponRequest.getBorrowNid()) || Validator.isNull(appCouponRequest.getSign())||
@@ -85,7 +86,7 @@ public class CouponController extends BaseTradeController {
             money="0";
         }
         String investType = appCouponRequest.getBorrowType();
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         logger.info("investType is :{}", investType);
 
         if(investType != null){
@@ -116,9 +117,12 @@ public class CouponController extends BaseTradeController {
      */
     @ApiOperation(value = "APP散标投资获取我的优惠券列表", notes = "APP散标投资获取我的优惠券列表")
     @PostMapping("/getborrowcoupon")
-    public WebResult<Map<String,Object>> getBorrowCoupon(@RequestHeader(value = "token") String token, HttpServletRequest request,String borrowNid,String money,String platform) throws Exception {
+    public WebResult<Map<String,Object>> getBorrowCoupon(@RequestHeader(value = "userId") Integer userId,
+                                                         @RequestParam String borrowNid,
+                                                         @RequestParam String money,
+                                                         @RequestParam String platform) throws Exception {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         if(null != user && null != user.getUserId()){
             JSONObject resultMap = new JSONObject();
             resultMap = appCouponService.getBorrowCoupon(user.getUserId(),borrowNid,money,platform);
@@ -138,9 +142,12 @@ public class CouponController extends BaseTradeController {
      */
     @ApiOperation(value = "APP加入计划获取我的优惠券列表", notes = "APP加入计划获取我的优惠券列表")
     @PostMapping("/getplancoupon")
-    public WebResult<Map<String,Object>> getPlanCoupon(@RequestHeader(value = "token") String token, HttpServletRequest request,String planNid,String money,String platform) throws Exception {
+    public WebResult<Map<String,Object>> getPlanCoupon(@RequestHeader(value = "userId") Integer userId,
+                                                       @RequestParam String planNid,
+                                                       @RequestParam String money,
+                                                       @RequestParam String platform) throws Exception {
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         if(null != user && null != user.getUserId()){
             JSONObject resultMap = new JSONObject();
             resultMap = appCouponService.getPlanCoupon(user.getUserId(),planNid,money,platform);

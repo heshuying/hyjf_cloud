@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -191,6 +193,16 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             return sysConfig.getWeiFrontHost();
         }
         return null;
+    }
+
+    /**
+     * 根据borrowNid获取borrow
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowVO getBorrowByNid(String borrowNid) {
+        return amTradeClient.selectBorrowByNid(borrowNid);
     }
 
 }

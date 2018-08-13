@@ -8,12 +8,12 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
@@ -423,14 +423,14 @@ public class AppBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public ModelAndView userBankWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        logger.info("web端提现接口, token is :{}", JSONObject.toJSONString(token));
+    public ModelAndView userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+        logger.info("web端提现接口, userId is :{}", userId);
         String transAmt = request.getParameter("withdrawmoney");// 交易金额
         String cardNo = request.getParameter("widCard");// 提现银行卡号
         String payAllianceCode = request.getParameter("payAllianceCode");// 银联行号
         // 平台
         String platform = request.getParameter("platform");
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         if(null!=userVO||0==userVO.getIsSetPassword()||userVO.getOpenAccount()==0){
             return  new ModelAndView();

@@ -106,7 +106,7 @@ public class MyProfileController extends BaseUserController {
         Integer userId = requestUtil.getRequestUserId(request);
         if (userId==null){
             resultBean.setStatus(BaseResult.FAIL);
-            resultBean.setStatusDesc("不存在的用户!");
+            resultBean.setStatusDesc("用户未登录!");
             return resultBean;
         }
         String resultStr = myProfileService.getUserCouponsData("0", 1, 100, userId, "");

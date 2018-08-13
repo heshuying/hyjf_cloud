@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Map;
 
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.user.bean.BindCardPageBean;
@@ -49,6 +50,8 @@ public interface BindCardService extends BaseUserService {
     Integer getBankInterfaceFlagByType(String type);
 
     BankCardVO queryUserCardValid(String userId, String cardNo);
+
+    BankConfigVO getBankConfigById(Integer id);
 
     BigDecimal getBankBalance(Integer userId, String account);
 }

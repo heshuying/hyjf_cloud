@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
@@ -54,8 +55,11 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -804,6 +808,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/repay/update_apicron";
         Response<Boolean> response =
                 restTemplate.postForEntity(url,requestBean,Response.class).getBody();
+        if (response!=null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 如果有正在出让的债权,先去把出让状态停止
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Boolean updateBorrowCreditStautus(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/update_borrowcredit_status/" + borrowNid;
+        Response<Boolean> response =
+                restTemplate.getForEntity(url,Response.class).getBody();
         if (response!=null && Response.isSuccess(response)){
             return response.getResult();
         }
@@ -3737,6 +3757,48 @@ public class AmTradeClientImpl implements AmTradeClient {
     public BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/borrow/getBorrowInfoBLOBByborrowNid/" + borrowNid;
         BorrowInfoWithBLOBResponse response = restTemplate.getForEntity(url,BorrowInfoWithBLOBResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取还款详情页面数据
+     * @auther: hesy
+     * @date: 2018/8/7
+     */
+    @Override
+    public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repay/repay_detail";
+        String response = restTemplate.postForEntity(url,requestBean,String.class).getBody();
+
+        if (!StringUtils.isBlank(response)) {
+            return JSON.parseObject(response);
+        }
+        return null;
+    }
+
+    /**
+     * 获取计算完的还款Bean
+     * @param paraMap
+     * @return
+     */
+    @Override
+    public RepayBean getRepayBean(Map<String, String> paraMap) {
+        RepayBeanResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/repay/get_repaybean",paraMap,RepayBeanResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return JSON.parseObject(response.getResult(), RepayBean.class);
+        }
+        return null;
+    }
+
+    /**
+     * 获取批量还款页面数据
+     */
+    @Override
+    public ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean) {
+        Response<ProjectBean> response = restTemplate.postForEntity("http://AM-MARKET/am-market/repay/get_batch_reapydata",requestBean,Response.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
