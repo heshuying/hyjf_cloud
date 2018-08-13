@@ -160,9 +160,9 @@ public class AccessFilter extends ZuulFilter {
 			// wechat自带hyjf-wechat 直接返回即可
 			return null;
 		} else if (requestUrl.contains(WEB_CHANNEL)) {
-			if (secureVisitFlag) {
+			/*if (secureVisitFlag) {*/
 				ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
-			}
+			/*}*/
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			prefix = API_VISIT_URL;
@@ -300,6 +300,9 @@ public class AccessFilter extends ZuulFilter {
 			return ctx;
 		}
 
+		if (StringUtils.isBlank(token)){
+			return ctx;
+		}
 		// jwt解析token
 		AccessToken accessToken = JwtHelper.parseToken(token);
 		if (accessToken == null) {

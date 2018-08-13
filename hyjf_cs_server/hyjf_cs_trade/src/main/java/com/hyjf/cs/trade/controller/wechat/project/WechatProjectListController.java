@@ -83,7 +83,7 @@ public class WechatProjectListController extends BaseTradeController {
      * @date 2018/7/30 11:00
      */
     @ApiOperation(value = "微信端:获取首页<计划>加入记录", notes = "微信端:获取首页<计划>加入记录")
-    @PostMapping(value = "/plan/{planId}/investRecord.do", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/plan/{planId}/investRecord.do", produces = "application/json; charset=utf-8")
     public Object getPlanAccedeList( @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                                      @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @PathVariable String planId){
         Object jsonObject = wechatProjectListService.getPlanAccedeList(planId,currentPage,pageSize);
