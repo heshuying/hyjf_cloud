@@ -1,4 +1,4 @@
-package com.hyjf.admin.beans;
+package com.hyjf.admin.excel;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HxlsPrint extends HxlsAbstract{
+public class HxlsPrint extends HxlsAbstract {
 
 	private Map<String, Integer> rowIndexMap;
 	private static Map<String, String> titleMap = null;
@@ -64,10 +64,7 @@ public class HxlsPrint extends HxlsAbstract{
 	 * 调用方法，解析xls
 	 * @param feth
 	 * @param titleMaps
-	 * @param diskFileList
-	 * @param contentJsonDao
-	 * @param contentJsonDetailDao
-	 * @param diskFileListService1
+	 * @param resumeLists
 	 */
 	public void parseXls(String feth, Map<String, String> titleMaps,List<JSONObject> resumeLists){
 		HxlsPrint xls2csv;

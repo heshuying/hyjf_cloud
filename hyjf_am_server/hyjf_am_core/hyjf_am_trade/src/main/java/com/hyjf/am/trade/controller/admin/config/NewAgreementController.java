@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version NewAgreementController, v0.1 2018/7/31 17:38
  */
 @RestController
-@RequestMapping("/am-tradenew/new/agreement")
+@RequestMapping("/am-trade/new/agreement")
 public class NewAgreementController {
 
     @Autowired

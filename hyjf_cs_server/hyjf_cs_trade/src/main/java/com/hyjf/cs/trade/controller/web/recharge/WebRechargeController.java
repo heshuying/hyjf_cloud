@@ -62,8 +62,8 @@ public class WebRechargeController extends BaseTradeController{
 	 */
 	@ApiOperation(value = "web端-获取用户充值信息", notes = "用户充值")
 	@PostMapping("/toRecharge")
-	public WebResult<Object> toRecharge(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-		WebViewUserVO user=userRechargeService.getUsersByToken(token);
+	public WebResult<Object> toRecharge(@RequestHeader(value = "userId") Integer userId) {
+		WebViewUserVO user=userRechargeService.getUserFromCache(userId);
 		WebResult<Object> objectWebResult=userRechargeService.toRecharge(user);
 		return objectWebResult;
 	}
@@ -77,11 +77,13 @@ public class WebRechargeController extends BaseTradeController{
 	@ApiOperation(value = "web端-用户充值", notes = "用户充值")
 	@PostMapping("/page")
 	@RequestLimit(seconds=3)
-	public WebResult<Object> recharge(@RequestHeader(value = "token") String token,HttpServletRequest request,@RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
+	public WebResult<Object> recharge(@RequestHeader(value = "userId") int userId,
+									  HttpServletRequest request,
+									  @RequestBody @Valid BankRechargeVO bankRechargeVO) throws Exception {
 		logger.info("web充值服务");
 		WebResult<Object> result = new WebResult<Object>();
 		String ipAddr = CustomUtil.getIpAddr(request);
-		BankCallBean bean = userRechargeService.rechargeService(token,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
+		BankCallBean bean = userRechargeService.rechargeService(userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);

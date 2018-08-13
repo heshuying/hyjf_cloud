@@ -142,7 +142,7 @@ public class AppSafeController extends BaseUserController {
                 }
 
                 // 更新联系人信息
-                boolean success = safeService.saveContract(urgentRelation, urgentName, urgentMobile,webViewUserVO);
+                boolean success = safeService.saveContract(urgentRelation, urgentName, urgentMobile,userId);
 
                 if (success) {
                     ret.put("status", "0");

@@ -100,7 +100,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     @Override
     public WebResult<Map<String, Object>> borrowTender(TenderRequest request) {
-        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getToken()));
+        UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         logger.info("开始检查散标投资参数,userId:{}", userId);
         request.setUser(loginUser);
@@ -565,7 +565,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getToken()));
+        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
 
         BestCouponListVO couponConfig = new BestCouponListVO();
         // 未登录，不计算优惠券
@@ -694,7 +694,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-        WebViewUserVO loginUser = RedisUtils.getObj(tender.getToken(), WebViewUserVO.class);
+        WebViewUserVO loginUser = RedisUtils.getObj(RedisConstants.USERID_KEY +tender.getUserId(), WebViewUserVO.class);
         // 可用优惠券张数
         MyCouponListRequest request = new MyCouponListRequest();
         request.setBorrowNid(tender.getBorrowNid());

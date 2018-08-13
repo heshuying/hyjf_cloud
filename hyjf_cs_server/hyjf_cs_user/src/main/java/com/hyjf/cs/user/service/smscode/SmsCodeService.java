@@ -26,17 +26,17 @@ public interface SmsCodeService extends BaseUserService {
      * @param token
      * @param ip
      */
-    void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip);
+    void sendSmsCodeCheckParam(String validCodeType, String mobile, Integer userId, String ip);
 
     /**
      * app参数检查
      * @param validCodeType
      * @param mobile
-     * @param token
+     * @param userId
      * @param ip
      * @return
      */
-    JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip);
+    JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, Integer userId, String ip);
 
     /**
      * web 参数检查

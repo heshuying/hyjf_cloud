@@ -219,7 +219,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String txcode = "";
         BankCallBean bean = new BankCallBean(users.getUserId(), txcode, client);
         // 同步地址 跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?logOrdId=" + bean.getLogOrderId();
+        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?channel="+type+"&logOrdId=" + bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticSuccess?channel="+type;
         // 异步调用路
         String bgRetUrl = "";

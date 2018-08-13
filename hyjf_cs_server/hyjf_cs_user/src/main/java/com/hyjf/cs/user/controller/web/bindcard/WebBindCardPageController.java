@@ -52,12 +52,13 @@ public class WebBindCardPageController extends BaseUserController{
     @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
     @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindCardPage(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request) {
+    public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = bindCardService.getUsersByToken(token);
+        WebViewUserVO user = bindCardService.getUserFromCache(userId);
         String userIp = GetCilentIP.getIpAddr(request);
-        String urlstatus = param.get("urlstatus"); // 请求来源
+        // 请求来源
+        String urlstatus = param.get("urlstatus");
         // 条件校验
         bindCardService.checkParamBindCardPage(user);
 
@@ -83,8 +84,7 @@ public class WebBindCardPageController extends BaseUserController{
      */
     @ApiOperation(value = "绑卡接口回调", notes = "绑卡接口回调")
     @PostMapping(value = "/bgReturn", produces = "application/json; charset=utf-8")
-    public BankCallResult bindCardBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody  BankCallBean bean, HttpServletRequest request) {
-        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+    public BankCallResult bindCardBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");
@@ -114,19 +114,17 @@ public class WebBindCardPageController extends BaseUserController{
      */
     @ApiOperation(value = "用户解绑卡", notes = "用户解绑卡")
     @PostMapping(value = "/unBindCard", produces = "application/json; charset=utf-8")
-    public WebResult<Object> unBindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+    public WebResult<Object> unBindCard(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
                                         HttpServletResponse response) {
         logger.info("解绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = bindCardService.getUsersByToken(token);
-
-        bindCardService.checkParamUnBindCard(bindCardVO, user.getUserId());
+        bindCardService.checkParamUnBindCard(bindCardVO, userId);
 
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
         try {
-            bankBean = bindCardService.callBankUnBindCard(bindCardVO.getCardNo(), user.getUserId());
+            bankBean = bindCardService.callBankUnBindCard(bindCardVO.getCardNo(), userId);
         } catch (Exception e) {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
@@ -139,10 +137,12 @@ public class WebBindCardPageController extends BaseUserController{
             logger.error("请求解绑卡接口失败");
         }
 
+        WebViewUserVO user = bindCardService.getUserFromCache(userId);
+
         // 绑卡请求后业务处理
         try {
             LogAcqResBean logAcqResBean = bankBean.getLogAcqResBean();
-            boolean updateResult = bindCardService.updateAfterDeleteCard(user.getUserId(),user.getUsername(),logAcqResBean.getCardNo());
+            boolean updateResult = bindCardService.updateAfterDeleteCard(userId,user.getUsername(),logAcqResBean.getCardNo());
             if(!updateResult){
                 result.setStatus(ApiResult.FAIL);
                 result.setStatusDesc("更新银行卡失败");

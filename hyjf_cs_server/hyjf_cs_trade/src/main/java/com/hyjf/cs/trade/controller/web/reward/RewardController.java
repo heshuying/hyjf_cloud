@@ -41,9 +41,9 @@ public class RewardController {
     @ApiOperation(value = "我的奖励列表", notes = "我的奖励列表")
     @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")
     @PostMapping(value = "/myRewardList", produces = "application/json; charset=utf-8")
-    public WebResult<List<MyRewardRecordCustomizeVO>> selectMyRewardList(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String,String> param, HttpServletRequest request){
+    public WebResult<List<MyRewardRecordCustomizeVO>> selectMyRewardList(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String,String> param){
         WebResult<List<MyRewardRecordCustomizeVO>> result = new WebResult<List<MyRewardRecordCustomizeVO>>();
-        WebViewUserVO userVO = rewardService.getUsersByToken(token);
+        WebViewUserVO userVO = rewardService.getUserFromCache(userId);
 
         logger.info("获取我的奖励列表开始，userId：{}", userVO.getUserId());
 

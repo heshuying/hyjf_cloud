@@ -5126,5 +5126,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+	@Override
+	public BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectBorrowStyleList";
+        BorrowCustomizeResponse response = restTemplate.postForEntity(url,form,BorrowCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
 
 }

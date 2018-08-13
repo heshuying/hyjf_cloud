@@ -473,6 +473,7 @@
         <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
         <result column="credit_capital" property="creditCapital" jdbcType="VARCHAR" />
         <result column="bid_name" property="bidName" jdbcType="VARCHAR" />
+        <result column="credit_inProgress" property="creditInProgress" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--债权转让查询data -->
