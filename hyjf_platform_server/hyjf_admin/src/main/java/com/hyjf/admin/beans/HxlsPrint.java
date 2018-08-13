@@ -64,10 +64,7 @@ public class HxlsPrint extends HxlsAbstract{
 	 * 调用方法，解析xls
 	 * @param feth
 	 * @param titleMaps
-	 * @param diskFileList
-	 * @param contentJsonDao
-	 * @param contentJsonDetailDao
-	 * @param diskFileListService1
+	 * @param resumeLists
 	 */
 	public void parseXls(String feth, Map<String, String> titleMaps,List<JSONObject> resumeLists){
 		HxlsPrint xls2csv;
