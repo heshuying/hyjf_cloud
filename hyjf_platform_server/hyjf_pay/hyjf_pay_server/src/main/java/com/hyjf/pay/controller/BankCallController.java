@@ -542,6 +542,7 @@ public class BankCallController extends BaseController {
                     backBean.setLogOrderId(bean.getLogOrderId());
                     backBean.setLogUserId(bean.getLogUserId());
                     backBean.setLogClient(bean.getLogClient());
+                    backBean.setLogOrderStatus(bean.getLogOrderStatus());
                     payLogService.updateChinapnrExclusiveLog(logOrderId, backBean, nowTime);
                     // 验签成功时
                     if (verifyResult.isLogVerifyFlag()) {
@@ -656,7 +657,9 @@ public class BankCallController extends BaseController {
                                 bean.getAllParams().remove(BankCallConstant.PARAM_VERSION);
                                 bean.setSign(null);
                                 bean.setVersion(null);
+                                notifyUrl = StringEscapeUtils.unescapeHtml(notifyUrl);
                                 content = HttpDeal.post(notifyUrl, bean.getAllParams());
+                                logger.info("联机异步调用notifyUrl: "+notifyUrl+"   返回结果为: "+content);
                                 if (StringUtils.isNotBlank(content)) {
                                     BankCallResult callResult = JSONObject.parseObject(content, BankCallResult.class);
                                     if (callResult.isStatus()) {

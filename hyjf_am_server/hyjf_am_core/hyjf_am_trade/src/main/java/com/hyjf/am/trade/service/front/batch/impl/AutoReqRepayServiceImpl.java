@@ -8,6 +8,7 @@ import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AutoReqRepayBorrowCustomize;
 import com.hyjf.am.trade.service.front.batch.AutoReqRepayService;
+import com.hyjf.am.trade.service.front.repay.RepayManageOldService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.common.cache.RedisConstants;
@@ -34,7 +35,7 @@ import java.util.List;
 @Service
 public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqRepayService {
     @Autowired
-    private RepayManageService repayManageService;
+    private RepayManageOldService repayManageService;
 
     /** 还款时的校验信息 */
     public static final String REPAY_ERROR = "WEBPAY0001";

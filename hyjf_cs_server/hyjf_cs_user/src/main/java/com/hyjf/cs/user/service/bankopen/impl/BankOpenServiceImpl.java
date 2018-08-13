@@ -20,8 +20,8 @@ import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.util.ErrorCodeConstant;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -30,8 +30,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,8 +46,6 @@ import java.util.Map;
 @Service
 public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpenService   {
 	
-	private static final Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
-
     @Autowired
     private AmUserClient amUserClient;
 

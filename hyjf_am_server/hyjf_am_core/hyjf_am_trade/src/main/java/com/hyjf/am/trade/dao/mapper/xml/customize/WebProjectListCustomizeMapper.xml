@@ -473,6 +473,7 @@
         <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
         <result column="credit_capital" property="creditCapital" jdbcType="VARCHAR" />
         <result column="bid_name" property="bidName" jdbcType="VARCHAR" />
+        <result column="credit_inProgress" property="creditInProgress" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--债权转让查询data -->
@@ -483,7 +484,7 @@
         INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
 	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
 	    <include refid="Credit_Common_Where_Column"/>
-        ORDER BY credit_inProgress DESC,
+        ORDER BY ht_borrow_credit.credit_order DESC ,credit_inProgress DESC,
         <!--6月22号后需求(债转排序优化) mod by nxl start -->
         <!--<if test="discountSort != null and discountSort != ''">
             credit_discount ${discountSort},

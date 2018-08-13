@@ -44,7 +44,7 @@ import java.util.List;
  */
 @Api(value = "产品中心-汇直投-还款明细",tags ="产品中心-汇直投-还款明细" )
 @RestController
-@RequestMapping("/borrow/borrowrepaymentinfo")
+@RequestMapping("/hyjf-admin/borrow/borrowrepaymentinfo")
 public class BorrowRepaymentInfoController extends BaseController {
 
 

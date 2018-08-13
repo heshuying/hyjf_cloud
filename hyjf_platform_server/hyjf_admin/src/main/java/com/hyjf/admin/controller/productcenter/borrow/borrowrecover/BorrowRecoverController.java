@@ -42,7 +42,7 @@ import java.util.Map;
  */
 @Api(value = "产品中心-汇直投-放款明细",tags = "产品中心-汇直投-放款明细")
 @RestController
-@RequestMapping("/borrow/borrowrecover")
+@RequestMapping("/hyjf-admin/borrow/borrowrecover")
 public class BorrowRecoverController extends BaseController {
     @Autowired
     private BorrowRecoverService borrowRecoverService;

@@ -36,7 +36,7 @@ import java.util.Map;
  */
 @Api(value = "vip管理", tags = "vip管理")
 @RestController
-@RequestMapping("/hyjf-admin/vipManage")
+@RequestMapping("/hyjf-admin/vipmanage")
 public class VipManageController extends BaseController {
 
     /** 查看权限 */

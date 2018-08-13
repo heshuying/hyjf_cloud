@@ -23,7 +23,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
@@ -71,7 +70,6 @@ public class RepayManageController extends BaseTradeController {
 
     /**
      * 用户还款页面统计数据查询
-     * @param token
      */
     @ApiOperation(value = "用户还款页面统计数据", notes = "用户还款页面统计数据查询")
     @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
@@ -170,7 +168,6 @@ public class RepayManageController extends BaseTradeController {
 
     /**
      * 用户已还款列表
-     * @param token
      * @param requestBean
      * @return
      */
@@ -259,7 +256,6 @@ public class RepayManageController extends BaseTradeController {
 
     /**
      * 垫付机构已还款列表
-     * @param token
      * @param requestBean
      */
     @ApiOperation(value = "垫付机构已还款列表", tags = "垫付机构已还款列表")
@@ -457,9 +453,10 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "担保机构批量还款页面数据", tags = "担保机构批量还款页面数据")
     @PostMapping(value = "/batch_repaydata", produces = "application/json; charset=utf-8")
-    public WebResult orgUserBatchRepayData(@RequestHeader(value = "token", required = true) String token, @RequestBody BatchRepayPageRequestVO requestBean){
+    public WebResult orgUserBatchRepayData(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean){
         WebResult webResult = new WebResult();
         Map<String,Object> resultMap = new HashMap<>();
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
         if(StringUtils.isBlank(requestBean.getUserId())){
             webResult.setStatus(WebResult.ERROR);
@@ -527,9 +524,9 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "担保机构批量还款条件校验", tags = "担保机构批量还款条件校验")
     @PostMapping(value = "/batchrepay_check", produces = "application/json; charset=utf-8")
-    public WebResult orgUserStartBatchRepayCheck(@RequestHeader(value = "token", required = true) String token, @RequestBody BatchRepayPageRequestVO requestBean) {
+    public WebResult orgUserStartBatchRepayCheck(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean) {
         WebResult webResult = new WebResult();
-        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
         String msg = "";
         if (!userVO.isOpenAccount()) {
@@ -570,14 +567,13 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "担保机构批量还款", tags = "担保机构批量还款")
     @PostMapping(value = "/batchrepay_action", produces = "application/json; charset=utf-8")
-    public WebResult orgUserStartBatchRepay(@RequestHeader(value = "token", required = true) String token, @RequestBody BatchRepayPageRequestVO requestBean, HttpServletRequest request) {
+    public WebResult orgUserStartBatchRepay(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean, HttpServletRequest request) {
         WebResult webResult = new WebResult();
-        WebViewUserVO userVO = repayManageService.getUsersByToken(token);
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
 
         String startDate = requestBean.getStartDate();
         String endDate = requestBean.getEndDate();
         String password = requestBean.getPassword();
-        Integer userId = userVO.getUserId();
         String msg = "";
 
         //查询该时间段的所有担保户的待还款记录并进行还款

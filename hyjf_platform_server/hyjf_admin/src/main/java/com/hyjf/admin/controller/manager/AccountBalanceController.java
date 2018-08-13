@@ -12,7 +12,6 @@ import com.hyjf.am.vo.admin.HjhAccountBalanceVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import com.ibm.icu.text.SimpleDateFormat;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 

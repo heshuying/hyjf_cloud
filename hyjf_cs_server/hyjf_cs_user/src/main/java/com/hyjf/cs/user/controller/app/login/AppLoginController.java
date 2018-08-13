@@ -265,7 +265,7 @@ public class AppLoginController extends BaseUserController {
                                          @RequestParam String order,
                                          @RequestParam(value = "iconImg", required = false) MultipartFile iconImg) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/uploadAvatarAction");
+        ret.put("request", "/hyjf-app/appUser/uploadAvatarAction");
 
         // 业务逻辑
         try {

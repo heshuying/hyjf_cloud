@@ -1,8 +1,22 @@
 package com.hyjf.admin.client.impl;
 
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
+import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -11,108 +25,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
-import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
-import com.hyjf.am.response.admin.UserPortraitScoreResponse;
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.admin.VipDetailListResponse;
-import com.hyjf.am.response.admin.VipManageResponse;
-import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
-import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.user.AccountChinapnrResponse;
-import com.hyjf.am.response.user.AdminPreRegistListResponse;
-import com.hyjf.am.response.user.AdminUserAuthListResponse;
-import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
-import com.hyjf.am.response.user.BankAccountRecordResponse;
-import com.hyjf.am.response.user.BankCardLogResponse;
-import com.hyjf.am.response.user.BankCardManagerResponse;
-import com.hyjf.am.response.user.BankCardResponse;
-import com.hyjf.am.response.user.BankOpenAccountResponse;
-import com.hyjf.am.response.user.BindUserResponse;
-import com.hyjf.am.response.user.CertificateAuthorityResponse;
-import com.hyjf.am.response.user.ChangeLogResponse;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.response.user.EmployeeCustomizeResponse;
-import com.hyjf.am.response.user.EvalationResultResponse;
-import com.hyjf.am.response.user.KeyCountResponse;
-import com.hyjf.am.response.user.LoanCoverUserResponse;
-import com.hyjf.am.response.user.MspApplytResponse;
-import com.hyjf.am.response.user.MspResponse;
-import com.hyjf.am.response.user.RegistRecordResponse;
-import com.hyjf.am.response.user.SpreadsUserResponse;
-import com.hyjf.am.response.user.UserBankOpenAccountResponse;
-import com.hyjf.am.response.user.UserChangeLogResponse;
-import com.hyjf.am.response.user.UserEvalationQuestionResponse;
-import com.hyjf.am.response.user.UserEvalationResultResponse;
-import com.hyjf.am.response.user.UserInfoCustomizeResponse;
-import com.hyjf.am.response.user.UserInfoResponse;
-import com.hyjf.am.response.user.UserManagerDetailResponse;
-import com.hyjf.am.response.user.UserManagerResponse;
-import com.hyjf.am.response.user.UserManagerUpdateResponse;
-import com.hyjf.am.response.user.UserPortraitResponse;
-import com.hyjf.am.response.user.UserRecommendCustomizeResponse;
-import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
-import com.hyjf.am.resquest.admin.VipDetailListRequest;
-import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.AccountRecordRequest;
-import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
-import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
-import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
-import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
-import com.hyjf.am.resquest.user.BankAccountRecordRequest;
-import com.hyjf.am.resquest.user.BankCardLogRequest;
-import com.hyjf.am.resquest.user.BankCardManagerRequest;
-import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.resquest.user.BankOpenAccountRequest;
-import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
-import com.hyjf.am.resquest.user.ChangeLogRequest;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.user.EvalationRequest;
-import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.resquest.user.LoanCoverUserRequest;
-import com.hyjf.am.resquest.user.MspApplytRequest;
-import com.hyjf.am.resquest.user.MspRequest;
-import com.hyjf.am.resquest.user.RegistRcordRequest;
-import com.hyjf.am.resquest.user.UpdCompanyRequest;
-import com.hyjf.am.resquest.user.UserChangeLogRequest;
-import com.hyjf.am.resquest.user.UserInfoRequest;
-import com.hyjf.am.resquest.user.UserManagerRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
-import com.hyjf.am.resquest.user.UserPortraitRequest;
-import com.hyjf.am.resquest.user.UserRequest;
-import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
-import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
-import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.AccountChinapnrVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.BindUserVo;
-import com.hyjf.am.vo.user.CertificateAuthorityVO;
-import com.hyjf.am.vo.user.EmployeeCustomizeVO;
-import com.hyjf.am.vo.user.LoanCoverUserVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserBankOpenAccountVO;
-import com.hyjf.am.vo.user.UserChangeLogVO;
-import com.hyjf.am.vo.user.UserEvalationQuestionVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserManagerDetailVO;
-import com.hyjf.am.vo.user.UserManagerUpdateVO;
-import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.am.vo.user.UserRecommendCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1530,7 +1444,8 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForObject("http://AM-USER/am-user/user/findById/"+userId, UserResponse.class);
 	}
 
-	public UtmResponse getByPageList(Map<String, Object> map) {
+	@Override
+    public UtmResponse getByPageList(Map<String, Object> map) {
 		UtmResponse response = restTemplate
 				.postForEntity("http://AM-USER/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -1783,7 +1698,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-USER/am-user/mspapply/applyInfo" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/applyAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {
@@ -1914,5 +1829,53 @@ public class AmUserClientImpl implements AmUserClient {
 			return utmResponse;
 		}
 		return null;
+	}
+
+	/**
+	 * 查询手机号同步数量  用于前端分页显示
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int countBankOpenAccountUser(MobileSynchronizeRequest request) {
+		String url = userService + "/mobilesynchronize/countBankOpenAccountUser";
+		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 查询手机号同步列表
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<MobileSynchronizeCustomizeVO> selectBankOpenAccountUserList(MobileSynchronizeRequest request) {
+		String url = userService + "/mobilesynchronize/selectBankOpenAccountUserList";
+		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 同步手机号
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean updateMobile(MobileSynchronizeRequest request) {
+		String url = userService + "/mobilesynchronize/updateMobile";
+		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.isUpdate();
+		}
+		return false;
 	}
 }

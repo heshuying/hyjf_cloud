@@ -47,9 +47,9 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
         if (recordTotal > 0) {
             // 查询相应的用户交易明细列表
             List<WebUserTradeListCustomizeVO> userTrades = amTradeClient.searchUserTradeList(form);
-            result.setTradeList(userTrades);
+            result.setData(userTrades);
         } else {
-            result.setTradeList(new ArrayList<WebUserTradeListCustomizeVO>());
+            result.setData(new ArrayList<WebUserTradeListCustomizeVO>());
         }
         result.setPage(page);
         return result;
@@ -70,9 +70,9 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
         if (recordTotal > 0) {
             // 查询相应的用户充值记录列表
             List<WebUserRechargeListCustomizeVO> userTrades = amTradeClient.searchUserRechargeList(form);
-            result.setRechargeList(userTrades);
+            result.setData(userTrades);
         } else {
-            result.setRechargeList(new ArrayList<WebUserRechargeListCustomizeVO>());
+            result.setData(new ArrayList<WebUserRechargeListCustomizeVO>());
         }
         result.setPage(page);
         return result;
@@ -93,9 +93,9 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
         if (recordTotal > 0) {
             // 查询相应的用户提现记录列表
             List<WebUserWithdrawListCustomizeVO> userTrades = amTradeClient.searchUserWithdrawList(form);
-            result.setWithdrawList(userTrades);
+            result.setData(userTrades);
         } else {
-            result.setWithdrawList(new ArrayList<WebUserWithdrawListCustomizeVO>());
+            result.setData(new ArrayList<WebUserWithdrawListCustomizeVO>());
         }
         result.setPage(page);
         return result;

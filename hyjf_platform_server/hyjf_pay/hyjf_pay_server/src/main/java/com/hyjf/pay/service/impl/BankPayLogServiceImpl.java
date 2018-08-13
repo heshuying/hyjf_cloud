@@ -1,5 +1,15 @@
 package com.hyjf.pay.service.impl;
 
+import java.util.Date;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
@@ -13,14 +23,6 @@ import com.hyjf.pay.mongo.BankExclusiveLogDao;
 import com.hyjf.pay.mongo.BankLogDao;
 import com.hyjf.pay.mongo.BankSendLogDao;
 import com.hyjf.pay.service.BankPayLogService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.Map;
 
 @Service
 public class BankPayLogServiceImpl implements BankPayLogService {
@@ -187,28 +189,44 @@ public class BankPayLogServiceImpl implements BankPayLogService {
     @Override
     public void updateChinapnrExclusiveLog(String orderId, BankCallBean bean, int nowTime) {
 
-        BankExclusiveLog exclusiveLogInDb = this.bankExclusiveLogDao.findOne(
-                Query.query(Criteria.where("ordid").is(orderId)));
-        // 拼接相应的参数
-        exclusiveLogInDb.setStatus(bean.getLogOrderStatus());
-        exclusiveLogInDb.setResult(bean.getJson());
-        exclusiveLogInDb.setRespcode(bean.getRetCode());
-        exclusiveLogInDb.setUpdatetime(String.valueOf(nowTime));
-        exclusiveLogInDb.setUpdateuser(bean.getLogUserId());
+//        BankExclusiveLog exclusiveLogInDb = this.bankExclusiveLogDao.findOne(
+//                Query.query(Criteria.where("ordid").is(orderId)));
+//        // 拼接相应的参数
+//        exclusiveLogInDb.setStatus(bean.getLogOrderStatus());
+//        exclusiveLogInDb.setResult(bean.getJson());
+//        exclusiveLogInDb.setRespcode(bean.getRetCode());
+//        exclusiveLogInDb.setUpdatetime(String.valueOf(nowTime));
+//        exclusiveLogInDb.setUpdateuser(bean.getLogUserId());
+//        this.bankExclusiveLogDao.save(exclusiveLogInDb);
 
-        this.bankExclusiveLogDao.save(exclusiveLogInDb);
+        
+        Query q1 = Query.query(Criteria.where("ordid").is(orderId));
+        Update u1 = new Update();
+        u1.set("status", bean.getLogOrderStatus());
+        u1.set("result", bean.getJson());
+        u1.set("respcode", bean.getRetCode());
+        u1.set("updatetime", String.valueOf(nowTime));
+        u1.set("updateuser", bean.getLogUserId());
+        
+        this.bankExclusiveLogDao.findAndModify(q1, u1);
 
     }
 
     @Override
     public void updateChinapnrExclusiveLog(String orderId, int status) {
 
-        BankExclusiveLog exclusiveLogInDb = this.bankExclusiveLogDao.findOne(
-                Query.query(Criteria.where("ordid").is(orderId)));
-        // 拼接相应的参数
-        exclusiveLogInDb.setStatus(status + "");
-
-        this.bankExclusiveLogDao.save(exclusiveLogInDb);
+//        BankExclusiveLog exclusiveLogInDb = this.bankExclusiveLogDao.findOne(
+//                Query.query(Criteria.where("ordid").is(orderId)));
+//        // 拼接相应的参数
+//        exclusiveLogInDb.setStatus(status + "");
+//
+//        this.bankExclusiveLogDao.save(exclusiveLogInDb);
+        
+        Query q1 = Query.query(Criteria.where("ordid").is(orderId));
+        Update u1 = new Update();
+        u1.set("status", status + "");
+        
+        this.bankExclusiveLogDao.findAndModify(q1, u1);
     }
 
 

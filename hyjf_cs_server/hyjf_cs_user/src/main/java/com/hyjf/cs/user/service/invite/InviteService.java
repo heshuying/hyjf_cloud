@@ -12,9 +12,16 @@ import java.util.Map;
  * @version InviteService, v0.1 2018/6/23 18:02
  */
 public interface InviteService extends BaseUserService {
+    /**
+     * 邀请列表请求校验
+     */
     void checkForInviteList(Map<String, String> param);
-
+    /**
+     * 我的邀请列表
+     */
     List<MyInviteListCustomizeVO> selectMyInviteList(String userId, Integer limitStart, Integer limitEnd);
-
+    /**
+     * 我的邀请记录总数
+     */
     Integer selectMyInviteCount(String userId);
 }

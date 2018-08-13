@@ -50,7 +50,7 @@ import java.util.Map;
 
 @Api(value = "借款操作日志",tags ="借款操作日志")
 @RestController
-@RequestMapping("/borrow/borrowlog")
+@RequestMapping("/hyjf-admin/borrow/borrowlog")
 public class BorrowLogController extends BaseController {
 
     /** 查看权限 */
