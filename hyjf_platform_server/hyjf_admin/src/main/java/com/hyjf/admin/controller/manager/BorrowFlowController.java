@@ -192,7 +192,7 @@ public class BorrowFlowController extends BaseController {
      * @return 进入资产列表页面
      */
     @ApiOperation(value = "配置中心借款项目配置---项目流程 流程配置", notes = "下拉联动")
-    @RequestMapping("/assetTypeAction")
+    @PostMapping("/assetTypeAction")
     public List<Map<String, Object>> assetTypeAction(HttpServletRequest request, RedirectAttributes attr,
                                                      String instCode) {
         List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();

@@ -112,7 +112,8 @@ public class AccountBalanceMonitoringController {
         for (int i = 0; i < recordList.size(); i++) {
             MerchantAccountVO record = new MerchantAccountVO();
             BeanUtils.copyProperties(recordList.get(i), record);
-            record.setIds(String.valueOf(recordList.get(i).getId()));
+            //todo 联调时注意下，用id代替ids行不？
+//            record.setIds(String.valueOf(recordList.get(i).getId()));
             result.add(record);
         }
         return result;
