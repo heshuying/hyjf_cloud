@@ -25,6 +25,7 @@ import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,10 +55,9 @@ public class MyProfileController extends BaseUserController {
 
 
     @RequestMapping("/profile")
-    public WeChatResult myProfile(HttpServletRequest request) {
+    public WeChatResult myProfile(@RequestHeader(value = "userId") Integer userId) {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
-        Integer userId = requestUtil.getRequestUserId(request);
         //用户真实姓名
         String trueUserName = myProfileService.getUserCallName(userId);
 
