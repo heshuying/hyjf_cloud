@@ -1894,4 +1894,16 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map){
 		return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list",map,AdminOperationLogResponse.class).getBody();
 	}
+	/**
+	 *
+	 * @Description:通过身份证号获取户籍所在地
+	 * @param idCardCustomize
+	 * @return String
+	 * @exception:
+	 * @author: nxl
+	 */
+	@Override
+	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
 }

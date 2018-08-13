@@ -1,8 +1,8 @@
-package com.hyjf.cs.user;
+package com.hyjf.cs.trade.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.cs.trade.bean.BaseResultBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,9 +24,9 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = Exception.class)
 	@ResponseBody
-	public BaseResult defaultErrorHandler(HttpServletRequest req, Exception e) {
+	public BaseResultBean defaultErrorHandler(HttpServletRequest req, Exception e) {
 		logger.error("system error", e);
-		BaseResult response = new BaseResult();
+		BaseResultBean response = new BaseResultBean();
 		response.setStatus(SYSTEM_ERROR);
 		response.setStatusDesc(e.getMessage() == null ? SYSTEM_ERROR_MSG : e.getMessage());
 		return response;
@@ -34,8 +34,8 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = ReturnMessageException.class)
 	@ResponseBody
-	public BaseResult defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
-		BaseResult response = new BaseResult();
+	public BaseResultBean defaultReturnErrorHandler(HttpServletRequest req, ReturnMessageException e) {
+		BaseResultBean response = new BaseResultBean();
 		response.setStatus(e.getError().getCode());
 		response.setStatusDesc(e.getError().getMsg());
 		return response;

@@ -34,8 +34,8 @@
 				AND binfo.inst_code = #{instCodeSrch}
 			</if>
 			<!-- 借款标题 -->
-			<if test="borrowName != null and borrowName != ''">
-				AND binfo.name LIKE CONCAT('%', #{borrowName}, '%')
+			<if test="borrowNameSrch != null and borrowNameSrch != ''">
+				AND binfo.name LIKE CONCAT('%', #{borrowNameSrch}, '%')
 			</if>
 			<!-- 借款人 -->
 			<if test="borrowUserName != null and borrowUserName != ''">

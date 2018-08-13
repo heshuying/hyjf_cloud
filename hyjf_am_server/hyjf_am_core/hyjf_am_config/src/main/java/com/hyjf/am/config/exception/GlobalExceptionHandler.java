@@ -1,4 +1,4 @@
-package com.hyjf.am.config;
+package com.hyjf.am.config.exception;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.BaseVO;

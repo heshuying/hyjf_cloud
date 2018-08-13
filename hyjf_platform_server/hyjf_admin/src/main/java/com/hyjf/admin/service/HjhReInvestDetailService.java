@@ -1,7 +1,9 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
-import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
+import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 产品中心 --> 汇计划 --> 资金计划 -> 复投详情
@@ -11,15 +13,17 @@ public interface HjhReInvestDetailService {
 
     /**
      * 列表总数
-     * @param request
+     * @param data
+     * @param planNid
      * @return
      */
-    Integer countHjhReInvestDetailTotal(HjhReInvestDetailRequest request);
+    Integer countHjhReInvestDetailTotal(String data, String planNid);
 
     /**
      * 列表
-     * @param request
+     * @param data
+     * @param planNid
      * @return
      */
-    HjhReInvestDetailResponse hjhReInvestDetailList(HjhReInvestDetailRequest request);
+    List<HjhReInvestDetailVO> hjhReInvestDetailList(String data, String planNid);
 }

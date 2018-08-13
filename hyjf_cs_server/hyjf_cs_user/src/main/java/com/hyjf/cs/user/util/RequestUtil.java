@@ -2,6 +2,9 @@ package com.hyjf.cs.user.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 
@@ -22,6 +25,10 @@ public class RequestUtil{
      * @return
      */
     public Integer getRequestUserId(HttpServletRequest request){
+        String userId=request.getHeader("userId");
+        if(StringUtils.isBlank(userId)){
+            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
+        }
         return Integer.valueOf(request.getHeader("userId"));
     }
     
