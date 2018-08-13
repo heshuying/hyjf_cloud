@@ -11,6 +11,10 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
  * @version BatchCreditEndService, v0.1 2018/7/10 19:23
  */
 public interface BatchCreditEndService extends BaseTradeService {
+    /**
+     * 批次结束债权
+     * @return
+     */
     Boolean batchCreditEnd();
 
     /**
