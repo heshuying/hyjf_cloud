@@ -1697,7 +1697,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
 		MspApplytResponse mspApplytResponse = restTemplate
-				.postForEntity("http://AM-USER/am-user/mspapply/applyInfo" ,mspApplytRequest,
+				.postForEntity("http://AM-USER/am-user/mspapply/applyAction" ,mspApplytRequest,
 						MspApplytResponse.class)
 				.getBody();
 		if (mspApplytResponse != null) {

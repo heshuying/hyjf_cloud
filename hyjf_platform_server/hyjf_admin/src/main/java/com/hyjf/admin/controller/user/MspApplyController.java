@@ -318,12 +318,9 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "共享", notes = "共享")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult<MspApplytResponseBean> applyInfo(HttpServletRequest request,
-			@RequestBody MspApplytRequestBean mspApplytRequestBean) {
-		MspApplytRequest aprlr = new MspApplytRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(mspApplytRequestBean, aprlr);
-		aprlr.setAdminId(this.getUser(request).getId());
-		MspApplytResponse prs = mspApplyService.applyInfo(aprlr);
+			@RequestBody MspApplytRequest mspApplytRequestBean) {
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
+		MspApplytResponse prs = mspApplyService.applyInfo(mspApplytRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -344,12 +341,9 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "安融共享", notes = "安融共享")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult shareUser(HttpServletRequest request,
-			@RequestBody MspApplytRequestBean mspApplytRequestBean) {
-		MspApplytRequest aprlr = new MspApplytRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(mspApplytRequestBean, aprlr);
-		aprlr.setAdminId(this.getUser(request).getId());
-		MspApplytResponse prs = mspApplyService.shareUser(aprlr);
+			@RequestBody MspApplytRequest mspApplytRequestBean) {
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
+		MspApplytResponse prs = mspApplyService.shareUser(mspApplytRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -371,7 +365,7 @@ public class MspApplyController extends BaseController {
 	 */
 	@ResponseBody
 	@PostMapping("/downloadFile")
-	@ApiOperation(value = "安融共享", notes = "安融共享")
+	@ApiOperation(value = "安融下載", notes = "安融下載")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<MspApplytResponseBean> download(HttpServletRequest request,
 			@RequestBody MspApplytRequestBean mspApplytRequestBean) {

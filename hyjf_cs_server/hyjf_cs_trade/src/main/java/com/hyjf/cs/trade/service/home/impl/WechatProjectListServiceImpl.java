@@ -1162,7 +1162,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
             }
-            wechatHomeProjectListCustomize.setAccountWait(df.format(new com.ibm.icu.math.BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
+            wechatHomeProjectListCustomize.setAccountWait(df.format(new BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
         }
 
         // 字段为null时，转为""
