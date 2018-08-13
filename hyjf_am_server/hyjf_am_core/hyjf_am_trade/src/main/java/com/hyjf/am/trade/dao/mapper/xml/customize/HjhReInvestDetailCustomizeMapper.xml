@@ -15,7 +15,7 @@
         <result column="borrow_style_name" property="borrowStyle" jdbcType="VARCHAR" />
         <result column="invest_type" property="investType" jdbcType="VARCHAR" />
         <result column="count_interest_time" property="countInterestTime" jdbcType="VARCHAR" />
-        <result column="add_time" property="addTime" jdbcType="VARCHAR" />
+        <!--<result column="add_time" property="addTime" jdbcType="VARCHAR" />-->
     </resultMap>
 
     <sql id="Where_Clause">
@@ -24,8 +24,11 @@
             <if test="planNid != null and planNid != ''">
                 AND ha.plan_nid = #{planNid }
             </if>
-            <if test="date != null and date != ''">
-                AND	FROM_UNIXTIME( bt.addtime, '%Y-%m-%d' ) = #{date }
+            <if test="date != null ">
+                AND  bt.create_time <![CDATA[ >= ]]> #{date}
+            </if>
+            <if test="datee != null">
+                AND  bt.create_time <![CDATA[ <= ]]> #{datee}
             </if>
             <if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
                 AND bt.accede_order_id = #{accedeOrderIdSrch }
@@ -64,14 +67,14 @@
         bt.invest_type,
         CASE WHEN ha.count_interest_time <![CDATA[<>]]> 0 AND ha.count_interest_time IS NOT NULL THEN FROM_UNIXTIME( ha.count_interest_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS count_interest_time,
         CASE WHEN bt.create_time <![CDATA[<>]]> 0 AND bt.create_time IS NOT NULL THEN bt.create_time ELSE '' END AS add_time
---         CASE WHEN bt.addtime <![CDATA[<>]]> 0 AND bt.addtime IS NOT NULL THEN FROM_UNIXTIME( bt.addtime, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time
+        --         CASE WHEN bt.addtime <![CDATA[<>]]> 0 AND bt.addtime IS NOT NULL THEN FROM_UNIXTIME( bt.addtime, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time
         FROM
         ht_borrow_tender bt
         LEFT JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id
         LEFT JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
---         LEFT JOIN ht_users hu ON hu.user_id = bt.user_id
---         LEFT JOIN ht_users hur ON hu.referrer = hur.user_id
---         LEFT JOIN ht_users_info hui ON hui.user_id = bt.user_id
+        --         LEFT JOIN ht_users hu ON hu.user_id = bt.user_id
+        --         LEFT JOIN ht_users hur ON hu.referrer = hur.user_id
+        --         LEFT JOIN ht_users_info hui ON hui.user_id = bt.user_id
         LEFT JOIN ht_borrow hb ON hb.borrow_nid = bt.borrow_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
         LEFT JOIN ht_r_user hu ON hu.user_id = bt.user_id
@@ -81,5 +84,35 @@
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
+    </select>
+
+    <select id="queryReInvestDetailCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderExample">
+        SELECT
+        count(*) AS recordTotal
+        FROM
+        ht_borrow_tender bt
+        LEFT JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id
+        LEFT JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+--         LEFT JOIN huiyingdai_users hu ON hu.user_id = bt.user_id
+--         LEFT JOIN huiyingdai_users hur ON hu.referrer = hur.user_id
+--         LEFT JOIN huiyingdai_users_info hui ON hui.user_id = bt.user_id
+        LEFT JOIN ht_borrow hb ON hb.borrow_nid = bt.borrow_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
+        <include refid="Where_Clause" />
+    </select>
+
+    <select id="queryReInvestDetailTotal" resultType="java.lang.String" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowTenderExample">
+        SELECT
+        SUM(bt.account) as totalQty
+        FROM
+        huiyingdai_borrow_tender bt
+        LEFT JOIN hyjf_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id
+        LEFT JOIN hyjf_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+        LEFT JOIN huiyingdai_users hu ON hu.user_id = bt.user_id
+        LEFT JOIN huiyingdai_users hur ON hu.referrer = hur.user_id
+        LEFT JOIN huiyingdai_users_info hui ON hui.user_id = bt.user_id
+        LEFT JOIN huiyingdai_borrow hb ON hb.borrow_nid = bt.borrow_nid
+        LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = hb.borrow_style
+        <include refid="Where_Clause" />
     </select>
 </mapper>
