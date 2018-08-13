@@ -119,7 +119,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		if (count > 0) {
 			map.put("success",true);
 		}else {
-			map.put("msg", "保存失败");
+			map.put("success",false);
 		}
 		return map;
 	}
