@@ -40,6 +40,8 @@ public class AppProjectInvestListCustomize  implements Serializable {
 	 */
 	private Integer client;
 
+	private String clientName;
+
 	public Integer getClient() {
 		return client;
 	}
@@ -82,6 +84,13 @@ public class AppProjectInvestListCustomize  implements Serializable {
 	}
 
 
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
 }
 
 	

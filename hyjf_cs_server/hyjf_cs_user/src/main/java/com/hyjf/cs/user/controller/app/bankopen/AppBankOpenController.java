@@ -17,6 +17,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,9 +49,9 @@ public class AppBankOpenController extends BaseUserController {
     @ApiOperation(value = "app端获取开户信息", notes = "获取开户信息")
     @PostMapping(value = "/userInfo")
     @ResponseBody
-    public AppResult<String> userInfo(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+    public Map userInfo(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         logger.info("app openAccount userInfo start, userId is :{}", userId);
-        AppResult<String> result = new AppResult<String>();
+        Map<String,String> result = new HashedMap();
         UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
             logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
@@ -58,11 +59,12 @@ public class AppBankOpenController extends BaseUserController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setData(mobile);
+            result.put("phone",mobile);
+            result.put("status","1");
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_USER_INFO_GET.getMsg());
+            result.put("status","0");
+            result.put("statusDesc","操作失败");
         }
         return result;
     }

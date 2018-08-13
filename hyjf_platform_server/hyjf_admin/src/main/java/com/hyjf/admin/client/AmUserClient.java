@@ -31,12 +31,7 @@ import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
-import com.hyjf.am.resquest.admin.BankAccountManageRequest;
-import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
-import com.hyjf.am.resquest.admin.VipDetailListRequest;
-import com.hyjf.am.resquest.admin.VipManageRequest;
-import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
 import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
@@ -63,6 +58,7 @@ import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -986,4 +982,27 @@ public interface AmUserClient {
 
     UtmResponse getChannelNameByUserId(Integer userId);
 
+    /**
+     * 查询手机号同步数量  用于前端分页显示
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int countBankOpenAccountUser(MobileSynchronizeRequest request);
+
+    /**
+     * 查询手机号同步列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<MobileSynchronizeCustomizeVO> selectBankOpenAccountUserList(MobileSynchronizeRequest request);
+
+    /**
+     * 同步手机号
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    boolean updateMobile(MobileSynchronizeRequest request);
 }

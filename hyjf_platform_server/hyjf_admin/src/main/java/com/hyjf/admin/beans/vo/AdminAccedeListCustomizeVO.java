@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -200,6 +201,30 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	
 	@ApiModelProperty(value = "退出时间")
 	private Integer quitTime;
+	
+	@ApiModelProperty(value = "自动投标进度")
+	private String autoBidProgress;
+	
+	@ApiModelProperty(value = "冻结金额")
+	private String frostAccount;
+	
+	@ApiModelProperty(value = "公允价值")
+	private String fairValue;
+	
+	@ApiModelProperty(value = "实际年化收益率")
+	private String actualApr;
+	
+	@ApiModelProperty(value = "投资笔数")
+	private String investCounts;
+	
+	@ApiModelProperty(value = "匹配期")
+	private String matchDates;
+	
+	@ApiModelProperty(value = "计算用加入金额")
+	private BigDecimal jAccedeAccount;
+	
+	@ApiModelProperty(value = "计算用已投资金额")
+	private BigDecimal jalreadyInvest;
 	
 	public String getPlanOrderId() {
 		return planOrderId;
@@ -689,4 +714,67 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 		this.quitTime = quitTime;
 	}
 
+	public String getAutoBidProgress() {
+		return autoBidProgress;
+	}
+
+	public void setAutoBidProgress(String autoBidProgress) {
+		this.autoBidProgress = autoBidProgress;
+	}
+
+	public String getFrostAccount() {
+		return frostAccount;
+	}
+
+	public void setFrostAccount(String frostAccount) {
+		this.frostAccount = frostAccount;
+	}
+
+	public String getFairValue() {
+		return fairValue;
+	}
+
+	public void setFairValue(String fairValue) {
+		this.fairValue = fairValue;
+	}
+
+	public String getActualApr() {
+		return actualApr;
+	}
+
+	public void setActualApr(String actualApr) {
+		this.actualApr = actualApr;
+	}
+
+	public String getInvestCounts() {
+		return investCounts;
+	}
+
+	public void setInvestCounts(String investCounts) {
+		this.investCounts = investCounts;
+	}
+
+	public String getMatchDates() {
+		return matchDates;
+	}
+
+	public void setMatchDates(String matchDates) {
+		this.matchDates = matchDates;
+	}
+
+	public BigDecimal getjAccedeAccount() {
+		return jAccedeAccount;
+	}
+
+	public void setjAccedeAccount(BigDecimal jAccedeAccount) {
+		this.jAccedeAccount = jAccedeAccount;
+	}
+
+	public BigDecimal getJalreadyInvest() {
+		return jalreadyInvest;
+	}
+
+	public void setJalreadyInvest(BigDecimal jalreadyInvest) {
+		this.jalreadyInvest = jalreadyInvest;
+	}
 }

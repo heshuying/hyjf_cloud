@@ -1,21 +1,8 @@
 package com.hyjf.zuul.filter;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.hyjf.am.vo.user.WebViewUserVO;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.GatewayApiConfigVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bean.AccessToken;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -26,6 +13,17 @@ import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.SignValue;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -57,7 +55,7 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private static final String VERSION = "version";
 	private static final String SIGN = "sign";
-	private static final String TOEKN = "token";
+	private static final String TOKEN = "token";
 	private static final String KEY = "key";
 	private static final String INITKEY = "initKey";
 	/** （0:pc 1:Android 2:IOS 3:微信） */
@@ -188,7 +186,7 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
 		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
-		ctx.addZuulRequestHeader(TOEKN, signValue.getToken());
+		ctx.addZuulRequestHeader(TOKEN, signValue.getToken());
 		ctx.addZuulRequestHeader(SIGN, sign);
 		ctx.addZuulRequestHeader(KEY, signValue.getKey());
 		ctx.addZuulRequestHeader(INITKEY, signValue.getInitKey());
@@ -290,9 +288,9 @@ public class AccessFilter extends ZuulFilter {
 			String channel) {
 		String token = "";
 		if (APP_CHANNEL.equals(channel)) {
-			token = request.getParameter(TOEKN);
+			token = request.getParameter(TOKEN);
 		} else {
-			token = request.getHeader(TOEKN);
+			token = request.getHeader(TOKEN);
 		}
 
 		if (StringUtils.isBlank(token) && isNecessary) {

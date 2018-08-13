@@ -1772,6 +1772,22 @@ public interface AmTradeClient {
     public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 总条数
+     * @param data
+     * @param planNid
+     * @return
+     */
+    Integer getHjhReInvestDetailListCount(String data, String planNid);
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param data
+     * @param planNid
+     * @return
+     * @Author : huanghui
+     */
+    List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37
