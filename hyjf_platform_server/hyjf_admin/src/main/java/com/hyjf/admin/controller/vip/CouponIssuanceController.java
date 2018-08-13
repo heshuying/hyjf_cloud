@@ -42,7 +42,7 @@ import javax.validation.Valid;
  */
 @Api(value = "优惠券发行",tags = "优惠券发行" )
 @RestController
-@RequestMapping("/coupon/issuance")
+@RequestMapping("/hyjf-admin/coupon/issuance")
 public class CouponIssuanceController extends BaseController {
     /**
      * 权限名称
