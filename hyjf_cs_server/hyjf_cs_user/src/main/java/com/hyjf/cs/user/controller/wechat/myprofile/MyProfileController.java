@@ -58,9 +58,6 @@ public class MyProfileController extends BaseUserController {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
         Integer userId = requestUtil.getRequestUserId(request);
-        if(userId==null){
-            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
         //用户真实姓名
         String trueUserName = myProfileService.getUserCallName(userId);
 

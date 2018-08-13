@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Api(value = "优惠券列表接口", tags = "优惠券列表")
 @RestController
-@RequestMapping("/coupon/checkList")
+@RequestMapping("/hyjf-admin/coupon/checklist")
 public class CouponCheckController extends BaseController {
     /**
      * 权限名称
