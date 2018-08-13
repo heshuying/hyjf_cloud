@@ -20,6 +20,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.PasswordRequest;
@@ -45,7 +46,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/password")
-public class WebPassWordController {
+public class WebPassWordController extends BaseUserController{
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
 
     @Autowired
@@ -366,12 +367,13 @@ public class WebPassWordController {
      * @Author
      */
     @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
-    @RequestMapping("/searchFiledMess")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
-        String retMsg = passWordService.getFiledMess(logOrdId);
+        String retMsg = passWordService.getFiledMess(param.get("logOrdId"));
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);

@@ -36,6 +36,7 @@ import java.util.Map;
  */
 @Api(tags = "Web端-散标投资")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/tender/borrow")
 public class BorrowTenderController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(BorrowTenderController.class);

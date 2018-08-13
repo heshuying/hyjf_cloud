@@ -166,11 +166,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         Integer paymentAuthStatus = 0;
         //  用户角色
         Integer roleId = 0;
-        // 判断用户是否登录
-        WebViewUser webViewUser = null;
 
-        if (webViewUser != null) {
-            userId = webViewUser.getUserId();
+        if (userId != null) {
             isLogined = true;
             UserVO users = amUserClient.findUserById(userId);
             if (users != null) {
@@ -1984,7 +1981,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         mapParam.put("pageSize", size);
         mapParam.put("borrowNid", borrowNid);
         this.createProjectUndertakePage(info, mapParam);
-        return null;
+        return info;
     }
 
 

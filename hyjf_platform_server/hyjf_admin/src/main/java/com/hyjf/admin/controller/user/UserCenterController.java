@@ -12,8 +12,10 @@ import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserManagerResponse;
@@ -62,6 +64,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public  AdminResult<UserManagerInitResponseBean>  userManagerInit() {
         UserManagerInitResponseBean userManagerInitResponseBean =userCenterService.initUserManaget();
         return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
@@ -102,7 +105,7 @@ public class UserCenterController extends BaseController {
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
         userDetailInfoResponseBean.setUserManagerDetailVO(userManagerDetailCustomizeVO);
-        //todo vip user 表里没有vip字段
+        // vip user 表里没有vip字段
 
         // 获取测评信息
         UserEvalationResultVO userEvalationResultInfo = userCenterService.getUserEvalationResult(userId);
@@ -196,8 +199,8 @@ public class UserCenterController extends BaseController {
         userRequest.setLogingUserId(adminSystemVO.getId());
         //1代表更新成功，0为失败
         int intUpdFlg = userCenterService.updataUserInfo(userRequest);
-        //todo 修改手机号后 发送更新客户信息
-
+        // 修改手机号后 发送更新客户信息
+        userCenterService.sendCAChangeMQ(userRequest);
         if (intUpdFlg<=0) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -309,7 +312,8 @@ public class UserCenterController extends BaseController {
         if(updFlg<=0){
             return new AdminResult<>(FAIL, "修改用户身份证失败");
         }
-        //todo 修改身份证号后 发送更新客户信息MQ
+        //修改身份证号后 发送更新客户信息MQ
+        userCenterService.sendCAChangeMQ(adminUserRecommendRequest);
         return new AdminResult<>();
     }
 
@@ -433,8 +437,8 @@ public class UserCenterController extends BaseController {
                         } else if (celLength == 10) {// 身份证号
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getIdcard(),7));
                         } else if (celLength == 11) {// 户籍所在地
-                            // todo 户籍所在地表 hyjf_idcard_area 不存在
-//                            cell.setCellValue(usersService.getAreaByIdCard(user.getIdcard()));
+                            // 户籍所在地表 hyjf_idcard_area 不存在
+                            cell.setCellValue(userCenterService.getAreaByIdCard(user.getIdcard()));
                         } else if (celLength == 12) {// 手机号码
                             cell.setCellValue(AsteriskProcessUtil.getAsteriskedValue(user.getMobile(),3));
                         } else if (celLength == 13) {// 会员类型

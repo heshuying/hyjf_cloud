@@ -104,12 +104,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         boolean isAutoInves = false;
         boolean isInvested = false;
         boolean isPaymentAuth = false;
-        // 判断用户是否登录
-        WebViewUser webViewUser = null;
-		if (userId != null) {
-			webViewUser = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUser.class);
-		}
-         
+
+
         if (userId != null && userId > 0) {
             UserVO users = amUserClient.findUserById(userId);
             if (users != null) {
@@ -763,6 +759,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
+        result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
+        result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
     }
 
@@ -1166,7 +1164,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
             }
-            wechatHomeProjectListCustomize.setAccountWait(df.format(new com.ibm.icu.math.BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
+            wechatHomeProjectListCustomize.setAccountWait(df.format(new BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
         }
 
         // 字段为null时，转为""

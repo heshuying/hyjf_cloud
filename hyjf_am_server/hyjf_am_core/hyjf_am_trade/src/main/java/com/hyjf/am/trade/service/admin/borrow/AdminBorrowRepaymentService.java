@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.admin.borrow;
 
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
+import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize;
@@ -16,11 +17,10 @@ import java.util.List;
  * @version AdminBorrowRepaymentService, v0.1 2018/7/4 14:33
  */
 public interface AdminBorrowRepaymentService {
-    int countBorrowRecover(BorrowRecoverRequest request);
+    int countBorrowRecover(BorrowRepaymentRequest request);
 
-    List<AdminBorrowRepaymentCustomize> selectBorrowRecoverList(BorrowRecoverRequest request);
 
-    AdminBorrowRepaymentCustomize sumBorrowRecoverList(BorrowRecoverRequest request);
+    AdminBorrowRepaymentCustomize sumBorrowRecoverList(BorrowRepaymentRequest request);
 
     List<AdminBorrowRepaymentPlanCustomize> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
 
@@ -31,4 +31,6 @@ public interface AdminBorrowRepaymentService {
     BorrowRepayPlan getBorrowRepayPlanDelay(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
 
     int updateBorrowRepayDelayDays(String borrowNid, String delayDays) throws ParseException;
+
+    List<AdminBorrowRepaymentCustomize> selectBorrowRepaymentList(BorrowRepaymentRequest request);
 }

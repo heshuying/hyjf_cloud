@@ -1,4 +1,4 @@
-package com.hyjf.admin.beans;
+package com.hyjf.admin.excel;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -15,9 +15,6 @@ public class ReadExcel extends XxlsAbstract {
     public static final String OFFICE_EXCEL_2010_POSTFIX = "xlsx";
 
     public static final String POINT = ".";
-    public static final String LIB_PATH = "E:\\date\\";
-    public static final String STUDENT_INFO_XLS_PATH = LIB_PATH + "excel-41万简历记录" + POINT + OFFICE_EXCEL_2010_POSTFIX;
-    public static final String STUDENT_INFO_XLSX_PATH = LIB_PATH + "60000" + POINT + OFFICE_EXCEL_2010_POSTFIX;
     public static final String NOT_EXCEL_FILE = " : Not the Excel file!";
     public static final String PROCESSING = "Processing...";
 
@@ -27,30 +24,12 @@ public class ReadExcel extends XxlsAbstract {
     private Map<String, Integer> rowIndexMap;
     public static final String EMPTY = "";
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("startTime:" + new Date());
-            Map<String, String> nameMaps = new HashMap<>();
-            nameMaps.put("couponCode", "couponCode");
-            nameMaps.put("activityId", "activityId");
-            nameMaps.put("userName", "userName");
-            ReadExcel readExcel = new ReadExcel();
-//			List<JSONObject> list = readExcel.readExcel("E:/excel/汇计划加息8.xlsx",nameMaps);
-            List<JSONObject> list = readExcel.readExcel("E:/excel/汇计划加息9.xls", nameMaps);
-
-            System.out.println("size:" + list.size());
-            System.out.println("endTime:" + new Date());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Excel解析开始
      *
-     * @param filePath
-     * @param nameMaps
-     * @return
+     * @param filePath 文件路径
+     * @param nameMaps Excel表头
+     * @return List<JSONObject>
      * @throws IOException
      */
     public List<JSONObject> readExcel(String filePath, Map<String, String> nameMaps) throws IOException {
@@ -82,7 +61,7 @@ public class ReadExcel extends XxlsAbstract {
     /**
      * get postfix of the path
      *
-     * @param path
+     * @param path 文件路径
      * @return
      */
     public static String getPostfix(String path) {
@@ -99,9 +78,8 @@ public class ReadExcel extends XxlsAbstract {
     /**
      * Read the Excel 2010
      *
-     * @param path       the path of the excel file
-     * @param path
-     * @param resumeList
+     * @param path       文件路径
+     * @param resumeList 返回结果list
      * @return
      * @throws IOException
      */
@@ -159,26 +137,6 @@ public class ReadExcel extends XxlsAbstract {
      */
     public JSONObject setFieldValue(String key, String cellValue, JSONObject jsonObject) {
         if (cellValue != null && !"".equals(cellValue.trim())) {
-            if (cellValue.contains("E") && key.equals("base.mobile")) {
-                BigDecimal bd = new BigDecimal(cellValue);
-                cellValue = bd.toPlainString();
-            }
-            try {
-                if (key.contains("year")) {
-                    if (cellValue.contains("岁")) {
-                        cellValue = cellValue.substring(0, cellValue.indexOf("岁"));
-                    }
-                    key = "base.born";
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Calendar rightNow = Calendar.getInstance();
-                    rightNow.setTime(new Date());
-                    rightNow.add(Calendar.YEAR, -Integer.parseInt(cellValue));//日期减year年
-                    Date dt1 = rightNow.getTime();
-                    cellValue = sdf.format(dt1);
-                }
-            } catch (Exception e) {
-                key = null;
-            }
             if (key != null) {
                 try {
                     if (key.indexOf("[") > 0 && key.indexOf("[") < key.indexOf(".")) {

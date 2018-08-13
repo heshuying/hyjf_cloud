@@ -14,8 +14,6 @@ import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
@@ -289,6 +287,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 	 * @param request
 	 * @return
 	 */
+	@Override
 	public ProtocolTemplateCommonVO deleteProtocolTemplate(AdminProtocolRequest request){
 		ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
 		//根据协议的id查询协议

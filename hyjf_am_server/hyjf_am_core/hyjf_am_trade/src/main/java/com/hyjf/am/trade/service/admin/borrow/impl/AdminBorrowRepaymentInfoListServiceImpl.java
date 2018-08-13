@@ -16,12 +16,14 @@ import java.util.List;
 public class AdminBorrowRepaymentInfoListServiceImpl extends BaseServiceImpl implements AdminBorrowRepaymentInfoListService {
     @Override
     public int countBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request) {
-        return this.borrowRepaymentInfoListCustomizeMapper.selectBorrowRepaymentInfoListList(request);
+        return this.borrowRepaymentInfoListCustomizeMapper.countBorrowRepaymentInfoList(request);
+
+
     }
 
     @Override
     public List<AdminBorrowRepaymentInfoListCustomize> selectBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request) {
-        return this.borrowRepaymentInfoListCustomizeMapper.countBorrowRepaymentInfoList(request);
+        return this.borrowRepaymentInfoListCustomizeMapper.selectBorrowRepaymentInfoListList(request);
     }
 
     @Override

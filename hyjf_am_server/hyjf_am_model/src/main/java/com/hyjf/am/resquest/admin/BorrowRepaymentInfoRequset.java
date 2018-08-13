@@ -78,8 +78,25 @@ public class BorrowRepaymentInfoRequset extends BasePage {
      */
     private  int serchFlag = 0;
 
+    private  String instCodeSrch ;
 
+    private String borrowUserName;// 借款人用户名
 
+    private String recoverUserName;// 投资人用户名
+    private String status;// 还款状态
+    /**
+     * 计划加入订单号 检索条件
+     */
+    private String accedeOrderIdSrch;
+    /**
+     * 应还日期 检索条件
+     */
+    private String recoverTimeStartSrch;
+    /**
+     * 应还日期 检索条件
+     */
+    private String recoverTimeEndSrch;
+    private String nid;
     public String getBorrowNidSrch() {
         return borrowNidSrch;
     }
@@ -214,5 +231,69 @@ public class BorrowRepaymentInfoRequset extends BasePage {
 
     public void setSerchFlag(int serchFlag) {
         this.serchFlag = serchFlag;
+    }
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public String getInstCodeSrch() {
+        return instCodeSrch;
+    }
+
+    public void setInstCodeSrch(String instCodeSrch) {
+        this.instCodeSrch = instCodeSrch;
+    }
+
+    public String getBorrowUserName() {
+        return borrowUserName;
+    }
+
+    public void setBorrowUserName(String borrowUserName) {
+        this.borrowUserName = borrowUserName;
+    }
+
+    public String getRecoverUserName() {
+        return recoverUserName;
+    }
+
+    public void setRecoverUserName(String recoverUserName) {
+        this.recoverUserName = recoverUserName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRecoverTimeStartSrch() {
+        return recoverTimeStartSrch;
+    }
+
+    public void setRecoverTimeStartSrch(String recoverTimeStartSrch) {
+        this.recoverTimeStartSrch = recoverTimeStartSrch;
+    }
+
+    public String getRecoverTimeEndSrch() {
+        return recoverTimeEndSrch;
+    }
+
+    public void setRecoverTimeEndSrch(String recoverTimeEndSrch) {
+        this.recoverTimeEndSrch = recoverTimeEndSrch;
+    }
+
+    public String getAccedeOrderIdSrch() {
+        return accedeOrderIdSrch;
+    }
+
+    public void setAccedeOrderIdSrch(String accedeOrderIdSrch) {
+        this.accedeOrderIdSrch = accedeOrderIdSrch;
     }
 }
