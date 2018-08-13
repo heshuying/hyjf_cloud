@@ -3527,6 +3527,34 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 总数
+     * @param data
+     * @param planNid
+     * @return
+     */
+    @Override
+    public Integer getHjhReInvestDetailListCount(String data, String planNid) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestCount/" + data + "/"+ planNid, Integer.class).getBody();
+    }
+
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param data
+     * @param planNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid) {
+        HjhReInvestDetailResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestInfo/" + data + "/"+ planNid, HjhReInvestDetailResponse.class).getBody();
+
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     @Override
     public AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest) {
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList", adminRequest, AdminBorrowFlowResponse.class)
@@ -5126,5 +5154,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+	@Override
+	public BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form) {
+        String url = "http://AM-TRADE/am-trade/borrow/selectBorrowStyleList";
+        BorrowCustomizeResponse response = restTemplate.postForEntity(url,form,BorrowCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+	}
 
 }

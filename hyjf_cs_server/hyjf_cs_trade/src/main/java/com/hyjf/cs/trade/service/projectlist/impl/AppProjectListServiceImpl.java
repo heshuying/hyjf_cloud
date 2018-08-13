@@ -1981,7 +1981,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         mapParam.put("pageSize", size);
         mapParam.put("borrowNid", borrowNid);
         this.createProjectUndertakePage(info, mapParam);
-        return null;
+        return info;
     }
 
 

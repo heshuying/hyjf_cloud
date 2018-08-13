@@ -1,8 +1,8 @@
 spring:
   application:
     name: CONFIG-SERVER
-  profiles:
-    active: native
+#  profiles:
+#    active: native
   cloud:
     config:
       server:

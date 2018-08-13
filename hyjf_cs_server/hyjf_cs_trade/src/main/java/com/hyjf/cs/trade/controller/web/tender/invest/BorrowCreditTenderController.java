@@ -29,6 +29,7 @@ import java.util.Map;
  */
 @Api(tags = "web端散标债转投资")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/tender/credit")
 public class BorrowCreditTenderController extends BaseTradeController {
 

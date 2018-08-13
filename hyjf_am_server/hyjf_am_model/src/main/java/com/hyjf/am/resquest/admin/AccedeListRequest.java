@@ -69,9 +69,14 @@ public class AccedeListRequest extends BasePage implements Serializable{
 	private List<AccedeListCustomizeVO> recordList;
 	
 	/**
-	 * 列表数据
+	 * 匹配期查询
 	 */
-	/*private List<BorrowInvestCustomize> recordLists;*/
+	private String matchDatesSrch;
+	
+	/**
+	 * 投资笔数查询
+	 */
+	private String investCountsSrch;
 
 	/**
 	 * 翻页机能用的隐藏变量
@@ -235,5 +240,21 @@ public class AccedeListRequest extends BasePage implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getMatchDatesSrch() {
+		return matchDatesSrch;
+	}
+
+	public void setMatchDatesSrch(String matchDatesSrch) {
+		this.matchDatesSrch = matchDatesSrch;
+	}
+
+	public String getInvestCountsSrch() {
+		return investCountsSrch;
+	}
+
+	public void setInvestCountsSrch(String investCountsSrch) {
+		this.investCountsSrch = investCountsSrch;
 	}
 }

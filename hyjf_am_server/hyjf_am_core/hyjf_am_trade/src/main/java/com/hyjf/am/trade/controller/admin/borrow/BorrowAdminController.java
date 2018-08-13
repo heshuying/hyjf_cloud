@@ -104,7 +104,7 @@ public class BorrowAdminController  {
 		Long count = this.borrowService.countBorrow(corrowCommonCustomize);
 		mcr.setRecordTotal(count.intValue());
 		if (count != null && count > 0) {
-			Paginator paginator = new Paginator(form.getCurrPage(),form.getPageSize(), Integer.valueOf(String.valueOf(count)));
+			Paginator paginator = new Paginator(form.getCurrPage(), Integer.valueOf(String.valueOf(count)),form.getPageSize());
 			corrowCommonCustomize.setLimitStart(paginator.getOffset());
 			corrowCommonCustomize.setLimitEnd(paginator.getLimit());
 			List<BorrowCustomizeVO> recordList = this.borrowService.selectBorrowList(corrowCommonCustomize);

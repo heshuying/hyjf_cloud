@@ -58,9 +58,6 @@ public class MyProfileController extends BaseUserController {
         WeChatResult result = new WeChatResult();
         MyProfileVO myProfileVO = new MyProfileVO();
         Integer userId = requestUtil.getRequestUserId(request);
-        if(userId==null){
-            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
         //用户真实姓名
         String trueUserName = myProfileService.getUserCallName(userId);
 
@@ -106,7 +103,7 @@ public class MyProfileController extends BaseUserController {
         Integer userId = requestUtil.getRequestUserId(request);
         if (userId==null){
             resultBean.setStatus(BaseResult.FAIL);
-            resultBean.setStatusDesc("不存在的用户!");
+            resultBean.setStatusDesc("用户未登录!");
             return resultBean;
         }
         String resultStr = myProfileService.getUserCouponsData("0", 1, 100, userId, "");

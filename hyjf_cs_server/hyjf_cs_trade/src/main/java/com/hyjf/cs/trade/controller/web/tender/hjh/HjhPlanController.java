@@ -33,6 +33,7 @@ import java.util.Map;
  */
 @Api(tags = "Web端-加入计划")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/tender/hjh")
 public class HjhPlanController extends BaseTradeController {
     private static final Logger logger = LoggerFactory.getLogger(HjhPlanController.class);

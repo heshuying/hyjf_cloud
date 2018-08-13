@@ -45,11 +45,15 @@ import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
+import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonNameAccountVO;
@@ -61,6 +65,7 @@ import com.hyjf.am.vo.user.AdminPreRegistListVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -1657,4 +1662,275 @@ public class BorrowCommonController extends BaseController {
 			return String.valueOf(hssfCell.getStringCellValue());
 		}
 	}
+	/**
+     * 迁移到详细画面
+     *
+     * @param request
+     * @param form
+     * @return
+     */
+	@ApiOperation(value = "查询借款列表")
+	@PostMapping("/selectBorrowStyleList")
+    public AdminResult<BorrowCustomizeResponse>  init(@RequestBody @Valid BorrowBeanRequest form) {
+		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
+		if(bcr==null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(bcr)) {
+			return new AdminResult<>(FAIL, bcr.getMessage());
+
+		}
+		bcr.setSt(CacheUtil.getParamNameMap("ASSET_STATUS"));
+		return new AdminResult<BorrowCustomizeResponse>(bcr);
+    }
+	/**
+	 * 导出功能
+	 * 
+	 * @param request
+	 * @param modelAndView
+	 * @param form
+	 */
+	@ApiOperation(value = "下载借款列表")
+	@PostMapping("/downloadBorrowStyleList")
+	public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody @Valid BorrowBeanRequest form) throws Exception {
+		// 表格sheet名称
+		String sheetName = "借款列表";
+
+		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
+		List<BorrowCommonCustomizeVO> resultList =null;//=bcr.getResultList();
+
+		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+
+
+		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "用户名", "项目申请人", "项目标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化利率", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
+				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" ,"添加标的人员","标的备案人员","垫付机构用户名"};
+		// UPD BY LIUSHOUYI 合规检查 END
+		
+		// 声明一个工作薄
+		HSSFWorkbook workbook = new HSSFWorkbook();
+
+		// 生成一个表格
+		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+
+		if (resultList != null && resultList.size() > 0) {
+
+			int sheetCount = 1;
+			int rowNum = 0;
+
+			for (int i = 0; i < resultList.size(); i++) {
+				rowNum++;
+				if (i != 0 && i % 60000 == 0) {
+					sheetCount++;
+					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+					rowNum = 1;
+				}
+
+				// 新建一行
+				Row row = sheet.createRow(rowNum);
+				// 循环数据
+				for (int celLength = 0; celLength < titles.length; celLength++) {
+					BorrowCommonCustomizeVO borrowCommonCustomize = resultList.get(i);
+
+					Cell cell = row.createCell(celLength);
+					if (celLength == 0) {
+						cell.setCellValue(i + 1);
+					}
+					// 借款编号
+					else if (celLength == 1) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowNid());
+					}
+					// 计划编号
+					else if (celLength == 2) {
+						cell.setCellValue(borrowCommonCustomize.getPlanNid());
+					}
+					// 借款人ID
+					else if (celLength == 3) {
+						cell.setCellValue(borrowCommonCustomize.getUserId());
+					}
+					// 借款人用户名
+					else if (celLength == 4) {
+						cell.setCellValue(borrowCommonCustomize.getUsername());
+					}
+					// 项目申请人
+					else if (celLength == 5) {
+						cell.setCellValue(borrowCommonCustomize.getApplicant());
+					}
+					// 项目标题
+					else if (celLength == 6) {
+						cell.setCellValue(StringUtils.isEmpty(borrowCommonCustomize.getProjectName()) ? ""
+								: borrowCommonCustomize.getProjectName());
+					}
+					// 项目类型
+					else if (celLength == 7) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowProjectTypeName());
+					}
+					// 资产来源
+					else if (celLength == 8) {
+						cell.setCellValue(borrowCommonCustomize.getInstName());
+					}
+					// 借款金额（元）
+					else if (celLength == 9) {
+						cell.setCellValue(borrowCommonCustomize.getAccount());
+					}
+					// 借款期限
+					else if (celLength == 10) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowPeriod());
+					}
+					// 年化收益
+					else if (celLength == 11) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowApr());
+					}
+					// 还款方式
+					else if (celLength == 12) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowStyle());
+					}
+					// 融资服务费率
+					else if (celLength == 13) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowServiceScale());
+					}
+					// 账户管理费率
+					else if (celLength == 14) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowManagerScale());
+					}
+					// 合作机构
+					else if (celLength == 15) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowMeasuresInstit());
+					}
+					// 已借到金额
+					else if (celLength == 16) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowAccountYes());
+					}
+					// 剩余金额
+					else if (celLength == 17) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowAccountWait());
+					}
+					// 借款进度
+					else if (celLength == 18) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowAccountScale());
+					}
+					// 项目状态
+					else if (celLength == 19) {
+						cell.setCellValue(borrowCommonCustomize.getStatus());
+					}
+					// 添加时间
+					else if (celLength == 20) {
+						cell.setCellValue(borrowCommonCustomize.getAddtime());
+					}
+					// 初审通过时间
+					else if (celLength == 21) {
+						cell.setCellValue(borrowCommonCustomize.getVerifyTime());
+					}
+					// 定时发标时间
+					else if (celLength == 22) {
+						cell.setCellValue(borrowCommonCustomize.getOntime());
+					}
+					// 预约开始时间
+					else if (celLength == 23) {
+						if (!"待发布".equals(borrowCommonCustomize.getStatus())) {
+							cell.setCellValue(borrowCommonCustomize.getBookingBeginTime());
+						}
+					}
+					// 预约截止时间
+					else if (celLength == 24) {
+						if (!"待发布".equals(borrowCommonCustomize.getStatus())) {
+							cell.setCellValue(borrowCommonCustomize.getBookingEndTime());
+						}
+					}
+					// 实际发标时间
+					else if (celLength == 25) {
+						cell.setCellValue(borrowCommonCustomize.getVerifyTime());
+					}
+					// 投稿截止时间
+					else if (celLength == 26) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowValidTime());
+					}
+					// 满标时间
+					else if (celLength == 27) {
+						cell.setCellValue(borrowCommonCustomize.getBorrowFullTime());
+					}
+					// 复审通过时间
+					else if (celLength == 28) {
+						cell.setCellValue(borrowCommonCustomize.getReverifyTime());
+					}
+					// 放款完成时间
+					else if (celLength == 29) {
+						cell.setCellValue(borrowCommonCustomize.getRecoverLastTime());
+					}
+					// 最后还款日
+					else if (celLength == 30) {
+						cell.setCellValue(borrowCommonCustomize.getRepayLastTime());
+					}
+					// 备案时间
+					else if (celLength == 31) {
+						cell.setCellValue(borrowCommonCustomize.getRegistTime());
+					}
+					// 复审人员
+					else if (celLength == 32) {
+						cell.setCellValue(borrowCommonCustomize.getReverifyUserName());
+					}
+					// 所在地区
+                    else if (celLength == 33) {
+                        cell.setCellValue(borrowCommonCustomize.getLocation());
+                    }
+					// 借款人姓名
+                    else if (celLength == 34) {
+                        cell.setCellValue(borrowCommonCustomize.getBorrowerName());
+                    }
+					// 属性
+                    else if (celLength == 35) {
+                        cell.setCellValue(borrowCommonCustomize.getAttribute());
+                    }
+					// 是否受托支付
+                    else if (celLength == 36) {
+                    	if ("0".equals(borrowCommonCustomize.getEntrustedFlg())) {
+                    		cell.setCellValue("否");
+                    	} else {
+                    		cell.setCellValue("是");
+                    	}
+                    }
+					// 收款人用户名
+                    else if (celLength == 37) {
+                    	if ("0".equals(borrowCommonCustomize.getEntrustedFlg())) {
+                    		cell.setCellValue("未开通受托支付");
+                    	} else {
+                    		cell.setCellValue(borrowCommonCustomize.getEntrustedUsername());
+                    	}
+                    }
+//					// 账户操作人
+//                    else if (celLength == 38) {
+//                        cell.setCellValue(borrowCommonCustomize.getCreateUserName());
+//                    }
+//                    // 备案人员 
+//                    else if (celLength == 39) {
+//                        cell.setCellValue(borrowCommonCustomize.getRegistUserName());
+//                    }
+					// 标签名称 
+                    else if (celLength == 38) {
+                        cell.setCellValue(borrowCommonCustomize.getLabelNameSrch());
+                    }
+					// 备注 
+                    else if (celLength == 39) {
+                        cell.setCellValue(borrowCommonCustomize.getRemark());
+                    }
+					// 添加标的人员 
+                    else if (celLength == 40) {
+                        cell.setCellValue(borrowCommonCustomize.getCreatename());
+                    }
+					// 标的备案人员 
+                    else if (celLength == 41) {
+                        cell.setCellValue(borrowCommonCustomize.getRegistname());
+                    }
+					// 垫付机构用户名
+					else if (celLength == 42) {
+						cell.setCellValue(borrowCommonCustomize.getRepayOrgUserName());
+					}
+                    // UPD BY LIUSHOUYI 合规检查 END
+				}
+			}
+		}
+		// 导出
+		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+
+	}
+
 }

@@ -3,7 +3,7 @@ spring:
     name: CS-MESSAGE
   cloud:
     config:
-      uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
+      uri: http://micoserver:2222/
       profile: test
       name: cs-message
   boot:

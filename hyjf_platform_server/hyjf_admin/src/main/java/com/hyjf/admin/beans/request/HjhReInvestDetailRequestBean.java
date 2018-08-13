@@ -1,27 +1,37 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 
-import java.io.Serializable;
-
 /**
- * 产品中心 --> 汇计划 --> 资金计划 -> 复投详情
  * @Author : huanghui
  */
-public class HjhReInvestDetailRequest implements Serializable {
+public class HjhReInvestDetailRequestBean extends BasePage {
 
+
+    //标的planNid
+    private String planNid;
     //时间
     private String date;
     //计划投资订单号（检索）
     private String accedeOrderIdSrch;
     //用户名（检索）
     private String userNameSrch;
+    //借款编号（检索）
+    private String borrowNidSrch;
     //借款期限(锁定期)（检索）
     private String lockPeriodSrch;
     //投资方式（检索）
     private String investTypeSrch;
     //还款方式（检索）
     private String borrowStyleSrch;
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
 
     public String getDate() {
         return date;
@@ -47,6 +57,14 @@ public class HjhReInvestDetailRequest implements Serializable {
         this.userNameSrch = userNameSrch;
     }
 
+    public String getBorrowNidSrch() {
+        return borrowNidSrch;
+    }
+
+    public void setBorrowNidSrch(String borrowNidSrch) {
+        this.borrowNidSrch = borrowNidSrch;
+    }
+
     public String getLockPeriodSrch() {
         return lockPeriodSrch;
     }
@@ -70,5 +88,4 @@ public class HjhReInvestDetailRequest implements Serializable {
     public void setBorrowStyleSrch(String borrowStyleSrch) {
         this.borrowStyleSrch = borrowStyleSrch;
     }
-
 }

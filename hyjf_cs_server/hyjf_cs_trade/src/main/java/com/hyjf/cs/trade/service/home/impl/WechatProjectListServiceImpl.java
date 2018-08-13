@@ -759,6 +759,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
+        result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
+        result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
     }
 
@@ -1162,7 +1164,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
             }
-            wechatHomeProjectListCustomize.setAccountWait(df.format(new com.ibm.icu.math.BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
+            wechatHomeProjectListCustomize.setAccountWait(df.format(new BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
         }
 
         // 字段为null时，转为""
