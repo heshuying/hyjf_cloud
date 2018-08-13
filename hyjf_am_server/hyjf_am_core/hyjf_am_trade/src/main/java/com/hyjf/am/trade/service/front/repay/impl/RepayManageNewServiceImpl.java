@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
-import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageNewService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -16,7 +14,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
