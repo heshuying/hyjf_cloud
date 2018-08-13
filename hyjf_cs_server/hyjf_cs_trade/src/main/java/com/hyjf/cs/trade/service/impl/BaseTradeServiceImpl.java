@@ -47,7 +47,6 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     AccountClient accountClient;
 
     /**
-     * @param token
      * @Description 根据token查询user
      * @Author sunss
      * @Version v0.1

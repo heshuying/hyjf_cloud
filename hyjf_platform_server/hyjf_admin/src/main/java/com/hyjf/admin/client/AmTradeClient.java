@@ -2455,5 +2455,6 @@ public interface AmTradeClient {
      * @return
      */
     CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode);
+    BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form);
 }
 
