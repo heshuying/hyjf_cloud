@@ -1,29 +1,422 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
+import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.trade.service.front.repay.RepayManageNewService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.common.validator.ValidatorCheckUtil;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author hesy
  * @version RepayManageNewServiceImpl, v0.1 2018/8/7 10:38
  */
+@Service
 public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayManageNewService {
+
+    public static JedisPool pool = RedisUtils.getPool();
+
+    /**
+     * 普通借款人管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectUserRepayFeeWaitTotal(Integer userId){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        return repayManageCustomizeMapper.selectUserRepayFeeWaitTotal(params);
+    }
+
+    /**
+     * 担保机构管理费总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgRepayFeeWaitTotal(Integer userId){
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userId", userId);
+        return repayManageCustomizeMapper.selectOrgRepayFeeWaitTotal(params);
+    }
+
+    /**
+     * 担保机构总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectRepayOrgRepaywait(Integer userId){
+        return repayManageCustomizeMapper.selectRepayOrgRepaywait(userId);
+    }
+
+    /**
+     * 检索还款列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectRepayList(param);
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                BigDecimal accountFee = BigDecimal.ZERO;
+                BigDecimal borrowTotal = BigDecimal.ZERO;
+                BigDecimal realAccountTotal = BigDecimal.ZERO;
+                BigDecimal allAccountFee = BigDecimal.ZERO;
+                BigDecimal serviceFee = BigDecimal.ZERO;
+                if (StringUtils.isNotBlank(list.get(i).getRepayFee())) {
+                    accountFee = new BigDecimal(list.get(i).getRepayFee());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getBorrowTotal())) {
+                    borrowTotal = new BigDecimal(list.get(i).getBorrowTotal());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getRealAccountYes())) {
+                    realAccountTotal = new BigDecimal(list.get(i).getRealAccountYes());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getAllRepayFee())) {
+                    allAccountFee = new BigDecimal(list.get(i).getAllRepayFee());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
+                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
+                }
+                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount());
+                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
+                list.get(i).setYesAccount(yesAccount.toString());
+                list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
+                list.get(i).setRealAccountYes(realAccountTotal.add(accountFee).toString());
+            }
+        }
+
+        for(RepayListCustomizeVO record : list){
+            List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
+            for(BorrowTender tender : tenderList){
+                List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
+                if(agreementList !=null && !agreementList.isEmpty()){
+                    TenderAgreement tenderAgreement = agreementList.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if(fddStatus.equals(3)){
+                        record.setFddStatus(1);
+                    }else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
+                }else {
+                    //下载老版本协议
+                    record.setFddStatus(1);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * 获取borrowTender列表
+     */
+    private List<BorrowTender> getBorrowTender(String borrowNid){
+        BorrowTenderExample example = new BorrowTenderExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<BorrowTender> resultList = borrowTenderMapper.selectByExample(example);
+
+        return resultList;
+    }
+
+    /**
+     * 获取投资协议
+     */
+    private List<TenderAgreement> getTenderAgreement(String tenderNid) {
+        TenderAgreementExample example = new TenderAgreementExample();
+        example.createCriteria().andTenderNidEqualTo(tenderNid);
+        List<TenderAgreement> tenderAgreements= this.tenderAgreementMapper.selectByExample(example);
+
+        if(tenderAgreements != null && tenderAgreements.size()>0){
+            return tenderAgreements;
+        }
+        return null;
+    }
+
+    /**
+     * 统计还款列表总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer selectRepayCount(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        Integer count = repayManageCustomizeMapper.selectRepayCount(param);
+
+        return count;
+    }
+
+    /**
+     * 检索垫付机构待垫付列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                BigDecimal accountFee = BigDecimal.ZERO;
+                BigDecimal borrowTotal = BigDecimal.ZERO;
+                BigDecimal realAccountTotal = BigDecimal.ZERO;
+                BigDecimal allAccountFee = BigDecimal.ZERO;
+                BigDecimal serviceFee = BigDecimal.ZERO;
+                if (StringUtils.isNotBlank(list.get(i).getRepayFee())) {
+                    accountFee = new BigDecimal(list.get(i).getRepayFee());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getBorrowTotal())) {
+                    borrowTotal = new BigDecimal(list.get(i).getBorrowTotal());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getRealAccountYes())) {
+                    realAccountTotal = new BigDecimal(list.get(i).getRealAccountYes());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getAllRepayFee())) {
+                    allAccountFee = new BigDecimal(list.get(i).getAllRepayFee());
+                }
+                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
+                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
+                }
+                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
+                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
+                list.get(i).setYesAccount(yesAccount.toString());
+                list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
+                list.get(i).setRealAccountYes(realAccountTotal.add(accountFee).toString());
+            }
+        }
+
+        for(RepayListCustomizeVO record : list){
+            List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
+            for(BorrowTender tender : tenderList){
+                List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
+                if(agreementList !=null && !agreementList.isEmpty()){
+                    TenderAgreement tenderAgreement = agreementList.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if(fddStatus.equals(3)){
+                        record.setFddStatus(1);
+                    }else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
+                }else {
+                    //下载老版本协议
+                    record.setFddStatus(1);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * 统计垫付机构待垫付总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer selectOrgRepayCount(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        Integer count = repayManageCustomizeMapper.selectOrgRepayCount(param);
+
+        return count;
+    }
+
+    /**
+     * 检索垫付机构已垫付列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
+
+        for(RepayListCustomizeVO record : list){
+            List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
+            for(BorrowTender tender : tenderList){
+                List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
+                if(agreementList !=null && !agreementList.isEmpty()){
+                    TenderAgreement tenderAgreement = agreementList.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if(fddStatus.equals(3)){
+                        record.setFddStatus(1);
+                    }else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
+                }else {
+                    //下载老版本协议
+                    record.setFddStatus(1);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * 统计垫付机构总的已垫付记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer selectOrgRepayedCount(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        if (requestBean.getLimitStart() != null) {
+            param.put("limitStart", requestBean.getLimitStart());
+        }else {
+            param.put("limitStart", -1);
+        }
+        if (requestBean.getLimitEnd() != null) {
+            param.put("limitEnd", requestBean.getLimitEnd());
+        }else {
+            param.put("limitEnd", -1);
+        }
+
+        Integer count = repayManageCustomizeMapper.selectOrgRepayCount(param);
+
+        return count;
+    }
+
     /**
      * 查询用户的还款详情
      */
@@ -37,8 +430,8 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
 
         if (borrow != null && borrowInfo != null) {
-            if(!checkBorrowUser(form.getRoleId(), userId, borrow, borrowInfo)){
-               return null;
+            if (!checkBorrowUser(form.getRoleId(), userId, borrow, borrowInfo)) {
+                return null;
             }
             // userId 改成借款人的userid！！！
             userId = borrow.getUserId().toString();
@@ -68,7 +461,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
             if (borrowApicrons != null && borrowApicrons.size() > 0) {
                 BorrowApicron borrowApicron = borrowApicrons.get(0);
                 Integer allrepay = borrowApicron.getIsAllrepay();
-                if(allrepay != null && allrepay.intValue() ==1) {
+                if (allrepay != null && allrepay.intValue() == 1) {
                     form.setAllRepay("1");
                     isAllRepay = true;
                 }
@@ -81,7 +474,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
             if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
 
                 RepayBean repay = this.calculateRepay(Integer.parseInt(userId), borrow);
-                setRecoverDetail(form, userId, borrow,repay);
+                setRecoverDetail(form, userId, borrow, repay);
             } else {
                 RepayBean repayByTerm = new RepayBean();
                 BorrowRepay borrowRepay = this.searchRepay(Integer.parseInt(userId), borrow.getBorrowNid());
@@ -91,34 +484,34 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 // 计算当前还款期数
                 int period = borrow.getBorrowPeriod() - borrowRepay.getRepayPeriod() + 1;
                 BorrowRepayPlan borrowRepayPlan = null;
-                if(period ==1) {
+                if (period == 1) {
                     borrowRepayPlan = this.searchRepayPlan(Integer.parseInt(userId), borrowNid, period);
                     Date repayTimeStart = borrowRepayPlan.getCreateTime();
-                }else {
-                    borrowRepayPlan = this.searchRepayPlan(Integer.parseInt(userId), borrowNid, period-1);
+                } else {
+                    borrowRepayPlan = this.searchRepayPlan(Integer.parseInt(userId), borrowNid, period - 1);
                     Integer repayTimeStart = borrowRepayPlan.getRepayTime();
 
                     int curPlanStart = GetDate.getIntYYMMDD(repayTimeStart);
                     int nowDate = GetDate.getIntYYMMDD(new Date());
                     // 超前还款的情况，只能一次性还款
-                    if(nowDate <= curPlanStart) {
+                    if (nowDate <= curPlanStart) {
                         form.setOnlyAllRepay("1");
                         isAllRepay = true;
                     }
                 }
 
                 // 计算分期的项目还款信息
-                if(isAllRepay) {
+                if (isAllRepay) {
                     // 全部结清的
 //        			RepayBean repayByTerm = this.searchRepayPlanTotal(Integer.parseInt(userId), borrow);
                     // 分期 当前期 计算，如果当前期没有还款，则先算当前期，后算所有剩下的期数
                     this.calculateRepayPlanAll(repayByTerm, borrow, period);
-                    setRecoverPlanAllDetail(form, isAllRepay, userId,borrow,repayByTerm);
+                    setRecoverPlanAllDetail(form, isAllRepay, userId, borrow, repayByTerm);
 
-                }else {
+                } else {
                     // 当期还款
                     this.calculateRepayPlan(repayByTerm, borrow, period);
-                    setRecoverPlanDetail(form, isAllRepay, userId,borrow,repayByTerm);
+                    setRecoverPlanDetail(form, isAllRepay, userId, borrow, repayByTerm);
                 }
             }
             return form;
@@ -131,12 +524,12 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
     private boolean checkBorrowUser(String roleId, String userId, Borrow borrow, BorrowInfo borrowInfo) {
         if (StringUtils.isNotEmpty(roleId) && "3".equals(roleId)) {
             // 垫付机构
-            if(!borrowInfo.getRepayOrgUserId().equals(Integer.parseInt(userId))){
+            if (!borrowInfo.getRepayOrgUserId().equals(Integer.parseInt(userId))) {
                 return false;
             }
         } else {
             // 普通借款人
-            if(!borrow.getUserId().equals(Integer.parseInt(userId))){
+            if (!borrow.getUserId().equals(Integer.parseInt(userId))) {
                 return false;
             }
         }
@@ -225,7 +618,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                     // 计算用户实际还款总额
                     this.calculateRecoverTotal(repay, borrow, advanceDays);
                 }
-            }else if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+            } else if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
                 if (Integer.parseInt(repayAdvanceDay) <= advanceDays) {
                     // 计算用户提前还款总额
                     this.calculateRecoverTotalAdvance(repay, borrow, advanceDays);
@@ -305,13 +698,13 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 } else {
 
                     // 实际持有天数
-                    int acctualDays = GetDate.daysBetween(createTime,factRepayTime);
+                    int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
 
                     // 用户提前还款减少的利息
                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr(), acctualDays);
-                    if(acctualInterest.compareTo(userInterest) >=0) {
+                    if (acctualInterest.compareTo(userInterest) >= 0) {
                         userChargeInterest = BigDecimal.ZERO;
-                    }else {
+                    } else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
 
@@ -328,7 +721,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 }
                 userManageFee = borrowRecover.getRecoverFee();// 获取应还款管理费
                 if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                    if(Validator.isNull(borrowRecover.getAccedeOrderId())){
+                    if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                         // 直投项目债转还款
                         // 债转还款数据
                         List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, 1, 0);
@@ -372,13 +765,13 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                     }
                                 } else {
                                     // 实际持有天数
-                                    int acctualDays = GetDate.daysBetween(createTime,factRepayTime);
+                                    int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
 
                                     // 用户提前还款减少的利息
                                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr(), acctualDays);
-                                    if(acctualInterest.compareTo(assignInterest) >=0) {
+                                    if (acctualInterest.compareTo(assignInterest) >= 0) {
                                         assignChargeInterest = BigDecimal.ZERO;
-                                    }else {
+                                    } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
                                 }
@@ -408,9 +801,9 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         }
                         if (borrowRecover.getCreditStatus() != 2) {
                             // 实际持有天数
-                            int acctualDays = GetDate.daysBetween(createTime,factRepayTime);
+                            int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
 
-                            if(CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+                            if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
                                 // 用户提前还款减少的利息
                                 BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr(), acctualDays);
                                 if (acctualInterest.compareTo(userInterest) >= 0) {
@@ -427,7 +820,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                             repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
                         }
-                    }else{
+                    } else {
                         // 计划类还款
                         boolean overFlag = false;
                         // 债转还款数据
@@ -440,7 +833,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                             //判断当前期是否全部承接
-                            overFlag = isOverUndertake(borrowRecover,null,null,false,0);
+                            overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
                                 HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -468,13 +861,13 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                     }
                                 } else {
                                     // 实际持有天数
-                                    int acctualDays = GetDate.daysBetween(createTime,factRepayTime);
+                                    int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
 
                                     // 用户提前还款减少的利息
                                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr(), acctualDays);
-                                    if(acctualInterest.compareTo(assignInterest) >=0) {
+                                    if (acctualInterest.compareTo(assignInterest) >= 0) {
                                         assignChargeInterest = BigDecimal.ZERO;
-                                    }else {
+                                    } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
 
@@ -506,8 +899,8 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         if (overFlag) {
                             // 重新计算债转后出让人剩余金额的提前减息金额
                             // 实际持有天数
-                            int acctualDays = GetDate.daysBetween(createTime,factRepayTime);
-                            if(CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+                            int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
+                            if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
                                 // 用户提前还款减少的利息
                                 BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr(), acctualDays);
                                 if (acctualInterest.compareTo(userInterest) >= 0) {
@@ -560,12 +953,6 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
     /***
      * 查询相应的债转还款记录
-     *
-     * @param borrowNid
-     * @param tenderOrderId
-     * @param periodNow
-     * @param i
-     * @return
      */
     private List<CreditRepay> selectCreditRepay(String borrowNid, String tenderOrderId, Integer periodNow, int status) {
         CreditRepayExample example = new CreditRepayExample();
@@ -580,7 +967,8 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
     }
 
     /**
-     *  查询相应的债转还款记录
+     * 查询相应的债转还款记录
+     *
      * @param borrowNid
      * @param tenderOrderId
      * @param periodNow
@@ -611,10 +999,10 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 if (recoverPlanCapital.compareTo(creditSumCapital) > 0) {
                     return true;
                 }
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             if (borrowRecover.getRecoverCapitalOld().compareTo(borrowRecover.getCreditAmountOld()) > 0) {
                 return true;
             }
@@ -634,10 +1022,10 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 if (recoverPlanCapital.compareTo(creditSumCapital) > 0) {
                     return true;
                 }
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             if (borrowRecover.getRecoverCapital().compareTo(borrowRecover.getCreditAmount()) > 0) {
                 return true;
             }
@@ -655,10 +1043,10 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 if (recoverPlanCapital.compareTo(creditSumCapital) > 0) {
                     return true;
                 }
-            }else{
+            } else {
                 return true;
             }
-        }else{
+        } else {
             if (userRecoverPlan.getRecoverCapitalOld().compareTo(userRecoverPlan.getCreditAmountOld()) > 0) {
                 return true;
             }
@@ -721,7 +1109,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 repayRecoverBean.setCreditAmountOld(borrowRecover.getCreditAmount());
 
                 if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                    if(Validator.isNull(borrowRecover.getAccedeOrderId())){
+                    if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                         // 直投类项目还款
                         List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, 1, 0);
                         if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -800,7 +1188,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
                             repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                         }
-                    }else{
+                    } else {
                         // 计划类债转还款
                         List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
                         if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -812,7 +1200,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
                             BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
                             //判断当前期是否全部承接
-                            boolean overFlag = isOverUndertake(borrowRecover,null,null,false,0);
+                            boolean overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
                                 HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -958,7 +1346,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 repayRecoverBean.setCreditAmountOld(borrowRecover.getCreditAmount());
 
                 if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                    if(Validator.isNull(borrowRecover.getAccedeOrderId())){
+                    if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                         // 投资项目还款
                         List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, 1, 0);
                         if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -1015,7 +1403,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayInterest = repayInterest.add(userInterest);
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                         }
-                    }else{
+                    } else {
                         // 计划类还款
                         List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
                         if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -1025,7 +1413,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                             //判断当前期是否全部承接
-                            boolean overFlag = isOverUndertake(borrowRecover,null,null,false,0);
+                            boolean overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
                                 HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -1223,7 +1611,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                             BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
                             //判断当前期是否全部承接
-                            boolean overFlag = isOverUndertake(borrowRecover,null,null,false,0);
+                            boolean overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
                                 HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -1315,9 +1703,9 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
     }
 
     /**
-     *  设置一次性还款方式数据
+     * 设置一次性还款方式数据
      */
-    private void setRecoverDetail(ProjectBean form, String userId, Borrow borrow,RepayBean repay)
+    private void setRecoverDetail(ProjectBean form, String userId, Borrow borrow, RepayBean repay)
             throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
@@ -1333,7 +1721,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         form.setAdvanceStatus(String.valueOf(repay.getAdvanceStatus()));
         form.setChargeDays(repay.getChargeDays().toString());
         form.setChargeInterest(repay.getChargeInterest().toString());
-        if("0".equals(repay.getChargeInterest().toString())){
+        if ("0".equals(repay.getChargeInterest().toString())) {
             form.setChargeInterest("0.00");
         }
         form.setDelayDays(repay.getDelayDays().toString());
@@ -1349,7 +1737,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         userRepayBean.setRepayInterest(repay.getRepayInterest().toString());
         userRepayBean.setChargeDays(repay.getChargeDays().toString());
         userRepayBean.setChargeInterest(repay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-        if("0".equals(userRepayBean.getChargeInterest())){
+        if ("0".equals(userRepayBean.getChargeInterest())) {
             userRepayBean.setChargeInterest("0.00");
         }
         userRepayBean.setDelayDays(repay.getDelayDays().toString());
@@ -1379,7 +1767,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                         userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
                         userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                        if("0".equals(userRepayDetail.getChargeInterest())){
+                        if ("0".equals(userRepayDetail.getChargeInterest())) {
                             userRepayDetail.setChargeInterest("0.00");
                         }
                         userRepayDetail.setDelayDays(userRecover.getDelayDays().toString());
@@ -1416,7 +1804,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                         userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
                         userRepayDetail.setChargeInterest(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1")).toString());
-                        if("0".equals(userRepayDetail.getChargeInterest())){
+                        if ("0".equals(userRepayDetail.getChargeInterest())) {
                             userRepayDetail.setChargeInterest("0.00");
                         }
                         userRepayDetail.setDelayDays(userRecover.getDelayDays().toString());
@@ -1442,7 +1830,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                     }
                 }
 
-                boolean overFlag = isOverUndertake(userRecover,null,null,false,0);
+                boolean overFlag = isOverUndertake(userRecover, null, null, false, 0);
                 if (overFlag) {
                     ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
                     userRepayDetail.setRepayAccount(userRecover.getRecoverAccount().toString());
@@ -1450,7 +1838,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                     userRepayDetail.setRepayInterest(userRecover.getRecoverInterest().toString());
                     userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
                     userRepayDetail.setChargeInterest(userRecover.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                    if("0".equals(userRepayDetail.getChargeInterest())){
+                    if ("0".equals(userRepayDetail.getChargeInterest())) {
                         userRepayDetail.setChargeInterest("0.00");
                     }
                     userRepayDetail.setDelayDays(userRecover.getDelayDays().toString());
@@ -1511,13 +1899,13 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 if (period == borrowRepayPlan.getRepayPeriod()) {
 
                     // 当前期已经还款
-                    if(borrowRepayPlan.getRepayStatus() == 1) {
+                    if (borrowRepayPlan.getRepayStatus() == 1) {
 
                         BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
                         this.calculateRecoverPlan(repayPlanDetail, borrow);
                         borrowRepayPlanDeails.add(repayPlanDetail);
 
-                    }else {
+                    } else {
                         // 查看当前还款时间 是否 在当前期里头,如果超前则不算当期还款
 
                         Integer repayTimeStart = null;
@@ -1531,7 +1919,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         int nowDate = GetDate.getIntYYMMDD(new Date());
 
                         // 超期还
-                        if(i != 0 && nowDate <= curPlanStart) {
+                        if (i != 0 && nowDate <= curPlanStart) {
                             // 当前期也算的话，需要加上当前期
                             totalPeriod = borrow.getBorrowPeriod() - period + 1;
                             // 计算还款期的数据
@@ -1549,14 +1937,14 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
                             repayAccountAll = repayPlanDetail.getRepayAccountAll();
 
-                        }else {
+                        } else {
 
                             // 计算还款期的数据
                             BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
                             this.calculateRecoverPlan(repayPlanDetail, borrow, period, null);
                             borrowRepayPlanDeails.add(repayPlanDetail);
 
-                            if(repayPlanDetail.getAdvanceStatus() == 2 || repayPlanDetail.getAdvanceStatus() == 3) {
+                            if (repayPlanDetail.getAdvanceStatus() == 2 || repayPlanDetail.getAdvanceStatus() == 3) {
                                 throw new Exception("当期延期或者逾期，不能全部结清");
                             }
 
@@ -1579,7 +1967,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
                     }
 
-                } else if(borrowRepayPlan.getRepayPeriod() > period) {
+                } else if (borrowRepayPlan.getRepayPeriod() > period) {
 
                     // 计算还款期的数据
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
@@ -1617,7 +2005,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
     /**
      * 统计分期还款用户正常还款的总标
      */
-    private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, Borrow borrow,int totalPeriod) {
+    private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, Borrow borrow, int totalPeriod) {
 
         // 项目编号
         String borrowNid = borrow.getBorrowNid();
@@ -1634,7 +2022,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         // 还款期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
         // ====> 是否分期最后一期
-        boolean isLastPeriod = (borrowPeriod==repayPeriod?true:false);
+        boolean isLastPeriod = (borrowPeriod == repayPeriod ? true : false);
 
         List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
         List<BorrowRecoverPlan> borrowRecoverPlans = this.getBorrowRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
@@ -1649,11 +2037,11 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款利息
 
         if (borrowRecoverList == null || borrowRecoverList.size() <= 0) {
-            logger.error(borrow.getBorrowNid()+" 没有recover 数据");
+            logger.error(borrow.getBorrowNid() + " 没有recover 数据");
             return;
         }
         if (borrowRecoverPlans == null || borrowRecoverPlans.size() <= 0) {
-            logger.error(borrow.getBorrowNid()+"  还款期："+borrowRepayPlan.getRepayPeriod()+" 没有recoverPlan 数据");
+            logger.error(borrow.getBorrowNid() + "  还款期：" + borrowRepayPlan.getRepayPeriod() + " 没有recoverPlan 数据");
             return;
         }
 
@@ -1697,13 +2085,13 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
                     // ** 计算三天罚息
                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(recoverUserCapital, borrow.getBorrowApr(), 0);
-                    if(isLastPeriod) {
+                    if (isLastPeriod) {
                         acctualInterest = UnnormalRepayUtils.aheadLastRepayInterest(recoverUserCapital, borrow.getBorrowApr(), totalPeriod);
                     }
 
-                    if(acctualInterest.compareTo(userInterest) >=0) {
+                    if (acctualInterest.compareTo(userInterest) >= 0) {
                         userChargeInterest = BigDecimal.ZERO;
-                    }else {
+                    } else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
                     // 项目提前还款时，提前还款利息不得大于应还款利息
@@ -1713,7 +2101,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
                     // 如果发生债转
                     if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                        if (Validator.isNull(borrowRecover.getAccedeOrderId())){
+                        if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
 
                             List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, recoverNid, repayPeriod, 0);
 
@@ -1759,14 +2147,14 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                         }
 
                                     }
-                                    assignUserCapital =  creditTender.getAssignCapital().subtract(creditTender.getAssignRepayCapital());
+                                    assignUserCapital = creditTender.getAssignCapital().subtract(creditTender.getAssignRepayCapital());
                                     BigDecimal acctualAsignInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignUserCapital, borrow.getBorrowApr(), 0);
-                                    if(isLastPeriod) {
+                                    if (isLastPeriod) {
                                         acctualAsignInterest = UnnormalRepayUtils.aheadLastRepayInterest(assignUserCapital, borrow.getBorrowApr(), totalPeriod);
                                     }
-                                    if(acctualAsignInterest.compareTo(assignInterest) >=0) {
+                                    if (acctualAsignInterest.compareTo(assignInterest) >= 0) {
                                         assignChargeInterest = BigDecimal.ZERO;
-                                    }else {
+                                    } else {
                                         assignChargeInterest = assignInterest.subtract(acctualAsignInterest);
                                     }
                                     // 项目提前还款时，提前还款利息不得大于应还款利息
@@ -1802,12 +2190,12 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             if (borrowRecoverPlan.getCreditStatus() != 2) {
                                 //出让人剩余部分不再通过兜底进行计算，通过剩余本金进行计算
                                 BigDecimal acctualUserInterest = UnnormalRepayUtils.aheadEndRepayInterest(recoverUserCapital, borrow.getBorrowApr(), 0);
-                                if(isLastPeriod) {
+                                if (isLastPeriod) {
                                     acctualUserInterest = UnnormalRepayUtils.aheadLastRepayInterest(recoverUserCapital, borrow.getBorrowApr(), totalPeriod);
                                 }
-                                if(acctualUserInterest.compareTo(userInterest) >=0) {
+                                if (acctualUserInterest.compareTo(userInterest) >= 0) {
                                     userChargeInterest = BigDecimal.ZERO;
-                                }else {
+                                } else {
                                     userChargeInterest = userInterest.subtract(acctualUserInterest);
                                 }
                                 // 统计总额
@@ -1818,9 +2206,9 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                 repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                 repayChargeInterest = repayChargeInterest.add(userChargeInterest);
                             }
-                        }else{//计划还款
+                        } else {//计划还款
                             boolean overFlag = false;
-                            List<HjhDebtCreditRepay> creditRepayList =this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                            List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                             if (creditRepayList != null && creditRepayList.size() > 0) {
                                 List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                 BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -1835,7 +2223,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                     sumCreditAccount = sumCreditAccount.add(hjhDebtCreditRepayBean.getRepayAccount());
                                 }
                                 //判断当前期是否全部承接
-                                overFlag = isOverUndertake(borrowRecover,borrowRecoverPlan.getRecoverAccount(),sumCreditAccount,true,hjhFlag);
+                                overFlag = isOverUndertake(borrowRecover, borrowRecoverPlan.getRecoverAccount(), sumCreditAccount, true, hjhFlag);
                                 for (int k = 0; k < creditRepayList.size(); k++) {
                                     HjhDebtCreditRepay creditRepay = creditRepayList.get(k);
                                     HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -1870,14 +2258,14 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                     }
 
                                     // modify by cwyang 2018-5-23 计算金额取自剩余承接本金
-                                    BigDecimal assignUserCapital =  getAssignSurplusCapital(assignNid,recoverNid);
+                                    BigDecimal assignUserCapital = getAssignSurplusCapital(assignNid, recoverNid);
                                     BigDecimal acctualAsignInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignUserCapital, borrow.getBorrowApr(), 0);
-                                    if(isLastPeriod) {
+                                    if (isLastPeriod) {
                                         acctualAsignInterest = UnnormalRepayUtils.aheadLastRepayInterest(assignUserCapital, borrow.getBorrowApr(), totalPeriod);
                                     }
-                                    if(acctualAsignInterest.compareTo(assignInterest) >=0) {
+                                    if (acctualAsignInterest.compareTo(assignInterest) >= 0) {
                                         assignChargeInterest = BigDecimal.ZERO;
-                                    }else {
+                                    } else {
                                         assignChargeInterest = assignInterest.subtract(acctualAsignInterest);
                                     }
                                     // 项目提前还款时，提前还款利息不得大于应还款利息，需求变更
@@ -1911,12 +2299,12 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             if (overFlag) {
                                 //出让人剩余部分不再通过兜底进行计算，通过剩余本金进行计算
                                 BigDecimal acctualUserInterest = UnnormalRepayUtils.aheadEndRepayInterest(recoverUserCapital, borrow.getBorrowApr(), 0);
-                                if(isLastPeriod) {
+                                if (isLastPeriod) {
                                     acctualUserInterest = UnnormalRepayUtils.aheadLastRepayInterest(recoverUserCapital, borrow.getBorrowApr(), totalPeriod);
                                 }
-                                if(acctualUserInterest.compareTo(userInterest) >=0) {
+                                if (acctualUserInterest.compareTo(userInterest) >= 0) {
                                     userChargeInterest = BigDecimal.ZERO;
-                                }else {
+                                } else {
                                     userChargeInterest = userInterest.subtract(acctualUserInterest);
                                 }
                                 // 统计总额
@@ -1974,9 +2362,9 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
         criteria.andRepayStatusEqualTo(0);
         criteria.andDelFlagEqualTo(0);
         List<HjhDebtCreditRepay> repayList = this.hjhDebtCreditRepayMapper.selectByExample(example);
-        if(repayList != null && repayList.size() > 0){
+        if (repayList != null && repayList.size() > 0) {
             BigDecimal sumCapital = BigDecimal.ZERO;
-            for (HjhDebtCreditRepay info: repayList) {
+            for (HjhDebtCreditRepay info : repayList) {
                 sumCapital = sumCapital.add(info.getRepayCapital());
             }
             return sumCapital;
@@ -2108,7 +2496,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayRecoverPlanBean.setCreditAmountOld(borrowRecover.getCreditAmount());
 
                             if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                                if (Validator.isNull(borrowRecover.getAccedeOrderId())){
+                                if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                                     // 直投类项目债转还款
                                     List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, recoverNid, repayPeriod, 0);
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -2205,7 +2593,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                         repayDelayInterest = repayDelayInterest.add(userDelayInterest);
                                         repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);
                                     }
-                                }else{
+                                } else {
                                     // 计划类项目债转还款
                                     List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -2226,7 +2614,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                             sumCreditAccount = sumCreditAccount.add(hjhDebtCreditRepayBean.getRepayAccount());
                                         }
                                         //判断当前期是否全部承接
-                                        boolean overFlag = isOverUndertake(borrowRecover,borrowRecoverPlan.getRecoverAccount(),sumCreditAccount,true,hjhFlag);
+                                        boolean overFlag = isOverUndertake(borrowRecover, borrowRecoverPlan.getRecoverAccount(), sumCreditAccount, true, hjhFlag);
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             creditRepay = creditRepayList.get(k);
                                             creditRepayBean = new HjhDebtCreditRepayBean();
@@ -2418,7 +2806,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayRecoverPlanBean.setCreditAmountOld(borrowRecover.getCreditAmount());
 
                             if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                                if (Validator.isNull(borrowRecover.getAccedeOrderId())){
+                                if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                                     // 直投项目还款
                                     List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, recoverNid, repayPeriod, 0);
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -2499,7 +2887,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                         repayDelayInterest = repayDelayInterest.add(userDelayInterest);
                                     }
-                                }else{
+                                } else {
                                     // 计划类债转还款
                                     List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -2518,7 +2906,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                             sumCreditAccount = sumCreditAccount.add(hjhDebtCreditRepayBean.getRepayAccount());
                                         }
                                         //判断当前期是否全部承接
-                                        boolean overFlag = isOverUndertake(borrowRecover,borrowRecoverPlan.getRecoverAccount(),sumCreditAccount,true,hjhFlag);
+                                        boolean overFlag = isOverUndertake(borrowRecover, borrowRecoverPlan.getRecoverAccount(), sumCreditAccount, true, hjhFlag);
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             creditRepay = creditRepayList.get(k);
                                             creditRepayBean = new HjhDebtCreditRepayBean();
@@ -2684,7 +3072,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayRecoverPlanBean.setCreditAmountOld(borrowRecover.getCreditAmount());
                             // 如果发生债转
                             if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                                if (Validator.isNull(borrowRecover.getAccedeOrderId())){
+                                if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                                     List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, recoverNid, repayPeriod, 0);
 
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -2754,9 +3142,9 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                         repayInterest = repayInterest.add(userInterest);
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                     }
-                                }else{//计划还款
+                                } else {//计划还款
                                     boolean overFlag = false;
-                                    List<HjhDebtCreditRepay> creditRepayList =this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
+                                    List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
                                         List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
                                         BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -2770,7 +3158,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                             sumCreditAccount = sumCreditAccount.add(hjhDebtCreditRepayBean.getRepayAccount());
                                         }
                                         //判断当前期是否全部承接
-                                        overFlag = isOverUndertake(borrowRecover,borrowRecoverPlan.getRecoverAccount(),sumCreditAccount,true,hjhFlag);
+                                        overFlag = isOverUndertake(borrowRecover, borrowRecoverPlan.getRecoverAccount(), sumCreditAccount, true, hjhFlag);
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             HjhDebtCreditRepay creditRepay = creditRepayList.get(k);
                                             HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -2933,7 +3321,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             repayRecoverPlanBean.setCreditAmountOld(borrowRecover.getCreditAmount());
                             // 如果发生债转
                             if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                                if(Validator.isNull(borrowRecover.getAccedeOrderId())){
+                                if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                                     // 直投类项目债转还款
                                     List<CreditRepay> creditRepayList = this.selectCreditRepayList(borrowNid, recoverNid, repayPeriod);
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -3019,7 +3407,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                         repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                     }
-                                }else{
+                                } else {
                                     // 计划类项目债转还款
                                     List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
                                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -3038,7 +3426,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                                             sumCreditAccount = sumCreditAccount.add(hjhDebtCreditRepayBean.getRepayAccount());
                                         }
                                         //判断当前期是否全部承接
-                                        boolean overFlag = isOverUndertake(borrowRecover,borrowRecoverPlan.getRecoverAccount(),sumCreditAccount,true,hjhFlag);
+                                        boolean overFlag = isOverUndertake(borrowRecover, borrowRecoverPlan.getRecoverAccount(), sumCreditAccount, true, hjhFlag);
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             HjhDebtCreditRepay creditRepay = creditRepayList.get(k);
                                             HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
@@ -3172,6 +3560,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
     /**
      * 分期还款 全部结清 计算各期数据
+     *
      * @param form
      * @param isAllRepay
      * @param userId
@@ -3179,7 +3568,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
      * @param repayByTerm
      * @throws ParseException
      */
-    private void setRecoverPlanAllDetail(ProjectBean form, boolean isAllRepay, String userId,Borrow borrow,RepayBean repayByTerm) throws ParseException {
+    private void setRecoverPlanAllDetail(ProjectBean form, boolean isAllRepay, String userId, Borrow borrow, RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
         // 还款总期数
@@ -3224,7 +3613,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 userRepayBean.setRepayTime(GetDate.getDateMyTimeInMillis(userRepayPlan.getRepayTime()));
                 userRepayBean.setChargeDays(userRepayPlan.getChargeDays().toString());
                 userRepayBean.setChargeInterest(userRepayPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                if(userRepayPlan.getChargeInterest() == BigDecimal.ZERO){
+                if (userRepayPlan.getChargeInterest() == BigDecimal.ZERO) {
                     userRepayBean.setChargeInterest("0.00");
                 }
                 userRepayBean.setDelayDays(userRepayPlan.getDelayDays().toString());
@@ -3253,7 +3642,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                             userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                            if(creditRepay.getChargeInterest() == BigDecimal.ZERO){
+                            if (creditRepay.getChargeInterest() == BigDecimal.ZERO) {
                                 userRepayDetail.setChargeInterest("0.00");
                             }
                             userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
@@ -3292,7 +3681,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                             userRepayDetail.setChargeInterest(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1")).toString());
-                            if(creditRepay.getRepayAdvanceInterest().compareTo(BigDecimal.ZERO) == 0){
+                            if (creditRepay.getRepayAdvanceInterest().compareTo(BigDecimal.ZERO) == 0) {
                                 userRepayDetail.setChargeInterest("0.00");
                             }
                             userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
@@ -3318,10 +3707,10 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         }
                     }
 //		            BorrowRecover borrowRecover = getBorrowRecoverByPlanInfo(userRecoverPlan);
-                    boolean overFlag = isOverUndertake(userRecoverPlan,recoverAccount,sumAccount,true,hjhFlag);
+                    boolean overFlag = isOverUndertake(userRecoverPlan, recoverAccount, sumAccount, true, hjhFlag);
                     Integer recoverStatus = userRecoverPlan.getRecoverStatus();
-                    if(hjhFlag == 0){
-                        if(userRecoverPlan.getCreditStatus() == 2){
+                    if (hjhFlag == 0) {
+                        if (userRecoverPlan.getCreditStatus() == 2) {
                             overFlag = false;
                         }
                     }
@@ -3333,23 +3722,23 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                         if (recoverStatus == 1) {//已还款
                             userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
-                        }else{
+                        } else {
                             userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
                         }
-                        if("0".equals(userRepayDetail.getChargeInterest())){
+                        if ("0".equals(userRepayDetail.getChargeInterest())) {
                             userRepayDetail.setChargeInterest("0.00");
                         }
                         userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
                         if (recoverStatus == 1) {
                             userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterestOld().toString());
-                        }else{
+                        } else {
                             userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterest().toString());
                         }
                         userRepayDetail.setManageFee(userRecoverPlan.getRecoverFee().toString());
                         userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
                         if (recoverStatus == 1) {
                             userRepayDetail.setLateInterest(userRecoverPlan.getLateInterestOld().toString());
-                        }else{
+                        } else {
                             userRepayDetail.setLateInterest(userRecoverPlan.getLateInterest().toString());
                         }
                         userRepayDetail.setAdvanceStatus(userRecoverPlan.getAdvanceStatus().toString());
@@ -3457,6 +3846,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
 
     /**
      * 分期还款 计算各期数据
+     *
      * @param form
      * @param isAllRepay
      * @param userId
@@ -3464,7 +3854,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
      * @param repayByTerm
      * @throws ParseException
      */
-    private void setRecoverPlanDetail(ProjectBean form, boolean isAllRepay, String userId,Borrow borrow,RepayBean repayByTerm) throws ParseException {
+    private void setRecoverPlanDetail(ProjectBean form, boolean isAllRepay, String userId, Borrow borrow, RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
         // 还款总期数
@@ -3568,7 +3958,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
 
                             userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                            if(creditRepay.getChargeInterest().compareTo(BigDecimal.ZERO) == 0){
+                            if (creditRepay.getChargeInterest().compareTo(BigDecimal.ZERO) == 0) {
                                 userRepayDetail.setChargeInterest("0.00");
                             }
                             userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
@@ -3607,7 +3997,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                             userRepayDetail.setChargeInterest(String.valueOf(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1"))));
-                            if(creditRepay.getRepayAdvanceInterest() == BigDecimal.ZERO){
+                            if (creditRepay.getRepayAdvanceInterest() == BigDecimal.ZERO) {
                                 userRepayDetail.setChargeInterest("0.00");
                             }
                             userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
@@ -3632,11 +4022,11 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetails.add(userRepayDetail);
                         }
                     }
-                    boolean overFlag = isOverUndertake(userRecoverPlan,recoverAccount,sumAccount,true,hjhFlag);
+                    boolean overFlag = isOverUndertake(userRecoverPlan, recoverAccount, sumAccount, true, hjhFlag);
                     Integer recoverStatus = userRecoverPlan.getRecoverStatus();
-                    if(hjhFlag == 0){
-                        if(userRecoverPlan.getCreditStatus() == 2){
-                            overFlag =false;
+                    if (hjhFlag == 0) {
+                        if (userRecoverPlan.getCreditStatus() == 2) {
+                            overFlag = false;
                         }
                     }
                     if (overFlag) {
@@ -3647,20 +4037,20 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                         userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                         if (recoverStatus == 1) {//已还款
                             userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
-                        }else{
+                        } else {
                             userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
                         }
                         userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
                         if (recoverStatus == 1) {
                             userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterestOld().toString());
-                        }else{
+                        } else {
                             userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterest().toString());
                         }
                         userRepayDetail.setManageFee(userRecoverPlan.getRecoverFee().toString());
                         userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
                         if (recoverStatus == 1) {
                             userRepayDetail.setLateInterest(userRecoverPlan.getLateInterestOld().toString());
-                        }else{
+                        } else {
                             userRepayDetail.setLateInterest(userRecoverPlan.getLateInterest().toString());
                         }
                         userRepayDetail.setAdvanceStatus(userRecoverPlan.getAdvanceStatus().toString());
@@ -3735,4 +4125,938 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
             return null;
         }
     }
+
+
+
+    /**
+     * 用户还款
+     *
+     * @throws Exception
+     */
+    @Override
+    public boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay) throws Exception {
+
+        int time = GetDate.getNowTime10();
+        String borrowNid = repay.getBorrowNid();
+        String periodTotal = repay.getBorrowPeriod();
+        int remainRepayPeriod = repay.getRepayPeriod();
+        int period = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
+        int userId = repay.getUserId();// 借款人id
+        Integer repayUserId = repay.getRepayUserId();
+        RUser repayUser = this.getRUser(repayUserId);
+        String userName = repayUser.getUsername();
+        Integer roleId = repayUser.getRoleId();
+        BigDecimal repayTotal = repay.getRepayAccountAll();// 用户还款总额
+        String nid = "";
+        Boolean repayFlag = false;
+        int errorCount = 0;
+        Borrow borrow = this.getBorrow(borrowNid);
+        /** 标的基本数据 */
+        Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
+        String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
+        Integer projectType = borrow.getProjectType(); // 项目类型
+        boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
+        if (!isMonth) {
+            borrowPeriod = 1;
+        }
+        // 不分期还款
+        List<RepayRecoverBean> recoverList = repay.getRecoverList();
+        if (recoverList != null && recoverList.size() > 0) {
+            BankRepayFreezeLogExample freezeLogexample = new BankRepayFreezeLogExample();
+            freezeLogexample.createCriteria().andOrderIdEqualTo(bean.getOrderId());
+            List<BankRepayFreezeLog> log = this.bankRepayFreezeLogMapper.selectByExample(freezeLogexample);
+            if (log != null && log.size() > 0) {
+                for (int i = 0; i < log.size(); i++) {
+                    BankRepayFreezeLog record = log.get(i);
+                    record.setDelFlag(1);// 0 有效 1无效
+                    boolean repayFreezeLogFlag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record) > 0 ? true : false;
+                    if (!repayFreezeLogFlag) {
+                        throw new Exception("还款失败！" + "更新还款冻结日志失败" + "冻结订单号：" + bean.getOrderId());
+                    }
+                }
+            }
+            // 获取用户本次应还的金额
+            BorrowRepay borrowRepay = this.searchRepay(userId, borrowNid);
+            BorrowApicronExample example = new BorrowApicronExample();
+            BorrowApicronExample.Criteria crt = example.createCriteria();
+            crt.andBorrowNidEqualTo(borrowNid);
+            crt.andApiTypeEqualTo(1); // 放还款状态 0放款1还款
+            List<BorrowApicron> borrowApicrons = borrowApicronMapper.selectByExample(example);
+            // 如果未还款
+            if (borrowApicrons == null || (borrowApicrons != null && borrowApicrons.size() == 0)) {
+                boolean borrowRecoverFlag = true;
+                boolean creditFlag = true;
+                for (int i = 0; i < recoverList.size(); i++) {
+                    RepayRecoverBean repayRecover = recoverList.get(i);
+                    BorrowRecover borrowRecoverOld = borrowRecoverMapper.selectByPrimaryKey(repayRecover.getId());
+                    Integer tenderUserId = borrowRecoverOld.getUserId(); // 投资人信息
+                    BigDecimal manageFee = BigDecimal.ZERO;
+                    List<RepayCreditRepayBean> creditRepayList = repayRecover.getCreditRepayList();
+                    List<HjhDebtCreditRepayBean> hjhCreditRepayList = repayRecover.getHjhCreditRepayList();//汇计划债转还款列表的
+                    if (hjhCreditRepayList != null && hjhCreditRepayList.size() > 0) {
+                        for (int j = 0; j < hjhCreditRepayList.size(); j++) {
+                            HjhDebtCreditRepayBean hjhDebtCreditRepayBean = hjhCreditRepayList.get(j);
+                            String investOrderId = hjhDebtCreditRepayBean.getInvestOrderId();
+                            if (investOrderId.equals(repayRecover.getNid())) {
+                                HjhDebtCreditRepay oldCreditRepay = this.hjhDebtCreditRepayMapper.selectByPrimaryKey(hjhDebtCreditRepayBean.getId());
+                                oldCreditRepay.setAdvanceDays(hjhDebtCreditRepayBean.getAdvanceDays());
+                                oldCreditRepay.setRepayAdvanceInterest(hjhDebtCreditRepayBean.getRepayAdvanceInterest());
+                                oldCreditRepay.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
+                                oldCreditRepay.setRepayDelayInterest(hjhDebtCreditRepayBean.getRepayDelayInterest());
+                                oldCreditRepay.setLateDays(hjhDebtCreditRepayBean.getLateDays());
+                                oldCreditRepay.setRepayLateInterest(hjhDebtCreditRepayBean.getRepayLateInterest());
+                                oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
+                                oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
+                                int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
+                                if (hjhCreditRepayFlag > 0) {
+                                    manageFee = manageFee.add(hjhDebtCreditRepayBean.getManageFee());
+                                    borrowRecoverOld.setChargeDays(hjhDebtCreditRepayBean.getAdvanceDays());
+                                    borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(hjhDebtCreditRepayBean.getRepayAdvanceInterest()));
+                                    borrowRecoverOld.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
+                                    borrowRecoverOld.setDelayInterest(borrowRecoverOld.getDelayInterest().add(hjhDebtCreditRepayBean.getRepayDelayInterest()));
+                                    borrowRecoverOld.setLateDays(hjhDebtCreditRepayBean.getLateDays());
+                                    borrowRecoverOld.setLateInterest(borrowRecoverOld.getLateInterest().add(hjhDebtCreditRepayBean.getRepayLateInterest()));
+                                    boolean recoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecoverOld) > 0 ? true : false;
+                                    if (!recoverFlag) {
+                                        errorCount = errorCount + 1;
+                                    }
+                                    borrowRecoverFlag = borrowRecoverFlag && recoverFlag;
+                                } else {
+                                    errorCount = errorCount + 1;
+                                }
+                                creditFlag = creditFlag && hjhCreditRepayFlag > 0;
+                            }
+                        }
+                    }
+                    if (creditRepayList != null && creditRepayList.size() > 0) {
+                        for (int j = 0; j < creditRepayList.size(); j++) {
+                            RepayCreditRepayBean creditRepay = creditRepayList.get(j);
+                            String tenderOrderId = creditRepay.getCreditTenderNid();
+                            if (tenderOrderId.equals(repayRecover.getNid())) {
+                                CreditRepay creditRepayOld = creditRepayMapper.selectByPrimaryKey(creditRepay.getId());
+                                creditRepayOld.setChargeDays(creditRepay.getChargeDays());
+                                creditRepayOld.setChargeInterest(creditRepay.getChargeInterest());
+                                creditRepayOld.setDelayDays(creditRepay.getDelayDays());
+                                creditRepayOld.setDelayInterest(creditRepay.getDelayInterest());
+                                creditRepayOld.setLateDays(creditRepay.getLateDays());
+                                creditRepayOld.setLateInterest(creditRepay.getLateInterest());
+                                creditRepayOld.setManageFee(creditRepay.getManageFee());
+                                creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
+                                boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
+                                if (creditRepayFlag) {
+                                    manageFee = manageFee.add(creditRepay.getManageFee());
+                                    borrowRecoverOld.setChargeDays(creditRepay.getChargeDays());
+                                    borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(creditRepay.getChargeInterest()));
+                                    borrowRecoverOld.setDelayDays(creditRepay.getDelayDays());
+                                    borrowRecoverOld.setDelayInterest(borrowRecoverOld.getDelayInterest().add(creditRepay.getDelayInterest()));
+                                    borrowRecoverOld.setLateDays(creditRepay.getLateDays());
+                                    borrowRecoverOld.setLateInterest(borrowRecoverOld.getLateInterest().add(creditRepay.getLateInterest()));
+                                    boolean recoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecoverOld) > 0 ? true : false;
+                                    if (!recoverFlag) {
+                                        errorCount = errorCount + 1;
+                                    }
+                                    borrowRecoverFlag = borrowRecoverFlag && recoverFlag;
+                                } else {
+                                    errorCount = errorCount + 1;
+                                }
+                                creditFlag = creditFlag && creditRepayFlag;
+                            }
+                        }
+                    }
+                    if (borrowRecoverFlag && creditFlag) {
+                        RUser users = this.getRefUser(tenderUserId);
+                        if (users != null) {
+                            // 获取投资人属性
+                            // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+                            Integer attribute = null;
+                            // 获取投资用户的用户属性
+                            attribute = users.getAttribute();
+                            if (attribute != null) {
+                                // 投资人用户属性
+                                borrowRecoverOld.setTenderUserAttribute(attribute);
+                                // 如果是线上员工或线下员工，推荐人的userId和username不插
+                                if (attribute == 2 || attribute == 3) {
+                                    EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(tenderUserId);
+                                    if (employeeCustomize != null) {
+                                        borrowRecoverOld.setInviteRegionId(employeeCustomize.getRegionId());
+                                        borrowRecoverOld.setInviteRegionName(employeeCustomize.getRegionName());
+                                        borrowRecoverOld.setInviteBranchId(employeeCustomize.getBranchId());
+                                        borrowRecoverOld.setInviteBranchName(employeeCustomize.getBranchName());
+                                        borrowRecoverOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
+                                        borrowRecoverOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                    }
+                                } else if (attribute == 1) {
+                                    int refUserId = users.getSpreadsUserId();
+                                    // 查找用户推荐人
+                                    RUser userss = this.getRUser(refUserId);
+                                    if (userss != null) {
+                                        borrowRecoverOld.setInviteUserId(userss.getUserId());
+                                        borrowRecoverOld.setInviteUserName(userss.getUsername());
+                                        borrowRecoverOld.setInviteUserAttribute(userss.getAttribute());
+                                    }
+                                    // 查找用户推荐人部门
+                                    EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
+                                    if (employeeCustomize != null) {
+                                        borrowRecoverOld.setInviteRegionId(employeeCustomize.getRegionId());
+                                        borrowRecoverOld.setInviteRegionName(employeeCustomize.getRegionName());
+                                        borrowRecoverOld.setInviteBranchId(employeeCustomize.getBranchId());
+                                        borrowRecoverOld.setInviteBranchName(employeeCustomize.getBranchName());
+                                        borrowRecoverOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
+                                        borrowRecoverOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                    }
+                                } else if (attribute == 0) {
+                                    int refUserId = users.getSpreadsUserId();
+                                    // 查找推荐人
+                                    RUser userss = getRUser(refUserId);
+                                    if (userss != null) {
+                                        borrowRecoverOld.setInviteUserId(userss.getUserId());
+                                        borrowRecoverOld.setInviteUserName(userss.getUsername());
+                                        borrowRecoverOld.setInviteUserAttribute(userss.getAttribute());
+                                    }
+                                }
+                            }
+                        }
+                        manageFee = manageFee.add(repayRecover.getRecoverFee());
+                        borrowRecoverOld.setAdvanceStatus(repayRecover.getAdvanceStatus());
+                        borrowRecoverOld.setChargeDays(repayRecover.getChargeDays());
+                        borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(repayRecover.getChargeInterest()));
+                        borrowRecoverOld.setDelayDays(repayRecover.getDelayDays());
+                        borrowRecoverOld.setDelayInterest(borrowRecoverOld.getDelayInterest().add(repayRecover.getDelayInterest()));
+                        borrowRecoverOld.setLateDays(repayRecover.getLateDays());
+                        borrowRecoverOld.setLateInterest(borrowRecoverOld.getLateInterest().add(repayRecover.getLateInterest()));
+                        borrowRecoverOld.setRecoverFee(manageFee);
+                        boolean flag = borrowRecoverMapper.updateByPrimaryKey(borrowRecoverOld) > 0 ? true : false;
+                        if (!flag) {
+                            errorCount = errorCount + 1;
+                        }
+                        borrowRecoverFlag = borrowRecoverFlag && flag;
+                    }
+                }
+                if (borrowRecoverFlag && creditFlag) {
+                    // 添加借款表repay还款来源、实际还款人
+                    if (roleId == 3) { // repayUserId不为空，表示垫付机构还款
+                        borrowRepay.setRepayMoneySource(2);
+                        borrowRepay.setRepayUsername(userName);
+                    } else {
+                        borrowRepay.setRepayMoneySource(1);
+                        borrowRepay.setRepayUsername(userName);
+                    }
+                    boolean borrowRepayFlag = borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
+                    if (borrowRepayFlag) {
+                        int borrowApicronCount = this.borrowApicronMapper.countByExample(example);
+                        // 还款任务>0件
+                        if (borrowApicronCount > 0) {
+                            throw new Exception("还款失败！" + "重复还款，【" + errorCount + "】" + "项目编号：" + borrowNid);
+                        }
+                        int nowTime = GetDate.getNowTime10();
+                        nid = repay.getBorrowNid() + "_" + repay.getUserId() + "_1";
+                        BorrowApicron borrowApicron = new BorrowApicron();
+                        borrowApicron.setNid(nid);
+                        borrowApicron.setUserId(repayUserId);
+                        borrowApicron.setUserName(userName);
+                        borrowApicron.setBorrowNid(borrowNid);
+                        borrowApicron.setBorrowAccount(borrow.getAccount());
+                        borrowApicron.setBorrowPeriod(borrowPeriod);
+                        if (roleId == 3) {
+                            borrowApicron.setIsRepayOrgFlag(1);
+                        } else {
+                            borrowApicron.setIsRepayOrgFlag(0);
+                        }
+                        borrowApicron.setApiType(1);
+                        borrowApicron.setPeriodNow(1);
+                        borrowApicron.setRepayStatus(0);
+                        borrowApicron.setStatus(1);
+                        borrowApicron.setFailTimes(0);
+                        borrowApicron.setCreditRepayStatus(0);
+                        borrowApicron.setCreateTime(GetDate.getNowTime());
+                        borrowApicron.setUpdateTime(GetDate.getNowTime());
+                        if (projectType == 13) {
+                            borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
+                            borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
+                        } else {
+                            borrowApicron.setExtraYieldStatus(1);// 融通宝加息相关的放款状态
+                            borrowApicron.setExtraYieldRepayStatus(1);// 融通宝相关的加息还款状态
+                        }
+                        borrowApicron.setPlanNid(borrow.getPlanNid());// 汇计划计划编号
+                        boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
+                        if (apiCronFlag) {
+                            repayFlag = true;
+                        } else {
+                            throw new Exception("还款失败，项目编号：" + borrowNid);
+                        }
+                    } else {
+                        throw new Exception("还款失败！" + "失败数量【" + errorCount + "】");
+                    }
+                } else {
+                    throw new Exception("还款失败！！" + "失败数量【" + errorCount + "】");
+                }
+            } else if (borrowApicrons.size() == 1) {
+                repayFlag = true;
+            } else {
+                throw new Exception("还款失败！" + "重复还款，【" + errorCount + "】" + "项目编号：" + borrowNid);
+            }
+        }
+        List<RepayDetailBean> repayPLanList = repay.getRepayPlanList();
+        // 分期还款
+        if (repayPLanList != null && repayPLanList.size() > 0) {
+            for (int i = 0; i < repayPLanList.size(); i++) {
+                RepayDetailBean repayDetail = repayPLanList.get(i);
+                if (repayDetail.getRepayPeriod() == period && !isAllRepay) {
+                    Map mapResult = updaterepayData(userId, borrowNid, period, repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
+                            borrowPeriod, projectType, repayFlag, isAllRepay);
+                    if (mapResult.get("result") != null) {
+                        boolean result = (boolean) mapResult.get("result");
+                        if (result) {
+                            return true;
+                        }
+                    }
+                    if (mapResult.get("repayFlag") != null) {
+                        repayFlag = (Boolean) mapResult.get("repayFlag");
+                    }
+                } else if (isAllRepay && repayDetail.getRepayPeriod() >= period && repayDetail.getRepayStatus() == 0) {
+
+                    Map mapResult = updaterepayData(userId, borrowNid, repayDetail.getRepayPeriod(), repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
+                            borrowPeriod, projectType, repayFlag, isAllRepay);
+
+                    if (mapResult.get("result") != null) {
+                        boolean result = (boolean) mapResult.get("result");
+                        if (result) {
+                            return true;
+                        }
+                    }
+                    if (mapResult.get("repayFlag") != null) {
+                        repayFlag = (Boolean) mapResult.get("repayFlag");
+                        if (!repayFlag) {
+                            throw new RuntimeException("标的全部还款出现异常，还款标的：" + borrowNid + ",还款期数：" + repayDetail.getRepayPeriod());
+                        }
+                    }
+                }
+            }
+        }
+        if (repayFlag) {
+            if (countRepayAccountListByNid(nid) == 0) {
+                // 获取用户的账户信息
+                Account repayAccount = this.getAccount(repayUserId);
+                if (StringUtils.isNotBlank(repayAccount.getAccountId())) {
+                    BigDecimal borrowBalance = repayAccount.getBankBalance();
+                    String repayAccountId = repayAccount.getAccountId();
+                    if (borrowBalance.compareTo(repayTotal) >= 0) {
+                        // ** 用户符合还款条件，可以还款 *//*
+                        BigDecimal bankBalance = repayTotal;// 可用金额
+                        BigDecimal bankFrost = repayTotal;// 冻结金额
+                        BigDecimal bankBalanceCash = repayTotal;// 江西银行账户余额
+                        BigDecimal bankFrostCash = repayTotal;// 江西银行账户冻结金额
+                        repayAccount.setBankBalance(bankBalance);
+                        repayAccount.setBankFrost(bankFrost);
+                        repayAccount.setBankFrostCash(bankBalanceCash);
+                        repayAccount.setBankBalanceCash(bankFrostCash);
+                        boolean accountFlag = this.adminAccountCustomizeMapper.updateOfRepayBorrowFreeze(repayAccount) > 0 ? true : false;
+                        if (accountFlag) {
+                            repayAccount = this.getAccount(repayUserId);
+                            // 插入huiyingdai_account_list表
+                            AccountList accountList = new AccountList();
+                            accountList.setNid(borrowNid + "_" + repay.getUserId() + "_" + period); // 生成规则BorrowNid_userid_期数
+                            accountList.setUserId(repayUserId);// 借款人/垫付机构 id
+                            accountList.setAmount(repayTotal);// 操作金额
+                            /** 银行存管相关字段设置 */
+                            accountList.setAccountId(repayAccountId);
+                            accountList.setBankAwait(repayAccount.getBankAwait());
+                            accountList.setBankAwaitCapital(repayAccount.getBankAwaitCapital());
+                            accountList.setBankAwaitInterest(repayAccount.getBankAwaitInterest());
+                            accountList.setBankBalance(repayAccount.getBankBalance());
+                            accountList.setBankFrost(repayAccount.getBankFrost());
+                            accountList.setBankInterestSum(repayAccount.getBankInterestSum());
+                            accountList.setBankInvestSum(repayAccount.getBankInvestSum());
+                            accountList.setBankTotal(repayAccount.getBankTotal());
+                            accountList.setBankWaitCapital(repayAccount.getBankWaitCapital());
+                            accountList.setBankWaitInterest(repayAccount.getBankWaitInterest());
+                            accountList.setBankWaitRepay(repayAccount.getBankWaitRepay());
+                            accountList.setPlanBalance(repayAccount.getPlanBalance());//汇计划账户可用余额
+                            accountList.setPlanFrost(repayAccount.getPlanFrost());
+                            accountList.setCheckStatus(0);
+                            accountList.setTradeStatus(1);// 交易状态 0:失败 1:成功
+                            accountList.setIsBank(1);
+                            accountList.setTxDate(Integer.parseInt(bean.getTxDate()));
+                            accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
+                            accountList.setSeqNo(bean.getSeqNo());
+                            accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
+                            // 非银行相关
+                            accountList.setType(3);// 收支类型1收入2支出3冻结
+                            accountList.setTrade("repay_freeze");// 交易类型
+                            accountList.setTradeCode("balance");// 操作识别码
+                            accountList.setTotal(repayAccount.getTotal());// 资金总额
+                            accountList.setBalance(repayAccount.getBalance());
+                            accountList.setFrost(repayAccount.getFrost());// 冻结金额
+                            accountList.setAwait(repayAccount.getAwait());// 待收金额
+                            accountList.setRepay(repayAccount.getRepay());// 待还金额
+                            accountList.setCreateTime(GetDate.getDate());// 创建时间
+                            accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY);// 操作员
+                            accountList.setRemark(borrowNid);
+                            accountList.setIp(repay.getIp());// 操作IP
+//                            accountList.setBaseUpdate(0);
+                            accountList.setWeb(0);
+                            boolean accountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
+                            if (accountListFlag) {
+                                try {
+                                    deleteFreezeTempLog(bean.getOrderId());
+                                } catch (Exception e) {
+                                    logger.info("=========还款冻结订单号: " + bean.getOrderId());
+                                    logger.info("还款冻结成功==============删除还款冻结临时日志失败============");
+                                }
+                                return true;
+                            } else {
+                                throw new RuntimeException("还款失败！" + "插入借款人交易明细表AccountList失败！");
+                            }
+                        } else {
+                            throw new RuntimeException("还款失败！" + "更新借款人账户余额表Account失败！");
+                        }
+                    } else {
+                        throw new RuntimeException("用户汇付账户余额不足!");
+                    }
+                } else {
+                    throw new RuntimeException("用户开户信息不存在!");
+                }
+            } else {
+                throw new RuntimeException("此笔还款的交易明细已存在,请勿重复还款");
+            }
+        } else {
+            throw new RuntimeException("还款失败！" + "失败数量【" + errorCount + "】");
+        }
+    }
+
+    /**
+     * 判断该收支明细是否存在
+     */
+    private int countRepayAccountListByNid(String nid) {
+        AccountListExample accountListExample = new AccountListExample();
+        accountListExample.createCriteria().andNidEqualTo(nid).andTradeEqualTo("repay_success");
+        return this.accountListMapper.countByExample(accountListExample);
+    }
+
+    /**
+     * TODO 处理还款数据
+     * @param userId
+     * @param borrowNid
+     * @param period
+     * @param repayDetail
+     * @param errorCount
+     * @param nid
+     * @param roleId
+     * @param userName
+     * @param repay
+     * @param repayUserId
+     * @param borrow
+     * @param borrowPeriod
+     * @param projectType
+     * @param repayFlag
+     * @param isAllRepay
+     */
+    private Map updaterepayData(int userId, String borrowNid, int period, RepayDetailBean repayDetail, int errorCount,
+                                String nid, Integer roleId, String userName, RepayBean repay, Integer repayUserId,
+                                Borrow borrow, Integer borrowPeriod, Integer projectType, Boolean repayFlag,
+                                boolean isAllRepay) throws Exception {
+
+        Map map = new HashMap();
+        BorrowRepayPlan borrowRepayPlan = this.searchRepayPlan(userId, borrowNid, period);
+        BorrowApicronExample example = new BorrowApicronExample();
+        BorrowApicronExample.Criteria crt = example.createCriteria();
+        crt.andBorrowNidEqualTo(borrowNid);
+        crt.andApiTypeEqualTo(1);
+        crt.andPeriodNowEqualTo(repayDetail.getRepayPeriod());
+        List<BorrowApicron> borrowApicrons = borrowApicronMapper.selectByExample(example);
+        if (borrowApicrons == null || (borrowApicrons != null && borrowApicrons.size() == 0)) {
+            boolean borrowRecoverPlanFlag = true;
+            boolean creditFlag = true;
+            List<RepayRecoverPlanBean> repayRecoverPlans = repayDetail.getRecoverPlanList();
+            if (repayRecoverPlans != null && repayRecoverPlans.size() > 0) {
+                for (int j = 0; j < repayRecoverPlans.size(); j++) {
+                    RepayRecoverPlanBean repayRecoverPlan = repayRecoverPlans.get(j);
+                    BorrowRecoverPlan borrowRecoverPlanOld = borrowRecoverPlanMapper.selectByPrimaryKey(repayRecoverPlan.getId());
+                    Integer tenderUserId = borrowRecoverPlanOld.getUserId();// 投资人信息
+                    BigDecimal manageFee = BigDecimal.ZERO;
+                    List<RepayCreditRepayBean> creditRepayList = repayRecoverPlan.getCreditRepayList();
+                    if (creditRepayList != null && creditRepayList.size() > 0) {
+                        for (int k = 0; k < creditRepayList.size(); k++) {
+                            RepayCreditRepayBean creditRepay = creditRepayList.get(k);
+                            String tenderOrderId = creditRepay.getCreditTenderNid();
+                            if (tenderOrderId.equals(repayRecoverPlan.getNid())) {
+                                CreditRepay creditRepayOld = creditRepayMapper.selectByPrimaryKey(creditRepay.getId());
+                                creditRepayOld.setChargeDays(creditRepay.getChargeDays());
+                                creditRepayOld.setChargeInterest(creditRepay.getChargeInterest());
+                                creditRepayOld.setDelayDays(creditRepay.getDelayDays());
+                                creditRepayOld.setDelayInterest(creditRepay.getDelayInterest());
+                                creditRepayOld.setLateDays(creditRepay.getLateDays());
+                                creditRepayOld.setLateInterest(creditRepay.getLateInterest());
+                                creditRepayOld.setManageFee(creditRepay.getManageFee());
+                                creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
+                                boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
+                                if (creditRepayFlag) {
+                                    manageFee = manageFee.add(creditRepay.getManageFee());
+                                    borrowRecoverPlanOld.setChargeDays(creditRepay.getChargeDays());
+                                    borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(creditRepay.getChargeInterest()));
+                                    borrowRecoverPlanOld.setDelayDays(creditRepay.getDelayDays());
+                                    borrowRecoverPlanOld.setDelayInterest(borrowRecoverPlanOld.getDelayInterest().add(creditRepay.getDelayInterest()));
+                                    borrowRecoverPlanOld.setLateDays(creditRepay.getLateDays());
+                                    borrowRecoverPlanOld.setLateInterest(borrowRecoverPlanOld.getLateInterest().add(creditRepay.getLateInterest()));
+                                    boolean recoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlanOld) > 0 ? true : false;
+                                    if (!recoverPlanFlag) {
+                                        errorCount = errorCount + 1;
+                                    }
+                                    borrowRecoverPlanFlag = borrowRecoverPlanFlag && recoverPlanFlag;
+                                } else {
+                                    errorCount = errorCount + 1;
+                                }
+                                creditFlag = creditFlag && creditRepayFlag;
+                            }
+                        }
+                    }
+                    List<HjhDebtCreditRepayBean> hjhCreditRepayList = repayRecoverPlan.getHjhCreditRepayList();//汇计划债转还款列表的
+                    if (hjhCreditRepayList != null && hjhCreditRepayList.size() > 0) {
+                        for (int k = 0; k < hjhCreditRepayList.size(); k++) {
+                            HjhDebtCreditRepayBean hjhDebtCreditRepayBean = hjhCreditRepayList.get(k);
+                            String investOrderId = hjhDebtCreditRepayBean.getInvestOrderId();
+                            if (investOrderId.equals(repayRecoverPlan.getNid())) {
+                                HjhDebtCreditRepay oldCreditRepay = this.hjhDebtCreditRepayMapper.selectByPrimaryKey(hjhDebtCreditRepayBean.getId());
+                                oldCreditRepay.setAdvanceDays(hjhDebtCreditRepayBean.getAdvanceDays());
+                                oldCreditRepay.setRepayAdvanceInterest(hjhDebtCreditRepayBean.getRepayAdvanceInterest());
+                                oldCreditRepay.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
+                                oldCreditRepay.setRepayDelayInterest(hjhDebtCreditRepayBean.getRepayDelayInterest());
+                                oldCreditRepay.setLateDays(hjhDebtCreditRepayBean.getLateDays());
+                                oldCreditRepay.setRepayLateInterest(hjhDebtCreditRepayBean.getRepayLateInterest());
+                                oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
+                                oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
+                                int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
+                                if (hjhCreditRepayFlag > 0) {
+                                    manageFee = manageFee.add(hjhDebtCreditRepayBean.getManageFee());
+                                    borrowRecoverPlanOld.setChargeDays(hjhDebtCreditRepayBean.getAdvanceDays());
+                                    borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(hjhDebtCreditRepayBean.getRepayAdvanceInterest()));
+                                    borrowRecoverPlanOld.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
+                                    borrowRecoverPlanOld.setDelayInterest(borrowRecoverPlanOld.getDelayInterest().add(hjhDebtCreditRepayBean.getRepayDelayInterest()));
+                                    borrowRecoverPlanOld.setLateDays(hjhDebtCreditRepayBean.getLateDays());
+                                    borrowRecoverPlanOld.setLateInterest(borrowRecoverPlanOld.getLateInterest().add(hjhDebtCreditRepayBean.getRepayLateInterest()));
+                                    boolean recoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlanOld) > 0 ? true : false;
+                                    if (!recoverPlanFlag) {
+                                        errorCount = errorCount + 1;
+                                    }
+                                    borrowRecoverPlanFlag = borrowRecoverPlanFlag && recoverPlanFlag;
+                                }else {
+                                    errorCount = errorCount + 1;
+                                }
+                                creditFlag = creditFlag && hjhCreditRepayFlag > 0;
+                            }
+                        }
+                    }
+                    if (borrowRecoverPlanFlag && creditFlag) {
+                        RUser users = this.getRUser(tenderUserId);
+                        if (users != null) {
+                            // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+                            Integer attribute = users.getAttribute();
+                                if (attribute != null) {
+                                    // 投资人用户属性
+                                    borrowRecoverPlanOld.setTenderUserAttribute(attribute);
+                                    // 如果是线上员工或线下员工，推荐人的userId和username不插
+                                    if (attribute == 2 || attribute == 3) {
+                                        EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(tenderUserId);
+                                        if (employeeCustomize != null) {
+                                            borrowRecoverPlanOld.setInviteRegionId(employeeCustomize.getRegionId());
+                                            borrowRecoverPlanOld.setInviteRegionName(employeeCustomize.getRegionName());
+                                            borrowRecoverPlanOld.setInviteBranchId(employeeCustomize.getBranchId());
+                                            borrowRecoverPlanOld.setInviteBranchName(employeeCustomize.getBranchName());
+                                            borrowRecoverPlanOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
+                                            borrowRecoverPlanOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                        }
+                                    } else if (attribute == 1) {
+                                            int refUserId = users.getSpreadsUserId();
+                                            // 查找用户推荐人
+                                            RUser userss = this.getRUser(refUserId);
+                                            if (userss != null) {
+                                                borrowRecoverPlanOld.setInviteUserId(userss.getUserId());
+                                                borrowRecoverPlanOld.setInviteUserName(userss.getUsername());
+                                                borrowRecoverPlanOld.setInviteUserAttribute(userss.getAttribute());
+                                            }
+                                            // 查找用户推荐人部门
+                                            EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
+                                            if (employeeCustomize != null) {
+                                                borrowRecoverPlanOld.setInviteRegionId(employeeCustomize.getRegionId());
+                                                borrowRecoverPlanOld.setInviteRegionName(employeeCustomize.getRegionName());
+                                                borrowRecoverPlanOld.setInviteBranchId(employeeCustomize.getBranchId());
+                                                borrowRecoverPlanOld.setInviteBranchName(employeeCustomize.getBranchName());
+                                                borrowRecoverPlanOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
+                                                borrowRecoverPlanOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                            }
+                                    } else if (attribute == 0) {
+                                        int refUserId = users.getSpreadsUserId();
+                                        // 查找推荐人
+                                        RUser userss = this.getRUser(refUserId);
+                                        if (userss != null) {
+                                            borrowRecoverPlanOld.setInviteUserId(userss.getUserId());
+                                            borrowRecoverPlanOld.setInviteUserName(userss.getUsername());
+                                            borrowRecoverPlanOld.setInviteUserAttribute(userss.getAttribute());
+                                        }
+                                    }
+                                }
+                        }
+                        manageFee = manageFee.add(repayRecoverPlan.getRecoverFee());
+                        borrowRecoverPlanOld.setAdvanceStatus(repayRecoverPlan.getAdvanceStatus());
+                        borrowRecoverPlanOld.setChargeDays(repayRecoverPlan.getChargeDays());
+                        borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(repayRecoverPlan.getChargeInterest()));
+                        borrowRecoverPlanOld.setDelayDays(repayRecoverPlan.getDelayDays());
+                        borrowRecoverPlanOld.setDelayInterest(borrowRecoverPlanOld.getDelayInterest().add(repayRecoverPlan.getDelayInterest()));
+                        borrowRecoverPlanOld.setLateDays(repayRecoverPlan.getLateDays());
+                        borrowRecoverPlanOld.setLateInterest(borrowRecoverPlanOld.getLateInterest().add(repayRecoverPlan.getLateInterest()));
+                        borrowRecoverPlanOld.setRecoverFee(manageFee);
+                        boolean flag = borrowRecoverPlanMapper.updateByPrimaryKey(borrowRecoverPlanOld) > 0 ? true : false;
+                        if (!flag) {
+                            errorCount = errorCount + 1;
+                        }
+                        borrowRecoverPlanFlag = borrowRecoverPlanFlag && flag;
+                    }
+                }
+            }
+            if (borrowRecoverPlanFlag && creditFlag) {
+                // 添加借款表repay还款来源、实际还款人
+                if (roleId == 3) { // repayUserId不为空，表示垫付机构还款
+                    borrowRepayPlan.setRepayMoneySource(2);
+                    borrowRepayPlan.setRepayUsername(userName);
+                } else {
+                    borrowRepayPlan.setRepayMoneySource(1);
+                    borrowRepayPlan.setRepayUsername(userName);
+                }
+                boolean borrowRepayPlanFlag = borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
+                if (borrowRepayPlanFlag) {
+                    int borrowApicronCount = this.borrowApicronMapper.countByExample(example);
+                    // 还款任务>0件
+                    if (borrowApicronCount > 0) {
+                        throw new Exception("重复还款");
+                    }
+                    int nowTime = GetDate.getNowTime10();
+                    nid = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
+                    BorrowApicron borrowApicron = new BorrowApicron();
+                    borrowApicron.setNid(nid);
+                    borrowApicron.setUserId(repayUserId);
+                    borrowApicron.setUserName(userName);
+                    borrowApicron.setBorrowNid(borrowNid);
+                    borrowApicron.setBorrowAccount(borrow.getAccount());
+                    borrowApicron.setBorrowPeriod(borrowPeriod);
+                    if (roleId == 3) {
+                        borrowApicron.setIsRepayOrgFlag(1);
+                    } else {
+                        borrowApicron.setIsRepayOrgFlag(0);
+                    }
+                    borrowApicron.setApiType(1);
+                    borrowApicron.setPeriodNow(period);
+                    borrowApicron.setRepayStatus(0);
+                    borrowApicron.setStatus(1);
+                    borrowApicron.setFailTimes(0);
+                    borrowApicron.setCreditRepayStatus(0);
+                    borrowApicron.setCreateTime(GetDate.getNowTime());
+                    borrowApicron.setUpdateTime(GetDate.getNowTime());
+                    if(isAllRepay){
+                        borrowApicron.setIsAllrepay(1);
+                    }
+                    if (projectType == 13) {
+                        borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
+                        borrowApicron.setExtraYieldRepayStatus(0);// 融通宝相关的加息还款状态
+                    } else {
+                        borrowApicron.setExtraYieldStatus(1);// 融通宝加息相关的放款状态
+                        borrowApicron.setExtraYieldRepayStatus(1);// 融通宝相关的加息还款状态
+                    }
+                    borrowApicron.setPlanNid(borrow.getPlanNid());// 汇计划项目编号
+                    boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
+                    if (apiCronFlag) {
+                        repayFlag = true;
+                    } else {
+                        throw new RuntimeException("重复还款");
+                    }
+                } else {
+                    throw new RuntimeException("还款失败！" + "失败数量【" + errorCount + "】");
+                }
+            } else {
+                throw new RuntimeException("还款失败！" + "失败数量【" + errorCount + "】");
+            }
+        } else if (borrowApicrons.size() == 1) {
+            map.put("result",true);
+            return map;
+        } else {
+            throw new RuntimeException("还款失败！" + "重复还款，【" + errorCount + "】" + "项目编号：" + borrowNid + ",期数；" + period);
+        }
+        map.put("repayFlag",repayFlag);
+        return map;
+    }
+
+    /**
+     * 根据项目编号查询正在债转的项目
+     */
+    @Override
+    public boolean updateBorrowCreditStautus(String borrowNid) {
+        Borrow borrow = this.getBorrow(borrowNid);
+        String planNid = borrow.getPlanNid();
+        BigDecimal rollBackAccount = BigDecimal.ZERO;
+        if (StringUtils.isNotBlank(planNid)) {//计划标的
+            HjhDebtCreditExample example = new HjhDebtCreditExample();
+            List<Integer> list = new ArrayList<>();
+            list.add(0);
+            list.add(1);
+            example.createCriteria().andBorrowNidEqualTo(borrowNid).andCreditStatusIn(list);
+            List<HjhDebtCredit> hjhDebtCreditList = hjhDebtCreditMapper.selectByExample(example);
+            String rollBackPlanNid = null;
+            if (hjhDebtCreditList != null && hjhDebtCreditList.size() > 0) {
+                for (HjhDebtCredit hjhDebtCredit : hjhDebtCreditList) {
+                    logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "===================");
+                    BigDecimal creditPrice = hjhDebtCredit.getCreditPrice();//已承接金额
+                    BigDecimal liquidationFairValue = hjhDebtCredit.getLiquidationFairValue();//清算时债权价值
+                    BigDecimal resultAmount = liquidationFairValue.subtract(creditPrice);//回滚金额
+                    rollBackAccount = rollBackAccount.add(resultAmount);
+                    hjhDebtCredit.setCreditStatus(3);
+                    //更新债权结束时间 add by cwyang 2018-4-2
+                    hjhDebtCredit.setEndTime(GetDate.getNowTime10());
+                    rollBackPlanNid = hjhDebtCredit.getPlanNidNew();
+                    this.hjhDebtCreditMapper.updateByPrimaryKey(hjhDebtCredit);
+                    String planOrderId = hjhDebtCredit.getPlanOrderId();//获得订单号
+                    HjhAccedeExample accedeExample = new HjhAccedeExample();
+                    accedeExample.createCriteria().andAccedeOrderIdEqualTo(planOrderId);
+                    List<HjhAccede> accedeList = this.hjhAccedeMapper.selectByExample(accedeExample);
+                    HjhAccede hjhAccede = accedeList.get(0);
+                    hjhAccede.setCreditCompleteFlag(2);//将清算状态置为2,以便2次清算
+                    this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
+                    logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "，订单号：" + planOrderId + "===================");
+                }
+            }
+            //回滚开放额度 add by cwyang 2017-12-25
+            if (StringUtils.isNotBlank(rollBackPlanNid)) {
+                rollBackAccedeAccount(rollBackPlanNid, rollBackAccount);
+            }
+        } else {//直投标的
+            BorrowCreditExample example = new BorrowCreditExample();
+            BorrowCreditExample.Criteria cra = example.createCriteria();
+            cra.andBidNidEqualTo(borrowNid);
+            cra.andCreditStatusEqualTo(0);
+            List<BorrowCredit> borrowCreditList = this.borrowCreditMapper.selectByExample(example);
+            if (borrowCreditList != null && borrowCreditList.size() > 0) {
+                for (BorrowCredit borrowCredit : borrowCreditList) {
+                    borrowCredit.setCreditStatus(3);
+                    this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 回滚开放额度
+     *
+     * @param rollBackAccount
+     */
+    private void rollBackAccedeAccount(String planNid, BigDecimal rollBackAccount) {
+
+        HjhPlanExample example = new HjhPlanExample();
+        example.createCriteria().andPlanNidEqualTo(planNid);
+        List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
+        if (planList != null && planList.size() > 0) {
+            for (HjhPlan hjhPlan : planList) {
+                HjhPlan hjhPlanParam = new HjhPlan();
+                hjhPlanParam.setPlanNid(hjhPlan.getPlanNid());
+                hjhPlanParam.setAvailableInvestAccount(rollBackAccount);
+                this.hjhPlanCustomizeMapper.updateRepayPlanAccount(hjhPlanParam);
+                redisSub(RedisConstants.HJH_PLAN + hjhPlan.getPlanNid(), rollBackAccount.toString());//增加redis相应计划可投金额
+            }
+        }
+
+    }
+
+    /**
+     * 并发情况下保证设置一个值
+     *
+     * @param key
+     * @param value
+     */
+    private void redisSub(String key, String value) {
+
+        Jedis jedis = pool.getResource();
+
+        while ("OK".equals(jedis.watch(key))) {
+            List<Object> results = null;
+
+            String balance = jedis.get(key);
+            BigDecimal bal = new BigDecimal(0);
+            if (balance != null) {
+                bal = new BigDecimal(balance);
+            }
+            BigDecimal val = new BigDecimal(value);
+
+            Transaction tx = jedis.multi();
+            String valbeset = bal.subtract(val).toString();
+            tx.set(key, valbeset);
+            results = tx.exec();
+            if (results == null || results.isEmpty()) {
+                jedis.unwatch();
+            } else {
+                String ret = (String) results.get(0);
+                if (ret != null && ret.equals("OK")) {
+                    // 成功后
+                    break;
+                } else {
+                    jedis.unwatch();
+                }
+            }
+        }
+    }
+
+    /**
+     * 删除临时日志,内部使用,保证事物的传递性
+     *
+     * @param orderId
+     */
+    private void deleteFreezeTempLog(String orderId) {
+        BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        List<BankRepayFreezeLog> log = this.bankRepayFreezeLogMapper.selectByExample(example);
+        if (log != null && log.size() > 0) {
+            for (int i = 0; i < log.size(); i++) {
+                BankRepayFreezeLog record = log.get(i);
+                record.setDelFlag(1);// 0 有效 1无效
+                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record);
+                if (flag > 0) {
+                    logger.info("=============还款冻结成功,删除还款冻结临时日志成功=========");
+                } else {
+                    logger.info("==============删除还款冻结临时日志失败============");
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public RepayBean searchRepayTotalV2(int userId, Borrow borrow) throws Exception {
+        RepayBean RepayBean = this.calculateRepay(userId, borrow);
+        return RepayBean;
+    }
+
+    @Override
+    public RepayBean searchRepayPlanTotal(int userId, Borrow borrow) throws Exception {
+        RepayBean repayByTerm = new RepayBean();
+
+        BorrowRepay borrowRepay = this.searchRepay(userId, borrow.getBorrowNid());
+
+        if (borrowRepay != null) {
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repayByTerm);
+            repayByTerm.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
+            // 计算当前还款期数
+            int period = borrow.getBorrowPeriod() - borrowRepay.getRepayPeriod() + 1;
+
+            // 分期 当前期 计算，如果当前期没有还款，则先算当前期，后算所有剩下的期数
+            // 如果当前期已经还款，直接算所有剩下期数
+            calculateRepayPlanAll(repayByTerm, borrow, period);
+        }
+        return repayByTerm;
+    }
+
+    @Override
+    public RepayBean searchRepayByTermTotalV2(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception {
+
+        RepayBean repayByTerm = new RepayBean();
+        BorrowRepay borrowRepay = this.searchRepay(userId, borrow.getBorrowNid());
+
+        if (borrowRepay != null) {
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repayByTerm);
+            repayByTerm.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
+            // 计算当前还款期数
+            int period = periodTotal - borrowRepay.getRepayPeriod() + 1;
+            calculateRepayPlan(repayByTerm, borrow, period);
+        }
+        return repayByTerm;
+    }
+
+    /**
+     * 更新借款API任务表
+     * @auther: hesy
+     * @date: 2018/7/17
+     */
+    @Override
+    public boolean updateBorrowApicron(BorrowApicron apicron, int status){
+        //更新api表状态
+        String borrowNid = apicron.getBorrowNid();
+        BorrowApicronExample example = new BorrowApicronExample();
+        example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
+        apicron.setStatus(status);
+        apicron.setUpdateTime(GetDate.getNowTime());
+        borrowApicronMapper.updateByExampleSelective(apicron, example);
+
+        //更新borrow表状态
+        Borrow borrow = this.getBorrow(borrowNid);
+        borrow.setRepayStatus(status);
+        this.borrowMapper.updateByPrimaryKey(borrow);
+
+        return true;
+    }
+
+    /**
+     * 获取垫付机构详情页面还款数据
+     * @param userId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @Override
+    public ProjectBean getOrgBatchRepayData(String userId, String startDate, String endDate){
+        RepayListRequest requestBean = new RepayListRequest();
+        requestBean.setUserId(userId);
+        requestBean.setRoleId("3");
+        requestBean.setStartDate(startDate);
+        requestBean.setEndDate(endDate);
+        requestBean.setStatus("0");
+        requestBean.setRepayStatus("0");
+
+        List<RepayListCustomizeVO> resultList = this.selectOrgRepayList(requestBean);
+        if (resultList == null) {
+            resultList = new ArrayList<RepayListCustomizeVO>();
+        }
+
+        ProjectBean form = new ProjectBean();
+        form.setUserId(userId);
+        form.setRoleId("3");
+        //垫付机构总的还款信息
+        ProjectBean repayProjectInfo = new ProjectBean();
+        BigDecimal repayAccount = new BigDecimal(0);
+        BigDecimal repayCapital = new BigDecimal(0);
+        BigDecimal repayInterest = new BigDecimal(0);
+        BigDecimal repayMangee = new BigDecimal(0);
+        BigDecimal chargeInterest = new BigDecimal(0);//提前减息
+        BigDecimal delayInterest = new BigDecimal(0);//延期利息
+        BigDecimal lateInterest = new BigDecimal(0);//逾期利息
+        try {
+            for (int i = 0; i < resultList.size(); i++) {
+                form.setBorrowNid(resultList.get(i).getBorrowNid());
+                ProjectBean repayProject =  this.searchRepayProjectDetail(form,false);
+                repayAccount = repayAccount.add(new BigDecimal(repayProject.getRepayAccount())).add(new BigDecimal(repayProject.getManageFee()));
+                repayCapital = repayCapital.add(new BigDecimal(repayProject.getRepayCapital()));
+                repayInterest = repayInterest.add(new BigDecimal(repayProject.getShouldInterest()));
+                repayMangee = repayMangee.add(new BigDecimal(repayProject.getManageFee()));
+                chargeInterest = chargeInterest.add(new BigDecimal(repayProject.getChargeInterest() == null ? "0" : repayProject.getChargeInterest()));
+                delayInterest = delayInterest.add(new BigDecimal(repayProject.getDelayInterest() == null ? "0" : repayProject.getDelayInterest()));
+                lateInterest = lateInterest.add(new BigDecimal(repayProject.getLateInterest() == null ? "0" : repayProject.getLateInterest()));
+            }
+            repayProjectInfo.setRepayAccount(repayAccount.toString());
+            repayProjectInfo.setRepayCapital(repayCapital.toString());
+            repayProjectInfo.setRepayInterest(repayInterest.toString());
+            repayProjectInfo.setManageFee(repayMangee.toString());
+            repayProjectInfo.setChargeInterest(chargeInterest.toString());
+            repayProjectInfo.setDelayInterest(delayInterest.toString());
+            repayProjectInfo.setLateInterest(lateInterest.toString());
+            //返回应收笔数
+            repayProjectInfo.setRepayNum(String.valueOf(resultList.size()));
+            return repayProjectInfo;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return repayProjectInfo;
+    }
+
+
 }
