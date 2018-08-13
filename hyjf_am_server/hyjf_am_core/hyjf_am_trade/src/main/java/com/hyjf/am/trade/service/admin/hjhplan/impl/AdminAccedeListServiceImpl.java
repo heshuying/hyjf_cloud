@@ -89,6 +89,14 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(form.getCountInterestTimeEndDate())) {
 			param.put("countInterestTimeEndDate", form.getCountInterestTimeEndDate());
 		}
+		// 匹配期查询传入
+		if (StringUtils.isNotEmpty(form.getMatchDatesSrch())) {
+			param.put("matchDatesSrch", form.getMatchDatesSrch());
+		}
+		// 投资笔数查询传入
+		if (StringUtils.isNotEmpty(form.getInvestCountsSrch())) {
+			param.put("investCountsSrch", form.getInvestCountsSrch());
+		}
 		int count = this.adminPlanAccedeListCustomizeMapper.countAccedeRecord(param);
 		return count;
 	}
@@ -144,7 +152,14 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(form.getCountInterestTimeEndDate())) {
 			param.put("countInterestTimeEndDate", form.getCountInterestTimeEndDate());
 		}
-		
+		// 匹配期查询传入
+		if (StringUtils.isNotEmpty(form.getMatchDatesSrch())) {
+			param.put("matchDatesSrch", form.getMatchDatesSrch());
+		}
+		// 投资笔数查询传入
+		if (StringUtils.isNotEmpty(form.getInvestCountsSrch())) {
+			param.put("investCountsSrch", form.getInvestCountsSrch());
+		}
 		param.put("limitStart", limitStart);
 		param.put("limitEnd", limitEnd);
 		
@@ -201,6 +216,14 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		// 加入结束时间(计息结束时间)
 		if (StringUtils.isNotEmpty(request.getCountInterestTimeEndDate())) {
 			param.put("countInterestTimeEndDate", request.getCountInterestTimeEndDate());
+		}
+		// 匹配期查询传入
+		if (StringUtils.isNotEmpty(request.getMatchDatesSrch())) {
+			param.put("matchDatesSrch", request.getMatchDatesSrch());
+		}
+		// 投资笔数查询传入
+		if (StringUtils.isNotEmpty(request.getInvestCountsSrch())) {
+			param.put("investCountsSrch", request.getInvestCountsSrch());
 		}
 		return this.adminPlanAccedeListCustomizeMapper.selectAccedeRecordList(param);
 	}

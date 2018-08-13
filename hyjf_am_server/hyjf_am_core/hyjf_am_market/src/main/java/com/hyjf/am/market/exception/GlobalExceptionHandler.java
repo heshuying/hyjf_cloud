@@ -1,4 +1,4 @@
-package com.hyjf.am.market;
+package com.hyjf.am.market.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
