@@ -231,6 +231,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_SYSTEM_UNKNOWN("ESY000001","未知错误，请稍后再试"),
 	ERR_SYSTEM_API_CALL("ESY000002","微服务调用异常，请稍后重试"),
 	ERR_SYSTEM_UNUSUAL("ESY000003","系统异常"),
+	ERR_SYSTEM_BUSY("ESY000004","系统繁忙，请稍后再试"),
 
 	// 订单相关ERR_ORDER_
 	ERR_ORDER_VERIFY("EOD000001","订单验证失败"),

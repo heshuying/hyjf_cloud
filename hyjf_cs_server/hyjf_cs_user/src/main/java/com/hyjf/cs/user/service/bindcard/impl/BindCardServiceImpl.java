@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
@@ -683,6 +684,16 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	@Override
 	public BankCardVO queryUserCardValid(String userId, String cardNo) {
 		return amUserClient.queryUserCardValid(userId, cardNo);
+	}
+
+	/**
+	 * 根据银行卡id获取银行配置信息
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public BankConfigVO getBankConfigById(Integer id) {
+		return amConfigClient.getBankConfigById(id);
 	}
 
 	/**

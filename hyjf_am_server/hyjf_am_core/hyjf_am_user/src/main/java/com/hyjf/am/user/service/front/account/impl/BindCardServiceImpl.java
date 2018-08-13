@@ -8,6 +8,7 @@ import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,7 +43,9 @@ public class BindCardServiceImpl implements BindCardService {
 		BankCardExample example = new BankCardExample();
 		BankCardExample.Criteria aCriteria = example.createCriteria();
 		aCriteria.andUserIdEqualTo(userId);
-		aCriteria.andCardNoEqualTo(cardNo); 
+		if(StringUtils.isNotBlank(cardNo)){
+			aCriteria.andCardNoEqualTo(cardNo);
+		}
 		aCriteria.andStatusEqualTo(1); // 0:无效 1：有效
 		List<BankCard> list = this.bankCardMapper.selectByExample(example);
 		if(list == null || list.isEmpty()) {
@@ -50,7 +53,7 @@ public class BindCardServiceImpl implements BindCardService {
 		}
 		return list.get(0);
 	}
-	
+
 	/**
 	 * 统计用户绑定的有效银行卡个数
 	 * @param userId
