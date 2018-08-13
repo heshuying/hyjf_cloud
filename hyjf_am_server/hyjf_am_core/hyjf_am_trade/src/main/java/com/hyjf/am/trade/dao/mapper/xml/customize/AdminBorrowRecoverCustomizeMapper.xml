@@ -58,17 +58,17 @@
 			</if>
 			<!-- 投资时间 -->
 			<if test="timeRecoverStartSrch != null and timeRecoverStartSrch != ''">
-				AND bt.addtime <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeRecoverStartSrch})
+				AND UNIX_TIMESTAMP(bt.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeRecoverStartSrch})
 			</if>
 			<if test="timeRecoverEndSrch != null and timeRecoverEndSrch != ''">
-				AND bt.addtime <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeRecoverEndSrch})+86399
+				AND UNIX_TIMESTAMP(bt.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeRecoverEndSrch})+86399
 			</if>
 			<!-- 放款时间 -->
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND br.addtime <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
+				AND UNIX_TIMESTAMP(br.create_time) <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND br.addtime <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})+86399
+				AND UNIX_TIMESTAMP(br.create_time) <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})+86399
 			</if>
 			<!--  计划编号 -->
 			<if test="planNidSrch != null and planNidSrch != ''">
@@ -130,8 +130,8 @@
 		bt.loan_amount AS recover_price,
 		CASE WHEN bt.`status` = 1 THEN bt.loan_amount ELSE '0.00' END AS recover_price_over,
 		bt.`status` AS is_recover,
-		FROM_UNIXTIME( bt.create_time, '%Y-%m-%d %H:%i:%s' ) AS time_recover,
-		FROM_UNIXTIME( br.create_time, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+		bt.create_time AS time_recover,
+		br.create_time AS create_time,
 		br.loan_batch_no AS loan_batch_no,
 		b.plan_nid
 		FROM

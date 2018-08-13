@@ -352,9 +352,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	@Override
-	public BankCallBean rechargeService(String  token, String ipAddr, String mobile, String money) throws Exception {
-		WebViewUserVO user=this.getUsersByToken(token);
-		Integer userId = user.getUserId();
+	public BankCallBean rechargeService(int userId, String ipAddr, String mobile, String money) throws Exception {
+		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
 		BankCardVO bankCard = this.selectBankCardByUserId(userId);
 		this.checkUserMessage(bankCard,userId,money);

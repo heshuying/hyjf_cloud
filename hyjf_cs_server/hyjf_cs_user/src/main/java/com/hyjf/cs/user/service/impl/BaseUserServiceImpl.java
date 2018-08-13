@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.bean.AccessToken;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
@@ -60,34 +61,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public boolean existUser(String mobile) {
 		UserVO userVO = amUserClient.findUserByMobile(mobile);
 		return userVO == null ? false : true;
-	}
-	/**
-	 * @param token
-	 * @Description 根据token查询user
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:34
-	 */
-	@Override
-	public WebViewUserVO getUsersByToken(String token) {
-		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
-		return user;
-	}
-
-	/**
-	 * @param token
-	 * @Description 查询用户对象
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:50
-	 */
-	@Override
-	public UserVO getUsers(String token) {
-		WebViewUserVO user = getUsersByToken(token);
-		if (user == null || user.getUserId() == null) {
-			return null;
-		}
-		return getUsersById(user.getUserId());
 	}
 
 	/**
@@ -531,17 +504,30 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 
+	/**
+	 * @param token
+	 * @Description 根据token查询user
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/12 10:34
+	 */
+	@Override
+	public WebViewUserVO getUserFromCache(int userId) {
+		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
+		return user;
+	}
+
 	@Override
 	public WebViewUserVO setToken(WebViewUserVO webViewUserVO){
 		String token = generatorToken(webViewUserVO.getUserId(), webViewUserVO.getUsername());
 		webViewUserVO.setToken(token);
-		RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+		RedisUtils.setObjEx(RedisConstants.USERID_KEY + webViewUserVO.getUserId(), webViewUserVO, 7 * 24 * 60 * 60);
 		return webViewUserVO;
 	}
 
 	@Override
-	public WebViewUserVO updateToken(String token,WebViewUserVO webViewUserVO){
-		RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+	public WebViewUserVO updateUserToCache(WebViewUserVO webViewUserVO){
+		RedisUtils.setObjEx(RedisConstants.USERID_KEY + webViewUserVO.getUserId(), webViewUserVO, 7 * 24 * 60 * 60);
 		return webViewUserVO;
 	}
 
@@ -553,10 +539,9 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 * @param username
 	 * @return
 	 */
-	private String generatorToken(int userId, String username) {
-		Map map = ImmutableMap.of("userId", String.valueOf(userId), "username", username, "ts",
-				String.valueOf(Instant.now().getEpochSecond()));
-		String token = JwtHelper.genToken(map);
+	protected String generatorToken(int userId, String username) {
+		AccessToken accessToken = new AccessToken(userId, username, Instant.now().getEpochSecond());
+		String token = JwtHelper.generatorToken(accessToken);
 		return token;
 	}
 

@@ -5,6 +5,7 @@ package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -49,6 +50,35 @@ public class PushMoneyVO extends BaseVO {
     public String recoverLastTime;
     public String recoverLastTimeStart;
     public String recoverLastTimeEnd;
+    // 提成列表用
+    // 融资期限
+    private String rzqx;
+    // 分公司
+    private String regionName;
+    // 分部
+    private String branchName;
+    // 团队
+    private String departmentName;
+    // 提成人
+    private String username;
+    // 电子账号
+    private String accountId;
+    // 提成人用户属性0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+    private String attribute;
+    // 是否51老用户，1：是 0：否
+    private Integer is51;
+    // 导出用
+    private String is51Name;
+    // 投资人
+    private String usernameTender;
+    // 投资金额
+    private BigDecimal accountTender;
+    // 状态
+    private String statusName;
+    // 投资时间
+    private String tenderTimeView;
+    // 提成发放时间
+    private String sendTimeView;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -214,5 +244,117 @@ public class PushMoneyVO extends BaseVO {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getRzqx() {
+        return rzqx;
+    }
+
+    public void setRzqx(String rzqx) {
+        this.rzqx = rzqx;
+    }
+
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
+    }
+
+    public Integer getIs51() {
+        return is51;
+    }
+
+    public void setIs51(Integer is51) {
+        this.is51 = is51;
+    }
+
+    public String getIs51Name() {
+        return is51Name;
+    }
+
+    public void setIs51Name(String is51Name) {
+        this.is51Name = is51Name;
+    }
+
+    public String getUsernameTender() {
+        return usernameTender;
+    }
+
+    public void setUsernameTender(String usernameTender) {
+        this.usernameTender = usernameTender;
+    }
+
+    public BigDecimal getAccountTender() {
+        return accountTender;
+    }
+
+    public void setAccountTender(BigDecimal accountTender) {
+        this.accountTender = accountTender;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public String getTenderTimeView() {
+        return tenderTimeView;
+    }
+
+    public void setTenderTimeView(String tenderTimeView) {
+        this.tenderTimeView = tenderTimeView;
+    }
+
+    public String getSendTimeView() {
+        return sendTimeView;
+    }
+
+    public void setSendTimeView(String sendTimeView) {
+        this.sendTimeView = sendTimeView;
     }
 }

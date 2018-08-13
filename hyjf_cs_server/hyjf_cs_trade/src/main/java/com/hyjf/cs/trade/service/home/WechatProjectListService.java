@@ -18,7 +18,7 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 11:33
      */
-    public JSONObject getProjectDetail(String borrowId,String type,String token);
+    public JSONObject getProjectDetail(String borrowId,String type,Integer userId);
 
 
     /**
@@ -33,7 +33,7 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 15:39
      */
-    public JSONObject getPlanDetail(String planId, String token);
+    public JSONObject getPlanDetail(String planId, Integer userId);
 
     /**
      * 获取计划标的组成
@@ -62,5 +62,5 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/24 10:46
      */
-    public WechatHomePageResult  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,String token);
+    public WechatHomePageResult  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,Integer userId);
 }

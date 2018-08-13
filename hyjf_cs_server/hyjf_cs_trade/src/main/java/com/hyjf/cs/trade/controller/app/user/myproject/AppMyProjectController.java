@@ -66,7 +66,7 @@ public class AppMyProjectController extends BaseTradeController {
         }
         // 构建查询条件
         AssetManageBeanRequest  params = buildQueryParameter(request);
-        params.setUserId(userId+"");
+        params.setUserId(userId);
         // 构建分页查询条件
         this.buildQueryParameter(request);
         // 这2个不用了，在返回的时候拼接
@@ -318,7 +318,7 @@ public class AppMyProjectController extends BaseTradeController {
         AssetManageBeanRequest  params=new AssetManageBeanRequest();
         params.setBorrowNid(borrowNid);
         params.setTenderNid(tenderNid);
-        params.setUserId(userId+"");
+        params.setUserId(userId);
         params.setNowTime((int)(System.currentTimeMillis() / 1000));
         params.setLimitStart(0);
         params.setLimitEnd(1);

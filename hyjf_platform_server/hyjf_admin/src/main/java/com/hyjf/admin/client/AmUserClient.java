@@ -966,6 +966,7 @@ public interface AmUserClient {
      * @return
      */
     UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request);
+
    	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest);
 	public MspApplytResponse infoAction();
 	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest);
@@ -982,4 +983,7 @@ public interface AmUserClient {
 	public MspResponse configureNameError(MspRequest mspRequest);
 	public MspResponse deleteAction(MspRequest mspRequest);
 	public MspResponse checkAction(MspRequest mspRequest);
+
+    UtmResponse getChannelNameByUserId(Integer userId);
+
 }

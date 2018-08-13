@@ -1156,8 +1156,12 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         return borrowTenderClient.selectNidForCouponOnly(new CouponRepayRequest());
     }
 
+    /**
+     * 体验金按收益期限还款
+     * @param recoverNidList
+     */
     @Override
     public void couponOnlyRepay(List<String> recoverNidList) {
-        borrowTenderClient.couponOnlyRepay(recoverNidList);
+            borrowTenderClient.couponOnlyRepay(recoverNidList);
     }
 }
