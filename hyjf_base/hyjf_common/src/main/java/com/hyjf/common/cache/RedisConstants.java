@@ -265,4 +265,12 @@ public class RedisConstants {
 	 * add by libin
 	 */
 	public static final String PUSH_MONEY_ = "push_money:";
+
+	/**
+	 * 四端平台名称rediskey
+	 * @author zhangyk
+	 * @date 2018/8/13 9:24
+	 */
+	public static final String CLIENT = "CLIENT";
+
 }
