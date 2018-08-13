@@ -1,9 +1,9 @@
 package com.hyjf.cs.user.controller.web.invite;
 
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.invite.InviteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -27,7 +27,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/invite")
-public class InviteController {
+public class InviteController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(InviteController.class);
 
     @Autowired

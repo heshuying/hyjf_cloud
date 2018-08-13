@@ -10,6 +10,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/bank/synbalance")
-public class WebSynBalanceController {
+public class WebSynBalanceController extends BaseUserController {
 
     @Autowired
     SynBalanceService synBalanceService;

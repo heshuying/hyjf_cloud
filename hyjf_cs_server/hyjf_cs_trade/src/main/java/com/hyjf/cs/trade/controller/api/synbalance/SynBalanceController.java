@@ -136,8 +136,6 @@ public class SynBalanceController extends BaseTradeController {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             logger.info("-------------------同步余额失败--------------------");
             resultBean.setStatusDesc("同步余额失败");
-
-            logger.info(this.getClass().getName(), "/synbalance");
             return resultBean;
         }
         //返回失败

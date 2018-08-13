@@ -10,6 +10,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.bean.ThirdPartyEvaluationResultBean;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-api/user")
-public class ApiEvaluationController {
+public class ApiEvaluationController extends BaseUserController {
 
     @Autowired
     EvaluationService evaluationService;

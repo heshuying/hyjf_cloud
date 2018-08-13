@@ -21,6 +21,7 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -49,7 +50,7 @@ import java.util.regex.Pattern;
 @Controller
 @RestController
 @RequestMapping("/")
-public class AppPassWordController {
+public class AppPassWordController extends BaseUserController {
 
     @Autowired
     BankOpenService bankOpenService;
