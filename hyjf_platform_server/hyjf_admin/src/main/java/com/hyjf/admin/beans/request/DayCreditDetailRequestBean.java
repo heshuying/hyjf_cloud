@@ -1,52 +1,52 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.admin.beans.request;
 
-import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
-import java.io.Serializable;
-
-/**
- * @Author : huanghui
- */
-public class DayCreditDetailRequest extends BasePage implements Serializable {
+public class DayCreditDetailRequestBean {
 
     //转让状态
+    @ApiModelProperty(value = "转让状态")
     private String creditStatus;
 
     //还款状态
+    @ApiModelProperty(value = "还款状态")
     private String repayStatus;
 
     //检索条件 项目还款方式
+    @ApiModelProperty(value = "项目还款方式")
     private String repayStyle;
 
     //检索条件 清算时间开始
+    @ApiModelProperty(value = "清算时间开始")
     private String liquidatesTimeStart;
 
     //检索条件 清算时间结束
+    @ApiModelProperty(value = "清算时间结束")
     private String liquidatesTimeEnd;
 
     //检索条件 还款时间开始
+    @ApiModelProperty(value = "转让状态")
     private String repayNextTimeStart;
 
     //检索条件 还款时间结束
+    @ApiModelProperty(value = "还款时间结束")
     private String repayNextTimeEnd;
 
     //检索条件 债转结束时间开始
+    @ApiModelProperty(value = "债转结束时间开始")
     private String endTimeStart;
 
     //检索条件 债转结束时间结束
+    @ApiModelProperty(value = "债转结束时间结束")
     private String endTimeEnd;
 
     //前画面传入检索条件 清算日期
+    @ApiModelProperty(value = "清算日期")
     private String date;
 
-    //转让人计划编号
+    //画面传入检索条件 转让人标的Nid
+    @ApiModelProperty(value = "转让人标的Nid")
     private String planNid;
-
-    public int limit = 0;
-
-    private int limitStart = -1;
-
-    private int limitEnd = -1;
 
     public String getCreditStatus() {
         return creditStatus;
@@ -134,29 +134,5 @@ public class DayCreditDetailRequest extends BasePage implements Serializable {
 
     public void setPlanNid(String planNid) {
         this.planNid = planNid;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public int getLimitStart() {
-        return limitStart;
-    }
-
-    public void setLimitStart(int limitStart) {
-        this.limitStart = limitStart;
-    }
-
-    public int getLimitEnd() {
-        return limitEnd;
-    }
-
-    public void setLimitEnd(int limitEnd) {
-        this.limitEnd = limitEnd;
     }
 }

@@ -1788,6 +1788,14 @@ public interface AmTradeClient {
     List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid);
 
     /**
+     * 汇计划按天转让记录
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37
@@ -1862,8 +1870,6 @@ public interface AmTradeClient {
     CouponTenderResponse countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
 
     CouponTenderResponse getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
-
-    DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
 
     /**
      * 圈存异步回调业务处理
