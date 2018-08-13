@@ -53,16 +53,15 @@ public class WebBindCardController extends BaseUserController {
 
 	/**
 	 *  我的银行卡页面数据
-	 * @param token
 	 * @param bindCardVO
 	 * @return
 	 */
 	@ApiOperation(value = "我的银行卡页面数据", tags = "我的银行卡页面数据")
 	@PostMapping(value = "/mycard", produces = "application/json; charset=utf-8")
-	public WebResult<Object> myCardInit(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO) {
+	public WebResult<Object> myCardInit(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO) {
 		WebResult<Object> result = new WebResult<Object>();
 		Map<String,Object> resultMap = new HashMap<>();
-		WebViewUserVO user = bindCardService.getUsersByToken(token);
+		WebViewUserVO user = bindCardService.getUserFromCache(userId);
 
 		if(user == null){
 			result.setStatus(WebResult.ERROR);
@@ -99,7 +98,6 @@ public class WebBindCardController extends BaseUserController {
 
 	/**
 	 *  用户绑卡发送短信验证码
-	 * @param token
 	 * @param bindCardVO
 	 * @return
 	 */
@@ -139,7 +137,6 @@ public class WebBindCardController extends BaseUserController {
 
 	/**
 	 * 用户绑卡
-	 * @param token
 	 * @param bindCardVO
 	 * @param request
 	 * @param response
