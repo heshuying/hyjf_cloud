@@ -25,6 +25,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -958,6 +959,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         WebResult webResult = new WebResult();
         // 获取计划编号(列表画面传递-计划编号)
         String planNid = map.get(ProjectConstant.PARAM_PLAN_NID);
+        CheckUtil.check(StringUtils.isNotBlank(planNid), MsgEnum.ERR_OBJECT_REQUIRED,"计划编号");
         // 阀值
         Integer threshold = 1000;
         result.put("threshold", threshold);
@@ -979,7 +981,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 线上异常处理 如果为空的话直接返回
         if (planDetail == null) {
             logger.error("未查询到对应的计划，计划编号为:" + planNid);
-
+            throw new CheckException("未查询到对应的计划");
 
         }
         // 最小投资金额(起投金额)-->计算最后一笔投资
