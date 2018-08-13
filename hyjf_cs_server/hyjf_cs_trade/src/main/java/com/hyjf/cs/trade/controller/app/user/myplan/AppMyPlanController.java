@@ -77,7 +77,7 @@ public class AppMyPlanController extends BaseTradeController {
 
         // 构建查询条件
         AssetManageBeanRequest params = buildQueryParameter(request);
-        params.setUserId(userId+"");
+        params.setUserId(userId);
         params.setType(type);
         AccountVO accountVO=appMyPlanService.getAccountByUserId(userId);
         // 待收金额

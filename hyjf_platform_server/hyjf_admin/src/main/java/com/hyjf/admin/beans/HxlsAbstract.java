@@ -81,12 +81,10 @@ public abstract class HxlsAbstract implements HSSFListener {
 	//excel记录行操作方法，以sheet索引，行索引和行元素列表为参数，对sheet的一行元素进行操作，元素为String类型
 	public abstract void optRows(int sheetIndex,int curRow, Map<Integer, String> rowMap
 			) throws SQLException;
-	
+
 	/**
 	 * 遍历 excel 文件
-	 * @param contentJsonDetailDao 
-	 * @param contentJsonDao 
-	 * @param diskFileList 
+	 * @throws IOException
 	 */
 	public void process() throws IOException {
 		MissingRecordAwareHSSFListener listener = new MissingRecordAwareHSSFListener(

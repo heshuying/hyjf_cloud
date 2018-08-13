@@ -34,7 +34,7 @@ public interface AppProjectListService extends BaseTradeService {
      * @author zhangyk
      * @date 2018/6/28 16:15
      */
-    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest request, String token);
+    public JSONObject getAppProjectDetail(String borrowNid, HttpServletRequest request, Integer userId);
 
 
     /**
@@ -49,7 +49,7 @@ public interface AppProjectListService extends BaseTradeService {
      * @author zhangyk
      * @date 2018/6/30 10:40
      */
-    public JSONObject getAppCreditDetail(String creditNid,String token);
+    public JSONObject getAppCreditDetail(String creditNid, Integer userId);
 
     /**
      * 移动端计划列表
@@ -63,7 +63,7 @@ public interface AppProjectListService extends BaseTradeService {
      * @author zhangyk
      * @date 2018/6/29 16:27
      */
-    public JSONObject getAppPlanDetail(String planNid, String token);
+    public JSONObject getAppPlanDetail(String planNid, Integer userId);
 
     /**
      * 散标投资记录列表

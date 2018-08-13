@@ -79,11 +79,9 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "获取用戶通知配置信息", notes = "获取用戶通知配置信息")
     @PostMapping("/userNoticeSettingInit")
-    public WebResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
+    public WebResult<UserVO> userNoticeSettingInit(@RequestHeader(value = "userId") int userId) {
         WebResult<UserVO> result = new WebResult<UserVO>();
-
-        WebViewUserVO user = safeService.getUsersByToken(token);
-        UserVO userVO = safeService.queryUserByUserId(user.getUserId());
+        UserVO userVO = safeService.queryUserByUserId(userId);
         result.setData(userVO);
 
         return result;
@@ -98,11 +96,11 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "保存用户通知设置", notes = "保存用户通知设置")
     @PostMapping(value = "/saveUserNoticeSetting", produces = "application/json; charset=utf-8")
-    public WebResult<WebViewUserVO> saveUserNoticeSetting(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
+    public WebResult<WebViewUserVO> saveUserNoticeSetting(@RequestHeader(value = "userId") int userId, @RequestBody @Valid UserNoticeSetVO userNoticeSetVO) {
         logger.info("用户通知设置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
 
-        WebViewUserVO user = safeService.getUsersByToken(token);
+        WebViewUserVO user = safeService.getWebViewUserByUserId(userId);
 
         UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
         BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
@@ -117,7 +115,7 @@ public class WebSafeController extends BaseUserController {
 
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
         if (null != webUser) {
-            webUser = safeService.updateToken(token,webUser);
+            webUser = safeService.updateUserToCache(webUser);
             result.setData(webUser);
         }
 
@@ -158,19 +156,17 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
     @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindEmail(@RequestHeader(value = "token") String token, @RequestBody BindEmailVO bindEmailVO) {
+    public WebResult<Object> bindEmail(@RequestHeader(value = "userId") int userId, @RequestBody BindEmailVO bindEmailVO) {
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        WebViewUserVO user = safeService.getUsersByToken(token);
-
-        safeService.checkForEmailBind(bindEmailVO, user);
+        safeService.checkForEmailBind(bindEmailVO, userId);
 
         try {
-            safeService.updateEmail(user.getUserId(), bindEmailVO.getEmail());
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
+            safeService.updateEmail(userId, bindEmailVO.getEmail());
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
-                webUser = safeService.updateToken(token,webUser);
+                webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
             }
         } catch (MQException e) {
@@ -190,12 +186,9 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "加载紧急联系人信息", notes = "加载紧急联系人信息")
     @PostMapping(value = "/contractInit", produces = "application/json; charset=utf-8")
-    public ContractSetResultBean contractInit(@RequestHeader(value = "token", required = true) String token) {
+    public ContractSetResultBean contractInit(@RequestHeader(value = "userId") int userId) {
         logger.info("加载紧急联系人信息开始...");
-
-        WebViewUserVO user = safeService.getUsersByToken(token);
-
-        return safeService.queryContractInfo(user.getUserId());
+        return safeService.queryContractInfo(userId);
     }
 
     /**
@@ -207,16 +200,15 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "添加、修改紧急联系人", notes = "添加、修改紧急联系人")
     @PostMapping(value = "/saveContract", produces = "application/json; charset=utf-8")
     @ApiImplicitParam(name = "param", value = "{relationId:int,rlName:string,rlPhone:string}", dataType = "Map")
-    public WebResult<Object> saveContract(@RequestHeader(value = "token", required = true) String token, @RequestBody Map<String, String> param) {
+    public WebResult<Object> saveContract(@RequestHeader(value = "userId") int userId, @RequestBody Map<String, String> param) {
         WebResult<Object> result = new WebResult<Object>();
-        WebViewUserVO user = safeService.getUsersByToken(token);
-        safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
+        safeService.checkForContractSave(param.get("relationId"), param.get("rlName"), param.get("rlPhone"));
 
         try {
-            safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), user);
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
+            safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), userId);
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
-                webUser = safeService.updateToken(token,webUser);
+                webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
             }
         } catch (MQException e) {
@@ -252,7 +244,7 @@ public class WebSafeController extends BaseUserController {
          */
         WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
         if (null != webUser) {
-            webUser = safeService.updateToken(token,webUser);
+            webUser = safeService.updateUserToCache(webUser);
             result.setData(webUser);
         }
         return result;
@@ -297,7 +289,7 @@ public class WebSafeController extends BaseUserController {
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
-                webUser = safeService.updateToken(token,webUser);
+                webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
             }
             Map<String, String> map = new HashMap<>();

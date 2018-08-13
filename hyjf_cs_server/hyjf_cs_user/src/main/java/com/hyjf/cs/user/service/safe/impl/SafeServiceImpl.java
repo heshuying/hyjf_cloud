@@ -291,14 +291,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUserVO user) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO, int userId) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 校验激活是否用户本人
-        if (!bindEmailVO.getKey().equals(String.valueOf(user.getUserId()))) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(userId))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -340,7 +340,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 紧急联系人参数校验
      */
     @Override
-    public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUserVO user) {
+    public void checkForContractSave(String relationId, String rlName, String rlPhone) {
         // 请求参数空值校验
         if (StringUtils.isBlank(relationId) || StringUtils.isBlank(rlName) || StringUtils.isBlank(rlPhone)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
@@ -359,12 +359,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 保存紧急联系人
      */
     @Override
-    public boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUserVO user) throws MQException {
+    public boolean saveContract(String relationId, String rlName, String rlPhone, int userId) throws MQException {
         UsersContractRequest requestBean = new UsersContractRequest();
         requestBean.setRelation(Integer.parseInt(relationId));
         requestBean.setRlName(rlName);
         requestBean.setRlPhone(rlPhone);
-        requestBean.setUserId(user.getUserId());
+        requestBean.setUserId(userId);
         int cnt = amUserClient.updateUserContract(requestBean);
 
         if (cnt <= 0) {
@@ -491,12 +491,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     }
 
     @Override
-    public String updateAvatar(String token, MultipartFile iconImg) throws Exception {
+    public String updateAvatar(Integer userId, MultipartFile iconImg) throws Exception {
         // 单位字节
         Long allowFileLength = 5000000L;
-        UserVO userVO = this.getUsers(token);
+        UserVO userVO = this.getUsersById(userId);
         // 取得用户ID
-        Integer userId = userVO.getUserId();
         CheckUtil.check(null != userId, MsgEnum.STATUS_CE000006);
         // 从配置文件获取上传文件的各个URL
         // 上传文件的CDNURL

@@ -20,21 +20,6 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
 	 boolean existUser(String mobile);
-	/**
-	 * @Description 根据token查询user
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:34
-	 */
-	WebViewUserVO getUsersByToken(String token);
-
-	/**
-	 * @Description 查询用户对象
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:50
-	 */
-	UserVO getUsers(String token);
 
 	/**
 	 * @Description 根据手机号查询user
@@ -123,6 +108,14 @@ public interface BaseUserService extends BaseService{
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
 	/**
+	 * @Description 根据token查询user
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/12 10:34
+	 */
+	WebViewUserVO getUserFromCache(int userId);
+
+	/**
 	 * 设置token
 	 * @param
 	 * @param webViewUserVO
@@ -137,7 +130,12 @@ public interface BaseUserService extends BaseService{
 	 */
 	UserInfoVO getUserInfo(int userId);
 
-    WebViewUserVO updateToken(String token,WebViewUserVO webViewUserVO);
+	/**
+	 * 更新用户缓存信息
+	 * @param webViewUserVO
+	 * @return
+	 */
+    WebViewUserVO updateUserToCache(WebViewUserVO webViewUserVO);
 
     /**
 	 * 登录

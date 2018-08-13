@@ -37,11 +37,11 @@ public class BorrowCreditTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端散标债转投资", notes = "web端散标债转投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求债转投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setToken(token);
+        tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         WebResult<Map<String,Object>> result = null;
@@ -68,19 +68,19 @@ public class BorrowCreditTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端债转投资获取投资结果  失败", notes = "web端债转投资获取投资结果  失败")
     @PostMapping(value = "/getResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
         logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
         return  borrowTenderService.getFaileResult(userVO,logOrdId);
     }
 
     @ApiOperation(value = "web端债转投资获取投资结果  成功", notes = "web端债转投资获取投资结果  成功")
     @PostMapping(value = "/getSuccessResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId") int userId,
                                                                @RequestParam String logOrdId) {
         logger.info("web端债转投资获取投资结果，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
         return  borrowTenderService.getSuccessResult(userVO.getUserId(),logOrdId);
     }
 

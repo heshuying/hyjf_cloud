@@ -105,17 +105,16 @@ public class WebBindCardController extends BaseUserController {
 	 */
 	@ApiOperation(value = "用户绑卡发送短信验证码", notes = "用户绑卡发送短信验证码")
 	@PostMapping(value = "/bindCardSendCode", produces = "application/json; charset=utf-8")
-	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO) {
+	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO) {
 		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", bindCardVO.getMobile(), bindCardVO.getCardNo());
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUserVO user = bindCardService.getUsersByToken(token);
-        
-        bindCardService.checkParamSendcode(user.getUserId(), bindCardVO.getMobile(), bindCardVO.getCardNo());
+
+        bindCardService.checkParamSendcode(userId, bindCardVO.getMobile(), bindCardVO.getCardNo());
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
 		try {
-			bankBean = bindCardService.callSendCode(user.getUserId(),bindCardVO.getMobile(), BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,bindCardVO.getCardNo());
+			bankBean = bindCardService.callSendCode(userId,bindCardVO.getMobile(), BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,bindCardVO.getCardNo());
 		} catch (Exception e) {
 			result.setStatus(ApiResult.ERROR);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
@@ -148,12 +147,12 @@ public class WebBindCardController extends BaseUserController {
 	 */
 	@ApiOperation(value = "用户绑卡", notes = "用户绑卡")
 	@PostMapping(value = "/bindCard", produces = "application/json; charset=utf-8")
-	public WebResult<Object> bindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+	public WebResult<Object> bindCard(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
         String userIp = GetCilentIP.getIpAddr(request);
         
         bindCardService.checkParamBindCard(bindCardVO, user.getUserId());

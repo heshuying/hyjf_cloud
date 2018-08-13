@@ -40,9 +40,9 @@ public class BorrowAuthController extends BaseTradeController {
      */
     @ApiOperation(value = "待授权列表", notes = "待授权列表")
     @PostMapping(value = "/list_auth", produces = "application/json; charset=utf-8")
-    public WebResult<List<BorrowAuthCustomizeVO>> authList(@RequestHeader(value = "token", required = true) String token, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
+    public WebResult<List<BorrowAuthCustomizeVO>> authList(@RequestHeader(value = "userId") Integer userId, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
         WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<List<BorrowAuthCustomizeVO>>();
-        WebViewUserVO userVO = borrowAuthService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowAuthService.getUserFromCache(userId);
 
         logger.info("获取待授权列表开始，requestBean：{}", JSON.toJSONString(requestBean));
 
@@ -75,9 +75,9 @@ public class BorrowAuthController extends BaseTradeController {
      */
     @ApiOperation(value = "已授权列表", notes = "已授权列表")
     @PostMapping(value = "/list_authed", produces = "application/json; charset=utf-8")
-    public WebResult<List<BorrowAuthCustomizeVO>> authedList(@RequestHeader(value = "token", required = true) String token, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
+    public WebResult<List<BorrowAuthCustomizeVO>> authedList(@RequestHeader(value = "userId") Integer userId, @RequestBody BorrowAuthRequest requestBean, HttpServletRequest request){
         WebResult<List<BorrowAuthCustomizeVO>> result = new WebResult<List<BorrowAuthCustomizeVO>>();
-        WebViewUserVO userVO = borrowAuthService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowAuthService.getUserFromCache(userId);
 
         logger.info("获取已授权列表开始，requestBean：{}", JSON.toJSONString(requestBean));
 
@@ -110,9 +110,9 @@ public class BorrowAuthController extends BaseTradeController {
      */
     @ApiOperation(value = "受托支付授权", notes = "受托支付授权")
     @GetMapping(value = "/trusteepay/{borrowNid}", produces = "application/json; charset=utf-8")
-    public WebResult<Object> trusteePay(@RequestHeader(value = "token", required = true) String token, @PathVariable String borrowNid, HttpServletRequest request){
+    public WebResult<Object> trusteePay(@RequestHeader(value = "userId") Integer userId, @PathVariable String borrowNid, HttpServletRequest request){
         WebResult<Object> result = new WebResult<Object>();
-        WebViewUserVO userVO = borrowAuthService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowAuthService.getUserFromCache(userId);
 
         logger.info("受托支付授权开始，borrowNid：{}", borrowNid);
 
@@ -138,8 +138,7 @@ public class BorrowAuthController extends BaseTradeController {
      */
     @ApiOperation(value = "受托支付授权异步回调", notes = "受托支付授权异步回调")
     @PostMapping(value = "/auth_bgrturn", produces = "application/json; charset=utf-8")
-    public BankCallResult authBgReturn(@RequestHeader(value = "token", required = true) String token, @RequestBody BankCallBean bean, HttpServletRequest request) {
-        WebViewUserVO user = borrowAuthService.getUsersByToken(token);
+    public BankCallResult authBgReturn(@RequestBody BankCallBean bean, HttpServletRequest request) {
 
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");

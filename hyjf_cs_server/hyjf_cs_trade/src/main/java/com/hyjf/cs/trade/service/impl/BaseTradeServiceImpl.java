@@ -53,8 +53,8 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
      * @Date 2018/6/12 10:34
      */
     @Override
-    public WebViewUserVO getUsersByToken(String token) {
-        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+    public WebViewUserVO getUserFromCache(int userId) {
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
         return user;
     }
 

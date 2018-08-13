@@ -20,7 +20,7 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/12 10:34
      */
-    WebViewUserVO getUsersByToken(String token);
+    WebViewUserVO getUserFromCache(int userId);
 
     UserVO getUserByUserId(Integer userId);
 

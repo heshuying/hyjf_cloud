@@ -117,28 +117,25 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_user_info (role_id, birthday, sex, 
-      truename, idcard, truename_isApprove, 
-      mobile_isApprove, email_isApprove, province, 
-      city, area, address, 
-      `attribute`, is_contact, borrower_type, 
-      update_time)
-    values (#{roleId,jdbcType=TINYINT}, #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
-      #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, #{truenameIsapprove,jdbcType=TINYINT}, 
-      #{mobileIsapprove,jdbcType=TINYINT}, #{emailIsapprove,jdbcType=TINYINT}, #{province,jdbcType=VARCHAR}, 
-      #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{attribute,jdbcType=INTEGER}, #{isContact,jdbcType=TINYINT}, #{borrowerType,jdbcType=TINYINT}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into ht_user_info (user_id, role_id, birthday, 
+      sex, truename, idcard, 
+      truename_isApprove, mobile_isApprove, email_isApprove, 
+      province, city, area, 
+      address, `attribute`, is_contact, 
+      borrower_type, update_time)
+    values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=TINYINT}, #{birthday,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=TINYINT}, #{truename,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{truenameIsapprove,jdbcType=TINYINT}, #{mobileIsapprove,jdbcType=TINYINT}, #{emailIsapprove,jdbcType=TINYINT}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{attribute,jdbcType=INTEGER}, #{isContact,jdbcType=TINYINT}, 
+      #{borrowerType,jdbcType=TINYINT}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.UserInfo" >
-    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_user_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="roleId != null" >
         role_id,
       </if>
@@ -189,6 +186,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
       <if test="roleId != null" >
         #{roleId,jdbcType=TINYINT},
       </if>

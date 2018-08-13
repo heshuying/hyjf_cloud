@@ -78,7 +78,7 @@ public class AppBankWithdrawController extends BaseTradeController {
     @ResponseBody
     @RequestMapping(value = "/getInfoAction")
     @ApiOperation(value = "获取用户提现信息", notes = "获取用户充值信息")
-    public AppWithdrawResultVO getCashInfo(@RequestHeader(value = "token") String token,HttpServletRequest request) {
+    public AppWithdrawResultVO getCashInfo(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
 
         AppWithdrawResultVO result = new AppWithdrawResultVO(AppWithdrawResultVO.APP_SUCCESS, AppWithdrawResultVO.SUCCESS_MSG, "/hyjf-app/bank/user/withdraw/getInfoAction");
         // 版本号
@@ -87,6 +87,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         String netStatus = request.getParameter("netStatus");
         // 平台
         String platform = request.getParameter("platform");
+        String token = request.getParameter("token");
         // 随机字符串
         String randomString = request.getParameter("randomString");
         // 唯一标识
@@ -133,8 +134,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         result.setUrl(super.getFrontHost(systemConfig,platform) + WITHDRAW_RULE_URL);
 
         // 取得用户iD
-        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
-        Integer userId = user.getUserId();
+        WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
 
         // 获取用户信息
         logger.info("提现可用余额："+result.getTotal());
@@ -266,7 +266,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      */
     @ResponseBody
     @RequestMapping("/getCashUrl")
-    public JSONObject getCashUrl(@RequestHeader(value = "token") String token,HttpServletRequest request) {
+    public JSONObject getCashUrl(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         // 版本号
         String version = request.getParameter("version");
@@ -303,9 +303,6 @@ public class AppBankWithdrawController extends BaseTradeController {
             ret.put("request", "/getCashUrl");
             return ret;
         }
-        // 取得用户iD
-        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
-        Integer userId = user.getUserId();
 
         String transAmt = request.getParameter("total");// 交易金额
         // 取得用户当前余额

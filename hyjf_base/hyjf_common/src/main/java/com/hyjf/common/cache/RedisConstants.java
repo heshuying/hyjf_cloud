@@ -191,7 +191,7 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
-    public static final String USER_TOKEN_REDIS = "user_token:";
+    public static final String USERID_KEY = "userId_";
 
     /**
      * 放款批次号key
@@ -258,7 +258,7 @@ public class RedisConstants {
      * 用户画像评分
      */
     public static final String USERPORTRAIT_SCORE = "userPortrait_score";
-    
+
     /**
 	 * 汇计划提成
 	 * 之前是大寫PUSH_MONEY

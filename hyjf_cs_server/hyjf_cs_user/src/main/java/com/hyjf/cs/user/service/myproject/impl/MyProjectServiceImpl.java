@@ -25,7 +25,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
     private AmTradeClient amTradeClient;
 
     @Override
-    public void selectCurrentHoldObligatoryRightList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public void selectCurrentHoldObligatoryRightList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         AssetManageBeanRequest request = new AssetManageBeanRequest();
         request.setUserId(userId);
         int total = amTradeClient.selectCurrentHoldObligatoryRightListTotal(request);
@@ -65,7 +65,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
 
 
     @Override
-    public void selectRepaymentList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public void selectRepaymentList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         AssetManageBeanRequest request = new AssetManageBeanRequest();
         request.setUserId(userId);
         int total = amTradeClient.selectRepaymentListTotal(request);
@@ -87,7 +87,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
     }
 
     @Override
-    public void selectCreditRecordList(String userId, int currentPage, int pageSize,QueryMyProjectVO vo) {
+    public void selectCreditRecordList(Integer userId, int currentPage, int pageSize,QueryMyProjectVO vo) {
         AssetManageBeanRequest request = new AssetManageBeanRequest();
         request.setUserId(userId);
         int total=amTradeClient.countCreditRecordTotal(request);
@@ -110,7 +110,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
     }
 
     @Override
-    public void selectCurrentHoldPlanList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public void selectCurrentHoldPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         AssetManageBeanRequest request=new AssetManageBeanRequest();
         request.setUserId(userId);
         int total=amTradeClient.countCurrentHoldPlanTotal(request);
@@ -129,7 +129,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
     }
 
     @Override
-    public void selectRepayMentPlanList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
+    public void selectRepayMentPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo) {
         AssetManageBeanRequest request=new AssetManageBeanRequest();
         request.setUserId(userId);
         int total=amTradeClient.countRepayMentPlanTotal(request);

@@ -92,7 +92,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     @Override
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
-        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getToken()));
+        UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
         String key = RedisConstants.HJH_TENDER_REPEAT + userId;
@@ -167,7 +167,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 计划不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
-        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getToken()));
+        UserVO loginUser = amUserClient.findUserById(tender.getUserId());
 
         tender.setUser(loginUser);
         BigDecimal couponInterest = BigDecimal.ZERO;
