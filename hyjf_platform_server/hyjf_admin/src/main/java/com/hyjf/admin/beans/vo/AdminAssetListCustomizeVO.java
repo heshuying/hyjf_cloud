@@ -4,9 +4,9 @@
 package com.hyjf.admin.beans.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.hyjf.am.vo.BaseVO;
-import com.ibm.icu.math.BigDecimal;
 
 import io.swagger.annotations.ApiModelProperty;
 

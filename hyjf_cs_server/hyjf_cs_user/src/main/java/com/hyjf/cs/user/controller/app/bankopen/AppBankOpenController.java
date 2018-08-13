@@ -5,7 +5,6 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -19,12 +18,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -35,9 +31,9 @@ import java.util.Map;
  */
 @Api(value = "app端用户开户",tags = "app端-用户开户")
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {
-    private static final Logger logger = LoggerFactory.getLogger(AppBankOpenController.class);
 
     @Autowired
     private BankOpenService bankOpenService;
@@ -53,11 +49,11 @@ public class AppBankOpenController extends BaseUserController {
     @PostMapping(value = "/userInfo")
     @ResponseBody
     public AppResult<String> userInfo(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
-        logger.info("openAccount userInfo start, userId is :{}", userId);
+        logger.info("app openAccount userInfo start, userId is :{}", userId);
         AppResult<String> result = new AppResult<String>();
         UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
-            logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
+            logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";

@@ -20,6 +20,9 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.paginator.Paginator;
@@ -549,6 +552,14 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             params.put("limitEnd", page.getLimit());
             List<AppProjectInvestListCustomizeVO> list = amTradeClient.selectProjectInvestList(params);
             if (!CollectionUtils.isEmpty(list)) {
+                Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
+                if (!CollectionUtils.isEmpty(map)){
+                    for (AppProjectInvestListCustomizeVO vo : list){
+                        if (StringUtils.isNotBlank(vo.getClientName())){
+                            vo.setClientName(map.get(vo.getClientName()));
+                        }
+                    }
+                }
                 List<ProjectInvestListVO> voList = CommonUtils.convertBeanList(list, ProjectInvestListVO.class);
                 CommonUtils.convertNullToEmptyString(voList);
                 info.setProjectInvestList(voList);

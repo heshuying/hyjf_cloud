@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -36,6 +37,8 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -297,6 +300,8 @@ public interface AmTradeClient {
     Integer countPreapysList(Map<String, Object> requestBean);
 
     Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean);
+
+    Boolean updateBorrowCreditStautus(String borrowNid);
 
     BorrowApicronVO selectBorrowApicron(String bankSeqNO);
 
@@ -1606,4 +1611,10 @@ public interface AmTradeClient {
      * @date 2018/8/10 15:21
      */
     BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
+
+    JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean);
+
+    RepayBean getRepayBean(Map<String, String> paraMap);
+
+    ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
 }

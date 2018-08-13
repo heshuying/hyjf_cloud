@@ -327,7 +327,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         String token = generatorToken(userId, userVO.getUsername());
         WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO);
         webViewUserVO.setToken(token);
-        RedisUtils.setObjEx(RedisConstants.USER_TOKEN_REDIS + token, webViewUserVO, 7 * 24 * 60 * 60);
+        RedisUtils.setObjEx(RedisConstants.USERID_KEY + userId, webViewUserVO, 7 * 24 * 60 * 60);
 
         // 2. 注册成功用户保存账户表
         sendMqToSaveAccount(webViewUserVO.getUserId(),webViewUserVO.getUsername());
@@ -675,20 +675,5 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             return imghost + fileUploadTempPath + iconUrl;
         }
         return iconUrl;
-    }
-
-
-    /**
-     * jwt生成token
-     *
-     * @param userId
-     * @param username
-     * @return
-     */
-    private String generatorToken(int userId, String username) {
-        Map map = ImmutableMap.of("userId", String.valueOf(userId), "username", username, "ts",
-                String.valueOf(Instant.now().getEpochSecond()));
-        String token = JwtHelper.genToken(map);
-        return token;
     }
 }

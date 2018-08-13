@@ -90,7 +90,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      * @param ip
      */
     @Override
-    public void sendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
+    public void sendSmsCodeCheckParam(String validCodeType, String mobile, Integer userId, String ip) {
 
         List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
                 CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
@@ -102,20 +102,21 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
         }
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-            if (StringUtils.isNotEmpty(token)) {
-                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-                CheckUtil.check(webViewUserVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
-                // 验证原手机号校验
-                if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
-                    CheckUtil.check(StringUtils.isNotBlank(webViewUserVO.getMobile()), MsgEnum.ERR_USER_NOT_EXISTS);
-                    CheckUtil.check(webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_SAME);
-                }
-                // 绑定新手机号校验
-                if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-                    CheckUtil.check(!webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_DIFFERENT);
-                    CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
-                }
-            }
+			if (userId != null) {
+				WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USERID_KEY + userId,
+						WebViewUserVO.class);
+				CheckUtil.check(webViewUserVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
+				// 验证原手机号校验
+				if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH)) {
+					CheckUtil.check(StringUtils.isNotBlank(webViewUserVO.getMobile()), MsgEnum.ERR_USER_NOT_EXISTS);
+					CheckUtil.check(webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_SAME);
+				}
+				// 绑定新手机号校验
+				if (validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
+					CheckUtil.check(!webViewUserVO.getMobile().equals(mobile), MsgEnum.ERR_MOBILE_NEED_DIFFERENT);
+					CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
+				}
+			}
         }
 
         // 判断发送间隔时间
@@ -194,7 +195,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      * @param ip
      */
     @Override
-    public JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, String token, String ip) {
+    public JSONObject appSendSmsCodeCheckParam(String validCodeType, String mobile, Integer userId, String ip) {
         JSONObject ret = new JSONObject();
         List<String> codeTypes = Arrays.asList(CommonConstant.PARAM_TPL_ZHUCE, CommonConstant.PARAM_TPL_ZHAOHUIMIMA,
                 CommonConstant.PARAM_TPL_YZYSJH, CommonConstant.PARAM_TPL_BDYSJH);
@@ -218,8 +219,8 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             }
         }
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
-            if (StringUtils.isNotEmpty(token)) {
-                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
+            if (userId != null) {
+                WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
                 if (webViewUserVO == null){
                     ret.put("status", "1");
                     ret.put("statusDesc", "用户不存在");

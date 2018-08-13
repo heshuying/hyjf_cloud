@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.service.impl;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -45,15 +47,14 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     AccountClient accountClient;
 
     /**
-     * @param token
      * @Description 根据token查询user
      * @Author sunss
      * @Version v0.1
      * @Date 2018/6/12 10:34
      */
     @Override
-    public WebViewUserVO getUsersByToken(String token) {
-        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+    public WebViewUserVO getUserFromCache(int userId) {
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
         return user;
     }
 
@@ -191,6 +192,16 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             return sysConfig.getWeiFrontHost();
         }
         return null;
+    }
+
+    /**
+     * 根据borrowNid获取borrow
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowVO getBorrowByNid(String borrowNid) {
+        return amTradeClient.selectBorrowByNid(borrowNid);
     }
 
 }

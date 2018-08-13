@@ -22,7 +22,7 @@ public class RequestUtil{
      * @return
      */
     public Integer getRequestUserId(HttpServletRequest request){
-        return (Integer)request.getAttribute("userId");
+        return Integer.valueOf(request.getHeader("userId"));
     }
     
     /**

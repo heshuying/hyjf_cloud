@@ -13,11 +13,14 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
+import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -122,6 +125,17 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	@Override
 	public boolean isCAIdNoCheck(String param, String name) {
 		return Response.isSuccess(amUserClient.isCAIdNoCheck(param, name));
+	}
+
+	@Override
+	public BorrowCustomizeResponse init(BorrowBeanRequest form) {
+		return amTradeClient.selectBorrowAllList(form);
+	}
+
+	@Override
+	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowBeanRequest borrowCommonCustomize) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

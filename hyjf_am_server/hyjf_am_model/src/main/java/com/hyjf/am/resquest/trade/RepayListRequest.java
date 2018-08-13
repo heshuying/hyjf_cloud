@@ -9,6 +9,7 @@ import com.hyjf.am.vo.BasePage;
  */
 public class RepayListRequest extends BasePage {
     String userId;
+    String roleId;
     String status;
     String repayStatus;
     String startDate;
@@ -97,5 +98,13 @@ public class RepayListRequest extends BasePage {
 
     public void setRepayStatus(String repayStatus) {
         this.repayStatus = repayStatus;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

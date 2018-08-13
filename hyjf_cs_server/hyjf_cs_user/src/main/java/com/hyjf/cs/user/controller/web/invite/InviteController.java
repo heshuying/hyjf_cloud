@@ -41,22 +41,21 @@ public class InviteController {
     @ApiOperation(value = "我的邀请列表", notes = "我的邀请列表")
     @ApiImplicitParam(name = "param",value = "{currPage:string,pageSize:string}", dataType = "Map")
     @PostMapping(value = "/myInviteList", produces = "application/json; charset=utf-8")
-    public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "token", required = true) String token, @RequestBody  Map<String,String> param, HttpServletRequest request){
+    public WebResult<List<MyInviteListCustomizeVO>> selectMyInviteList(@RequestHeader(value = "userId") int userId, @RequestBody  Map<String,String> param, HttpServletRequest request){
         WebResult<List<MyInviteListCustomizeVO>> result = new WebResult<List<MyInviteListCustomizeVO>>();
         List<MyInviteListCustomizeVO> resultList = Collections.emptyList();
-        WebViewUserVO userVO = inviteService.getUsersByToken(token);
 
-        logger.info("获取我的邀请列表开始，userId：{}", userVO.getUserId());
+        logger.info("获取我的邀请列表开始，userId：{}", userId);
 
         // 请求参数校验
         inviteService.checkForInviteList(param);
 
-        Integer inviteCount = inviteService.selectMyInviteCount(String.valueOf(userVO.getUserId()));
+        Integer inviteCount = inviteService.selectMyInviteCount(String.valueOf(userId));
         Page page = Page.initPage(Integer.parseInt(param.get("currPage")), Integer.parseInt(param.get("pageSize")));
         page.setTotal(inviteCount);
 
         try {
-            resultList = inviteService.selectMyInviteList(String.valueOf(userVO.getUserId()), page.getOffset(), page.getLimit());
+            resultList = inviteService.selectMyInviteList(String.valueOf(userId), page.getOffset(), page.getLimit());
             result.setData(resultList);
         } catch (Exception e) {
             logger.error("获取我的邀请列表异常", e);

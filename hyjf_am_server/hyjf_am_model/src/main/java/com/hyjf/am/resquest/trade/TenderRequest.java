@@ -47,7 +47,7 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "投资平台 app需要上送")
     private String platform;
     // 登录的userId
-    private String token;
+    private Integer userId;
     // 当前登录user对象
     private UserVO user;
     /**
@@ -131,12 +131,12 @@ public class TenderRequest extends BaseVO {
         this.platform = platform;
     }
 
-    public String getToken() {
-        return token;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public UserVO getUser() {

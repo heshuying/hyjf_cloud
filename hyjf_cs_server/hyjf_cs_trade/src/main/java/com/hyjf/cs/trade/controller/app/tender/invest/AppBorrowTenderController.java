@@ -46,11 +46,11 @@ public class AppBorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "token", required = true) String token,TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId,TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setToken(token);
+        tender.setUserId(userId);
 
         WebResult<Map<String,Object>> result = null;
         try{
@@ -86,31 +86,31 @@ public class AppBorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "APP端散标投资获取投资结果", notes = "APP端散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
         logger.info("APP端请求获取投资结果接口，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
         return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
     }
 
     @ApiOperation(value = "APP端散标投资获取投资成功结果", notes = "APP端散标投资获取投资成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid) {
         logger.info("APP端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
+        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
         return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
     }
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
-    public AppResult<AppInvestInfoResultVO> getInvestInfo(@RequestHeader(value = "token", required = true) String token, TenderRequest tender, HttpServletRequest request) {
+    public AppResult<AppInvestInfoResultVO> getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
-        tender.setToken(token);
+        tender.setUserId(userId);
         AppResult<AppInvestInfoResultVO> result = borrowTenderService.getInvestInfoApp(tender);
         return result;
     }

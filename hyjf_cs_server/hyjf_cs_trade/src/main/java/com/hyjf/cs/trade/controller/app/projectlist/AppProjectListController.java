@@ -59,9 +59,9 @@ public class AppProjectListController extends BaseTradeController {
     @ApiOperation(value = "APP端散标详情", notes = "APP端散标详情")
     @ApiImplicitParam(name = "param", value = "{borrowId:string,borrowType:string<1是债转,0 普通>}", dataType = "Map")
     @GetMapping(value = "/borrow/{borrowId}", produces = "application/json; charset=utf-8")
-    public Object borrowProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "token", required = false) String token) {
+    public Object borrowProjectDetail(@PathVariable String borrowId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) Integer userId) {
         // controller 不做业务处理
-        JSONObject result = appProjectListService.getAppProjectDetail(borrowId,request, token);
+        JSONObject result = appProjectListService.getAppProjectDetail(borrowId,request, userId);
         return result;
     }
 
@@ -100,7 +100,7 @@ public class AppProjectListController extends BaseTradeController {
      * @date 2018/8/9 10:36
      */
     @ApiOperation(value = "新增承接记录列表显示", tags = "新增承接记录列表显示" )
-    @PostMapping(value = "/borrow/{borrowId}/getBorrowUndertake" , produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/borrow/{borrowId}/getBorrowUndertake" , produces = "application/json; charset=utf-8")
     public JSONObject searchProjectUndertakeList(@PathVariable("borrowId") String borrowNid, HttpServletRequest request) {
        JSONObject result =  appProjectListService.searchProjectUndertakeList(borrowNid,request);
        return result;
@@ -134,8 +134,8 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端债转详情", notes = "APP端债转详情")
     @GetMapping(value = "/transfer/{transferId}", produces = "application/json; charset=utf-8")
-    public Object getCreditDetail(@PathVariable String transferId , @RequestHeader(value = "token", required = false) String token) {
-        JSONObject result= appProjectListService.getAppCreditDetail(transferId, token);
+    public Object getCreditDetail(@PathVariable String transferId , @RequestHeader(value = "userId", required = false) int userId) {
+        JSONObject result= appProjectListService.getAppCreditDetail(transferId, userId);
         return result;
     }
 
@@ -183,8 +183,8 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端计划详情", notes = "APP端计划详情")
     @GetMapping(value ="/plan/{planId}", produces = "application/json; charset=utf-8")
-    public Object getPlanDetail(@PathVariable @Valid String planId , @RequestHeader(value = "token", required = false) String token) {
-         JSONObject result = appProjectListService.getAppPlanDetail(planId, token);
+    public Object getPlanDetail(@PathVariable @Valid String planId , @RequestHeader(value = "userId", required = false) int userId) {
+         JSONObject result = appProjectListService.getAppPlanDetail(planId, userId);
         return result;
     }
 
