@@ -60,4 +60,5 @@ public interface BaseTradeService extends BaseService{
     BankCardVO getBankCardVOByUserId(Integer userId);
 
     BorrowVO getBorrowByNid(String borrowNid);
+    BankCardVO getBankCardVOByUserId(Integer userId);
 }

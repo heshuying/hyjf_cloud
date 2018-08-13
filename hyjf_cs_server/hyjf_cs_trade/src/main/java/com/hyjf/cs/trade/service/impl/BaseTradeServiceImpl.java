@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;

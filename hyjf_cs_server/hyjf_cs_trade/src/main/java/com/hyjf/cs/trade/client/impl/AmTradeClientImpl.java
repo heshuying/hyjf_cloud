@@ -1656,6 +1656,10 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";
+        UserHjhInvistDetailCustomizeResponse response = restTemplate.postForEntity(url,params,UserHjhInvistDetailCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
         return null;
     }
     /**
