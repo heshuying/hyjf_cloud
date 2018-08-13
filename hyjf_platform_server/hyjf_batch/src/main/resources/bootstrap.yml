@@ -2,9 +2,9 @@ spring:
   application:
     name: BATCH
   cloud:
-    config:
-      uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
-      profile: test
+          config:
+            uri: http://micoserver:2222/
+            profile: test
 
 server:
   port: 9091
