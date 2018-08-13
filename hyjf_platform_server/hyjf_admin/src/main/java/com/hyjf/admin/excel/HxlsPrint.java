@@ -1,4 +1,4 @@
-package com.hyjf.admin.beans;
+package com.hyjf.admin.excel;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HxlsPrint extends HxlsAbstract{
+public class HxlsPrint extends HxlsAbstract {
 
 	private Map<String, Integer> rowIndexMap;
 	private static Map<String, String> titleMap = null;

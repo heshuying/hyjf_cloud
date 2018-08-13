@@ -1,4 +1,4 @@
-package com.hyjf.admin.beans;
+package com.hyjf.admin.excel;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

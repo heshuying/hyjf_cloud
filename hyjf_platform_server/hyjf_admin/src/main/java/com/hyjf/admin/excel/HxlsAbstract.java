@@ -1,4 +1,4 @@
-package com.hyjf.admin.beans;
+package com.hyjf.admin.excel;
 
 import org.apache.poi.hssf.eventusermodel.EventWorkbookBuilder.SheetRecordCollectingListener;
 import org.apache.poi.hssf.eventusermodel.*;
