@@ -4,7 +4,7 @@ import com.hyjf.am.response.admin.ManualReverseCustomizeResponse;
 import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
 import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.trade.ManualReverseCustomize;
+import com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize;
 import com.hyjf.am.trade.service.admin.exception.ManualReverseExceptionService;
 import com.hyjf.am.vo.admin.ManualReverseCustomizeVO;
 import com.hyjf.common.util.CommonUtils;

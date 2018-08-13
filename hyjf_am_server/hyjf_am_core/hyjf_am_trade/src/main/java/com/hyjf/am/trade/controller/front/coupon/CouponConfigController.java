@@ -14,7 +14,7 @@ import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponConfigCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponConfigService;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;

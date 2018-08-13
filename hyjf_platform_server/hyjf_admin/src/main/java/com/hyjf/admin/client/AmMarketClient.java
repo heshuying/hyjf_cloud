@@ -8,6 +8,7 @@ import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 
@@ -87,4 +88,6 @@ public interface AmMarketClient {
      * @return title
      */
     CouponTenderResponse getActivityById(Integer activityId);
+
+    List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request);
 }

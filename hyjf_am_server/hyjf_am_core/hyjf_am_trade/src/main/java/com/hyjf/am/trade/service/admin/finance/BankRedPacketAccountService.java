@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.BankMerchantAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 
 import java.util.List;
 

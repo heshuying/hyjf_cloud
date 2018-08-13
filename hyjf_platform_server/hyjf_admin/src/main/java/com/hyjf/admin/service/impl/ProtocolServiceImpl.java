@@ -74,11 +74,11 @@ public class ProtocolServiceImpl implements ProtocolService {
      * @return
      */
     @Override
-    public void insertProtocolTemplate(AdminProtocolRequest request){
+    public void insertProtocolTemplate(AdminProtocolRequest request,String userId){
         List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
 
-        Integer createUserId = 0;
+        Integer createUserId = Integer.valueOf(userId);
         //模板存放路径
         String fileDomainUrl = "";
         //年月日，随机数
@@ -87,7 +87,6 @@ public class ProtocolServiceImpl implements ProtocolService {
         String monthNow = calendar1.get(Calendar.MONTH) + 1< 10? "0"+(calendar1.get(Calendar.MONTH) + 1):String.valueOf(calendar1.get(Calendar.MONTH) + 1);
         String dayNow =calendar1.get(Calendar.DATE)<10? "0"+calendar1.get(Calendar.DATE): String.valueOf(calendar1.get(Calendar.DATE));
         int random = (int)(Math.random()*900)+100;
-        int randomUrl = (int)(Math.random()*9000)+1000;
         //查询协议模板名称
         ProtocolTemplateVO protocolTemplate=request.getProtocolTemplateVO();
         int num=getProtocolTemplateNum(request);
@@ -107,8 +106,6 @@ public class ProtocolServiceImpl implements ProtocolService {
                     protocolId="Agreement"+"0"+num+ yearNow+monthNow+dayNow+random;
                 }
             }
-            String protocolNam= protocolTemplate.getProtocolName();
-            String versionNumber= protocolTemplate.getVersionNumber();
             String protocolUrl = protocolTemplate.getProtocolUrl();
             //将pdf转为图片---参数
             String pdfPath=protocolUrl;
@@ -116,7 +113,6 @@ public class ProtocolServiceImpl implements ProtocolService {
             String imgUrl="";
             //1.保存协议模板
             protocolTemplate.setProtocolId(protocolId);
-//            protocolTemplate.setCreateUserId(createUserId);
             //将pdf转为图片
             List<String> imgs = PdfToHtml.pdftoImg(fileDomainUrl+pdfPath,fileDomainUrl+savePath,PdfToHtml.IMG_TYPE_JPG);
             if(!CollectionUtils.isEmpty(imgs)){
@@ -200,11 +196,11 @@ public class ProtocolServiceImpl implements ProtocolService {
      * @return
      */
     @Override
-    public void updateProtocolTemplate(AdminProtocolRequest request) {
+    public void updateProtocolTemplate(AdminProtocolRequest request,String userId) {
         List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
         ProtocolTemplateCommonVO protocolTemplateCommonVO = new ProtocolTemplateCommonVO();
         String fileDomainUrl = "";
-        Integer updateUserId = 0;
+        Integer updateUserId = Integer.valueOf(userId);
         //1.1修改协议模板
         ProtocolTemplateVO protocolTemplate = request.getProtocolTemplateVO();
         if (protocolTemplate != null) {
@@ -255,9 +251,9 @@ public class ProtocolServiceImpl implements ProtocolService {
      *
      */
     @Override
-    public void deleteProtocolTemplate(AdminProtocolRequest request){
+    public void deleteProtocolTemplate(AdminProtocolRequest request,String userId){
         List<ProtocolTemplateCommonVO> listProtocolTemplateCommonVO = new ArrayList<>();
-        Integer updateUserId = 0;
+        Integer updateUserId =  Integer.valueOf(userId);
         ProtocolTemplateCommonVO protocolTemplateCommon=new ProtocolTemplateCommonVO();
         request.setIds(String.valueOf(updateUserId));
         //根据协议的id查询协议

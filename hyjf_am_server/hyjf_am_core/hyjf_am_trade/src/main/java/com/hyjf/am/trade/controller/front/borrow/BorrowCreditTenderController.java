@@ -8,7 +8,7 @@ import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
 import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminBorrowCreditTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditTenderCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;

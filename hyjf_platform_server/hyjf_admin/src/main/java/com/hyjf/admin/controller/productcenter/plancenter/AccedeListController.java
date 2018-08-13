@@ -715,7 +715,7 @@ public class AccedeListController extends BaseController{
 					return null;
 				}
 			} else {
-				System.out.println("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。");
+				_log.info("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。");
 				return "计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。";
 			}
 		} catch (Exception e) {

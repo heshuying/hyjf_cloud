@@ -9,7 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowBail;
 import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowExample;
-import com.hyjf.am.trade.dao.model.customize.admin.BorrowFirstCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.mq.producer.BorrowFirstProducer;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;

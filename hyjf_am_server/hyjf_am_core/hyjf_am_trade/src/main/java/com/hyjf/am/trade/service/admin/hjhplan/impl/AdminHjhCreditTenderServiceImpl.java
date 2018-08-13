@@ -5,7 +5,7 @@ package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.trade.dao.mapper.auto.HjhDebtCreditTenderMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.AdminHjhCreditTenderCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AdminHjhCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTenderExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;

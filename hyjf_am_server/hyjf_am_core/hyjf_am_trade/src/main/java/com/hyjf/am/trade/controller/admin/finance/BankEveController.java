@@ -6,7 +6,7 @@ import com.hyjf.am.response.trade.BankEveResponse;
 import com.hyjf.am.resquest.admin.BankEveRequest;
 
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.trade.EveLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.EveLogCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankEveService;
 import com.hyjf.am.vo.admin.BankEveVO;
 import com.hyjf.common.paginator.Paginator;

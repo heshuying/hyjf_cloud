@@ -234,7 +234,7 @@ public class RedisConstants {
     /**
      * 邮件模版key
      */
-    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template";
+    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template:";
 
     /**
      * 运营报告定时任务key

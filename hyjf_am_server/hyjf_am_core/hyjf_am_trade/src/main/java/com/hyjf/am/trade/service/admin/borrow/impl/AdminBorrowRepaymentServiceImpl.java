@@ -3,7 +3,7 @@ package com.hyjf.am.trade.service.admin.borrow.impl;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.admin.*;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.CommonUtils;

@@ -1899,4 +1899,20 @@ public class AmUserClientImpl implements AmUserClient {
 			}
 			return null;
 	}
+
+	/**
+	 * 获取注册时的用户渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmResponse getChannelNameByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId;
+		UtmResponse utmResponse = restTemplate.getForEntity(url, UtmResponse.class).getBody();
+		if (utmResponse != null) {
+			return utmResponse;
+		}
+		return null;
+	}
 }

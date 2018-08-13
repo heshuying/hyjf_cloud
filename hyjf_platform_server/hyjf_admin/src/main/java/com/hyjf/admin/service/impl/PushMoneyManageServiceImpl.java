@@ -1,5 +1,7 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.BankAccountManageClient;
@@ -8,6 +10,9 @@ import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.BorrowApicronRequest;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.resquest.admin.TenderCommissionRequest;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -15,15 +20,21 @@ import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.http.HtmlUtil;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.AverageCapitalPlusInterestUtils;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +44,7 @@ import java.util.Map;
  * @version BorrowRecoverServiceImpl, v0.1 2018/7/2 10:17
  */
 @Service
-public class PushMoneyManageServiceImpl implements PushMoneyManageService {
+public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements PushMoneyManageService {
 
     @Autowired
     AmTradeClient amTradeClient;
@@ -333,5 +344,224 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
             tenderCommission.setDepartmentId(userInfoCustomize.getDepartmentId());
             tenderCommission.setDepartmentName(HtmlUtil.unescape(userInfoCustomize.getDepartmentName()));
         }
+    }
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public int getPushMoneyListCount(PushMoneyRequest request) {
+        return amTradeClient.getPushMoneyListCount(request);
+    }
+
+    /**
+     * 直投提成列表list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request) {
+        List<PushMoneyVO> pushMoneyVOList = amTradeClient.searchPushMoneyList(request);
+        return pushMoneyVOList;
+    }
+
+    /**
+     * 直投提成列表总额
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public Map<String, Object> queryPushMoneyTotle(PushMoneyRequest request) {
+        return amTradeClient.queryPushMoneyTotle(request);
+    }
+
+    /**
+     * 发提成
+     * @auth sunpeikai
+     * @param id 提成id
+     * @return
+     */
+    @Override
+    public JSONObject pushMoney(HttpServletRequest request,Integer id,Integer loginUserId) {
+
+        JSONObject ret = new JSONObject();
+        ret.put("status","");
+        ret.put("statusDesc","");
+
+        TenderCommissionVO tenderCommissionVO = amTradeClient.queryTenderCommissionByPrimaryKey(id);
+
+        //TenderCommission tenderCommission = this.pushMoneyService.queryTenderCommissionByPrimaryKey(id);
+        // 如果 未发放 //且 提成>0
+        if (tenderCommissionVO != null && tenderCommissionVO.getStatus() == 0
+                && tenderCommissionVO.getAccountTender().compareTo(BigDecimal.ZERO) > 0) {
+            Integer userId = tenderCommissionVO.getUserId();
+
+            /** 验证员工在平台的身份属性是否和crm的一致 如果不一致则不发提成 begin */
+
+            /** redis 锁 */
+            boolean reslut = RedisUtils.tranactionSet("PUSH_MONEY:" + id, 60);
+            // 如果没有设置成功，说明有请求来设置过
+            if(!reslut){
+                ret.put("status","error");
+                ret.put("statusDesc","数据已发生变化,请一分钟后再操作!");
+                return ret;
+            }
+
+            UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
+            // cuttype 提成发放方式（3线上2线下）
+
+            Integer cuttype = amTradeClient.queryCrmCuttype(userId);
+
+            if (userInfoVO.getAttribute() != null && userInfoVO.getAttribute() > 1) {
+                if (userInfoVO.getAttribute() != cuttype) {
+                    ret.put("status","error");
+                    ret.put("statusDesc","该用户属性异常!");
+                    logger.error("该用户平台属性与CRM 不符！[userId=" + userId + "]");
+                    return ret;
+                }
+            }
+            /** 验证员工在平台的身份属性是否和crm的一致 如果不一致则不发提成 end */
+
+            BankOpenAccountVO bankOpenAccountVO = amUserClient.searchBankOpenAccount(userId);
+
+            if (bankOpenAccountVO != null && !Validator.isNull(bankOpenAccountVO.getAccount())) {
+                // 查询商户子账户余额
+
+                String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
+
+                BigDecimal bankBalance = getBankBalance(loginUserId, merrpAccount);
+
+                // 如果接口调用成功
+                if (bankBalance != null) {
+                    // 检查余额是否充足
+                    if (bankBalance.compareTo(tenderCommissionVO.getCommission()) < 0) {
+                        logger.error("推广提成子账户余额不足,请先充值或向该子账户转账");
+                        ret.put("status","error");
+                        ret.put("statusDesc","推广提成子账户余额不足,请先充值或向该子账户转账!");
+                        return ret;
+                    }
+                } else {
+                    logger.error("没有查询到商户可用余额");
+                    ret.put("status","error");
+                    ret.put("statusDesc","没有查询到商户可用余额");
+                    return ret;
+                }
+
+
+                // IP地址
+                String ip = CustomUtil.getIpAddr(request);
+                String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
+
+                BankCallBean bean = new BankCallBean();
+                bean.setVersion(BankCallConstant.VERSION_10);// 版本号
+                bean.setTxCode(BankCallMethodConstant.TXCODE_VOUCHER_PAY);// 交易代码
+                bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
+                bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
+                bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
+                bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
+                bean.setAccountId(merrpAccount);// 电子账号
+                bean.setTxAmount(tenderCommissionVO.getCommission().toString());
+                bean.setForAccountId(bankOpenAccountVO.getAccount());
+                bean.setDesLineFlag("1");
+                bean.setDesLine(tenderCommissionVO.getOrdid());
+                bean.setLogOrderId(orderId);// 订单号
+                bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+                bean.setLogUserId(String.valueOf(userId));
+                bean.setLogClient(0);// 平台
+                bean.setLogIp(ip);
+
+                BankCallBean resultBean;
+                try {
+                    resultBean = BankCallUtils.callApiBg(bean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ret.put("status","error");
+                    ret.put("statusDesc","请求红包接口失败");
+                    return ret;
+                }
+
+                if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                    ret.put("status","error");
+                    ret.put("statusDesc","调用红包接口发生错误");
+                    return ret;
+                }
+
+                int cnt = 0;
+                // 接口返回正常时,执行更新操作
+                try {
+                    // 发提成处理
+                    PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
+                    pushMoneyRequest.setTenderCommissionVO(tenderCommissionVO);
+                    pushMoneyRequest.setLoginUserId(loginUserId);
+                    AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
+                    pushMoneyRequest.setLoginUserName(adminSystemVO.getUsername());
+                    pushMoneyRequest.setBankOpenAccountVO(bankOpenAccountVO);
+                    pushMoneyRequest.setBankCallBeanVO(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
+                    cnt = amTradeClient.updateTenderCommissionRecord(pushMoneyRequest);
+
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+
+                // 返现成功
+                if (cnt > 0) {
+                    ret.put("status","success");
+                    ret.put("statusDesc","发提成操作成功!");
+                    logger.info("提成发放成功，用户id：" + userId + " 金额:"  + tenderCommissionVO.getCommission().toString());
+                } else {
+                    ret.put("status","error");
+                    ret.put("statusDesc","发提成时发生错误,请重新操作!");
+                }
+                return ret;
+
+            }else {
+                ret.put("status","error");
+                ret.put("statusDesc","该用户未开户!");
+                return ret;
+            }
+
+        }else{
+            ret.put("status","error");
+            ret.put("statusDesc","提成已经发过啦");
+        }
+        return ret;
+    }
+
+    /**
+     * 获取银行账户余额
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private BigDecimal getBankBalance(Integer userId, String accountId) {
+        // 账户可用余额
+        BigDecimal balance = BigDecimal.ZERO;
+        BankCallBean bean = new BankCallBean();
+        bean.setVersion(BankCallConstant.VERSION_10);// 版本号
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);// 交易代码
+        bean.setTxDate(GetOrderIdUtils.getTxDate()); // 交易日期
+        bean.setTxTime(GetOrderIdUtils.getTxTime()); // 交易时间
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号
+        bean.setChannel(BankCallConstant.CHANNEL_PC); // 交易渠道
+        bean.setAccountId(accountId);// 电子账号
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(userId)));// 订单号
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogUserId(String.valueOf(userId));
+        bean.setLogClient(0);// 平台
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return balance;
     }
 }

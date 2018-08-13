@@ -4,9 +4,10 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.PushMoneyCustomize;
+import com.hyjf.am.trade.dao.model.customize.PushMoneyCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zdj
@@ -26,4 +27,26 @@ public interface PushMoneyManageService {
      * @return
      */
     int countPushMoney(PushMoneyRequest request);
+
+    int getPushMoneyListCount(PushMoneyRequest request);
+
+    List<PushMoneyCustomize> searchPushMoneyList(PushMoneyRequest request);
+
+    Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request);
+
+    /**
+     * 根据userid查询 crm  cuttype
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int queryCrmCuttype(Integer userId);
+
+    /**
+     * 发提成
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateTenderCommissionRecord(PushMoneyRequest request);
 }

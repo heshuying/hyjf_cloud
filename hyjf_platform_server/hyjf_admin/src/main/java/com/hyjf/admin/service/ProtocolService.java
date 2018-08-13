@@ -35,18 +35,18 @@ public interface ProtocolService {
      *
      * @return
      */
-    void insertProtocolTemplate(AdminProtocolRequest request);
+    void insertProtocolTemplate(AdminProtocolRequest request,String userId);
 
     /**
      * 修改协议模板
      *
      * @return
      */
-    void updateProtocolTemplate(AdminProtocolRequest request);
+    void updateProtocolTemplate(AdminProtocolRequest request,String userId);
 
     /**
      * 删除协议模板
      *
      */
-    void deleteProtocolTemplate(AdminProtocolRequest request);
+    void deleteProtocolTemplate(AdminProtocolRequest request,String userId);
 }

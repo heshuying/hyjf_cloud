@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -17,17 +18,16 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -2321,6 +2321,48 @@ public interface AmTradeClient {
 	 * @return
 	 */
     OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form);
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPushMoneyListCount(PushMoneyRequest request);
+
+    /**
+     * 直投提成列表list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request);
+
+    /**
+     * 直投提成列表查询总金额
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request);
+
+    /**
+     * 根据userid查询 crm  cuttype
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+/*
+    int queryCrmCuttype(Integer userId);
+*/
+
+    /**
+     * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateTenderCommissionRecord(PushMoneyRequest pushMoneyRequest);
     /**
      * 查询列表
      * @param adminRequest
@@ -2368,21 +2410,21 @@ public interface AmTradeClient {
     List<HjhAssetTypeVO> getHjhAssetType();
 
 
-	
+
     /**
      * 查询用户充值记录
      * @param userId
      * @return
      */
     List<AccountRechargeVO> getAccountRecharge(int userId);
-    
+
 	/**
 	 * 根据userId获取提成方式
 	 * 此方法后期可以做成基类的方法
 	 * @return
 	 */
     Integer queryCrmCuttype(Integer userId);
-    
+
 	/**
      * 发提成
      * @auth libin
@@ -2390,5 +2432,28 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateTenderCommissionRecord(CommissionComboRequest request);
+
+    CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
+
+    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+
+    List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
+
+    CouponConfigResponse selectCouponConfig(String couponCode);
+
+    CouponUserResponse insertCouponUser(CouponUserRequest couponUserRequest);
+
+    CouponUserResponse getCouponUserByCouponCode(String couponCode);
+
+    CouponUserCustomizeResponse selectCouponUserById(Integer couponUserId);
+
+    CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean);
+
+    /**
+     * 查询优惠券已发行数量
+     * @param param
+     * @return
+     */
+    CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode);
 }
 

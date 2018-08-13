@@ -4,11 +4,13 @@
 package com.hyjf.am.trade.service.front.config.impl;
 
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
+import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolLogMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolVersionMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
+import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
@@ -32,6 +34,7 @@ import java.util.List;
  */
 @Service
 public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
+
 	
 	@Autowired
 	protected  ProtocolTemplateMapper protocolTemplateMapper;
@@ -318,6 +321,39 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 			}
 		}
 		return protocolTemplateCommonVO;
+	}
+
+	@Override
+	public Integer countRecordLog(ProtocolLogRequest request) {
+		Integer count=0;
+		ProtocolLogExample protocolLogExample =new ProtocolLogExample();
+		ProtocolLogExample.Criteria criteria = protocolLogExample.createCriteria();
+		List<ProtocolLog> protocolLogs=protocolLogMapper.selectByExample(protocolLogExample);
+		if(!org.springframework.util.CollectionUtils.isEmpty(protocolLogs)){
+			count=protocolLogs.size();
+		}
+		return count;
+	}
+
+	@Override
+	public List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request) {
+		List<ProtocolLogVO> listVO = new ArrayList<>();
+
+		//查询所有协议
+		ProtocolLogExample example=new ProtocolLogExample();
+
+		ProtocolLogExample.Criteria criteria = example.createCriteria();
+		// 条件查询
+		example.setOrderByClause("`id` Desc,`create_time` ASC");
+		List<ProtocolLog> protocolLogs=protocolLogMapper.selectByExample(example);
+		ProtocolLogVO protocolLogVO = null;
+		for (ProtocolLog protocolLog : protocolLogs){
+			protocolLogVO = new ProtocolLogVO();
+			BeanUtils.copyProperties(protocolLog,protocolLogVO);
+			listVO.add(protocolLogVO);
+		}
+		return listVO;
+
 	}
 
 }

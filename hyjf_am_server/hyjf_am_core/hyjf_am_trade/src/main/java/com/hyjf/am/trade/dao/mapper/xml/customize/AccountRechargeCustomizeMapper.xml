@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AccountRechargeCustomizeMapper">
+
+	<select id="getRechargePrice" resultType="DECIMAL" parameterType="list">
+		select sum(money) from ht_account_recharge a
+		left join ht_user_info b on a.user_id = b.user_id
+		<where>
+			<if test="type != null">
+				b.attribute=0
+			</if>
+			<if test="list != null">
+				and a.user_id in
+					<foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+						#{item}
+					</foreach>
+			</if>
+		</where>
+	</select>
+ 
+	
+</mapper>

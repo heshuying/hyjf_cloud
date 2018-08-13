@@ -5,7 +5,7 @@ package com.hyjf.am.trade.service.front.coupon;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
-import com.hyjf.am.trade.dao.model.customize.trade.CouponCustomize;
+import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
 import com.hyjf.am.vo.trade.coupon.AppCouponCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;

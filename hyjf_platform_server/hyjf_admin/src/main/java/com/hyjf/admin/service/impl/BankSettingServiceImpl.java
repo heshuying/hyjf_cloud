@@ -112,7 +112,8 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
 
         String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);

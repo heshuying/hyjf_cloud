@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.trade.service.front.statistics.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.trade.HjhPlanCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.OperationReportJobCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.OperationReportJobCustomizeMapper;
 import com.hyjf.am.trade.service.front.statistics.TotalInvestAndInterestService;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import org.springframework.beans.factory.annotation.Autowired;

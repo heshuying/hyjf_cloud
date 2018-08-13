@@ -10,8 +10,8 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.CreditRepay;
 import com.hyjf.am.trade.dao.model.auto.CreditTender;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
-import com.hyjf.am.trade.dao.model.customize.trade.TenderCreditCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.TenderToCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.TenderCreditCustomize;
+import com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize;
 import com.hyjf.am.vo.trade.*;
 
 import java.math.BigDecimal;

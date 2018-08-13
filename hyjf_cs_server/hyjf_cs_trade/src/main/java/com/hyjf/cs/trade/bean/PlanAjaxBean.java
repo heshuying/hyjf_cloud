@@ -6,19 +6,31 @@ import java.util.List;
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
 
-public class PlanAjaxBean extends WebResult {
+public class PlanAjaxBean {
 
 	private static final long serialVersionUID = 3278149257478770256L;
 	
 	//当前持有计划列表
-	private List<CurrentHoldPlanListCustomizeVO> currentHoldPlanList;
+	private List<CurrentHoldPlanListCustomizeVO>
+            currentHoldPlanList;
 	//已回款计划列表
 	private List<RepayMentPlanListCustomizeVO> repayMentPlanList;
 	//当前持有计划数量
 	private Integer currentHoldPlanCount=0;
 	//已回款计划数量
 	private Integer repayMentPlanCount=0;
+    // 分页对象
+    private Page page;
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
 
     public List<CurrentHoldPlanListCustomizeVO> getCurrentHoldPlanList() {
         return currentHoldPlanList;

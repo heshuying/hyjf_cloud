@@ -5,9 +5,9 @@ package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.ProtocolsRequest;
 import com.hyjf.am.trade.dao.mapper.auto.FddTempletMapper;
-import com.hyjf.am.trade.dao.mapper.customize.admin.FddTempletCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.FddTempletCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
-import com.hyjf.am.trade.dao.model.customize.admin.FddTempletCustomize;
+import com.hyjf.am.trade.dao.model.customize.FddTempletCustomize;
 import com.hyjf.am.trade.service.admin.ProtocolsService;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
