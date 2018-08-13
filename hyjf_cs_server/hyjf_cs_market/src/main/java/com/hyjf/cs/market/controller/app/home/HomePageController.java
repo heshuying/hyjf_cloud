@@ -67,7 +67,7 @@ public class HomePageController extends BaseMarketController {
             ads.put("limitStart",0 );
             ads.put("limitEnd", 1);
             //TODO ads.put("host", HOST_URL);
-            ads.put("host", "https://frontapp1.hyjf.com/");
+            ads.put("host", "http://micro.file.hyjf.com");
             ads.put("code", "startpage");
             if ("2".equals(platform)) {
                 ads.put("platformType","1");
