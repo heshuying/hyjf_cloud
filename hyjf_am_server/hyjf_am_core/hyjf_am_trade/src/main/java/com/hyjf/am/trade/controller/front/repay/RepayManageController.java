@@ -3,27 +3,15 @@ package com.hyjf.am.trade.controller.front.repay;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.RepayListResponse;
-import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
-import com.hyjf.am.resquest.trade.RepayListRequest;
-import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
-import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
-import com.hyjf.am.response.trade.RepayListResponse;
-import com.hyjf.am.resquest.trade.ApiCronUpdateRequest;
-import com.hyjf.am.resquest.trade.RepayListRequest;
-import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.trade.bean.repay.RepayBean;
-import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
-import com.hyjf.am.trade.service.front.repay.RepayManageNewService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -32,9 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.List;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,7 +34,7 @@ import java.util.Map;
 @RequestMapping("/am-trade/repay")
 public class RepayManageController extends BaseController {
     @Autowired
-    RepayManageNewService repayManageService;
+    RepayManageService repayManageService;
 
     /**
      * 普通借款人管理费总待还
