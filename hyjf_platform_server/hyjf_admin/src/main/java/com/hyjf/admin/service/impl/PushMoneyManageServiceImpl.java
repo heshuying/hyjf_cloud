@@ -2,10 +2,8 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.client.BankAccountManageClient;
 import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.am.response.trade.PushMoneyResponse;
-import com.hyjf.am.resquest.admin.BorrowApicronRequest;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.resquest.admin.TenderCommissionRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
@@ -65,6 +63,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
      * @param borrowNid
      * @return
      */
+    @Override
     public BorrowApicronVO getBorrowApicronBorrowNid(String borrowNid) {
         List<BorrowApicronVO> list = this.amTradeClient.selectBorrowApicronListByBorrowNid(borrowNid);
         if (list!= null && list.size() > 0) {
@@ -79,6 +78,7 @@ public class PushMoneyManageServiceImpl implements PushMoneyManageService {
      * @param apicornId,request
      * @return
      */
+    @Override
     public int insertTenderCommissionRecord(Integer apicornId, PushMoneyRequest request) {
         int ret = -1;
         // 项目编号

@@ -3224,7 +3224,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                 userRepayBean.setRepayTime(GetDate.getDateMyTimeInMillis(userRepayPlan.getRepayTime()));
                 userRepayBean.setChargeDays(userRepayPlan.getChargeDays().toString());
                 userRepayBean.setChargeInterest(userRepayPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                if(userRepayPlan.getChargeInterest() == BigDecimal.ZERO){
+                if(userRepayPlan.getChargeInterest().equals(BigDecimal.ZERO)){
                     userRepayBean.setChargeInterest("0.00");
                 }
                 userRepayBean.setDelayDays(userRepayPlan.getDelayDays().toString());
@@ -3253,7 +3253,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                             userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                            if(creditRepay.getChargeInterest() == BigDecimal.ZERO){
+                            if(creditRepay.getChargeInterest().equals(BigDecimal.ZERO)){
                                 userRepayDetail.setChargeInterest("0.00");
                             }
                             userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
@@ -3607,7 +3607,7 @@ public class RepayManageNewServiceImpl extends BaseServiceImpl implements RepayM
                             userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                             userRepayDetail.setChargeInterest(String.valueOf(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1"))));
-                            if(creditRepay.getRepayAdvanceInterest() == BigDecimal.ZERO){
+                            if(creditRepay.getRepayAdvanceInterest().equals(BigDecimal.ZERO)){
                                 userRepayDetail.setChargeInterest("0.00");
                             }
                             userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());

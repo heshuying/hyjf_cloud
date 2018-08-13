@@ -32,11 +32,13 @@ public class RepayDetailBean extends BorrowRepayPlan implements Serializable {
 		this.recoverPlanList = recoverPlanList;
 	}
 
-	public Integer getRepayUserId() {
+	@Override
+    public Integer getRepayUserId() {
 		return repayUserId;
 	}
 
-	public void setRepayUserId(Integer repayUserId) {
+	@Override
+    public void setRepayUserId(Integer repayUserId) {
 		this.repayUserId = repayUserId;
 	}
 
