@@ -41,7 +41,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
         logger.info("web端请求债转投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setUser(this.borrowTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         WebResult<Map<String,Object>> result = null;

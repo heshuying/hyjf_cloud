@@ -46,7 +46,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
         logger.info("wechat端-请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setUser(borrowTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowTender(tender);
@@ -104,7 +104,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("wechat端-获取投资信息");
-        tender.setUser(borrowTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
         return borrowTenderService.getInvestInfo(tender);
     }
 

@@ -98,7 +98,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     @Override
     public WebResult<Map<String, Object>> borrowCreditTender(TenderRequest request)  {
-        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getToken()));
+        UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
 
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);

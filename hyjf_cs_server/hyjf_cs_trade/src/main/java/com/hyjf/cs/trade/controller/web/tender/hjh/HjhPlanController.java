@@ -46,7 +46,7 @@ public class HjhPlanController extends BaseTradeController {
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setToken(userId+"");
+        tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         WebResult<Map<String, Object>> result = null;
         try {
@@ -62,7 +62,7 @@ public class HjhPlanController extends BaseTradeController {
     @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
-        tender.setToken(userId+"");
+        tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         return  hjhTenderService.getInvestInfo(tender);
     }

@@ -5,7 +5,7 @@ import com.hyjf.am.vo.BasePage;
 
 public class AssetManageBeanRequest extends BasePage {
     // 用户id
-    public String userId;
+    public Integer userId;
     // 投资开始值
     public String startDate;
     // 投资结束值
@@ -31,10 +31,10 @@ public class AssetManageBeanRequest extends BasePage {
 
     private String currentTab;
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
     public String getStartDate() {

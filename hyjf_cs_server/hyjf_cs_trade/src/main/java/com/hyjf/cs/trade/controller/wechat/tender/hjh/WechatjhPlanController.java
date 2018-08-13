@@ -46,7 +46,7 @@ public class WechatjhPlanController extends BaseTradeController {
     public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setUser(hjhTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         WebResult<Map<String, Object>> result = null;
         try {
@@ -62,7 +62,7 @@ public class WechatjhPlanController extends BaseTradeController {
     @ApiOperation(value = "wechat端-获取计划投资信息", notes = "wechat端-获取计划投资信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender) {
-        tender.setUser(hjhTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         return  hjhTenderService.getInvestInfo(tender);
     }

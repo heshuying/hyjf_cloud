@@ -50,7 +50,7 @@ public class AppBorrowTenderController extends BaseTradeController {
         logger.info("APP端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setUser(this.borrowTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
 
         WebResult<Map<String,Object>> result = null;
         try{
@@ -110,7 +110,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public AppResult<AppInvestInfoResultVO> getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
         logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
-        tender.setUser(borrowTenderService.getUserFromCache(userId));
+        tender.setUserId(userId);
         AppResult<AppInvestInfoResultVO> result = borrowTenderService.getInvestInfoApp(tender);
         return result;
     }
