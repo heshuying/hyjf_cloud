@@ -175,4 +175,22 @@ public interface UserCenterService {
      * @return
      */
     Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest);
+    /**
+     * 发送CA认证信息修改MQ
+     * @param form
+     */
+    void sendCAChangeMQ(UserManagerUpdateRequest form);
+    /**
+     * 发送CA认证信息修改MQ
+     * @param form
+     */
+    void sendCAChangeMQ(AdminUserRecommendRequest form);
+    /**
+     *
+     * @Description:通过身份证号获取户籍所在地
+     * @param idCard
+     * @return String
+     * @exception:
+     */
+    String getAreaByIdCard(String idCard);
 }

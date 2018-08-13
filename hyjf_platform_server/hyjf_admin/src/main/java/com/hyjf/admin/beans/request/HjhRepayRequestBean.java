@@ -2,6 +2,9 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.am.vo.BasePage;
 
+/**
+ * @Author : huanghui
+ */
 public class HjhRepayRequestBean extends BasePage {
     /**
      * 检索条件 加入订单号

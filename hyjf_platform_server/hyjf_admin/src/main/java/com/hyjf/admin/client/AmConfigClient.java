@@ -1184,5 +1184,13 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<ParamNameVO> getParamName(String other1);
-
+	/**
+	 *
+	 * @Description:通过身份证号获取户籍所在地
+	 * @param idCardCustomize
+	 * @return String
+	 * @exception:
+	 * @author: nxl
+	 */
+	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
 }
