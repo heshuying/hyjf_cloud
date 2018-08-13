@@ -32,7 +32,6 @@ public class RepayCalendarController extends BaseMarketController {
     @Autowired
     private RepayCalendarService repayCalendarService;
 
-    //TODO : 未测完
     @ResponseBody
     @ApiOperation(value = "日历", httpMethod = "POST", notes = "日历")
     @PostMapping(value = "/repayCalendar/getRepayCalendar?")

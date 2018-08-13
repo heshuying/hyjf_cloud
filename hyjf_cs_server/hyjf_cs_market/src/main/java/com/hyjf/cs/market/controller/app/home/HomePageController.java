@@ -36,7 +36,7 @@ public class HomePageController extends BaseMarketController {
     @Autowired
     private HomePageService homePageService;
 
-    @Value("${file.domain.head.url}")
+    //TODO @Value("${file.domain.head.url}")
     private String HOST_URL;
 
     /** @RequestMapping值 */
@@ -67,7 +67,7 @@ public class HomePageController extends BaseMarketController {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );
             ads.put("limitEnd", 1);
-            ads.put("host", HOST_URL);
+            ads.put("host", "http://micro.file.hyjf.com");
             ads.put("code", "startpage");
             if ("2".equals(platform)) {
                 ads.put("platformType","1");

@@ -79,7 +79,6 @@ public class NewAgreementController extends BaseTradeController{
      * （一）居间服务借款协议
      * @author libin
      * @param request
-     * @param response
      * @return
      */
     @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "居间服务借款协议")
