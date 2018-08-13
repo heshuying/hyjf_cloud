@@ -145,7 +145,7 @@ public class AccessFilter extends ZuulFilter {
 				this.appNomalRequestProcess(request, ctx, sign);
 
 				if (secureVisitFlag) {
-					this.setUserIdByToken(request, ctx, secureVisitFlag, APP_CHANNEL);
+					this.appSetUserIdProcess(ctx, sign);
 				}
 			} else {
 				// app打开初始化操作
@@ -327,6 +327,25 @@ public class AccessFilter extends ZuulFilter {
 		return ctx;
 	}
 
+
+	/**
+	 * app特殊处理
+	 *
+	 * @param request
+	 * @param ctx
+	 * @return
+	 */
+	private Object appSetUserIdProcess(RequestContext ctx, String sign) {
+		AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
+		if (appUserToken == null) {
+			logger.error("TokenInvalid");
+			// 不对其进行路由
+			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
+			return ctx;
+		}
+		ctx.addZuulRequestHeader("userId", appUserToken.getUserId() + "");
+		return ctx;
+	}
 	/**
 	 * 微信特殊处理
 	 * 
