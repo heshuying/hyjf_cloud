@@ -31,6 +31,7 @@ import java.util.Map;
  */
 @Api(value = "app端用户开户",tags = "app端-用户开户")
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {
 
