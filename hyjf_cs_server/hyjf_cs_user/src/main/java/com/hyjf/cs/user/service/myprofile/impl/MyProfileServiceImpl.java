@@ -118,7 +118,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Override
     public void buildUserAccountInfo(Integer userId, UserAccountInfoVO userAccountInfo) {
         UserVO users = this.getUsersById(userId);
-        CheckUtil.check(users == null, MsgEnum.ERR_USER_NOT_EXISTS, userId);
+        CheckUtil.check(users != null, MsgEnum.ERR_USER_NOT_EXISTS, userId);
         //Preconditions.checkArgument(users != null, userId + "用户不存在！");
         //是否绑定邮箱
         userAccountInfo.setSetEmail(!Strings.isNullOrEmpty(users.getEmail()));
@@ -188,7 +188,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     public void buildOutInfo(Integer userId, MyProfileVO myProfileVO) {
 
         AccountVO account = this.amTradeClient.getAccount(userId);
-        CheckUtil.check(account == null, MsgEnum.ERR_BANK_ACCOUNT_NOT_EXIST, userId);
+        CheckUtil.check(account != null, MsgEnum.ERR_BANK_ACCOUNT_NOT_EXIST, userId);
         //Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
 
         //资产总额
