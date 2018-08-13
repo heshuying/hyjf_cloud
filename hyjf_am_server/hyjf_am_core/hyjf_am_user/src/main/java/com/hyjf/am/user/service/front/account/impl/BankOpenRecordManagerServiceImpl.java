@@ -3,12 +3,11 @@
  */
 package com.hyjf.am.user.service.front.account.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.BankOpenRecordCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.BankOpenAccountRecordCustomize;
 import com.hyjf.am.user.service.front.account.BankOpenRecordManagerService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,9 +18,8 @@ import java.util.Map;
  * @version RegistRecordServiceImpl, v0.1 2018/6/20 15:36
  */
 @Service
-public class BankOpenRecordManagerServiceImpl implements BankOpenRecordManagerService {
-    @Autowired
-    private BankOpenRecordCustomizeMapper bankOpenRecordCustomizeMapper;
+public class BankOpenRecordManagerServiceImpl extends BaseServiceImpl implements BankOpenRecordManagerService {
+
     /**
      * 查找江西银行开户记录
      *

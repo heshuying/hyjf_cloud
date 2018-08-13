@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.projectlist;
 import com.hyjf.am.resquest.trade.CreditListRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.BorrowInvestReqBean;
 import com.hyjf.cs.trade.bean.WebCreditRequestBean;
 import com.hyjf.cs.trade.bean.WebPlanRequestBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -32,6 +33,13 @@ public interface WebProjectListService extends BaseTradeService {
      * @date 2018/6/22 16:40
      */
     public WebResult getBorrowDetail(Map map,String userId);
+
+    /**
+     * 获取新手标和散标详情：投资记录
+     * @author zhangyk
+     * @date 2018/8/9 16:58
+     */
+    public WebResult getBorrowInvest(BorrowInvestReqBean form, String userId);
 
 
     /**

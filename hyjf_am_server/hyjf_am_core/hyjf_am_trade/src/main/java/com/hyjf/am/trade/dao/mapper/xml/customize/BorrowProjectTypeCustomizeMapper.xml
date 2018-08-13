@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BorrowProjectTypeCustomizeMapper">
+    <sql id="Where_Clause">
+        <where>
+        </where>
+    </sql>
+
+    <resultMap id="getProjectTypeListMap" type="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
+        <result column="borrow_project_type" property="borrowProjectType" jdbcType="VARCHAR" />
+        <result column="borrow_cd" property="borrowCd" jdbcType="VARCHAR" />
+        <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
+        <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
+        <result column="invest_start" property="investStart" jdbcType="VARCHAR" />
+        <result column="invest_end" property="investEnd" jdbcType="VARCHAR" />
+        <result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
+        <result column="interest_coupon" property="interestCoupon" jdbcType="VARCHAR" />
+        <result column="taste_money" property="tasteMoney" jdbcType="VARCHAR" />
+        <result column="invest_user_type" property="investUserType" jdbcType="VARCHAR" />
+        <result column="repay_name" property="repayName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectProjectTypeList" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
+        SELECT
+        typ.borrow_cd,
+        typ.borrow_name,
+        typ.borrow_class,
+        typ.invest_start,
+        typ.invest_end,
+        typ.increase_money,
+        typ.interest_coupon,
+        typ.taste_money,
+        GROUP_CONCAT("【", pr.method_name, "】") AS repay_name
+        FROM
+        ht_borrow_project_type typ
+        LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
+        GROUP BY
+        pr.borrow_class
+        <include refid="Where_Clause" />
+        ORDER BY
+        typ.id
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+</mapper>

@@ -7,12 +7,16 @@ import com.hyjf.am.response.admin.BankMerchantAccountInfoResponse;
 import com.hyjf.am.response.admin.BankMerchantAccountResponse;
 import com.hyjf.am.response.trade.BankMerchantAccountListResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
+import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -21,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ${yaoy}
@@ -141,6 +146,12 @@ public class AccountController extends BaseController {
         return count;
     }
 
+    @PostMapping(value = "/updateBankMerchantAccountByCode")
+    public int updateBankMerchantAccount(@RequestBody BankMerchantAccount bankMerchantAccount) {
+        int count = accountService.updateBankMerchantAccount(bankMerchantAccount);
+        return count;
+    }
+
     /**
      * @Author walter.limeng
      * @Description  更新BankMerchatAccount
@@ -204,4 +215,44 @@ public class AccountController extends BaseController {
         }
         return response;
     }
+
+    /**
+     *根据订单号查询提现订单
+     */
+    @GetMapping("/queryAccountwithdrawByNid/{nid}/{userId}")
+    public AccountWithdrawResponse queryAccountwithdrawByNid(@PathVariable String nid, @PathVariable Integer userId){
+        AccountWithdrawResponse response=new AccountWithdrawResponse();
+        AccountWithdraw result=accountService.queryAccountwithdrawByNid(nid,userId);
+        if (result!=null){
+            response.setResult(CommonUtils.convertBean(result,AccountWithdrawVO.class));
+        }
+        return response;
+    }
+
+
+    /**
+     * 提现成功后,更新用户账户信息,提现记录
+     * @param param
+     * @return
+     */
+    @PostMapping("/updateAccountAfterWithdraw")
+    public boolean updateAccountAfterWithdraw(@RequestBody Map<String, String> param){
+       return accountService.updateAccountAfterWithdraw(param);
+    }
+
+
+    /**
+     *充值失败,更新充值订单
+     */
+    @GetMapping("/updateAccountAfterWithdrawFail/{userId}/{nid}")
+    public boolean updateAccountAfterWithdrawFail(@PathVariable Integer userId,@PathVariable String nid){
+        boolean ret = false;
+        try {
+            ret = accountService.updateAccountAfterWithdrawFail(userId,nid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
 }

@@ -3,19 +3,18 @@
  */
 package com.hyjf.cs.message.service.Impl;
 
-import com.hyjf.am.response.admin.HjhAccountBalanceResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
-import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
-import com.hyjf.cs.common.service.BaseClient;
-import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
-import com.hyjf.cs.message.mongo.ic.HjhPlanCapitalDao;
-import com.hyjf.cs.message.service.HjhPlanCapitalService;
+import java.util.Date;
+import java.util.List;
+
+import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
+import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.cs.message.mongo.ic.HjhPlanCapitalDao;
+import com.hyjf.cs.message.service.HjhPlanCapitalService;
 
 /**
  * 汇计划资本预估统计(每日)任务
@@ -86,5 +85,27 @@ public class HjhPlanCapitalServiceImpl implements HjhPlanCapitalService {
         HjhPlanCapitalResponse response = this.baseClient.getExe("http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalForProformaList/" + fromDate + "/" + toDate
                 , HjhPlanCapitalResponse.class);
         return response.getResultList();
+    }
+
+    /**
+     * 汇计划 - 资金计划count
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public Integer getPlanCapitalCount(HjhPlanCapitalRequest request) {
+        return null;
+    }
+
+    /**
+     * 汇计划 - 获取资金计划类表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest request) {
+        return this.hjhPlanCapitalDao.findAllList(request);
     }
 }

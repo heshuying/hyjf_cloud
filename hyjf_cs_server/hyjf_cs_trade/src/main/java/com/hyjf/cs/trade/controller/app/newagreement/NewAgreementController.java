@@ -52,7 +52,7 @@ import java.util.Map;
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(tags = "APP端协议接口")
+@Api(description = "APP端协议接口", tags = "APP端协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
@@ -68,8 +68,8 @@ public class NewAgreementController extends BaseTradeController{
 	@Autowired
 	private NewAgreementService agreementService;
 	
-    @Autowired
-    BankWithdrawService bankWithdrawService;
+/*    @Autowired
+    BankWithdrawService bankWithdrawService;*/
 	
 	@Autowired
     SystemConfig systemConfig;
@@ -82,10 +82,10 @@ public class NewAgreementController extends BaseTradeController{
      * @param response
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "居间服务借款协议")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "居间服务借款协议")
     @ResponseBody
     @PostMapping("/interServiceLoanAgreement")
-    public NewAgreementResultBean interServiceLoanAgreement(HttpServletRequest request, HttpServletResponse response) {
+    public NewAgreementResultBean interServiceLoanAgreement(HttpServletRequest request) {
     	logger.info("*******************************居间服务借款协议************************************");
         NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
         newAgreementResultBean.setAgreementImages("");
@@ -311,7 +311,7 @@ public class NewAgreementController extends BaseTradeController{
                     // 转让人信息详情
                     UserInfoVO creditUserInfo = this.agreementService.getUsersInfoByUserId(hjhDebtCreditTender.getCreditUserId());
                     // 转让人
-                    UserVO creditUser = this.bankWithdrawService.getUserByUserId(hjhDebtCreditTender.getCreditUserId());
+                    UserVO creditUser = this.agreementService.getUserByUserId(hjhDebtCreditTender.getCreditUserId());
                     // 承接人信息详情
                     UserInfoVO usersInfo = this.agreementService.getUsersInfoByUserId(hjhDebtCreditTender.getUserId());
                     // 承接人
@@ -324,21 +324,35 @@ public class NewAgreementController extends BaseTradeController{
                     /*HjhDebtCredit hjhDebtCredit = this.agreementService.getHjhDebtCreditByCreditNid(hjhDebtCreditTender.getCreditNid());*/
                     HjhDebtCreditVO hjhDebtCredit = this.agreementService.getHjhDebtCreditByCreditNid(hjhDebtCreditTender.getCreditNid());
                     /*jsonObject.put("addTime", GetDate.times10toStrYYYYMMDD(hjhDebtCreditTender.getCreateTime()));*/
+                    // ht_debt_credit_tender 创建时间
                     jsonObject.put("addTime", hjhDebtCreditTender.getCreateTime());
+                    // ht_debt_credit 剩余天数
                     jsonObject.put("remainderPeriod", hjhDebtCredit.getRemainDays()+"天");
                     /*jsonObject.put("assignTime", GetDate.times10toStrYYYYMMDD(hjhDebtCredit.getCreateTime()));*/
+                    // ht_debt_credit 创建时间
                     jsonObject.put("assignTime", hjhDebtCredit.getCreateTime());
+                    // 承接本金
                     jsonObject.put("assignCapital", df.format(hjhDebtCreditTender.getAssignCapital()));
+                    // 支付金额
                     jsonObject.put("assignPay", df.format(hjhDebtCreditTender.getAssignPrice()));
+                    // 承接订单号
                     jsonObject.put("orderId", hjhDebtCreditTender.getAssignOrderId());
+                    // 原标标号
                     jsonObject.put("borrowNid", hjhDebtCreditTender.getBorrowNid());
+                    // 借贷总金额
                     jsonObject.put("borrowAccount", df.format(borrow.getAccount()));
+                    // 借款利率
                     jsonObject.put("borrowApr", borrow.getBorrowApr()+"%");
+                    // 还款方式
                     jsonObject.put("borrowStyle", getBorrowStyle(borrow.getBorrowStyle()));
+                    // 借款期限
                     jsonObject.put("borrowPeriod", getBorrowPeriod(borrow.getBorrowStyle(), borrow.getBorrowPeriod()));
                     if(user.getUserId().equals(new Integer(userId))){
+                    	// 真实姓名
                         jsonObject.put("newCreditTruename", usersInfo.getTruename());
+                        // 身份证
                         jsonObject.put("newCreditIdcard", usersInfo.getIdcard());
+                        // 用户名
                         jsonObject.put("newCreditUsername", user.getUsername());
                     }else{
                         String truename=usersInfo.getTruename();
@@ -346,23 +360,29 @@ public class NewAgreementController extends BaseTradeController{
                         for (int i = 0; i < truename.length()-1; i++) {
                             encryptedTruename+="*";
                         }
+                        // 加密用户名
                         jsonObject.put("newCreditTruename", encryptedTruename);
                         String idCard=usersInfo.getIdcard();
                         String encryptedIdCard=idCard.substring(0, 4);
                         for (int i = 0; i < idCard.length()-4; i++) {
                             encryptedIdCard+="*";
                         }
+                        // 加密身份证
                         jsonObject.put("newCreditIdcard", encryptedIdCard);
                         String userName= user.getUsername();
                         String encryptedUserName=userName.substring(0, 1);
                         for (int i = 0; i < 5; i++) {
                             encryptedUserName+="*";
                         }
+                        // 加密用户名
                         jsonObject.put("newCreditUsername", encryptedUserName);  
                     }
                     if(creditUser.getUserId().equals(new Integer(userId))){
+                    	// 用户名
                         jsonObject.put("oldCreditUsername", creditUser.getUsername());
+                        // 真实姓名
                         jsonObject.put("oldCreditTruename", creditUserInfo.getTruename());
+                        // 身份证号
                         jsonObject.put("oldCreditIdcard", creditUserInfo.getIdcard());
                     }else{
                         String userName= creditUser.getUsername();
@@ -370,12 +390,14 @@ public class NewAgreementController extends BaseTradeController{
                         for (int i = 0; i < 5; i++) {
                             encryptedUserName+="*";
                         }
+                        // 加密
                         jsonObject.put("oldCreditUsername", encryptedUserName);
                         String truename=creditUserInfo.getTruename();
                         String encryptedTruename=truename.substring(0, 1);
                         for (int i = 0; i < truename.length()-1; i++) {
                             encryptedTruename+="*";
                         }
+                        // 加密
                         jsonObject.put("oldCreditTruename", encryptedTruename);
                         String idCard=creditUserInfo.getIdcard();
                         String encryptedIdCard=idCard.substring(0, 4);
@@ -397,7 +419,6 @@ public class NewAgreementController extends BaseTradeController{
                     }
                     newAgreementResultBean.setAgreementImages(agreementImages);
                     newAgreementResultBean.setInfo(jsonObject);
-                    
                 }
                 logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
                 return newAgreementResultBean;
@@ -529,7 +550,7 @@ public class NewAgreementController extends BaseTradeController{
      * @param request
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "我的计划-计划详情-资产列表-协议（转让）列表")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "我的计划-计划详情-资产列表-协议（转让）列表")
     @ResponseBody
     @PostMapping("/userCreditContractList")
     public NewAgreementResultBean userCreditContractList(HttpServletRequest request) {
@@ -994,7 +1015,7 @@ public class NewAgreementController extends BaseTradeController{
      * @param aliasName
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "获得 协议模板pdf显示地址")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获得 协议模板pdf显示地址")
     @ResponseBody
     @PostMapping("/gotAgreementPdfOrImg")
     public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam String aliasName) {
@@ -1128,7 +1149,7 @@ public class NewAgreementController extends BaseTradeController{
         return listImg;
     }
 
-    @ApiOperation(value = "APP端协议接口", notes = "获取协议模板")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获取协议模板")
     @ResponseBody
     @PostMapping("/getAgreementTemplateApi")
     public AppResult getAgreementTemplateApi(@RequestParam String aliasName) {
@@ -1145,7 +1166,7 @@ public class NewAgreementController extends BaseTradeController{
         return new AppResult(response.getResultList());
     }
 
-    @ApiOperation(value = "APP端协议接口", notes = "查看协议模板接口")
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "查看协议模板接口")
     @ResponseBody
     @PostMapping("/getdisplayNameDynamic")
     public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {

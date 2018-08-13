@@ -6,22 +6,17 @@ package com.hyjf.am.user.service.callcenter.impl;
 import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
-import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
-import com.hyjf.am.user.dao.mapper.auto.CallcenterServiceUsersMapper;
-import com.hyjf.am.user.dao.mapper.customize.callcenter.CallCenterAccountHuifuMapper;
-import com.hyjf.am.user.dao.mapper.customize.callcenter.CallCenterCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsers;
 import com.hyjf.am.user.dao.model.auto.CallcenterServiceUsersExample;
-import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize;
-import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
+import com.hyjf.am.user.dao.model.customize.CallcenterAccountHuifuCustomize;
+import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
 import com.hyjf.am.user.service.callcenter.CallCenterBankService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,15 +28,7 @@ import java.util.Map;
  * @version CallCenterBankServiceImpl, v0.1 2018/6/6 14:22
  */
 @Service
-public class CallCenterBankServiceImpl implements CallCenterBankService {
-	@Autowired
-	private BankCardMapper bankCardMapper;
-	@Autowired
-	private CallCenterCustomizeMapper callCenterCustomizeMapper;
-	@Autowired
-	private CallCenterAccountHuifuMapper callCenterAccountHuifuMapper;
-	@Autowired
-	private CallcenterServiceUsersMapper callcenterServiceUsersMapper;
+public class CallCenterBankServiceImpl extends BaseServiceImpl implements CallCenterBankService {
 
 	@Override
 	public List<BankCard> getTiedCardOfAccountBank(Integer userId){

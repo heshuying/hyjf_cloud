@@ -72,4 +72,7 @@ public interface BankConfigService {
      */
     JxBankConfig getJxBankConfigByBankId(int bankId);
 
+    List<JxBankConfig> getRechargeQuotaLimit(Integer quickPayment);
+
+    List<ParamName> getParamName(String other1);
 }

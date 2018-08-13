@@ -108,11 +108,7 @@ public class AutoTenderExceptionController extends BaseController {
         if (responseBean == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        List<AdminBorrowInvestCustomizeVO> adminBorrowInvestCustomizeVOList = new ArrayList<AdminBorrowInvestCustomizeVO>();
-        List<BorrowInvestCustomizeVO> borrowInvestCustomizeVOList = responseBean.getRecordList();
-        if(null!=borrowInvestCustomizeVOList&&borrowInvestCustomizeVOList.size()>0){
-            adminBorrowInvestCustomizeVOList = CommonUtils.convertBeanList(borrowInvestCustomizeVOList,AdminBorrowInvestCustomizeVO.class);
-        }
+        List<AdminBorrowInvestCustomizeVO> adminBorrowInvestCustomizeVOList = responseBean.getRecordList();
         return new AdminResult<ListResult<AdminBorrowInvestCustomizeVO>>(ListResult.build(adminBorrowInvestCustomizeVOList, responseBean.getTotal()));
     }
 

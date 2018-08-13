@@ -5,19 +5,18 @@ import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
 import com.hyjf.am.user.dao.mapper.customize.KeyCountCustomMapper;
 import com.hyjf.am.user.service.admin.extensioncenter.KeyCountService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.user.KeyCountVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
-public class KeyCountServiceImpl implements KeyCountService {
-	@Autowired
-	private KeyCountCustomMapper keyCountCustomMapper;
+public class KeyCountServiceImpl extends BaseServiceImpl implements KeyCountService {
+
 	@Override
 	public KeyCountResponse searchAction(KeyCountRequest request){
 		KeyCountResponse response = new KeyCountResponse();

@@ -5,7 +5,7 @@ import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.RUser;
-import com.hyjf.am.trade.dao.model.customize.trade.ManualReverseCustomize;
+import com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize;
 import com.hyjf.am.trade.service.admin.exception.ManualReverseExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;

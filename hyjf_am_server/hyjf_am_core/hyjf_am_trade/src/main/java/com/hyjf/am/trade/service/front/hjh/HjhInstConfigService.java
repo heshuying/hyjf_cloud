@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 
 import java.util.List;
 import java.util.Map;

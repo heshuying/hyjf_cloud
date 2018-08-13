@@ -3,8 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
-import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.app.AppRepayCalendarCustomize;
+import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.model.customize.AppRepayCalendarCustomize;
 import com.hyjf.am.trade.service.admin.RepayCalendarService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
@@ -27,11 +27,21 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
     @Autowired
     protected AssetManageCustomizeMapper assetManageCustomizeMapper;
 
+    /**
+     * 查询回款日历总数
+     * @param params
+     * @return
+     */
     @Override
     public Integer countRepaymentCalendar(Map<String, Object> params) {
         return assetManageCustomizeMapper.countRepaymentCalendar(params);
     }
 
+    /**
+     * 查询回款日历明细
+     * @param params
+     * @return
+     */
     @Override
     public List<AppReapyCalendarResultVO> searchRepaymentCalendar(Map<String, Object> params) {
         List<AppRepayCalendarCustomize> list = assetManageCustomizeMapper.selectRepaymentCalendar(params);
@@ -96,6 +106,11 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
         return resultList;
     }
 
+    /**
+     * 返回用户最近回款时间戳-秒
+     * @param params
+     * @return
+     */
     @Override
     public Integer searchNearlyRepaymentTime(Map<String, Object> params) {
         return assetManageCustomizeMapper.selectNearlyRepaymentTime(params);

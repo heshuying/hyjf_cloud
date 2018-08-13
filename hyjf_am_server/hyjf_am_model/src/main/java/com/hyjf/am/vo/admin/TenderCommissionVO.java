@@ -46,7 +46,25 @@ public class TenderCommissionVO extends BaseVO implements Serializable {
     private Integer regionId;
 
     private Integer branchId;
-
+    
+    private String loginUserName;
+    
+    // 此account取自 BankOpenAccount 的 account,使用的是 Commission表的 userid取值
+    private String account;
+    
+    // 此userName 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
+    private String userName;
+    // 此trueName 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
+    private String trueName;
+    // 此sex 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
+    private String sex;
+    // 此mobile 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
+    private String mobile;
+    // 此attribute 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
+    private Integer attribute;
+    // 此attribute 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
+    private Integer is51;
+   
     public Integer getId() {
         return id;
     }
@@ -234,8 +252,72 @@ public class TenderCommissionVO extends BaseVO implements Serializable {
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
+    
+	public String getLoginUserName() {
+		return loginUserName;
+	}
 
-    private String regionName;
+	public void setLoginUserName(String loginUserName) {
+		this.loginUserName = loginUserName;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getTrueName() {
+		return trueName;
+	}
+
+	public void setTrueName(String trueName) {
+		this.trueName = trueName;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public Integer getAttribute() {
+		return attribute;
+	}
+
+	public void setAttribute(Integer attribute) {
+		this.attribute = attribute;
+	}
+
+	public Integer getIs51() {
+		return is51;
+	}
+
+	public void setIs51(Integer is51) {
+		this.is51 = is51;
+	}
+
+	private String regionName;
 
     private String branchName;
 
@@ -246,7 +328,4 @@ public class TenderCommissionVO extends BaseVO implements Serializable {
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
-
-
-
 }

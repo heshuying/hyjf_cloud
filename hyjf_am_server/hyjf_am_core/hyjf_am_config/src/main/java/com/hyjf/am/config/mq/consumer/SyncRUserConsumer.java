@@ -32,7 +32,7 @@ import com.hyjf.common.constants.MQConstant;
  * @version SyncRUserConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 //@ConditionalOnProperty(value = "hyjf.env.test", matchIfMissing = false)
-//@Component
+@Component
 public class SyncRUserConsumer extends Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncRUserConsumer.class);

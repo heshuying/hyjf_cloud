@@ -4,7 +4,7 @@ import com.hyjf.am.response.trade.account.AccountTradeResponse;
 import com.hyjf.am.response.trade.account.AppAccountTradeListCustomizeResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountTrade;
-import com.hyjf.am.trade.dao.model.customize.app.AppAccountTradeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AppAccountTradeListCustomize;
 import com.hyjf.am.trade.service.front.account.AccountTradeService;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
@@ -28,8 +28,8 @@ public class AccountTradeController extends BaseController {
     @Autowired
     private AccountTradeService accountTradeService;
 
-    @GetMapping("/selectTradeTypes/{borrowUserId}")
-    public AccountTradeResponse selectTradeTypes(Integer borrowUserId) {
+    @GetMapping("/selectTradeTypes")
+    public AccountTradeResponse selectTradeTypes() {
         AccountTradeResponse response = new AccountTradeResponse();
         List<AccountTrade> list = accountTradeService.selectTradeTypes();
         if(!CollectionUtils.isEmpty(list)){

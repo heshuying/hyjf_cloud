@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/27.
  */
-@Api(value = "admin借款项目配置---项目类型",tags = "配置中心借款项目配置---项目流程的项目类型")
+@Api(value = "配置中心借款项目配置---项目流程的项目类型",tags = "配置中心借款项目配置---项目流程的项目类型")
 @RestController
 @RequestMapping("/hyjf-admin/config/projecttype")
 public class BorrowProjectTypeController extends BaseController {
@@ -44,8 +44,8 @@ public class BorrowProjectTypeController extends BaseController {
 
     @Autowired
     private BorrowProjectTypeService borrowProjectTypeService;
-    @ApiOperation(value = "配置中心借款项目配置---项目流程 项目类型", notes = "查询项目类型")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询项目类型", notes = "查询项目类型")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult selectProjectTypeList(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
         BorrowProjectTypeResponse resList=borrowProjectTypeService.selectProjectTypeList(adminRequest);
@@ -58,8 +58,8 @@ public class BorrowProjectTypeController extends BaseController {
         }
         return new AdminResult<ListResult<BorrowProjectTypeVO>>(ListResult.build(resList.getResultList(), resList.getResultList().size())) ;
     }
-    @ApiOperation(value = "配置中心借款项目配置---项目流程 项目类型", notes = "查询 项目类型")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询项目类型详情", notes = "查询项目类型详情 ")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public BorrowProjectTypeResponse subConfigSearch(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
@@ -93,7 +93,7 @@ public class BorrowProjectTypeController extends BaseController {
         return response ;
     }
 
-    @ApiOperation(value = "配置中心项目配置---项目流程 项目类型", notes = "项目类型添加")
+    @ApiOperation(value = "项目类型添加", notes = "项目类型添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public BorrowProjectTypeResponse insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
@@ -133,7 +133,7 @@ public class BorrowProjectTypeController extends BaseController {
         }
         return response;
     }
-    @ApiOperation(value = "配置中心项目配置---项目流程 项目类型", notes = "项目类型修改")
+    @ApiOperation(value = "项目类型修改", notes = "项目类型修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public BorrowProjectTypeResponse updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
@@ -174,7 +174,7 @@ public class BorrowProjectTypeController extends BaseController {
          response=borrowProjectTypeService.selectProjectTypeList(adminRequest);
         return response;
     }
-    @ApiOperation(value = "配置中心项目配置---项目流程 项目类型", notes = "项目类型删除")
+    @ApiOperation(value = "项目类型删除", notes = "项目类型删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
@@ -196,7 +196,7 @@ public class BorrowProjectTypeController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "配置中心项目配置---项目流程 项目类型", notes = "项目类型校验")
+    @ApiOperation(value = "项目类型校验", notes = "项目类型校验")
     @PostMapping("/checkAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public String checkAction(HttpServletRequest request) {

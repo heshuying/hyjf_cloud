@@ -1,17 +1,13 @@
 package com.hyjf.am.user.service.front.account.impl;
 
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
-import com.hyjf.am.user.dao.mapper.auto.BankCardLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankCardMapper;
-import com.hyjf.am.user.dao.mapper.auto.BankSmsAuthCodeMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.account.BindCardService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -21,16 +17,7 @@ import java.util.List;
  */
 
 @Service
-public class BindCardServiceImpl implements BindCardService {
-
-	@Resource
-	private UserMapper userMapper;
-	@Resource
-	private BankCardMapper bankCardMapper;
-	@Resource
-	private BankCardLogMapper bankCardLogMapper;
-	@Resource
-	private BankSmsAuthCodeMapper bankSmsAuthCodeMapper;
+public class BindCardServiceImpl extends BaseServiceImpl implements BindCardService {
 
 	/**
 	 * 查询用户已绑定的有效卡
@@ -114,6 +101,7 @@ public class BindCardServiceImpl implements BindCardService {
 	 */
 	@Override
 	public int updateUserCard(BankCard bankCard) {
+		bankCard.setUpdateTime(new Date());
 		return this.bankCardMapper.updateByPrimaryKeySelective(bankCard);
 	}
 	

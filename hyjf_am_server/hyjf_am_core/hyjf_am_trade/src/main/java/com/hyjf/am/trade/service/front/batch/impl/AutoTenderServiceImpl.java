@@ -5,8 +5,8 @@ package com.hyjf.am.trade.service.front.batch.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.EmployeeCustomize;
-import com.hyjf.am.trade.dao.model.customize.trade.HjhAccedeCustomize;
+import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.mq.producer.FddProducer;
@@ -30,15 +30,14 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * 自动投资
+ *
  * @author liubin
  * @version AutoTenderServiceImpl, v0.1 2018/6/28 21:26
  */
@@ -93,11 +92,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     public final String HJH_ASSIGN = "assign";
 
     public static JedisPool pool = RedisUtils.getPool();
-    /**
-     * 汇消费的项目类型编号
-     */
-    public static String PROJECT_TYPE_HXF = "8";
-
 
     /**
      * 查询计划加入明细
@@ -175,6 +169,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 银行自动投资成功后，更新投资数据
+     *
      * @param borrowNid
      * @param accedeOrderId
      * @param bean
@@ -251,6 +246,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 插入冻结表
+     *
      * @param borrow
      * @param hjhAccede
      * @param bean
@@ -544,6 +540,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 获取相应的标的详情
+     *
      * @param borrowNid
      * @return
      */
@@ -565,6 +562,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 获取相应的债转详情
+     *
      * @param creditNid
      * @return
      */
@@ -583,6 +581,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 投资完成更新计划明细
+     *
      * @param hjhAccede
      * @param orderStaus
      * @return
@@ -602,6 +601,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
     /**
      * 银行自动投资成功后，更新投资数据
+     *
      * @param creditNid
      * @param accedeOrderId
      * @param planNid
@@ -736,210 +736,207 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         String planOrderId = debtPlanAccede.getAccedeOrderId();
         // 加入平台
         int client = debtPlanAccede.getClient();
-        // 获取借款数据
-        BorrowExample borrowExample = new BorrowExample();
-        BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
-        borrowCra.andBorrowNidEqualTo(credit.getBorrowNid());
-        List<Borrow> borrowList = this.borrowMapper.selectByExample(borrowExample);
-        if (borrowList != null && borrowList.size() > 0) {
-            Borrow borrow = borrowList.get(0);
-            String borrowStyle = borrow.getBorrowStyle();
-            // 承接本息
-            BigDecimal assignAccount = BigDecimal.ZERO;
-            // 承接本金
-            BigDecimal assignCapital = BigDecimal.ZERO;
-            // 债转利息
-            BigDecimal assignInterest = BigDecimal.ZERO;
-            // 垫付利息
-            BigDecimal assignAdvanceMentInterest = BigDecimal.ZERO;
-            // 投资人收取延期利息
-            BigDecimal assignRepayDelayInterest = BigDecimal.ZERO;
-            // 投资人收取逾期利息
-            BigDecimal assignRepayLateInterest = BigDecimal.ZERO;
-            // 实付金额
-            BigDecimal assignPay = account;//BigDecimal.ZERO;
 
-            // 按天 or 按月（不分期）
-            if (borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY) || borrowStyle.equals(CalculatesUtil.STYLE_END)) {
+        // 获取借款数据
+        Borrow borrow = this.getBorrow(credit.getBorrowNid());
+        if (borrow == null) {
+            throw new RuntimeException("未查询到相应的标的信息，项目编号：" + borrowNid + ",还款期数：" + repayPeriod + 1);
+        }
+
+        String borrowStyle = borrow.getBorrowStyle();
+        // 承接本息
+        BigDecimal assignAccount = BigDecimal.ZERO;
+        // 承接本金
+        BigDecimal assignCapital = BigDecimal.ZERO;
+        // 债转利息
+        BigDecimal assignInterest = BigDecimal.ZERO;
+        // 垫付利息
+        BigDecimal assignAdvanceMentInterest = BigDecimal.ZERO;
+        // 投资人收取延期利息
+        BigDecimal assignRepayDelayInterest = BigDecimal.ZERO;
+        // 投资人收取逾期利息
+        BigDecimal assignRepayLateInterest = BigDecimal.ZERO;
+        // 实付金额
+        BigDecimal assignPay = account;//BigDecimal.ZERO;
+
+        // 按天 or 按月（不分期）
+        if (borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY) || borrowStyle.equals(CalculatesUtil.STYLE_END)) {
 //				// 承接人承接本金
 //				assignCapital = HTJServiceFeeUtils.getAssignCapital(account, sellerCapitalWait, sellerInterestAdvanceWait, sellerCapital, sellerInterestAdvance);
-                // 出让人的债权信息
-                HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
-                HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
-                debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
-                debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
-                debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
-                debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
-                debtDetailOldCrt.andRepayStatusEqualTo(0);
-                debtDetailOldCrt.andDelFlagEqualTo(1);
-                debtDetailOldCrt.andStatusEqualTo(1);
-                debtDetailOldExample.setOrderByClause("repay_period ASC");
-                List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
-                if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
-                    HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
-                    // 承接人承接本金
-                    assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
+            // 出让人的债权信息
+            HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
+            HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
+            debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
+            debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
+            debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
+            debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
+            debtDetailOldCrt.andRepayStatusEqualTo(0);
+            debtDetailOldCrt.andDelFlagEqualTo(1);
+            debtDetailOldCrt.andStatusEqualTo(1);
+            debtDetailOldExample.setOrderByClause("repay_period ASC");
+            List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
+            if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
+                HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
+                // 承接人承接本金
+                assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
+                        debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
+                // 承接人承接利息
+                assignInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
+                        debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
+                // 承接人延期利息
+                assignRepayDelayInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestDelay(sellerInterest, delayDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerDelayInterestWait);
+                // 承接人逾期利息
+                assignRepayLateInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestLate(sellerInterest, lateDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerLateInterestWait);
+                // 垫付利息
+                assignAdvanceMentInterest = assignPay.subtract(assignCapital);
+            }
+            // 债转本息
+            assignAccount = assignCapital.add(assignInterest);
+        }
+        // 先息后本 or 等额本金 or 等额本息 (分期)
+        else if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_MONTH)) {
+            // 出让人的债权信息
+            HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
+            HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
+            debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
+            debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
+            debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
+            debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
+            debtDetailOldCrt.andRepayStatusEqualTo(0);
+            debtDetailOldCrt.andDelFlagEqualTo(1);
+            debtDetailOldCrt.andStatusEqualTo(1);
+            debtDetailOldExample.setOrderByClause("repay_period ASC");
+            List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
+            // 承接人此次承接的总待收本金
+            BigDecimal assignPeriodCapitalTotal = BigDecimal.ZERO;
+            // 承接人此次承接的总待收利息
+            BigDecimal assignPeriodInterestTotal = BigDecimal.ZERO;
+            // 校验数据完整性
+            if (debtDetailOldList != null && debtDetailOldList.size() > 0) {
+                Map<Integer, Object> assignResult = new HashMap<Integer, Object>();
+                for (int i = 0; i < debtDetailOldList.size(); i++) {
+                    // 承接人此次承接的分期承接本金
+                    BigDecimal assignPeriodCapital = BigDecimal.ZERO;
+                    // 承接人此次承接的分期承接利息
+                    BigDecimal assignPeriodInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的分期垫付利息
+                    BigDecimal assignPeriodAdvanceMentInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的待收取分期延期利息
+                    BigDecimal assignPeriodRepayDelayInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的待收取分期逾期利息
+                    BigDecimal assignPeriodRepayLateInterest = BigDecimal.ZERO;
+                    // 债权信息
+                    HjhDebtDetail debtDetailOld = debtDetailOldList.get(i);
+                    // 还款期数
+                    int waitRepayPeriod = debtDetailOld.getRepayPeriod();
+                    // 承接人此次承接的分期待收本金
+                    assignPeriodCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
                             debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
-                    // 承接人承接利息
-                    assignInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
+                    // 承接人此次承接的分期待收利息
+                    assignPeriodInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
                             debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
-                    // 承接人延期利息
-                    assignRepayDelayInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestDelay(sellerInterest, delayDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerDelayInterestWait);
-                    // 承接人逾期利息
-                    assignRepayLateInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestLate(sellerInterest, lateDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerLateInterestWait);
-                    // 垫付利息
-                    assignAdvanceMentInterest = assignPay.subtract(assignCapital);
+                    // 本期延期利息(0)
+                    assignPeriodRepayDelayInterest = BigDecimal.ZERO;
+                    // 本期逾期利息(0)
+                    assignPeriodRepayLateInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的总待收本金
+                    assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
+                    // 承接人此次承接的总待收利息
+                    assignPeriodInterestTotal = assignPeriodInterestTotal.add(assignPeriodInterest);
+                    // 返回结果集
+                    Map<String, BigDecimal> assignPeriodMap = new HashMap<String, BigDecimal>();
+                    assignPeriodMap.put(ASSIGN_PERIOD_CAPITAL, assignPeriodCapital);
+                    assignPeriodMap.put(ASSIGN_PERIOD_INTEREST, assignPeriodInterest);
+                    assignPeriodMap.put(ASSIGN_PERIOD_ADVANCEMENT_INTEREST, assignPeriodAdvanceMentInterest);
+                    assignPeriodMap.put(ASSIGN_PERIOD_REPAY_DELAY_INTEREST, assignPeriodRepayDelayInterest);
+                    assignPeriodMap.put(ASSIGN_PERIOD_REPAY_LATE_INTEREST, assignPeriodRepayLateInterest);
+                    assignResult.put(waitRepayPeriod, assignPeriodMap);
                 }
-                // 债转本息
-                assignAccount = assignCapital.add(assignInterest);
+                // 分期利息计算结果
+                result.put(ASSIGN_RESULT, assignResult);
             }
-            // 先息后本 or 等额本金 or 等额本息 (分期)
-            else if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_MONTH)) {
-                // 出让人的债权信息
-                HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
-                HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
-                debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
-                debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
-                debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
-                debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
-                debtDetailOldCrt.andRepayStatusEqualTo(0);
-                debtDetailOldCrt.andDelFlagEqualTo(1);
-                debtDetailOldCrt.andStatusEqualTo(1);
-                debtDetailOldExample.setOrderByClause("repay_period ASC");
-                List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
-                // 承接人此次承接的总待收本金
-                BigDecimal assignPeriodCapitalTotal = BigDecimal.ZERO;
-                // 承接人此次承接的总待收利息
-                BigDecimal assignPeriodInterestTotal = BigDecimal.ZERO;
-                // 校验数据完整性
-                if (debtDetailOldList != null && debtDetailOldList.size() > 0) {
-                    Map<Integer, Object> assignResult = new HashMap<Integer, Object>();
-                    for (int i = 0; i < debtDetailOldList.size(); i++) {
-                        // 承接人此次承接的分期承接本金
-                        BigDecimal assignPeriodCapital = BigDecimal.ZERO;
-                        // 承接人此次承接的分期承接利息
-                        BigDecimal assignPeriodInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的分期垫付利息
-                        BigDecimal assignPeriodAdvanceMentInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的待收取分期延期利息
-                        BigDecimal assignPeriodRepayDelayInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的待收取分期逾期利息
-                        BigDecimal assignPeriodRepayLateInterest = BigDecimal.ZERO;
-                        // 债权信息
-                        HjhDebtDetail debtDetailOld = debtDetailOldList.get(i);
-                        // 还款期数
-                        int waitRepayPeriod = debtDetailOld.getRepayPeriod();
-                        // 承接人此次承接的分期待收本金
-                        assignPeriodCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
-                                debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
-                        // 承接人此次承接的分期待收利息
-                        assignPeriodInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
-                                debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
-                        // 本期延期利息(0)
-                        assignPeriodRepayDelayInterest = BigDecimal.ZERO;
-                        // 本期逾期利息(0)
-                        assignPeriodRepayLateInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的总待收本金
-                        assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
-                        // 承接人此次承接的总待收利息
-                        assignPeriodInterestTotal = assignPeriodInterestTotal.add(assignPeriodInterest);
-                        // 返回结果集
-                        Map<String, BigDecimal> assignPeriodMap = new HashMap<String, BigDecimal>();
-                        assignPeriodMap.put(ASSIGN_PERIOD_CAPITAL, assignPeriodCapital);
-                        assignPeriodMap.put(ASSIGN_PERIOD_INTEREST, assignPeriodInterest);
-                        assignPeriodMap.put(ASSIGN_PERIOD_ADVANCEMENT_INTEREST, assignPeriodAdvanceMentInterest);
-                        assignPeriodMap.put(ASSIGN_PERIOD_REPAY_DELAY_INTEREST, assignPeriodRepayDelayInterest);
-                        assignPeriodMap.put(ASSIGN_PERIOD_REPAY_LATE_INTEREST, assignPeriodRepayLateInterest);
-                        assignResult.put(waitRepayPeriod, assignPeriodMap);
-                    }
-                    // 分期利息计算结果
-                    result.put(ASSIGN_RESULT, assignResult);
-                }
-                // 重置承接人承接总本金
-                assignCapital = assignPeriodCapitalTotal;
-                // 承接总利息
-                assignInterest = assignPeriodInterestTotal;
-                // 承接总本息
-                assignAccount = assignCapital.add(assignInterest);
-                // 承接人此次承接待收取的总延期利息(0)
-                assignRepayDelayInterest = BigDecimal.ZERO;//assignPeriodRepayDelayInterestTotal;
-                // 承接人此次承接待收取的总逾期利息(0)
-                assignRepayLateInterest = BigDecimal.ZERO;//assignPeriodRepayLateInterestTotal;
-                // 垫付总利息(实际支付-承接人每期承接本金之和)
-                assignAdvanceMentInterest = assignPay.subtract(assignPeriodCapitalTotal);
-            }
-            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-            // 计算服务费
-            //BigDecimal serviceFee = BigDecimal.ZERO;//this.calculateServiceFee(credit, assignCapital.add(assignAdvanceMentInterest));
-            // 出让人加入计划信息
-            HjhAccede sellerHjhAccede = this.selectHjhAccedeByAccedeOrderId(credit.getPlanOrderId());
-            BigDecimal serviceApr = sellerHjhAccede.getLqdServiceApr();
-            BigDecimal serviceFee = assignPay.multiply(serviceApr).setScale(2, BigDecimal.ROUND_DOWN);
-            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-            // 返回结果封装
-            result.put(ASSIGN_ACCOUNT, assignAccount);
-            result.put(ASSIGN_CAPITAL, assignCapital);
-            result.put(ASSIGN_INTEREST, assignInterest);
-            result.put(ASSIGN_ADVANCEMENT_INTEREST, assignAdvanceMentInterest);
-            result.put(ASSIGN_REPAY_DELAY_INTEREST, assignRepayDelayInterest);
-            result.put(ASSIGN_REPAY_LATE_INTEREST, assignRepayLateInterest);
-            result.put(ASSIGN_PAY, assignPay);
-            result.put(SERVICE_FEE, serviceFee);
-            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-            result.put(SERVICE_APR, serviceApr);
-            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-            // 保存credit_tender_log表
-            HjhDebtCreditTenderLog debtCreditTenderLog = new HjhDebtCreditTenderLog();
-            debtCreditTenderLog.setUserId(userId);
-            debtCreditTenderLog.setUserName(userName);
-            debtCreditTenderLog.setCreditUserId(credit.getUserId());
-            debtCreditTenderLog.setCreditUserName(credit.getUserName());
-            debtCreditTenderLog.setStatus(0);
-            debtCreditTenderLog.setLiquidatesPlanNid(liquidatesPlanNid);
-            debtCreditTenderLog.setLiquidatesPlanOrderId(liquidatesPlanOrderId);
-            debtCreditTenderLog.setAssignPlanNid(planNid);
-            debtCreditTenderLog.setAssignPlanOrderId(planOrderId);
-            debtCreditTenderLog.setBorrowNid(credit.getBorrowNid());
-            debtCreditTenderLog.setCreditNid(credit.getCreditNid());
-            debtCreditTenderLog.setInvestOrderId(credit.getInvestOrderId());
-            debtCreditTenderLog.setSellOrderId(credit.getSellOrderId());
-            debtCreditTenderLog.setAssignOrderId(creditOrderId);
-            debtCreditTenderLog.setAssignOrderDate(creditOrderDate);
-            debtCreditTenderLog.setAssignCapital(assignCapital);
-            debtCreditTenderLog.setAssignAccount(assignAccount);
-            debtCreditTenderLog.setAssignInterest(assignInterest);
-            debtCreditTenderLog.setAssignRepayDelayInterest(assignRepayDelayInterest);
-            debtCreditTenderLog.setAssignRepayLateInterest(assignRepayLateInterest);
-            debtCreditTenderLog.setAssignInterestAdvance(assignAdvanceMentInterest);
-            debtCreditTenderLog.setAssignPrice(assignPay);
-            debtCreditTenderLog.setAssignPay(assignPay);
-            debtCreditTenderLog.setAssignRepayAccount(assignCapital.add(assignInterest));
-            debtCreditTenderLog.setAssignRepayCapital(assignCapital);
-            debtCreditTenderLog.setAssignRepayInterest(assignInterest);
-            debtCreditTenderLog.setAssignRepayEndTime(credit.getCreditRepayEndTime());
-            debtCreditTenderLog.setAssignRepayLastTime(credit.getCreditRepayLastTime());
-            debtCreditTenderLog.setAssignRepayNextTime(credit.getCreditRepayNextTime());
-            debtCreditTenderLog.setAssignRepayYesTime(0);
-            debtCreditTenderLog.setAssignRepayPeriod(credit.getCreditPeriod());
-            debtCreditTenderLog.setRepayPeriod(repayPeriod);
-            debtCreditTenderLog.setAssignRepayPeriod(creditPeriod);
-            debtCreditTenderLog.setAssignOrderDate(creditOrderDate);
-            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-            debtCreditTenderLog.setAssignServiceApr(serviceApr);
-            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-            debtCreditTenderLog.setAssignServiceFee(serviceFee);
-            debtCreditTenderLog.setCreateUserId(userId);
-            debtCreditTenderLog.setCreateUserName(userName);
-            debtCreditTenderLog.setCreateTime(GetDate.getDate());
-            debtCreditTenderLog.setClient(client);
-            boolean flag = this.hjhDebtCreditTenderLogMapper.insertSelective(debtCreditTenderLog) > 0 ? true : false;
-            if (flag) {
-                return result;
-            } else {
-                throw new RuntimeException("债转日志debtCrditTenderLog表保存失败，债权标号：" + creditNid + ",投资编号：" + sellOrderId);
-            }
+            // 重置承接人承接总本金
+            assignCapital = assignPeriodCapitalTotal;
+            // 承接总利息
+            assignInterest = assignPeriodInterestTotal;
+            // 承接总本息
+            assignAccount = assignCapital.add(assignInterest);
+            // 承接人此次承接待收取的总延期利息(0)
+            assignRepayDelayInterest = BigDecimal.ZERO;//assignPeriodRepayDelayInterestTotal;
+            // 承接人此次承接待收取的总逾期利息(0)
+            assignRepayLateInterest = BigDecimal.ZERO;//assignPeriodRepayLateInterestTotal;
+            // 垫付总利息(实际支付-承接人每期承接本金之和)
+            assignAdvanceMentInterest = assignPay.subtract(assignPeriodCapitalTotal);
+        }
+        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // 计算服务费
+        //BigDecimal serviceFee = BigDecimal.ZERO;//this.calculateServiceFee(credit, assignCapital.add(assignAdvanceMentInterest));
+        // 出让人加入计划信息
+        HjhAccede sellerHjhAccede = this.selectHjhAccedeByAccedeOrderId(credit.getPlanOrderId());
+        BigDecimal serviceApr = sellerHjhAccede.getLqdServiceApr();
+        BigDecimal serviceFee = assignPay.multiply(serviceApr).setScale(2, BigDecimal.ROUND_DOWN);
+        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // 返回结果封装
+        result.put(ASSIGN_ACCOUNT, assignAccount);
+        result.put(ASSIGN_CAPITAL, assignCapital);
+        result.put(ASSIGN_INTEREST, assignInterest);
+        result.put(ASSIGN_ADVANCEMENT_INTEREST, assignAdvanceMentInterest);
+        result.put(ASSIGN_REPAY_DELAY_INTEREST, assignRepayDelayInterest);
+        result.put(ASSIGN_REPAY_LATE_INTEREST, assignRepayLateInterest);
+        result.put(ASSIGN_PAY, assignPay);
+        result.put(SERVICE_FEE, serviceFee);
+        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        result.put(SERVICE_APR, serviceApr);
+        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // 保存credit_tender_log表
+        HjhDebtCreditTenderLog debtCreditTenderLog = new HjhDebtCreditTenderLog();
+        debtCreditTenderLog.setUserId(userId);
+        debtCreditTenderLog.setUserName(userName);
+        debtCreditTenderLog.setCreditUserId(credit.getUserId());
+        debtCreditTenderLog.setCreditUserName(credit.getUserName());
+        debtCreditTenderLog.setStatus(0);
+        debtCreditTenderLog.setLiquidatesPlanNid(liquidatesPlanNid);
+        debtCreditTenderLog.setLiquidatesPlanOrderId(liquidatesPlanOrderId);
+        debtCreditTenderLog.setAssignPlanNid(planNid);
+        debtCreditTenderLog.setAssignPlanOrderId(planOrderId);
+        debtCreditTenderLog.setBorrowNid(credit.getBorrowNid());
+        debtCreditTenderLog.setCreditNid(credit.getCreditNid());
+        debtCreditTenderLog.setInvestOrderId(credit.getInvestOrderId());
+        debtCreditTenderLog.setSellOrderId(credit.getSellOrderId());
+        debtCreditTenderLog.setAssignOrderId(creditOrderId);
+        debtCreditTenderLog.setAssignOrderDate(creditOrderDate);
+        debtCreditTenderLog.setAssignCapital(assignCapital);
+        debtCreditTenderLog.setAssignAccount(assignAccount);
+        debtCreditTenderLog.setAssignInterest(assignInterest);
+        debtCreditTenderLog.setAssignRepayDelayInterest(assignRepayDelayInterest);
+        debtCreditTenderLog.setAssignRepayLateInterest(assignRepayLateInterest);
+        debtCreditTenderLog.setAssignInterestAdvance(assignAdvanceMentInterest);
+        debtCreditTenderLog.setAssignPrice(assignPay);
+        debtCreditTenderLog.setAssignPay(assignPay);
+        debtCreditTenderLog.setAssignRepayAccount(assignCapital.add(assignInterest));
+        debtCreditTenderLog.setAssignRepayCapital(assignCapital);
+        debtCreditTenderLog.setAssignRepayInterest(assignInterest);
+        debtCreditTenderLog.setAssignRepayEndTime(credit.getCreditRepayEndTime());
+        debtCreditTenderLog.setAssignRepayLastTime(credit.getCreditRepayLastTime());
+        debtCreditTenderLog.setAssignRepayNextTime(credit.getCreditRepayNextTime());
+        debtCreditTenderLog.setAssignRepayYesTime(0);
+        debtCreditTenderLog.setAssignRepayPeriod(credit.getCreditPeriod());
+        debtCreditTenderLog.setRepayPeriod(repayPeriod);
+        debtCreditTenderLog.setAssignRepayPeriod(creditPeriod);
+        debtCreditTenderLog.setAssignOrderDate(creditOrderDate);
+        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        debtCreditTenderLog.setAssignServiceApr(serviceApr);
+        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        debtCreditTenderLog.setAssignServiceFee(serviceFee);
+        debtCreditTenderLog.setCreateUserId(userId);
+        debtCreditTenderLog.setCreateUserName(userName);
+        debtCreditTenderLog.setCreateTime(GetDate.getDate());
+        debtCreditTenderLog.setClient(client);
+        boolean flag = this.hjhDebtCreditTenderLogMapper.insertSelective(debtCreditTenderLog) > 0 ? true : false;
+        if (flag) {
+            return result;
         } else {
-            throw new RuntimeException("未查询到相应的标的信息，项目编号：" + borrowNid + ",还款期数：" + repayPeriod + 1);
+            throw new RuntimeException("债转日志debtCrditTenderLog表保存失败，债权标号：" + creditNid + ",投资编号：" + sellOrderId);
         }
     }
 
@@ -990,181 +987,160 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         String planOrderId = debtPlanAccede.getAccedeOrderId();
         // 加入平台
         int client = debtPlanAccede.getClient();
+
         // 获取借款数据
-        BorrowExample borrowExample = new BorrowExample();
-        BorrowExample.Criteria borrowCra = borrowExample.createCriteria();
-        borrowCra.andBorrowNidEqualTo(credit.getBorrowNid());
-        List<Borrow> borrowList = this.borrowMapper.selectByExample(borrowExample);
-        if (borrowList != null && borrowList.size() > 0) {
-            Borrow borrow = borrowList.get(0);
-            String borrowStyle = borrow.getBorrowStyle();
-            // 承接本息
-            BigDecimal assignAccount = BigDecimal.ZERO;
-            // 承接本金
-            BigDecimal assignCapital = BigDecimal.ZERO;
-            // 债转利息
-            BigDecimal assignInterest = BigDecimal.ZERO;
-            // 垫付利息
-            BigDecimal assignAdvanceMentInterest = BigDecimal.ZERO;
-            // 投资人收取延期利息
-            BigDecimal assignRepayDelayInterest = BigDecimal.ZERO;
-            // 投资人收取逾期利息
-            BigDecimal assignRepayLateInterest = BigDecimal.ZERO;
-            // 实付金额
-            BigDecimal assignPay = account;//BigDecimal.ZERO;
-
-            // 按天 or 按月（不分期）
-            if (borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY) || borrowStyle.equals(CalculatesUtil.STYLE_END)) {
-//				// 承接人承接本金
-//				assignCapital = HTJServiceFeeUtils.getAssignCapital(account, sellerCapitalWait, sellerInterestAdvanceWait, sellerCapital, sellerInterestAdvance);
-                // 出让人的债权信息
-                HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
-                HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
-                debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
-                debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
-                debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
-                debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
-                debtDetailOldCrt.andRepayStatusEqualTo(0);
-                debtDetailOldCrt.andDelFlagEqualTo(1);
-                debtDetailOldCrt.andStatusEqualTo(1);
-                debtDetailOldExample.setOrderByClause("repay_period ASC");
-                List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
-                if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
-                    HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
-                    // 承接人承接本金
-                    assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
-                            debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
-                    // 承接人承接利息
-                    assignInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
-                            debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
-                    // 承接人延期利息
-                    assignRepayDelayInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestDelay(sellerInterest, delayDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerDelayInterestWait);
-                    // 承接人逾期利息
-                    assignRepayLateInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestLate(sellerInterest, lateDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerLateInterestWait);
-                    // 垫付利息
-                    assignAdvanceMentInterest = assignPay.subtract(assignCapital);
-                }
-                // 债转本息
-                assignAccount = assignCapital.add(assignInterest);
-            }
-            // 先息后本 or 等额本金 or 等额本息 (分期)
-            else if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_MONTH)) {
-                // 出让人的债权信息
-                HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
-                HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
-                debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
-                debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
-                debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
-                debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
-                debtDetailOldCrt.andRepayStatusEqualTo(0);
-                debtDetailOldCrt.andDelFlagEqualTo(1);
-                debtDetailOldCrt.andStatusEqualTo(1);
-                debtDetailOldExample.setOrderByClause("repay_period ASC");
-                List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
-                // 承接人此次承接的总待收本金
-                BigDecimal assignPeriodCapitalTotal = BigDecimal.ZERO;
-                // 承接人此次承接的总待收利息
-                BigDecimal assignPeriodInterestTotal = BigDecimal.ZERO;
-                // 校验数据完整性
-                if (debtDetailOldList != null && debtDetailOldList.size() > 0) {
-                    Map<Integer, Object> assignResult = new HashMap<Integer, Object>();
-                    for (int i = 0; i < debtDetailOldList.size(); i++) {
-                        // 承接人此次承接的分期承接本金
-                        BigDecimal assignPeriodCapital = BigDecimal.ZERO;
-                        // 承接人此次承接的分期承接利息
-                        BigDecimal assignPeriodInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的分期垫付利息
-                        BigDecimal assignPeriodAdvanceMentInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的待收取分期延期利息
-                        BigDecimal assignPeriodRepayDelayInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的待收取分期逾期利息
-                        BigDecimal assignPeriodRepayLateInterest = BigDecimal.ZERO;
-                        // 债权信息
-                        HjhDebtDetail debtDetailOld = debtDetailOldList.get(i);
-                        // 还款期数
-                        int waitRepayPeriod = debtDetailOld.getRepayPeriod();
-                        // 承接人此次承接的分期待收本金
-                        assignPeriodCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
-                                debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
-                        // 承接人此次承接的分期待收利息
-                        assignPeriodInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
-                                debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
-                        // 本期延期利息(0)
-                        assignPeriodRepayDelayInterest = BigDecimal.ZERO;
-                        // 本期逾期利息(0)
-                        assignPeriodRepayLateInterest = BigDecimal.ZERO;
-                        // 承接人此次承接的总待收本金
-                        assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
-                        // 承接人此次承接的总待收利息
-                        assignPeriodInterestTotal = assignPeriodInterestTotal.add(assignPeriodInterest);
-                        // 返回结果集
-                        Map<String, BigDecimal> assignPeriodMap = new HashMap<String, BigDecimal>();
-                        assignPeriodMap.put(ASSIGN_PERIOD_CAPITAL, assignPeriodCapital);
-                        assignPeriodMap.put(ASSIGN_PERIOD_INTEREST, assignPeriodInterest);
-                        assignPeriodMap.put(ASSIGN_PERIOD_ADVANCEMENT_INTEREST, assignPeriodAdvanceMentInterest);
-                        assignPeriodMap.put(ASSIGN_PERIOD_REPAY_DELAY_INTEREST, assignPeriodRepayDelayInterest);
-                        assignPeriodMap.put(ASSIGN_PERIOD_REPAY_LATE_INTEREST, assignPeriodRepayLateInterest);
-                        assignResult.put(waitRepayPeriod, assignPeriodMap);
-                    }
-                    // 分期利息计算结果
-                    result.put(ASSIGN_RESULT, assignResult);
-                }
-                // 重置承接人承接总本金
-                assignCapital = assignPeriodCapitalTotal;
-                // 承接总利息
-                assignInterest = assignPeriodInterestTotal;
-                // 承接总本息
-                assignAccount = assignCapital.add(assignInterest);
-                // 承接人此次承接待收取的总延期利息(0)
-                assignRepayDelayInterest = BigDecimal.ZERO;//assignPeriodRepayDelayInterestTotal;
-                // 承接人此次承接待收取的总逾期利息(0)
-                assignRepayLateInterest = BigDecimal.ZERO;//assignPeriodRepayLateInterestTotal;
-                // 垫付总利息(实际支付-承接人每期承接本金之和)
-                assignAdvanceMentInterest = assignPay.subtract(assignPeriodCapitalTotal);
-            }
-            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-            // 计算服务费
-            //BigDecimal serviceFee = BigDecimal.ZERO;//this.calculateServiceFee(credit, assignCapital.add(assignAdvanceMentInterest));
-            // 出让人加入计划信息
-            HjhAccede sellerHjhAccede = this.selectHjhAccedeByAccedeOrderId(credit.getPlanOrderId());
-            BigDecimal serviceApr = sellerHjhAccede.getLqdServiceApr();
-            BigDecimal serviceFee = assignPay.multiply(serviceApr).setScale(2, BigDecimal.ROUND_DOWN);
-            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-
-            // 返回结果封装
-            result.put(ASSIGN_ACCOUNT, assignAccount);
-            result.put(ASSIGN_CAPITAL, assignCapital);
-            result.put(ASSIGN_INTEREST, assignInterest);
-            result.put(ASSIGN_ADVANCEMENT_INTEREST, assignAdvanceMentInterest);
-            result.put(ASSIGN_REPAY_DELAY_INTEREST, assignRepayDelayInterest);
-            result.put(ASSIGN_REPAY_LATE_INTEREST, assignRepayLateInterest);
-            result.put(ASSIGN_PAY, assignPay);
-            result.put(SERVICE_FEE, serviceFee);
-            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
-            result.put(SERVICE_APR, serviceApr);
-            // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
-            return result;
-        } else {
+        Borrow borrow = this.getBorrow(credit.getBorrowNid());
+        if (borrow == null) {
             throw new RuntimeException("未查询到相应的标的信息，项目编号：" + borrowNid + ",还款期数：" + repayPeriod + 1);
         }
-    }
 
-    /**
-     * 获取借款信息
-     *
-     * @param borrowNid
-     * @return 借款信息
-     */
-    private Borrow selectDebtBorrowByNid(String borrowNid) {
-        Borrow borrow = null;
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list = borrowMapper.selectByExample(example);
-        if (list != null && !list.isEmpty()) {
-            borrow = list.get(0);
+        String borrowStyle = borrow.getBorrowStyle();
+        // 承接本息
+        BigDecimal assignAccount = BigDecimal.ZERO;
+        // 承接本金
+        BigDecimal assignCapital = BigDecimal.ZERO;
+        // 债转利息
+        BigDecimal assignInterest = BigDecimal.ZERO;
+        // 垫付利息
+        BigDecimal assignAdvanceMentInterest = BigDecimal.ZERO;
+        // 投资人收取延期利息
+        BigDecimal assignRepayDelayInterest = BigDecimal.ZERO;
+        // 投资人收取逾期利息
+        BigDecimal assignRepayLateInterest = BigDecimal.ZERO;
+        // 实付金额
+        BigDecimal assignPay = account;//BigDecimal.ZERO;
+
+        // 按天 or 按月（不分期）
+        if (borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY) || borrowStyle.equals(CalculatesUtil.STYLE_END)) {
+//				// 承接人承接本金
+//				assignCapital = HTJServiceFeeUtils.getAssignCapital(account, sellerCapitalWait, sellerInterestAdvanceWait, sellerCapital, sellerInterestAdvance);
+            // 出让人的债权信息
+            HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
+            HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
+            debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
+            debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
+            debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
+            debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
+            debtDetailOldCrt.andRepayStatusEqualTo(0);
+            debtDetailOldCrt.andDelFlagEqualTo(1);
+            debtDetailOldCrt.andStatusEqualTo(1);
+            debtDetailOldExample.setOrderByClause("repay_period ASC");
+            List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
+            if (debtDetailOldList != null && debtDetailOldList.size() == 1) {
+                HjhDebtDetail debtDetailOld = debtDetailOldList.get(0);
+                // 承接人承接本金
+                assignCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
+                        debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
+                // 承接人承接利息
+                assignInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
+                        debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
+                // 承接人延期利息
+                assignRepayDelayInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestDelay(sellerInterest, delayDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerDelayInterestWait);
+                // 承接人逾期利息
+                assignRepayLateInterest = BigDecimal.ZERO;//HTJServiceFeeUtils.getEndDayAssignRepayInterestLate(sellerInterest, lateDays, sellerTotalDays, assignCapital, sellerCapital, sellerCapitalWait, sellerLateInterestWait);
+                // 垫付利息
+                assignAdvanceMentInterest = assignPay.subtract(assignCapital);
+            }
+            // 债转本息
+            assignAccount = assignCapital.add(assignInterest);
         }
-        return borrow;
+        // 先息后本 or 等额本金 or 等额本息 (分期)
+        else if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_MONTH)) {
+            // 出让人的债权信息
+            HjhDebtDetailExample debtDetailOldExample = new HjhDebtDetailExample();
+            HjhDebtDetailExample.Criteria debtDetailOldCrt = debtDetailOldExample.createCriteria();
+            debtDetailOldCrt.andPlanNidEqualTo(liquidatesPlanNid);
+            debtDetailOldCrt.andPlanOrderIdEqualTo(liquidatesPlanOrderId);
+            debtDetailOldCrt.andInvestOrderIdEqualTo(credit.getInvestOrderId());
+            debtDetailOldCrt.andOrderIdEqualTo(credit.getSellOrderId());
+            debtDetailOldCrt.andRepayStatusEqualTo(0);
+            debtDetailOldCrt.andDelFlagEqualTo(1);
+            debtDetailOldCrt.andStatusEqualTo(1);
+            debtDetailOldExample.setOrderByClause("repay_period ASC");
+            List<HjhDebtDetail> debtDetailOldList = this.hjhDebtDetailMapper.selectByExample(debtDetailOldExample);
+            // 承接人此次承接的总待收本金
+            BigDecimal assignPeriodCapitalTotal = BigDecimal.ZERO;
+            // 承接人此次承接的总待收利息
+            BigDecimal assignPeriodInterestTotal = BigDecimal.ZERO;
+            // 校验数据完整性
+            if (debtDetailOldList != null && debtDetailOldList.size() > 0) {
+                Map<Integer, Object> assignResult = new HashMap<Integer, Object>();
+                for (int i = 0; i < debtDetailOldList.size(); i++) {
+                    // 承接人此次承接的分期承接本金
+                    BigDecimal assignPeriodCapital = BigDecimal.ZERO;
+                    // 承接人此次承接的分期承接利息
+                    BigDecimal assignPeriodInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的分期垫付利息
+                    BigDecimal assignPeriodAdvanceMentInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的待收取分期延期利息
+                    BigDecimal assignPeriodRepayDelayInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的待收取分期逾期利息
+                    BigDecimal assignPeriodRepayLateInterest = BigDecimal.ZERO;
+                    // 债权信息
+                    HjhDebtDetail debtDetailOld = debtDetailOldList.get(i);
+                    // 还款期数
+                    int waitRepayPeriod = debtDetailOld.getRepayPeriod();
+                    // 承接人此次承接的分期待收本金
+                    assignPeriodCapital = HJHServiceFeeUtils.getCurrentPeriodAssignCapital(assignPay, credit.getLiquidationFairValue(),
+                            debtDetailOld.getLoanCapital(), debtDetailOld.getRepayCapitalWait(), isLast);
+                    // 承接人此次承接的分期待收利息
+                    assignPeriodInterest = HJHServiceFeeUtils.getCurrentPeriodAssignInterest(assignPay, credit.getLiquidationFairValue(),
+                            debtDetailOld.getLoanInterest(), debtDetailOld.getRepayInterestWait(), isLast);
+                    // 本期延期利息(0)
+                    assignPeriodRepayDelayInterest = BigDecimal.ZERO;
+                    // 本期逾期利息(0)
+                    assignPeriodRepayLateInterest = BigDecimal.ZERO;
+                    // 承接人此次承接的总待收本金
+                    assignPeriodCapitalTotal = assignPeriodCapitalTotal.add(assignPeriodCapital);
+                    // 承接人此次承接的总待收利息
+                    assignPeriodInterestTotal = assignPeriodInterestTotal.add(assignPeriodInterest);
+                    // 返回结果集
+                    Map<String, BigDecimal> assignPeriodMap = new HashMap<String, BigDecimal>();
+                    assignPeriodMap.put(ASSIGN_PERIOD_CAPITAL, assignPeriodCapital);
+                    assignPeriodMap.put(ASSIGN_PERIOD_INTEREST, assignPeriodInterest);
+                    assignPeriodMap.put(ASSIGN_PERIOD_ADVANCEMENT_INTEREST, assignPeriodAdvanceMentInterest);
+                    assignPeriodMap.put(ASSIGN_PERIOD_REPAY_DELAY_INTEREST, assignPeriodRepayDelayInterest);
+                    assignPeriodMap.put(ASSIGN_PERIOD_REPAY_LATE_INTEREST, assignPeriodRepayLateInterest);
+                    assignResult.put(waitRepayPeriod, assignPeriodMap);
+                }
+                // 分期利息计算结果
+                result.put(ASSIGN_RESULT, assignResult);
+            }
+            // 重置承接人承接总本金
+            assignCapital = assignPeriodCapitalTotal;
+            // 承接总利息
+            assignInterest = assignPeriodInterestTotal;
+            // 承接总本息
+            assignAccount = assignCapital.add(assignInterest);
+            // 承接人此次承接待收取的总延期利息(0)
+            assignRepayDelayInterest = BigDecimal.ZERO;//assignPeriodRepayDelayInterestTotal;
+            // 承接人此次承接待收取的总逾期利息(0)
+            assignRepayLateInterest = BigDecimal.ZERO;//assignPeriodRepayLateInterestTotal;
+            // 垫付总利息(实际支付-承接人每期承接本金之和)
+            assignAdvanceMentInterest = assignPay.subtract(assignPeriodCapitalTotal);
+        }
+        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // 计算服务费
+        //BigDecimal serviceFee = BigDecimal.ZERO;//this.calculateServiceFee(credit, assignCapital.add(assignAdvanceMentInterest));
+        // 出让人加入计划信息
+        HjhAccede sellerHjhAccede = this.selectHjhAccedeByAccedeOrderId(credit.getPlanOrderId());
+        BigDecimal serviceApr = sellerHjhAccede.getLqdServiceApr();
+        BigDecimal serviceFee = assignPay.multiply(serviceApr).setScale(2, BigDecimal.ROUND_DOWN);
+        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+
+        // 返回结果封装
+        result.put(ASSIGN_ACCOUNT, assignAccount);
+        result.put(ASSIGN_CAPITAL, assignCapital);
+        result.put(ASSIGN_INTEREST, assignInterest);
+        result.put(ASSIGN_ADVANCEMENT_INTEREST, assignAdvanceMentInterest);
+        result.put(ASSIGN_REPAY_DELAY_INTEREST, assignRepayDelayInterest);
+        result.put(ASSIGN_REPAY_LATE_INTEREST, assignRepayLateInterest);
+        result.put(ASSIGN_PAY, assignPay);
+        result.put(SERVICE_FEE, serviceFee);
+        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        result.put(SERVICE_APR, serviceApr);
+        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        return result;
     }
 
     /**
@@ -2406,46 +2382,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             return result;
         }
         logger.info("[" + hjhAccede.getAccedeOrderId() + "] " + "复投减开封额度！,计划编号:" + hjhAccede.getPlanNid() + "redis原开放额度:" + oldOpenAmount + "，应减额度:" + subAmount.toString());
-        redisSub(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), subAmount.toString());//增加redis相应计划可投金额
+        RedisUtils.add(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), subAmount.negate().toString());//增加redis相应计划可投金额
         return result;
-    }
-
-    /**
-     * 并发情况下保证设置一个值
-     *
-     * @param key
-     * @param value
-     */
-    private void redisSub(String key, String value) {
-
-        Jedis jedis = pool.getResource();
-
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
-
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(0);
-            if (balance != null) {
-                bal = new BigDecimal(balance);
-            }
-            BigDecimal val = new BigDecimal(value);
-
-            Transaction tx = jedis.multi();
-            String valbeset = bal.subtract(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    // 成功后
-                    break;
-                } else {
-                    jedis.unwatch();
-                }
-            }
-        }
     }
 
     /**

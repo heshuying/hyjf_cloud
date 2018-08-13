@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.WithdrawBeanRequest;
-import com.hyjf.am.trade.dao.model.customize.admin.WithdrawCustomize;
+import com.hyjf.am.trade.dao.model.customize.WithdrawCustomize;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

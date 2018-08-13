@@ -81,4 +81,19 @@ public interface AssetPushService extends BaseService {
      * @return
      */
     int updateHjhPlanAssetnew(HjhPlanAsset hjhPlanAsset);
+
+    /**
+     * 检查是否存在重复资产
+     * @param assetId
+     * @return
+     */
+    List<HjhPlanAsset> checkDuplicateAssetId(String assetId);
+
+    /**
+     * 录标时添加企业资产
+     *
+     * @param borrowUser
+     * @return
+     */
+    int insertCompanyInfoToBorrowUsers(BorrowUser borrowUser);
 }

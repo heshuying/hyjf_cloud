@@ -4,10 +4,10 @@
 package com.hyjf.am.trade.service.front.hjh.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
-import com.hyjf.am.trade.dao.mapper.customize.web.AssetManageCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AssetManageCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
-import com.hyjf.am.trade.dao.model.customize.web.RecentPaymentListCustomize;
+import com.hyjf.am.trade.dao.model.customize.RecentPaymentListCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhInstConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

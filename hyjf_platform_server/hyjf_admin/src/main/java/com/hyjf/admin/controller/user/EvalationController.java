@@ -4,8 +4,10 @@
 package com.hyjf.admin.controller.user;
 
 import com.hyjf.admin.beans.request.EvalationRequestBean;
+import com.hyjf.admin.beans.response.EvalationDetailResponseBean;
 import com.hyjf.admin.beans.response.EvalationInitResponseBean;
 import com.hyjf.admin.beans.vo.EvalationCustomizeVO;
+import com.hyjf.admin.beans.vo.UserEvalationQuestionCustomizeVO;
 import com.hyjf.admin.beans.vo.UserEvalationResultCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -14,7 +16,9 @@ import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
+import com.hyjf.am.vo.user.UserEvalationQuestionVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -69,12 +73,26 @@ public class EvalationController extends BaseController {
     @ApiOperation(value = "用户测评结果显示", notes = "用户测评结果显示")
     @PostMapping(value = "/selectEvaluationDetailById")
     @ResponseBody
-    public AdminResult<UserEvalationResultCustomizeVO> selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response,@RequestBody String  userId){
+    public AdminResult<EvalationDetailResponseBean> selectEvaluationDetailById(HttpServletRequest request, HttpServletResponse response, @RequestBody String  userId){
         UserEvalationResultVO userEvalationResultVO = evalationService.selectUserEvalationResultByUserId(userId);
+        EvalationDetailResponseBean evalationDetailResponseBean = new EvalationDetailResponseBean();
+        UserVO userVO = evalationService.getUserVOByUserId(userId);
+        evalationDetailResponseBean.setIsEvalation("0");
+        if(null!=userVO){
+            evalationDetailResponseBean.setUserName(userVO.getUsername());
+        }
         UserEvalationResultCustomizeVO userEvalationResultCustomizeVO = new UserEvalationResultCustomizeVO();
-        if (null != userEvalationResultVO) {
+        if (null != userEvalationResultVO&&userEvalationResultVO.getUserId().toString().equals(userId)) {
             BeanUtils.copyProperties(userEvalationResultVO, userEvalationResultCustomizeVO);
-            return new AdminResult<UserEvalationResultCustomizeVO>(userEvalationResultCustomizeVO);
+            List<UserEvalationQuestionVO> listUserEvalationQuestionVO =  evalationService.getUserQuestionInfoById(userEvalationResultCustomizeVO.getId());
+            List<UserEvalationQuestionCustomizeVO> evalationQuestionCustomizeVOList = new ArrayList<UserEvalationQuestionCustomizeVO>();
+            if(null!=listUserEvalationQuestionVO&&listUserEvalationQuestionVO.size()>0){
+                evalationQuestionCustomizeVOList = CommonUtils.convertBeanList(listUserEvalationQuestionVO,UserEvalationQuestionCustomizeVO.class);
+            }
+            evalationDetailResponseBean.setUserEvalationResultCustomizeVO(userEvalationResultCustomizeVO);
+            evalationDetailResponseBean.setIsEvalation("1");
+            evalationDetailResponseBean.setUserEvalationQuestionCustomizeVO(evalationQuestionCustomizeVOList);
+           return new AdminResult<EvalationDetailResponseBean>(evalationDetailResponseBean);
         }
         return new AdminResult<>(FAIL, FAIL_DESC);
     }

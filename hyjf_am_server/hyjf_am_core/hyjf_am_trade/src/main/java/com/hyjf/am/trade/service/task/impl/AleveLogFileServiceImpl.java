@@ -6,7 +6,7 @@ package com.hyjf.am.trade.service.task.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;

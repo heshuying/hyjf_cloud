@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.BankInterfaceClient;
 import com.hyjf.admin.service.BankInterfaceService;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BankInterfaceServiceImpl implements BankInterfaceService {
     @Autowired
-    private BankInterfaceClient bankInterfaceClient;
+    private AmConfigClient AmConfigClient;
     /**
      * 查询配置中心接口切换列表
      * @param adminRequest
@@ -22,7 +23,7 @@ public class BankInterfaceServiceImpl implements BankInterfaceService {
      */
     @Override
     public BankInterfaceResponse bankInterfaceInit(BankInterfaceRequest adminRequest){
-        return bankInterfaceClient.bankInterfaceInit(adminRequest);
+        return AmConfigClient.bankInterfaceInit(adminRequest);
     }
     /**
      * 查询配置中心接口切换详情页面
@@ -31,7 +32,7 @@ public class BankInterfaceServiceImpl implements BankInterfaceService {
      */
     @Override
     public BankInterfaceResponse bankInterfaceInfo(BankInterfaceRequest adminRequest){
-        return bankInterfaceClient.bankInterfaceInfo(adminRequest);
+        return AmConfigClient.bankInterfaceInfo(adminRequest);
     }
     /**
      * 修改 接口切换
@@ -39,7 +40,7 @@ public class BankInterfaceServiceImpl implements BankInterfaceService {
      */
     @Override
     public BankInterfaceResponse updateBankIntefaceAction(BankInterfaceVO req){
-        return bankInterfaceClient.updateBankIntefaceAction(req);
+        return AmConfigClient.updateBankIntefaceAction(req);
     }
 
     /**
@@ -48,6 +49,6 @@ public class BankInterfaceServiceImpl implements BankInterfaceService {
      */
     @Override
     public BankInterfaceResponse deleteBankInterfaceConfig(BankInterfaceVO req){
-        return bankInterfaceClient.deleteBankInterfaceConfig(req);
+        return AmConfigClient.deleteBankInterfaceConfig(req);
     }
 }

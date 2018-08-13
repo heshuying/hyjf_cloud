@@ -1,16 +1,8 @@
 package com.hyjf.admin.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
-import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +11,108 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
+import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BankAccountManageCustomizeResponse;
+import com.hyjf.am.response.admin.UserPortraitScoreResponse;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.admin.VipDetailListResponse;
+import com.hyjf.am.response.admin.VipManageResponse;
+import com.hyjf.am.response.admin.VipUpdateGradeListResponse;
+import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.user.AccountChinapnrResponse;
+import com.hyjf.am.response.user.AdminPreRegistListResponse;
+import com.hyjf.am.response.user.AdminUserAuthListResponse;
+import com.hyjf.am.response.user.AdminUserAuthLogListResponse;
+import com.hyjf.am.response.user.BankAccountRecordResponse;
+import com.hyjf.am.response.user.BankCardLogResponse;
+import com.hyjf.am.response.user.BankCardManagerResponse;
+import com.hyjf.am.response.user.BankCardResponse;
+import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.response.user.BindUserResponse;
+import com.hyjf.am.response.user.CertificateAuthorityResponse;
+import com.hyjf.am.response.user.ChangeLogResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
+import com.hyjf.am.response.user.EmployeeCustomizeResponse;
+import com.hyjf.am.response.user.EvalationResultResponse;
+import com.hyjf.am.response.user.KeyCountResponse;
+import com.hyjf.am.response.user.LoanCoverUserResponse;
+import com.hyjf.am.response.user.MspApplytResponse;
+import com.hyjf.am.response.user.MspResponse;
+import com.hyjf.am.response.user.RegistRecordResponse;
+import com.hyjf.am.response.user.SpreadsUserResponse;
+import com.hyjf.am.response.user.UserBankOpenAccountResponse;
+import com.hyjf.am.response.user.UserChangeLogResponse;
+import com.hyjf.am.response.user.UserEvalationQuestionResponse;
+import com.hyjf.am.response.user.UserEvalationResultResponse;
+import com.hyjf.am.response.user.UserInfoCustomizeResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserManagerDetailResponse;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.response.user.UserManagerUpdateResponse;
+import com.hyjf.am.response.user.UserPortraitResponse;
+import com.hyjf.am.response.user.UserRecommendCustomizeResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
+import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
+import com.hyjf.am.resquest.admin.VipDetailListRequest;
+import com.hyjf.am.resquest.admin.VipManageRequest;
+import com.hyjf.am.resquest.admin.VipUpdateGradeListRequest;
+import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
+import com.hyjf.am.resquest.user.AccountRecordRequest;
+import com.hyjf.am.resquest.user.AdminPreRegistListRequest;
+import com.hyjf.am.resquest.user.AdminUserAuthListRequest;
+import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
+import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
+import com.hyjf.am.resquest.user.BankAccountRecordRequest;
+import com.hyjf.am.resquest.user.BankCardLogRequest;
+import com.hyjf.am.resquest.user.BankCardManagerRequest;
+import com.hyjf.am.resquest.user.BankCardRequest;
+import com.hyjf.am.resquest.user.BankOpenAccountRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
+import com.hyjf.am.resquest.user.ChangeLogRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.user.EvalationRequest;
+import com.hyjf.am.resquest.user.KeyCountRequest;
+import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.resquest.user.MspApplytRequest;
+import com.hyjf.am.resquest.user.MspRequest;
+import com.hyjf.am.resquest.user.RegistRcordRequest;
+import com.hyjf.am.resquest.user.UpdCompanyRequest;
+import com.hyjf.am.resquest.user.UserChangeLogRequest;
+import com.hyjf.am.resquest.user.UserInfoRequest;
+import com.hyjf.am.resquest.user.UserManagerRequest;
+import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.UserPortraitRequest;
+import com.hyjf.am.resquest.user.UserRequest;
+import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.AccountChinapnrVO;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.BindUserVo;
+import com.hyjf.am.vo.user.CertificateAuthorityVO;
+import com.hyjf.am.vo.user.EmployeeCustomizeVO;
+import com.hyjf.am.vo.user.LoanCoverUserVO;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserBankOpenAccountVO;
+import com.hyjf.am.vo.user.UserChangeLogVO;
+import com.hyjf.am.vo.user.UserEvalationQuestionVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserManagerDetailVO;
+import com.hyjf.am.vo.user.UserManagerUpdateVO;
+import com.hyjf.am.vo.user.UserPortraitVO;
+import com.hyjf.am.vo.user.UserRecommendCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 
 /**
  * @author zhangqingqing
@@ -616,7 +709,7 @@ public class AmUserClientImpl implements AmUserClient {
 	/*
 	 * @Override public BanksConfigVO getBanksConfigByBankId(int bankId) {
 	 * BanksConfigResponse response = restTemplate
-	 * .getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" +
+	 * .getForEntity("http://AM-USER/AM-USER/config/getBanksConfigByBankId/" +
 	 * bankId, BanksConfigResponse.class).getBody(); if (response != null) { return
 	 * response.getResult(); } return null; }
 	 */
@@ -699,7 +792,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	/**
 	 * 根据用户id获取用户信息
-	 * 
+	 *
 	 * @auther: nxl
 	 * @param userId
 	 * @return
@@ -1324,5 +1417,502 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.getForObject("http://AM-USER/am-user/content/whereaboutspage/delete/" + id,
 				WhereaboutsPageResponse.class);
 	}
-	
+
+	@Override
+	public Integer queryAccountCount(BankAccountManageRequest bankAccountManageRequest) {
+		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountCount";
+		Integer result = restTemplate.postForEntity(url,bankAccountManageRequest,Integer.class).getBody();
+		return result;
+	}
+
+	@Override
+	public List<BankAccountManageCustomizeVO> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest) {
+		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountInfos";
+		BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<BankAccountManageCustomizeVO> queryAccountDetails(BankAccountManageRequest bankAccountManageRequest) {
+		String url = "http://AM-USER/am-user/bankAccountManage/queryAccountDetails";
+		BankAccountManageCustomizeResponse response = restTemplate.postForEntity(url,bankAccountManageRequest,BankAccountManageCustomizeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+		String url = "http://AM-USER/am-user/bankaccountmanage/getbankopenaccount/" + userId;
+		BankOpenAccountResponse response = restTemplate.getForEntity(url,BankOpenAccountResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public ChangeLogResponse getChangeLogList(ChangeLogRequest clr) {
+		ChangeLogResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/changelog/init",clr, ChangeLogResponse.class)
+				.getBody();
+		return response;
+	}
+
+	@Override
+	public ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request){
+		ChannelStatisticsDetailResponse amUserResponse = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/channelstatisticsdetail/searchaction",
+				request, ChannelStatisticsDetailResponse.class);
+		return amUserResponse;
+	}
+
+	/**
+	 * 根据id查找用户测评的问题与答案
+	 * @param evalationId
+	 * @author nxl
+	 * @return
+	 */
+	@Override
+	public List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId){
+		String url = "http://AM-USER/am-user/evaluationManager/getUserQuestionInfoById/" + evalationId;
+		UserEvalationQuestionResponse response = restTemplate.getForEntity(url, UserEvalationQuestionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询用户画像评分列表
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserPortraitScoreResponse selectScoreRecordList(UserPortraitScoreRequest request) {
+		String url = "http://AM-USER/am-user/userPortraitManage/selectUserPortraitScoreRecordList";
+		UserPortraitScoreResponse response = restTemplate.postForEntity(url,request,UserPortraitScoreResponse.class).getBody();
+		if (response != null) {
+			response.getResultList();
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public KeyCountResponse searchAction(KeyCountRequest request) {
+		KeyCountResponse response = restTemplate.postForObject("http://AM-USER/am-user/extensioncenter/keycount/searchaction",
+				request, KeyCountResponse.class);
+		return  response;
+
+	}
+
+	/**
+	 * 根据用户名查询id
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public UserResponse findUserByCondition(String userName) {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/findByCondition/"+userName, UserResponse.class);
+	}
+
+	/**
+	 * 根据用户id查询用户
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserResponse findUserByUserId(Integer userId) {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/findById/"+userId, UserResponse.class);
+	}
+
+	public UtmResponse getByPageList(Map<String, Object> map) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/getbypagelist", map, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public UtmResponse getCountByParam(Map<String, Object> map) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/getcount", map, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public Integer getChannelCount(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/channel/getchannelcount", channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getRecordTotal();
+		}
+		return null;
+	}
+
+	@Override
+	public List<ChannelCustomizeVO> getChannelList(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/channel/getchannellist", channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<UtmPlatVO> getUtmPlat(String sourceId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmplat/"+sourceId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UtmChannelVO getRecord(String utmId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyutmid/"+utmId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return (UtmChannelVO)response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserVO getUser(String utmReferrer, String userId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return (UserVO)response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutm/",channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	@Override
+	public boolean deleteAction(ChannelCustomizeVO channelCustomizeVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutm/",channelCustomizeVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	@Override
+	public UtmPlatVO getDataById(Integer id) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/getutmbyid/"+id, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return (UtmPlatVO)response.getResult();
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public int sourceNameIsExists(String sourceName, Integer sourceId) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/promotion/utm/sourcenameisexists/"+sourceName+"/"+sourceId, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getRecordTotal();
+		}else{
+			return 0;
+		}
+	}
+
+	@Override
+	public boolean insertOrUpdateUtmPlat(UtmPlatVO utmPlatVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/insertorupdateutmplat/",utmPlatVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	@Override
+	public boolean utmClientdeleteUtmPlatAction(UtmPlatVO utmPlatVO) {
+		UtmResponse response = restTemplate
+				.postForEntity("http://AM-USER/am-user/promotion/utm/deleteutmplat/",utmPlatVO, UtmResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
+
+	/**
+	 * 查找VIP信息
+	 * @param vipManageRequest
+	 * @return
+	 */
+	@Override
+	public VipManageResponse searchList(VipManageRequest vipManageRequest) {
+		String url = "http://AM-USER/am-user/vipManage/getUserList";
+		VipManageResponse response = restTemplate.postForEntity(url,vipManageRequest,VipManageResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public VipDetailListResponse searchDetailList(VipDetailListRequest detailListRequest) {
+		String url = "http://AM-USER/am-user/vipManage/vipDetailList";
+		VipDetailListResponse response = restTemplate.postForEntity(url,detailListRequest,VipDetailListResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+	@Override
+	public VipUpdateGradeListResponse searchUpdateGradeList(VipUpdateGradeListRequest vgl) {
+		String url = "http://AM-USER/am-user/vipManage/vipUpdateGradeList";
+		VipUpdateGradeListResponse response = restTemplate.postForEntity(url,vgl,VipUpdateGradeListResponse.class).getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+	/**
+	 *  分账名单配置添加  查询用户名信息
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public UserInfoCustomizeResponse queryUserInfoByUserName(AdminSubConfigRequest request){
+		return restTemplate.postForEntity("http://AM-USER/am-user/config/queryUserInfoByUserName",request, UserInfoCustomizeResponse.class).getBody();
+	}
+	@Override
+	public MspApplytResponse getRecordList(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/init" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse infoAction() {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/infoAction" ,null,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse insertAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/insertAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse updateAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/insertAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse deleteRecordAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/deleteRecordAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse validateBeforeAction(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/validateBeforeAction" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse applyInfo(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/applyInfo" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse shareUser(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/shareUser" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspApplytResponse download(MspApplytRequest mspApplytRequest) {
+		MspApplytResponse mspApplytResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapply/download" ,mspApplytRequest,
+						MspApplytResponse.class)
+				.getBody();
+		if (mspApplytResponse != null) {
+			return mspApplytResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse searchAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse infoAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/infoAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse insertAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse updateAction(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/insertAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse configureNameError(MspRequest mspRequest) {
+		MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/configureNameError" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse deleteAction(MspRequest mspRequest) {
+		 MspResponse mspResponse = restTemplate
+				.postForEntity("http://AM-USER/am-user/mspapplyconfigure/deleteAction" ,mspRequest,
+						MspResponse.class)
+				.getBody();
+		if (mspResponse != null) {
+			return mspResponse;
+		}
+		return null;
+	}
+
+	@Override
+	public MspResponse checkAction(MspRequest mspRequest) {
+		 MspResponse mspResponse = restTemplate
+					.postForEntity("http://AM-USER/am-user/mspapplyconfigure/checkAction" ,mspRequest,
+							MspResponse.class)
+					.getBody();
+			if (mspResponse != null) {
+				return mspResponse;
+			}
+			return null;
+	}
+
+	/**
+	 * 获取注册时的用户渠道
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UtmResponse getChannelNameByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/channel/getchannelnamebyuserd/" + userId;
+		UtmResponse utmResponse = restTemplate.getForEntity(url, UtmResponse.class).getBody();
+		if (utmResponse != null) {
+			return utmResponse;
+		}
+		return null;
+	}
 }

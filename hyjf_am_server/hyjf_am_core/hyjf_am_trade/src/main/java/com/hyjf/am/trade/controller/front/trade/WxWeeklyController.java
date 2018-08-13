@@ -38,7 +38,7 @@ public class WxWeeklyController {
      * @param userId
      * @return
      */
-    @GetMapping("/getBorrowTender/{userid}/{begin}/{end}")
+    @GetMapping("/getBorrowTender/{userId}/{begin}/{end}")
     public BorrowTenderResponse getBorrowTender(@PathVariable int userId, @PathVariable int begin, @PathVariable int end){
         BorrowTenderResponse borrowTenderResponse = new BorrowTenderResponse();
         List<BorrowTender> borrowTender = weeklyService.getBorrowTender(userId, begin, end);

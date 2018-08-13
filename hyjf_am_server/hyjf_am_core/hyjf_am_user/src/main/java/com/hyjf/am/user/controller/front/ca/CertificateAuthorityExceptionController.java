@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.hyjf.am.user.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +46,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * @return
      */
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-    public CertificateAuthorityResponse search(HttpServletRequest request, CertificateAuthorityExceptionRequest form) {
+    public CertificateAuthorityResponse search(HttpServletRequest request,@RequestBody CertificateAuthorityExceptionRequest form) {
 		CertificateAuthorityResponse cfar=new CertificateAuthorityResponse();
         // 创建分页
        
@@ -63,7 +64,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * @throws NumberFormatException 
      */
 	@RequestMapping(value = "/modifyAction", method = RequestMethod.POST)
-    public CertificateAuthorityResponse modifyAction( CertificateAuthorityExceptionRequest form) throws NumberFormatException, ParseException, MQException {
+    public CertificateAuthorityResponse modifyAction(@RequestBody CertificateAuthorityExceptionRequest form) throws NumberFormatException, ParseException, MQException {
 		CertificateAuthorityResponse cr=new CertificateAuthorityResponse();
         // 用户ID
         if (Validator.isNull(form.getUserId())) {
@@ -86,7 +87,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
     private CertificateAuthorityResponse createPage( CertificateAuthorityExceptionRequest form,CertificateAuthorityResponse cfar) {
         Integer counts = this.certificateAuthorityExceptionService.countCAExceptionList(form);
         if (counts > 0) {
-            Paginator paginator = new Paginator(form.getCurrPage(),form.getPageSize(), counts);
+            Paginator paginator = new Paginator(form.getCurrPage(),counts,form.getPageSize());
             List<CertificateAuthority> recordList = this.certificateAuthorityExceptionService.getCAExceptionList(form, paginator.getOffset(), paginator.getLimit());
             cfar.setResultList(CommonUtils.convertBeanList(recordList, CertificateAuthorityVO.class));
         }

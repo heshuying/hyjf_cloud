@@ -18,7 +18,10 @@ import java.util.List;
  * @version UserCenterService, v0.1 2018/6/20 15:34
  */
 public interface UserCenterService {
-
+    /**
+     * 初始化用户管理页面
+     * @return
+     */
     UserManagerInitResponseBean initUserManaget();
     /**
      *查找用户信息

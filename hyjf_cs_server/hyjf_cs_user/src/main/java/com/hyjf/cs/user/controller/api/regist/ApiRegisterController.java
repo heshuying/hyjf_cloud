@@ -8,7 +8,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.regist.RegistService;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
@@ -36,7 +36,7 @@ public class ApiRegisterController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(ApiRegisterController.class);
 
     @Autowired
-    RegistService registService;
+    RegisterService registService;
 
     /**
      * @param request

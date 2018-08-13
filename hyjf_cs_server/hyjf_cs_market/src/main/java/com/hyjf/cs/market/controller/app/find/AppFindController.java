@@ -12,10 +12,12 @@ import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,17 +28,20 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "app发现页", tags = "app发现页")
+@Api(description = "app发现页", tags = "app发现页")
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppFindController extends BaseMarketController {
+    private static final Logger logger = LoggerFactory.getLogger(AppFindController.class);
     @Autowired
     private AppFindService appFindService;
 
+    @ApiOperation(value = "知识列表", httpMethod = "POST", notes = "知识列表")
+    @PostMapping(value = "/contentArticle/getContentArticleListByType")
+    @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
-    @ApiOperation(value = "知识列表", notes = "知识列表")
-    @RequestMapping(value = "/contentArticle/getContentArticleListByType", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
-    public JSONObject getContentArticleListByType(HttpServletRequest request, AppContentArticleBean form) {
+    public JSONObject getContentArticleListByType(@ModelAttribute AppContentArticleBean form) {
+        logger.info(AppFindController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
@@ -49,7 +54,7 @@ public class AppFindController extends BaseMarketController {
                 return ret;
             }
             // 检查参数正确性
-            if (form.getSize()<0||form.getPage()<0){
+            if (form.getSize() < 0 || form.getPage() < 0){
                 ret.put("status", "1");
                 ret.put("statusDesc", "分页参数非法");
                 return ret;
@@ -83,18 +88,20 @@ public class AppFindController extends BaseMarketController {
             ret.put("statusDesc", "系统异常请稍后再试");
             ret.put("messageCount", "0");
             ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
+            logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
             return ret;
         }
+        logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
         return ret;
 
     }
 
+    @ApiOperation(value = "上下翻页", httpMethod = "POST", notes = "上下翻页")
+    @PostMapping(value = "/contentArticle/getContentArticleFlip")
+    @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
-    @ApiOperation(value = "上下翻页", notes = "上下翻页")
-    @RequestMapping(value = "/contentArticle/getContentArticleFlip", method = RequestMethod.POST ,produces = "application/json; charset=utf-8")
-    public JSONObject getContentArticleFlip(@ModelAttribute() AppContentArticleBean form) {
-
-        //LogUtil.startLog(THIS_CLASS, AppContentArticleDefine.GET_CONTENT_ARTICLE_FLIP_ACTION);
+    public JSONObject getContentArticleFlip(@ModelAttribute AppContentArticleBean form) {
+        logger.info(AppFindController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/getContentArticleFlip");
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
@@ -135,7 +142,7 @@ public class AppFindController extends BaseMarketController {
             ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
             return ret;
         }
-        //LogUtil.endLog(THIS_CLASS, AppContentArticleDefine.GET_CONTENT_ARTICLE_FLIP_ACTION);
+        logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleFlip");
         return ret;
     }
 

@@ -38,8 +38,6 @@ import java.util.UUID;
 @Service
 public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAutoCreditService {
 
-    private static final Logger logger = LoggerFactory.getLogger(HjhAutoCreditServiceImpl.class);
-
     @Autowired
     private HjhCalculateFairValueProducer hjhCalculateFairValueProducer;
 
@@ -76,6 +74,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             hjhCalculateFairValueProducer.messageSend(new MessageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
         } catch (MQException e) {
             logger.error("发送汇计划加入订单计算公允价值MQ失败...");
+            e.printStackTrace();
         }
     }
 

@@ -53,24 +53,66 @@ public interface AmUserClient {
 	 */
 	UserVO register(RegisterUserRequest request);
 
+	/**
+	 * 根据userId获取userInfo
+	 * @param userId
+	 * @return
+	 */
 	UserInfoVO findUserInfoById(int userId);
 
+	/**
+	 * 保存短信信息
+	 * @param mobile
+	 * @param checkCode
+	 * @param validCodeType
+	 * @param status
+	 * @param platform
+	 * @return
+	 */
 	int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
+	/**
+	 * 校验验证码
+	 * @param mobile
+	 * @param verificationCode
+	 * @param verificationType
+	 * @param platform
+	 * @param searchStatus
+	 * @param updateStatus
+	 * @param isUpdate
+	 * @return
+	 */
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
-
+	/**
+	 * 更新登录信息
+	 * @param userId
+	 * @param ip
+	 */
 	void updateLoginUser(int userId, String ip);
 
+	/**
+	 * 检查用户授权状态
+	 * @param userId
+	 * @return
+	 */
 	HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
 
 	BankReturnCodeConfigVO getBankReturnCodeConfig(String retCode);
 
+	/**
+	 * 插入UserAuth信息
+	 * @param hjhUserAuthLog
+	 */
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 
 	HjhUserAuthLogVO selectByExample(String orderId);
 
+	/**
+	 * 更新签约状态和日志表
+	 * @param bean
+	 */
 	void updateUserAuthInves(BankRequest bean);
 
 	/**
@@ -87,24 +129,74 @@ public interface AmUserClient {
 	 */
 	int countByMobile(String mobile);
 
+	/**
+	 * 修改密码
+	 * @param userId
+	 * @param oldPW
+	 * @param newPW
+	 * @return
+	 */
 	JSONObject updatePassWd(Integer userId, String oldPW, String newPW);
 
+	/**
+	 * 获取汇付信息
+	 * @param userId
+	 * @return
+	 */
     AccountChinapnrVO getAccountChinapnr(Integer userId);
 
+	/**
+	 * 校验邮箱
+	 * @param email
+	 * @return
+	 */
 	boolean checkEmailUsed(String email);
 
+	/**
+	 * 更新绑定邮箱信息
+	 * @param bean
+	 */
 	void updateBindEmail(BindEmailLogRequest bean);
 
+	/**
+	 * 获取绑定邮箱日志信息表
+	 * @param userId
+	 * @return
+	 */
 	BindEmailLogVO getBindEmailLog(Integer userId);
 
+	/**
+	 * 插入绑定邮箱日志信息表
+	 * @param bean
+	 */
 	void insertBindEmailLog(BindEmailLogRequest bean);
 
+	/**
+	 * 保存紧急联系人
+	 * @param bean
+	 * @return
+	 */
 	int updateUserContract(UsersContractRequest bean);
 
+	/**
+	 * 查询紧急联系人
+	 * @param userId
+	 * @return
+	 */
     UsersContactVO selectUserContact(Integer userId);
 
-    int updateUserNoticeSet(UserNoticeSetRequest requestBean);
+	/**
+	 * 更新用户信息
+	 * @param requestBean
+	 * @return
+	 */
+	int updateUserNoticeSet(UserNoticeSetRequest requestBean);
 
+	/**
+	 * 根据idno获取用户信息
+	 * @param idNo
+	 * @return
+	 */
 	UserInfoVO getUserByIdNo(String idNo);
 
     UserLoginLogVO getUserLoginById(Integer userId);
@@ -119,16 +211,41 @@ public interface AmUserClient {
 
 	List<EvalationVO> getEvalationRecord();
 
+	/**
+	 * 获取测评结果
+	 * @param evalationType
+	 * @return
+	 */
     EvalationVO getEvalationByEvalationType(String evalationType);
 
-    UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
+	/**
+	 * 插入测评信息
+	 * @param userEvalationRequest
+	 * @return
+	 */
+	UserEvalationResultVO insertUserEvalationResult(UserEvalationRequest userEvalationRequest);
 
 	UserInfoVO findUserInfoByCardNo(String cradNo);
 
+	/**
+	 * 保存开户日志
+	 * @param request
+	 * @return
+	 */
 	int updateUserAccountLog(BankOpenRequest request);
 
+	/**
+	 * 根据电子账户号查询用户ID
+	 * @param accountId
+	 * @return
+	 */
 	BankOpenAccountVO selectByAccountId(String accountId);
 
+	/**
+	 * 风险测评结果
+	 * @param userId
+	 * @return
+	 */
 	UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 
 	void deleteUserEvalationResultByUserId(Integer userId);
@@ -157,8 +274,19 @@ public interface AmUserClient {
 	 */
 	Integer saveCardNoToBank(BankCardRequest request);
 
+	/**
+	 * 待解绑卡校验
+	 * @param userId
+	 * @param cardNo
+	 * @return
+	 */
     BankCardVO queryUserCardValid(String userId, String cardNo);
 
+	/**
+	 * 已绑卡校验
+	 * @param userId
+	 * @return
+	 */
 	int countUserCardValid(String userId);
 
 	int deleteUserCardByUserId(String userId);
@@ -182,13 +310,33 @@ public interface AmUserClient {
      */
 	String getBankOpenAccountFiledMess(String logOrdId);
 
+	/**
+	 * 判断企业用户是否已开户
+	 * @param userId
+	 * @return
+	 */
 	int isCompAccount(Integer userId);
 
+	/**
+	 * 根据渠道号检索推广渠道是否存在
+	 * @param utmId
+	 * @return
+	 */
 	UtmPlatVO selectUtmPlatByUtmId(String utmId);
 
+	/**
+	 * 我的邀请列表
+	 * @param requestBean
+	 * @return
+	 */
     List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
 
-    int selectMyInviteCount(MyInviteListRequest requestBean);
+	/**
+	 * 我的邀请记录总数
+	 * @param requestBean
+	 * @return
+	 */
+	int selectMyInviteCount(MyInviteListRequest requestBean);
 
     /**
 	 * 查询同步银行卡号
@@ -294,15 +442,50 @@ public interface AmUserClient {
 	 */
     List<AccountBankVO> selectAccountBank(Integer userId, int status);
 
-    List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
+	/**
+	 *
+	 * @param userId
+	 * @return
+	 */
+	List<AdminBankAccountCheckCustomizeVO> queryAllBankOpenAccount(Integer userId);
 
-    BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+	/**
+	 * 获取开户账号
+	 * @param accountId
+	 * @return
+	 */
+	BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId);
+
+	/**
+	 * 根据绑定信息取得用户id
+	 * @param bindUniqueId
+	 * @param bindPlatformId
+	 * @return
+	 */
 	Integer getUserIdByBind(Integer bindUniqueId, Integer bindPlatformId);
 
+	/**
+	 * 插入各种信息
+	 * @param userId
+	 * @param bindPlatformId
+	 * @return
+	 */
 	String getBindUniqueIdByUserId(int userId, int bindPlatformId);
 
+	/**
+	 * 授权
+	 * @param userId
+	 * @param bindUniqueId
+	 * @param pid
+	 * @return
+	 */
 	Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer pid);
 
+	/**
+	 * 获取银行卡信息
+	 * @param userId
+	 * @return
+	 */
 	BankCardVO getBankCardByUserId(Integer userId);
 
 	/**
@@ -314,8 +497,7 @@ public interface AmUserClient {
 
 	/**
 	 * 插入各种信息
-	 * @auth sunpeikai
-	 * @param
+	 * @param userActionUtmRequest
 	 * @return
 	 */
 	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);

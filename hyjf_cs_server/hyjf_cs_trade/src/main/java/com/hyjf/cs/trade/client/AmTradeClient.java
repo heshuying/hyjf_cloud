@@ -6,6 +6,7 @@ import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -33,9 +34,7 @@ import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
@@ -1534,6 +1533,84 @@ public interface AmTradeClient {
      * @date 2018/7/5 15:32
      */
     List<AppAdsCustomizeVO> getBannerList(AdsRequest request);
+
+    /**
+     * 获取承接中的总额度
+     * @author zhangyk
+     * @date 2018/8/9 11:48
+     */
+    String sumUndertakeAccount(String borrowNid);
+
+    /**
+     * 承接中的列表
+     * @author zhangyk
+     * @date 2018/8/9 13:58
+     */
+    List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> params);
+
+    /**
+     * 获取机构信息
+     *
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    HjhAssetBorrowTypeVO selectAssetBorrowType(String instCode, Integer assetType);
+
+    /**
+     * 根据项目类型去还款方式
+     *
+     * @param borrowcCd
+     * @return
+     */
+    List<BorrowProjectRepayVO> selectProjectRepay(String borrowcCd);
+
+    /**
+     * 获取受托支付电子账户列表
+     *
+     * @param instCode
+     * @param entrustedAccountId
+     * @return
+     */
+    STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId);
+
+    /**
+     * 插入资产表
+     *
+     * @param record
+     * @return
+     */
+    int insertAssert(HjhPlanAssetVO record);
+
+    /**
+     * 插入资产表
+     *
+     * @param riskInfo
+     */
+    void insertRiskInfo(List<InfoBean> riskInfo);
+
+    /**
+     * 检查是否存在重复资产
+     *
+     * @param assetId
+     * @return
+     */
+    HjhPlanAssetVO checkDuplicateAssetId(String assetId);
+
+    /**
+     * 录标时添加企业资产
+     *
+     * @param record
+     * @return
+     */
+    int insertCompanyInfoToBorrowUsers(BorrowUserVO record);
+
+    /**
+     * 根据borrowNid查询风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:21
+     */
+    BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
 
     JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean);
 

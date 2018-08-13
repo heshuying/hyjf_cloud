@@ -4,16 +4,14 @@
 package com.hyjf.am.trade.controller.front.hjh;
 
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.HjhAppCreditResponse;
-import com.hyjf.am.response.trade.HjhDebtCreditResponse;
-import com.hyjf.am.response.trade.HjhDebtCreditTenderResponse;
-import com.hyjf.am.response.trade.HjhUserInvestListResponse;
+import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
 import com.hyjf.am.trade.service.front.hjh.HjhDebtCreditService;
+import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -164,6 +162,59 @@ public class HjhDebtCreditController extends BaseController {
         HjhUserInvestListResponse response = new HjhUserInvestListResponse();
         List<UserHjhInvistListCustomizeVO> list = hjhDebtCreditService.getUserHjhInvestList(params);
         response.setResultList(list);
+        return response;
+    }
+
+    @PostMapping("/selectHjhDebtCreditListByBorrowNidAndStatus")
+    public HjhDebtCreditResponse selectHjhDebtCreditListByBorrowNidAndStatus(@RequestBody DebtCreditRequest request){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        List<HjhDebtCredit> list = hjhDebtCreditService.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+        if (CollectionUtils.isNotEmpty(list)){
+            List<HjhDebtCreditVO> resultList = CommonUtils.convertBeanList(list,HjhDebtCreditVO.class);
+            response.setResultList(resultList);
+        }
+        return response;
+    }
+
+    /**
+     * 查询承接记录数
+     * @author zhangyk
+     * @date 2018/8/9 11:06
+     */
+    @PostMapping("/countCreditTenderByBorrowNidAndUserId")
+    public HjhDebtCreditResponse countCreditTenderByBorrowNidAndUserId(@RequestBody Map<String,Object> params){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        int count = hjhDebtCreditService.countCreditTenderByBorrowNidAndUserId(params);
+        response.setTenderCount(count);
+        return response;
+    }
+
+    /**
+     * 查询当前承接下的总金额
+     * @author zhangyk
+     * @date 2018/8/9 13:48
+     */
+    @GetMapping("/sumUndertakeAmount/{borrowNid}")
+    public HjhDebtCreditResponse sumUnderTakeAmountByBorrowNid(@PathVariable String borrowNid){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        String sum = hjhDebtCreditService.sumUnderTakeAmountByBorrowNid(borrowNid);
+        response.setSum(sum);
+        return response;
+    }
+
+
+    /**
+     * 在承接中的列表
+     * @author zhangyk
+     * @date 2018/8/9 14:17
+     */
+    @PostMapping("/selectProjectUndertakeList")
+    public HjhCreditUnderTakeResponse selectProjectUndertakeList(@RequestBody Map<String,Object> params){
+        HjhCreditUnderTakeResponse response = new HjhCreditUnderTakeResponse();
+        List<ProjectUndertakeListVO> list = hjhDebtCreditService.selectProjectUndertakeList(params);
+        if (CollectionUtils.isNotEmpty(list)){
+            response.setResultList(list);
+        }
         return response;
     }
 }

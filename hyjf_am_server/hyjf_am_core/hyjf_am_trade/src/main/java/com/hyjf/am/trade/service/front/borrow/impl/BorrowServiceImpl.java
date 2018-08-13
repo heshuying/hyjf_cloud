@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
-import com.hyjf.am.trade.dao.mapper.customize.trade.AccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.trade.WebCalculateInvestInterestCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.AccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.WebCalculateInvestInterestCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
@@ -530,5 +530,23 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         criteria.andBorrowNidEqualTo(borrowNid);
         List<AccountBorrow> accountBorrows = accountBorrowMapper.selectByExample(example);
         return  accountBorrows;
+    }
+
+
+    /**
+     * 查询订单风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:40
+     */
+    @Override
+    public BorrowInfoWithBLOBs getBorrowInfoWithBLOBs(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfoWithBLOBs> list = borrowInfoMapper.selectByExampleWithBLOBs(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
+        return null;
     }
 }

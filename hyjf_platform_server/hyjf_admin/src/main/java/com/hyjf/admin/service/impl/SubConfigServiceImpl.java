@@ -1,8 +1,10 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.client.SubConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.SubConfigService;
 import com.hyjf.am.response.admin.AdminSubConfigResponse;
+import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminSubConfigRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SubConfigServiceImpl implements SubConfigService {
     @Autowired
-    private SubConfigClient subConfigClient;
+    private AmTradeClient amTradeClient;
+    @Autowired
+    private AmUserClient userClient;
 
     /**
      * 查询列表
@@ -22,7 +26,7 @@ public class SubConfigServiceImpl implements SubConfigService {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest adminRequest){
-        return subConfigClient.selectSubConfigListByParam(adminRequest);
+        return amTradeClient.selectSubConfigListByParam(adminRequest);
     }
     /**
      * 页面详情
@@ -31,7 +35,7 @@ public class SubConfigServiceImpl implements SubConfigService {
      */
     @Override
     public AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest adminRequest){
-        return subConfigClient.selectSubConfigInfo(adminRequest);
+        return amTradeClient.selectSubConfigInfo(adminRequest);
     }
     /**
      * 分账名单配置添加
@@ -40,7 +44,13 @@ public class SubConfigServiceImpl implements SubConfigService {
      */
     @Override
     public AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest adminRequest){
-        return subConfigClient.insertSubConfig(adminRequest);
+        // 查询用户名信息
+        UserInfoCustomizeResponse userResponse= userClient.queryUserInfoByUserName(adminRequest);
+        if (userResponse != null&& userResponse.getResult().getUserId() !=null) {
+            // 设置用户名信息
+            adminRequest.setUserId(userResponse.getResult().getUserId());
+        }
+        return amTradeClient.insertSubConfig(adminRequest);
     }
 
     /**
@@ -50,7 +60,7 @@ public class SubConfigServiceImpl implements SubConfigService {
      */
     @Override
     public AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest adminRequest){
-        return subConfigClient.updateSubConfig(adminRequest);
+        return amTradeClient.updateSubConfig(adminRequest);
     }
 
     /**
@@ -60,7 +70,7 @@ public class SubConfigServiceImpl implements SubConfigService {
      */
     @Override
     public AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest adminRequest){
-        return subConfigClient.deleteSubConfig(adminRequest);
+        return amTradeClient.deleteSubConfig(adminRequest);
     }
 
 

@@ -3,11 +3,6 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.mapper.auto.CertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.LoanSubjectCertificateAuthorityMapper;
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -29,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -41,18 +35,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	@Resource
-	private CertificateAuthorityMapper certificateAuthorityMapper;
-	@Resource
-	private LoanSubjectCertificateAuthorityMapper loanSubjectCertificateAuthorityMapper;
-	@Resource
-	private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
-	@Resource
-	private UserMapper userMapper;
-	@Resource
-	private SpreadsUserMapper spreadsUserMapper;
-
-
 
 	@Value("${hyjf.ip.taobo.url}")
 	private String ipInfoUrl;
@@ -1417,7 +1399,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				userLog.setContent("注册成功");
 				System.out.println("saveRegistUser***********************************预插入userLog："
 						+ JSON.toJSONString(userLog));
-				usersLogMapper.insertSelective(userLog);
+				userLogMapper.insertSelective(userLog);
 			}
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -1443,6 +1425,43 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		if(i>0){
 			return userEvalationResult;
 		}else {
+			return null;
+		}
+	}
+
+	/**
+	 * 通过用户id获得借款人的开户电子账号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BankOpenAccount selectBankAccountById(Integer userId) {
+		BankOpenAccountExample example = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = example.createCriteria();
+		crt.andUserIdEqualTo(userId);
+		List<BankOpenAccount> list = this.bankOpenAccountMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else return null;
+	}
+
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public CorpOpenAccountRecord selectUserBusiNameByUsername(String userName) {
+		CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
+		CorpOpenAccountRecordExample.Criteria crt = example.createCriteria();
+		crt.andUsernameEqualTo(userName);
+		List<CorpOpenAccountRecord> list = corpOpenAccountRecordMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
 			return null;
 		}
 	}

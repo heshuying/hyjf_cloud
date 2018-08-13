@@ -8,12 +8,16 @@ import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +43,7 @@ public class HjhRepayController {
     public HjhRepayResponse hjhRepayList(@RequestBody HjhRepayRequest request){
         HjhRepayResponse response = new HjhRepayResponse();
         String returnCode = Response.FAIL;
+
         List<HjhRepay> hjhRepayVOList = hjhRepayService.selectByExample(request);
 
         if (!CollectionUtils.isEmpty(hjhRepayVOList)) {

@@ -9,7 +9,6 @@ import com.hyjf.am.resquest.user.KeyCountRequest;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -17,7 +16,7 @@ import java.util.List;
  * @author tanyy
  * @version KeyCountService.java, v0.1 2018年7月17日 下午3:04:29
  */
-public interface KeyCountService  {
+public interface KeyCountService extends BaseService {
 
 	/**
 	 * 根据条件查询列表

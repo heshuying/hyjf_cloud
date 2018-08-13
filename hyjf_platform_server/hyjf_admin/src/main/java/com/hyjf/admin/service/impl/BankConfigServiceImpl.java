@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.BankConfigClient;
 import com.hyjf.admin.service.BankConfigService;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
@@ -19,7 +20,7 @@ import java.util.List;
 public class BankConfigServiceImpl implements BankConfigService {
 
     @Autowired
-    private BankConfigClient bankConfigClient;
+    private AmConfigClient amConfigClient;
 
     /**
      * 查询银行配置列表
@@ -28,7 +29,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public AdminBankConfigResponse bankConfigInit(AdminBankConfigRequest adminRequest){
-        return bankConfigClient.bankConfigInit(adminRequest);
+        return amConfigClient.bankConfigInit(adminRequest);
     }
 
     /**
@@ -38,7 +39,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public AdminBankConfigResponse selectBankConfigById(Integer bankId){
-        return bankConfigClient.selectBankConfigById(bankId);
+        return amConfigClient.selectBankConfigById(bankId);
     }
 
     /**
@@ -47,7 +48,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public List<BankConfigVO> getBankConfigRecordList(BankConfigVO bank){
-        return bankConfigClient.getBankConfigRecordList(bank.getName());
+        return amConfigClient.getBankConfigRecordList(bank.getName());
     }
 
     /**
@@ -57,7 +58,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public AdminBankConfigResponse insertBankConfigRecord(AdminBankConfigRequest adminRequest){
-        return bankConfigClient.insertBankConfigRecord(adminRequest);
+        return amConfigClient.insertBankConfigRecord(adminRequest);
     }
 
 
@@ -68,7 +69,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public AdminBankConfigResponse updateBankConfigRecord(AdminBankConfigRequest adminRequest){
-        return bankConfigClient.updateBankConfigRecord(adminRequest);
+        return amConfigClient.updateBankConfigRecord(adminRequest);
     }
     /**
      * 删除银行配置
@@ -77,7 +78,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public AdminBankConfigResponse deleteBankConfigById(Integer id){
-        return bankConfigClient.deleteBankConfigById(id);
+        return amConfigClient.deleteBankConfigById(id);
     }
 
     /**
@@ -145,7 +146,7 @@ public class BankConfigServiceImpl implements BankConfigService {
      */
     @Override
     public AdminBankConfigResponse validateBeforeAction(AdminBankConfigRequest adminBankConfigRequest){
-        return bankConfigClient.validateBeforeAction(adminBankConfigRequest);
+        return amConfigClient.validateBeforeAction(adminBankConfigRequest);
     }
 
 

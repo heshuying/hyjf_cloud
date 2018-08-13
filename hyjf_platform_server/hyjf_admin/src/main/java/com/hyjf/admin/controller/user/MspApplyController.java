@@ -32,8 +32,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,12 +127,10 @@ public class MspApplyController extends BaseController {
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult insertAction(HttpServletRequest request,
-			@RequestBody MspApplytRequestBean mspApplytRequestBean) {
-		MspApplytRequest aprlr = new MspApplytRequest();
+			@RequestBody MspApplytRequest mspApplytRequestBean) {
 		// 可以直接使用
-		BeanUtils.copyProperties(mspApplytRequestBean, aprlr);
-		aprlr.setAdminId(this.getUser(request).getId());
-		MspApplytResponse prs = mspApplyService.insertAction(aprlr);
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
+		MspApplytResponse prs = mspApplyService.insertAction(mspApplytRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -252,7 +252,7 @@ public class MspApplyController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "安融反欺诈查询";
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
 				+ CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号", "姓名", "身份证号", "操作人", "查询时间" };
 		// 声明一个工作薄
@@ -399,12 +399,10 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "安融配置列表", notes = "安融配置列表")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<MspConfigureVO>> searchAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
 
-		 MspResponse prs = mspApplyService.searchAction(aprlr);
+
+		 MspResponse prs = mspApplyService.searchAction(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -421,13 +419,10 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "配置新增页面初始化", notes = "配置新增页面初始化")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<Map<String, Object>> infoAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		Map<String, Object> map = null;
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
+		Map<String, Object> map = new HashMap<String, Object>();
 
-		 MspResponse prs = mspApplyService.searchAction(aprlr);
+		 MspResponse prs = mspApplyService.infoAction(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -436,7 +431,10 @@ public class MspApplyController extends BaseController {
 			return new AdminResult<>(FAIL, prs.getMessage());
 
 		}
-		map.put("record", prs.getResult());
+		if( prs.getResult()!=null) {
+			map.put("record", prs.getResult());
+		}
+		
 		map.put("regionList", prs.getRegionList());
 		return new AdminResult<Map<String, Object>>(map);
 	}
@@ -445,12 +443,10 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "新增配置", notes = "新增配置")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult insertAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
 
-		 MspResponse prs = mspApplyService.insertAction(aprlr);
+
+		 MspResponse prs = mspApplyService.insertAction(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -466,12 +462,9 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "配置修改", notes = "配置修改")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult updateAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
 
-		 MspResponse prs = mspApplyService.updateAction(aprlr);
+		 MspResponse prs = mspApplyService.updateAction(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -487,12 +480,9 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "检测标名", notes = "检测标名")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult configureNameError(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
 
-		 MspResponse prs = mspApplyService.configureNameError(aprlr);
+		 MspResponse prs = mspApplyService.configureNameError(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -508,12 +498,9 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "删除配置", notes = "删除配置")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult deleteAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
 
-		 MspResponse prs = mspApplyService.deleteAction(aprlr);
+		 MspResponse prs = mspApplyService.deleteAction(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -529,12 +516,9 @@ public class MspApplyController extends BaseController {
 	@ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult checkAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean) {
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+			@RequestBody MspRequest mspRequestBean) {
 
-		 MspResponse prs = mspApplyService.checkAction(aprlr);
+		 MspResponse prs = mspApplyService.checkAction(mspRequestBean);
 
 		if (prs == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -554,15 +538,12 @@ public class MspApplyController extends BaseController {
 	 */
 	@SuppressWarnings("deprecation")
 	@PostMapping("/mspexportAction")
-	@ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
+	@ApiOperation(value = "安融反欺诈查询配置表", notes = "安融反欺诈查询配置表")
 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletRequest request,
-			@RequestBody MspRequestBean mspRequestBean,HttpServletResponse response) throws Exception {
+			@RequestBody MspRequest aprlr,HttpServletResponse response) throws Exception {
 		
-		
-		MspRequest aprlr = new MspRequest();
-		// 可以直接使用
-		BeanUtils.copyProperties(request, aprlr);
+
 		aprlr.setPageSize(-1);
 		aprlr.setCurrPage(-1);
 		 MspResponse prs = mspApplyService.searchAction(aprlr);
@@ -573,7 +554,7 @@ public class MspApplyController extends BaseController {
 		List<MspConfigureVO> resultList = prs.getResultList();
 
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "序号", "标的名称", "业务类型", "借款类型(借款用途)", "审批结果 ", "借款金额（合同金额）（元）", "借款/还款期数（月）", "借款城市(借款地点)", "担保类型", "未偿还本金", "当前还款状态"};
 		// 声明一个工作薄

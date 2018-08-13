@@ -76,6 +76,7 @@ public class OperationReportRequest extends BasePage implements Serializable{
 	//运营报告的id
 	private String operationReportId;
 
+	private Integer isRelease;
 	//运营报告
 	private OperationReportVO operationReport;
 	//运营报告活动
@@ -192,5 +193,13 @@ public class OperationReportRequest extends BasePage implements Serializable{
 
 	public void setGoodExperiences(List<OperationReportActivityVO> goodExperiences) {
 		this.goodExperiences = goodExperiences;
+	}
+
+	public Integer getIsRelease() {
+		return isRelease;
+	}
+
+	public void setIsRelease(Integer isRelease) {
+		this.isRelease = isRelease;
 	}
 }

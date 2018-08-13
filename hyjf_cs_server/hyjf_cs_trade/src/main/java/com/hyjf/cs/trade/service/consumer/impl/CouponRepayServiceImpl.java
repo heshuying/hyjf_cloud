@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.consumer.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -749,6 +750,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         this.sendPushMsgCoupon(retMsgList);
     }
 
+
     /**
      * 更新还款期
      *
@@ -1143,5 +1145,23 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     private CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow) {
         return this.borrowTenderClient.getCurrentCouponRecover(couponTenderNid,periodNow);
 
+    }
+
+    /**
+     * 优惠券单独投资放款
+     * @return
+     */
+    @Override
+    public List<String> selectNidForCouponOnly() {
+        return borrowTenderClient.selectNidForCouponOnly(new CouponRepayRequest());
+    }
+
+    /**
+     * 体验金按收益期限还款
+     * @param recoverNidList
+     */
+    @Override
+    public void couponOnlyRepay(List<String> recoverNidList) {
+            borrowTenderClient.couponOnlyRepay(recoverNidList);
     }
 }

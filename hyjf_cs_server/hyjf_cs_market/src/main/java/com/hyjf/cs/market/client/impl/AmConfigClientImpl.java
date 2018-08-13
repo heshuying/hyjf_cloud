@@ -137,10 +137,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     }
 
+	/**
+	 * 查询文章条数
+	 * @return
+	 */
 	@Override
 	public Integer countContentArticleByType() {
 		ContentArticleCustomizeResponse response = restTemplate.getForObject(
-				"http://AM-CONFIG/am-config/am-config/article/countcontentarticlebytype",
+				"http://AM-CONFIG/am-config/article/countcontentarticlebytype",
 				ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getCount();
@@ -148,10 +152,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
+	/**
+	 * 查询文章列表
+	 * @return
+	 */
 	@Override
 	public List<ContentArticleCustomizeVO> getContentArticleListByType(Map<String, Object> params) {
 		ContentArticleCustomizeResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/am-config/article/getcontentarticlelistbytype", params,
+				"http://AM-CONFIG/am-config/article/getcontentarticlelistbytype", params,
 				ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getResultList();
@@ -184,10 +192,18 @@ public class AmConfigClientImpl implements AmConfigClient {
 				WechatContentArticleResponse.class);
         return response;
     }
+
+	/**
+	 * 上下翻页
+	 * @param params
+	 * @param offset
+	 * @return
+	 */
     @Override
 	public ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset) {
+		params.put("offset", offset);
 		ContentArticleCustomizeResponse response = restTemplate
-				.getForObject("http://AM-CONFIG/am-config/article/getContentArticleFlip/" + params + offset, ContentArticleCustomizeResponse.class);
+				.postForObject("http://AM-CONFIG/am-config/article/getContentArticleFlip/", params, ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getResult();
 		}
@@ -203,4 +219,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
         return null;
     }
+	/**
+	 * 添加反馈信息
+	 * @param submissionsVO
+	 * @return
+	 */
+	@Override
+	public int addSubmission(SubmissionsVO submissionsVO){
+		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
+		return response;
+	}
 }

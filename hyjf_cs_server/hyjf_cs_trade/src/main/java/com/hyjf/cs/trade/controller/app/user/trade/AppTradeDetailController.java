@@ -57,7 +57,7 @@ public class  AppTradeDetailController extends BaseTradeController {
      */
     @ResponseBody
     @RequestMapping(value = "/getTradeList",  produces = "application/json; charset=utf-8")
-    public AppTradeDetailBean searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId,@RequestBody @Valid AppTradeDetailBeanRequest trade) {
+    public AppTradeDetailBean searchTradeDetailList(@RequestHeader(value = "userId" , required = false )Integer userId,@RequestBody        @Valid AppTradeDetailBeanRequest trade) {
 
         trade.setUserId(userId+"");
         AppTradeDetailBean appTradeDetailBean=tradeDetailService.createTradeDetailListPage(trade);

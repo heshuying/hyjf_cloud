@@ -4,7 +4,7 @@
 package com.hyjf.am.trade.service.front.hjh;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.customize.trade.PlanDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 
 import java.util.List;
 

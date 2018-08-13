@@ -1,24 +1,18 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import com.hyjf.am.user.dao.mapper.auto.SpreadsUserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper;
-import com.hyjf.am.user.dao.mapper.customize.UserInfoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.SpreadsUser;
 import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.dao.model.auto.UserInfoExample;
 import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserInfoCustomize;
-import com.hyjf.am.user.dao.model.customize.crm.UserCrmInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserInfoService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -26,22 +20,7 @@ import com.hyjf.am.user.service.front.user.UserInfoService;
  */
 
 @Service
-public class UserInfoServiceImpl implements UserInfoService {
-
-	@Autowired
-	private UserInfoMapper userInfoMapper;
-
-	@Autowired
-	private UserCrmInfoCustomizeMapper userCrmInfoCustomizeMapper;
-
-	@Autowired
-	private UserInfoCustomizeMapper userInfoCustomizeMapper;
-
-	@Autowired
-	private SpreadsUserMapper spreadsUserMapper;
-
-	@Autowired
-	private EmployeeCustomizeMapper employeeCustomizeMapper;
+public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoService {
 
 	@Override
 	public UserInfo findUserInfoById(int userId) {
@@ -133,6 +112,25 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public EmployeeCustomize selectEmployeeByUserId(Integer userId) {
 		return employeeCustomizeMapper.selectEmployeeByUserId(userId);
+	}
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfo selectUserInfoByUserId(Integer userId) {
+		UserInfoExample example = new UserInfoExample();
+		UserInfoExample.Criteria crt = example.createCriteria();
+		crt.andUserIdEqualTo(userId);
+		List<UserInfo> list = userInfoMapper.selectByExample(example);
+		if(list.size() > 0){
+			return list.get(0);
+		}else{
+			return null;
+		}
 	}
 
 }

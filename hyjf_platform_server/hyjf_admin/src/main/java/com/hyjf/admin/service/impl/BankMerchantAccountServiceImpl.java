@@ -15,19 +15,25 @@ import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
 import com.hyjf.am.vo.admin.BankMerchantAccountInfoVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.GetterUtil;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.hyjf.pay.lib.bank.util.*;
+import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -224,4 +230,226 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         return result;
     }
 
+
+    /**
+     * 充值前处理
+     * @author zhangyk
+     * @date 2018/8/7 16:23
+     */
+    @Override
+    public int updateBeforeRecharge(BankCallBean bean, Map<String, String> params, BankMerchantAccountVO bankMerchantAccount) {
+        int ret = 0;
+        String ordId = bean.getLogOrderId() == null ? bean.get(ChinaPnrConstant.PARAM_ORDID) : bean.getLogOrderId(); // 订单号
+
+        Integer count = amTradeClient.getBankMerchantAccountListByOrderId(ordId);
+        if (null != count && count >0) {
+            return ret;
+        }
+        BigDecimal money = new BigDecimal(bean.getTxAmount()); //充值金额
+        Integer userId = GetterUtil.getInteger(params.get("userId")); // 用户ID
+        BankMerchantAccountListVO bankMerchantAccountList = new BankMerchantAccountListVO();
+        bankMerchantAccountList.setOrderId(ordId);
+        bankMerchantAccountList.setUserId(userId);
+        bankMerchantAccountList.setAccountId(bean.getAccountId());
+        bankMerchantAccountList.setAmount(money);
+        bankMerchantAccountList.setBankAccountCode(bean.getAccountId());
+        bankMerchantAccountList.setBankAccountBalance(bankMerchantAccount.getAccountBalance());
+        bankMerchantAccountList.setTransType(CustomConstants.BANK_MER_TRANS_TYPE_MANUAL);
+        bankMerchantAccountList.setType(CustomConstants.BANK_MER_TYPE_INCOME);
+        bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_UNDERWAY);
+        bankMerchantAccountList.setSeqNo(bean.getSeqNo());
+        bankMerchantAccountList.setTxDate(Integer.parseInt(bean.getTxDate()));
+        bankMerchantAccountList.setTxTime(Integer.parseInt(bean.getTxTime()));
+        bankMerchantAccountList.setCreateUserId(userId);
+        bankMerchantAccountList.setCreateUserName("0");
+        bankMerchantAccountList.setCreateTime(new Date());
+        bankMerchantAccountList.setUpdateUserId(userId);
+        bankMerchantAccountList.setUpdateUserName("0");
+        bankMerchantAccountList.setBankAccountFrost(bankMerchantAccount.getFrost());
+        bankMerchantAccountList.setUpdateTime(new Date());
+        bankMerchantAccountList.setRemark("红包账户或手续费账户充值");
+        ret += amTradeClient.insertBankMerchantAccountList(bankMerchantAccountList);
+        return ret;
+    }
+
+
+    /**
+     * 回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:41
+     */
+    @Override
+    public void handlerAfterRecharge(BankCallBean bean, Map<String, String> params) {
+        // 用户ID
+        int userId = Integer.parseInt(params.get("userId"));
+        String orderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
+
+        Map<String ,Object> reqMap = new HashMap<>();
+        reqMap.put("userId",userId);
+        reqMap.put(BankCallParamConstant.PARAM_LOGORDERID,orderId);
+        reqMap.put(BankCallParamConstant.PARAM_ACCOUNTID,bean.getAccountId());
+        reqMap.put(BankCallParamConstant.PARAM_TXAMOUNT,bean.getTxAmount());
+        boolean flag = amTradeClient.updateAccountCallbackRecharge(reqMap);
+        if (!flag){
+            throw new RuntimeException("圈存失败");
+        }
+    }
+
+
+    /**
+     * 更新圈提和圈存的交易状态为交易失败
+     * @author zhangyk
+     * @date 2018/8/7 19:29
+     */
+    @Override
+    public void updateBankAccountListFailByOrderId(String orderId) {
+        amTradeClient.updateBankAccountListFailByOrderId(orderId);
+    }
+
+    @Override
+    public int updateBankMerchantAccount(String accountCode, BigDecimal currBalance, BigDecimal balance, BigDecimal frost) {
+        BankMerchantAccountVO bankMerchantAccount=new BankMerchantAccountVO();
+        bankMerchantAccount.setAccountCode(accountCode);
+        bankMerchantAccount.setAccountBalance(currBalance);
+        bankMerchantAccount.setAvailableBalance(balance);
+        bankMerchantAccount.setFrost(frost);
+        bankMerchantAccount.setUpdateTime(new Date());
+        return amTradeClient.updateBankMerchantAccountByCode(bankMerchantAccount);
+    }
+
+    /**
+     * 根据电子账号查询用户在江西银行的可用余额
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @Override
+    public BigDecimal getBankBalance(Integer userId, String accountId) {
+        // 账户可用余额
+        BigDecimal balance = BigDecimal.ZERO;
+        BankCallBean bean = new BankCallBean();
+        // 交易代码
+        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
+        // 交易渠道
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        bean.setAccountId(accountId);
+        // 订单号
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.valueOf(userId)));
+        // 订单时间(必须)格式为yyyyMMdd，例如：20130307
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        bean.setLogUserId(String.valueOf(userId));
+        // 平台
+        bean.setLogClient(0);
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return balance;
+    }
+
+
+
+    /**
+     * 统一参数校验
+     * @author zhangyk
+     * @date 2018/8/8 11:40
+     */
+    @Override
+    public String checkParam(String amount, String accountCode) {
+        if (StringUtils.isBlank(amount) || amount.equals("0")) {
+            return "金额不能为0";
+        }
+        BigDecimal txAmount = new BigDecimal("0");
+        try {
+            txAmount = new BigDecimal(amount);
+        } catch (Exception e) {
+            return "请输入正确的金额";
+        }
+        if (txAmount.intValue() <= 1) {
+            return "金额必须大于1元";
+        }
+        if (StringUtils.isBlank(accountCode)){
+            return "请输入账户号";
+        }
+        BankMerchantAccountVO bankMerchantAccount =  amTradeClient.getBankMerchantAccount(accountCode);
+        if (bankMerchantAccount != null ) {
+            return "账户不存在";
+        }
+        if(bankMerchantAccount.getIsSetPassword()==0){
+            return "请先设置交易密码";
+        }
+        return null;
+    }
+
+
+    /**
+     * 提现前处理
+     * @author zhangyk
+     * @date 2018/8/8 15:37
+     */
+    @Override
+    public int updateBeforeCash(BankCallBean bean, Map<String, String> params, BankMerchantAccountVO bankMerchantAccount) {
+        int ret = 0;
+        String ordId = bean.getLogOrderId() == null ? bean.get(ChinaPnrConstant.PARAM_ORDID) : bean.getLogOrderId(); // 订单号
+
+        Integer count = amTradeClient.getBankMerchantAccountListByOrderId(ordId);
+        if (null != count && count >0) {
+            return ret;
+        }
+        BigDecimal money = new BigDecimal(bean.getTxAmount()); //充值金额
+        Integer userId = GetterUtil.getInteger(params.get("userId")); // 用户ID
+        BankMerchantAccountListVO bankMerchantAccountList = new BankMerchantAccountListVO();
+        bankMerchantAccountList.setOrderId(ordId);
+        bankMerchantAccountList.setUserId(userId);
+        bankMerchantAccountList.setAccountId(bean.getAccountId());
+        bankMerchantAccountList.setAmount(money);
+        bankMerchantAccountList.setBankAccountCode(bean.getAccountId());
+        bankMerchantAccountList.setBankAccountBalance(bankMerchantAccount.getAccountBalance());
+        bankMerchantAccountList.setBankAccountFrost(bankMerchantAccount.getFrost());
+        bankMerchantAccountList.setTransType(CustomConstants.BANK_MER_TRANS_TYPE_MANUAL);
+        bankMerchantAccountList.setType(CustomConstants.BANK_MER_TYPE_EXPENDITURE);
+        bankMerchantAccountList.setStatus(CustomConstants.BANK_MER_TRANS_UNDERWAY);
+        bankMerchantAccountList.setSeqNo(bean.getSeqNo());
+        bankMerchantAccountList.setTxDate(Integer.parseInt(bean.getTxDate()));
+        bankMerchantAccountList.setTxTime(Integer.parseInt(bean.getTxTime()));
+        bankMerchantAccountList.setCreateUserId(userId);
+        bankMerchantAccountList.setCreateUserName("0");
+        bankMerchantAccountList.setCreateTime(new Date());
+        bankMerchantAccountList.setUpdateUserId(userId);
+        bankMerchantAccountList.setUpdateUserName("0");
+        bankMerchantAccountList.setUpdateTime(new Date());
+        bankMerchantAccountList.setRemark("红包账户或手续费账户提现");
+        ret += amTradeClient.insertBankMerchantAccountList(bankMerchantAccountList);
+        return ret;
+    }
+
+
+    /**
+     * 提现后回调
+     * @author zhangyk
+     * @date 2018/8/8 16:38
+     */
+    @Override
+    public void handlerAfterCash(BankCallBean bean, Map<String, String> params) {
+        // 用户ID
+        int userId = Integer.parseInt(params.get("userId"));
+        String orderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
+
+        Map<String ,Object> reqMap = new HashMap<>();
+        reqMap.put("userId",userId);
+        reqMap.put(BankCallParamConstant.PARAM_LOGORDERID,orderId);
+        reqMap.put(BankCallParamConstant.PARAM_ACCOUNTID,bean.getAccountId());
+        reqMap.put(BankCallParamConstant.PARAM_TXAMOUNT,bean.getTxAmount());
+        reqMap.put(BankCallParamConstant.PARAM_TXFEE,null == bean.getLogAcqResBean() ? "0.00" : bean.getLogAcqResBean().getFee());
+        boolean flag = amTradeClient.updateAccountCallbackWithdraw(reqMap);
+        if (!flag){
+            throw new RuntimeException("圈提失败");
+        }
+    }
 }

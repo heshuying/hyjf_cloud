@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -44,10 +45,13 @@ public class AppMyProjectController extends BaseTradeController {
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyProject", produces = "application/json; charset=utf-8")
-    public MyProjectResponse queryScatteredProject( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    @ResponseBody
+    public MyProjectResponse queryScatteredProject( HttpServletRequest request,
+                                                    @RequestHeader(value = "token", required = false) String token,
+                                                    @RequestHeader(value = "userId", required = false) Integer userId) {
 
         MyProjectResponse response = new MyProjectResponse();
-
+        response.setRequest("/hyjf-app/user/invest/getMyProject");
         // 状态：1为当前持有，2为已回款，3为转让记录
         String type = request.getParameter("type");
         // 唯一标识
@@ -60,9 +64,6 @@ public class AppMyProjectController extends BaseTradeController {
             response.setStatusDesc("参数非法");
             return response;
         }
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-        Integer userId = webViewUserVO.getUserId();
-        //Integer userId = Integer.valueOf(request.getParameter("userId"));
         // 构建查询条件
         AssetManageBeanRequest  params = buildQueryParameter(request);
         params.setUserId(userId+"");
@@ -334,8 +335,8 @@ public class AppMyProjectController extends BaseTradeController {
      */
     private AssetManageBeanRequest buildQueryParameter(HttpServletRequest request) {
         AssetManageBeanRequest params = new AssetManageBeanRequest();
-        Integer page = Integer.parseInt(request.getParameter("page"));
-        Integer pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Integer page = Integer.parseInt(request.getParameter("page")==null?"1":request.getParameter("page"));
+        Integer pageSize = Integer.parseInt(request.getParameter("pageSize")==null?"10":request.getParameter("pageSize"));
         params.setLimitStart((page - 1) * pageSize);
         params.setLimitEnd(pageSize);
         return params;

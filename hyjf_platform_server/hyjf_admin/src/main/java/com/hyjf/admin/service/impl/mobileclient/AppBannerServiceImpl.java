@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.admin.client.AppConfigClient;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.am.response.market.AppBannerResponse;
@@ -16,30 +17,30 @@ import org.springframework.stereotype.Service;
 public class AppBannerServiceImpl  implements AppBannerService {
 
     @Autowired
-    AppConfigClient appConfigClient;
+    AmMarketClient amMarketClient;
     @Override
     public AppBannerResponse getRecordList(AppBannerRequest request) {
-        return appConfigClient.findAppBannerList(request);
+        return amMarketClient.findAppBannerList(request);
     }
 
     @Override
     public AppBannerResponse insertRecord(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return appConfigClient.insertAppBannerList(adsWithBLOBsVo);
+        return amMarketClient.insertAppBannerList(adsWithBLOBsVo);
     }
 
     @Override
     public AppBannerResponse updateRecord(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return appConfigClient.updateAppBannerList(adsWithBLOBsVo);
+        return amMarketClient.updateAppBannerList(adsWithBLOBsVo);
     }
 
     @Override
     public AppBannerResponse updateStatus(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return appConfigClient.updateAppBannerStatus(adsWithBLOBsVo);
+        return amMarketClient.updateAppBannerStatus(adsWithBLOBsVo);
     }
 
     @Override
     public AppBannerResponse deleteAppBanner(AdsWithBLOBsVO adsWithBLOBsVo) {
-        return appConfigClient.deleteAppBanner(adsWithBLOBsVo);
+        return amMarketClient.deleteAppBanner(adsWithBLOBsVo);
     }
 
 }

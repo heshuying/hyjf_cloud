@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_user.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -240,12 +240,12 @@
             <columnOverride column="education" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_smscode" domainObjectName="Smsode">
+        <table tableName="ht_smscode" domainObjectName="SmsCode">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_spreads_log" domainObjectName="SpreadsLog">
+        <table tableName="ht_commission_log" domainObjectName="CommissionLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="pay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_valid" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1408,7 +1408,6 @@
         </table>
 
         <table tableName="ht_r_user" domainObjectName="RUser">
-            <generatedKey column="user_id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="role_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

@@ -5,7 +5,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BankAleveResponse;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.trade.AleveLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankAleveService;
 import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.common.paginator.Paginator;

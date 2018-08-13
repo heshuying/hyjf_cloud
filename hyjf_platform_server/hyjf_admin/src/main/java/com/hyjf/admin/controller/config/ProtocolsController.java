@@ -11,6 +11,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.FddTempletCustomizeResponse;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +62,10 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "添加协议管理", notes = "添加协议管理")
 	@RequestMapping("/insert")
-	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean) {
+	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO user = getUser(request);
+		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
+		requestBean.setCreateUserName(user.getUsername());
 		FddTempletCustomizeResponse response = protocolsService.insertAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -73,7 +78,10 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
 	@RequestMapping("/update")
-	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean) {
+	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO user = getUser(request);
+		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
+		requestBean.setCreateUserName(user.getUsername());
 		FddTempletCustomizeResponse response = protocolsService.updateAction(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -100,7 +108,7 @@ public class ProtocolsController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "协议管理";
 		// 文件名称
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 需要输出的结果列表
 		List<FddTempletCustomizeVO> recordList = new ArrayList<>();
 		FddTempletCustomizeResponse fddResponse = this.protocolsService.selectFddTempletList(form);

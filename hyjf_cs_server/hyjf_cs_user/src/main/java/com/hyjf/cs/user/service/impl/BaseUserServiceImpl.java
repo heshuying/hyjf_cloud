@@ -24,7 +24,7 @@ import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -250,6 +250,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		// 交易渠道000001手机APP 000002网页
 		bean.setChannel(client);
 		bean.setCardNo(cardNo);
+		if(null!=cardNo){
+			// 绑卡接口参照生产环境类型改为2
+			bean.setReqType("2");
+		}
 		bean.setSrvTxCode(srvTxCode);
 		// 交易渠道
 		bean.setMobile(mobile);

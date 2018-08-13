@@ -76,7 +76,7 @@ public class MspController extends BaseController {
 		Integer count = this.mspService.getRecordCount(conditionMap);
 		MspResponse mr=new MspResponse();
 		if (count != null && count > 0) {
-			Paginator paginator = new Paginator(form.getCurrPage(),form.getPageSize(),count);
+			Paginator paginator = new Paginator(form.getCurrPage(),count,form.getPageSize());
 			List<MspConfigureCustomize> recordList = this.mspService.getRecordList(conditionMap, paginator.getOffset(), paginator.getLimit());
 			mr.setRecordTotal(count);
 			mr.setResultList( CommonUtils.convertBeanList(recordList,MspConfigureVO.class));
@@ -100,8 +100,6 @@ public class MspController extends BaseController {
 			MspConfigureVO mcv=new MspConfigureVO();
 			BeanUtils.copyProperties(record,mcv);
 			mr.setResult(mcv);
-			mr.setRegionList(CommonUtils.convertBeanList(this.mspApplyService.getRegionList(),MspRegionVO.class));
-
 		}
 //		form.setUnredeemedMoney(new BigDecimal(0));
 //		form.setLoanTimeLimit(1); 

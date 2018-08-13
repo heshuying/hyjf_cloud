@@ -5,7 +5,7 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize;
-import com.hyjf.am.user.dao.model.customize.batch.UserUpdateParamCustomize;
+import com.hyjf.am.user.dao.model.customize.UserUpdateParamCustomize;
 import com.hyjf.am.user.service.front.user.RefereeService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;

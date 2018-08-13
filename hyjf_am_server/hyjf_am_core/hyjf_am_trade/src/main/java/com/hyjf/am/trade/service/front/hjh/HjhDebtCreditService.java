@@ -3,9 +3,11 @@
  */
 package com.hyjf.am.trade.service.front.hjh;
 
+import com.hyjf.am.resquest.trade.DebtCreditRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCreditTender;
+import com.hyjf.am.vo.trade.borrow.ProjectUndertakeListVO;
 import com.hyjf.am.vo.trade.hjh.AppCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
@@ -71,4 +73,32 @@ public interface HjhDebtCreditService {
      * @date 2018/8/1 14:00
      */
     List<UserHjhInvistListCustomizeVO> getUserHjhInvestList(Map<String,Object> params);
+
+    /**
+     * 根据borrowNid和creditStatus查询债转列表
+     * @author zhangyk
+     * @date 2018/8/8 9:54
+     */
+    List<HjhDebtCredit> selectHjhDebtCreditListByBorrowNidAndStatus(DebtCreditRequest request);
+
+    /**
+     * 查询承接记录数
+     * @author zhangyk
+     * @date 2018/8/9 11:08
+     */
+    int  countCreditTenderByBorrowNidAndUserId(Map<String,Object> params);
+
+    /**
+     * 查询承接中的总额
+     * @author zhangyk
+     * @date 2018/8/9 11:55
+     */
+    String sumUnderTakeAmountByBorrowNid(String borrowNid);
+
+    /**
+     * 承接总的列表
+     * @author zhangyk
+     * @date 2018/8/9 14:04
+     */
+    List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> params);
 }

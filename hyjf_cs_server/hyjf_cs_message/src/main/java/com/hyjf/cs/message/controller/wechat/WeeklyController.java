@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,8 +45,8 @@ public class WeeklyController {
 
     @ApiOperation(value = "上周周报", notes = "上周周报")
     @RequestMapping("/data")
-    public WeeklyResponse getWeeklyData(HttpServletRequest request) {
-        Integer userId=1;
+    public WeeklyResponse getWeeklyData(@RequestHeader("userId") Integer userId) {
+        //Integer userId=1;
         WeeklyResponse resultBean = new WeeklyResponse();
         String methodName = "getWeeklyData";
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;

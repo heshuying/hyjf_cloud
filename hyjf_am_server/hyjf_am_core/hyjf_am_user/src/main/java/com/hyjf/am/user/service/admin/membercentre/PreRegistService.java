@@ -5,10 +5,10 @@ import java.util.Map;
 
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.dao.model.customize.AdminPreRegistListCustomize;
+import com.hyjf.am.user.service.BaseService;
 
 
-
-public interface PreRegistService {
+public interface PreRegistService extends BaseService{
 
     /**
      * 获取预注册数据数目

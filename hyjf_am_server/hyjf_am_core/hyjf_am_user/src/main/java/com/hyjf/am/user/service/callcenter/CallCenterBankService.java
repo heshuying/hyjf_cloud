@@ -4,8 +4,9 @@ import com.hyjf.am.resquest.callcenter.CallCenterServiceUsersRequest;
 import com.hyjf.am.resquest.callcenter.CallCenterUserInfoRequest;
 import com.hyjf.am.resquest.callcenter.CallcenterAccountHuifuRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
-import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterAccountHuifuCustomize;
-import com.hyjf.am.user.dao.model.customize.callcenter.CallcenterUserBaseCustomize;
+import com.hyjf.am.user.dao.model.customize.CallcenterAccountHuifuCustomize;
+import com.hyjf.am.user.dao.model.customize.CallcenterUserBaseCustomize;
+import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @author wangjun
  * @version UpdateBankCardBatchService, v0.1 2018/5/29 14:58
  */
-public interface CallCenterBankService {
+public interface CallCenterBankService extends BaseService{
     List<BankCard> getTiedCardOfAccountBank(Integer userId);
 
     List<CallcenterUserBaseCustomize> getNoServiceFuTouUsersList(CallCenterUserInfoRequest callCenterUserInfoRequest);

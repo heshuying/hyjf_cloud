@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.HjhReInvestDetailClient;
 import com.hyjf.admin.service.HjhReInvestDetailService;
 import com.hyjf.am.response.admin.HjhReInvestDetailResponse;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class HjhReInvestDetailServiceImpl implements HjhReInvestDetailService {
 
     @Autowired
-    private HjhReInvestDetailClient hjhReInvestDetailClient;
+    private AmTradeClient amTradeClient;
 
     @Override
     public Integer countHjhReInvestDetailTotal(HjhReInvestDetailRequest request) {
@@ -20,7 +21,7 @@ public class HjhReInvestDetailServiceImpl implements HjhReInvestDetailService {
 
     @Override
     public HjhReInvestDetailResponse hjhReInvestDetailList(HjhReInvestDetailRequest request) {
-        HjhReInvestDetailResponse recoList = hjhReInvestDetailClient.getHjhReInvestDetailList(request);
+        HjhReInvestDetailResponse recoList = amTradeClient.getHjhReInvestDetailList(request);
         return recoList;
     }
 }

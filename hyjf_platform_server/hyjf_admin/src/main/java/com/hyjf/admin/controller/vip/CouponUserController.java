@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -146,13 +147,11 @@ public class CouponUserController extends BaseController {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         //根据用户名获取用户id
         String userName = couponUserBeanRequest.getUserName();
-        UserResponse userResponse = couponUserService.getUser(userName);
-        UserVO userVO = userResponse.getResult();
+        UserVO userVO = couponUserService.getUser(userName);
         Integer userId = userVO.getUserId();
 
         //根据用户id获取用户详情信息
-        UserInfoResponse userInfoResponse = couponUserService.getUserInfo(userId);
-        UserInfoVO userInfoVO = userInfoResponse.getResult();
+        UserInfoVO userInfoVO = couponUserService.getUserInfo(userId);
 
         //根据用户id获取注册时渠道名
         UtmResponse utmResponse = couponUserService.getChannelName(userId);
@@ -206,12 +205,12 @@ public class CouponUserController extends BaseController {
             response.setMessage(message);
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        UserResponse userResponse = couponUserService.getUser(userName);
-        if (userResponse.getResult() == null) {
+        UserVO user = couponUserService.getUser(userName);
+        if (user == null) {
             String message = "用户名不存在";
             response.setMessage(message);
             return new AdminResult<>(FAIL,FAIL_DESC);
-        } else if (userResponse.getResult().getStatus() != null && userResponse.getResult().getStatus() == 1) {
+        } else if (user.getStatus() != null && user.getStatus() == 1) {
             String message = "用户已锁定";
             response.setMessage(message);
             return new AdminResult<>(FAIL,FAIL_DESC);
@@ -602,7 +601,7 @@ public class CouponUserController extends BaseController {
 
         CouponUserCustomizeResponse customizeResponse  = couponUserService.searchList(beanRequest);
         List<CouponUserCustomizeVO> resultList = customizeResponse.getResultList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] {"序号", "优惠券类别编号","优惠券用户编号","用户名","发券时属性","注册渠道", "优惠券类型","面值","投资限额","有效期","来源", "操作平台", "项目类型", "项目期限", "使用状态","获得时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

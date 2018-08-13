@@ -110,8 +110,8 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "修改用户画像", notes = "修改用户画像")
     @PostMapping(value = "/updateUserPortrait")
     @ResponseBody
-    public AdminResult updateUserPortrait(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
-        if (StringUtils.isNotBlank(userPortraitRequestBean.getUserId())) {
+    public AdminResult updateUserPortrait(@RequestBody UserPortraitRequestBean userPortraitRequestBean) {
+        if (null==userPortraitRequestBean.getUserId()) {
             return new AdminResult<>(FAIL, "请输入用户id");
         }
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();

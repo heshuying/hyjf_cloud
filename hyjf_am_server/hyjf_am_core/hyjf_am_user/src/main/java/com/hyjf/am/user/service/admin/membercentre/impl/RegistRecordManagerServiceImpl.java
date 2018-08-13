@@ -3,14 +3,11 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import com.hyjf.am.user.dao.mapper.customize.RegistRecordCustomizeMapper;
-import com.hyjf.am.user.dao.model.customize.*;
+import com.hyjf.am.user.dao.model.customize.RegistRecordCustomize;
 import com.hyjf.am.user.service.admin.membercentre.RegistRecordManagerService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,13 +19,7 @@ import java.util.Map;
  *          后台管理系统 ：会员中心->会员管理 接口实现
  */
 @Service
-public class RegistRecordManagerServiceImpl implements RegistRecordManagerService {
-
-    @Autowired
-    private RegistRecordCustomizeMapper registRecordCustomizeMapper;
-
-    private static Logger logger = LoggerFactory.getLogger(RegistRecordManagerServiceImpl.class);
-
+public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements RegistRecordManagerService {
 
     /**
      * 根据筛选条件查找注册信息

@@ -251,4 +251,45 @@ public interface AmUserClient {
 
 
 	UtmPlatVO selectUtmPlatByUserId(Integer userId);
+
+	/**
+	 * 获取用户信息
+	 *
+	 * @param truename
+	 * @param idcard
+	 * @return
+	 */
+	UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard);
+
+	/**
+	 * 获取用户的数据
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserVO selectUsersById(Integer userId);
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	UserVO selectUserInfoByUsername(String userName);
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserInfoVO selectUserInfoByUserId(Integer userId);
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName);
 }

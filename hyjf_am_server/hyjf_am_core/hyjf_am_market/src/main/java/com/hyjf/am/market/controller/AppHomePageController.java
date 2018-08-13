@@ -5,6 +5,7 @@ package com.hyjf.am.market.controller;
 
 import com.hyjf.am.market.dao.model.customize.app.AppAdsCustomize;
 import com.hyjf.am.market.service.AppHomePageService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
@@ -41,6 +42,8 @@ public class AppHomePageController {
             response.setResultList(voList);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 }

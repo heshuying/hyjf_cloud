@@ -61,7 +61,8 @@ public class AppRechargeController extends BaseTradeController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/user/bank/recharge/getRechargeUrl")
-	public Object getRechargeUrl(AppRechargeVO vo) {
+	@ApiOperation(value = "获取用户充值信息", notes = "获取用户充值信息")
+	public JSONObject getRechargeUrl(AppRechargeVO vo) {
 		JSONObject object=new JSONObject();
 		object.put("request","/user/bank/recharge/getRechargeUrl");
 		/** 充值接口 */

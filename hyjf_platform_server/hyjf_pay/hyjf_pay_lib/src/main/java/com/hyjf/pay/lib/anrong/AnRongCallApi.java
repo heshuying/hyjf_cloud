@@ -19,23 +19,7 @@ public interface AnRongCallApi {
      * @param bean
      * @return
      */
-    public String callAnRongApi(AnRongApiBean bean);
+    public String callAnRongApi(AnRongApiBean bean,String url);
 
-    /**
-     * 
-     * 查询用户
-     * @author sss
-     * @param bean
-     * @return
-     */
-    public AnRongApiBean queryUser(AnRongApiBean bean);
-    
-    /**
-     * 
-     * 共享信息
-     * @author sss
-     * @param bean
-     * @return
-     */
-    public AnRongApiBean sendMess(AnRongApiBean bean);
+
 }

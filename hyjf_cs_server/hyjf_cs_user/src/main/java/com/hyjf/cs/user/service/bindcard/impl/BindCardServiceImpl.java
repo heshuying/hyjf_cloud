@@ -289,6 +289,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         bean.setUserIP(userIp);// 客户IP
         LogAcqResBean logAcq = new LogAcqResBean();
         logAcq.setCardNo(bindCardVO.getCardNo());
+        logAcq.setMobile(bindCardVO.getMobile());
         bean.setLogAcqResBean(logAcq);
         
         try {
@@ -384,6 +385,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					if(bankId == null) {
 						bankId = "0";
 					}
+					logger.info("根据银行卡号查询出的bankId：" + bankId);
 					// 查询银行配置信息
 					BanksConfigVO bankConfig = amConfigClient.getBanksConfigByBankId(bankId);
 					
@@ -393,7 +395,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 					bank.setStatus(1);// 默认都是1
 					bank.setCardNo(obj.getString("cardNo"));
 					bank.setBankId(bankId == null ? 0 : Integer.valueOf(bankId));
-					bank.setBank(bankConfig.getBankName());
+					if(bankConfig != null){
+						bank.setBank(bankConfig.getBankName());
+					}
 					// 银行联号
 					String payAllianceCode = "";
 					// 调用江西银行接口查询银行联号
@@ -402,7 +406,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 						payAllianceCode = payAllianceCodeQueryBean.getPayAllianceCode();
 					}
 					// 如果此时银联行号还是为空,根据bankId查询本地存的银联行号
-					if (StringUtils.isBlank(payAllianceCode)) {
+					if (StringUtils.isBlank(payAllianceCode) && bankConfig != null) {
 						payAllianceCode = bankConfig.getPayAllianceCode();
 					}
 					bank.setPayAllianceCode(payAllianceCode);
@@ -435,7 +439,9 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bankCardLogRequest.setUserId(userId);
 		bankCardLogRequest.setUserName(userVO.getUsername());
 		bankCardLogRequest.setBankCode(String.valueOf(bankId));
-		bankCardLogRequest.setBankName(bankConfig.getBankName());
+		if(bankConfig != null){
+			bankCardLogRequest.setBankName(bankConfig.getBankName());
+		}
 		bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
 		bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
 		bankCardLogRequest.setStatus(0);// 成功
@@ -448,7 +454,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
         if (retCard != null) {
             BankCardRequest bankCard=new BankCardRequest();
             bankCard.setId(retCard.getId());
-            bankCard.setMobile(callBean.getMobile());
+            bankCard.setMobile(logAcq.getMobile());
             amUserClient.updateUserCard(bankCard);
         }
 		
