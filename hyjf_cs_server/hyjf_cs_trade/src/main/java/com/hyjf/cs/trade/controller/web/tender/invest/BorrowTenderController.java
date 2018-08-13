@@ -34,7 +34,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(value = "Web端散标投资")
+@Api(tags = "Web端-散标投资")
 @RestController
 @RequestMapping("/hyjf-web/tender/borrow")
 public class BorrowTenderController extends BaseTradeController {
@@ -46,11 +46,11 @@ public class BorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "web端散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") int userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求投资接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setUser(this.borrowTenderService.getUserFromCache(userId));
+        tender.setToken(userId+"");
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         WebResult<Map<String,Object>> result = null;
@@ -87,31 +87,31 @@ public class BorrowTenderController extends BaseTradeController {
 
     @ApiOperation(value = "web端散标投资获取投资结果", notes = "web端散标投资获取投资结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "token", required = true) String token,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
         logger.info("web端请求获取投资结果接口，logOrdId{}",logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
+        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
         return  borrowTenderService.getBorrowTenderResult(userVO,logOrdId,borrowNid);
     }
 
     @ApiOperation(value = "web端散标投资获取投资成功结果", notes = "web端散标投资获取投资成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "token", required = true) String token,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid) {
         logger.info("web端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebViewUserVO userVO = borrowTenderService.getUserFromCache(userId);
+        WebViewUserVO userVO = borrowTenderService.getUsersByToken(token);
         return borrowTenderService.getBorrowTenderResultSuccess(userVO, logOrdId, borrowNid, couponGrantId);
     }
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端获取投资信息");
-        tender.setUser(borrowTenderService.getUserFromCache(userId));
+        tender.setToken(token);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         return borrowTenderService.getInvestInfo(tender);
     }

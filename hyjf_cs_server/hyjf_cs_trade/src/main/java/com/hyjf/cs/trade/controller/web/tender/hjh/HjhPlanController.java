@@ -31,7 +31,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date 2018/6/19 9:32
  */
-@Api(tags = "Web端加入计划")
+@Api(tags = "Web端-加入计划")
 @RestController
 @RequestMapping("/hyjf-web/tender/hjh")
 public class HjhPlanController extends BaseTradeController {
@@ -43,10 +43,10 @@ public class HjhPlanController extends BaseTradeController {
     @ApiOperation(value = "web端加入计划", notes = "web端加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
-    public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+    public WebResult<Map<String, Object>> joinPlan(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender, HttpServletRequest request) {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
-        tender.setUser(hjhTenderService.getUserFromCache(userId));
+        tender.setToken(userId+"");
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         WebResult<Map<String, Object>> result = null;
         try {
@@ -61,8 +61,8 @@ public class HjhPlanController extends BaseTradeController {
 
     @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
-    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender) {
-        tender.setUser(hjhTenderService.getUserFromCache(userId));
+    public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
+        tender.setToken(userId+"");
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         return  hjhTenderService.getInvestInfo(tender);
     }

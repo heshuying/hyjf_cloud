@@ -39,29 +39,6 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
     /** 还款时的校验信息 */
     public static final String REPAY_ERROR = "WEBPAY0001";
 
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR1 = "EWEBPAY0001";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR2 = "EWEBPAY0002";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR3 = "EWEBPAY0003";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR4 = "EWEBPAY0004";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR5 = "EWEBPAY0005";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR6 = "EWEBPAY0006";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR7 = "EWEBPAY0007";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR8 = "EWEBPAY0008";
-    /** 还款时的校验信息 */
-    public static final String REPAY_ERROR9 = "EWEBPAY0009";
-    /** 还款时的余额 */
-    public static final String REPAY_ERROR10 = "EWEBPAY0010";
-    /** 还款时期数错误 */
-    public static final String REPAY_ERROR11 = "EWEBPAY0011";
-
     /**
      * 取得本日应还款标的列表
      * @return
@@ -180,7 +157,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     if (!"".equals(respCode)) {
                         this.repayManageService.deleteFreezeTempLogs(orderId);
                     }
-                    System.out.println("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
+                    logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
                     logger.info("还款失败，请稍后再试！");
                     return false;
                 }
