@@ -24,6 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -254,5 +255,19 @@ public class AccountController extends BaseController {
         }
         return ret;
     }
+
+
+    @GetMapping("/testUpdate")
+    public void testUpdate(){
+        Account account = new Account();
+        account.setUserId(88881234);
+        account.setId(88881234);
+        account.setBankTotal(new BigDecimal("0"));
+        account.setBankAwait(new BigDecimal("0"));
+        account.setBankWaitInterest(new BigDecimal("0"));
+        accountService.updateOfRTBLoansTender(account);
+    }
+
+
 
 }
