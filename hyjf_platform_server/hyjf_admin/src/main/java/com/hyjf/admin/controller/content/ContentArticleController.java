@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -33,7 +34,7 @@ public class ContentArticleController extends BaseController {
     private ContentArticleService contentArticleService;
 
     @ApiOperation(value = "文章管理-条件列表查询", notes = "文章管理-条件列表查询")
-    @RequestMapping("/searchaction")
+    @RequestMapping(value = "/searchaction",method = RequestMethod.POST)
     public AdminResult<ListResult<ContentArticleVO>> searchAction(ContentArticleRequest requestBean) {
         logger.info("查询内容中心-文章管理-条件列表查询开始......");
         ContentArticleResponse response = contentArticleService.searchAction(requestBean);
@@ -47,7 +48,7 @@ public class ContentArticleController extends BaseController {
     }
 
     @ApiOperation(value = "文章管理-添加", notes = "文章管理-添加")
-    @RequestMapping("/insert")
+    @RequestMapping(value ="/insert",method = RequestMethod.POST)
     public AdminResult add(ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.inserAction(requestBean);
         if (response == null) {
@@ -60,7 +61,7 @@ public class ContentArticleController extends BaseController {
     }
 
     @ApiOperation(value = "文章管理-修改", notes = "文章管理-修改")
-    @RequestMapping("/update")
+    @RequestMapping(value ="/update",method = RequestMethod.POST)
     public AdminResult update(ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.updateAction(requestBean);
         if (response == null) {
@@ -73,7 +74,7 @@ public class ContentArticleController extends BaseController {
     }
 
     @ApiOperation(value = "文章管理-删除", notes = "文章管理-删除")
-    @RequestMapping("/delete/{id}")
+    @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
     public AdminResult delete(@PathVariable Integer id) {
         ContentArticleResponse response = contentArticleService.deleteById(id);
         if (response == null) {
