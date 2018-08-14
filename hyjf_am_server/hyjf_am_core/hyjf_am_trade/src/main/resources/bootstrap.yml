@@ -35,3 +35,6 @@ file:
  upload:
   real:
    path: 123
+#swagger启用开关
+swagger:
+ enable: true
