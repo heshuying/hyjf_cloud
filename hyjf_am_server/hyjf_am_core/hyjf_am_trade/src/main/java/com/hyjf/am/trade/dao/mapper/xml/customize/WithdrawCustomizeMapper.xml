@@ -99,20 +99,20 @@
 			a.bank_seq_no,
 			a.addtime,
 			a.id,
-			u.username,		   
-			pna.`name` AS user_property,
+			u.username,
+			u.attribute AS user_property,
 			u.mobile,
-			CASE  ui.role_id
+			CASE  u.role_id
            WHEN 1 THEN '投资人'
            WHEN 2 THEN '借款人'
       	 	 END AS roleid ,
-			ui.attribute AS user_attribute,
-			CASE WHEN ui.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `user_region_name`,
-			CASE WHEN ui.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `user_branch_name`,
-			CASE WHEN ui.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `user_department_name`,
+			u.attribute AS user_attribute,
+			CASE WHEN u.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `user_region_name`,
+			CASE WHEN u.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `user_branch_name`,
+			CASE WHEN u.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `user_department_name`,
 			spu.username AS referrer_name,
-			su.spreads_userid AS referrer_user_id,
-			ui2.truename AS referrer_true_name,
+			u.spreads_user_id AS referrer_user_id,
+			spu.truename AS referrer_true_name,
 			`od6`.`name` AS `referrer_region_name`,
 			`od5`.`name` AS `referrer_branch_name`,
 			`od4`.`name` AS `referrer_department_name`,
@@ -126,30 +126,24 @@
 				a.addtime,
 				'%Y-%m-%d %H:%i:%s'
 			) AS addtime_str,
-			clientname.`name` AS client_str,
+			a.client AS client_str,
 			a.`status` AS `status`,
-			statusname.`name` AS status_str,
+			a.`status` AS status_str,
 			a.reason AS reason,
 			a.withdraw_type AS withdrawType
 		FROM
-			huiyingdai_account_withdraw a
-		LEFT JOIN huiyingdai_users u ON a.user_id = u.user_id
-		LEFT JOIN huiyingdai_users_info ui ON  a.user_id=ui.user_id
-		LEFT JOIN huiyingdai_bank_config p ON a.bank = p.`code`
-	    LEFT JOIN hyjf_param_name pna ON cast(ui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
-		LEFT JOIN hyjf_param_name clientname ON clientname.name_class = 'CLIENT' AND clientname.name_cd = a.client AND clientname.del_flag = '0'
-		LEFT JOIN hyjf_param_name statusname ON statusname.name_class = 'WITHDRAW_STATUS' AND statusname.name_cd = a.`status` AND statusname.del_flag = '0'
-		LEFT JOIN huiyingdai_spreads_users su ON su.user_id = u.user_id
-		LEFT JOIN huiyingdai_users spu ON spu.user_id = su.spreads_userid
-		LEFT JOIN huiyingdai_users_info ui2 ON ui2.user_id = su.spreads_userid
-		LEFT JOIN `hyjf_crm`.`oa_users` `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
-		LEFT JOIN `hyjf_crm`.`oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
-		LEFT JOIN `hyjf_crm`.`oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
-		LEFT JOIN `hyjf_crm`.`oa_users` `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
-		LEFT JOIN `hyjf_crm`.`oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
-		LEFT JOIN `hyjf_crm`.`oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
-		LEFT JOIN `hyjf_crm`.`oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`
+			ht_account_withdraw a
+		LEFT JOIN ht_r_user u ON a.user_id = u.user_id
+		LEFT JOIN ht_bank_config p ON a.bank = p.`code`
+		LEFT JOIN ht_r_user spu ON spu.user_id = u.spreads_user_id
+		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+		LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+		LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
+		LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
 		<include refid="Withdraw_Where_Clause" />
 		ORDER BY
 			a.addtime DESC
@@ -174,24 +168,22 @@
 	<select id="getThirdPartyUserWithdrawRecord" resultMap="thirdPartyWithdrawRecordMap" parameterType="Map">
 		SELECT
 			hu.username username,
-			hui.truename truename,
+			hu.truename truename,
 			haw.total total,
 			haw.credited credited,
 			haw.fee fee,
 			IFNULL(hbc.card_no,'银行卡已删除') card_no,
 			haw.bank bank,
-			statusname.`name` status,
+			haw.`status` status,
 			FROM_UNIXTIME(
 				haw.addtime,
 				'%Y-%m-%d %H:%i:%s'
 			) AS addtime,
 			haw.bank_flag
 		FROM
-			huiyingdai_account_withdraw haw
-		LEFT JOIN huiyingdai_users hu ON haw.user_id = hu.user_id
-		LEFT JOIN huiyingdai_users_info hui ON haw.user_id = hui.user_id
-		LEFT JOIN hyjf_bank_card hbc ON haw.bank_id=hbc.id
-		LEFT JOIN hyjf_param_name statusname ON statusname.name_class = 'WITHDRAW_STATUS' AND statusname.name_cd = haw.`status` AND statusname.del_flag = '0'
+			ht_account_withdraw haw
+		LEFT JOIN ht_r_user hu ON haw.user_id = hu.user_id
+		LEFT JOIN ht_bank_card hbc ON haw.bank_id=hbc.id
 		WHERE haw.bank_flag=1
 			 
 		<if test="userId != null and userId != ''">
