@@ -247,7 +247,7 @@ public class BorrowCommonController extends BaseController {
 	@ApiOperation(value = " 获取最新的借款预编码")
 	@PostMapping("/getBorrowPreNid")
 	public AdminResult<Map<String, String>> getBorrowPreNid() {
-		Map<String, String> data = null;
+		Map<String, String> data = new HashMap<String, String>();
 		data.put("borrowPreNid", this.borrowCommonService.getBorrowPreNid());
 		return new AdminResult<Map<String, String>>(data);
 	}
@@ -261,7 +261,7 @@ public class BorrowCommonController extends BaseController {
 	@ApiOperation(value = " 获取现金贷的借款预编号")
 	@PostMapping("/getXJDBorrowPreNid")
 	public  AdminResult<Map<String, String>>  getXJDBorrowPreNid() {
-		Map<String, String> data = null;
+		Map<String, String> data =  new HashMap<String, String>();
 		data.put("borrowPreNid", this.borrowCommonService.getXJDBorrowPreNid());
 		return new AdminResult<Map<String, String>>(data);
 	}
