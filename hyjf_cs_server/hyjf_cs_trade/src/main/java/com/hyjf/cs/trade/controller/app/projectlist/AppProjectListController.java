@@ -54,7 +54,7 @@ public class AppProjectListController extends BaseTradeController {
     /**
      * app端获取散标投资详情
      * 原接口：com.hyjf.app.project.BorrowProjectController.searchProjectDetail()
-     * @param param
+     * @param
      * @return
      */
     @ApiOperation(value = "APP端散标详情", notes = "APP端散标详情")
@@ -100,7 +100,7 @@ public class AppProjectListController extends BaseTradeController {
      * @author zhangyk
      * @date 2018/8/9 10:36
      */
-    @ApiOperation(value = "新增承接记录列表显示", tags = "新增承接记录列表显示" )
+    @ApiOperation(value = "新增承接记录列表显示", notes = "新增承接记录列表显示" )
     @GetMapping(value = "/borrow/{borrowId}/getBorrowUndertake" , produces = "application/json; charset=utf-8")
     public JSONObject searchProjectUndertakeList(@PathVariable("borrowId") String borrowNid, HttpServletRequest request) {
        JSONObject result =  appProjectListService.searchProjectUndertakeList(borrowNid,request);
