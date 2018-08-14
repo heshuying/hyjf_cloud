@@ -25,7 +25,7 @@ import java.util.List;
  * @author pangchengchao
  * @version RegisterController, v0.1 2018/7/17 14:51
  */
-@Api(value = "融东风注册接口")
+@Api(value = "api端_融东风注册接口",tags = "api端_融东风注册接口")
 @Controller
 @RequestMapping("/hyjf-api/surong/register")
 public class RegisterController extends BaseUserController {
