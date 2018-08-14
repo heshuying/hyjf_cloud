@@ -134,7 +134,6 @@
 		FROM
 			ht_account_withdraw a
 		LEFT JOIN ht_r_user u ON a.user_id = u.user_id
-		LEFT JOIN ht_bank_config p ON a.bank = p.`code`
 		LEFT JOIN ht_r_user spu ON spu.user_id = u.spreads_user_id
 		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
 		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
