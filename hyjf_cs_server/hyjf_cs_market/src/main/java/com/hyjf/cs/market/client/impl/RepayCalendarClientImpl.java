@@ -31,9 +31,9 @@ public class RepayCalendarClientImpl implements RepayCalendarClient {
      */
     @Override
     public Integer countRepaymentCalendar(Map<String, Object> params) {
-        AppReapyCalendarResponse response = restTemplate.getForObject(
-                "http://AM-TRADE/am-trade/user/repayCalendar/countRepaymentCalendar",
-                AppReapyCalendarResponse.class);
+        AppReapyCalendarResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/user/repayCalendar/countBorrowRepayment",
+                params, AppReapyCalendarResponse.class);
         if (response != null) {
             return response.getCount();
         }
