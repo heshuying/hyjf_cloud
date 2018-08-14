@@ -30,7 +30,7 @@ public class WechatSecurityController extends BaseController {
     private SecurityService securityService;
 
     @ApiOperation(value = "安全保障数据", notes = "安全保障数据")
-    @RequestMapping("/security")
+    @RequestMapping("/security.do")
     public JSONObject getSecurityMessage() {
         JSONObject ret = new JSONObject();
         ret.put("status", "000");
