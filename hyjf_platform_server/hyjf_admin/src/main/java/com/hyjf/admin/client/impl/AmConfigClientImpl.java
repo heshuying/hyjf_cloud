@@ -1906,4 +1906,34 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
+	/**
+	 * 查询短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse initSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/insertSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/updateSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
 }
