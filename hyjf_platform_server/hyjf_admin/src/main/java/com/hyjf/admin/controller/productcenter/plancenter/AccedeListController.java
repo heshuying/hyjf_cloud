@@ -171,26 +171,12 @@ public class AccedeListController extends BaseController{
 		HjhAccedeSumVO sumVO = this.accedeListService.getCalcSumByParam(form);
 		if(sumVO != null){
 			jsonObject.put("sumAccedeAccount", sumVO.getSumAccedeAccount());
-			jsonObject.put("sumAccedeAccount", "加入金额合计");
-			
-			jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
-			jsonObject.put("sumWaitTotal", "待(收)还总额合计");
-			
-			jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());
-			jsonObject.put("sumWaitCaptical", "待(收)还本金合计");
-			
-			jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());
-			jsonObject.put("sumWaitInterest", "待(收)还利息合计");
-			
+			/*jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());*/
+			/*jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());*/
+			/*jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());*/
 			jsonObject.put("sumAvailableInvestAccount", sumVO.getSumAvailableInvestAccount());
-			jsonObject.put("sumAvailableInvestAccount", "剩余可投金额合计");
-			
 			jsonObject.put("sumFrostAccount", sumVO.getSumFrostAccount());
-			jsonObject.put("sumFrostAccount", "冻结金额合计");
-			
 			jsonObject.put("sumFairValue", sumVO.getSumFairValue());
-			jsonObject.put("sumFairValue", "公允价值合计");
-			
 			jsonObject.put("status", SUCCESS);
 		} else {
 			jsonObject.put("msg", "查询为空");
@@ -200,7 +186,7 @@ public class AccedeListController extends BaseController{
 	}
     
 	/**
-	 * 导出功能
+	 * 导出功能     已测试
 	 * 
 	 * @param request
 	 * @param modelAndView
@@ -458,7 +444,7 @@ public class AccedeListController extends BaseController{
 					}
 					// 加入时间
 					else if (celLength == 37) {
-						if (StringUtils.isNotEmpty(planAccedeDetail.getCreateTime())) {
+						if (planAccedeDetail.getCreateTime() != null) {
 							cell.setCellValue(planAccedeDetail.getCreateTime());
 						}
 					}
