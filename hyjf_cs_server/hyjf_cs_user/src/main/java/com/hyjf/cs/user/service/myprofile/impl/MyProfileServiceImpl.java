@@ -401,32 +401,9 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Override
     public List<CouponUserForAppCustomizeVO> getUserCouponsData(String couponStatus, Integer page,
                                                                 Integer pageSize, Integer userId, String host) {
-        String SOA_INTERFACE_KEY = systemConfig.getAopAccesskey();
-        //String GET_USERCOUPONS = "coupon/getUserCoupons.json";
-
-        String timestamp = String.valueOf(GetDate.getNowTime10());
-        String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + couponStatus + page + pageSize + timestamp + SOA_INTERFACE_KEY));
-
-        //Map<String, String> params = new HashMap<String, String>();
-        // 时间戳
-//        params.put("timestamp", timestamp);
-        // 签名
-//        params.put("chkValue", chkValue);
-        // 用户id
-//        params.put("userId", String.valueOf(userId));
-        // 商品id
-//        params.put("couponStatus", couponStatus);
-//        params.put("page", String.valueOf(page));
-//        params.put("pageSize", String.valueOf(pageSize));
-//        params.put("host", host);
 
         List<CouponUserForAppCustomizeVO> couponList = this.getMyCoupon(userId, page, pageSize, couponStatus);
         return couponList;
-        // 请求路径
-        //String requestUrl = systemConfig.getApiWebUrl() + GET_USERCOUPONS;
-        // 0:成功，1：失败
-        //String date = HttpClientUtils.post(requestUrl, params);
-        //return date;
     }
 
     /**
