@@ -200,11 +200,9 @@ public class MspApplyController  {
 	
 
 	@RequestMapping("/validateBeforeAction")
-	public MspApplytResponse validateBeforeAction(@RequestBody  MspApplytRequest form) {
+	public MspApplytResponse validateBeforeAction(@RequestBody  MspApply form) {
 		MspApplytResponse result = new MspApplytResponse();
-		MspApply mspapply=new MspApply();
-		BeanUtils.copyProperties(form,mspapply);
-		List<MspApply> list = mspApplyService.getRecordList(mspapply, -1, -1,0,0);
+		List<MspApply> list = mspApplyService.getRecordList(form, -1, -1,0,0);
 		if (list != null && list.size() != 0) {
 			if (form.getId() != null) {
 				Boolean hasnot = true;
@@ -292,12 +290,10 @@ public class MspApplyController  {
         	form.setRepaymentStatus(null);
 
         }
-        Map<String, String> params = ParamUtil.getSendParm(form);
-        log.info("要请求的参数：params"+params);
+        AnRongBean params = ParamUtil.getSendParm(form);
+        log.info("要请求的参数：params"+params.toString());
         // 调用api 请求安融共享方法
-        String postResult = send(ParamUtil.getQueryUserParm(form));
-        postResult = postResult.substring(1, postResult.length()-1);
-        postResult = postResult.replaceAll("\\\\", "");
+        String postResult = send(params);
         JSONObject postResultJson = JSONObject.parseObject(postResult);
         
         if(!validatorApiResult(postResultJson)){

@@ -1184,5 +1184,35 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	List<ParamNameVO> getParamName(String other1);
+	/**
+	 *
+	 * @Description:通过身份证号获取户籍所在地
+	 * @param idCardCustomize
+	 * @return String
+	 * @exception:
+	 * @author: nxl
+	 */
+	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
 
+	/**
+	 * 查询数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request);
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request);
 }

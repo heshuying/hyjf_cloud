@@ -59,7 +59,6 @@ public class WechatMyProjectController extends BaseTradeController {
 
         WeChatResult weChatResult = new WeChatResult();
         String type = request.getParameter("type");
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + userId, WebViewUserVO.class);
         if (Strings.isNullOrEmpty(type)) {
             weChatResult.setStatus(MsgEnum.ERR_PARAM_NUM.getCode());
             weChatResult.setStatusDesc(MsgEnum.ERR_PARAM_NUM.getMsg());
@@ -95,7 +94,7 @@ public class WechatMyProjectController extends BaseTradeController {
         Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
         vo.setAwait(account.getBankAwait() == null ? "0.00" : CommonUtils.formatAmount(account.getBankAwait()));
 
-        weChatResult.setData(vo);
+        weChatResult.setObject(vo);
         weChatResult.setStatus(BaseResult.SUCCESS);
         weChatResult.setStatusDesc(BaseResult.SUCCESS_DESC);
         return weChatResult;
@@ -111,7 +110,6 @@ public class WechatMyProjectController extends BaseTradeController {
     @ResponseBody
     public WeChatResult<QueryMyProjectVO> queryPlanedProject(HttpServletRequest request,@RequestHeader(value = "userId", required = false) Integer userId) {
         WeChatResult<QueryMyProjectVO> weChatResult = new WeChatResult<QueryMyProjectVO>();
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS + userId, WebViewUserVO.class);
         String type = request.getParameter("type");
 
         if (Strings.isNullOrEmpty(type)) {
@@ -142,7 +140,7 @@ public class WechatMyProjectController extends BaseTradeController {
         Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
         vo.setAwait(account.getPlanAccountWait() == null ? "0.00" : CommonUtils.formatAmount(account.getPlanAccountWait()));
 
-        weChatResult.setData(vo);
+        weChatResult.setObject(vo);
         weChatResult.setStatus(BaseResult.SUCCESS);
         weChatResult.setStatusDesc(BaseResult.SUCCESS_DESC);
         return weChatResult;

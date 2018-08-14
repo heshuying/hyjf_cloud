@@ -75,14 +75,14 @@ public class WebLoginController extends BaseUserController {
      */
     @ApiOperation(value = "登出", notes = "web端-登出")
     @PostMapping(value = "logout")
-    public WebResult<Object> loginout(@RequestHeader(value = "token") String token){
+    public WebResult<Object> loginout(@RequestHeader(value = "userId") int userId){
         WebResult<Object> result = new WebResult<>();
         JSONObject ret = new JSONObject();
         ret.put("request", "/user/logout");
         // 退出到首页
         result.setData("index");
         try {
-            RedisUtils.del(RedisConstants.USER_TOKEN_REDIS + token);
+            RedisUtils.del(RedisConstants.USERID_KEY + userId);
         }catch (Exception e){
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("退出失败");

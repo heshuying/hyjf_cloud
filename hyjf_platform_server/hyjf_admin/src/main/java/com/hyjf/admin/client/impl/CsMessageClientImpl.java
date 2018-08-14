@@ -6,12 +6,12 @@ package com.hyjf.admin.client.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.AssociatedRecordListResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
@@ -201,6 +201,30 @@ public class  CsMessageClientImpl  implements CsMessageClient {
                 hjhPlanCapitalRequest, HjhPlanCapitalResponse.class).getBody();
         if (response != null){
             return response.getResultList();
+        }
+        return null;
+    }
+
+	@Override
+	public MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
+		MessagePushTemplateStaticsResponse response = restTemplate
+				.postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
+						request, MessagePushTemplateStaticsResponse.class)
+				.getBody();
+		if (response != null) {
+			return response;
+		}
+		return null;
+	}
+
+    @Override
+    public MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request) {
+        MessagePushPlatStaticsResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
+                        request, MessagePushPlatStaticsResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
         }
         return null;
     }

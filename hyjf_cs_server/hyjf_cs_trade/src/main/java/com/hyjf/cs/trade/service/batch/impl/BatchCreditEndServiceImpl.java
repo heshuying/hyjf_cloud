@@ -37,6 +37,10 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
     @Autowired
     private AmTradeClient amTradeClient;
 
+    /**
+     * 批次结束债权
+     * @return
+     */
     @Override
     public Boolean batchCreditEnd() {
         // 筛选出一个批次更新（0-1）

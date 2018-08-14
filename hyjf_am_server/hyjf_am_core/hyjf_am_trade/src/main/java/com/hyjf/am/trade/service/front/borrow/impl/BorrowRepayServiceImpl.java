@@ -35,7 +35,9 @@ public class BorrowRepayServiceImpl implements BorrowRepayService {
         BorrowRepayExample example = new BorrowRepayExample();
         BorrowRepayExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
-        cra.andRepaySmsReminderEqualTo(repaySmsReminder);
+        if(null != repaySmsReminder){
+            cra.andRepaySmsReminderEqualTo(repaySmsReminder);
+        }
         return this.borrowRepayMapper.selectByExample(example);
     }
 

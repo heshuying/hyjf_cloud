@@ -47,7 +47,7 @@ public class WeChatSmsCodeController extends BaseUserController {
 	 */
 	@ApiOperation(value = " 发送短信验证码",notes = " 发送短信验证码")
 	@PostMapping(value = "/userRegist/sendVerificationCodeAction.do", produces = "application/json; charset=utf-8")
-	public JSONObject sendVerificationCodeAction(@RequestHeader(value = "token", required = false) String token,HttpServletRequest request, HttpServletResponse response) {
+	public JSONObject sendVerificationCodeAction(@RequestHeader(value = "userId", required = false) Integer userId,HttpServletRequest request) {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-wechat/userRegist/sendVerificationCodeAction");
 
@@ -67,10 +67,15 @@ public class WeChatSmsCodeController extends BaseUserController {
 					ret.put("status", "000");
 					ret.put("statusDesc", "发送验证码成功");
 			}else{
-				//判断用户是否登录
-				UserVO user = sendSmsCode.getUsers(token);
+				//未登录无法调用银行短信验证码发送接口
+				if(userId == null){
+					ret.put("status", "99");
+					ret.put("statusDesc","未登录");
+					return ret;
+				}
+
 				// 请求发送短信验证码
-				BankCallBean bean = sendSmsCode.callSendCode(user.getUserId(),mobile, BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, BankCallConstant.CHANNEL_WEI,null);
+				BankCallBean bean = sendSmsCode.callSendCode(userId,mobile, BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, BankCallConstant.CHANNEL_WEI,null);
 				if(bean == null){
 					ret.put("status", "99");
 					ret.put("statusDesc","发送短信验证码异常");

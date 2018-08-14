@@ -25,7 +25,7 @@ import java.util.Map;
  * @version: TenderCancelException, v0.1 2018/7/11 9:43
  */
 @RestController
-@RequestMapping("/hyjf-admin/tendercancelexception")
+@RequestMapping("/hyjf-admin/exception/tendercancelexception")
 @Api(value = "异常中心-银行投资撤销异常",tags = "异常中心-银行投资撤销异常")
 public class TenderCancelExceptionController extends BaseController {
 

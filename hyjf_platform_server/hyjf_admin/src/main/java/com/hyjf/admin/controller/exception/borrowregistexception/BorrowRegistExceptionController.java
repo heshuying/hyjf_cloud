@@ -30,7 +30,7 @@ import java.util.Map;
  * 银行标的备案掉单
  */
 @RestController
-@RequestMapping("/hyjf-admin/borrow_regist_exception")
+@RequestMapping("/hyjf-admin/exception/borrow_regist_exception")
 @Api(value = "异常中心-标的备案掉单",tags = "异常中心-标的备案掉单")
 public class BorrowRegistExceptionController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(getClass());

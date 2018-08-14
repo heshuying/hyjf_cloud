@@ -12,7 +12,7 @@ import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
  */
 public interface PlatformCountService {
     /**
-     * 
+     * 获取列表
      * @param requestBean
      * @return
      */

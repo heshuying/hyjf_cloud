@@ -32,10 +32,9 @@ public class RepayCalendarController extends BaseMarketController {
     @Autowired
     private RepayCalendarService repayCalendarService;
 
-    //TODO : 未测完
     @ResponseBody
     @ApiOperation(value = "日历", httpMethod = "POST", notes = "日历")
-    @PostMapping(value = "/repayCalendar/getRepayCalendar?")
+    @PostMapping(value = "/repayCalendar/getRepayCalendar")
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month, HttpServletRequest request) {
         logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");

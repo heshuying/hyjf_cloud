@@ -11,7 +11,6 @@ import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
@@ -52,11 +51,11 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @GetMapping("/getBanksConfigByBankId/{bankId}")
-    public BanksConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
-        BanksConfigResponse response = new BanksConfigResponse();
+    public BankConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
+        BankConfigResponse response = new BankConfigResponse();
         BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
         if(null != bankConfig){
-            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BankConfigVO banksConfigVO = new BankConfigVO();
             BeanUtils.copyProperties(bankConfig,banksConfigVO);
             response.setResult(banksConfigVO);
         }
@@ -69,11 +68,11 @@ public class BanksConfigController extends BaseConfigController{
      * @return
      */
     @GetMapping("/selectBankConfigByCode/{code}")
-    public BanksConfigResponse selectBankConfigByCode(@PathVariable String  code){
-        BanksConfigResponse response = new BanksConfigResponse();
+    public BankConfigResponse selectBankConfigByCode(@PathVariable String  code){
+        BankConfigResponse response = new BankConfigResponse();
         BankConfig bankConfig = bankConfigService.selectBankConfigByCode(code);
         if(null != bankConfig){
-            BanksConfigVO banksConfigVO = new BanksConfigVO();
+            BankConfigVO banksConfigVO = new BankConfigVO();
             BeanUtils.copyProperties(bankConfig,banksConfigVO);
             response.setResult(banksConfigVO);
         }
@@ -141,11 +140,11 @@ public class BanksConfigController extends BaseConfigController{
      * 获取银行列表
      */
     @RequestMapping("/selectBankConfigList")
-    public BanksConfigResponse selectBankConfigList(){
-        BanksConfigResponse response = new BanksConfigResponse();
+    public BankConfigResponse selectBankConfigList(){
+        BankConfigResponse response = new BankConfigResponse();
         List<BankConfig> listBankConfig = bankConfigService.selectBankConfigList();
         if(null!=listBankConfig&&listBankConfig.size()>0){
-            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
             response.setResultList(listBanksConfig);
             //代表成功
             response.setRtn(Response.SUCCESS);
@@ -158,14 +157,14 @@ public class BanksConfigController extends BaseConfigController{
      * 获取快捷支付银行
      */
     @RequestMapping("/getRechargeQuotaLimit")
-    public BanksConfigResponse getRechargeQuotaLimit(){
-        BanksConfigResponse response = new BanksConfigResponse();
+    public BankConfigResponse getRechargeQuotaLimit(){
+        BankConfigResponse response = new BankConfigResponse();
         List<JxBankConfig> listBankConfig = bankConfigService.getRechargeQuotaLimit(1);
         if(null!=listBankConfig&&listBankConfig.size()>0){
-            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            List<BankConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
             response.setResultList(listBanksConfig);
         }else{
-            response.setResultList(new ArrayList<BanksConfigVO>());
+            response.setResultList(new ArrayList<BankConfigVO>());
         }
         //代表成功
         response.setRtn(Response.SUCCESS);

@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.admin.borrow;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
+import com.hyjf.am.response.admin.HjhAssetTypeResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFlowService;
@@ -67,8 +68,14 @@ public class BorrowFlowController {
      * @return
      */
     @RequestMapping("/hjhAssetTypeList/{instCode}")
-    public List<HjhAssetTypeVO> hjhAssetTypeList(@PathVariable String instCode){
-        return borrowFlowService.hjhAssetTypeList(instCode);
+    public HjhAssetTypeResponse hjhAssetTypeList(@PathVariable String instCode){
+        HjhAssetTypeResponse response = new HjhAssetTypeResponse();
+        List<HjhAssetTypeVO> hjhAssetTypeVOS = borrowFlowService.hjhAssetTypeList(instCode);
+        if(CollectionUtils.isEmpty(hjhAssetTypeVOS)){
+            return null;
+        }
+        response.setResultList(hjhAssetTypeVOS);
+        return response;
     }
     /**
      * 分页查询

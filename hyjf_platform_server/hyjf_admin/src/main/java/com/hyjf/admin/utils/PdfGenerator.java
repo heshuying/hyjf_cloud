@@ -34,15 +34,22 @@ public class PdfGenerator {
      * @throws Exception
      */
     public String generateLocal(String fileName, String fileType, Map<String, Object> variables) throws Exception {
-        //发送旧协议暂时只有投资明细使用，只迁移有用部分
         String ftlPath = systemConfig.getContractFtlPath();
         String ftlName = "";
-        if (fileType.equals(CustomConstants.TENDER_CONTRACT)) {
+        if (fileType.equals(CustomConstants.CREDIT_CONTRACT)) {
+            ftlName = systemConfig.getCreditContractFtlName();
+        } else if (fileType.equals(CustomConstants.TENDER_CONTRACT)) {
             ftlName = systemConfig.getTenderContractFtlName();
+        } else if (fileType.equals(CustomConstants.HTJ_TENDER_CONTRACT)) {
+            ftlName = systemConfig.getHtjTenderContractFtlName();
         } else if (fileType.equals(CustomConstants.RTB_TENDER_CONTRACT)) {
             ftlName = systemConfig.getRtbContractFtlName();
         } else if (fileType.equals(CustomConstants.RTB_TENDER_CONTRACT_ZSC)) {
             ftlName = systemConfig.getRtbzscContractFtlName();
+        } else if (fileType.equals(CustomConstants.NEW_HJH_INVEST_CONTRACT)) {
+            ftlName = systemConfig.getNewHjhInvestContractFtlName();
+        } else if (fileType.equals(CustomConstants.NEW_TENDER_CONTRACT_FTL_NAME)) {
+            ftlName = systemConfig.getTenderNewContractFtlName();
         }
         String fontPath = systemConfig.getContractFont();
         OutputStream outputStream = null;

@@ -1894,4 +1894,46 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public AdminOperationLogResponse selectOperationLogList(Map<String, Object> map){
 		return restTemplate.postForEntity("http://AM-CONFIG/am-config/config/operationlog/list",map,AdminOperationLogResponse.class).getBody();
 	}
+	/**
+	 *
+	 * @Description:通过身份证号获取户籍所在地
+	 * @param idCardCustomize
+	 * @return String
+	 * @exception:
+	 * @author: nxl
+	 */
+	@Override
+	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+	/**
+	 * 查询短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse initSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/insertSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/updateSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
 }

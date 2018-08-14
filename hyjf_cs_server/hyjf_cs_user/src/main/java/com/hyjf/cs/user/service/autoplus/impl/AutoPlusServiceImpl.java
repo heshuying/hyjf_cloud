@@ -219,20 +219,20 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String txcode = "";
         BankCallBean bean = new BankCallBean(users.getUserId(), txcode, client);
         // 同步地址 跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?logOrdId=" + bean.getLogOrderId();
+        String retUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticError" + "?channel="+type+"&logOrdId=" + bean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig, String.valueOf(client)) + "/user/automaticSuccess?channel="+type;
         // 异步调用路
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
             remark = "投资人自动投标签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/invesbgreturn";
+            bgRetUrl = "http://CS-USER/hyjf-web/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             remark = "投资人自动债权转让签约增强";
-            bgRetUrl = systemConfig.getWebHost() + "/user/creditbgreturn";
+            bgRetUrl = "http://CS-USER/hyjf-web/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         //1wechat 2app

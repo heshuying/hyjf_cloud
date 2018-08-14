@@ -256,16 +256,10 @@ public class AppLoginController extends BaseUserController {
     @ResponseBody
     @PostMapping(value = "/uploadAvatarAction")
     @ApiOperation(value = "上传头像",notes = "上传头像")
-    public JSONObject uploadAvatarAction(@RequestParam String version,
-                                         @RequestParam String netStatus,
-                                         @RequestParam String platform,
-                                         @RequestParam String sign,
-                                         @RequestParam String randomString,
-                                         @RequestParam String token,
-                                         @RequestParam String order,
+    public JSONObject uploadAvatarAction(@RequestParam String sign,
                                          @RequestParam(value = "iconImg", required = false) MultipartFile iconImg) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/uploadAvatarAction");
+        ret.put("request", "/hyjf-app/appUser/uploadAvatarAction");
 
         // 业务逻辑
         try {

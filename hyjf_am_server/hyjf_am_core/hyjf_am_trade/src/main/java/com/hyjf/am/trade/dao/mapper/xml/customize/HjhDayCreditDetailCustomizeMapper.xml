@@ -75,17 +75,88 @@
             </if>
             <!-- 清算时间 -->
             <if test="liquidatesTimeStart != null and liquidatesTimeStart != ''">
-                AND dc.create_time <![CDATA[>=]]> unix_timestamp(CONCAT(#{liquidatesTimeStart},' 00:00:00'))
+                AND dc.create_time <![CDATA[>=]]> CONCAT(#{liquidatesTimeStart},' 00:00:00')
             </if>
             <if test="liquidatesTimeEnd != null and liquidatesTimeEnd != ''">
-                AND dc.create_time <![CDATA[<=]]> unix_timestamp(CONCAT(#{liquidatesTimeEnd},' 23:59:59'))
+                AND dc.create_time <![CDATA[<=]]> CONCAT(#{liquidatesTimeEnd},' 23:59:59')
             </if>
             <!-- 下期还款时间 -->
             <if test="repayNextTimeStart != null and repayNextTimeStart != ''">
-                AND dc.credit_repay_next_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                AND dc.credit_repay_next_time <![CDATA[>=]]> CONCAT(#{repayNextTimeStart},' 00:00:00')
             </if>
             <if test="repayNextTimeEnd != null and repayNextTimeEnd != ''">
-                AND dc.credit_repay_next_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                AND dc.credit_repay_next_time <![CDATA[<=]]> CONCAT(#{repayNextTimeEnd},' 23:59:59')
+            </if>
+
+            <if test="creditCapitalWait != null and creditCapitalWait != ''">
+                AND dc.credit_capital_wait = #{creditCapitalWait}
+            </if>
+
+            <!-- 债转结束时间 -->
+            <if test="endTimeStart != null and endTimeStart != ''">
+                AND dc.end_time <![CDATA[>=]]> CONCAT(#{endTimeStart},' 00:00:00')
+            </if>
+            <if test="endTimeEnd != null and endTimeEnd != ''">
+                AND dc.end_time <![CDATA[<=]]> CONCAT(#{endTimeEnd},' 23:59:59')
+            </if>
+        </where>
+    </sql>
+
+    <sql id="Where_Clause_New">
+        <where>
+            <!-- 出让人计划编号 -->
+            <if test="planNid != null and planNid != ''">
+                AND dc.plan_nid = #{planNid}
+            </if>
+            <!-- 出让人计划订单号 -->
+            <if test="planOrderId != null and planOrderId != ''">
+                AND dc.plan_order_id like  concat( '%', #{planOrderId} , '%')
+            </if>
+            <!-- 清算后计划编号 -->
+            <if test="planNidNew != null and planNidNew != ''">
+                AND dc.plan_nid_new = #{planNidNew}
+            </if>
+            <!-- 债转编号 -->
+            <if test="creditNid != null and creditNid != ''">
+                AND dc.credit_nid = #{creditNid}
+            </if>
+            <!-- 债转编号 -->
+            <if test="borrowNid != null and borrowNid != ''">
+                AND dc.borrow_nid = #{borrowNid}
+            </if>
+            <!-- 用户名 -->
+            <if test="userName != null and userName != ''">
+                AND dc.user_name like concat('%' , #{userName} , '%')
+            </if>
+            <!-- 还款方式 -->
+            <if test="repayStyle != null and repayStyle != ''">
+                AND b.borrow_style = #{repayStyle}
+            </if>
+            <!-- 转让状态 -->
+            <if test="creditStatus != null and creditStatus != ''">
+                AND dc.credit_status = #{creditStatus}
+            </if>
+            <!-- 还款状态-->
+            <if test="repayStatus != null and repayStatus != ''">
+                AND dc.repay_status = #{repayStatus}
+            </if>
+            <!-- 还款状态-->
+            <if test="repayStatus != null and repayStatus != ''">
+                AND dc.repay_status = #{repayStatus}
+            </if>
+            <!-- 清算时间 -->
+            <if test="liquidatesTimeStart != null and liquidatesTimeStart != ''">
+                AND dc.create_time <![CDATA[>=]]> CONCAT(#{liquidatesTimeStart},' 00:00:00')
+            </if>
+            <if test="liquidatesTimeEnd != null and liquidatesTimeEnd != ''">
+                AND dc.create_time <![CDATA[<=]]> CONCAT(#{liquidatesTimeEnd},' 23:59:59')
+            </if>
+            <!-- 下期还款时间 -->
+            <if test="repayNextTimeStart != null and repayNextTimeStart != ''">
+                AND 	if( b.borrow_style = 'endday' OR b.borrow_style = 'end' , dc.credit_repay_end_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{repayNextTimeStart},' 00:00:00')), dc.credit_repay_next_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{repayNextTimeStart},' 00:00:00')))
+            </if>
+            <if test="repayNextTimeEnd != null and repayNextTimeEnd != ''">
+                AND   if( b.borrow_style = 'endday' OR b.borrow_style = 'end',  dc.credit_repay_end_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{repayNextTimeEnd},' 23:59:59')) , dc.credit_repay_next_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{repayNextTimeEnd},' 23:59:59')))
             </if>
 
             <if test="creditCapitalWait != null and creditCapitalWait != ''">
@@ -99,23 +170,32 @@
             <if test="endTimeEnd != null and endTimeEnd != ''">
                 AND dc.end_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{endTimeEnd},' 23:59:59'))
             </if>
+            <if test="actualAprStartSrch != null and actualAprStartSrch != ''">
+                AND dc.actual_apr >= #{actualAprStartSrch}
+            </if>
+            <if test="actualAprEndSrch != null and actualAprEndSrch != ''">
+                AND dc.actual_apr <![CDATA[ <= ]]> #{actualAprEndSrch}
+            </if>
+            <if test="labelName != null and labelName != ''">
+                AND dc.label_name  like concat('%',#{labelName},'%')
+            </if>
         </where>
     </sql>
 
-    <!--<select id="countDebtCredit" resultType="java.lang.Integer" parameterType="map">-->
-        <!--SELECT-->
-        <!--COUNT(1)-->
-        <!--FROM-->
-        <!--hyjf_hjh_debt_credit dc-->
-        <!--INNER JOIN huiyingdai_borrow b ON dc.borrow_nid = b.borrow_nid-->
-        <!--INNER JOIN hyjf_hjh_plan dp ON dp.plan_nid = dc.plan_nid-->
-        <!--LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = b.borrow_style-->
-        <!--LEFT JOIN hyjf_param_name pa ON pa.name_cd = dc.credit_status-->
-        <!--AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'-->
-        <!--LEFT JOIN hyjf_param_name par ON par.name_cd = dc.repay_status-->
-        <!--AND par.name_class = 'HJH_DEBT_REPAY_STATUS'-->
-        <!--<include refid="Where_Clause" />-->
-    <!--</select>-->
+    <select id="countDebtCredit" resultType="java.lang.Integer" parameterType="map">
+        SELECT
+        COUNT(1)
+        FROM
+        ht_hjh_debt_credit dc
+        INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+        INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+--         LEFT JOIN hyjf_param_name pa ON pa.name_cd = dc.credit_status
+--         AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'
+--         LEFT JOIN hyjf_param_name par ON par.name_cd = dc.repay_status
+--         AND par.name_class = 'HJH_DEBT_REPAY_STATUS'
+        <include refid="Where_Clause_New" />
+    </select>
 
     <select id="selectDebtCreditList" resultMap="DebtCreditMap" parameterType="map">
         SELECT
@@ -140,8 +220,6 @@
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
         dc.assign_period,
         dc.liquidates_period,
---         pa.`name` AS credit_status_name,
---         par.`name` AS repay_status_name,
         FROM_UNIXTIME(IF(dc.end_time=0, NULL, dc.end_time),'%Y-%m-%d %H:%i:%s') AS end_time,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
         FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time
@@ -150,11 +228,7 @@
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
---         LEFT JOIN hyjf_param_name pa ON pa.name_cd = dc.credit_status
---         AND pa.name_class ='HJH_DEBT_CREDIT_STATUS'
---         LEFT JOIN hyjf_param_name par ON par.name_cd = dc.repay_status
---         AND par.name_class = 'HJH_DEBT_REPAY_STATUS'
-        <include refid="Where_Clause" />
+        <include refid="Where_Clause_New" />
         ORDER BY dc.create_time DESC
         <if  test="limitStart != null and limitEnd != null and limitStart >= 0">
             LIMIT #{limitStart} , #{limitEnd}

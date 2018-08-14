@@ -23,21 +23,23 @@ import java.io.Serializable;
 public class ProjectInvestListVO  extends BaseVO implements Serializable {
 
 	//用户id
-	public String userId;
+	private String userId;
 	//vip等级
-    private String vipId;
+	private String vipId;
     //vip等级
-    private String vipLevel;
+	private String vipLevel;
 	//用户名
-	public String userName;
+	private String userName;
 	//投资金额
-	public String account;
+	private String account;
 	//投资时间
-	public String investTime;
+	private String investTime;
 	//投资来源
-	public String client;
+	private String client;
 	//是否有红包
-	public String redbag;
+	private String redbag;
+
+	private String clientName;
 
 	public String getRedbag() {
 		return redbag;
@@ -111,7 +113,13 @@ public class ProjectInvestListVO  extends BaseVO implements Serializable {
         this.vipLevel = vipLevel;
     }
 
+	public String getClientName() {
+		return clientName;
+	}
 
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
 }
 
 	

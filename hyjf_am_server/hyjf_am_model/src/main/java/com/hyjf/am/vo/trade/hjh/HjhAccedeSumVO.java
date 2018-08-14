@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import com.hyjf.am.vo.BaseVO;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author libin
  * @version HjhAccedeSumVO.java, v0.1 2018年7月10日 上午10:57:17
@@ -17,26 +19,30 @@ public class HjhAccedeSumVO extends BaseVO implements Serializable{
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 加入金额合计
-	 */
+	@ApiModelProperty(value = "加入金额合计")
 	private String sumAccedeAccount;
-		/**
-	 * 已投资金额
-	 */
+
+	@ApiModelProperty(value = "已投资金额合计")
 	private String sumAlreadyInvest;
-		/**
-	 * 待(收)还总额
-	 */
+
+	@ApiModelProperty(value = "待(收)还总额合计")
 	private String sumWaitTotal;
-		/**
-	 * 待(收)还本金
-	 */
+
+	@ApiModelProperty(value = "待(收)还本金合计")
 	private String sumWaitCaptical;
-		/**
-	 * 待(收)还利息
-	 */
+
+	@ApiModelProperty(value = "待(收)还利息合计")
 	private String sumWaitInterest;
+	
+	@ApiModelProperty(value = "剩余可投金额合计")
+	private String sumAvailableInvestAccount;
+	
+	@ApiModelProperty(value = "冻结金额合计")
+	private String sumFrostAccount;
+	
+	@ApiModelProperty(value = "公允价值合计")
+	private String sumFairValue;
+	
 	public String getSumAccedeAccount() {
 		return sumAccedeAccount;
 	}
@@ -66,5 +72,23 @@ public class HjhAccedeSumVO extends BaseVO implements Serializable{
 	}
 	public void setSumWaitInterest(String sumWaitInterest) {
 		this.sumWaitInterest = sumWaitInterest;
+	}
+	public String getSumAvailableInvestAccount() {
+		return sumAvailableInvestAccount;
+	}
+	public void setSumAvailableInvestAccount(String sumAvailableInvestAccount) {
+		this.sumAvailableInvestAccount = sumAvailableInvestAccount;
+	}
+	public String getSumFrostAccount() {
+		return sumFrostAccount;
+	}
+	public void setSumFrostAccount(String sumFrostAccount) {
+		this.sumFrostAccount = sumFrostAccount;
+	}
+	public String getSumFairValue() {
+		return sumFairValue;
+	}
+	public void setSumFairValue(String sumFairValue) {
+		this.sumFairValue = sumFairValue;
 	}
 }

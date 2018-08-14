@@ -67,9 +67,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
 	@ApiOperation(value = "CA认证记录列表", notes = "CA认证记录列表")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertificateAuthorityVO>> init(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean) {
-//    	CertificateAuthorityExceptionRequest aprlr = new CertificateAuthorityExceptionRequest();
-//		// 可以直接使用
-//		BeanUtils.copyProperties(certificateAuthorityExceptionBean, aprlr);
+
 
 		CertificateAuthorityResponse prs = certificateAuthorityExceptionService.getRecordList(certificateAuthorityExceptionBean);
 

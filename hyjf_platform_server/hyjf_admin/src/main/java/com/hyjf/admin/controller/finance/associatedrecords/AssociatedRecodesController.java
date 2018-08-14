@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-定向转账-关联记录",tags = "资金中心-定向转账-关联记录")
 @RestController
-@RequestMapping(value = "/hyjf-admin/associatedrecords")
+@RequestMapping(value = "/hyjf-admin/finance/associatedrecords")
 public class AssociatedRecodesController extends BaseController {
 
     @Autowired

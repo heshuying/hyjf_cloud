@@ -1772,6 +1772,30 @@ public interface AmTradeClient {
     public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
 
     /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 总条数
+     * @param data
+     * @param planNid
+     * @return
+     */
+    Integer getHjhReInvestDetailListCount(String data, String planNid);
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param data
+     * @param planNid
+     * @return
+     * @Author : huanghui
+     */
+    List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid);
+
+    /**
+     * 汇计划按天转让记录
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
+
+    /**
      *
      * @author zhangyk
      * @date 2018/8/7 16:37
@@ -1846,8 +1870,6 @@ public interface AmTradeClient {
     CouponTenderResponse countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
 
     CouponTenderResponse getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
-
-    DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
 
     /**
      * 圈存异步回调业务处理
@@ -2455,5 +2477,49 @@ public interface AmTradeClient {
      * @return
      */
     CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode);
+    BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form);
+
+    /**
+     * 查询列表
+     * @param adminRequest
+     * @return
+     */
+    FinmanChargeNewResponse selectFinmanChargeList(FinmanChargeNewRequest adminRequest);
+    /**
+     * 根据manChargeCd查询费率配置 详情
+     * @author xiehuili
+     * @param manChargeCd
+     * @return
+     */
+     FinmanChargeNewResponse getRecordInfo(String manChargeCd);
+    /**
+     * 插入费率配置
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public FinmanChargeNewResponse insertFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest);
+    /**
+     * 修改费率配置
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public FinmanChargeNewResponse updateFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest);
+    /**
+     * 删除费率配置
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public FinmanChargeNewResponse deleteFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest);
+    /**
+     *
+     * 根据表的类型,期数,项目类型检索管理费件数
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public int countRecordByProjectType(FinmanChargeNewRequest adminRequest);
 }
 

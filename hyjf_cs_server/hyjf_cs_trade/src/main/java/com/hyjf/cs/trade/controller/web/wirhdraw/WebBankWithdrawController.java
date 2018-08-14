@@ -51,8 +51,8 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "web端获取用户银行提现", notes = "用户提现")
     @PostMapping("/toWithdraw")
-    public WebResult<Object> toWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
+    public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
+        WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
         if(null==user||0==user.getIsSetPassword()||!user.isBankOpenAccount()){
             return new WebResult<>();
         }
@@ -71,11 +71,11 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "web端用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
     @RequestLimit(seconds=3)
-    public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "token", required = true) String token,
+    public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "userId") int userId,
                                                @RequestBody @Valid BankWithdrawVO bankWithdrawVO , HttpServletRequest request) {
-        logger.info("web端提现接口, token is :{}", JSONObject.toJSONString(token));
+        logger.info("web端提现接口, userId is :{}", JSONObject.toJSONString(userId));
         WebResult<Object> result = new WebResult<Object>();
-        WebViewUserVO user=bankWithdrawService.getUsersByToken(token);
+        WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ip=CustomUtil.getIpAddr(request);
