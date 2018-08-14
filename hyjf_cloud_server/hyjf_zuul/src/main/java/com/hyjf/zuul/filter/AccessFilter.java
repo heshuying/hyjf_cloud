@@ -334,15 +334,16 @@ public class AccessFilter extends ZuulFilter {
 	}
 
 	/**
-	 * app特殊处理
-	 *
-	 * @param request
-	 * @param ctx
+	 * @Author walter.limeng
+	 * @user walter.limeng
+	 * @Description  app特殊处理
+	 * @Date 10:35 2018/8/14
+	 * @Param
 	 * @return
 	 */
 	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
 		AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-		if (appUserToken == null) {
+		if (appUserToken == null || appUserToken.getUserId()==null) {
 			logger.error("TokenInvalid");
 			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		}
