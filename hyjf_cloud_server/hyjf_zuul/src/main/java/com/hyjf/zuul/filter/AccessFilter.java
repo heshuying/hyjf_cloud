@@ -342,12 +342,12 @@ public class AccessFilter extends ZuulFilter {
 	 * @return
 	 */
 	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
-		AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-		if (appUserToken == null || appUserToken.getUserId()==null) {
+		Integer userId = SecretUtil.getUserId(sign);
+		if (userId == null) {
 			logger.error("TokenInvalid");
 			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		}
-		ctx.addZuulRequestHeader("userId", appUserToken.getUserId() + "");
+		ctx.addZuulRequestHeader("userId", userId + "");
 		return ctx;
 	}
 
