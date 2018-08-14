@@ -1,5 +1,7 @@
 package com.hyjf.am.vo.admin;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
@@ -10,68 +12,79 @@ public class ManualReverseCustomizeVO {
     /**
      * 原交易流水号
      */
+    @ApiModelProperty(value = "原交易流水号")
     private String seqNo;
 
     /**
      * 交易流水号
      */
+    @ApiModelProperty(value = "交易流水号")
     private String bankSeqNo;
 
     /**
      * 交易时间
      */
+    @ApiModelProperty(value = "交易时间")
     private Date txTime;
 
     /**
      * 用户名
      */
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
     /**
      * 电子账号
      */
+    @ApiModelProperty(value = "电子账号")
     private String accountId;
 
     /**
      * 资金托管平台 0:汇付，1:江西银行
      */
+    @ApiModelProperty(value = "资金托管平台 0:汇付，1:江西银行")
     private String isBank;
 
     /**
      * 收支类型 1收入 2支出
      */
+    @ApiModelProperty(value = "收支类型 1收入 2支出")
     private String type;
 
     /**
      * 交易类型
      */
+    @ApiModelProperty(value = "交易类型")
     private String transType;
 
     /**
      * 操作金额
      */
+    @ApiModelProperty(value = "操作金额")
     private String amount;
 
     /**
      * 操作状态 0 成功 1失败
      */
+    @ApiModelProperty(value = "操作状态 0 成功 1失败")
     private String status;
 
     /**
      * 创建用户ID
      */
+    @ApiModelProperty(value = "创建用户ID")
     private Integer createUserId;
 
     /**
      * 创建时间create_time
      */
+    @ApiModelProperty(value = "创建时间")
     private int createTime;
 
     /**
      * seqNo
      * @return the seqNo
      */
-
     public String getSeqNo() {
         return seqNo;
     }

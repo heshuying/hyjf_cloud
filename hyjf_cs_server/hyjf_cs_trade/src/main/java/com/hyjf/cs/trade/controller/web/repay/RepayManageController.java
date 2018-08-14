@@ -4,9 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
-import com.hyjf.am.vo.trade.RUserVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
@@ -20,12 +17,10 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
-import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.vo.BatchRepayPageRequestVO;
@@ -42,7 +37,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -258,7 +252,7 @@ public class RepayManageController extends BaseTradeController {
      * 垫付机构已还款列表
      * @param requestBean
      */
-    @ApiOperation(value = "垫付机构已还款列表", tags = "垫付机构已还款列表")
+    @ApiOperation(value = "垫付机构已还款列表", notes = "垫付机构已还款列表")
     @PostMapping(value = "/repayed_org_list", produces = "application/json; charset=utf-8")
     public WebResult<List<RepayListCustomizeVO>> selectOrgRepayedList(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
         WebResult<List<RepayListCustomizeVO>> result = new WebResult<List<RepayListCustomizeVO>>();
@@ -295,7 +289,7 @@ public class RepayManageController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/9
      */
-    @ApiOperation(value = "还款详情页面数据", tags = "还款详情页面数据")
+    @ApiOperation(value = "还款详情页面数据", notes = "还款详情页面数据")
     @PostMapping(value = "/repay_detail", produces = "application/json; charset=utf-8")
     public WebResult repayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayDetailRequestVO requestBean, HttpServletRequest request){
         WebResult result = new WebResult();
@@ -347,7 +341,7 @@ public class RepayManageController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/10
      */
-    @ApiOperation(value = "还款申请", tags = "还款申请")
+    @ApiOperation(value = "还款申请", notes = "还款申请")
     @PostMapping(value = "/repay_request", produces = "application/json; charset=utf-8")
     public WebResult repayRequest(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayRequest requestBean, HttpServletRequest request){
         WebResult webResult = new WebResult();
@@ -451,7 +445,7 @@ public class RepayManageController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/9
      */
-    @ApiOperation(value = "担保机构批量还款页面数据", tags = "担保机构批量还款页面数据")
+    @ApiOperation(value = "担保机构批量还款页面数据", notes = "担保机构批量还款页面数据")
     @PostMapping(value = "/batch_repaydata", produces = "application/json; charset=utf-8")
     public WebResult orgUserBatchRepayData(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean){
         WebResult webResult = new WebResult();
@@ -522,7 +516,7 @@ public class RepayManageController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/9
      */
-    @ApiOperation(value = "担保机构批量还款条件校验", tags = "担保机构批量还款条件校验")
+    @ApiOperation(value = "担保机构批量还款条件校验", notes = "担保机构批量还款条件校验")
     @PostMapping(value = "/batchrepay_check", produces = "application/json; charset=utf-8")
     public WebResult orgUserStartBatchRepayCheck(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean) {
         WebResult webResult = new WebResult();
@@ -565,7 +559,7 @@ public class RepayManageController extends BaseTradeController {
      * @auther: hesy
      * @date: 2018/7/9
      */
-    @ApiOperation(value = "担保机构批量还款", tags = "担保机构批量还款")
+    @ApiOperation(value = "担保机构批量还款", notes = "担保机构批量还款")
     @PostMapping(value = "/batchrepay_action", produces = "application/json; charset=utf-8")
     public WebResult orgUserStartBatchRepay(@RequestHeader(value = "userId") Integer userId, @RequestBody BatchRepayPageRequestVO requestBean, HttpServletRequest request) {
         WebResult webResult = new WebResult();

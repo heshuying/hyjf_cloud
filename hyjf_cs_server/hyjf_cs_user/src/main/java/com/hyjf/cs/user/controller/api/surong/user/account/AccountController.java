@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(value = "融东风用户账户接口",tags = "融东风用户账户接口")
+@Api(value = "api端融东风用户账户接口",tags = "api端融东风用户账户接口")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("hyjf-api/surong/account")

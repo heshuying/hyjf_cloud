@@ -13,9 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,7 +21,7 @@ import java.util.List;
  * @author fuqiang
  * @version SmsTemplateController, v0.1 2018/6/25 10:09
  */
-@Api(tags = "短信模板")
+@Api(description = "短信模板", tags = "短信模板")
 @RestController
 @RequestMapping("/hyjf-admin/message/smsTemplate")
 public class SmsTemplateController extends BaseController {
@@ -39,7 +37,7 @@ public class SmsTemplateController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询所有短信模版", notes = "查询所有短信模版")
-	@RequestMapping("/smsTemplateList")
+	@GetMapping("/smsTemplateList")
 	public JSONObject smsTemplateList() {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsTemplateVO> voList = smsTemplateService.findAll();
@@ -54,7 +52,7 @@ public class SmsTemplateController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据条件查询所有短信模版", notes = "根据条件查询所有短信模版")
-	@RequestMapping("/findSmsTemplate")
+	@PostMapping("/findSmsTemplate")
 	public JSONObject findSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsTemplateVO> voList = smsTemplateService.findSmsTemplate(request);
@@ -69,7 +67,7 @@ public class SmsTemplateController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增短信模版", notes = "新增短信模版")
-	@RequestMapping("/insertTemplate")
+	@PostMapping("/insertTemplate")
 	public JSONObject insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {

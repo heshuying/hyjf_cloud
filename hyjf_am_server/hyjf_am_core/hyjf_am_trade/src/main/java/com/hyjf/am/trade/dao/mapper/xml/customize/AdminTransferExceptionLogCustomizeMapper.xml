@@ -80,10 +80,10 @@
 		 el.add_user,
 		 el.update_time,
 		 el.update_user,
-		 el.del_flg
+		 el.del_flag
 		FROM
-			hyjf_transfer_exception_log el
-		LEFT JOIN huiyingdai_users u ON u.user_id = el.user_id
+			ht_transfer_exception_log el
+		LEFT JOIN ht_r_user u ON u.user_id = el.user_id
 		<include refid="Where_Clause" />
 		ORDER BY update_time DESC
 		<if test="limitStart >= 0" >
@@ -94,8 +94,8 @@
     <select id="countTransferException" resultType="java.lang.Integer" parameterType="java.util.Map">
 	    SELECT
 			count(1)
-		FROM hyjf_transfer_exception_log el
-		     LEFT JOIN huiyingdai_users u ON u.user_id = el.user_id 
+		FROM ht_transfer_exception_log el
+		     LEFT JOIN ht_t_user u ON u.user_id = el.user_id
 		<include refid="Where_Clause" />
 	</select>
 	
@@ -103,8 +103,8 @@
 	    SELECT
 			u.coupon_user_code
 		FROM
-			hyjf_coupon_tender t
-		INNER JOIN hyjf_coupon_user u ON t.coupon_grant_id = u.id
+			ht_coupon_tender t
+		INNER JOIN ht_coupon_user u ON t.coupon_grant_id = u.id
 		WHERE
 			t.order_id = #{tenderNid}
 	</select>

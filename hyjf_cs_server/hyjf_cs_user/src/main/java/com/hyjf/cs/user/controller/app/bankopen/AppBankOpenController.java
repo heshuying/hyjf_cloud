@@ -60,10 +60,11 @@ public class AppBankOpenController extends BaseUserController {
                 mobile = "";
             }
             result.put("phone",mobile);
-            result.put("status","1");
+            result.put("status","000");
+            result.put("statusDesc","操作成功");
         } else {
             logger.error("openAccount userInfo failed...");
-            result.put("status","0");
+            result.put("status","99");
             result.put("statusDesc","操作失败");
         }
         return result;

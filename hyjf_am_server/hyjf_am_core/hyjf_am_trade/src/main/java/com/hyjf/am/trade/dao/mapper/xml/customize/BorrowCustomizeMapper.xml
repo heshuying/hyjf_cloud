@@ -674,7 +674,7 @@ WHERE
 		  <if test="col != null and col != '' and sort != null and sort != ''">
 		   ${col} ${sort},
 		  </if>
-		  b.addtime DESC, b.id DESC
+		  b.create_time DESC, b.id DESC
 		  <if test="limitStart >= 0">
 		   LIMIT #{limitStart} , #{limitEnd}
 		  </if>

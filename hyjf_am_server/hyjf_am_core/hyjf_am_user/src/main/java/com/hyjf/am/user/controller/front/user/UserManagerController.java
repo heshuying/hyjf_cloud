@@ -310,9 +310,9 @@ public class UserManagerController extends BaseController {
         UserVO userVO = new UserVO();
         User user = userManagerService.selectUserByUserId(userId);
         if (null != user) {
-            BeanUtils.copyProperties(user, userVO);
+            BeanUtils.copyProperties(user,userVO);
             response.setResult(userVO);
-            response.setRtn("00");//代表成功
+            response.setRtn(Response.SUCCESS);//代表成功
             return response;
         }
         return null;

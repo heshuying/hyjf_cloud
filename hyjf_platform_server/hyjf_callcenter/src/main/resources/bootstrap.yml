@@ -12,3 +12,6 @@ server:
 
 logging:
   file: callcenter.log
+#swagger启用开关
+swagger:
+ enable: true

@@ -3,14 +3,16 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import java.util.List;
-
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -56,9 +58,44 @@ public class MessagePushTemplateStaticsDao extends BaseMongoDao<MessagePushTempl
 		return mongoTemplate.find(query, getEntityClass());
 	}
 
+	/**
+	 *查询模板消息统计报表
+	 * @param request
+	 * @return
+	 */
+	public List<MessagePushTemplateStatics> selectTemplateStatics(MessagePushTemplateStaticsRequest request) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if (request.getStartDateSrch() != null) {
+			Date startTime = GetDate.stringToDate2(request.getStartDateSrch());
+			criteria.and("createTime").gte((int) (startTime.getTime() / 1000));
+		}
+		if (request.getEndDateSrch() != null) {
+			Date endTime = GetDate.stringToDate2(request.getEndDateSrch());
+			criteria.and("createTime").lte((int) (endTime.getTime() / 1000));
+		}
+		if (request.getMsgTitleSrch() != null) {
+			criteria.and("msgTitle").regex(request.getMsgTitleSrch());
+		}
+		if (request.getMsgCodeSrch() != null) {
+			criteria.and("msgCode").is(request.getMsgCodeSrch());
+		}
+		if (request.getTagIdSrch() != null) {
+			criteria.and("tagId").is(request.getTagIdSrch());
+		}
+		int currPage = request.getCurrPage();
+		int pageSize = request.getPageSize();
+		int limitStart = (currPage - 1) * pageSize;
+		int limitEnd = limitStart + pageSize;
+		query.addCriteria(criteria);
+		query.skip(limitStart).limit(limitEnd);
+		return mongoTemplate.find(query, getEntityClass());
+	}
+
 	@Override
 	protected Class<MessagePushTemplateStatics> getEntityClass() {
 		return MessagePushTemplateStatics.class;
 	}
+
 
 }

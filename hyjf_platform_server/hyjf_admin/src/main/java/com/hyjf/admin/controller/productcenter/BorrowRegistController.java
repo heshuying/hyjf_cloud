@@ -18,6 +18,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,7 @@ public class BorrowRegistController extends BaseController {
     }
 
     @ApiOperation(value = "标的备案", notes = "标的备案")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String")
     @GetMapping("/debt_regist/{borrowNid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {
