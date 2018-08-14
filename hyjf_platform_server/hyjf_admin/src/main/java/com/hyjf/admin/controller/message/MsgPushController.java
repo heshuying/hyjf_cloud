@@ -12,9 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class MsgPushController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询所有消息推送模板", notes = "查询所有消息推送模板")
-	@RequestMapping("/findAll")
+	@GetMapping("/findAll")
 	public JSONObject findAll() {
 		JSONObject jsonObject = new JSONObject();
 		List<MessagePushTemplateVO> voList = msgPushTemplateService.findAll();
@@ -52,7 +50,7 @@ public class MsgPushController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据条件查询消息推送模板", notes = "根据条件查询消息推送模板")
-	@RequestMapping("/findMsgPushTemplate")
+	@PostMapping("/findMsgPushTemplate")
 	public JSONObject findMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<MessagePushTemplateVO> voList = msgPushTemplateService.findMsgPushTemplate(request);
@@ -67,7 +65,7 @@ public class MsgPushController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增消息推送模板", notes = "新增消息推送模板")
-	@RequestMapping("/insertMsgPushTemplate")
+	@PostMapping("/insertMsgPushTemplate")
 	public JSONObject insertMailTemplate(@RequestBody MsgPushTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
