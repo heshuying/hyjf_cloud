@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * APP端协议controller
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
