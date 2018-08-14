@@ -31,7 +31,7 @@ public class ShareNewsController extends BaseMarketController {
 
     @ApiOperation(value = "分享信息", notes = "app-分享信息")
     @PostMapping("/getNews")
-    public ShareNewsResponse init(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request, @RequestBody ShareNewsRequest shareNewsRequest){
+    public ShareNewsResponse init(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
         ShareNewsResponse response = new ShareNewsResponse();
 
         ShareNewsBeanVO shareNewsBean = this.shareNewsService.queryShareNews();
