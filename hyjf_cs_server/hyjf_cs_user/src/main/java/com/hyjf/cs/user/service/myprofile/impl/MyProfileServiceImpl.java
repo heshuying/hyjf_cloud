@@ -400,27 +400,27 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
      */
     @Override
     public List<CouponUserForAppCustomizeVO> getUserCouponsData(String couponStatus, Integer page,
-                                     Integer pageSize, Integer userId, String host) {
+                                                                Integer pageSize, Integer userId, String host) {
         String SOA_INTERFACE_KEY = systemConfig.getAopAccesskey();
-        String GET_USERCOUPONS = "coupon/getUserCoupons.json";
+        //String GET_USERCOUPONS = "coupon/getUserCoupons.json";
 
         String timestamp = String.valueOf(GetDate.getNowTime10());
         String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + couponStatus + page + pageSize + timestamp + SOA_INTERFACE_KEY));
 
-        Map<String, String> params = new HashMap<String, String>();
+        //Map<String, String> params = new HashMap<String, String>();
         // 时间戳
-        params.put("timestamp", timestamp);
+//        params.put("timestamp", timestamp);
         // 签名
-        params.put("chkValue", chkValue);
+//        params.put("chkValue", chkValue);
         // 用户id
-        params.put("userId", String.valueOf(userId));
+//        params.put("userId", String.valueOf(userId));
         // 商品id
-        params.put("couponStatus", couponStatus);
-        params.put("page", String.valueOf(page));
-        params.put("pageSize", String.valueOf(pageSize));
-        params.put("host", host);
+//        params.put("couponStatus", couponStatus);
+//        params.put("page", String.valueOf(page));
+//        params.put("pageSize", String.valueOf(pageSize));
+//        params.put("host", host);
 
-        List<CouponUserForAppCustomizeVO> couponList=this.getMyCoupon(userId,page,pageSize,couponStatus);
+        List<CouponUserForAppCustomizeVO> couponList = this.getMyCoupon(userId, page, pageSize, couponStatus);
         return couponList;
         // 请求路径
         //String requestUrl = systemConfig.getApiWebUrl() + GET_USERCOUPONS;
@@ -431,6 +431,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
 
     /**
      * 获取我的优惠券
+     *
      * @param userId
      * @param page
      * @param pageSize
@@ -439,9 +440,9 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
      */
     private List<CouponUserForAppCustomizeVO> getMyCoupon(Integer userId, Integer page, Integer pageSize, String couponStatus) {
         MyCouponListRequest requestBean = new MyCouponListRequest();
-        requestBean.setUserId(userId+"");
+        requestBean.setUserId(userId + "");
         requestBean.setUsedFlag(couponStatus);
-        requestBean.setLimitStart((page-1) * pageSize);
+        requestBean.setLimitStart((page - 1) * pageSize);
         requestBean.setLimitEnd(page * pageSize);
         return amTradeClient.getMyCoupon(requestBean);
     }
