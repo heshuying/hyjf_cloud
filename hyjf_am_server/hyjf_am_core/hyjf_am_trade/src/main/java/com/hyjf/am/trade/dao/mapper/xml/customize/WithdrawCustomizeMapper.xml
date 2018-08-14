@@ -24,7 +24,7 @@
 	    <result column="credited" property="credited" jdbcType="DECIMAL" />
 	    <result column="bank" property="bank" jdbcType="VARCHAR" />
 	    <result column="account" property="account" jdbcType="VARCHAR" />
-	    <result column="addtime_str" property="addtimeStr" jdbcType="VARCHAR" />
+	    <result column="create_time_str" property="addtimeStr" jdbcType="VARCHAR" />
 	    <result column="client_str" property="clientStr" jdbcType="VARCHAR" />
 	    <result column="status" property="status" jdbcType="VARCHAR" />
 	    <result column="status_str" property="statusStr" jdbcType="VARCHAR" />
@@ -58,10 +58,10 @@
 				AND a.`status` in (0, 1)
 			</if>
 			<if test="addtimeStartSrch != null and addtimeStartSrch != ''">
-				AND FROM_UNIXTIME( a.addtime, '%Y-%m-%d' ) <![CDATA[>=]]> #{addtimeStartSrch}
+				AND FROM_UNIXTIME( a.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{addtimeStartSrch}
 			</if>
 			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
-				AND FROM_UNIXTIME( a.addtime, '%Y-%m-%d' ) <![CDATA[<=]]> #{addtimeEndSrch}
+				AND FROM_UNIXTIME( a.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{addtimeEndSrch}
 			</if>
 			<if test="bankFlagSrch != null and bankFlagSrch != ''">
 				AND a.bank_flag = #{bankFlagSrch}
@@ -97,7 +97,7 @@
 			DATE_FORMAT(a.tx_date,'%Y-%m-%d') as tx_date,
 			CONCAT(MID(lpad(a.tx_time,6,0),1,2),':',MID(lpad(a.tx_time,6,0),3,2),':',MID(lpad(a.tx_time,6,0),5,2)) as tx_time,
 			a.bank_seq_no,
-			a.addtime,
+			a.create_time,
 			a.id,
 			u.username,
 			u.attribute AS user_property,
@@ -123,9 +123,9 @@
 			a.bank AS bank,
 			a.account,
 			FROM_UNIXTIME(
-				a.addtime,
+				a.create_time,
 				'%Y-%m-%d %H:%i:%s'
-			) AS addtime_str,
+			) AS create_time_str,
 			a.client AS client_str,
 			a.`status` AS `status`,
 			a.`status` AS status_str,
@@ -134,19 +134,18 @@
 		FROM
 			ht_account_withdraw a
 		LEFT JOIN ht_r_user u ON a.user_id = u.user_id
-		LEFT JOIN ht_bank_config p ON a.bank = p.`code`
 		LEFT JOIN ht_r_user spu ON spu.user_id = u.spreads_user_id
 		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
 		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
 		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
 		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-		LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = su.spreads_userid AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 		LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 		LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
 		LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
 		<include refid="Withdraw_Where_Clause" />
 		ORDER BY
-			a.addtime DESC
+			a.create_time DESC
 		<if test="limitStart >= 0" >
 	      limit #{limitStart} , #{limitEnd}
 	    </if>
@@ -162,7 +161,7 @@
 	    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
 	    <result column="bank" property="bank" jdbcType="VARCHAR" />
 	    <result column="status" property="status" jdbcType="VARCHAR" />
-	    <result column="addtime" property="withdrawTime" jdbcType="VARCHAR" />
+	    <result column="create_time" property="withdrawTime" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="getThirdPartyUserWithdrawRecord" resultMap="thirdPartyWithdrawRecordMap" parameterType="Map">
@@ -176,9 +175,9 @@
 			haw.bank bank,
 			haw.`status` status,
 			FROM_UNIXTIME(
-				haw.addtime,
+				haw.create_time,
 				'%Y-%m-%d %H:%i:%s'
-			) AS addtime,
+			) AS create_time,
 			haw.bank_flag
 		FROM
 			ht_account_withdraw haw

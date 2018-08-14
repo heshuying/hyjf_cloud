@@ -146,4 +146,12 @@ public interface HjhPlanService {
      * @return
      */
     List<DebtPlanAccedeCustomize> selectPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 更新显示的计划开启或者关闭
+     * 1 开启计划 2 关闭计划
+     * @param status
+     * @return
+     */
+    int updateHjhPlanForJoinSwitch(int status);
 }

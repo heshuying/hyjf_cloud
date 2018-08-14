@@ -284,7 +284,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhUserAuthVO getUserAuthByUserId(Integer userId) {
-        HjhUserAuthResponse response = restTemplate.getForEntity("",HjhUserAuthResponse.class).getBody();
+        String url = "http://AM-USER/am-user/user/getHjhUserAuthByUserId/" + userId;
+        HjhUserAuthResponse response = restTemplate.getForEntity(url,HjhUserAuthResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
         }
