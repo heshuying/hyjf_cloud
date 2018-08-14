@@ -207,6 +207,7 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private Object initServer(HttpServletRequest request, RequestContext ctx) {
 		ctx.addZuulRequestHeader(VERSION, request.getParameter(VERSION));
+		ctx.addZuulRequestHeader(SIGN, request.getParameter(SIGN));
 		ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
 		ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
 		ctx.addZuulRequestHeader(SECRET_KEY, request.getParameter(SECRET_KEY));

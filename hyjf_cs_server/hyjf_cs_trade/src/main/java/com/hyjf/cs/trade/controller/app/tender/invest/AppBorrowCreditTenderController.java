@@ -58,7 +58,7 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
      * @param bean
      * @return
      */
-    @RequestMapping("/bgReturn")
+    @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowCreditTenderBgReturn(BankCallBean bean ) {
         logger.info("APP端债转投资异步处理start,userId:{},返回码:{}", bean.getLogUserId(),bean.getRetCode());
