@@ -565,6 +565,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
 
         BestCouponListVO couponConfig = new BestCouponListVO();
