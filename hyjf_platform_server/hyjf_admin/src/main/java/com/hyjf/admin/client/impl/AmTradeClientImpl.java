@@ -2491,7 +2491,9 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String planOrderId) {
-        String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByNid/" + planOrderId;
+        // 原 selectTenderAgreementByNid 方法返回的是 List<CurrentHoldObligatoryRightListCustomizeVO> 不能共用，换新方法
+    	/*String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByNid/" + planOrderId;*/
+    	String url = "http://AM-TRADE/am-trade/tenderagreement/selectTenderAgreementByTenderNid/" + planOrderId;
         TenderAgreementResponse response = restTemplate.getForEntity(url, TenderAgreementResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
