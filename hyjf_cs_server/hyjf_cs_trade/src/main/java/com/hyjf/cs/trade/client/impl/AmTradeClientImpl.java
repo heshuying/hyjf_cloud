@@ -1407,7 +1407,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public Integer countUserInvest(Integer userId, String borrowNid) {
-        BorrowTenderResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrowTender/countUserInvest/" +userId + "/" + borrowNid,BorrowTenderResponse.class).getBody();
+        BorrowTenderResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/borrowTender/countUserInvest/" +borrowNid + "/" + userId,BorrowTenderResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getTenderCount();
         }
