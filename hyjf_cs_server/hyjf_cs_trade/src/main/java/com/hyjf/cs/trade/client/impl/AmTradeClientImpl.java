@@ -1311,8 +1311,14 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<BorrowRepayVO> selectBorrowRepayList(String borrowNid, Integer repaySmsReminder) {
+        String url= "http://AM-TRADE/am-trade/borrowRepay/selectBorrowRepayList/" + borrowNid + "/";
+        if (null == repaySmsReminder){
+            url += "000";  // 为了公用添加特殊处理字符
+        }else{
+            url += repaySmsReminder.toString();
+        }
         BorrowRepayResponse response = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/borrowRepay/selectBorrowRepayList/" + borrowNid + "/" + repaySmsReminder,
+                url,
                 BorrowRepayResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
