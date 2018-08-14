@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.beans.BorrowCreditRepayInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
 import com.hyjf.admin.beans.BorrowCreditTenderResultBean;
@@ -11,6 +10,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BorrowCreditTenderService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.response.trade.BorrowCreditRepayResponse;
 import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
@@ -40,7 +40,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -118,12 +119,12 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
      * @date 2018/7/11 20:41
      */
     @Override
-    public void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) {
+    public void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
 
         String sheetName = "还款信息列表";
         String[] titles = new String[]{"承接人", "债转编号", "出让人", "项目编号", "订单号", "应收本金", "应收利息", "应收本息", "已收本息", "还款服务费", "还款状态", "债权承接时间", "下次还款时间"};
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
 
         // 导出列表不需要分页,扩大数据查询范围，使失效
@@ -208,13 +209,13 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
      * @date 2018/7/13 10:49
      */
     @Override
-    public void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response) {
+    public void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
         AdminCreditTenderResponse res = baseClient.postExe(TENDER_LIST_URL, req, AdminCreditTenderResponse.class);
         List<BorrowCreditTenderVO> list = res.getResultList();
         String sheetName = "汇转让-承接信息";
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         //String[] titles = new String[] { "序号","订单号","债转编号","项目编号","出让人","出让人当前的推荐人的用户名","出让人当前的推荐人的用户属性","出让人当前的推荐人的分公司","出让人当前的推荐人的部门","出让人当前的推荐人的团队","出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队", "承接人","承接人当前的推荐人的用户名","承接人当前的推荐人的用户属性","承接人当前的推荐人的分公司","承接人当前的推荐人的部门","承接人当前的推荐人的团队","承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队", "承接本金","折让率","认购价格","垫付利息", "债转服务费", "实付金额","承接平台", "承接时间" };
         String[] titles = new String[] { "序号","订单号","债转编号","项目编号","出让人","承接人", "承接本金","折让率","认购价格","垫付利息", "债转服务费", "实付金额","承接平台", "承接时间" };
@@ -359,17 +360,17 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
                     }
                     // 客户端
                     else if (celLength == 12) {
-                        if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("0")) {
+                        if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "0".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("pc");
-                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("1")) {
+                        }else if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "1".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("微信");
-                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("2")) {
+                        }else if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "2".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("android");
-                        }else if (creditTenderVo.getClient()!=null&&!creditTenderVo.getClient().equals("")
-                                &&creditTenderVo.getClient().equals("3")) {
+                        }else if (creditTenderVo.getClient()!=null&&!"".equals(creditTenderVo.getClient())
+                                && "3".equals(creditTenderVo.getClient())) {
                             cell.setCellValue("ios");
                         }
                     }

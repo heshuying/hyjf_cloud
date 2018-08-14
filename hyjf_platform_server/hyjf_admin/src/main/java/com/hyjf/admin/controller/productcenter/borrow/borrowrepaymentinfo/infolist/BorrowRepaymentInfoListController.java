@@ -1,18 +1,13 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepaymentinfo.infolist;
 
-import com.hyjf.admin.beans.BorrowRepaymentInfoBean;
 import com.hyjf.admin.beans.BorrowRepaymentInfoListBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentInfoListRequestBean;
-import com.hyjf.admin.beans.request.BorrowRepaymentInfoRequsetBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRepaymentInfoListService;
-import com.hyjf.admin.service.BorrowRepaymentInfoService;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoListRequset;
-import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
-import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CustomConstants;
@@ -35,9 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -46,9 +39,9 @@ import java.util.List;
  * @version BorrowRepaymentInfoListController, v0.1 2018/7/10 9:30
  */
 
-@Api(value = "产品中心-汇直投-还款明细列表")
+@Api(value = "产品中心-汇直投-还款明细列表",tags ="产品中心-汇直投-还款明细列表")
 @RestController
-@RequestMapping("/borrow/borrowrepaymentinfo/infolist")
+@RequestMapping("/hyjf-admin/borrow/borrowrepaymentinfo/infolist")
 public class BorrowRepaymentInfoListController {
     @Autowired
     private BorrowRepaymentInfoListService borrowRepaymentInfoListService;
@@ -90,7 +83,7 @@ public class BorrowRepaymentInfoListController {
         // 表格sheet名称
         String sheetName = "还款详情导出数据";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowRepaymentInfoListCustomizeVO> resultList = this.borrowRepaymentInfoListService.selectExportBorrowRepaymentInfoListList(copyForm);
         // 列头

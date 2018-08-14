@@ -33,13 +33,10 @@ import java.util.List;
 public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
 
     @Autowired
-    private HjhInstConfigClient hjhInstConfigClient;
-
-    @Autowired
     private AmTradeClient amTradeClient;
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
+        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
 

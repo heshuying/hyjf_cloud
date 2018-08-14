@@ -11,6 +11,9 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.AppAlreadyRepayListCustomize;
+
+import java.util.List;
 import java.util.Map;
 
 public interface AppUserInvestCustomizeMapper {
@@ -23,4 +26,8 @@ public interface AppUserInvestCustomizeMapper {
      * @return
      */
     public Integer selectUserTenderCount(Map<String, Object> paraMap);
+
+
+
+    List<AppAlreadyRepayListCustomize> selectAlreadyRepayList(Map<String, Object> params);
 }

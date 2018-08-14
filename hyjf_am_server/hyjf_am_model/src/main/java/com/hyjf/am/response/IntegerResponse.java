@@ -5,7 +5,7 @@ package com.hyjf.am.response;
 
 /**
  * @author liubin
- * @version MapResponse, v0.1 2018/7/10 18:22
+ * @version IntegerResponse, v0.1 2018/7/10 18:22
  */
 public class IntegerResponse extends Response{
     Integer resultInt;

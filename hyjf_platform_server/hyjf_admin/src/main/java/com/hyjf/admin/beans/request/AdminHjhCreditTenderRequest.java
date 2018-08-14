@@ -132,6 +132,9 @@ public class AdminHjhCreditTenderRequest extends BaseRequest implements Serializ
 	@ApiModelProperty(value = "隐藏域债转编号")
 	private String creditNidHidden;
 	
+	@ApiModelProperty(value = "是否从债转标的页面调转(1:是)")
+	private String isOptFlag;
+	
 	/**
 	 * 构造方法
 	 */
@@ -443,4 +446,11 @@ public class AdminHjhCreditTenderRequest extends BaseRequest implements Serializ
 		this.creditNidHidden = creditNidHidden;
 	}
 
+	public String getIsOptFlag() {
+		return isOptFlag;
+	}
+
+	public void setIsOptFlag(String isOptFlag) {
+		this.isOptFlag = isOptFlag;
+	}
 }

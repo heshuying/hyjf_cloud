@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.mq.consumer;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -18,7 +17,6 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -27,7 +25,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.service.RealTimeBorrowLoanPlanService;
+import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanPlanService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -36,7 +34,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
@@ -151,6 +148,7 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上
+				String toMail[] = systemConfig.getLoadRepayMailAddrs();
 				if (systemConfig.isEnvTest()) {
 					online = "测试环境";
 				}
@@ -161,18 +159,15 @@ public class BorrowLoanPlanRealTimeConsumer extends Consumer {
 				msg.append("执行次数：").append("第" + failTimes + "次").append("<br/>");
 				msg.append("错误信息：").append(e.getMessage()).append("<br/>");
 				msg.append("详细错误信息：<br/>").append(sbError.toString());
-				String[] toMail = new String[] {};
-				if ("测试环境".equals(online)) {
-					toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com", "dengxiaojiang@hyjf.com" };
-				} else {
-					toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com","zhangjinpeng@hyjf.com" };
-				}
-				MailMessage mailmessage = new MailMessage(null, null, "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail, null,
-						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 
 				try {
+					if(toMail == null) {
+						throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
+					}
+					MailMessage mailmessage = new MailMessage(null, null, "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail, null,
+							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, JSON.toJSONBytes(mailmessage)));
-				} catch (MQException e2) {
+				} catch (Exception e2) {
 					logger.error("发送邮件失败..", e2);
 				}
 				// 消息队列指令不消费

@@ -2,8 +2,8 @@ package com.hyjf.am.trade.controller.admin.productcenter.plancenter.reinvestdebt
 
 import com.hyjf.am.response.admin.HjhReInvestDebtResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;
-import com.hyjf.am.trade.service.admin.HjhReInvestDebtService;
-import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalVO;
+import com.hyjf.am.trade.service.admin.hjhplan.HjhReInvestDebtService;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class HjhReInvestDebtController {
     public HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request){
         HjhReInvestDebtResponse response = new HjhReInvestDebtResponse();
 
-        List<HjhPlanCapitalVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
+        List<HjhPlanCapitalCustomizeVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
         response.setResultList(responseList);
         return response;
     }

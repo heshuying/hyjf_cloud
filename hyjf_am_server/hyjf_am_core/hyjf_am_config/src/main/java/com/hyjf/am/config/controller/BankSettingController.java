@@ -11,9 +11,9 @@ import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,13 +22,15 @@ import java.util.List;
  * @author dangzw
  * @version BankSettingController, v0.1 2018/7/24 23:58
  */
-@Api(value = "配置中心银行配置 江西银行", description = "配置中心银行配置 江西银行")
 @RestController
 @RequestMapping("/am-config/banksetting")
 public class BankSettingController {
 
     @Autowired
     private BankSettingService bankSettingService;
+
+    @Value("${file.domain.url}")
+    private String DOMAIN_URL;
 
     /**
      *(条件)列表查询
@@ -37,7 +39,7 @@ public class BankSettingController {
     @RequestMapping("/list")
     public AdminBankSettingResponse selectBankSettingListByPage(@RequestBody AdminBankSettingRequest adminRequest) {
         //logger.info("江西银行列表..." + JSONObject.toJSON(adminRequest));
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         List<JxBankConfig> recordList = this.bankSettingService.getRecordList(new JxBankConfig(), -1, -1);
         if (recordList != null) {
             for(JxBankConfig banksConfig : recordList) {
@@ -52,16 +54,22 @@ public class BankSettingController {
             bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
             recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(),
                     paginator.getLimit());
-           // String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
-            if(!CollectionUtils.isEmpty(recordList)){
+            if(CollectionUtils.isNotEmpty(recordList)){
                 List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
+                response.setPaginator(paginator);
                 response.setResultList(jxBankConfigList);
-                response.setRecordTotal(recordList.size());
-                response.setRtn(Response.SUCCESS);
+                response.setBanksettingForm(adminRequest);
+                //TODO String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
+                response.setFileDomainUrl(DOMAIN_URL);
+                return response;
             }
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
             return response;
         }
-        return null;
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
+        return response;
     }
 
     /**
@@ -71,13 +79,15 @@ public class BankSettingController {
      */
     @RequestMapping("/info")
     public AdminBankSettingResponse bankSettingInfo(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         JxBankConfig jxBankConfigList = bankSettingService.bankSettingInfo(adminRequest);
-        if(null != jxBankConfigList){
+        if(jxBankConfigList != null){
             JxBankConfigVO jxBankConfigVO = CommonUtils.convertBean(jxBankConfigList, JxBankConfigVO.class);
             response.setResult(jxBankConfigVO);
-            response.setRtn(Response.SUCCESS);
+            return response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -86,13 +96,14 @@ public class BankSettingController {
      * @return
      */
     @RequestMapping("/searchForInsert")
-    public List<JxBankConfigVO> searchForInsert(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
-            JxBankConfig bc=new JxBankConfig();
-            bc.setBankName(adminRequest.getBankName());
-            List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
-            List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
-        return jxBankConfigList;
+    public AdminBankSettingResponse searchForInsert(@RequestBody AdminBankSettingRequest adminRequest) {
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+        JxBankConfig bc = new JxBankConfig();
+        bc.setBankName(adminRequest.getBankName());
+        List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
+        List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
+        response.setResultList(jxBankConfigVO);
+        return response;
     }
 
     /**
@@ -101,15 +112,17 @@ public class BankSettingController {
      */
     @RequestMapping("/insert")
     public AdminBankSettingResponse insertBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         try{
             int result =this.bankSettingService.insertBankSetting(adminRequest);
             if(result > 0 ){
-                response.setRtn(Response.SUCCESS);
+                return response;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -120,15 +133,17 @@ public class BankSettingController {
      */
     @RequestMapping("/update")
     public AdminBankSettingResponse updateBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         try{
-            int result =this.bankSettingService.updateBankSetting(adminRequest);
+            int result = this.bankSettingService.updateBankSetting(adminRequest);
             if(result > 0 ){
-                response.setRtn(Response.SUCCESS);
+                return response;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -139,11 +154,13 @@ public class BankSettingController {
      */
     @RequestMapping("/delete")
     public AdminBankSettingResponse deleteFeeConfig(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response =new AdminBankSettingResponse();
+        AdminBankSettingResponse  response = new AdminBankSettingResponse();
         if(adminRequest.getId() != null){
             this.bankSettingService.deleteFeeConfig(adminRequest.getId());
-            response.setRtn(Response.SUCCESS);
+            return  response;
         }
+        response.setRtn(Response.FAIL);
+        response.setMessage(Response.FAIL_MSG);
         return  response;
     }
 

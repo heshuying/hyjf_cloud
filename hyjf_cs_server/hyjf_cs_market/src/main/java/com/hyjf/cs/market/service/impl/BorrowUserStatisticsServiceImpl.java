@@ -8,7 +8,7 @@ import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.market.client.AmDataCollectClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.BorrowUserStatisticsProducer;
@@ -30,7 +30,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	@Autowired
 	private AmTradeClient amTradeClient;
 	@Autowired
-	private AmDataCollectClient amDataCollectClient;
+	private CsMessageClient csMessageClient;
 	@Autowired
 	private BorrowUserStatisticsProducer statisticsProducer;
 
@@ -51,7 +51,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		BigDecimal sumBorrowUserMoneyTopTen = amTradeClient.sumBorrowUserMoneyTopTen();
 		// 最大单一借款人待还金额
 		BigDecimal sumBorrowUserMoneyTopOne = amTradeClient.sumBorrowUserMoneyTopOne();
-		BorrowUserStatisticVO statisticVO = amDataCollectClient.selectBorrowUserStatistic();
+		BorrowUserStatisticVO statisticVO = csMessageClient.selectBorrowUserStatistic();
 		BorrowUserStatisticVO record = new BorrowUserStatisticVO();
 		record.setBorrowuserCountTotal(countBorrowUser);
 		record.setBorrowuserCountCurrent(countBorrowUserCurrent);

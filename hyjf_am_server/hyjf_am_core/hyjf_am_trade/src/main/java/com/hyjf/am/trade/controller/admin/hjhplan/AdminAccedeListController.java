@@ -110,13 +110,9 @@ public class AdminAccedeListController {
 				 vo.setInviteUserAttributeName(map1.getOrDefault(vo.getInviteUserAttributeName(),null));
 				 vo.setAttribute(map1.getOrDefault(vo.getAttribute(),null));
 			 }
+			response.setResultList(list);
+			response.setRtn(Response.SUCCESS);
 		}
-        if(list.size() > 0){
-            if (!CollectionUtils.isEmpty(list)) {
-                response.setResultList(list);
-                response.setRtn(Response.SUCCESS);
-            }
-        }
 		return response;
 	}
 	

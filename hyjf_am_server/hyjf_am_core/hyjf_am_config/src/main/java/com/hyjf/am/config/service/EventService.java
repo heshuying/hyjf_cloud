@@ -51,4 +51,17 @@ public interface EventService {
 	 * @param id
 	 */
     void deleteById(Integer id);
+
+
+	/**
+	 * 根据时间查询公司纪事
+	 * @param begin
+	 * @param end
+	 * @param year
+	 * @return
+	 */
+	 List<Event> getEvents(int begin, int end,int year);
+
+
+
 }

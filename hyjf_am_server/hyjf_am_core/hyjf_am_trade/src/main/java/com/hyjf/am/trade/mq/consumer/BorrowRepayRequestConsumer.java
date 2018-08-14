@@ -18,7 +18,6 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -27,8 +26,8 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.service.BatchBorrowRepayPlanService;
-import com.hyjf.am.trade.service.BatchBorrowRepayZTService;
+import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
+import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -167,6 +166,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        	StringBuffer sbError = new StringBuffer();// 错误信息
 	        	sbError.append(e.getMessage()).append("<br/>");
 	        	String online = "生产环境";// 取得是否线上
+				String toMail[] = systemConfig.getLoadRepayMailAddrs();
 	        	if (systemConfig.isEnvTest()) {
 	        		online = "测试环境";
 	        	}
@@ -176,18 +176,17 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        	msg.append("还款时间：").append(GetDate.formatTime()).append("<br/>");
 	        	msg.append("错误信息：").append(e.getMessage()).append("<br/>");
 	        	msg.append("详细错误信息：<br/>").append(sbError.toString());
-	        	String[] toMail = new String[] {};
-	        	if ("测试环境".equals(online)) {
-	        		toMail = new String[] { "jiangying@hyjf.com", "liudandan@hyjf.com", "dengxiaojiang@hyjf.com" };
-	        	} else {
-	        		toMail = new String[] { "sunjijin@hyjf.com", "gaohonggang@hyjf.com","zhangjinpeng@hyjf.com" };
-	        	}
-	        	MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
-	        			MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 
 				try {
+
+					if(toMail == null) {
+						throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
+					}
+
+		        	MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
+		        			MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(mailMessage)));
-				} catch (MQException e2) {
+				} catch (Exception e2) {
 					logger.error("发送邮件失败..", e2);
 				}
 	        	

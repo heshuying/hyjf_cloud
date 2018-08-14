@@ -1,12 +1,13 @@
 package com.hyjf.admin.service.impl;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.VersionConfigClient;
 import com.hyjf.admin.service.VersionConfigService;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
-    private VersionConfigClient versionConfigClient;
+    private AmConfigClient amConfigClient;
     /**
      * 查询版本设置列表
      * @param adminRequest
@@ -30,12 +31,12 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     @Override
     public AdminVersionResponse versionConfigInit(AdminVersionRequest adminRequest){
         AdminVersionResponse response = new AdminVersionResponse();
-        response =versionConfigClient.versionConfigInit(adminRequest);
+        response =amConfigClient.versionConfigInit(adminRequest);
         //数据字典
-        List<ParamName> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
-        List<ParamName> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
-        response.getResult().setVersionNames(versionName);
-        response.getResult().setIsUpdates(isUpdate);
+        List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
+        List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
+        response.setVersionNames(versionName);
+        response.setIsUpdates(isUpdate);
         return response;
     }
     /**
@@ -46,12 +47,12 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     @Override
     public AdminVersionResponse searchVersionConfigInfo(AdminVersionRequest adminRequest){
         AdminVersionResponse response = new AdminVersionResponse();
-        response= versionConfigClient.searchVersionConfigInfo(adminRequest);
+        response= amConfigClient.searchVersionConfigInfo(adminRequest);
         //数据字典
-        List<ParamName> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
-        List<ParamName> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
-        response.getResult().setVersionNames(versionName);
-        response.getResult().setIsUpdates(isUpdate);
+        List<ParamNameVO> versionName = this.amTradeClient.getParamNameList("VERSION_NAME");
+        List<ParamNameVO> isUpdate = this.amTradeClient.getParamNameList("IS_UPDATE");
+        response.setVersionNames(versionName);
+        response.setIsUpdates(isUpdate);
         return response;
     }
     /**
@@ -60,7 +61,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      * @return
      */
     @Override
-    public List<ParamName> getParamNameList(String code){
+    public List<ParamNameVO> getParamNameList(String code){
         return amTradeClient.getParamNameList(code);
     }
 
@@ -70,7 +71,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public AdminVersionResponse saveVersionConfig(AdminVersionRequest req){
-        return versionConfigClient.saveVersionConfig(req);
+        return amConfigClient.saveVersionConfig(req);
     }
 
     /**
@@ -79,7 +80,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public AdminVersionResponse updateVersionConfig(AdminVersionRequest req){
-        return versionConfigClient.updateVersionConfig(req);
+        return amConfigClient.updateVersionConfig(req);
     }
 
     /**
@@ -88,7 +89,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public AdminVersionResponse deleteVersionConfig(Integer id){
-        return versionConfigClient.deleteVersionConfig(id);
+        return amConfigClient.deleteVersionConfig(id);
     }
     /**
      * 校验版本号是否唯一
@@ -96,7 +97,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
      */
     @Override
     public VersionVO getVersionByCode(Integer vid, Integer type, String version){
-        return versionConfigClient.getVersionByCode(vid,type,version);
+        return amConfigClient.getVersionByCode(vid,type,version);
     }
 
 }

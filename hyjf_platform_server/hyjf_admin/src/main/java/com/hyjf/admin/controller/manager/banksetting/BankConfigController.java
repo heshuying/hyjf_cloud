@@ -32,7 +32,7 @@ import java.util.List;
  *  @version BankSettingController, v0.1 2018/7/11.
  *  银行配置
  */
-@Api(value = "配置中心银行配置")
+@Api(value = "配置中心银行配置", tags = "配置中心银行配置-银行配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/bankconfig")
 public class BankConfigController extends BaseController {
@@ -42,8 +42,8 @@ public class BankConfigController extends BaseController {
     @Autowired
     private BankConfigService bankConfigService;
 
-    @ApiOperation(value = "配置中心银行配置-银行配置", notes = "查询配置中心银行配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心银行配置", notes = "查询配置中心银行配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult bankConfigInit(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
         AdminBankConfigRequest request = new AdminBankConfigRequest();
@@ -62,7 +62,7 @@ public class BankConfigController extends BaseController {
         return new AdminResult<ListResult<BankConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心银行配置", notes = "银行配置详情页面")
+    @ApiOperation(value = "银行配置详情页面", notes = "银行配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult  bankConfigInfo(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
@@ -80,7 +80,7 @@ public class BankConfigController extends BaseController {
         }
         return new AdminResult<BankConfigVO>(response.getResult()) ;
     }
-    @ApiOperation(value = "配置中心银行配置", notes = "银行配置添加")
+    @ApiOperation(value = "银行配置添加", notes = "银行配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult  insertBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
@@ -113,7 +113,7 @@ public class BankConfigController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心银行配置", notes = "银行配置修改")
+    @ApiOperation(value = "修改银行配置", notes = "修改银行配置")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
@@ -138,7 +138,7 @@ public class BankConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心银行配置", notes = "银行配置删除")
+    @ApiOperation(value = "删除银行配置", notes = "删除银行配置")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankConfig(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
@@ -157,7 +157,7 @@ public class BankConfigController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心银行配置上传", notes = "上传文件")
+    @ApiOperation(value = "银行配置上传文件", notes = "上传文件")
     @PostMapping("/uploadFile")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult uploadFile(HttpServletRequest request, HttpServletResponse response) {
@@ -165,7 +165,7 @@ public class BankConfigController extends BaseController {
         return new AdminResult<BankConfigVO>(files.getResult());
     }
 
-    @ApiOperation(value = "配置中心银行配置", notes = "去重校验")
+    @ApiOperation(value = "银行配置去重校验", notes = "去重校验")
     @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult validateBeforeAction(@RequestBody BankConfigRequestBean bankConfigRequestBean) {

@@ -3,13 +3,16 @@ package com.hyjf.zuul.filter;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.GatewayApiConfigVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.bean.AccessToken;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.jwt.JwtHelper;
+import com.hyjf.common.util.AppUserToken;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.SignValue;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.exception.ZuulException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -32,17 +36,59 @@ public class AccessFilter extends ZuulFilter {
 	@Value("${ignore.urls.app.key}")
 	private String appKeyIgnoreUrls;
 
+	/**
+	 * 不同客户端的请求包含不同的关键字（域名）
+	 */
 	private static final String APP_CHANNEL = "app";
 	private static final String WEB_CHANNEL = "web";
-	private static final String WEB_VISIT_URL = "/hyjf-web";
-	private static final String WECHAT_CHANNEL = "wechat";
-	private static final String WECHAT_VISIT_URL = "/hyjf-wechat";
 	private static final String API_CHANNEL = "api";
+	private static final String WECHAT_CHANNEL = "wechat";
+
+	/**
+	 * 各客户端增加的前缀 微信和app自带hyjf-xx请求，不用处理
+	 */
+	private static final String WEB_VISIT_URL = "/hyjf-web";
 	private static final String API_VISIT_URL = "/hyjf-api";
+
+	/**
+	 * app共同字段
+	 */
+	private static final String VERSION = "version";
+	private static final String SIGN = "sign";
+	private static final String TOKEN = "token";
+	private static final String KEY = "key";
+	private static final String INITKEY = "initKey";
+	/** （0:pc 1:Android 2:IOS 3:微信） */
+	private static final String PLATFORM = "platform";
+	private static final String RANDOM_STRING = "randomString";
+	/** 安全码（经过appId和appKey算出来，然后连接上随机字符串，进行ASCII码生序排列） */
+	private static final String SECRET_KEY = "secretKey";
+	private static final String APP_ID = "appId";
+	private static final String NET_STATUS = "netStatus";
+	/**
+	 * order生成规则：token+随机字符串连接在一起，然后经过ASCII码升序排序，最后经过key加密（当没有token时，规则是随机字符串连接在一起，然后经过ASCII码升序排序，最后经过key加密）
+	 */
+	private static final String ORDER = "order";
+	private static final String JUMP_COMMEND = "jumpcommend";
+
+	/**
+	 * app的设备所属渠道-马甲
+	 */
+	private static final String HYJF = "hyjf";
+	private static final String HYJF_YXB = "hyjfYXB";
+	private static final String HYJF_ZNB = "hyjfZNB";
+	private static final String HYJF_ZYB = "hyjfZYB";
+	private static final String HYJF_ZZB = "hyjfZZB";
+	private static final String HYJF_TEST = "hyjfTEST";
+
+	/**
+	 * 过滤器类型
+	 */
+	private static final String PRE = "pre";
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return PRE;
 	}
 
 	@Override
@@ -59,10 +105,9 @@ public class AccessFilter extends ZuulFilter {
 	 * 过滤
 	 *
 	 * @return
-	 * @throws ZuulException
 	 */
 	@Override
-	public Object run() throws ZuulException {
+	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 		// 请求uri
@@ -83,50 +128,48 @@ public class AccessFilter extends ZuulFilter {
 		String requestUrl = fullRequestUrl.substring(0, fullRequestUrl.length() - requestUri.length() + 1);
 		String prefix;
 		if (requestUrl.contains(APP_CHANNEL)) {
+
+			// app 共同参数
+			String version = request.getParameter(VERSION);
+			String sign = request.getParameter(SIGN);
+
 			Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
 			if (!appKeyIgnoreUrls.contains(requestUri)) {
-				String sign = request.getParameter("sign");
 				if (sign == null) {
 					logger.error("sign is empty");
 					// 不对其进行路由
 					return this.buildErrorRequestContext(ctx, 400, "sign is empty!");
 				}
-				SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN+sign, SignValue.class);
-				ctx.addZuulRequestHeader("key", signValue.getKey());
-				ctx.addZuulRequestHeader("initKey", signValue.getInitKey());
-				ctx.addZuulRequestHeader("version", signValue.getVersion());
-				ctx.addZuulRequestHeader("token", signValue.getToken());
-				ctx.addZuulRequestHeader("sign", sign);
+				this.appNomalRequestProcess(request, ctx, sign);
 
-				if (secureVisitFlag) {
-					setUserIdByToken(request, ctx, secureVisitFlag);
-				}
+				this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
+
 			} else {
-				// 获取最优服务器
-				ctx.addZuulRequestHeader("platform", request.getParameter("platform"));
-				ctx.addZuulRequestHeader("randomString", request.getParameter("randomString"));
-				ctx.addZuulRequestHeader("secretKey", request.getParameter("secretKey"));
-				ctx.addZuulRequestHeader("appId", request.getParameter("appId"));
-				ctx.addZuulRequestHeader("version", request.getParameter("version"));
+				// app打开初始化操作
+				this.initServer(request, ctx);
 			}
+
+			this.addCommonResponse(ctx, version);
 			// app自带hyjf-app 直接返回即可
 			return null;
-		} else if (requestUrl.contains(WEB_CHANNEL)) {
-			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag);
-			}
-			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
-			if (secureVisitFlag) {
-				ctx = setUserIdByToken(request, ctx, secureVisitFlag);
-			}
-			prefix = WECHAT_VISIT_URL;
+			this.wechatSetUserIdProcess(request, ctx, secureVisitFlag);
+			// wechat自带hyjf-wechat 直接返回即可
+			return null;
+		}
+
+		if (requestUrl.contains(WEB_CHANNEL)) {
+			ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
+			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			prefix = API_VISIT_URL;
 		} else {
+			logger.error("error channel...");
 			// 不对其进行路由
-			return this.buildErrorRequestContext(ctx, 502, "illegal visit!");
+			this.buildErrorRequestContext(ctx, 502, "illegal visit!");
+			return null;
 		}
+
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
 		ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
@@ -134,17 +177,102 @@ public class AccessFilter extends ZuulFilter {
 	}
 
 	/**
+	 * app普通请求处理
+	 * 
+	 * @param request
+	 * @param ctx
+	 * @param sign
+	 * @return
+	 */
+	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
+		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
+		ctx.addZuulRequestHeader(TOKEN, signValue.getToken());
+		ctx.addZuulRequestHeader(SIGN, sign);
+		ctx.addZuulRequestHeader(KEY, signValue.getKey());
+		ctx.addZuulRequestHeader(INITKEY, signValue.getInitKey());
+		ctx.addZuulRequestHeader(VERSION, signValue.getVersion());
+		ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
+		ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
+		ctx.addZuulRequestHeader(NET_STATUS, request.getParameter(NET_STATUS));
+		ctx.addZuulRequestHeader(ORDER, request.getParameter(ORDER));
+		return ctx;
+	}
+
+	/**
+	 * 获取最优服务器，获取请求密钥处理
+	 * 
+	 * @param request
+	 * @param ctx
+	 * @return
+	 */
+	private Object initServer(HttpServletRequest request, RequestContext ctx) {
+		ctx.addZuulRequestHeader(VERSION, request.getParameter(VERSION));
+		ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
+		ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
+		ctx.addZuulRequestHeader(SECRET_KEY, request.getParameter(SECRET_KEY));
+		ctx.addZuulRequestHeader(APP_ID, request.getParameter(APP_ID));
+		return ctx;
+	}
+
+	/**
+	 * 返回app,h5访问必须的jumpcommend
+	 * 
+	 * @param ctx
+	 * @return
+	 */
+	private Object addCommonResponse(RequestContext ctx, String version) {
+		HttpServletResponse response = ctx.getResponse();
+		response.setHeader(JUMP_COMMEND, getLinkJumpPrefix(version));
+		response.setHeader(VERSION, version);
+		return response;
+	}
+
+	/**
+	 * 获取app h5 需要的JUMP_COMMEND
+	 * 
+	 * @param version
+	 * @return
+	 */
+	private String getLinkJumpPrefix(String version) {
+
+		if (!StringUtils.isEmpty(version)) {
+			// 取渠道号
+			String vers[] = version.split("\\.");
+			if (vers != null && vers.length > 3) {
+				String pcode = vers[3];
+
+				if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_39)) {
+					return HYJF;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_YXB)) {
+					return HYJF_YXB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_ZNB)) {
+					return HYJF_ZNB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_ZYB)) {
+					return HYJF_ZYB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_ZZB)) {
+					return HYJF_ZZB;
+				} else if (pcode.equals(CustomConstants.MSG_PUSH_PACKAGE_CODE_TEST)) {
+					return HYJF_TEST;
+				}
+			}
+
+		}
+		return HYJF;
+	}
+
+	/**
 	 * zuul拦截, 不对其进行路由
+	 * 
 	 * @param ctx
 	 * @param gatewayCode
 	 * @param errorMessage
 	 * @return
 	 */
-	private Object buildErrorRequestContext(RequestContext ctx, int gatewayCode, String errorMessage){
+	private Object buildErrorRequestContext(RequestContext ctx, int gatewayCode, String errorMessage) {
 		ctx.setSendZuulResponse(false);
 		ctx.setResponseStatusCode(gatewayCode);
 		ctx.setResponseBody(errorMessage);
-		return null;
+		return ctx;
 	}
 
 	/**
@@ -156,27 +284,104 @@ public class AccessFilter extends ZuulFilter {
 	 *            true 登录才能访问 false 登录不登录均可访问
 	 * @return
 	 */
-	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
-		String token = request.getParameter("token");
-		if (StringUtils.isBlank(token) && isNecessary) {
+	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean isNecessary,
+			String channel) {
+		String token = "";
+		if (APP_CHANNEL.equals(channel)) {
+			token = request.getParameter(TOKEN);
+		} else {
+			token = request.getHeader(TOKEN);
+		}
+
+		// 需要安全访问的请求，token空不路由，否则直接返回
+		if (StringUtils.isBlank(token)) {
 			logger.error("token is empty...");
-			// 不对其进行路由
-			this.buildErrorRequestContext(ctx, 400, "token is empty!");
-			return ctx;
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		}
-		WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-		if (webViewUserVO == null) {
-			if (isNecessary) {
-				logger.error("user is not exist...");
-				// 不对其进行路由
-				this.buildErrorRequestContext(ctx, 400, "user is not exist!");
-				return ctx;
-			} else {
-				return ctx;
+
+		// jwt解析token
+		AccessToken accessToken = JwtHelper.parseToken(token);
+		if (accessToken == null) {
+			logger.error("user is not exist...");
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+		} else {
+			Integer userId = accessToken.getUserId();
+			WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+			if (user == null) {
+				// 登陆过期
+				logger.error("login is invalid...");
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 			}
+			ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
+			logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
 		}
-		ctx.addZuulRequestHeader("userId", webViewUserVO.getUserId() + "");
-		logger.info(String.format("user token:%s userId:%s", token, webViewUserVO.getUserId()));
+		return ctx;
+	}
+
+	/**
+	 * token无效情况下判断是否安全访问执行不同策略
+	 * 
+	 * @param ctx
+	 * @param isNecessary
+	 * @return
+	 */
+	private RequestContext buildReturnContextOfTokenInvalid(RequestContext ctx, boolean isNecessary) {
+		if (isNecessary) {
+			// 不对其进行路由
+			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
+		}
+		return ctx;
+	}
+
+	/**
+	 * @Author walter.limeng
+	 * @user walter.limeng
+	 * @Description  app特殊处理
+	 * @Date 10:35 2018/8/14
+	 * @Param
+	 * @return
+	 */
+	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
+		Integer userId = SecretUtil.getUserId(sign);
+		if (userId == null) {
+			logger.error("TokenInvalid");
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+		}
+		ctx.addZuulRequestHeader("userId", userId + "");
+		return ctx;
+	}
+
+	/**
+	 * 微信特殊处理
+	 * 
+	 * @param request
+	 * @param ctx
+	 * @return
+	 */
+	private RequestContext wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
+		String sign = request.getParameter(SIGN);
+		if (StringUtils.isBlank(sign)) {
+			sign = (String) request.getAttribute(SIGN);
+		}
+		if (StringUtils.isNotBlank(sign)) {
+			// 获取用户ID
+			AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
+			if (appUserToken == null || appUserToken.getUserId()==null) {
+				logger.error("TokenInvalid");
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+			}
+
+			Integer userId = appUserToken.getUserId();
+			String accountId = appUserToken.getAccountId();
+			// 需要刷新 sign
+			SecretUtil.refreshSign(sign);
+			request.setAttribute("userId", userId);
+			request.setAttribute("accountId", accountId);
+			ctx.addZuulRequestHeader("userId", userId + "");
+			ctx.addZuulRequestHeader("accountId", accountId);
+		} else {
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+		}
 		return ctx;
 	}
 

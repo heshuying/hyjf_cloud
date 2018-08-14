@@ -3,21 +3,17 @@
  */
 package com.hyjf.cs.user.controller.wechat.autoplus;
 
-import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.controller.app.autoplus.AutoPlusResultBean;
-import com.hyjf.cs.user.controller.wechat.annotation.SignValidate;
+import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.autoplus.AutoPlusService;
 import com.hyjf.cs.user.util.ResultEnum;
@@ -26,7 +22,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -38,16 +33,15 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:37
  */
 
-@Api(value = "weChat端用户授权自动投资债转接口",description = "weChat端用户授权自动投资债转接口")
+@Api(tags = "weChat端-用户授权自动投资债转接口")
 @RestController
-@RequestMapping("/hyjf-wechat/user/autoplus")
+@RequestMapping("/hyjf-wechat/wx/user/autoplus")
 public class WeChatAutoPlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WeChatAutoPlusController.class);
@@ -55,32 +49,6 @@ public class WeChatAutoPlusController extends BaseUserController {
     @Autowired
     AutoPlusService autoPlusService;
 
-    @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
-    @ApiImplicitParam(name = "param",value = "{userAutoType: string} type=0授权自动投标；type=1授权自动债转", dataType = "Map")
-    @PostMapping(value = "/autoPlusSendCode", produces = "application/json; charset=utf-8")
-    public WebResult<Object> autoPlusSendCode(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String,String> param) {
-        logger.info("weChat端授权发送短信验证码, param :{}", param);
-        WebResult<Object> result = new WebResult<Object>();
-        CheckUtil.check(userId!=null,MsgEnum.ERR_USER_NOT_LOGIN);
-        UserVO user = autoPlusService.getUsersById(userId);
-        String userAutoType = param.get("userAutoType");
-        String srvTxCode = autoPlusService.checkSmsParam(user,userAutoType);
-        // 请求银行接口
-        BankCallBean bankBean = null;
-        try {
-            bankBean = autoPlusService.callSendCode(userId,user.getMobile(),srvTxCode, ClientConstants.CHANNEL_WEI,null);
-        } catch (Exception e) {
-            logger.error("请求验证码接口发生异常", e);
-            throw new CheckException(MsgEnum.ERR_BANK_CALL);
-        }
-        if(bankBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankBean.getRetCode()))) {
-            logger.error("请求验证码接口发生异常");
-            throw new CheckException(MsgEnum.ERR_BANK_CALL);
-        }else {
-            result.setData(bankBean.getSrvAuthCode());
-        }
-        return result;
-    }
 
     /**
      *
@@ -93,8 +61,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param mobile
      * @return
      */
-    @SignValidate
-    @RequestMapping(value = "/sendcode")
+    @ApiOperation(value = "授权发送短信验证码", notes = "weChat端-授权发送短信验证码")
+    @RequestMapping(value = "/sendcode.do")
     @ResponseBody
     public BaseResultBean sendSmsCode(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, @RequestParam String userAutoType, String mobile) {
         logger.info("发送授权短信验证码 接口,手机号为：【" + mobile + "】,授权类型为【" + userAutoType + "】,userid为：【" + userId + "】");
@@ -126,32 +94,6 @@ public class WeChatAutoPlusController extends BaseUserController {
     }
 
     /**
-     * @Author: zhangqingqing
-     * @Desc :用户自动债转授权
-     * @Param: * @param token
-     * @param
-     * @Date: 16:36 2018/5/30
-     * @Return: ModelAndView
-     */
-    @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
-    @PostMapping(value ="/userAuthCredit", produces = "application/json; charset=utf-8")
-    public WebResult<Object> userAuthCredit(@RequestHeader(value = "token") String token,  @RequestBody AuthorizedVO authorizedVO){
-        WebResult<Object> result = new WebResult<Object>();
-        String lastSrvAuthCode = authorizedVO.getLastSrvAuthCode();
-        String smsCode = authorizedVO.getSmsCode();
-        // 验证请求参数
-        if (token == null) {
-            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
-        UserVO user = this.autoPlusService.getUsers(token);
-        //检查用户信息
-        autoPlusService.checkUserMessage(user,lastSrvAuthCode,smsCode);
-        Map<String,Object> map = autoPlusService.userCreditAuthInves(user, ClientConstants.WECHAT_CLIENT, BankCallConstant.QUERY_TYPE_2,ClientConstants.CHANNEL_WEI,lastSrvAuthCode,smsCode);
-        result.setData(map);
-        return result;
-    }
-
-    /**
      * 用户自动债转授权
      * @param userId
      * @param sign
@@ -159,8 +101,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param response
      * @return
      */
-    @SignValidate
-    @RequestMapping(value = "userAuthCredit")
+    @ApiOperation(value = "用户自动债转授权", notes = "weChat端-用户自动债转授权")
+    @RequestMapping(value = "userAuthCredit.page")
     public ModelAndView userAuthCredit(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response){
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -205,7 +147,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/userAuthCreditReturn")
     public ModelAndView userAuthCreditReturn(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,@ModelAttribute BankCallBean bean, HttpServletRequest request) {
         bean.convert();
@@ -246,8 +187,8 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param response
      * @return
      */
-    @SignValidate
-    @RequestMapping(value = "/userAuthInves")
+    @ApiOperation(value = "自动投资授权接口")
+    @RequestMapping(value = "/userAuthInves.page")
     public ModelAndView userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
@@ -296,7 +237,6 @@ public class WeChatAutoPlusController extends BaseUserController {
      * @param request
      * @return
      */
-    @SignValidate
     @RequestMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(@ModelAttribute BankCallBean bean,@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         bean.convert();

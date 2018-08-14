@@ -15,9 +15,12 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.account.RdfAccountService;
 
+/**
+ * 融东风用户账户接口实现类
+ */
 @Service
 public class RdfAccountServiceImpl extends BaseUserServiceImpl implements RdfAccountService{
 
@@ -25,7 +28,12 @@ public class RdfAccountServiceImpl extends BaseUserServiceImpl implements RdfAcc
 	private AmUserClient amUserClient;
 	@Autowired
 	private AmTradeClient amTradeClient;
-	
+
+	/**
+	 * 通过手机号获取账户余额
+	 * @param mobile
+	 * @return
+	 */
 	@Override
 	public String getBalance(String mobile) {
 		
@@ -43,7 +51,12 @@ public class RdfAccountServiceImpl extends BaseUserServiceImpl implements RdfAcc
 		}
 	}
 
-	
+
+	/**
+	 * 通过手机号获取银行卡信息
+	 * @param mobile
+	 * @return
+	 */
 	@Override
 	public BankCardVO getBankCard(String mobile) {
 		UserVO user=amUserClient.findUserByMobile(mobile);
@@ -60,6 +73,11 @@ public class RdfAccountServiceImpl extends BaseUserServiceImpl implements RdfAcc
 
 	}
 
+	/**
+	 * 同步余额
+	 * @param ids
+	 * @return
+	 */
 	@Override
 	public List<Map<String, String>> balanceSync(List<Integer> ids) {
 		List<AccountVO> accounts=amTradeClient.getAccountByUserIds(ids);

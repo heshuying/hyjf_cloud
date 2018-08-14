@@ -1,6 +1,11 @@
 package com.hyjf.admin.beans.request;
 
-public class HjhRepayRequestBean {
+import com.hyjf.am.vo.BasePage;
+
+/**
+ * @Author : huanghui
+ */
+public class HjhRepayRequestBean extends BasePage {
     /**
      * 检索条件 加入订单号
      */
@@ -45,6 +50,9 @@ public class HjhRepayRequestBean {
      * 检索条件 计划实际还款时间结束
      */
     private String actulRepayTimeEnd;
+
+    private Integer limitStart;
+    private Integer limitEnd;
 
     public String getAccedeOrderIdSrch() {
         return accedeOrderIdSrch;
@@ -132,5 +140,21 @@ public class HjhRepayRequestBean {
 
     public void setActulRepayTimeEnd(String actulRepayTimeEnd) {
         this.actulRepayTimeEnd = actulRepayTimeEnd;
+    }
+
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public Integer getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(Integer limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

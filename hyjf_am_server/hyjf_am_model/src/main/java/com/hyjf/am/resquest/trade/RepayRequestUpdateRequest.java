@@ -10,6 +10,11 @@ public class RepayRequestUpdateRequest {
 
     private String bankCallBeanData;
 
+    /**
+     * 对分期标的，是否一次全部还款
+     */
+    boolean isAllRepay;
+
     public String getRepayBeanData() {
         return repayBeanData;
     }
@@ -24,5 +29,13 @@ public class RepayRequestUpdateRequest {
 
     public void setBankCallBeanData(String bankCallBeanData) {
         this.bankCallBeanData = bankCallBeanData;
+    }
+
+    public boolean isAllRepay() {
+        return isAllRepay;
+    }
+
+    public void setAllRepay(boolean allRepay) {
+        isAllRepay = allRepay;
     }
 }

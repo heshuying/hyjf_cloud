@@ -1,5 +1,6 @@
 package com.hyjf.batch.job.exception.credittenderexception;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -12,6 +13,7 @@ import com.hyjf.batch.job.BaseJob;
  * @author jun
  * @since 20180619	
  */
+@DisallowConcurrentExecution
 public class BankCreditTenderExceptionJob extends BaseJob implements Job{
 	
     @Override

@@ -8,6 +8,9 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationResultBean;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @version EvaluationController, v0.1 2018/7/3 17:26
  */
 
-@Api(value = "api端风险测评接口",description = "api端-风险测评接口")
+@Api(value = "api端风险测评接口",tags = "api端-风险测评接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-api/user")
-public class ApiEvaluationController {
+public class ApiEvaluationController extends BaseUserController {
 
     @Autowired
     EvaluationService evaluationService;

@@ -55,7 +55,7 @@ public class AccountClientImpl implements AccountClient {
     @Override
     public int countAccountWebList(String nid, String trade) {
         AccountWebListResponse result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/account/countaccountweblist/"+ nid + "/" + trade,
+                "http://CS-MESSAGE/cs-message/accountweblist/countaccountweblist/"+ nid + "/" + trade,
                 AccountWebListResponse.class).getBody();
         if (result == null) {
             return result.getRecordTotal();
@@ -66,7 +66,7 @@ public class AccountClientImpl implements AccountClient {
     @Override
     public int insertAccountWebList(AccountWebListVO accountWebList) {
         AccountWebListResponse result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/account/insertaccountweblist",accountWebList,
+                "http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist",accountWebList,
                 AccountWebListResponse.class).getBody();
         if (result == null) {
             return result.getRecordTotal();

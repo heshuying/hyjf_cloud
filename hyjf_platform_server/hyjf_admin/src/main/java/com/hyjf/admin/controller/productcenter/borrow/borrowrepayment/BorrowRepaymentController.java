@@ -1,9 +1,7 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepayment;
 
-import com.hyjf.admin.beans.BorrowRecoverBean;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
-import com.hyjf.admin.beans.request.BorrowRecoverRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentPlanRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepaymentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -13,15 +11,12 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRepaymentService;
-import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
-import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -39,18 +34,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pangchengchao
  * @version BorrowRecoverController, v0.1 2018/7/2 10:13
  */
-@Api(value = "产品中心-汇直投-还款信息",description="产品中心-汇直投-还款信息")
+@Api(value = "产品中心-汇直投-还款信息",tags ="产品中心-汇直投-还款信息")
 @RestController
-@RequestMapping("/borrow/borrowrepayment")
+@RequestMapping("/hyjf-admin/borrow/borrowrepayment")
 public class BorrowRepaymentController extends BaseController {
     @Autowired
     private BorrowRepaymentService borrowRepaymentService;
@@ -132,7 +126,7 @@ public class BorrowRepaymentController extends BaseController {
         // 表格sheet名称
         String sheetName = "还款计划导出数据";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowRepaymentPlanCustomizeVO> resultList = this.borrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(copyForm);
         // 列头
@@ -309,7 +303,7 @@ public class BorrowRepaymentController extends BaseController {
         // 表格sheet名称
         String sheetName = "还款信息导出数据";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowRepaymentCustomizeVO> resultList = this.borrowRepaymentService.selectBorrowRepaymentList(copyForm);
         // 列头

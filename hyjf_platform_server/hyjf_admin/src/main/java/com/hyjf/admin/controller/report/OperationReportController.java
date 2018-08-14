@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,7 +42,7 @@ import java.util.List;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/02 11:17
  */
-@Api(value = "运营报告配置")
+@Api(value = "运营报告配置",tags ="运营报告配置")
 @RestController
 @RequestMapping("/hyjf-admin/report/operationreport")
 public class OperationReportController extends BaseController {
@@ -244,7 +245,7 @@ public class OperationReportController extends BaseController {
     public AdminResult<OperationReportResponse> halfPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.halfPreview(request);
         //服务器配置路径跳转预览需要用到
-        response.setPath(systemConfig.getWebHost());
+        response.setPath(systemConfig.getAdminFrontHost());
         return new AdminResult<>(response);
     }
     /**
@@ -260,7 +261,7 @@ public class OperationReportController extends BaseController {
         String sheetName = "运营报告数据";
         OperationReportResponse operationReportResponse = operationReportService.getRecordList(form);
         List<OperationReportVO> recordList =  operationReportResponse.getResultList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]{"标题名称", "累计交易额", "累计赚取收益", "平台注册人数", "本月（本季/本年）成交笔数", "本月（本季/本年）成交金额", "本月（本季/本年）为用户赚取收益", "状态", "发布时间"};
 
         // 声明一个工作薄

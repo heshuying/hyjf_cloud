@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.user;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
-import com.hyjf.admin.beans.request.BankAccountRecordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.beans.vo.BankOpenAccountRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -13,7 +12,6 @@ import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.BankOpenRecordService;
-import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankAccountRecordResponse;
 import com.hyjf.am.resquest.user.AccountRecordRequest;
@@ -43,7 +41,7 @@ import java.util.List;
  * @version RegistRecordController, v0.1 2018/6/23 15:16
  */
 
-@Api(value = "会员中心-开户记录",description = "会员中心-开户记录")
+@Api(value = "会员中心-开户记录",tags = "会员中心-开户记录")
 @RestController
 @RequestMapping("/hyjf-admin/bankOpenRecord")
 public class BankOpenRecordController extends BaseController {
@@ -116,7 +114,7 @@ public class BankOpenRecordController extends BaseController {
         // 表格sheet名称
         String sheetName = "开户记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
         accountRecordRequest.setLimitFlg(true);
@@ -198,15 +196,14 @@ public class BankOpenRecordController extends BaseController {
      */
     @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
     @PostMapping(value = "/exportbankaccount")
-    public void exportBankExcel( HttpServletResponse response, @RequestBody BankAccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
-
+    public void exportBankExcel( HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
-        BeanUtils.copyProperties(bankAccountRecordRequestBeans,bankAccountRecordRequestBeans);
+        BeanUtils.copyProperties(bankAccountRecordRequestBeans,registerRcordeRequest);
         registerRcordeRequest.setLimitFlg(true);
         // 表格sheet名称
         String sheetName = "江西银行开户记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 需要输出的结果列表
         List<BankOpenAccountRecordVO> bankOpenRecordServiceAccountRecordList=new ArrayList<BankOpenAccountRecordVO>();
         BankAccountRecordResponse bankAccountRecordResponse=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);

@@ -3,8 +3,6 @@ package com.hyjf.am.trade.dao.mapper.auto;
 import com.hyjf.am.trade.dao.model.auto.CouponRecover;
 import com.hyjf.am.trade.dao.model.auto.CouponRecoverExample;
 import java.util.List;
-
-import com.hyjf.am.vo.trade.account.AccountVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface CouponRecoverMapper {

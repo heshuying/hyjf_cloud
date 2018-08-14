@@ -1,17 +1,16 @@
 package com.hyjf.am.trade.utils;
 
-import java.lang.reflect.Field;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.http.HttpDeal;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.http.HttpDeal;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -101,8 +100,9 @@ public class WrbParseParamUtil {
                 Object value = entry.getValue();
                 String setMethodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
                 Field field = getClassField(clazz, propertyName);
-                if (field == null)
+                if (field == null) {
                     continue;
+                }
                 Class<?> fieldTypeClass = field.getType();
                 if (value != null && StringUtils.isNotBlank(value.toString())) {
                     value = convertValType(value, fieldTypeClass);

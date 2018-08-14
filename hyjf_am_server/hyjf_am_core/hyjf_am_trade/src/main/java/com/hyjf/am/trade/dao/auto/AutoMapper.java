@@ -2,7 +2,7 @@ package com.hyjf.am.trade.dao.auto;
 
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.admin.BorrowFullCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BorrowFullCustomizeMapper;
 
 import org.springframework.stereotype.Service;
 
@@ -468,9 +468,10 @@ public class AutoMapper {
     protected StzhWhiteListMapper sTZHWhiteListMapper;
 
     @Resource
-    protected AccountWebListMapper accountWebListMapper;
-    @Resource
     protected BorrowFullCustomizeMapper borrowFullCustomizeMapper;
+    
+    @Resource
+    protected CommissionLogMapper commissionLogMapper;
     
 }
 

@@ -66,7 +66,7 @@ public class CouponUserClientImpl implements CouponUserClient {
 
     @Override
     public String selectChannelNameByUserId(Integer userId) {
-        String chanelName = restTemplate.getForEntity("http:AM-USER/am-user/channel/selectChannelNameById/"+userId,String.class).getBody();
+        String chanelName = restTemplate.getForEntity("http://AM-USER/am-user/channel/selectChannelNameById/"+userId,String.class).getBody();
         return chanelName;
     }
 

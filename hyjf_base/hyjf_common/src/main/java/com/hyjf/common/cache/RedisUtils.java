@@ -14,6 +14,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -943,4 +944,51 @@ public class RedisUtils {
         return moveCount;
     }
     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+
+    /**
+     * 并发情况下, 对key值进行加减
+     *
+     * @param key
+     * @param value
+     */
+    public static void add(String key, String value) {
+
+        Jedis jedis = pool.getResource();
+
+        try {
+            while ("OK".equals(jedis.watch(key))) {
+                List<Object> results = null;
+
+                String balance = jedis.get(key);
+                BigDecimal bal = new BigDecimal(0);
+                if (balance != null) {
+                    bal = new BigDecimal(balance);
+                }
+                BigDecimal val = new BigDecimal(value);
+
+                Transaction tx = jedis.multi();
+                String valbeset = bal.add(val).toString();
+                tx.set(key, valbeset);
+                results = tx.exec();
+                if (results == null || results.isEmpty()) {
+                    jedis.unwatch();
+                } else {
+                    String ret = (String) results.get(0);
+                    if (ret != null && "OK".equals(ret)) {
+                        // 成功后
+                        break;
+                    } else {
+                        jedis.unwatch();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+    }
 }

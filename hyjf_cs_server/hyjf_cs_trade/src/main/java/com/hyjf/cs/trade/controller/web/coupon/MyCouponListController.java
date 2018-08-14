@@ -24,7 +24,7 @@ import java.util.Map;
  * @author hesy
  * @version MyCouponListController, v0.1 2018/6/23 14:09
  */
-@Api(value = "web端-我的优惠券列表", description = "web端-我的优惠券列表")
+@Api(value = "web端-我的优惠券列表", tags = "web端-我的优惠券列表")
 @RestController
 @RequestMapping("/hyjf-web/coupon")
 public class MyCouponListController {
@@ -40,9 +40,9 @@ public class MyCouponListController {
      */
     @ApiOperation(value = "获取我的优惠券列表", notes = "我的优惠券列表")
     @PostMapping(value = "/myCouponList", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> selectMyCouponList(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request){
+    public WebResult<Map<String,Object>> selectMyCouponList(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
         WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
-        WebViewUserVO userVO = myCouponListService.getUsersByToken(token);
+        WebViewUserVO userVO = myCouponListService.getUserFromCache(userId);
         logger.info("获取我的优惠券列表数据开始，userId:{}", userVO.getUserId());
 
         try {

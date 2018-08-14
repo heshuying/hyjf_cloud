@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +36,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: SubCommissionController, v0.1 2018/7/10 9:28
  */
-@Api(value = "资金中心-平台账户分佣",description = "资金中心-平台账户分佣")
+@Api(value = "资金中心-平台账户分佣",tags = "资金中心-平台账户分佣")
 @RestController
 @RequestMapping(value = "/hyjf-admin/subcommission")
 public class SubCommissionController extends BaseController {
@@ -68,13 +70,13 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣导出",notes = "平台账户分佣导出")
     @PostMapping(value = "/subcommissionlistexport")
-    public void exportSubCommissionList(HttpServletResponse response, @RequestBody SubCommissionRequest request){
+    public void exportSubCommissionList(HttpServletResponse response, @RequestBody SubCommissionRequest request) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         request.setCurrPage(-1);
         // 表格sheet名称
         String sheetName = "账户分佣明细";
         List<SubCommissionVO> subCommissionVOList = subCommissionService.searchSubCommissionList(request);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "转账订单号", "转出电子账户号", "转账金额", "转入用户名","转入姓名", "转入电子账户号", "转账状态", "转账时间", "操作人", "备注" ,"发送日期" ,"发送时间" ,"系统跟踪号" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

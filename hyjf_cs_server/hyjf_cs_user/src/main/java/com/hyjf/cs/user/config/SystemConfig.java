@@ -9,6 +9,9 @@ public class SystemConfig {
     @Value("${aop.interface.accesskey}")
     public String aopAccesskey;
 
+    @Value("${release.coupon.accesskey}")
+    public String couponAccesskey;
+
     @Value("${hyjf.api.web.url}")
     public String apiWebUrl;
 
@@ -44,6 +47,9 @@ public class SystemConfig {
 
     @Value("${file.upload.head.path}")
     public String uploadHeadPath;
+
+    @Value("${hyjf.app.server.host}")
+    public String appServerHost;
 
     /**
      * pc前端地址
@@ -97,9 +103,57 @@ public class SystemConfig {
     @Value("${wcsr.resetpassword}")
     // 需要在配置文件中 添加 wcsr.resetpassword=http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBackResetPwd
     private String resetpassword;
-
+    @Value("${wcsr.deletecard.callback}")
+    // 需要在配置文件中 添加 wcsr.deletecard.callback=http://app.rongdongfeng.zhugedai.com/wcsr-app/deletecard/callBack
+    private String surongDeletecard;
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
+
+    @Value("${hyjf.chinapnr.mercustid}")
+    private String chinapnrMercustid;
+    @Value("${publickey.hjs}")
+    private String publickeyhjs;
+    @Value("${privatekey.hjs}")
+    private String privatekeyhjs;
+
+    public String getAppServerHost() {
+        return appServerHost;
+    }
+
+    public void setAppServerHost(String appServerHost) {
+        this.appServerHost = appServerHost;
+    }
+
+    public String getCouponAccesskey() {
+        return couponAccesskey;
+    }
+
+    public void setCouponAccesskey(String couponAccesskey) {
+        this.couponAccesskey = couponAccesskey;
+    }
+
+    public String getPublickeyhjs() {
+		return publickeyhjs;
+	}
+
+	public void setPublickeyhjs(String publickeyhjs) {
+		this.publickeyhjs = publickeyhjs;
+	}
+
+	public String getPrivatekeyhjs() {
+		return privatekeyhjs;
+	}
+
+	public void setPrivatekeyhjs(String privatekeyhjs) {
+		this.privatekeyhjs = privatekeyhjs;
+	}
+    public String getChinapnrMercustid() {
+        return chinapnrMercustid;
+    }
+
+    public void setChinapnrMercustid(String chinapnrMercustid) {
+        this.chinapnrMercustid = chinapnrMercustid;
+    }
 
     public String getWechatQrcodeUrl() {
         return wechatQrcodeUrl;
@@ -323,5 +377,13 @@ public class SystemConfig {
 
     public void setHyjfEnvTest(boolean hyjfEnvTest) {
         this.hyjfEnvTest = hyjfEnvTest;
+    }
+
+    public String getSurongDeletecard() {
+        return surongDeletecard;
+    }
+
+    public void setSurongDeletecard(String surongDeletecard) {
+        this.surongDeletecard = surongDeletecard;
     }
 }

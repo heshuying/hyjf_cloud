@@ -3,8 +3,9 @@
  */
 package com.hyjf.cs.user.service.evaluation;
 
+import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.cs.user.controller.api.evaluation.ThirdPartyEvaluationRequestBean;
+import com.hyjf.cs.user.bean.ThirdPartyEvaluationRequestBean;
 import com.hyjf.cs.user.service.BaseUserService;
 
 import java.util.List;
@@ -101,4 +102,24 @@ public interface EvaluationService extends BaseUserService {
     Integer insertUserEvalationBehavior(Integer userId, String s);
 
     void updateUserEvalationBehavior(UserEvalationBehaviorVO userEvalationBehavior);
+
+    /**
+     * 获取App改版新测评问题
+     * @return
+     */
+    List<NewAppQuestionCustomizeVO> getNewAppQuestionList();
+
+    /**
+     * 更新用户信息
+     * @param userId
+     */
+    void updateUser(int userId);
+
+    /**
+     * 插入测评结果
+     * @param userId
+     * @param countScore
+     * @return
+     */
+    UserEvalationResultVO skipEvaluate(Integer userId, int countScore);
 }

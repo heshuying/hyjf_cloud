@@ -2,7 +2,7 @@ package com.hyjf.am.trade.service.admin.exception;
 
 import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
 import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
-import com.hyjf.am.trade.dao.model.customize.trade.ManualReverseCustomize;
+import com.hyjf.am.trade.dao.model.customize.ManualReverseCustomize;
 
 import java.util.List;
 

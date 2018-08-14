@@ -8,6 +8,7 @@ import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -31,7 +32,7 @@ import java.util.Map;
  * @author wangjun
  * @version borrowFirstController, v0.1 2018/7/3 9:48
  */
-@Api(value = "汇直投-借款初审接口", description = "汇直投-借款初审接口")
+@Api(value = "汇直投-借款初审接口", tags = "汇直投-借款初审接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_first")
 public class BorrowFirstController extends BaseController {
@@ -46,7 +47,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "借款初审初始化", notes = "标的备案初始化")
     @PostMapping("/init")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowFirstResponseBean> init(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
@@ -63,7 +63,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "获取借款初审列表", notes = "获取借款初审列表")
     @PostMapping("/search")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowFirstResponseBean> search(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
@@ -74,7 +73,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "已交保证金详细画面", notes = "已交保证金详细画面")
     @GetMapping("/get_bail_info/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult<BorrowBailInfoResponseBean> getBailInfo(@PathVariable String borrowNid) {
         return borrowFirstService.getBailInfo(borrowNid);
@@ -82,16 +80,17 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "交保证金", notes = "交保证金")
     @GetMapping("/insert_borrow_bail/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult insertBorrowBail(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
         return borrowFirstService.insertBorrowBail(borrowNid, currUser.getId());
     }
 
     @ApiOperation(value = "获取发标信息", notes = "获取发标信息")
     @GetMapping("/get_borrow_fire_info/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
     public AdminResult<BorrowFireInfoResponseBean> getBorrowFireInfo(@PathVariable String borrowNid) {
         return borrowFirstService.getFireInfo(borrowNid);
@@ -99,7 +98,6 @@ public class BorrowFirstController extends BaseController {
 
     @ApiOperation(value = "发标", notes = "发标")
     @PostMapping("/update_borrow_fire_info")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_FIRE)
     public AdminResult updateBorrowFireInfo(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         return borrowFirstService.updateBorrowFireInfo(borrowFirstRequestBean.getBorrowNidSrch(), borrowFirstRequestBean.getVerifyStatusSrch(), borrowFirstRequestBean.getOntime());

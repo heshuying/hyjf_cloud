@@ -31,7 +31,7 @@ import java.util.List;
  *  @version FeeConfigController, v0.1 2018/7/18.
  *  银行配置 手续费配置
  */
-@Api(value = "配置中心银行配置 手续费配置")
+@Api(value = "配置中心银行配置-手续费配置", tags = "配置中心银行配置-手续费配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/feeconfig")
 public class FeeConfigController extends BaseController {
@@ -41,8 +41,8 @@ public class FeeConfigController extends BaseController {
     @Autowired
     private FeeConfigService feeConfigService;
 
-    @ApiOperation(value = "配置中心银行配置-手续费配置", notes = "查询配置中心手续费配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心手续费配置", notes = "查询配置中心手续费配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initFeeConfigList(@RequestBody FeeConfigRequestBean feeConfigRequestBean) {
         AdminFeeConfigRequest request = new AdminFeeConfigRequest();
@@ -58,7 +58,7 @@ public class FeeConfigController extends BaseController {
         }
         return new AdminResult<ListResult<FeeConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
-    @ApiOperation(value = "配置中心银行配置-手续费配置", notes = "手续费配置详情页面")
+    @ApiOperation(value = "手续费配置详情页面", notes = "手续费配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult  feeConfigInfo(@RequestBody FeeConfigRequestBean feeConfigRequestBean) {
@@ -81,7 +81,7 @@ public class FeeConfigController extends BaseController {
         }
         return new AdminResult<FeeConfigVO>(response.getResult()) ;
     }
-    @ApiOperation(value = "配置中心银行配置-手续费配置", notes = "手续费配置添加")
+    @ApiOperation(value = "手续费配置添加", notes = "手续费配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult  insertFeeConfig(@RequestBody FeeConfigRequestBean feeConfigRequestBean){
@@ -113,7 +113,7 @@ public class FeeConfigController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心-手续费配置", notes = "手续费配置修改")
+    @ApiOperation(value = "手续费配置修改", notes = "手续费配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateFeeConfig(@RequestBody FeeConfigRequestBean feeConfigRequestBean) {
@@ -145,7 +145,7 @@ public class FeeConfigController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心-手续费配置", notes = "手续费配置删除")
+    @ApiOperation(value = "手续费配置删除", notes = "手续费配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteFeeConfig(@RequestBody FeeConfigRequestBean feeConfigRequestBean) {

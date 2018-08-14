@@ -3,67 +3,254 @@
  */
 package com.hyjf.cs.trade.controller.app.newagreement;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.apache.commons.lang.StringUtils;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
+import com.hyjf.am.vo.app.AppNewAgreementVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.utils.ProtocolEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.util.calculate.CalculatesUtil;
-import com.hyjf.cs.trade.bean.BaseResultBeanFrontEnd;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.bean.newagreement.NewCreditAssignedBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BankWithdrawService;
+import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author libin
  * @version NewAgreementController.java, v0.1 2018年7月25日 下午2:05:17
  */
-@Api(description = "APP端协议接口")
+@Api(description = "APP端协议接口", tags = "APP端协议接口")
 @RestController
 @RequestMapping(value = "/hyjf-app/new/agreement")
 public class NewAgreementController extends BaseTradeController{
 	
 	private static final Logger logger = LoggerFactory.getLogger(NewAgreementController.class);
 	
+    /**债权转让协议前端地址*/
+    public static final String TRANS_FER_AGREEMENT_PATH = "/agreement/TransferAgreement";
+    
+    /**居间服务借款协议前端地址*/
+    public static final String SERVICE_LOAN_AGREEMENT_PATH = "/agreement/ServiceLoanAgreement";
+    
 	@Autowired
 	private NewAgreementService agreementService;
 	
-    @Autowired
-    BankWithdrawService bankWithdrawService;
+/*    @Autowired
+    BankWithdrawService bankWithdrawService;*/
 	
 	@Autowired
     SystemConfig systemConfig;
 	
+    /**
+     * 
+     * （一）居间服务借款协议
+     * @author libin
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "居间服务借款协议")
+    @ResponseBody
+    @PostMapping("/interServiceLoanAgreement")
+    public NewAgreementResultBean interServiceLoanAgreement(HttpServletRequest request) {
+    	logger.info("*******************************居间服务借款协议************************************");
+        NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
+        newAgreementResultBean.setAgreementImages("");
+        JSONObject jsonObject = new JSONObject();
+        String sign = request.getParameter("sign");
+        String tenderNid = request.getParameter("tenderNid");
+        String borrowNid = request.getParameter("borrowNid");
+        String userIdStr = request.getParameter("userId");
+        logger.info("get sign is: {}",sign);
+        logger.info("get tenderNid is: {}",tenderNid);
+        logger.info("get borrowNid is: {}",borrowNid);
+        Integer userId = null;
+        try {
+            if(userIdStr!= null && StringUtils.isNumeric(userIdStr)){
+                if (StringUtils.isEmpty(tenderNid)
+                        || StringUtils.isEmpty(borrowNid)) {
+                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                    newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                    newAgreementResultBean.setInfo(jsonObject);
+                    return newAgreementResultBean;
+                }
+                userId=Integer.parseInt(userIdStr);
+            }else{
+                if (StringUtils.isEmpty(sign)
+                        || StringUtils.isEmpty(tenderNid)
+                        || StringUtils.isEmpty(borrowNid)) {
+                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                    newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                    newAgreementResultBean.setInfo(jsonObject);
+                    return newAgreementResultBean;
+                }
+                userId = SecretUtil.getUserId(sign);
+            }
+            /*userId = WebUtils.getUserId(request); */// 用户ID
+            if (userId != null && userId.intValue() != 0) {
+                jsonObject = this.interServiceLoanAgreement(userId,tenderNid,borrowNid);
+                //获取法大大合同url
+                /*原代码List<TenderAgreement> tenderAgreements= fddGenerateContractService.selectByExample(tenderNid);*/
+                List<TenderAgreementVO> tenderAgreements= agreementService.getTenderAgreementByTenderNid(tenderNid);
+                String agreementImages = "";
+                if(null != tenderAgreements && tenderAgreements.size() > 0){
+                    String imgUrl = tenderAgreements.get(0).getImgUrl();
+                    if(StringUtils.isNotBlank(imgUrl) ){
+                        /*String basePathImage = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_IMG);*/
+                        //ftp文件路劲
+                        String basePathImage = systemConfig.getBasePathImage();
+                        /*String basePathurl = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_URL);*/
+                        //ftp映射路劲
+                        String basePathurl = systemConfig.getBasePathurl();
+                        String url = basePathurl+basePathImage;
+                        imgUrl = imgUrl.replaceAll("PDF/", url+"PDF/");
+                    }else{
+                        imgUrl="";
+                    }
+                    agreementImages = imgUrl;
+                }
+                newAgreementResultBean.setAgreementImages(agreementImages);
+                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                newAgreementResultBean.setInfo(jsonObject);
+            } else {
+            	logger.info(this.getClass().getName(), "userCreditContractAssign", "用户未登录");
+                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                newAgreementResultBean.setStatusDesc("用户未登录");
+                newAgreementResultBean.setInfo(jsonObject);
+            }
+        } catch (Exception e) {
+        	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
+            newAgreementResultBean.setStatusDesc("系统异常");
+            newAgreementResultBean.setInfo(jsonObject);
+        }
+        logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
+        return newAgreementResultBean;
+    }
+	
+    /**
+     * 
+     *（二）汇计划投资服务协议
+     * @author libin
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "APP端协议接口", notes = "汇计划投资服务协议")
+    @ResponseBody
+    @PostMapping("/hjhInfo")
+    public NewAgreementResultBean hjhInfo(HttpServletRequest request) {
+        NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
+        newAgreementResultBean.setAgreementImages("");
+		String accedeOrderId = request.getParameter("accedeOrderId");
+		String sign = request.getParameter("sign");
+		logger.info("get sign is: {}",sign);
+		logger.info("get accedeOrderId is: {}",accedeOrderId);
+		JSONObject jsonObject = new JSONObject();
+		try {
+		    if (StringUtils.isEmpty(sign)
+	                || StringUtils.isEmpty(accedeOrderId)) {
+	            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+	            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+	            newAgreementResultBean.setInfo(jsonObject);
+	            return newAgreementResultBean;
+	        }
+	        if (StringUtils.isNotEmpty(accedeOrderId)) {
+	        	//获取法大大合同url---原底层 example.createCriteria().andTenderNidEqualTo(tenderNid);
+                //原List<TenderAgreement> tenderAgreements= fddGenerateContractService.selectByExample(accedeOrderId);
+	        	//现底层 example.createCriteria().andTenderNidEqualTo(nid);
+	        	List<TenderAgreementVO> tenderAgreements= agreementService.getTenderAgreementByTenderNid(accedeOrderId);
+                String agreementImages = "";
+                if(null != tenderAgreements && tenderAgreements.size() > 0){
+                    String imgUrl = tenderAgreements.get(0).getImgUrl();
+                    if(StringUtils.isNotBlank(imgUrl) ){
+                        //ftp文件路劲
+                        String basePathImage = systemConfig.getBasePathImage();
+                        //ftp映射路劲
+                        String basePathurl = systemConfig.getBasePathurl();
+                        String url = basePathurl+basePathImage;
+                        imgUrl = imgUrl.replaceAll("PDF/", url+"PDF/");
+                    }else{
+                        imgUrl="";
+                    }
+                    agreementImages = imgUrl;
+                }
+                newAgreementResultBean.setAgreementImages(agreementImages);
+	            Integer userId = SecretUtil.getUserId(sign);
+	            logger.info("get userId is: {}",userId);
+	            // 1基本信息
+	            Map<String, Object> params = new HashMap<String, Object>();
+	            params.put("accedeOrderId", accedeOrderId);
+	            params.put("userId", userId);
+	            /*原UsersInfo userInfo = agreementService.getUsersInfoByUserId(userId);*/
+	            UserInfoVO userInfo = this.agreementService.getUsersInfoByUserId(userId);
+	            /*原Users users=agreementService.getUsers(userId);*/
+	            UserVO users = this.agreementService.getUserByUserId(userId);
+	            /*原UserHjhInvistDetailCustomize userHjhInvistDetailCustomize = agreementService.selectUserHjhInvistDetail(params);*/
+	            // 方法复用
+	            UserHjhInvistDetailCustomizeVO userHjhInvistDetailCustomize = agreementService.selectUserHjhInvistDetail(params);
+	            jsonObject.put("accedeOrderId" , accedeOrderId );
+	            jsonObject.put("addTime" ,userHjhInvistDetailCustomize.getCountInterestTime());
+	            jsonObject.put("truename" , userInfo.getTruename() );
+	            jsonObject.put("idcard" , userInfo.getIdcard() );
+	            jsonObject.put("username" , users.getUsername() );
+	            jsonObject.put("accedeAccount" , userHjhInvistDetailCustomize.getAccedeAccount() );
+	            jsonObject.put("planPeriod" , userHjhInvistDetailCustomize.getPlanPeriod() );
+	            jsonObject.put("planApr" , userHjhInvistDetailCustomize.getPlanApr() );
+	            jsonObject.put("countInterestTime" , userHjhInvistDetailCustomize.getCountInterestTime() );
+	            jsonObject.put("quitTime" , userHjhInvistDetailCustomize.getQuitTime() );
+	            jsonObject.put("incomeManageMode" , "收益复投" );
+	            jsonObject.put("shouldPayTotal" , userHjhInvistDetailCustomize.getShouldPayTotal() );
+	            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+	            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+	            newAgreementResultBean.setInfo(jsonObject);
+	        } else {
+	            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+	            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+	            newAgreementResultBean.setInfo(jsonObject);
+	        }
+        } catch (Exception e) {
+        	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
+            newAgreementResultBean.setStatusDesc("系统异常");
+            newAgreementResultBean.setInfo(jsonObject);
+        }
+		logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
+		return newAgreementResultBean;
+    }
+
 	/**
      * 
      * （三）债权转让协议
@@ -71,7 +258,6 @@ public class NewAgreementController extends BaseTradeController{
      * @author libin
      * @param request
      * @param response
-     * @param appTenderCreditAssignedBean
      * @return
      */
     @ApiOperation(value = "APP端协议接口", notes = "债权转让协议")
@@ -124,7 +310,7 @@ public class NewAgreementController extends BaseTradeController{
                     // 转让人信息详情
                     UserInfoVO creditUserInfo = this.agreementService.getUsersInfoByUserId(hjhDebtCreditTender.getCreditUserId());
                     // 转让人
-                    UserVO creditUser = this.bankWithdrawService.getUserByUserId(hjhDebtCreditTender.getCreditUserId());
+                    UserVO creditUser = this.agreementService.getUserByUserId(hjhDebtCreditTender.getCreditUserId());
                     // 承接人信息详情
                     UserInfoVO usersInfo = this.agreementService.getUsersInfoByUserId(hjhDebtCreditTender.getUserId());
                     // 承接人
@@ -137,21 +323,35 @@ public class NewAgreementController extends BaseTradeController{
                     /*HjhDebtCredit hjhDebtCredit = this.agreementService.getHjhDebtCreditByCreditNid(hjhDebtCreditTender.getCreditNid());*/
                     HjhDebtCreditVO hjhDebtCredit = this.agreementService.getHjhDebtCreditByCreditNid(hjhDebtCreditTender.getCreditNid());
                     /*jsonObject.put("addTime", GetDate.times10toStrYYYYMMDD(hjhDebtCreditTender.getCreateTime()));*/
+                    // ht_debt_credit_tender 创建时间
                     jsonObject.put("addTime", hjhDebtCreditTender.getCreateTime());
+                    // ht_debt_credit 剩余天数
                     jsonObject.put("remainderPeriod", hjhDebtCredit.getRemainDays()+"天");
                     /*jsonObject.put("assignTime", GetDate.times10toStrYYYYMMDD(hjhDebtCredit.getCreateTime()));*/
+                    // ht_debt_credit 创建时间
                     jsonObject.put("assignTime", hjhDebtCredit.getCreateTime());
+                    // 承接本金
                     jsonObject.put("assignCapital", df.format(hjhDebtCreditTender.getAssignCapital()));
+                    // 支付金额
                     jsonObject.put("assignPay", df.format(hjhDebtCreditTender.getAssignPrice()));
+                    // 承接订单号
                     jsonObject.put("orderId", hjhDebtCreditTender.getAssignOrderId());
+                    // 原标标号
                     jsonObject.put("borrowNid", hjhDebtCreditTender.getBorrowNid());
+                    // 借贷总金额
                     jsonObject.put("borrowAccount", df.format(borrow.getAccount()));
+                    // 借款利率
                     jsonObject.put("borrowApr", borrow.getBorrowApr()+"%");
+                    // 还款方式
                     jsonObject.put("borrowStyle", getBorrowStyle(borrow.getBorrowStyle()));
+                    // 借款期限
                     jsonObject.put("borrowPeriod", getBorrowPeriod(borrow.getBorrowStyle(), borrow.getBorrowPeriod()));
                     if(user.getUserId().equals(new Integer(userId))){
+                    	// 真实姓名
                         jsonObject.put("newCreditTruename", usersInfo.getTruename());
+                        // 身份证
                         jsonObject.put("newCreditIdcard", usersInfo.getIdcard());
+                        // 用户名
                         jsonObject.put("newCreditUsername", user.getUsername());
                     }else{
                         String truename=usersInfo.getTruename();
@@ -159,23 +359,29 @@ public class NewAgreementController extends BaseTradeController{
                         for (int i = 0; i < truename.length()-1; i++) {
                             encryptedTruename+="*";
                         }
+                        // 加密用户名
                         jsonObject.put("newCreditTruename", encryptedTruename);
                         String idCard=usersInfo.getIdcard();
                         String encryptedIdCard=idCard.substring(0, 4);
                         for (int i = 0; i < idCard.length()-4; i++) {
                             encryptedIdCard+="*";
                         }
+                        // 加密身份证
                         jsonObject.put("newCreditIdcard", encryptedIdCard);
                         String userName= user.getUsername();
                         String encryptedUserName=userName.substring(0, 1);
                         for (int i = 0; i < 5; i++) {
                             encryptedUserName+="*";
                         }
+                        // 加密用户名
                         jsonObject.put("newCreditUsername", encryptedUserName);  
                     }
                     if(creditUser.getUserId().equals(new Integer(userId))){
+                    	// 用户名
                         jsonObject.put("oldCreditUsername", creditUser.getUsername());
+                        // 真实姓名
                         jsonObject.put("oldCreditTruename", creditUserInfo.getTruename());
+                        // 身份证号
                         jsonObject.put("oldCreditIdcard", creditUserInfo.getIdcard());
                     }else{
                         String userName= creditUser.getUsername();
@@ -183,12 +389,14 @@ public class NewAgreementController extends BaseTradeController{
                         for (int i = 0; i < 5; i++) {
                             encryptedUserName+="*";
                         }
+                        // 加密
                         jsonObject.put("oldCreditUsername", encryptedUserName);
                         String truename=creditUserInfo.getTruename();
                         String encryptedTruename=truename.substring(0, 1);
                         for (int i = 0; i < truename.length()-1; i++) {
                             encryptedTruename+="*";
                         }
+                        // 加密
                         jsonObject.put("oldCreditTruename", encryptedTruename);
                         String idCard=creditUserInfo.getIdcard();
                         String encryptedIdCard=idCard.substring(0, 4);
@@ -210,7 +418,6 @@ public class NewAgreementController extends BaseTradeController{
                     }
                     newAgreementResultBean.setAgreementImages(agreementImages);
                     newAgreementResultBean.setInfo(jsonObject);
-                    
                 }
                 logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
                 return newAgreementResultBean;
@@ -292,8 +499,154 @@ public class NewAgreementController extends BaseTradeController{
         return newAgreementResultBean;
     }
     
+    /**
+     * （四）开户协议
+     * @param request
+     * @param response
+     * @return
+     */
+    @ApiOperation(value = "APP端协议接口", notes = "开户协议")
+    @ResponseBody
+    @PostMapping("/openAgreement")
+    public NewAgreementResultBean openAgreement(HttpServletRequest request, HttpServletResponse response) {
+        NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
+        String sign = request.getParameter("sign"); // 随机字符串
+        logger.info("get sign is: {}",sign);
+        JSONObject jsonObject = new JSONObject();
+        if (StringUtils.isEmpty(sign)) {
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+            newAgreementResultBean.setInfo(jsonObject);
+            return newAgreementResultBean;
+        }
+        try {
+             // 用户id
+            Integer userId = SecretUtil.getUserIdNoException(sign);
+            if (userId == null) {
+                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                newAgreementResultBean.setInfo(jsonObject);
+                return newAgreementResultBean;
+            }
+            /*原Users user = agreementService.getUsers(userId);*/
+            UserVO user = this.agreementService.getUserByUserId(userId);
+            jsonObject.put("username" , user.getUsername());
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+            newAgreementResultBean.setInfo(jsonObject);
+        } catch (Exception e) {
+        	logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
+            newAgreementResultBean.setStatusDesc("系统异常");
+            newAgreementResultBean.setInfo(jsonObject);
+        }
+        logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
+        return newAgreementResultBean;
+    }
     
-    
+    /**
+     * app 我的计划-计划详情-资产列表-协议（转让）列表
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "我的计划-计划详情-资产列表-协议（转让）列表")
+    @ResponseBody
+    @PostMapping("/userCreditContractList")
+    public NewAgreementResultBean userCreditContractList(HttpServletRequest request) {
+        NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
+        String sign = request.getParameter("sign"); // 随机字符串
+        String version = request.getParameter("version");
+        String nid = request.getParameter("nid");
+        String borrowType=request.getParameter("borrowType");
+        logger.info("get sign is: {}",sign);
+        logger.info("get version is: {}",version);
+        logger.info("我的计划-计划详情-资产列表-协议，债转id :{}", nid);
+        Integer userId=null;
+        try {
+            // 用户id
+           userId = SecretUtil.getUserId(sign);
+       } catch (Exception e) {
+    	   logger.info(this.getClass().getName(), "userCreditContractAssign", "系统异常");
+           newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.FAIL);
+           newAgreementResultBean.setStatusDesc("系统异常");
+           return newAgreementResultBean;
+       }
+        if("HJH".equals(borrowType)){
+            List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
+            String investOrderId=null;
+            
+            // 债转承接信息
+            HjhDebtCreditTenderVO hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(nid);
+            while (hjhDebtCreditTender!=null && investOrderId==null) {
+            	NewAgreementBean newAgreementBean=new NewAgreementBean("《债权转让协议》"+hjhDebtCreditTender.getAssignOrderDate(), 
+                		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +*/
+                		systemConfig.getAppFrontHost() +
+                        TRANS_FER_AGREEMENT_PATH + "?nid="+hjhDebtCreditTender.getId()+"&borrowType="+borrowType+"&userId="+userId);
+                
+                list.add(newAgreementBean);
+                if(!hjhDebtCreditTender.getInvestOrderId().equals(hjhDebtCreditTender.getSellOrderId())){
+                    // 债转承接信息
+                    hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(hjhDebtCreditTender.getSellOrderId());
+                }else{
+                    investOrderId=hjhDebtCreditTender.getInvestOrderId();
+                }
+            }
+            
+            /*原 BorrowTender borrowTender=agreementService.getBorrowTenderByNid(investOrderId); 使用 criteria.andNidEqualTo(nid);*/
+            //现 获取用户投资信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
+            List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(investOrderId);
+            BorrowTenderVO borrowTender = null;
+            if(CollectionUtils.isNotEmpty(tenderList)){
+            	borrowTender = tenderList.get(0);
+            } 
+
+            NewAgreementBean newAgreementBean=new NewAgreementBean("《居间服务借款协议》", 
+            		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+            		systemConfig.getAppFrontHost() +
+                    SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
+                    "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
+            list.add(newAgreementBean);
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+            newAgreementResultBean.setList(list); 
+        }else{
+            List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
+            // 原 债转承接信息  criteria.andAssignNidEqualTo(nid);
+            /*CreditTender creditTender = this.agreementService.getCreditTenderByCreditNid(nid);*/
+            CreditTenderVO creditTender = this.agreementService.getCreditTenderByAssignNid(nid);
+            
+            
+            NewAgreementBean newAgreementBean=new NewAgreementBean("《债权转让协议》", 
+            		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+            		systemConfig.getAppFrontHost() +
+                    TRANS_FER_AGREEMENT_PATH+"?bidNid="+creditTender.getBidNid()+
+                    "&creditNid="+creditTender.getCreditNid()+
+                    "&creditTenderNid="+creditTender.getCreditTenderNid()+
+                    "&assignNid="+creditTender.getAssignNid()+
+                    "&sign="+sign+
+                    "&borrowType="+borrowType);
+            list.add(newAgreementBean);
+            /*原BorrowTender borrowTender=agreementService.getBorrowTenderByNid(creditTender.getCreditTenderNid());  criteria.andNidEqualTo(nid)*/
+            //现 获取用户投资信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
+            List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(creditTender.getCreditTenderNid());
+            BorrowTenderVO borrowTender = null;
+            if(CollectionUtils.isNotEmpty(tenderList)){
+            	borrowTender = tenderList.get(0);
+            } 
+            NewAgreementBean newAgreementBean1=new NewAgreementBean("《居间服务借款协议》", 
+            		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+            		systemConfig.getAppFrontHost() +
+                    SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
+                    "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
+            list.add(newAgreementBean1);
+            newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+            newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+            newAgreementResultBean.setList(list);
+        }
+        logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
+        return newAgreementResultBean;
+    }
+
 	/**
 	 * 用户中心债转被投资的协议
 	 * 
@@ -551,6 +904,282 @@ public class NewAgreementController extends BaseTradeController{
         }else{
             return borrowPeriod+"个月";
         }
+    }
+    
+    
+    public JSONObject interServiceLoanAgreement(Integer userId, String tenderNid, String borrowNid) {
+        JSONObject jsonObject=new JSONObject();
+        //原 获取标的信息
+/*        BorrowExample borrowExample=new BorrowExample();
+        borrowExample.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<Borrow> borrows=borrowMapper.selectByExample(borrowExample);
+        if(borrows==null||borrows.size()==0){
+            return jsonObject;  
+        }
+        Borrow borrow=borrows.get(0);*/
+        //现 获取标的信息
+        BorrowVO borrow = this.agreementService.getBorrowByNid(borrowNid);
+        
+        //原 获取用户投资信息
+/*        BorrowTenderExample borrowTenderExample=new BorrowTenderExample();
+        borrowTenderExample.createCriteria().andNidEqualTo(tenderNid);
+        List<BorrowTender> borrowTenders=borrowTenderMapper.selectByExample(borrowTenderExample);
+        if(borrowTenders==null||borrowTenders.size()==0){
+            return jsonObject;  
+        }
+        BorrowTender borrowTender=borrowTenders.get(0);*/
+        
+        //现 获取用户投资信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
+        List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(tenderNid);
+        BorrowTenderVO borrowTender = null;
+        if(CollectionUtils.isNotEmpty(tenderList)){
+        	borrowTender = tenderList.get(0);
+        } 
+        
+        //原 获取借款人信息
+/*        UsersInfo borrowUserInfo=getUsersInfoByUserId(borrow.getUserId());
+        if(borrowUserInfo==null){
+            return jsonObject; 
+        }*/
+        //现 获取借款人信息
+        UserInfoVO borrowUserInfo = this.agreementService.getUsersInfoByUserId(borrow.getUserId());
+        if(borrowUserInfo==null){
+            return jsonObject; 
+        }
+        
+        //原 获取投资人信息
+/*        UsersInfo lendersUserInfo=getUsersInfoByUserId(borrowTender.getUserId());
+        if(lendersUserInfo==null){
+            return jsonObject; 
+        }*/
+        //现 获取投资人信息
+        UserInfoVO lendersUserInfo = this.agreementService.getUsersInfoByUserId(borrowTender.getUserId());
+        if(lendersUserInfo==null){
+            return jsonObject; 
+        }
+        
+        // 原 
+/*        Users lendersUser=getUsers(borrowTender.getUserId());
+        if(lendersUser==null){
+            return jsonObject; 
+        }*/
+        // 现
+        UserVO lendersUser = this.agreementService.getUserByUserId(borrowTender.getUserId());
+        
+        DecimalFormat df = CustomConstants.DF_FOR_VIEW;
+        jsonObject.put("tenderNid", tenderNid);
+        try {
+            jsonObject.put("signingTime", GetDate.formatDate(GetDate.parseDate(borrowTender.getLoanOrderDate(), "yyyyMMdd"), "yyyy-MM-dd"));
+        } catch (Exception e) {
+            jsonObject.put("signingTime", "待确认");
+        }
+        
+        if(userId.equals(borrowTender.getUserId())){
+            jsonObject.put("lendersTrueName", lendersUserInfo.getTruename());
+            jsonObject.put("lendersCredentialNo", lendersUserInfo.getIdcard());
+            jsonObject.put("lendersUserName", lendersUser.getUsername());  
+        }else{
+            String truename=lendersUserInfo.getTruename();
+            String encryptedTrueName=truename.substring(0, 1);
+            for (int i = 0; i < truename.length()-1; i++) {
+                encryptedTrueName+="*";
+            }
+            jsonObject.put("lendersTrueName", encryptedTrueName);
+            String idcode=lendersUserInfo.getIdcard();
+            String encryptedIdcode=idcode.substring(0, 4);
+            for (int i = 0; i < idcode.length()-4; i++) {
+                encryptedIdcode+="*";
+            }
+            jsonObject.put("lendersCredentialNo", encryptedIdcode);
+            String userName=lendersUser.getUsername();
+
+            String encryptedUserName=userName.substring(0, 1);
+            for (int i = 0; i < 5; i++) {
+                encryptedUserName+="*";
+            }
+            jsonObject.put("lendersUserName", encryptedUserName);
+        }
+        jsonObject.put("borrowTrueName", borrowUserInfo.getTruename().substring(0,1)+(borrowUserInfo.getTruename().length()==2?"*":"**"));
+        jsonObject.put("borrowAccount", df.format(borrow.getAccount()));
+        jsonObject.put("borrowPeriod", getBorrowPeriod(borrow.getBorrowStyle(),borrow.getBorrowPeriod()));
+        jsonObject.put("borrowApr", borrow.getBorrowApr().toString()+"%");
+        jsonObject.put("borrowStyle", getBorrowStyle(borrow.getBorrowStyle()));
+        jsonObject.put("tenderAccount", df.format(borrowTender.getAccount()));
+        jsonObject.put("tenderInterest", df.format(borrowTender.getRecoverAccountInterest()));
+        return jsonObject;
+    }
+    
+    /**
+     * 获得 协议模板pdf显示地址
+     * @param aliasName
+     * @return
+     */
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获得 协议模板pdf显示地址")
+    @ResponseBody
+    @PostMapping("/gotAgreementPdfOrImg")
+    public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam String aliasName) {
+        return setProtocolImg(aliasName);
+    }
+    
+    /**
+     * 获得协议模板图片
+     * @param aliasName 别名
+     * @return
+     */
+    public NewAgreementResultBean setProtocolImg(String aliasName){
+        NewAgreementResultBean newAgreementResultBean = new NewAgreementResultBean();
+        if (StringUtils.isEmpty(aliasName)) {
+            newAgreementResultBean.setStatus("99");
+            newAgreementResultBean.setStatusDesc("请求参数非法");
+            return newAgreementResultBean;
+        }
+
+        //是否在枚举中有定义
+        String displayName = ProtocolEnum.getDisplayName(aliasName);
+        if (StringUtils.isEmpty(displayName)) {
+            newAgreementResultBean.setStatus("99");
+            newAgreementResultBean.setStatusDesc("请求参数非法");
+            return newAgreementResultBean;
+        }
+
+        List<String> url = null;
+        String protocolId = null;
+
+        protocolId = RedisUtils.get(RedisConstants.PROTOCOL_TEMPLATE_ALIAS + aliasName);
+        if (StringUtils.isEmpty(protocolId)) {
+
+            boolean flag = this.setRedisProtocolTemplate(displayName);
+            if (!flag) {
+                newAgreementResultBean.setStatus("000");
+                newAgreementResultBean.setStatusDesc("成功");
+                return newAgreementResultBean;
+            }
+        }
+
+        try {
+            url = this.getImgUrlList(protocolId);
+            newAgreementResultBean.setStatus("000");
+            newAgreementResultBean.setStatusDesc("成功");
+            newAgreementResultBean.setRequest(url);
+        } catch (Exception e) {
+            newAgreementResultBean.setStatus("99");
+            newAgreementResultBean.setStatusDesc("数据非法");
+        }
+
+        return newAgreementResultBean;
+    }
+    
+    /**
+     * 往Redis中放入协议模板内容
+     *
+     * @param displayName
+     * @return
+     */
+    public boolean setRedisProtocolTemplate(String displayName) {
+/*        ProtocolTemplateExample examplev = new ProtocolTemplateExample();
+        ProtocolTemplateExample.Criteria criteria = examplev.createCriteria();
+        criteria.andDisplayNameEqualTo(displayName);
+        criteria.andStatusEqualTo(1);
+        List<ProtocolTemplate> list = protocolTemplateMapper.selectByExample(examplev);
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        ProtocolTemplate protocolTemplate = list.get(0);*/
+    	List<ProtocolTemplateVO> list = this.agreementService.getProtocolTemplateVOByDisplayName(displayName);
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        ProtocolTemplateVO protocolTemplate = list.get(0);
+        //将协议模板放入redis中
+        RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL + protocolTemplate.getProtocolId(), protocolTemplate.getProtocolUrl() + "&" + protocolTemplate.getImgUrl());
+        //获取协议模板前端显示名称对应的别名
+        String alias = ProtocolEnum.getAlias(protocolTemplate.getDisplayName());
+        if (StringUtils.isNotBlank(alias)) {
+            RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_ALIAS + alias, protocolTemplate.getProtocolId());//协议 ID放入redis
+        }
+        return true;
+    }
+    
+    /**
+     * 查询协议图片
+     *
+     * @param protocolId 协议模版的ID
+     * @return
+     */
+    public List<String> getImgUrlList(String protocolId) throws Exception {
+
+        // 拿出来的信息 /hyjfdata/data/pdf/template/1528268728879.pdf&/hyjfdata/data/pdf/template/1528268728879-0, 1, 2, 3, 4
+        String templateUrl = RedisUtils.get(RedisConstants.PROTOCOL_TEMPLATE_URL + protocolId);
+
+        if (StringUtils.isEmpty(templateUrl)) {
+            throw new Exception("templateUrl is null");
+        }
+
+        if (!templateUrl.contains("&")) {
+            throw new Exception("templateUrl is null");
+        }
+
+        String[] strUrl = templateUrl.split("&");// &之前的是 pdf路径，&之后的是 图片路径
+
+        //图片地址存储的路径是： /hyjfdata/data/pdf/template/1528087341328-0,1,2
+        String imgUrl = strUrl[1];
+        if (!imgUrl.contains("-")) {
+            throw new Exception("templateUrl is null");
+        }
+
+        return getJpgJson(imgUrl);
+    }
+    
+    /**
+     * 将图片拆分，配上路径
+     *
+     * @param imgUrl
+     * @return
+     */
+    public List<String> getJpgJson(String imgUrl) {
+        List<String> listImg = new ArrayList<>();
+        String[] url = imgUrl.split("-");
+        String imgPath = url[0];// /hyjfdata/data/pdf/template/1528087341328
+        String[] imgSize = url[1].split(",");// 0,1,2
+        for (String str : imgSize) {
+
+            listImg.add(new StringBuilder().append(imgPath).append("/").append(str).append(".jpg").toString());
+        }
+        return listImg;
+    }
+
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "获取协议模板")
+    @ResponseBody
+    @PostMapping("/getAgreementTemplateApi")
+    public AppResult getAgreementTemplateApi(@RequestParam String aliasName) {
+        logger.info("*******************************获取协议模板************************************");
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        response.setResult(template);
+        if(response == null) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, BaseResultBeanFrontEnd.FAIL_MSG);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
+        }
+        return new AppResult(response.getResultList());
+    }
+
+    @ApiOperation(value = "APP端协议接口", httpMethod = "POST", notes = "查看协议模板接口")
+    @ResponseBody
+    @PostMapping("/getdisplayNameDynamic")
+    public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {
+        logger.info("*******************************查看协议模板接口************************************");
+        AppNewAgreementResponse response = new AppNewAgreementResponse();
+        AppNewAgreementVO template = agreementService.setProtocolImg(aliasName);
+        response.setResult(template);
+        if(response == null) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, BaseResultBeanFrontEnd.FAIL_MSG);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AppResult(BaseResultBeanFrontEnd.FAIL, response.getMessage());
+        }
+        return new AppResult(response.getResultList());
     }
     
 }

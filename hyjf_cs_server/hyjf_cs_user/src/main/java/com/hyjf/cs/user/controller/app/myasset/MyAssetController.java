@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
  * @author jun
  * @version MyAssetController, v0.1 2018/7/5 17:04
  */
-@Api(value = "app端账户总览",description = "app端-账户总览")
+@Api(value = "app端账户总览",tags = "app端-账户总览")
 @Controller
 @RequestMapping(value = "/hyjf-app/myasset")
 public class MyAssetController extends BaseUserController {
@@ -42,11 +42,11 @@ public class MyAssetController extends BaseUserController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = MyAssetDefine.MYASSET_ACTION, method = RequestMethod.POST)
+	@RequestMapping(value ="/info", method = RequestMethod.POST)
 	public JSONObject getMyAsset(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("获取我的财富...myasset...info");
 		JSONObject ret = new JSONObject();
-		ret.put("request", MyAssetDefine.RETURN_REQUEST);
+		ret.put("request","/hyjf-app/myasset/info");
 		// 版本号
 		String version = request.getParameter("version");
 		// 网络状态
@@ -115,7 +115,7 @@ public class MyAssetController extends BaseUserController {
 			e.printStackTrace();
 			logger.info("用户账户信息异常");
 		}
-		logger.info(MyAssetDefine.MYASSET_ACTION+":"+ret);
+		logger.info("info:"+ret);
 		return ret;
 	}
 	

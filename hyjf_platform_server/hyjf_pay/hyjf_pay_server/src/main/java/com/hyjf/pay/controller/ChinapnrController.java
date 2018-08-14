@@ -254,7 +254,7 @@ public class ChinapnrController extends BaseController {
         String status;
         String remark = null;
         if (ChinaPnrConstant.CMDID_CORP_REGISTER.equals(bean.getCmdId())) {
-            if (bean.getAuditStat().equals("Y") || bean.getAuditStat().equals("R") || bean.getAuditStat().equals("F")) {
+            if ("Y".equals(bean.getAuditStat()) || "R".equals(bean.getAuditStat()) || "F".equals(bean.getAuditStat())) {
                 try {
                     if (bean.getMerPriv() != null) {
                         bean.getAllParams().put("MerPriv", URLDecoder.decode(bean.getMerPriv(), CustomConstants.UTF8));

@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.ContentJobClient;
 import com.hyjf.admin.client.ContentLandingPageClient;
 import com.hyjf.admin.service.ContentJobService;
@@ -23,26 +24,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContentLandingPageServiceImpl implements ContentLandingPageService {
 	@Autowired
-	private ContentLandingPageClient contentLandingPageClient;
+	private AmConfigClient amConfigClient;
 
 	@Override
 	public LandingPageResponse searchAction(ContentLandingPageRequestBean requestBean) {
-		return contentLandingPageClient.searchAction(requestBean);
+		return amConfigClient.searchAction(requestBean);
 	}
 
 	@Override
 	public LandingPageResponse insertAction(ContentLandingPageRequestBean requestBean) {
-		return contentLandingPageClient.insertAction(requestBean);
+		return amConfigClient.insertAction(requestBean);
 	}
 
 	@Override
 	public LandingPageResponse updateAction(ContentLandingPageRequestBean requestBean) {
-		return contentLandingPageClient.updateAction(requestBean);
+		return amConfigClient.updateAction(requestBean);
 	}
 
 
 	@Override
 	public LandingPageResponse deleteById(Integer id) {
-		return contentLandingPageClient.deleteById(id);
+		return amConfigClient.deleteLandingPageById(id);
 	}
 }

@@ -4,7 +4,7 @@
 package com.hyjf.admin.beans.response;
 
 import com.hyjf.admin.beans.InvestorDebtBean;
-import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
+import com.hyjf.admin.beans.vo.AdminBorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class BorrowInvestResponseBean {
     @ApiModelProperty(value = "投资明细列表")
-    private List<BorrowInvestCustomizeVO> recordList;
+    private List<AdminBorrowInvestCustomizeVO> recordList;
 
     @ApiModelProperty(value = "列表统计")
     private String sumAccount;
@@ -38,17 +38,17 @@ public class BorrowInvestResponseBean {
     @ApiModelProperty(value = "投资人债券明细")
     List<InvestorDebtBean> detailList;
 
-    @ApiModelProperty(value = "PDF脱敏图片")
+    @ApiModelProperty(value = "PDF脱敏图片(PDF脱敏图片预览接口)")
     List<String> imgList;
 
-    @ApiModelProperty(value = "文件服务器")
+    @ApiModelProperty(value = "文件服务器(PDF脱敏图片预览接口)")
     String fileDomainUrl;
 
-    public List<BorrowInvestCustomizeVO> getRecordList() {
+    public List<AdminBorrowInvestCustomizeVO> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowInvestCustomizeVO> recordList) {
+    public void setRecordList(List<AdminBorrowInvestCustomizeVO> recordList) {
         this.recordList = recordList;
     }
 

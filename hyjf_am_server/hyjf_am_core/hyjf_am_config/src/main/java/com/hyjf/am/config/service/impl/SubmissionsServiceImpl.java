@@ -1,9 +1,11 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.ParamNameMapper;
+import com.hyjf.am.config.dao.mapper.auto.SubmissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.SubmissionsCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.ParamName;
 import com.hyjf.am.config.dao.model.auto.ParamNameExample;
+import com.hyjf.am.config.dao.model.auto.Submissions;
 import com.hyjf.am.config.dao.model.customize.SubmissionsWithBLOBs;
 import com.hyjf.am.config.service.SubmissionsService;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
@@ -30,11 +32,14 @@ public class SubmissionsServiceImpl implements SubmissionsService {
     @Autowired
     SubmissionsCustomizeMapper submissionsCustomizeMapper;
 
+    @Autowired
+    SubmissionsMapper submissionsMapper;
     /**
      * 获取数据字典表的下拉列表
      *
      * @return
      */
+    @Override
     public List<ParamName> getParamNameList(String nameClass) {
         ParamNameExample example = new ParamNameExample();
         ParamNameExample.Criteria cra = example.createCriteria();
@@ -146,5 +151,14 @@ public class SubmissionsServiceImpl implements SubmissionsService {
     @Override
     public boolean updateSubmissions(SubmissionsWithBLOBs submissions) {
        return submissionsCustomizeMapper.updateByPrimaryKeySelective(submissions)>0?true:false;
+    }
+
+    /**
+     * 添加意见反馈
+     * @param submissions
+     */
+    @Override
+    public int addSubmission(Submissions submissions) {
+        return submissionsMapper.insertSelective(submissions);
     }
 }

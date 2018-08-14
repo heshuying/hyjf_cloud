@@ -9,7 +9,7 @@ import com.hyjf.am.response.admin.TransferExceptionLogResponse;
 import com.hyjf.am.resquest.admin.AdminTransferExceptionLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.TransferExceptionLog;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminTransferExceptionLogCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.service.admin.exception.AdminTransferExceptionLogService;
 import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.trade.TransferExceptionLogVO;
@@ -27,7 +27,7 @@ import java.util.List;
  * @author jun
  * @version AdminTransferExceptionLogController, v0.1 2018/7/10 11:19
  */
-@Api(value = "异常中心-银行转账异常",description = "异常中心-银行转账异常")
+@Api(value = "异常中心-银行转账异常",tags ="异常中心-银行转账异常")
 @RestController
 @RequestMapping("/am-trade/transferExceptionLog")
 public class AdminTransferExceptionLogController extends BaseController {

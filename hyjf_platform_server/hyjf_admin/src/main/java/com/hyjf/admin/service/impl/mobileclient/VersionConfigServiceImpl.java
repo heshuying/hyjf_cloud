@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.mobileclient;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.VersionConfigClient;
 import com.hyjf.admin.service.mobileclient.VersionConfigService;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
@@ -14,29 +15,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class VersionConfigServiceImpl implements VersionConfigService {
     @Autowired
-    VersionConfigClient versionConfigClient;
+    AmConfigClient amConfigClient;
     @Override
     public VersionConfigBeanResponse getRecordList(VersionConfigBeanRequest request) {
-        return versionConfigClient.searchList(request);
+        return amConfigClient.searchList(request);
     }
 
     @Override
     public VersionConfigBeanResponse getRecord(VersionConfigBeanRequest request) {
-        return versionConfigClient.searchInfo(request);
+        return amConfigClient.searchInfo(request);
     }
 
     @Override
     public VersionConfigBeanResponse insertRecord(VersionConfigBeanRequest request) {
-        return versionConfigClient.insertInfo(request);
+        return amConfigClient.insertInfo(request);
     }
 
     @Override
     public VersionConfigBeanResponse updateRecord(VersionConfigBeanRequest request) {
-        return versionConfigClient.updateInfo(request);
+        return amConfigClient.updateInfo(request);
     }
 
     @Override
     public VersionConfigBeanResponse deleteRecord(VersionConfigBeanRequest request) {
-        return versionConfigClient.deleteInfo(request);
+        return amConfigClient.deleteInfo(request);
     }
 }

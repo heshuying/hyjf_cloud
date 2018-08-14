@@ -18,6 +18,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,8 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +38,7 @@ import java.io.File;
  * @version LoginController, v0.1 2018/6/11 14:43
  */
 
-@Api(value = "app端用户登录接口",description = "app端-用户登录接口")
+@Api(value = "app端用户登录接口",tags = "app端-用户登录接口")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppLoginController extends BaseUserController {
@@ -247,76 +246,29 @@ public class AppLoginController extends BaseUserController {
     }
 
     /**
-     * 上传头像
+     * 上传头像 - 使用form-data提交方式的类似这个方法处理，网关有特殊处理
      *
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @param
      * @return
      */
     @ResponseBody
     @PostMapping(value = "/uploadAvatarAction")
     @ApiOperation(value = "上传头像",notes = "上传头像")
-    public JSONObject uploadAvatarAction(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject uploadAvatarAction(@RequestParam String version,
+                                         @RequestParam String netStatus,
+                                         @RequestParam String platform,
+                                         @RequestParam String sign,
+                                         @RequestParam String randomString,
+                                         @RequestParam String token,
+                                         @RequestParam String order,
+                                         @RequestParam(value = "iconImg", required = false) MultipartFile iconImg) {
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/uploadAvatarAction");
-
-        // 转型为MultipartHttpRequest(重点的所在)
-        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
-
-        // 版本号
-        String version = multipartRequest.getParameter("version");
-        // 网络状态
-        String netStatus = multipartRequest.getParameter("netStatus");
-        // 平台
-        String platform = multipartRequest.getParameter("platform");
-        // token
-        String token = multipartRequest.getParameter("token");
-        // 唯一标识
-        String sign = multipartRequest.getParameter("sign");
-        // 随机字符串
-        String randomString = multipartRequest.getParameter("randomString");
-        // Order
-        String order = multipartRequest.getParameter("order");
-        // 获得第1张图片（根据前台的name名称得到上传的文件）
-        MultipartFile iconImg = multipartRequest.getFile("iconImg");
-
-        // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-        // 验证sign
-        if (RedisUtils.get(RedisConstants.SIGN+sign) == null) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
-        // 验证key
-        String key = SecretUtil.getKey(sign);
-        if (Validator.isNull(key)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
-
-        // 验证Order
-        if (!SecretUtil.checkOrder(key, token, randomString, order)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
+        ret.put("request", "/hyjf-app/appUser/uploadAvatarAction");
 
         // 业务逻辑
         try {
-            if (Validator.isNull(iconImg)) {
-                ret.put("status", "1");
-                ret.put("statusDesc", "上传图片不能为空");
-                return ret;
-            }
             // 单位字节
             Long allowFileLength = 5000000L;
 
@@ -344,7 +296,7 @@ public class AppLoginController extends BaseUserController {
 
                 // 上传至服务器
                 String returnMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, iconImg.getInputStream(), allowFileLength);
-                if (!returnMessage.equals("上传文件成功！")) {
+                if (!"上传文件成功！".equals(returnMessage)) {
                     ret.put("status", "1");
                     ret.put("statusDesc", returnMessage);
                     return ret;

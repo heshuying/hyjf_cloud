@@ -19,7 +19,7 @@
         hydur.username AS recommend_name,
         hydutm.utm_source AS utm_source,
         hydu.reg_esb AS regist_plat,
-        from_unixtime( hydu.reg_time, '%Y/%m/%d %H:%i:%s' ) AS reg_time,
+        date_format(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
         ht_user hydu
@@ -45,22 +45,22 @@
     <sql id="Where_Clause">
         <where>
             <if test="recommendName != null and recommendName !='' ">
-                AND hydur.username LIKE CONCAT('%', #{recommendName}, '%')
+                AND hydur.username LIKE CONCAT(#{recommendName}, '%')
             </if>
             <if test="userName != null and userName !='' ">
-                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+                AND hydu.username LIKE CONCAT(#{userName}, '%')
             </if>
             <if test="regTimeStart != null and regTimeStart !='' ">
-                AND FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{regTimeStart}
+                AND hydu.reg_time <![CDATA[>=]]> CONCAT(#{regTimeStart},' 00:00:00')
             </if>
             <if test="regTimeEnd != null and regTimeEnd !='' ">
-                AND FROM_UNIXTIME( hydu.reg_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{regTimeEnd}
+                AND hydu.reg_time <![CDATA[<=]]> CONCAT(#{regTimeEnd},' 23:59:59')
             </if>
             <if test="registPlat != null and registPlat !='' ">
                 AND hydu.reg_esb = #{registPlat}
             </if>
             <if test="mobile != null and mobile !='' ">
-                AND hydu.mobile LIKE CONCAT('%', #{mobile}, '%')
+                AND hydu.mobile LIKE CONCAT( #{mobile}, '%')
             </if>
         </where>
     </sql>

@@ -11,6 +11,7 @@ import com.hyjf.cs.market.bean.AppContentArticleBean;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,13 +29,14 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "app发现页", description = "app发现页")
+@Api(value = "微信发现页", tags = "微信发现页")
 @RestController
 @RequestMapping("/hyjf-wechat/find")
 public class WechatFindController extends BaseMarketController {
     @Autowired
     private AppFindService appFindService;
 
+    @ApiOperation(value = "根据类型获取文章", notes = "根据类型获取文章")
     @RequestMapping("/contentArticle/getContentArticleListByType")
     public JSONObject getContentArticleListByType(HttpServletRequest request, AppContentArticleBean form) {
         JSONObject ret = new JSONObject();
@@ -90,6 +92,7 @@ public class WechatFindController extends BaseMarketController {
 
     }
 
+    @ApiOperation(value = "根据类型和文章编号查找文章", notes = "根据类型和文章编号查找文章")
     @RequestMapping("/contentArticle/{type}/{contentArticleId}")
     public JSONObject contentArticle (@PathVariable Integer type,
                                       @PathVariable Integer contentArticleId) {

@@ -26,18 +26,20 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
  * @author by xiehuili on 2018/7/17.
  */
-@Api(value = "配置中心操作日志配置")
+@Api(value = "配置中心操作日志配置",tags ="配置中心操作日志配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/operationlog")
 public class OperationLogController  extends BaseController {
@@ -49,8 +51,8 @@ public class OperationLogController  extends BaseController {
     @Autowired
     private OperationLogService operationLogService;
 
-    @ApiOperation(value = "配置中心操作日志配置", notes = "查询配置中心操作日志配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心操作日志配置", notes = "查询配置中心操作日志配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult operationLogConfigInit(@RequestBody OperationLogRequestBean operationLogRequestBean) {
         AdminOperationLogRequest adminRequest= new AdminOperationLogRequest();
@@ -69,8 +71,8 @@ public class OperationLogController  extends BaseController {
         return new AdminResult<ListResult<FeerateModifyLogVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心操作日志配置", notes = "查询配置中心操作日志配置")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询配置中心操作日志配置详情", notes = "查询配置中心操作日志配置详情")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult operationLogConfigInfoList(@RequestBody OperationLogRequestBean operationLogRequestBean) {
         AdminOperationLogResponse response = new AdminOperationLogResponse();
@@ -107,7 +109,7 @@ public class OperationLogController  extends BaseController {
      * @param operationLogRequestBean
      * @return
      */
-    @ApiOperation(value = "配置中心操作日志配置", notes = "导出配置中心操作日志配置")
+    @ApiOperation(value = "导出配置中心操作日志配置", notes = "导出配置中心操作日志配置")
     @RequestMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationLogRequestBean operationLogRequestBean) throws Exception {
@@ -122,7 +124,7 @@ public class OperationLogController  extends BaseController {
         AdminOperationLogResponse operationLogResponseResponse = this.operationLogService.selectOperationLogList(conditionMap,-1,-1);
 
         List<FeerateModifyLogVO> resultList =  operationLogResponseResponse.getResultList();
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "资产来源", "产品类型", "期限", "自动发标利率", "服务费", "管理费", "收益差率", "逾期利率", "逾期免息天数", "状态", "修改类型", "操作人", "操作时间" };
         // 声明一个工作薄

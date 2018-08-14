@@ -3,8 +3,8 @@
  */
 package com.hyjf.cs.trade.controller.app.recharge;
 
-import com.hyjf.cs.trade.bean.AppRechargeDescResultBean;
-import com.hyjf.cs.trade.service.AppRechargeRuleService;
+import com.hyjf.cs.trade.bean.app.AppRechargeDescResultBean;
+import com.hyjf.cs.trade.service.recharge.AppRechargeRuleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangjun
  * @version AppRechargeRuleController, v0.1 2018/7/25 14:49
  */
-@Api(description = "app端获取充值规则")
+@Api(tags = "app端获取充值规则")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-app/user/bank/recharge")

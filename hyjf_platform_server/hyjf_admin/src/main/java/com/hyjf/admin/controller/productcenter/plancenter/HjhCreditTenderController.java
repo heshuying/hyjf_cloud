@@ -3,29 +3,6 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AdminHjhCreditTenderRequest;
@@ -60,16 +37,30 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author libin
  * @version HjhCreditTenderController.java, v0.1 2018年7月11日 下午2:18:37
  */
-@Api(value = "汇计划承接记录列表",description = "汇计划承接记录列表")
+@Api(value = "汇计划承接记录列表",tags = "汇计划承接记录列表")
 @RestController
 @RequestMapping("/hyjf-admin/hjhcredittender")
 public class HjhCreditTenderController extends BaseController{
@@ -171,8 +162,7 @@ public class HjhCreditTenderController extends BaseController{
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "汇添金计划承接记录";
-		@SuppressWarnings("deprecation")
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		String[] titles = new String[] { "序号","承接人","承接计划编号","承接计划订单号","出让人","债转编号","原项目编号","还款方式","承接本金","垫付利息","实际支付金额"," 承接时间","承接方式","项目总期数","承接时所在期数"};
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -376,4 +366,51 @@ public class HjhCreditTenderController extends BaseController{
     	return ret;
     	
 	}
+	
+	/**
+	 * 运营记录 - 承接明细(计划管理画面跳转过来)
+	 * @param request
+	 * @param response
+	 * @param form
+     * @return
+     */
+    @ApiOperation(value = "汇计划承接记录列表", notes = "计划列表运营记录 - 承接明细")
+    @PostMapping(value = "/optactionsearch")
+    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>> optActionSearch(HttpServletRequest request, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) {
+    	// 初始化原子层请求实体
+    	HjhCreditTenderRequest form = new HjhCreditTenderRequest();
+		// 初始化返回LIST
+		List<AdminHjhCreditTenderCustomizeVO> volist = null;
+		
+		// 将画面检索参数request赋值给原子层 request.此处重点是 传  assignPlanNid
+		BeanUtils.copyProperties(viewRequest, form);
+		
+    	// 是否从加入明细列表跳转 1:是 0:否
+		if(form.getIsAccedelist()!=1){
+		    form.setIsAccedelist(0);
+		}
+		
+		// 是否从债转标的页面调转(1:是)
+		if (!"1".equals(viewRequest.getIsOptFlag())){
+			form.setAssignTimeStart(GetDate.date2Str(new Date(),new SimpleDateFormat("yyyy-MM-dd")));
+		}
+    	// 根据删选条件获取计划列表
+    	HjhCreditTenderResponse response = this.hjhCreditTenderService.getHjhCreditTenderListByParam(form);
+		if(response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		if (!Response.isSuccess(response)) {
+			return new AdminResult<>(FAIL, response.getMessage());
+		}
+		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			// 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
+			volist = CommonUtils.convertBeanList(response.getResultList(), AdminHjhCreditTenderCustomizeVO.class);
+			return new AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>>(ListResult.build(volist, response.getCount()));
+		} else {
+			return new AdminResult<ListResult<AdminHjhCreditTenderCustomizeVO>>(ListResult.build(volist, 0));
+		}
+    }
+
 }

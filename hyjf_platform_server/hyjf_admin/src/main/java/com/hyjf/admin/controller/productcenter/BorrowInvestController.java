@@ -43,7 +43,7 @@ import java.util.Map;
  * @author wangjun
  * @version BorrowInvestController, v0.1 2018/7/10 9:06
  */
-@Api(value = "汇直投-投资明细接口", description = "汇直投-投资明细接口")
+@Api(value = "汇直投-投资明细接口", tags = "汇直投-投资明细接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_invest")
 public class BorrowInvestController extends BaseController {
@@ -58,7 +58,6 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "投资明细初始化", notes = "投资明细初始化")
     @PostMapping("/init")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowInvestResponseBean> init(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
@@ -79,9 +78,8 @@ public class BorrowInvestController extends BaseController {
         return new AdminResult(responseBean);
     }
 
-    @ApiOperation(value = "投资明细列表查询", notes = "投资明细列表查询")
+    @ApiOperation(value = "投资明细列表查询/运营记录-投资明细", notes = "投资明细列表查询/运营记录-投资明细")
     @PostMapping("/search")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowInvestResponseBean> getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
@@ -331,9 +329,8 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
     @PostMapping("/debt_info")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
-    public AdminResult debtInfo(@RequestBody InvestorRequest investorRequest) {
+    public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody InvestorRequest investorRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
         BeanUtils.copyProperties(investorRequest, investorDebtBean);
         return borrowInvestService.debtInfo(investorDebtBean);
@@ -341,7 +338,6 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
     @GetMapping("/pdf_preview/{nid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
     public AdminResult<BorrowInvestResponseBean> pdfPreview(@PathVariable String nid) {
         return borrowInvestService.pdfPreview(nid);
@@ -349,7 +345,6 @@ public class BorrowInvestController extends BaseController {
 
     @ApiOperation(value = "PDF签署", notes = "PDF签署")
     @PostMapping("/pdf_sign")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_SIGN)
     public AdminResult pdfSign(@RequestBody InvestorRequest investorRequest) {
         InvestorDebtBean investorDebtBean = new InvestorDebtBean();
@@ -358,10 +353,24 @@ public class BorrowInvestController extends BaseController {
     }
 
     @ApiOperation(value = "发送协议", notes = "发送协议")
-    @ResponseBody
     @PostMapping("/send_agreement")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT_AGREEMENT)
     public AdminResult sendAgreement(@RequestBody InvestorRequest investorRequest) {
         return borrowInvestService.sendAgreement(investorRequest);
+    }
+
+    @ApiOperation(value = "运营记录-投资明细", notes = "运营记录-投资明细")
+    @PostMapping("/optaction_init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<BorrowInvestResponseBean> optRecordTender(@RequestBody BorrowInvestRequestBean requestBean) {
+        //查询类赋值
+        BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
+        BeanUtils.copyProperties(requestBean, borrowInvestRequest);
+        // 如果是从原始标的跳转过来，不默认时间，否则默认最近10天
+        if(!"1".equals(requestBean.getIsOptFlag())){
+            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
+        }
+        BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
+        return new AdminResult(responseBean);
     }
 }

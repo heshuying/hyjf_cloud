@@ -25,7 +25,7 @@ import java.util.Map;
  * @author tanyy
  * @version OperationReportController, v0.1 2018/7/23 14:10
  */
-@Api(value = "运营报告配置")
+@Api(value = "运营报告配置",tags ="app和web和api通用接口")
 @RestController
 @RequestMapping("/cs-message/operation_report")
 public class OperationReportController extends BaseController {
@@ -129,19 +129,7 @@ public class OperationReportController extends BaseController {
 		}
 		return response;
 	}
-	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表-app和web端使用")
-	@RequestMapping("/listbyrelease")
-	public OperationReportResponse listByRelease(@RequestBody OperationReportRequest request) {
-		OperationReportResponse response = operationReportService.getRecordListByReleaseJson(request);
-		return response;
-	}
 
-	@ApiOperation(value = "获取已发布运营报告列表", notes = "获取已发布运营报告列表-app和web端使用")
-	@RequestMapping("/reportinfo/{id}")
-	public OperationReportResponse reportInfo(@PathVariable String id) {
-		OperationReportResponse response = operationReportService.reportInfo(id);
-		return response;
-	}
 
 	/**
 	 *
@@ -150,6 +138,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "根据id查询运营报告", notes = "根据id查询运营报告")
 	@PostMapping("/selectdetail/{id}")
 	public OperationReportResponse selectDetail(@PathVariable String id) {
 		OperationReportResponse response = operationReportService.selectOperationreportCommon(id);
@@ -162,6 +151,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "月度运营报告新增修改", notes = "月度运营报告新增修改")
 	@PostMapping("/insertmonthaction")
 	public OperationReportResponse insertMonthAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -192,6 +182,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "删除运营报告", notes = "删除运营报告")
 	@PostMapping("/delete/{id}")
 	public OperationReportResponse delete(@PathVariable String id) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -218,6 +209,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "发布运营报告", notes = "发布运营报告")
 	@PostMapping("/publish")
 	public OperationReportResponse publish(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -250,6 +242,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "季度运营报告新增修改", notes = "季度运营报告新增修改")
 	@PostMapping("/insertquarteraction")
 	public OperationReportResponse insertQuarterAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -297,6 +290,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "上半年度运营报告新增修改", notes = "上半年度运营报告新增修改")
 	@PostMapping("/inserthalfyearaction")
 	public OperationReportResponse insertHalfYearAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -330,6 +324,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "年度运营报告新增修改", notes = "年度运营报告新增修改")
 	@PostMapping("/insertyearaction")
 	public OperationReportResponse insertYearAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -362,6 +357,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "月度新增修改页面预览", notes = "月度新增修改页面预览")
 	@PostMapping("/monthpreview")
 	public OperationReportResponse monthPreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -392,6 +388,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "年度新增修改页面预览", notes = "年度新增修改页面预览")
 	@PostMapping("/yearpreview")
 	public OperationReportResponse yearPreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -423,6 +420,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "季度新增修改页面预览", notes = "季度新增修改页面预览")
 	@PostMapping("/quarterpreview")
 	public OperationReportResponse quarterPreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
@@ -455,6 +453,7 @@ public class OperationReportController extends BaseController {
 	 * @Param
 	 * @return
 	 */
+	@ApiOperation(value = "半年度新增修改页面预览", notes = "半年度新增修改页面预览")
 	@PostMapping("/halfpreview")
 	public OperationReportResponse Halfpreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();

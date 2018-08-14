@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.controller.wechat.home;
 
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
-import com.hyjf.cs.trade.service.WechatProjectListService;
+import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/23 15:45
  */
-@Api(value = "Wechat端首页", description = "Web端首页")
+@Api(value = "Wechat端首页", tags = "Wechat端首页")
 @RestController
 @RequestMapping(HomePageDefine.WECHAT_REQUEST_MAPPING)
 public class WechatHomeController {
@@ -47,8 +47,8 @@ public class WechatHomeController {
                                              @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                              @RequestParam(value = "showPlanFlag") String showPlanFlag,
-                                             @RequestHeader(value = "token", required = false) String token){
-        WechatHomePageResult result = wechatProjectListService.getHomeProejctList(currentPage,pageSize,showPlanFlag,token);
+                                             @RequestHeader(value = "userId", required = false) Integer userId){
+        WechatHomePageResult result = wechatProjectListService.getHomeProejctList(currentPage,pageSize,showPlanFlag,userId);
         return result;
     }
 

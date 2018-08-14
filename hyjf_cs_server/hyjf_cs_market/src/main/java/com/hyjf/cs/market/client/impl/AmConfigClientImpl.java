@@ -6,8 +6,10 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,10 +137,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     }
 
+	/**
+	 * 查询文章条数
+	 * @return
+	 */
 	@Override
 	public Integer countContentArticleByType() {
 		ContentArticleCustomizeResponse response = restTemplate.getForObject(
-				"http://AM-CONFIG/am-config/am-config/article/countcontentarticlebytype",
+				"http://AM-CONFIG/am-config/article/countcontentarticlebytype",
 				ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getCount();
@@ -146,10 +152,14 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
+	/**
+	 * 查询文章列表
+	 * @return
+	 */
 	@Override
 	public List<ContentArticleCustomizeVO> getContentArticleListByType(Map<String, Object> params) {
 		ContentArticleCustomizeResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/am-config/article/getcontentarticlelistbytype", params,
+				"http://AM-CONFIG/am-config/article/getcontentarticlelistbytype", params,
 				ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getResultList();
@@ -160,10 +170,63 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public ContentArticleVO getContentArticleById(Integer contentArticleId) {
 		ContentArticleResponse response = restTemplate
-				.getForObject("http://AM-CONFIG/am-config/article//getarticlebyid/" + contentArticleId, ContentArticleResponse.class);
+				.getForObject("http://AM-CONFIG/am-config/article/getarticlebyid/" + contentArticleId, ContentArticleResponse.class);
 		if (response != null) {
 			return response.getResult();
 		}
 		return null;
+	}
+	@Override
+	public List<ContentArticleVO> searchHomeNoticeList(String noticeType, int limitStart, int limitEnd) {
+		ContentArticleResponse response=restTemplate.getForObject("http://AM-CONFIG/am-config/article/find/"+noticeType+"/"+limitStart+"/"+limitEnd, ContentArticleResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+    @Override
+    public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form) {
+		WechatContentArticleResponse response=restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/article/getWechatContentArticleListByType", form,
+				WechatContentArticleResponse.class);
+        return response;
+    }
+
+	/**
+	 * 上下翻页
+	 * @param params
+	 * @param offset
+	 * @return
+	 */
+    @Override
+	public ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset) {
+		params.put("offset", offset);
+		ContentArticleCustomizeResponse response = restTemplate
+				.postForObject("http://AM-CONFIG/am-config/article/getContentArticleFlip/", params, ContentArticleCustomizeResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+    @Override
+    public ShareNewsBeanVO queryShareNews() {
+		ShareNewsResponse response = restTemplate
+				.getForObject("http://AM-CONFIG/am-config/article/querysharenews" , ShareNewsResponse.class);
+		if (response != null) {
+			return (ShareNewsBeanVO)response.getData();
+		}
+        return null;
+    }
+	/**
+	 * 添加反馈信息
+	 * @param submissionsVO
+	 * @return
+	 */
+	@Override
+	public int addSubmission(SubmissionsVO submissionsVO){
+		Integer response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,Integer.class);
+		return response;
 	}
 }

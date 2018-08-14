@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.controller.app.home;
 
-import com.hyjf.cs.trade.service.AppHomeService;
+import com.hyjf.cs.trade.service.home.AppHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/5 13:40
  */
-@Api(value = "APP端首页",description = "APP端首页")
+@Api(value = "APP端首页",tags = "APP端首页")
 @RestController
 @RequestMapping(HomePageDefine.REQUEST_MAPPING)  // 保留原来请求路径
 public class AppHomeController {

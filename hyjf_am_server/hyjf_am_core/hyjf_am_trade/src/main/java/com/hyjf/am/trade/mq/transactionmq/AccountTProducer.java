@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.controller.transactiondemo.TransactionService;
 import com.hyjf.am.trade.dao.model.auto.ProducerTransactionMessage;
-import com.hyjf.am.trade.service.ProducerTransactionMessageService;
+import com.hyjf.am.trade.service.front.batch.ProducerTransactionMessageService;
 import com.hyjf.common.exception.MQException;
 
 /**
@@ -39,27 +39,27 @@ public class AccountTProducer extends TransactionProducer {
 
 	@Override
 	public boolean messageSend(MassageContent messageContent) throws MQException {
-		TransactionSendResult result = super.messageSend(messageContent, (msg, arg) -> {
-			Integer userId = JSON.parseObject(msg.getBody(), Integer.class);
-			if (userId == null) {
-				logger.error("事务消息发送失败， 参数解析错误...");
-				return LocalTransactionState.ROLLBACK_MESSAGE;
-			}
-			try {
-				// 执行本地事务
-				transactionService.updateAmount(userId);
-				// 保存本地消息表
-				this.saveProducerTransactionMessage(msg);
-			} catch (Exception e) {
-				logger.error("本地事务执行失败....", e);
-				return LocalTransactionState.ROLLBACK_MESSAGE;
-			}
-			return LocalTransactionState.COMMIT_MESSAGE;
-		});
+//		TransactionSendResult result = super.messageSend(messageContent, (msg, arg) -> {
+//			Integer userId = JSON.parseObject(msg.getBody(), Integer.class);
+//			if (userId == null) {
+//				logger.error("事务消息发送失败， 参数解析错误...");
+//				return LocalTransactionState.ROLLBACK_MESSAGE;
+//			}
+//			try {
+//				// 执行本地事务
+//				transactionService.updateAmount(userId);
+//				// 保存本地消息表
+//				this.saveProducerTransactionMessage(msg);
+//			} catch (Exception e) {
+//				logger.error("本地事务执行失败....", e);
+//				return LocalTransactionState.ROLLBACK_MESSAGE;
+//			}
+//			return LocalTransactionState.COMMIT_MESSAGE;
+//		});
 
-		if (result.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE) {
-			return true;
-		}
+//		if (result.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE) {
+//			return true;
+//		}
 		return false;
 	}
 

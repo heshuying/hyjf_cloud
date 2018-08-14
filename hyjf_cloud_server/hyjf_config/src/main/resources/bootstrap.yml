@@ -1,17 +1,18 @@
 spring:
   application:
     name: CONFIG-SERVER
+#  profiles:
+#    active: native
   cloud:
     config:
       server:
+#        native:
+#          searchLocations: D:/hyjf/git/0709/micro-deploy-master-9f3d4cab6ee35303fc7a0498ac61120addd0005a/src/main/resources
         git:
-          #青岛用
-          uri: http://10.10.2.12/java_new/micro-deploy.git
-          #上海用
-          #uri: http://219.147.28.242:3333/java_new/micro-deploy.git
+          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
           searchPaths: src/main/resources
-          username: sunshuaishuai
-          password: sss123456
+          username: deployment
+          password: deploy2018
 
 eureka:
   client:

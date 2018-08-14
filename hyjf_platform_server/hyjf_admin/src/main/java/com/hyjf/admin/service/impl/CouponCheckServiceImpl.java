@@ -3,19 +3,34 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.BatchSubUserCouponBean;
+import com.hyjf.admin.excel.ReadExcel;
+import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CouponCheckClient;
 import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.am.response.admin.CouponCheckResponse;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.CouponConfigResponse;
+import com.hyjf.am.response.trade.CouponRecoverCustomizeResponse;
+import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
+import com.hyjf.am.resquest.admin.CouponUserRequest;
 import com.hyjf.am.vo.config.CouponCheckVO;
+import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,9 +51,16 @@ import java.util.*;
  */
 @Service
 public class CouponCheckServiceImpl implements CouponCheckService {
+    private static final Logger logger = LoggerFactory.getLogger(CouponCheckServiceImpl.class);
 
     @Autowired
     CouponCheckClient couponCheckClient;
+    @Autowired
+    AmConfigClient amConfigClient;
+    @Autowired
+    AmUserClient amUserClient;
+    @Autowired
+    AmTradeClient amTradeClient;
     @Value("${file.upload.activity.img.path}")
     private String FILEUPLOADTEMPPATH;
 
@@ -50,7 +72,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
      */
     @Override
     public CouponCheckResponse serchCouponList(AdminCouponCheckRequest adminCouponCheckRequest) {
-        return couponCheckClient.getCouponList(adminCouponCheckRequest);
+        return amConfigClient.getCouponList(adminCouponCheckRequest);
     }
 
     /**
@@ -61,7 +83,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
      */
     @Override
     public CouponCheckResponse deleteCouponList(AdminCouponCheckRequest acr) {
-        return couponCheckClient.deleteCouponList(acr);
+        return amConfigClient.deleteCouponList(acr);
     }
 
     /**
@@ -109,7 +131,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     accr.setFilePath(logoRealPathDir + "/" + fileRealName);
                     accr.setDeFlag(0);
                     accr.setStatus(1);
-                    checkResponse = couponCheckClient.insert(accr);
+                    checkResponse = amConfigClient.insert(accr);
                     checkResponse.getMessage();
                 }
             } else {
@@ -121,7 +143,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public void downloadFile(String id, HttpServletResponse response) {
-        CouponCheckVO couponCheck = couponCheckClient.selectCoupon(Integer.valueOf(id));
+        CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String fileP = "";
         String fileN = "";
         if (couponCheck != null) {
@@ -130,7 +152,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         }
 
         OutputStream out = null;
-        try (FileInputStream in = new FileInputStream(fileP)){
+        try (FileInputStream in = new FileInputStream(fileP)) {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
 
@@ -147,10 +169,10 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 // 关闭输出流
-                if (Validator.isNotNull(out)){
+                if (Validator.isNotNull(out)) {
                     out.flush();
                     out.close();
                 }
@@ -161,59 +183,237 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public boolean batchCheck(Integer path, HttpServletResponse response,String userId) throws Exception {
-        String[] split = String.valueOf(path).split(",");
-        String filePath = split[1];
-        List<String> copuncodes;
-        JSONObject retResult = new JSONObject();
-        List<BatchSubUserCouponBean> subBeans = new ArrayList<>();
-        FileInputStream is = new FileInputStream(filePath);
-        String encode = "UTF-8";
-        // is.skip(3);
-        // String encode = getEncoder(is);
-        Reader in = new InputStreamReader(is, encode);
-        Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(in);
-        for (CSVRecord record : records) {
-            // 格式小于3,跳过
-            if (record.size() < 3) {
-                continue;
+    public boolean batchCheck(Integer path, HttpServletResponse response, String userId) throws Exception {
+        try {
+            String[] split = String.valueOf(path).split(",");
+            String filePath = split[1];
+            Map<String, String> nameMaps = new HashMap<>();
+            nameMaps.put("couponCode", "couponCode");
+            nameMaps.put("activityId", "activityId");
+            nameMaps.put("userName", "userName");
+            ReadExcel readExcel = new ReadExcel();
+            List<JSONObject> list = new ArrayList<>();
+            try {
+                list = readExcel.readExcel(filePath, nameMaps);
+            } catch (IOException e) {
+                logger.error("批量发送优惠券，解析Excel：" + filePath + "失败！", e);
+                return false;
             }
-            BatchSubUserCouponBean subBean = new BatchSubUserCouponBean();
-            String userName = record.get(0);
-            String activeId = record.get(1);
-            String couponcode = record.get(2);
-            copuncodes = Arrays.asList(couponcode.split(","));
-            if (copuncodes.size() <= 0 || org.apache.commons.lang.StringUtils.isBlank(userName)) {
-                continue;
-            }
-            subBean.setUserName(userName);
-            subBean.setActivityId(activeId);
-            subBean.setCouponCode(copuncodes);
-            subBeans.add(subBean);
-        }
-        //关闭输入流
-        in.close();
-        is.close();
+            final List<JSONObject> lists = list;
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+                    // run方法具体重写
+                    int totalcouponCount = 0;
+                    int succouponCount = 0;
 
-        if (subBeans.size() == 0) {
+                    // 优惠券来源1：手动发放，2：活动发放，3：vip礼包
+                    int couponSource = 2;
+                    logger.info("批量发放优惠券开始： 预计" + lists.size() + " 张");
+                    for (JSONObject jsonObject : lists) {
+                        List<String> copuncodes;
+                        String userName = jsonObject.getString("userName");
+                        String activeId = jsonObject.getString("activityId");
+                        String couponcode = jsonObject.getString("couponCode");
+                        copuncodes = Arrays.asList(couponcode.split(","));
+                        if (copuncodes.size() <= 0 || org.apache.commons.lang.StringUtils.isBlank(userName)) {
+                            continue;
+                        }
+                        Integer activityId = null;
+                        if (StringUtils.isNotBlank(activeId)) {
+                            activityId = Integer.parseInt(activeId.trim());
+                        }
+//                        String userId = userCouponBean.getUserId();
+                        logger.info("批量发放优惠券当前用户名：" + userName);
+                        if (StringUtils.isBlank(userName)) {
+                            continue;
+                        }
+                        batchInsertUserCoupon(userName, copuncodes, totalcouponCount, succouponCount, activityId, couponSource);
+
+                    }
+                }
+            });
+            t.start();
+
+        } catch (Exception e) {
+            logger.error("优惠券发放异常", e);
             return false;
-        } else {
-            // 访问API
-            Map<String, String> params = new HashMap<String, String>();
-            // 用户id
-            params.put("usercoupons", JSON.toJSONString(subBeans));
-            params.put("userId", userId);
-            // 请求路径
-            // TODO: 2018/7/5 给MQ发送消息，批量发送优惠券
-            JSONObject result = couponCheckClient.getBatchCoupons(params);
-
-            return StringUtils.equals(result.getString("status"), "0");
         }
+        return true;
+
+    }
+
+    private boolean batchInsertUserCoupon(String userName, List<String> copuncodes, int totalcouponCount, int succouponCount, Integer activityId, int couponSource) {
+        UserVO user = this.getUserByUserName(userName);
+        logger.info("批量发放优惠券User：" + user);
+        if(user == null){
+            return false;
+        }
+        if(copuncodes ==null || copuncodes.isEmpty()){
+            return false;
+        }
+        totalcouponCount = totalcouponCount+copuncodes.size();
+        // 发放优惠券
+        int couponCount = 0;
+        try {
+            couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource);
+        } catch (Exception e) {
+            logger.error("用户："+userName + "发送优惠券失败！",e);
+            e.printStackTrace();
+        }
+        succouponCount = succouponCount + couponCount;
+        logger.info(user.getUserId()+ " 发放优惠券：" + couponCount + " 张");
+        return true;
+    }
+
+    private synchronized int sendConponAction(List<String> couponCodeList, String userId, Integer activityId, int couponSource) throws Exception {
+        // sendflg设置1跳过活动id不设置的逻辑
+        return sendUserConponAction(couponCodeList, userId, 1, activityId, couponSource,"上传csv文件，批量发券");
+    }
+
+    public int sendUserConponAction(List<String> couponCodeList, String userId, Integer sendFlg, Integer activityId,
+                                    Integer couponSource, String content) throws Exception {
+        logger.info("用户："+userId+",执行发券逻辑开始  " + GetDate.dateToString(new Date()));
+        String methodName = "sendConponAction";
+        int nowTime = GetDate.getNowTime10();
+        // String couponGroupCode = CreateUUID.createUUID();
+
+        UserInfoVO userInfo = this.getUsersInfoByUserId(Integer.parseInt(userId));
+        if(userInfo == null){
+            return 0;
+        }
+
+        String channelName = this.getChannelNameByUserId(Integer.parseInt(userId));
+
+        int couponCount = 0;
+        if (couponCodeList != null && couponCodeList.size() > 0) {
+            for (String couponCode : couponCodeList) {
+                // 如果优惠券的发行数量已大于等于配置的发行数量，则不在发放该类别优惠券
+                if (!this.checkSendNum(couponCode)) {
+                    logger.info("优惠券发行数量超出上限，不再发放！");
+                    continue;
+                }
+                CouponUserVO couponUser = new CouponUserVO();
+                couponUser.setCouponCode(couponCode);
+                if (StringUtils.contains(couponCode, "PT")) {
+                    // 体验金编号
+                    couponUser.setCouponUserCode(GetCode.getCouponUserCode(1));
+                } else if (StringUtils.contains(couponCode, "PJ")) {
+                    // 加息券编号
+                    couponUser.setCouponUserCode(GetCode.getCouponUserCode(2));
+                } else if (StringUtils.contains(couponCode, "PD")) {
+                    // 代金券编号
+                    couponUser.setCouponUserCode(GetCode.getCouponUserCode(3));
+                }
+                // 优惠券组编号
+                // couponUser.setCouponGroupCode(couponGroupCode);
+                couponUser.setUserId(Integer.parseInt(userId));
+                if (Validator.isNotNull(sendFlg) && sendFlg != 2 && Validator.isNotNull(activityId)) {
+                    // 购买vip与活动无关
+                    couponUser.setActivityId(activityId);
+                }
+                couponUser.setUsedFlag(CustomConstants.USER_COUPON_STATUS_UNUSED);
+
+                // 根据优惠券编码查询优惠券
+                CouponConfigResponse configResponse = amTradeClient.selectCouponConfig(couponCode);
+                List<CouponConfigVO> configList = configResponse.getResultList();
+                if (configList == null || configList.isEmpty()) {
+                    continue;
+                }
+                CouponConfigVO config = configList.get(0);
+
+                Integer status = config.getStatus();
+                if(status==null||status==1||status==3){
+                    logger.info("优惠券审核未通过，无法发放！（coupon）"+couponCode);
+                    continue;
+                }
+                // 加息券编号
+                couponUser.setCouponUserCode(GetCode.getCouponUserCode(config.getCouponType()));
+
+                if (config.getExpirationType() == 1) { // 截止日
+                    couponUser.setEndTime(config.getExpirationDate());
+                } else if(config.getExpirationType() == 2) { // 时长
+                    couponUser.setEndTime((int) (GetDate.countDate(2, config.getExpirationLength()).getTime() / 1000));
+                } else if(config.getExpirationType() == 3){
+                    couponUser.setEndTime((int) (GetDate.countDate(5, config.getExpirationLengthDay()).getTime() / 1000));
+                }
+                couponUser.setCouponSource(couponSource);
+                couponUser.setAddTime(nowTime);
+                couponUser.setAddUser(CustomConstants.OPERATOR_AUTO_REPAY);
+                couponUser.setUpdateTime(nowTime);
+                couponUser.setUpdateUser(CustomConstants.OPERATOR_AUTO_REPAY);
+                couponUser.setDelFlag(CustomConstants.FALG_NOR);
+                couponUser.setChannel(channelName);
+                couponUser.setAttribute(userInfo.getAttribute());
+                couponUser.setContent(StringUtils.isEmpty(content)?"":content);
+                CouponUserRequest couponUserRequest = new CouponUserRequest();
+                BeanUtils.copyProperties(couponUser,couponUserRequest);
+                CouponUserResponse response = amTradeClient.insertCouponUser(couponUserRequest);
+                couponCount++;
+            }
+            logger.info("发放优惠券成功，发放张数：" + couponCount);
+        }
+        logger.info("用户："+userId+",执行发券逻辑结束  " + GetDate.dateToString(new Date()));
+        return couponCount;
     }
 
     @Override
     public boolean updateCoupon(AdminCouponCheckRequest request) {
-        return couponCheckClient.updateCoupon(request);
+        CouponCheckResponse response = amConfigClient.updateCoupon(request);
+        boolean result = response.isBool();
+        return result;
+    }
+
+
+    /**
+     * 根据用户名获取用户
+     * @param userName
+     * @return
+     */
+    public UserVO getUserByUserName(String userName){
+        if(StringUtils.isEmpty(userName)){
+            return null;
+        }
+        UserVO user = amUserClient.getUserByUserName(userName);
+        return user;
+    }
+
+    /**
+     * 根据用户ID取得用户信息
+     *
+     * @param userId
+     * @return
+     */
+    public UserInfoVO getUsersInfoByUserId(Integer userId) {
+        if (userId != null) {
+            UserInfoVO userInfoVO = amUserClient.selectUsersInfoByUserId(userId);
+            if (userInfoVO != null) {
+                return userInfoVO;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * 获取用户注册时的渠道名称
+     * @author hsy
+     * @param userId
+     * @return
+     */
+    public String getChannelNameByUserId(Integer userId){
+        UtmResponse response = amUserClient.getChannelNameByUserId(userId);
+        return response.getChannelName();
+    }
+
+    /**
+     * 校验优惠券的已发行数量
+     *
+     * @return
+     */
+    private boolean checkSendNum(String couponCode) {
+        CouponRecoverCustomizeResponse response = amTradeClient.checkCouponSendExcess(couponCode);
+        int remain = response.getCount();
+        return remain > 0 ? true : false;
     }
 
 

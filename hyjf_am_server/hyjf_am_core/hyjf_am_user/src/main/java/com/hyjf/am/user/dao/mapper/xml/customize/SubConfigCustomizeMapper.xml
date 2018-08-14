@@ -38,7 +38,7 @@
         END AS OPEN,
         hboa.account
         FROM
-        ht_users users LEFT JOIN ht_users_info userinfo ON (users.user_id=userinfo.user_id)
+        ht_user users LEFT JOIN ht_user_info userinfo ON (users.user_id=userinfo.user_id)
         LEFT JOIN ht_bank_open_account hboa ON (users.user_id=hboa.user_id)
         WHERE
         users.username = #{userName,jdbcType=CHAR}

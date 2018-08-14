@@ -99,6 +99,19 @@ public class AssetListCustomizeVO extends BaseVO implements Serializable {
 	private BigDecimal sumAccount;
 	/*-------add by LSY END---------------------*/
 	/**
+	 * 借款类型
+	 */
+	private String userType;
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	/**
 	 * assetId
 	 * @return the assetId
 	 */

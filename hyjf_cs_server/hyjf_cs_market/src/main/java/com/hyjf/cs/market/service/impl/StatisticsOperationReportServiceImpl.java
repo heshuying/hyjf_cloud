@@ -11,7 +11,7 @@ import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.cs.market.client.AmDataCollectClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.StatisticsOperationReportProducer;
@@ -37,7 +37,7 @@ public class StatisticsOperationReportServiceImpl extends BaseMarketServiceImpl 
 	@Autowired
 	private AmTradeClient amTradeClient;
 	@Autowired
-	private AmDataCollectClient amDataCollect;
+	private CsMessageClient amDataCollect;
 	@Autowired
 	private StatisticsOperationReportProducer statisticsProducer;
 

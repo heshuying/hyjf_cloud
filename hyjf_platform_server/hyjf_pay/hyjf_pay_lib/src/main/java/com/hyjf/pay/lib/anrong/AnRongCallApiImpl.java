@@ -3,11 +3,14 @@ package com.hyjf.pay.lib.anrong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.common.http.HttpDealBank;
+import com.hyjf.common.spring.SpringUtils;
 import com.hyjf.pay.lib.anrong.bean.AnRongApiBean;
 import com.hyjf.pay.lib.anrong.util.AnRongParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.config.PaySystemConfig;
 
 /**
  * 
@@ -17,30 +20,18 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
  * @since hyjf 1.0 2017年10月9日
  * @see 下午1:49:10
  */
+@Service
 public class AnRongCallApiImpl implements AnRongCallApi{
     private static Logger log = LoggerFactory.getLogger(AnRongCallApiImpl.class);
-	@Value("${hyjf.anrong.req.queryUrl}")
-	private static String queryUrl;
-	@Value("${hyjf.anrong.req.sendUrl}")
-	private static String sendUrl;
-    public AnRongCallApiImpl() {
-    }
-    
     @Override
-    public String callAnRongApi(AnRongApiBean bean) {
+    public String callAnRongApi(AnRongApiBean bean,String url) {
      // 方法名
         log.info("[调用安融API接口开始]");
         log.debug("参数: " + bean == null ? "无" : bean.getAllParams() + "]");
         String result = null;
         try {
             // 发送请求
-            String HTTP_URL = "";
-            // 获得接口URL
-            if(AnRongParamConstant.TXCODE_QUERY.equals(bean.get(BankCallConstant.PARAM_TXCODE))){
-                HTTP_URL = queryUrl;
-            }else if (AnRongParamConstant.TXCODE_SEND_MESS.equals(bean.get(BankCallConstant.PARAM_TXCODE))){
-                HTTP_URL = sendUrl;
-            }
+            String HTTP_URL = url;
             // 清除参数
             bean.getAllParams().remove(BankCallConstant.PARAM_TXCODE);
             result = HttpDealBank.anrongPost(HTTP_URL, bean.getAllParams());
@@ -52,14 +43,12 @@ public class AnRongCallApiImpl implements AnRongCallApi{
         return result;
     }
 
-    @Override
     public AnRongApiBean queryUser(AnRongApiBean bean) {
         // 消息类型
         bean.set(BankCallConstant.PARAM_TXCODE, AnRongParamConstant.TXCODE_QUERY);
         return bean;
     }
 
-    @Override
     public AnRongApiBean sendMess(AnRongApiBean bean) {
         // 消息类型
         bean.set(BankCallConstant.PARAM_TXCODE, AnRongParamConstant.TXCODE_SEND_MESS);

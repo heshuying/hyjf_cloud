@@ -52,6 +52,12 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 
 	@ApiModelProperty(value = "检索结束时间（计息结束时间）")
 	private String countInterestTimeEndDate;
+	
+	@ApiModelProperty(value = "匹配期查询")
+	private String matchDatesSrch;
+	
+	@ApiModelProperty(value = "投资笔数查询")
+	private String investCountsSrch;
 
 	/**
 	 * 翻页机能用的隐藏变量

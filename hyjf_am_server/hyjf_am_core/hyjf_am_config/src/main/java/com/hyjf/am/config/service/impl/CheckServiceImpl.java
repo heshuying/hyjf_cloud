@@ -40,9 +40,9 @@ public class CheckServiceImpl implements CheckService {
         //未删除
         criteria.andDeFlagEqualTo(0);
 
-        String createTimeStart = mapParam.get("createTimeStart").toString();
-        String createTimeEnd = mapParam.get("createTimeEnd").toString();
-        String status = mapParam.get("status").toString();
+        String createTimeStart =(String) mapParam.get("createTimeStart");
+        String createTimeEnd =(String) mapParam.get("createTimeEnd");
+        String status = (String)mapParam.get("status");
         if (StringUtils.isNotBlank(createTimeStart) && StringUtils.isNotBlank(createTimeEnd)) {
             criteria.andCreateTimeBetween( GetDate.str2Timestamp(createTimeStart), GetDate.str2Timestamp(createTimeEnd));
         }
@@ -74,9 +74,9 @@ public class CheckServiceImpl implements CheckService {
         //未删除
         criteria.andDeFlagEqualTo(0);
 
-        String createTimeStart = mapParam.get("createTimeStart").toString();
-        String createTimeEnd = mapParam.get("createTimeEnd").toString();
-        String status = mapParam.get("status").toString();
+        String createTimeStart =(String) mapParam.get("createTimeStart");
+        String createTimeEnd = (String) mapParam.get("createTimeEnd");
+        String status =(String)  mapParam.get("status");
 
         if (StringUtils.isNotBlank(createTimeStart) && StringUtils.isNotBlank(createTimeEnd)) {
             criteria.andCreateTimeBetween( GetDate.str2Timestamp(createTimeStart), GetDate.str2Timestamp(createTimeEnd));
@@ -91,7 +91,7 @@ public class CheckServiceImpl implements CheckService {
         }
 
         List<CouponCheck> couponChecks = couponCheckMapper.selectByExample(couponCheckExample);
-        return null;
+        return couponChecks;
     }
 
     /**

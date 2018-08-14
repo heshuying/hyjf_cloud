@@ -58,8 +58,9 @@ public class HjhLabelServiceImpl implements HjhLabelService{
 	}
 
 	@Override
-	public void insertHjhLabelRecord(HjhLabelInfoRequest hjhLabelInfoRequest) {
-		amTradeClient.insertHjhLabelRecord(hjhLabelInfoRequest);
+	public int insertHjhLabelRecord(HjhLabelInfoRequest hjhLabelInfoRequest) {
+		int flg = amTradeClient.insertHjhLabelRecord(hjhLabelInfoRequest);
+		return flg;
 	}
 
 	@Override

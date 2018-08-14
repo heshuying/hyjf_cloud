@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -60,14 +61,6 @@ public interface PlatformTransferService {
     Integer insertAccountList(AccountListVO accountListVO);
 
     /**
-     * 插入网站收支表记录
-     * @auth sunpeikai
-     * @param accountWebListVO 网站收支表信息
-     * @return
-     */
-    Integer insertAccountWebList(AccountWebListVO accountWebListVO);
-
-    /**
      * 根据账户id查询BankMerchantAccount
      * @auth sunpeikai
      * @param accountId 账户id
@@ -90,4 +83,33 @@ public interface PlatformTransferService {
      * @return
      */
     Integer insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountListVO);
+
+    /**
+     * 根据orderId查询红包明细
+     * @author zhangyk
+     * @date 2018/8/7 16:42
+     */
+    Integer  getBankMerchantAccountListCountByOrderId(String orderId);
+
+    /**
+     * 圈存异步回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:58
+     */
+    Boolean updateAccountByRechargeCallback(Map<String,Object> params);
+
+    /**
+     * 更新充值明细为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:30
+     */
+    Boolean updateMerchantAccountListFail(String orderId);
+
+    /**
+     * 圈提异步回调处理
+     * @author zhangyk
+     * @date 2018/8/7 18:58
+     */
+    Boolean updateAccountByWithdrawCallback(Map<String,Object> params);
+
 }

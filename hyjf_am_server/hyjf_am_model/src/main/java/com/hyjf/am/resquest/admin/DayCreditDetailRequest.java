@@ -4,55 +4,159 @@ import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;
 
+/**
+ * @Author : huanghui
+ */
 public class DayCreditDetailRequest extends BasePage implements Serializable {
 
-    private String planNidSrch;
+    //转让状态
+    private String creditStatus;
 
-    private String planNameSrch;
+    //还款状态
+    private String repayStatus;
 
-    private String lockPeriodSrch;
+    //检索条件 项目还款方式
+    private String repayStyle;
 
-    private String dateFromSrch;
+    //检索条件 清算时间开始
+    private String liquidatesTimeStart;
 
-    private String dateToSrch;
+    //检索条件 清算时间结束
+    private String liquidatesTimeEnd;
 
-    public String getPlanNidSrch() {
-        return planNidSrch;
+    //检索条件 还款时间开始
+    private String repayNextTimeStart;
+
+    //检索条件 还款时间结束
+    private String repayNextTimeEnd;
+
+    //检索条件 债转结束时间开始
+    private String endTimeStart;
+
+    //检索条件 债转结束时间结束
+    private String endTimeEnd;
+
+    //前画面传入检索条件 清算日期
+    private String date;
+
+    //转让人计划编号
+    private String planNid;
+
+    public int limit = 0;
+
+    private int limitStart = -1;
+
+    private int limitEnd = -1;
+
+    public String getCreditStatus() {
+        return creditStatus;
     }
 
-    public void setPlanNidSrch(String planNidSrch) {
-        this.planNidSrch = planNidSrch;
+    public void setCreditStatus(String creditStatus) {
+        this.creditStatus = creditStatus;
     }
 
-    public String getPlanNameSrch() {
-        return planNameSrch;
+    public String getRepayStatus() {
+        return repayStatus;
     }
 
-    public void setPlanNameSrch(String planNameSrch) {
-        this.planNameSrch = planNameSrch;
+    public void setRepayStatus(String repayStatus) {
+        this.repayStatus = repayStatus;
     }
 
-    public String getLockPeriodSrch() {
-        return lockPeriodSrch;
+    public String getRepayStyle() {
+        return repayStyle;
     }
 
-    public void setLockPeriodSrch(String lockPeriodSrch) {
-        this.lockPeriodSrch = lockPeriodSrch;
+    public void setRepayStyle(String repayStyle) {
+        this.repayStyle = repayStyle;
     }
 
-    public String getDateFromSrch() {
-        return dateFromSrch;
+    public String getLiquidatesTimeStart() {
+        return liquidatesTimeStart;
     }
 
-    public void setDateFromSrch(String dateFromSrch) {
-        this.dateFromSrch = dateFromSrch;
+    public void setLiquidatesTimeStart(String liquidatesTimeStart) {
+        this.liquidatesTimeStart = liquidatesTimeStart;
     }
 
-    public String getDateToSrch() {
-        return dateToSrch;
+    public String getLiquidatesTimeEnd() {
+        return liquidatesTimeEnd;
     }
 
-    public void setDateToSrch(String dateToSrch) {
-        this.dateToSrch = dateToSrch;
+    public void setLiquidatesTimeEnd(String liquidatesTimeEnd) {
+        this.liquidatesTimeEnd = liquidatesTimeEnd;
+    }
+
+    public String getRepayNextTimeStart() {
+        return repayNextTimeStart;
+    }
+
+    public void setRepayNextTimeStart(String repayNextTimeStart) {
+        this.repayNextTimeStart = repayNextTimeStart;
+    }
+
+    public String getRepayNextTimeEnd() {
+        return repayNextTimeEnd;
+    }
+
+    public void setRepayNextTimeEnd(String repayNextTimeEnd) {
+        this.repayNextTimeEnd = repayNextTimeEnd;
+    }
+
+    public String getEndTimeStart() {
+        return endTimeStart;
+    }
+
+    public void setEndTimeStart(String endTimeStart) {
+        this.endTimeStart = endTimeStart;
+    }
+
+    public String getEndTimeEnd() {
+        return endTimeEnd;
+    }
+
+    public void setEndTimeEnd(String endTimeEnd) {
+        this.endTimeEnd = endTimeEnd;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

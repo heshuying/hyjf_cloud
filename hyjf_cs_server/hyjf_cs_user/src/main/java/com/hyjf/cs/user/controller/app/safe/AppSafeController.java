@@ -25,7 +25,7 @@ import java.util.Map;
  * @version AppUserController, v0.1 2018/6/11 14:51
  */
 
-@Api(value = "app端用户账户设置",description = "app端-用户账户设置")
+@Api(value = "app端用户账户设置",tags = "app端-用户账户设置")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppSafeController extends BaseUserController {
@@ -44,6 +44,9 @@ public class AppSafeController extends BaseUserController {
     public JSONObject getRelationTypes(HttpServletRequest request) {
         JSONObject ret = checkAppBaseParam(request);
         ret.put("request", "/hyjf-app/appUser/getRelationTypes");
+        if (null!= ret&&"1".equals(ret.get("status"))){
+            return ret;
+        }
         // 业务逻辑
         try {
             Map<String, String> relationMap = CacheUtil.getParamNameMap("USER_RELATION");
@@ -77,6 +80,9 @@ public class AppSafeController extends BaseUserController {
     public JSONObject updateUrgentAction(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         JSONObject ret = checkAppBaseParam(request);
         ret.put("request", "/hyjf-app/appUser/updateUrgentAction");
+        if (null!= ret&&"1".equals(ret.get("status"))){
+            return ret;
+        }
         // 紧急联系人关系
         String urgentRelation = request.getParameter("urgentRelation");
         // 紧急联系人姓名
@@ -136,7 +142,7 @@ public class AppSafeController extends BaseUserController {
                 }
 
                 // 更新联系人信息
-                boolean success = safeService.saveContract(urgentRelation, urgentName, urgentMobile,webViewUserVO);
+                boolean success = safeService.saveContract(urgentRelation, urgentName, urgentMobile,userId);
 
                 if (success) {
                     ret.put("status", "0");

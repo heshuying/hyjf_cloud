@@ -3,19 +3,11 @@ package com.hyjf.admin.controller.mobileclient;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
-import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.user.UserResponse;
-import com.hyjf.am.resquest.admin.Paginator;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.vo.config.AppBorrowImageVO;
 import com.hyjf.am.vo.config.SubmissionsCustomizeVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -33,13 +25,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +38,7 @@ import java.util.Map;
  * @author lisheng
  * @version SubmissionsController, v0.1 2018/7/11 11:25
  */
-@Api(value = "admin移动客户端",description = "admin移动客户端")
+@Api(value = "admin移动客户端",tags = "admin移动客户端")
 @RestController
 @RequestMapping("/submissions")
 public class SubmissionsController extends BaseController {
@@ -115,7 +105,7 @@ public class SubmissionsController extends BaseController {
         // 表格sheet名称
         String sheetName = "意见反馈列表";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         if(StringUtils.isNotBlank(form.getUserName())){
             UserResponse user = submissionsService.getUserIdByUserName(form.getUserName());

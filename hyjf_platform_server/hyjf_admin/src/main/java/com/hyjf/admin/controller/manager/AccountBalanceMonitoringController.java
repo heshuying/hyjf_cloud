@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/13.
  */
-@Api(value = "配置中心平台账户配置")
+@Api(value = "配置中心平台账户配置", tags = "配置中心平台账户配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/accountbalance")
 public class AccountBalanceMonitoringController extends BaseController {
@@ -38,8 +38,8 @@ public class AccountBalanceMonitoringController extends BaseController {
     @Autowired
     private AccountBalanceMonitoringService accountBalanceMonitoringService;
 
-    @ApiOperation(value = "配置中心平台账户配置", notes = "查询配置中心平台账户配置 余额监控")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心平台账户配置 余额监控", notes = "查询配置中心平台账户配置 余额监控")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<MerchantAccountVO>> accountBalanceMonitoringInit(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest= new AdminAccountBalanceMonitoringRequest();
@@ -56,8 +56,8 @@ public class AccountBalanceMonitoringController extends BaseController {
         return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-        @ApiOperation(value = "配置中心平台账户配置", notes = "检索配置中心平台账户配置 余额监控")
-        @RequestMapping("/searchAction")
+        @ApiOperation(value = "检索配置中心平台账户配置 余额监控", notes = "检索配置中心平台账户配置 余额监控")
+        @PostMapping("/searchAction")
         @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
         public AdminResult<ListResult<MerchantAccountVO>> accountBalanceMonitoringSearch(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
             AdminAccountBalanceMonitoringRequest adminRequest= new AdminAccountBalanceMonitoringRequest();
@@ -74,7 +74,7 @@ public class AccountBalanceMonitoringController extends BaseController {
             return new AdminResult<ListResult<MerchantAccountVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
         }
 
-        @ApiOperation(value = "配置中心平台账户配置", notes = "平台账户配置 余额监控 详情页面")
+        @ApiOperation(value = "平台账户配置 余额监控 详情页面", notes = "平台账户配置 余额监控 详情页面")
         @PostMapping("/infoAction")
         @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
         public AdminResult<MerchantAccountVO>  merchantAccountInfo(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
@@ -91,7 +91,7 @@ public class AccountBalanceMonitoringController extends BaseController {
             return new AdminResult<MerchantAccountVO>(adminResponse.getResult()) ;
         }
 
-    @ApiOperation(value = "配置中心平台账户配置", notes = "平台账户配置 余额监控详情页面")
+    @ApiOperation(value = "平台账户配置 余额监控详情页面", notes = "平台账户配置 余额监控详情页面")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<MerchantAccountVO>  updateMerchantAccount(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
@@ -136,8 +136,8 @@ public class AccountBalanceMonitoringController extends BaseController {
                         newRecord.getBalanceLowerLimit() == null ? new Long(0) : newRecord.getBalanceLowerLimit();
                 // 数据没有变更的情况
                 if (oldData.equals(newData)
-                        && oldRecord.getAutoTransferInto() == newRecord.getAutoTransferInto()
-                        && oldRecord.getAutoTransferOut() == newRecord.getAutoTransferOut()
+                        && oldRecord.getAutoTransferInto().equals(newRecord.getAutoTransferInto())
+                        && oldRecord.getAutoTransferOut().equals(newRecord.getAutoTransferOut())
                         && (oldRecord.getTransferIntoRatio() == null ? 0 : oldRecord.getTransferIntoRatio()) == (newRecord
                         .getTransferIntoRatio() == null ? 0 : newRecord.getTransferIntoRatio())) {
                     newRecord.setUpdateFlg(false);

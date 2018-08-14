@@ -3,30 +3,34 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author nixiaoling
@@ -51,6 +57,8 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     private AmTradeClient amTradeClient;
     @Autowired
     private AmConfigClient amConfigClient;
+    @Autowired
+    private FddProducer fddProducer;
     /**卡号不存在*/
     public static final String RESPCODE_CORPRATION_QUERY_EXIST = "CA000054";
 
@@ -65,6 +73,10 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
 
     private static Logger logger = LoggerFactory.getLogger(UserCenterServiceImpl.class);
 
+    /**
+     * 初始化用户管理页面
+     * @return
+     */
     @Override
     public UserManagerInitResponseBean initUserManaget(){
         UserManagerInitResponseBean userManagerInitResponseBean = new UserManagerInitResponseBean();
@@ -541,4 +553,54 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         return userCenterClient.queryBankOpenAccountByUserId(userId);
     }
 
+    /**
+     * 发送CA认证信息修改MQ
+     * @param form
+     */
+    public void sendCAChangeMQ(UserManagerUpdateRequest form) {
+        // 加入到消息队列
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("userId", String.valueOf(form.getUserId()));
+        try {
+            fddProducer.messageSend(new MessageContent(MQConstant.FDD_USERINFO_CHANGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("修改手机号后 发送更新客户信息MQ失败...", e);
+        }
+    }
+    @Override
+    public void sendCAChangeMQ(AdminUserRecommendRequest form) {
+        // 加入到消息队列
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("userId", String.valueOf(form.getUserId()));
+        try {
+            fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error(" 修改身份证号后 发送更新客户信息MQ失败...", e);
+        }
+        // add by liushouyi 20180228 修改身份证号后 发送更新客户信息MQ end
+    }
+    /**
+     *
+     * @Description:通过身份证号获取户籍所在地
+     * @param idCard
+     * @return String
+     * @exception:
+     */
+    @Override
+    public String getAreaByIdCard(String idCard) {
+        if (StringUtils.isBlank(idCard) || idCard.length() < 15) {
+            return "";
+        }
+        IdCardCustomize idCardCustomize = new IdCardCustomize();
+        idCardCustomize.setBm(idCard.substring(0, 6));
+        IdCardCustomize idCardCustomizeResponse =  amConfigClient.getIdCardCustomize(idCardCustomize);
+        if(null!=idCardCustomizeResponse){
+            return idCardCustomizeResponse.getArea();
+        }
+        return "";
+    }
 }

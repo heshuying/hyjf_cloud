@@ -19,7 +19,7 @@ import java.util.List;
  * @author hesy
  * @version BankRepayFreezeController, v0.1 2018/7/11 11:32
  */
-@Api(value = "异常中心-还款冻结异常撤销", description = "异常中心-还款冻结异常撤销")
+@Api(value = "异常中心-还款冻结异常撤销", tags = "异常中心-还款冻结异常撤销")
 @RestController
 @RequestMapping("/hyjf-admin/exception/repayfreeze_cancel")
 public class BankRepayFreezeExceptionController extends BaseController {

@@ -11,7 +11,7 @@ import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.customize.trade.BorrowRegistCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -33,7 +33,7 @@ import java.util.List;
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 15:05
  * 异常中心-标的备案掉单
  */
-@Api(value = "异常中心-标的备案掉单",description = "异常中心-标的备案掉单")
+@Api(value = "异常中心-标的备案掉单",tags ="异常中心-标的备案掉单")
 @RestController
 @RequestMapping("/am-trade/borrow_regist_exception")
 public class BorrowRegistExceptionController extends BaseController {

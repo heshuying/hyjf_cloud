@@ -67,7 +67,7 @@ public interface SafeService  extends BaseUserService {
      * @param bindEmailVO
      * @param user
      */
-    void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUserVO user);
+    void checkForEmailBind(BindEmailVO bindEmailVO, int userId);
 
     /**
      * 修改邮箱
@@ -83,20 +83,19 @@ public interface SafeService  extends BaseUserService {
      * @param relationId
      * @param rlName
      * @param rlPhone
-     * @param user
      */
-    void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUserVO user);
+    void checkForContractSave(String relationId, String rlName, String rlPhone);
 
     /**
      * 紧急联系人保存
      * @param relationId
      * @param rlName
      * @param rlPhone
-     * @param user
+     * @param userId
      * @return
      * @throws MQException
      */
-    boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUserVO user) throws MQException;
+    boolean saveContract(String relationId, String rlName, String rlPhone, int userId) throws MQException;
 
     /**
      * 更新用户通知设置
@@ -138,5 +137,5 @@ public interface SafeService  extends BaseUserService {
      * app端上传头像
      * @param token
      */
-    String updateAvatar(String token,MultipartFile iconImg) throws Exception;
+    String updateAvatar(Integer userId ,MultipartFile iconImg) throws Exception;
 }

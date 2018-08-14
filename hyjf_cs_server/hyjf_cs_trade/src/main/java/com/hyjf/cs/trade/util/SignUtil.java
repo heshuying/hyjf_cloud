@@ -34,14 +34,20 @@ public class SignUtil {
         }
 
         if (Objects.equals("/push", methodName)) {
-            // 资产推送--校验接口
+            // 个人资产推送--校验接口
             PushRequestBean requestBean = (PushRequestBean) paramBean;
             int assetType = requestBean.getAssetType();
             Long timestamp = requestBean.getTimestamp();
             sign = timestamp + instCode + assetType;
         } else if(Objects.equals("/synbalance", methodName)){
             SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
-            sign =  bean.getAccountId() + bean.getTimestamp();
+            sign =  bean.getAccountId()+bean.getInstCode() + bean.getTimestamp();
+        }else if (Objects.equals("/pushcompany", methodName)) {
+            // 企业资产推送--校验接口
+            PushRequestBean bean = (PushRequestBean) paramBean;
+            Long timestamp = bean.getTimestamp();
+            Integer assetType = bean.getAssetType();
+            sign = timestamp + instCode + assetType;
         }
 
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

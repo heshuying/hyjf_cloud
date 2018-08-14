@@ -111,7 +111,7 @@ public class CommonConstant {
     public static final String JUMP_HTML_SUCCESS_PATH = "/user/setting/bankPassword/result/success";
 
     /** @RequestMapping值 */
-    public static final String REQUEST_MAPPING = "/user/password";
+    public static final String REQUEST_MAPPING = "/bank/user/transpassword";
 
     /** @RequestMapping值 */
     public static final String RETURL_SYN_PASSWORD_ACTION = "/passwordReturn";
@@ -141,4 +141,15 @@ public class CommonConstant {
     public static final  String PAGE_LIMIT_START = "limitStart";
 
     public static final  String PAGE_LIMIT_END =   "limitEnd";
+
+    /** ValidateForm请求返回值 */
+    public static final String JSON_IF_EVALUATION_KEY = "ifEvaluation";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_EVALATION_RESULT_KEY = "userEvalationResult";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_QUESRION_LIST_KEY = "questionList";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_LOGIN_ERROR_KEY = "userError";
+    /** ValidateForm请求返回值*/
+    public static final String JSON_USER_LOGIN_ERROR_VLUES = "userError";
 }

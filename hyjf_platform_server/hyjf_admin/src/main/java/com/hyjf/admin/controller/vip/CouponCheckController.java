@@ -13,7 +13,6 @@ import com.hyjf.admin.service.CouponCheckService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponCheckResponse;
 import com.hyjf.am.resquest.admin.AdminCouponCheckRequest;
-import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.CouponCheckVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,9 +28,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author yaoyong
  * @version CouponCheckController, v0.1 2018/7/3 15:57
  */
-@Api(value = "优惠券列表接口", description = "优惠券列表")
+@Api(value = "优惠券列表接口", tags = "优惠券列表")
 @RestController
-@RequestMapping("/coupon/checkList")
+@RequestMapping("/hyjf-admin/coupon/checklist")
 public class CouponCheckController extends BaseController {
     /**
      * 权限名称
@@ -59,9 +58,9 @@ public class CouponCheckController extends BaseController {
 
 
     @ApiOperation(value = "优惠券列表", notes = "删除信息")
-    @PostMapping("/deleteAction")
+    @GetMapping("/deleteAction/{ids}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
-    public AdminResult deleteCheckList(@RequestBody String ids) {
+    public AdminResult deleteCheckList(@PathVariable String ids) {
         AdminCouponCheckRequest acr = new AdminCouponCheckRequest();
         CouponCheckResponse ccr = new CouponCheckResponse();
         String[] split = ids.split(",");
@@ -102,8 +101,10 @@ public class CouponCheckController extends BaseController {
         CouponCheckResponse ccr = new CouponCheckResponse();
         String remark = checkRequest.getRemark();
         boolean results = false;
-        AdminSystemVO user = getUser(request);
-        String userId = user.getId();
+        //联调的时候需要放开  todo
+//        AdminSystemVO user = getUser(request);
+//        String userId = user.getId();
+        String userId = "3";
         //审核通过
         if (StringUtils.equals(String.valueOf(checkRequest.getStatus()), "2")) {
             boolean flag = false;
@@ -120,14 +121,13 @@ public class CouponCheckController extends BaseController {
             results = couponCheckService.updateCoupon(checkRequest);
         } else {
             ccr.setMessage("审核不通过需要填写备注,备注20字以内");
-            return new AdminResult<>(ccr.getResult());
+            return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        if (results) {
-            ccr.setMessage("审核成功");
-        } else {
+        if (!results) {
             ccr.setMessage("审核失败");
+            return new AdminResult<>(FAIL, ccr.getMessage());
         }
-        return new AdminResult<>(ccr.getResult());
+        return new AdminResult<>();
     }
 
 }

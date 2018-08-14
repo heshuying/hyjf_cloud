@@ -2,14 +2,15 @@ package com.hyjf.cs.trade.controller.wechat.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CustomUtil;
-import com.hyjf.cs.trade.bean.WebViewUser;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.BankWithdrawService;
+import com.hyjf.cs.trade.service.wirhdraw.BankWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -34,7 +35,7 @@ import java.util.Map;
  * @author pangchengchao
  * @version BankWithdrawController, v0.1 2018/6/12 18:32
  */
-@Api(value = "wechat端用户提现接口")
+@Api(tags = "wechat端用户提现接口")
 @Controller
 @RequestMapping("/hyjf-wechat/withdraw")
 public class WechatBankWithdrawController extends BaseTradeController {
@@ -53,12 +54,13 @@ public class WechatBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public ModelAndView userBankWithdraw(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        logger.info("wechat端提现接口, token is :{}", JSONObject.toJSONString(token));
+    public ModelAndView userBankWithdraw(@RequestHeader(value = "userId") Integer userId,
+                                         HttpServletRequest request) {
+        logger.info("wechat端提现接口, userId is :{}", userId);
         String transAmt = request.getParameter("transAmt");// 交易金额
         String cardNo = request.getParameter("cardNo");// 提现银行卡号
         String payAllianceCode = request.getParameter("openCardBankCode");// 银联行号
-        WebViewUser user = RedisUtils.getObj(token, WebViewUser.class);
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
         //是否设置交易密码、是否汇付开户、是否银行开户
         if(null!=userVO||0==userVO.getIsSetPassword()||0==userVO.getOpenAccount()||0==userVO.getBankOpenAccount()){

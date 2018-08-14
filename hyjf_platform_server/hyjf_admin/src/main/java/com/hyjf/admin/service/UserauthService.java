@@ -16,8 +16,8 @@ import com.hyjf.am.resquest.user.AdminUserAuthLogListRequest;
  */
 public interface UserauthService {
 	public AdminUserAuthListResponse userauthlist(AdminUserAuthListRequest adminUserAuthListRequest);
-	public AdminUserAuthListResponse cancelInvestAuth(int userId, String ordId);
-	public AdminUserAuthListResponse cancelCreditAuth( int userId,  String ordId);
+	public AdminUserAuthListResponse cancelInvestAuth(int userId);
+	public AdminUserAuthListResponse cancelCreditAuth( int userId);
 	 //@GetMapping("/canCancelAuth/{userId}")
 	public HjhAccedeResponse canCancelAuth(Integer userId);
 	public AdminUserAuthLogListResponse userauthLoglist(AdminUserAuthLogListRequest adminUserAuthListRequest);

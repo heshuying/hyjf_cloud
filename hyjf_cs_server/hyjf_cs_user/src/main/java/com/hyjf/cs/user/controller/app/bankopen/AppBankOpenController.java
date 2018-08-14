@@ -8,6 +8,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
@@ -16,16 +17,11 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,11 +30,11 @@ import java.util.Map;
 /**
  * @author sunss
  */
-@Api(value = "app端用户开户",description = "app端-用户开户")
+@Api(value = "app端用户开户",tags = "app端-用户开户")
 @Controller
+@CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-app/user/open")
 public class AppBankOpenController extends BaseUserController {
-    private static final Logger logger = LoggerFactory.getLogger(AppBankOpenController.class);
 
     @Autowired
     private BankOpenService bankOpenService;
@@ -52,36 +48,40 @@ public class AppBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "app端获取开户信息", notes = "获取开户信息")
     @PostMapping(value = "/userInfo")
-    public AppResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        logger.info("openAccount userInfo start, token is :{}", token);
-        AppResult<String> result = new AppResult<String>();
-        UserVO userVO = bankOpenService.getUsers(token);
+    @ResponseBody
+    public Map userInfo(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
+        logger.info("app openAccount userInfo start, userId is :{}", userId);
+        Map<String,String> result = new HashedMap();
+        UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
-            logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
+            logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
-            result.setData(mobile);
+            result.put("phone",mobile);
+            result.put("status","000");
+            result.put("statusDesc","操作成功");
         } else {
             logger.error("openAccount userInfo failed...");
-            result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(MsgEnum.ERR_USER_INFO_GET.getMsg());
+            result.put("status","99");
+            result.put("statusDesc","操作失败");
         }
         return result;
     }
 
     @ApiOperation(value = "app端用户开户", notes = "app端-用户开户")
     @PostMapping(value = "/openBankAccount")
-    public AppResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    @ResponseBody
+    public AppResult<Object> openBankAccount(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("app openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         AppResult<Object> result = new AppResult<Object>();
         // 验证请求参数
-        if (token == null) {
+        if (userId == null) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
         // 获取登录信息
-        UserVO user = bankOpenService.getUsers(token);
+        UserVO user = bankOpenService.getUsersById(userId);
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
         // 拼装参数 调用江西银行
@@ -110,5 +110,22 @@ public class AppBankOpenController extends BaseUserController {
         }
         logger.info("app端开户end");
         return result;
+    }
+
+    /**
+     * @Description 查询开户失败原因
+     * @Author sunss
+     */
+    @ApiOperation(value = "we端开户查询开户失败原因", notes = "web端-查询开户失败原因")
+    @PostMapping("/seachFiledMess")
+    @ResponseBody
+    public AppResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);
+        WebResult<Object> result = bankOpenService.getFiledMess(logOrdId);
+        AppResult<Object> appResult = new AppResult<>();
+        appResult.setData(result.getData());
+        appResult.setStatus(result.getStatus());
+        appResult.setStatusDesc(result.getStatusDesc());
+        return appResult;
     }
 }

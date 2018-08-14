@@ -33,7 +33,7 @@ import java.util.List;
  * @author fq
  * @version MessagePushController, v0.1 2018/7/25 9:06
  */
-@Api(value = "消息推送", description = "消息推送")
+@Api(value = "消息推送", tags = "消息推送")
 @RestController
 @RequestMapping("/hyjf-app/msgpush")
 public class MessagePushController extends BaseController {
@@ -61,13 +61,7 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
+
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 
@@ -246,13 +240,7 @@ public class MessagePushController extends BaseController {
 			ret.put("statusDesc", "请求参数非法");
 			return ret;
 		}
-		// 取得加密用的Key
-		String key = SecretUtil.getKey(sign);
-		if (Validator.isNull(key)) {
-			ret.put("status", "1");
-			ret.put("statusDesc", "请求参数非法");
-			return ret;
-		}
+
 		ret.put("status", "0");
 		ret.put("statusDesc", "成功");
 		//更新记录信息

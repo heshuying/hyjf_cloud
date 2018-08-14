@@ -2,7 +2,6 @@ package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.beans.request.VersionRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -12,7 +11,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminVersionResponse;
 import com.hyjf.am.resquest.admin.AdminVersionRequest;
 import com.hyjf.am.vo.admin.VersionVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +29,7 @@ import java.util.List;
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Api(value = "配置中心版本配置")
+@Api(value = "配置中心版本配置",tags ="配置中心版本配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/versionconfig")
 public class AdminVersionConfigController extends BaseController {
@@ -39,10 +38,10 @@ public class AdminVersionConfigController extends BaseController {
     @Autowired
     private VersionConfigService adminVersionConfigService;
 
-    @ApiOperation(value = "配置中心版本配置", notes = "查询配置中心版本配置")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询配置中心版本配置", notes = "查询配置中心版本配置")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult versionConfigInit(@RequestBody VersionRequestBean versionRequestBean) {
+    public AdminResult<AdminVersionResponse> versionConfigInit(@RequestBody VersionRequestBean versionRequestBean) {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         if(StringUtils.isNotEmpty(versionRequestBean.getNameSrh())){
             adminRequest.setNameSrh(versionRequestBean.getNameSrh());
@@ -58,13 +57,13 @@ public class AdminVersionConfigController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
 
         }
-        return new AdminResult<ListResult<VersionVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
+        return new AdminResult<AdminVersionResponse>(response) ;
     }
 
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置详情页面")
+    @ApiOperation(value = "版本配置详情页面", notes = "版本配置详情页面")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
-    public AdminResult versionConfigInfo(@RequestBody VersionRequestBean versionRequestBean) {
+    public AdminResult<AdminVersionResponse> versionConfigInfo(@RequestBody VersionRequestBean versionRequestBean) {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         AdminVersionResponse adminResponse= null;
         if (Validator.isNotNull(versionRequestBean.getIds())) {
@@ -79,12 +78,12 @@ public class AdminVersionConfigController extends BaseController {
         if (!Response.isSuccess(adminResponse)) {
             return new AdminResult<>(FAIL, adminResponse.getMessage());
         }
-        return new AdminResult<VersionVO>(adminResponse.getResult()) ;
+        return new AdminResult<AdminVersionResponse>(adminResponse) ;
     }
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置添加")
+    @ApiOperation(value = "版本配置添加", notes = "版本配置添加")
     @PostMapping("/insertAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
-    public AdminResult insertVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
+    public AdminResult<AdminVersionResponse> insertVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         BeanUtils.copyProperties(versionRequestBean, adminRequest);
         AdminVersionResponse adminResponse= null;
@@ -93,11 +92,11 @@ public class AdminVersionConfigController extends BaseController {
         this.validatorFieldCheck(mv, adminRequest);
         if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
             //数据字典
-            List<ParamName> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
-            List<ParamName> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
-            adminResponse.getResult().setVersionNames(versionName);
-            adminResponse.getResult().setIsUpdates(isUpdate);
-            return new AdminResult<VersionVO>(adminResponse.getResult()) ;
+            List<ParamNameVO> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
+            List<ParamNameVO> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
+            adminResponse.setVersionNames(versionName);
+            adminResponse.setIsUpdates(isUpdate);
+            return new AdminResult<AdminVersionResponse>(adminResponse) ;
         }
         adminResponse = adminVersionConfigService.saveVersionConfig(adminRequest);
         if(adminResponse==null) {
@@ -107,13 +106,13 @@ public class AdminVersionConfigController extends BaseController {
             return new AdminResult<>(FAIL, adminResponse.getMessage());
 
         }
-        return new AdminResult<>();
+        return new AdminResult<AdminVersionResponse>(adminResponse) ;
     }
 
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置修改")
+    @ApiOperation(value = "版本配置修改", notes = "版本配置修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult updateVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
+    public AdminResult<AdminVersionResponse> updateVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         BeanUtils.copyProperties(versionRequestBean, adminRequest);
         AdminVersionResponse adminResponse= null;
@@ -122,11 +121,11 @@ public class AdminVersionConfigController extends BaseController {
         this.validatorFieldCheck(mv, adminRequest);
         if (ValidatorFieldCheckUtil.hasValidateError(mv)) {
             //数据字典
-            List<ParamName> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
-            List<ParamName> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
-            adminResponse.getResult().setVersionNames(versionName);
-            adminResponse.getResult().setIsUpdates(isUpdate);
-            return new AdminResult<VersionVO>(adminResponse.getResult()) ;
+            List<ParamNameVO> versionName = this.adminVersionConfigService.getParamNameList("VERSION_NAME");
+            List<ParamNameVO> isUpdate = this.adminVersionConfigService.getParamNameList("IS_UPDATE");
+            adminResponse.setVersionNames(versionName);
+            adminResponse.setIsUpdates(isUpdate);
+            return new AdminResult<AdminVersionResponse>(adminResponse) ;
         }
         adminResponse = adminVersionConfigService.updateVersionConfig(adminRequest);
         if(adminResponse==null) {
@@ -136,10 +135,10 @@ public class AdminVersionConfigController extends BaseController {
             return new AdminResult<>(FAIL, adminResponse.getMessage());
 
         }
-        return new AdminResult<>();
+        return new AdminResult<AdminVersionResponse>(adminResponse) ;
     }
 
-    @ApiOperation(value = "配置中心版本配置", notes = "版本配置删除")
+    @ApiOperation(value = "版本配置删除", notes = "版本配置删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {

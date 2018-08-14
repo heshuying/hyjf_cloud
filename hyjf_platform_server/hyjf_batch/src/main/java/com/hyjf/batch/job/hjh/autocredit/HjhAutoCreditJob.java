@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 @DisallowConcurrentExecution
 public class HjhAutoCreditJob extends BaseJob implements Job {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
-
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("HjhAutoCreditJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());

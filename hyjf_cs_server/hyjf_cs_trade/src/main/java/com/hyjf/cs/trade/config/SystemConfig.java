@@ -115,6 +115,27 @@ public class SystemConfig {
     @Value("${hyjf.ftp.url}")
     private String basePathurl;
 
+    /*需要在cs-trade的工程配置里面添加 注册送券活动ID */
+    @Value("${hyjf.register.888.activity.id}")
+    private String registerActivityId;
+
+    /*需要在cs-trade的工程配置里面添加 活动ID */
+    @Value("${hyjf.register.888.coupon.code}")
+    private String registerCouponCode;
+
+    /*需要在cs-trade的工程配置里面添加 测评送加息券活动ID */
+    @Value("${hyjf.coupon.id}")
+    private String couponCodeId;
+
+    /*需要在cs-trade的工程配置里面添加 活动ID */
+    @Value("${hyjf.activity.id}")
+    private String activityId;
+
+    /*需要在cs-trade的工程配置里面添加 CouponAccesskey */
+    @Value("${release.coupon.accesskey}")
+    private String couponAccesskey;
+
+
     public String getBankInstcode() {
         return bankInstcode;
     }
@@ -376,4 +397,45 @@ public class SystemConfig {
 	public void setBasePathurl(String basePathurl) {
 		this.basePathurl = basePathurl;
 	}
+
+    public String getRegisterActivityId() {
+        return registerActivityId;
+    }
+
+    public void setRegisterActivityId(String registerActivityId) {
+        this.registerActivityId = registerActivityId;
+    }
+
+    public String getCouponCodeId() {
+        return couponCodeId;
+    }
+
+    public void setCouponCodeId(String couponCodeId) {
+        this.couponCodeId = couponCodeId;
+    }
+
+    public String getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    public String getRegisterCouponCode() {
+        return registerCouponCode;
+    }
+
+    public void setRegisterCouponCode(String registerCouponCode) {
+        this.registerCouponCode = registerCouponCode;
+    }
+
+    public String getCouponAccesskey() {
+        return couponAccesskey;
+    }
+
+    public void setCouponAccesskey(String couponAccesskey) {
+        this.couponAccesskey = couponAccesskey;
+    }
+
 }

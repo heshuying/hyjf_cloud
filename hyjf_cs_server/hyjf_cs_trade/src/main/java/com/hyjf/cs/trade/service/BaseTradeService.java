@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -18,7 +20,7 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/12 10:34
      */
-    WebViewUserVO getUsersByToken(String token);
+    WebViewUserVO getUserFromCache(int userId);
 
     UserVO getUserByUserId(Integer userId);
 
@@ -55,5 +57,7 @@ public interface BaseTradeService extends BaseService{
 
     AccountVO getAccountByUserId(Integer userId);
 
+    BankCardVO getBankCardVOByUserId(Integer userId);
 
+    BorrowVO getBorrowByNid(String borrowNid);
 }

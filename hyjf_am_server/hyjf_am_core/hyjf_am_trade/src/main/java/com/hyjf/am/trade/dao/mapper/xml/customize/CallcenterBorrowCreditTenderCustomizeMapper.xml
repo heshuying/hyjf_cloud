@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.CallcenterBorrowCreditTenderCustomizeMapper">
+
+	<resultMap id="ListMap" type="com.hyjf.am.trade.dao.model.customize.CallCenterBorrowCreditCustomize">
+		<result column="credit_id" property="creditId" jdbcType="VARCHAR" />
+		<result column="credit_nid" property="creditNid" jdbcType="VARCHAR" />
+		<result column="bid_nid" property="bidNid" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="credit_capital" property="creditCapital" jdbcType="VARCHAR" />
+		<result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
+		<result column="credit_capital_price" property="creditCapitalPrice" jdbcType="VARCHAR" />
+		<result column="credit_price" property="creditPrice" jdbcType="VARCHAR" />
+		<result column="credit_capital_assigned" property="creditCapitalAssigned" jdbcType="VARCHAR" />
+		<result column="credit_status_name" property="creditStatusName" jdbcType="VARCHAR" />
+		<result column="repay_status_name" property="repayStatusName" jdbcType="VARCHAR" />
+		<result column="credit_status" property="creditStatus" jdbcType="VARCHAR" />
+		<result column="add_time" property="addTime" jdbcType="VARCHAR" />
+		<result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
+		<result column="client" property="client" jdbcType="VARCHAR" />
+	</resultMap>
+
+ 	<select id="getBorrowCreditTenderList" resultMap="ListMap" parameterType="com.hyjf.am.resquest.callcenter.SrchTransferInfoRequest">
+		SELECT			
+			  ct.assign_nid              AS assign_nid,	
+			  ct.client             	 AS client,
+			  ct.credit_nid              AS credit_nid,	
+			  ct.bid_nid                 AS bid_nid,
+			  ct.credit_user_name      AS credit_username,	
+			  ct.user_name                 AS username,
+			  FORMAT(ct.assign_capital, 2)          AS assign_capital, 	
+			  FORMAT(bc.credit_discount, 2)         AS credit_discount, 	
+			  FORMAT(ct.assign_capital, 2)          AS assign_capital_price,	
+			  FORMAT(ct.assign_price, 2)            AS assign_price,	
+			  FORMAT(ct.assign_interest_advance, 2) AS assign_interest_advance,	
+			  FORMAT(ct.credit_fee, 2)              AS credit_fee,	
+			  FORMAT(ct.assign_pay, 2)              AS assign_pay,	
+			  CASE WHEN ct.add_time != 0 AND ct.add_time IS NOT NULL THEN FROM_UNIXTIME( ct.add_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS add_time	 
+			FROM	
+			  ht_credit_tender ct	
+	        INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid	
+	   <include refid="CreditInfo_Where_Clause" />
+		ORDER BY
+		  bc.add_time DESC
+	    <if test="limitStart >= 0" >
+	      LIMIT #{limitStart} , #{limitSize}
+	    </if>
+	</select> 
+ 	<sql id="CreditInfo_Where_Clause">
+		<where>
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND ct.user_name  LIKE CONCAT('%', #{usernameSrch}, '%')
+			</if>
+		</where>
+	</sql>
+</mapper>

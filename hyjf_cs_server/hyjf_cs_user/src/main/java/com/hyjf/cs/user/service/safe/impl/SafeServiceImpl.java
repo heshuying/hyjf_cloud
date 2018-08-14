@@ -27,7 +27,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.MailProducer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import org.apache.commons.lang3.StringUtils;
@@ -113,7 +113,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
-    }
+        }
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
@@ -135,8 +135,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
         List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
         BankCardVO bankCard = new BankCardVO();
-        if(bankCards!=null&&!bankCards.isEmpty()) {
+        if (bankCards != null && !bankCards.isEmpty()) {
             bankCard = bankCards.get(0);
+            bankCard.setCardNoNotEncrypt(bankCard.getCardNo());
             bankCard.setCardNo(BankCardUtil.getCardNo(bankCard.getCardNo()));
         }
         resultMap.put("bankCard", bankCard);
@@ -146,7 +147,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("chinapnr", chinapnr);
 
         UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(user.getUserId());
-        if (userEvalationResult != null && userEvalationResult.getId()!=null&&userEvalationResult.getId() != 0) {
+        if (userEvalationResult != null && userEvalationResult.getId() != null && userEvalationResult.getId() != 0) {
             //获取评测时间加一年的毫秒数18.2.2评测 19.2.2
             Long lCreate = GetDate.countDate(userEvalationResult.getCreateTime(), 1, 1).getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
@@ -175,7 +176,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if (StringUtils.isNotEmpty(user.getIconUrl())) {
             resultMap.put("iconUrl", imghost + fileUploadTempPath + user.getIconUrl());
         }
-        resultMap.put("inviteLink", systemConfig.getWebHost() + "/user/regist?from=" + user.getUserId());
+        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/user/regist?from=" + user.getUserId());
         return resultMap;
     }
 
@@ -290,14 +291,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, WebViewUserVO user) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO, int userId) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
         // 校验激活是否用户本人
-        if (!bindEmailVO.getKey().equals(String.valueOf(user.getUserId()))) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(userId))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -339,7 +340,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 紧急联系人参数校验
      */
     @Override
-    public void checkForContractSave(String relationId, String rlName, String rlPhone, WebViewUserVO user) {
+    public void checkForContractSave(String relationId, String rlName, String rlPhone) {
         // 请求参数空值校验
         if (StringUtils.isBlank(relationId) || StringUtils.isBlank(rlName) || StringUtils.isBlank(rlPhone)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
@@ -358,12 +359,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * 保存紧急联系人
      */
     @Override
-    public boolean saveContract(String relationId, String rlName, String rlPhone, WebViewUserVO user) throws MQException {
+    public boolean saveContract(String relationId, String rlName, String rlPhone, int userId) throws MQException {
         UsersContractRequest requestBean = new UsersContractRequest();
         requestBean.setRelation(Integer.parseInt(relationId));
         requestBean.setRlName(rlName);
         requestBean.setRlPhone(rlPhone);
-        requestBean.setUserId(user.getUserId());
+        requestBean.setUserId(userId);
         int cnt = amUserClient.updateUserContract(requestBean);
 
         if (cnt <= 0) {
@@ -490,12 +491,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     }
 
     @Override
-    public String updateAvatar(String token, MultipartFile iconImg) throws Exception {
+    public String updateAvatar(Integer userId, MultipartFile iconImg) throws Exception {
         // 单位字节
         Long allowFileLength = 5000000L;
-        UserVO userVO = this.getUsers(token);
+        UserVO userVO = this.getUsersById(userId);
         // 取得用户ID
-        Integer userId = userVO.getUserId();
         CheckUtil.check(null != userId, MsgEnum.STATUS_CE000006);
         // 从配置文件获取上传文件的各个URL
         // 上传文件的CDNURL

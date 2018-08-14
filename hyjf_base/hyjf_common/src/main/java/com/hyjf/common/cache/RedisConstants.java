@@ -12,12 +12,12 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app_";
+    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
 
     /**
      * 记录密码错误次数Redis前缀web端
      */
-    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web_";
+    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
 
     /**
      * 用户一秒内的登录次数(ip)
@@ -53,7 +53,7 @@ public class RedisConstants {
     /**
      * 加入计划防重校验
      */
-    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT";
+    public static final String HJH_TENDER_REPEAT = "HJH_TENDER_REPEAT:";
 
     /**
      * 汇计划可投余额前缀
@@ -121,7 +121,7 @@ public class RedisConstants {
     /**
      * 散标投资防重校验
      */
-    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT";
+    public static final String BORROW_TENDER_REPEAT = "BORROW_TENDER_REPEAT:";
 
 
     /**
@@ -176,4 +176,101 @@ public class RedisConstants {
      * admin单点登陆用户
      */
     public static final String ADMIN_REQUEST = "Admin:";
+    
+    /**
+     * 协议模板---协议前台展示名称的别名
+     */
+    public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_Alias:";
+    
+    /**
+     * 协议模板---协议文件存储Redis前缀
+     */
+    public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
+    
+
+    /**
+     * 用户token令牌前缀
+     */
+    public static final String USERID_KEY = "userId_";
+
+    /**
+     * 放款批次号key
+     */
+    public static final String BATCH_NO = "batchNo";
+    /**
+     *
+     */
+    public static final String DATA_BATCH_NO = "dataBatchNo";
+    /**
+     * 短信配置key
+     */
+    public static final String SMS_CONFIG = "smsConfig";
+
+    /**
+     * 记录密码错误次数Redis前缀
+     */
+    public static final String PASSWORD_ERR_COUNT = "password_err_count:";
+
+    /**
+     * 邮件配置key
+     */
+    public static final String SITE_SETTINGS = "site_settings";
+
+    /**
+     * 消息推送模版key
+     */
+    public static final String MESSAGE_PUSH_TEMPLATE = "message_push_template";
+
+    /**
+     * 短信通知配置key
+     */
+    public static final String SMS_NOTICE_CONFIG = "sms_notice_config";
+
+    /**
+     * 短信模版key
+     */
+    public static final String SMS_TEMPLATE = "sms_template";
+
+    /**
+     * 邮件模版key
+     */
+    public static final String SMS_MAIL_TEMPLATE = "sms_mail_template:";
+
+    /**
+     * 运营报告定时任务key
+     */
+    public static final String Statistics_Operation_Report = "StatisticsOperationReportTask";
+
+    /** CONTROLLOR @value值 */
+    public static final String CONTROLLOR_CLASS_NAME = "UserRegistDefine:";
+
+    /**
+     * 充值防重校验
+     */
+    public static final String RECHARGE_ORDERID = "recharge_orderid:";
+
+    /**
+     * 定时发标key
+     */
+    public static final String ON_TIME = "ON_TIME:";
+
+    /**
+     * 用户画像评分
+     */
+    public static final String USERPORTRAIT_SCORE = "userPortrait_score";
+
+    /**
+	 * 汇计划提成
+	 * 之前是大寫PUSH_MONEY
+	 * add by libin
+	 */
+	public static final String PUSH_MONEY_ = "push_money:";
+
+	/**
+	 * 四端平台名称rediskey
+	 * @author zhangyk
+	 * @date 2018/8/13 9:24
+	 */
+	public static final String CLIENT = "CLIENT";
+
 }

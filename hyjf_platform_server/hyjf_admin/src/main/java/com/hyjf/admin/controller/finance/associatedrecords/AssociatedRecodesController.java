@@ -3,12 +3,10 @@
  */
 package com.hyjf.admin.controller.finance.associatedrecords;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AssociatedRecordsService;
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVo;
 import com.hyjf.common.util.CustomConstants;
@@ -22,7 +20,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: AssociatedRecodesController, v0.1 2018/7/5 11:25
  */
-@Api(value = "资金中心-定向转账-关联记录",description = "资金中心-定向转账-关联记录")
+@Api(value = "资金中心-定向转账-关联记录",tags = "资金中心-定向转账-关联记录")
 @RestController
 @RequestMapping(value = "/hyjf-admin/associatedrecords")
 public class AssociatedRecodesController extends BaseController {
@@ -74,7 +74,7 @@ public class AssociatedRecodesController extends BaseController {
         String sheetName = "关联记录列表";
         // 文件名称
         String fileName =
-                sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+                URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 检索列表
         List<AssociatedRecordListVo> associatedRecordListVos = associatedRecordsService.getAssociatedRecordList(request);

@@ -423,7 +423,9 @@ public class GetDate extends PropertyEditorSupport {
 		if (null == date) {
 			return null;
 		}
-		return date_sdf.format(date);
+		synchronized (date_sdf){
+			return date_sdf.format(date);
+		}
 	}
 
 	/**
@@ -1428,6 +1430,12 @@ public class GetDate extends PropertyEditorSupport {
 		return sdf.format(date);
 	}
 
+	public static String getDateTimeMyTimeInMillis(Date date) {
+		// 时间转换
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(date);
+	}
+
 	/**
 	 * 获取毫秒日期 yyyy-MM-dd HH:mm:ss(24小时制)
 	 *
@@ -1968,5 +1976,33 @@ public class GetDate extends PropertyEditorSupport {
 		} else {
 			return result;
 		}
+	}
+
+	/**
+	 * 返回yyyymmdd的int值
+	 *
+	 * @param seconds 秒数
+	 *
+	 * @return 指定毫秒数表示的日期
+	 */
+	public static int getIntYYMMDD(int seconds) {
+		Date repayEndDate = new Date((long)seconds * 1000);
+		return getIntYYMMDD(repayEndDate);
+	}
+
+	/**
+	 * 返回yyyymmdd的int值
+	 *
+	 * @param seconds 秒数
+	 *
+	 * @return 指定毫秒数表示的日期
+	 */
+	public static int getIntYYMMDD(Date repayEndDate) {
+		String enddateStr = new SimpleDateFormat("yyyyMMdd").format(repayEndDate);
+		return Integer.parseInt(enddateStr);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getDateTimeMyTimeInMillis(1483163187));
 	}
 }

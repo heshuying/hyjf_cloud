@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.List;
  * @author fuqiang
  * @version PlatformCountController, v0.1 2018/7/18 17:46
  */
-@Api(value = "数据中心-平台统计", description = "数据中心-平台统计")
+@Api(value = "数据中心-平台统计", tags = "数据中心-平台统计")
 @RestController
 @RequestMapping("/hyjf-admin/promotion/platformcount")
 public class PlatformCountController extends BaseController {
@@ -77,7 +78,7 @@ public class PlatformCountController extends BaseController {
             recordList = countCustomizeResponse.getResultList();
         }
 
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "平台", "访问数", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额" };
         // 声明一个工作薄

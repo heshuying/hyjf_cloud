@@ -3,9 +3,12 @@
  */
 package com.hyjf.cs.market.client;
 
+import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
+import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 
 import java.util.List;
 import java.util.Map;
@@ -105,4 +108,44 @@ public interface AmConfigClient {
      * @return
      */
     ContentArticleVO getContentArticleById(Integer contentArticleId);
+
+    /**
+     * 上下翻页
+     * @param params
+     * @param offset
+     * @return
+     */
+    ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset);
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  获取分享信息
+     * @Date 9:08 2018/7/27
+     * @Param
+     * @return ShareNewsBeanVO
+     */
+    ShareNewsBeanVO queryShareNews();
+    /**
+     * 用于展示发布的信息
+     * @param noticeType
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    public List<ContentArticleVO> searchHomeNoticeList(String noticeType,int limitStart, int limitEnd) ;
+
+    /**
+     * 根据文章类型获取文章列表
+     * @param form
+     * @return
+     */
+    public WechatContentArticleResponse searchContentArticleList(WechatContentArticleRequest form);
+
+    /**
+     * 添加反馈信息
+     * @param submissionsVO
+     * @return
+     */
+    int addSubmission(SubmissionsVO submissionsVO);
 }

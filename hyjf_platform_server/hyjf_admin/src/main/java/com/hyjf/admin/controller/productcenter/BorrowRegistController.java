@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.productcenter;
 import com.hyjf.admin.beans.request.BorrowRegistRequestBean;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -31,7 +32,7 @@ import java.util.Map;
  * @version BorrowRegistController, v0.1 2018/6/29 11:18
  */
 
-@Api(value = "汇直投-标的备案接口", description = "汇直投-标的备案接口")
+@Api(value = "汇直投-标的备案接口", tags = "汇直投-标的备案接口")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_regist")
 public class BorrowRegistController extends BaseController {
@@ -46,7 +47,6 @@ public class BorrowRegistController extends BaseController {
 
     @ApiOperation(value = "标的备案初始化", notes = "标的备案初始化")
     @PostMapping("/init")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowRegistResponseBean> init(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
@@ -67,7 +67,6 @@ public class BorrowRegistController extends BaseController {
 
     @ApiOperation(value = "获取标的备案列表", notes = "获取标的备案列表")
     @PostMapping("/search")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowRegistResponseBean> search(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
@@ -78,10 +77,12 @@ public class BorrowRegistController extends BaseController {
 
     @ApiOperation(value = "标的备案", notes = "标的备案")
     @GetMapping("/debt_regist/{borrowNid}")
-    @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult debtRegist(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
         return borrowRegistService.updateBorrowRegist(borrowNid, currUser.getId(), currUser.getUsername());
     }
 }

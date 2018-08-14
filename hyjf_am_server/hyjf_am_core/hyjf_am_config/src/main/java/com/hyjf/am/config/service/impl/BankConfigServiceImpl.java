@@ -33,6 +33,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 	@Autowired
 	private JxBankConfigMapper jxBankConfigMapper;
 
+
 	/**
 	 * 获取银行卡配置信息
 	 */
@@ -308,6 +309,22 @@ public class BankConfigServiceImpl implements BankConfigService {
 			return jxBankConfigList.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	public List<JxBankConfig> getRechargeQuotaLimit(Integer quickPayment) {
+		JxBankConfigExample example = new JxBankConfigExample();
+		example.createCriteria().andQuickPaymentEqualTo(quickPayment).andDelFlagEqualTo(0);
+		List<JxBankConfig> jxBankConfigList = jxBankConfigMapper.selectByExample(example);
+		return jxBankConfigList;
+	}
+
+	@Override
+	public List<ParamName> getParamName(String other1) {
+		ParamNameExample example = new ParamNameExample();
+		ParamNameExample.Criteria cra = example.createCriteria();
+		cra.andOther1EqualTo(other1);
+		return this.paramNameMapper.selectByExample(example);
 	}
 
 }

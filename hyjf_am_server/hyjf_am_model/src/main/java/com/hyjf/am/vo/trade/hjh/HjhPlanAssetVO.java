@@ -124,6 +124,136 @@ public class HjhPlanAssetVO extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //企业推送-借款类型
+    private String borrowType;
+
+    //借款企业名称
+    private String borrowCompanyName;
+
+    //财务状况
+    private String financialSituation;
+
+    //法人
+    private String legalPerson;
+
+    //注册地区
+    private String registrationArea;
+
+    //注册时间
+    private String registrationDate;
+
+    //主营业务
+    private String mainBusiness;
+
+    //统一社会信用代码
+    private String unifiedSocialCreditCode;
+
+    //注册资本
+    private String registeredCapital;
+
+    //所属行业
+    private String industryInvolved;
+
+    private String registrationAddress;
+
+    private String corporateCode;
+
+    public String getRegistrationAddress() {
+        return registrationAddress;
+    }
+
+    public void setRegistrationAddress(String registrationAddress) {
+        this.registrationAddress = registrationAddress;
+    }
+
+    public String getCorporateCode() {
+        return corporateCode;
+    }
+
+    public void setCorporateCode(String corporateCode) {
+        this.corporateCode = corporateCode;
+    }
+
+    public String getBorrowType() {
+        return borrowType;
+    }
+
+    public void setBorrowType(String borrowType) {
+        this.borrowType = borrowType;
+    }
+
+    public String getBorrowCompanyName() {
+        return borrowCompanyName;
+    }
+
+    public void setBorrowCompanyName(String borrowCompanyName) {
+        this.borrowCompanyName = borrowCompanyName;
+    }
+
+    public String getFinancialSituation() {
+        return financialSituation;
+    }
+
+    public void setFinancialSituation(String financialSituation) {
+        this.financialSituation = financialSituation;
+    }
+
+    public String getLegalPerson() {
+        return legalPerson;
+    }
+
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson;
+    }
+
+    public String getRegistrationArea() {
+        return registrationArea;
+    }
+
+    public void setRegistrationArea(String registrationArea) {
+        this.registrationArea = registrationArea;
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getMainBusiness() {
+        return mainBusiness;
+    }
+
+    public void setMainBusiness(String mainBusiness) {
+        this.mainBusiness = mainBusiness;
+    }
+
+    public String getUnifiedSocialCreditCode() {
+        return unifiedSocialCreditCode;
+    }
+
+    public void setUnifiedSocialCreditCode(String unifiedSocialCreditCode) {
+        this.unifiedSocialCreditCode = unifiedSocialCreditCode;
+    }
+
+    public String getRegisteredCapital() {
+        return registeredCapital;
+    }
+
+    public void setRegisteredCapital(String registeredCapital) {
+        this.registeredCapital = registeredCapital;
+    }
+
+    public String getIndustryInvolved() {
+        return industryInvolved;
+    }
+
+    public void setIndustryInvolved(String industryInvolved) {
+        this.industryInvolved = industryInvolved;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchCenterCustomizeMapper">
+    <resultMap id="batchCenterMap" type="com.hyjf.am.vo.admin.BatchBorrowRecoverVo">
+        <result column="borrow_nid" property="borrowNid" /><!-- 项目编号 -->
+        <result column="inst_name" property="instName" /><!-- 资产来源 -->
+        <result column="batch_no" property="batchNo" /> <!-- 批次号 -->
+        <result column="user_id" property="userId" /> <!-- 用户id -->
+        <result column="user_name" property="userName" /> <!-- 用户名 -->
+        <result column="period_now" property="periodNow" /> <!-- 当前期数 -->
+        <result column="borrow_period" property="borrowPeriod" /> <!-- 总期数 -->
+        <result column="borrow_account" property="borrowAccount" /> <!-- 借款金额  -->
+        <result column="batch_amount" property="batchAmount" /> <!-- 应还/应放款金额  -->
+        <result column="batch_counts" property="batchCounts" /> <!-- 总笔数  -->
+        <result column="batch_service_fee" property="batchServiceFee" /> <!-- 应收服务费  -->
+        <result column="suc_amount" property="sucAmount" /> <!-- 成功金额  -->
+        <result column="suc_counts" property="sucCounts" /> <!-- 成功笔数 -->
+        <result column="fail_amount" property="failAmount" /> <!-- 失败金额 -->
+        <result column="fail_counts" property="failCounts" /> <!-- 失败笔数 -->
+        <result column="status" property="status" /> <!-- 交易状态 -->
+        <result column="status_str" property="statusStr" /> <!-- 交易状态 -->
+        <result column="create_time" property="createTime" /> <!-- 提交时间  -->
+        <result column="update_time" property="updateTime" /> <!-- 修改时间  -->
+        <result column="is_repay_org_flag" property="isRepayOrgFlag" /> <!-- 是否是担保机构还款(0:否,1:是)  -->
+        <result column="data" property="data" /> <!-- 银行回执说明 -->
+    </resultMap>
+
+    <sql id="Where_Clause">
+        where hba.api_type = #{apiType}
+        <if test="borrowNid != null and borrowNid != ''">
+            AND hba.borrow_nid = #{borrowNid}
+        </if>
+        <!-- 资产来源 -->
+        <if test="instCodeSrch != null and instCodeSrch != ''">
+            AND b.inst_code = #{instCodeSrch}
+        </if>
+        <if test="batchNo != null and batchNo != ''">
+            AND hba.batch_no = #{batchNo}
+        </if>
+        <if test="status != null and status != ''">
+            AND cast(hba.`status` AS CHAR) = #{status}
+        </if>
+        <if test="submitTimeStartSrch != null and submitTimeStartSrch != ''">
+
+            AND FROM_UNIXTIME(hba.create_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{submitTimeStartSrch},'00:00:00'
+            ),'%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
+
+            AND FROM_UNIXTIME(hba.create_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{submitTimeEndSrch},'23:59:59'
+            ),'%Y-%m-%d %H:%i:%s')
+        </if>
+    </sql>
+
+    <select id="countBorrowBatchCenterListTotal" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
+        SELECT
+        count(1)
+        FROM
+        ht_borrow_apicron hba
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
+        <include refid="Where_Clause"/>
+    </select>
+
+    <select id="queryBatchCenterList" resultMap="batchCenterMap"
+            parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
+        SELECT
+        hba.id,
+        hba.borrow_nid borrow_nid,
+        hic.inst_name,
+        hba.batch_no batch_no,
+        hba.user_id user_id,
+        hba.user_name user_name,
+        hba.period_now period_now,
+        hba.borrow_period borrow_period,
+        hba.borrow_account borrow_account,
+        hba.batch_amount batch_amount,
+        hba.batch_service_fee batch_service_fee,
+        hba.batch_counts batch_counts,
+        hba.suc_amount suc_amount,
+        hba.suc_counts suc_counts,
+        hba.fail_amount fail_amount,
+        hba.fail_counts fail_counts,
+        hba.`status`,
+        from_unixtime(
+        hba.create_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS create_time,
+        from_unixtime(
+        hba.update_time,
+        '%Y-%m-%d %H:%i:%s'
+        ) AS update_time,
+        hba.is_repay_org_flag is_repay_org_flag,
+        hba.data
+        FROM
+        ht_borrow_apicron hba
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
+        <include refid="Where_Clause"/>
+        ORDER BY hba.create_time DESC
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <resultMap id="sumBatchCenterMap" type="com.hyjf.am.vo.admin.BatchBorrowRecoverVo">
+        <result column="borrow_account" property="sumBorrowAccount" /> <!-- 借款金额  -->
+        <result column="batch_amount" property="sumBatchAmount" /> <!-- 应还/应放款金额  -->
+        <result column="batch_service_fee" property="sumBatchServiceFee" /> <!-- 应收服务费  -->
+        <result column="batch_counts" property="sumBatchCounts" /> <!-- 总笔数  -->
+        <result column="suc_amount" property="sumSucAmount" /> <!-- 成功金额  -->
+        <result column="suc_counts" property="sumSucCounts" /> <!-- 成功笔数 -->
+        <result column="fail_amount" property="sumFailAmount" /> <!-- 失败金额 -->
+        <result column="fail_counts" property="sumFailCounts" /> <!-- 失败笔数 -->
+    </resultMap>
+
+    <select id="sumBatchCenter" resultMap="sumBatchCenterMap" parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
+        SELECT
+        SUM(hba.borrow_account) AS borrow_account,
+        SUM(hba.batch_amount) AS batch_amount,
+        SUM(hba.batch_service_fee) AS batch_service_fee,
+        SUM(hba.batch_counts) AS batch_counts,
+        SUM(hba.suc_amount) AS suc_amount,
+        SUM(hba.suc_counts) AS suc_counts,
+        SUM(hba.fail_amount) AS fail_amount,
+        SUM(hba.fail_counts) AS fail_counts
+        FROM
+        ht_borrow_apicron hba
+        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
+        <include refid="Where_Clause"/>
+    </select>
+
+</mapper>
+

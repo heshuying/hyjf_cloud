@@ -5,6 +5,9 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
+
+import java.util.List;
 
 /**
  * @author fq
@@ -18,4 +21,18 @@ public interface DataCenterCouponService {
      * @return
      */
     DataCenterCouponResponse searchAction(DadaCenterCouponRequestBean requestBean, String type);
+
+    /**
+     * 获取加息券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+
+    /**
+     * 获取代金券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
 }

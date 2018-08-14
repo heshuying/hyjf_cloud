@@ -1,14 +1,23 @@
 package com.hyjf.cs.trade.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
+import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
+import com.hyjf.am.resquest.assetpush.InfoBean;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.app.AppNewAgreementVO;
+import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
+import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -18,17 +27,18 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
+import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BorrowAuthCustomizeVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -62,22 +72,6 @@ public interface AmTradeClient {
     Integer selectMyCouponCount(MyCouponListRequest requestBean);
 
     List<MyRewardRecordCustomizeVO> selectMyRewardList(MyInviteListRequest requestBean);
-
-    /**
-     * 根据borrowNid查询优惠券还款列表
-     * @param borrowNid
-     * @param repayTimeConfig
-     * @return
-     */
-    List<CouponTenderCustomizeVO> selectCouponRecoverAll(String borrowNid, int repayTimeConfig);
-
-    /**
-     * 取得分期付款信息
-     * @param couponTenderNid
-     * @param periodNow
-     * @return
-     */
-    CouponRecoverCustomizeVO getCurrentCouponRecover(String couponTenderNid, int periodNow);
 
 
     int selectMyRewardCount(MyInviteListRequest requestBean);
@@ -113,7 +107,7 @@ public interface AmTradeClient {
     List<HjhAccedeVO> selectPlanJoinList();
 
     /**
-     * 计算实际金额 保存creditTenderLog表
+     * 计算计划债转实际金额 保存creditTenderLog表
      * @author liubin
      * @return
      */
@@ -131,14 +125,14 @@ public interface AmTradeClient {
      * @author liubin
      * @return
      */
-    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
 
     /**
      * 银行自动投资成功后，更新投资数据
      * @author liubin
      * @return
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     /**
      * 根据是否原始债权获出让人投标成功的授权号
@@ -202,7 +196,8 @@ public interface AmTradeClient {
 
     /**
      * 根据主键，更新汇计划自动投资临时表
-     * @author liubin
+     * @param hjhPlanBorrowTmpVO
+     * @return
      */
     int updateHjhPlanBorrowTmpByPK(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 
@@ -305,6 +300,8 @@ public interface AmTradeClient {
     Integer countPreapysList(Map<String, Object> requestBean);
 
     Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean);
+
+    Boolean updateBorrowCreditStautus(String borrowNid);
 
     BorrowApicronVO selectBorrowApicron(String bankSeqNO);
 
@@ -1395,12 +1392,36 @@ public interface AmTradeClient {
 
     List<AppTenderCreditRecordListCustomizeVO> searchAppCreditRecordList(AssetManageBeanRequest params);
 
-	/**
-	 * 获取债转承接信息
-	 * @param nid
-	 * by libin
-	 * @return
-	 */
+
+    /**
+     * 散标投资记录数
+     * @param params
+     * @return
+     */
+    int countProjectInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * borrowId对应的总钱数
+     * @param params
+     * @return
+     */
+    String countMoneyByBorrowId(Map<String,Object> params);
+
+    /**
+     * 散标投资记录
+     * @param params
+     * @return
+     */
+    List<AppProjectInvestListCustomizeVO> selectProjectInvestList(Map<String,Object> params);
+
+
+
+    /**
+     * 获取债转承接信息
+     * @param nid
+     * by libin
+     * @return
+     */
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByPrimaryKey(Integer nid);
 
     Integer selectTenderToCreditListCount(AssetManageBeanRequest params);
@@ -1408,4 +1429,192 @@ public interface AmTradeClient {
     Integer countAppMyPlan(AssetManageBeanRequest params);
 
     List<AppMyPlanCustomizeVO> selectAppMyPlanList(AssetManageBeanRequest params);
+
+
+    /**
+     * 统计相应的计划加入记录总数
+     * @param params
+     * @return
+     */
+    int countPlanBorrowRecordTotal(Map<String,Object> params);
+
+    /**
+     * 查询相应的计划标的记录列表
+     * @param params
+     * @return
+     */
+    List<DebtPlanBorrowCustomizeVO> selectPlanBorrowList(Map<String,Object> params);
+
+    /**
+     * 获取债转承接信息by AssignOrderId
+     * @param assignOrderId
+     * by libin
+     * @return
+     */
+    HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
+
+    /**
+     * 获取债转承接信息by AssignNid
+     * @param assignNid
+     * @return
+     */
+    CreditTenderVO getCreditTenderByAssignNid(String assignNid);
+
+    /**
+     * 获取协议模板by DisplayName
+     * @param displayName
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName);
+
+    /**
+     * 统计相应的计划总数
+     * @param params
+     * @return
+     */
+    Long selectPlanAccedeSum(Map<String,Object> params);
+
+    /**
+     * 查询相应的计划的加入列表
+     * @param params
+     * @return
+     */
+    List<DebtPlanAccedeCustomizeVO> selectPlanAccedeList(Map<String,Object> params);
+
+    /**
+     * 获得协议模板图片
+     * @param aliasName 别名
+     * @return
+     */
+    AppNewAgreementVO setProtocolImg(String aliasName);
+
+    /**
+     * APP端债转记录数
+     * @param params
+     * @return
+     */
+    int countTenderCreditInvestRecordTotal(Map<String,Object> params);
+
+    /**
+     * 获取债转承接记录列表
+     * @param params
+     * @return
+     */
+    List<AppTenderCreditInvestListCustomizeVO> searchTenderCreditInvestList(Map<String,Object> params);
+
+    /**
+     * 获取债转投资人次和已债转金额
+     * @param transferId
+     * @return
+     */
+    List<BorrowCreditVO> selectBorrowCreditByNid(String transferId);
+
+    /**
+     * 获取项目类型
+     *
+     * @param borrowCd
+     * @return
+     */
+    List<BorrowProjectTypeVO> selectBorrowProjectByBorrowCd(String borrowCd);
+
+    int countAppTradeDetailListRecordTotal(AppTradeDetailBeanRequest trade);
+
+    List<AppTradeListCustomizeVO> searchAppTradeDetailList(AppTradeDetailBeanRequest trade);
+
+    BigDecimal getUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgRepayWaitTotal(Integer userId);
+
+    /**
+     * 查询广告列表
+     * @author zhangyk
+     * @date 2018/7/5 15:32
+     */
+    List<AppAdsCustomizeVO> getBannerList(AdsRequest request);
+
+    /**
+     * 获取承接中的总额度
+     * @author zhangyk
+     * @date 2018/8/9 11:48
+     */
+    String sumUndertakeAccount(String borrowNid);
+
+    /**
+     * 承接中的列表
+     * @author zhangyk
+     * @date 2018/8/9 13:58
+     */
+    List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> params);
+
+    /**
+     * 获取机构信息
+     *
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    HjhAssetBorrowTypeVO selectAssetBorrowType(String instCode, Integer assetType);
+
+    /**
+     * 根据项目类型去还款方式
+     *
+     * @param borrowcCd
+     * @return
+     */
+    List<BorrowProjectRepayVO> selectProjectRepay(String borrowcCd);
+
+    /**
+     * 获取受托支付电子账户列表
+     *
+     * @param instCode
+     * @param entrustedAccountId
+     * @return
+     */
+    STZHWhiteListVO selectStzfWhiteList(String instCode, String entrustedAccountId);
+
+    /**
+     * 插入资产表
+     *
+     * @param record
+     * @return
+     */
+    int insertAssert(HjhPlanAssetVO record);
+
+    /**
+     * 插入资产表
+     *
+     * @param riskInfo
+     */
+    void insertRiskInfo(List<InfoBean> riskInfo);
+
+    /**
+     * 检查是否存在重复资产
+     *
+     * @param assetId
+     * @return
+     */
+    HjhPlanAssetVO checkDuplicateAssetId(String assetId);
+
+    /**
+     * 录标时添加企业资产
+     *
+     * @param record
+     * @return
+     */
+    int insertCompanyInfoToBorrowUsers(BorrowUserVO record);
+
+    /**
+     * 根据borrowNid查询风控信息
+     * @author zhangyk
+     * @date 2018/8/10 15:21
+     */
+    BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
+
+    JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean);
+
+    RepayBean getRepayBean(Map<String, String> paraMap);
+
+    ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
 }

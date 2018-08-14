@@ -14,10 +14,7 @@ import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -109,4 +106,23 @@ public class EventController extends BaseConfigController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
+
+	/**
+	 * 获取公司纪事
+	 * @param begin
+	 * @param end
+	 * @param year
+	 * @return
+	 */
+	@GetMapping("/getEvents/{begin}/{end}/{year}")
+	public EventResponse getEvents(@PathVariable int begin, @PathVariable int end, @PathVariable int year){
+		EventResponse eventResponse = new EventResponse();
+		List<Event> events = eventService.getEvents(begin, end, year);
+		List<EventVO> eventsVO = CommonUtils.convertBeanList(events, EventVO.class);
+		eventResponse.setResultList(eventsVO);
+		return eventResponse;
+	}
+
+
+
 }

@@ -1,11 +1,11 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.BankCardResponse;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.trade.MyBestCouponListResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
@@ -15,12 +15,9 @@ import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,20 +149,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 我的邀请列表
-	 * @param requestBean
-	 * @return
-	 */
-	@Override
-	public List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean){
-		String url = urlBase + "invite/myInviteList";
-		MyInviteListResponse response = restTemplate.postForEntity(url,requestBean,MyInviteListResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
 
 	@Override
 	public Integer selectMyInviteCount(MyInviteListRequest requestBean){
@@ -280,15 +263,6 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return false;
     }
-
-	/**
-	 * 查如vipUser
-	 */
-	@Override
-	public boolean insertVipUserTender(JSONObject para) {
-		String url = "http://AM-USER/am-user/user/insertVipUserTender";	
-		return restTemplate.postForEntity(url, para, Boolean.class).getBody();
-	}
 
 	/**
 	 * 获取用户投资数量
@@ -493,15 +467,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 
     @Override
-    public CouponConfigVO selectCouponConfig(String couponCode) {
-        CouponConfigResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/selectCouponConfig/" + couponCode, CouponConfigResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
     public BestCouponListVO selectBestCoupon(MyCouponListRequest request) {
         MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/myBestCouponList", request,MyBestCouponListResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -518,43 +483,6 @@ public class AmUserClientImpl implements AmUserClient {
         }
         return null;
     }
-
-    @Override
-    public Integer checkCouponSendExcess(String couponCode) {
-        CouponConfigCustomizeResponse cccr = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponConfig/checkCouponSendExcess/"+couponCode,CouponConfigCustomizeResponse.class).getBody();
-        if (Response.isSuccess(cccr)) {
-            return cccr.getCount();
-        }
-        return null;
-    }
-
-    /**
-     * 查询汇计划最优优惠券
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    public BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request) {
-        MyBestCouponListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/selectHJHBestCoupon",request, MyBestCouponListResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    /**
-     * 查询HJH可用优惠券数量
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    public Integer countHJHAvaliableCoupon(MyCouponListRequest request) {
-        Integer response = restTemplate.postForEntity("http://AM-TRADE/am-trade/coupon/getHJHUserCouponAvailableCount", request,Integer.class).getBody();
-        return response;
-    }
-
 
 
     @Override
@@ -598,6 +526,87 @@ public class AmUserClientImpl implements AmUserClient {
 		UtmPlatResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/selectUtmPlatByUserId/" + userId,UtmPlatResponse.class)
 				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询用户信息（user表）
+	 *
+	 * @param truename
+	 * @param idcard
+	 * @return
+	 */
+	@Override
+	public UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard) {
+		String url = "http://AM-USER/am-user/userInfo/selectUserInfoByNameAndCard/" + truename + "/" + idcard;
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询用户信息（userinfo表）
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserVO selectUsersById(Integer userId) {
+		String url = "http://AM-USER/am-user/user/findById/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public UserVO selectUserInfoByUsername(String userName) {
+		String url = "http://AM-USER/am-user/user/selectUserInfoByUsername/" + userName;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserInfoVO selectUserInfoByUserId(Integer userId) {
+		String url = "http://AM-USER/am-user/userInfo/selectUserInfoByUserId/" + userId;
+		UserInfoResponse response = restTemplate.getForEntity(url, UserInfoResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName) {
+		String url = "http://AM-USER/am-user/corpOpenAccountRecord/selectUserBusiNameByUsername/" + userName;
+		CorpOpenAccountRecordResponse response = restTemplate.getForEntity(url, CorpOpenAccountRecordResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

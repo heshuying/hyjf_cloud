@@ -4,7 +4,7 @@
 package com.hyjf.cs.trade.controller.wechat.recharge;
 
 import com.hyjf.cs.trade.bean.WxRechargeDescResultBean;
-import com.hyjf.cs.trade.service.WechatRechargeRuleService;
+import com.hyjf.cs.trade.service.recharge.WechatRechargeRuleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author wangjun
  * @version WechatRechargeRuleController, v0.1 2018/7/26 9:23
  */
-@Api(description = "wechat端获取充值规则")
+@Api(tags = "wechat端获取充值规则")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/hyjf-wechat/wx/recharge")

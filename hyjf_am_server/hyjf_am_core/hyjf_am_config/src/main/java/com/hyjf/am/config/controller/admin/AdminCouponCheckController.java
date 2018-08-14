@@ -101,8 +101,11 @@ public class AdminCouponCheckController extends BaseConfigController {
 
 
     @PostMapping("/updateCoupon")
-    public Boolean updateCoupon(@RequestBody @Valid AdminCouponCheckRequest request) {
-        return checkService.updateCoupon(request);
+    public CouponCheckResponse updateCoupon(@RequestBody @Valid AdminCouponCheckRequest request) {
+        CouponCheckResponse response = new CouponCheckResponse();
+        boolean result = checkService.updateCoupon(request);
+        response.setBool(result);
+        return response;
     }
 
 

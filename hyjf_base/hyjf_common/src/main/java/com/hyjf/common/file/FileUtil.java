@@ -8,8 +8,9 @@ package com.hyjf.common.file;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
@@ -330,7 +331,7 @@ public class FileUtil {
      * @throws IOException
      */
     public static boolean getRemoteFile(String strUrl, String fileName) throws IOException {
-    	System.out.println("-------------getRemoteFile地址："+strUrl + "######" +fileName);
+    	logger.info("-------------getRemoteFile地址："+strUrl + "-----" +fileName);
 		URL url = new URL(strUrl);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		// 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
@@ -353,7 +354,7 @@ public class FileUtil {
 				output.write(buffer, 0, count);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("文件获取失败:", e);
 		} finally {
 			if (input != null) {
 				input.close();
@@ -600,37 +601,24 @@ public class FileUtil {
 	 * @param pdfPath
 	 * 保存的PDF路径
 	 */
-	public static void imageTOpdf(List imagePath,String pdfPath){
+    public static void imageTOpdf(List imagePath,String pdfPath){
 		String imgPath = null;
 		PDDocument document = null;
-		PDPageContentStream contentStream =  null;
 		try{
 
 			// 创建PDF文档
 			document = new PDDocument();
 			for (int i = 0; i < imagePath.size(); i++) {
+				
 				imgPath = (String) imagePath.get(i);
-
-				// 写PDF文件.
-				BufferedImage img = ImageIO.read(new File(imgPath));
-//          FileOutputStream fos = new FileOutputStream(pdfFile);
-				// 创建一页
-				PDPage blankPage = new PDPage();
-				// 添加分页到文档中
-				document.addPage(blankPage);
-				// 创建图片
-				PDJpeg jpeg = new PDJpeg(document,img);
-				// 获取页面格式。这里只取第0个
-				PageFormat pf = document.getPageFormat(0);
-				double pageWidth = pf.getWidth();
-				double pageHeight = pf.getHeight();
-				// 创建页面内容输出流
-				contentStream = new PDPageContentStream(document, blankPage);
-//          contentStream.drawImage(jpeg, 0, 0);
-				// 通过内容输出流，画图片对象到当前分页中。不能用drawImage，因为drawImage会直接按原图片的大小输出的。
-				contentStream.drawXObject(jpeg, 0, 0,(float)pageWidth,(float)pageHeight);
-				// 关闭页面输出流
+				PDImageXObject pdImage = PDImageXObject.createFromFile(imgPath, document);
+                PDRectangle pRectangle=new PDRectangle(pdImage.getWidth(), pdImage.getHeight());
+				PDPage pp=new PDPage(pRectangle);
+				PDPageContentStream contentStream = new PDPageContentStream(document, pp);
+				contentStream.drawImage(pdImage,1, -20,pdImage.getWidth(),pdImage.getHeight());
+				document.addPage(pp);
 				contentStream.close();
+	
 			}
 
 			// 保存PDF文档

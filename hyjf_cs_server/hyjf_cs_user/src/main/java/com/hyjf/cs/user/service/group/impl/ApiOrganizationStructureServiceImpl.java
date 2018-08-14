@@ -11,7 +11,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.OrganizationStructureRequestBean;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.group.ApiOrganizationStructureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class ApiOrganizationStructureServiceImpl extends BaseUserServiceImpl imp
     @Override
     public List<OrganizationStructureVO> queryInfo(OrganizationStructureRequestBean bean) {
         //校验参数
-        CheckUtil.check(Validator.isNotNull(bean.getInstCode()),MsgEnum.ERR_PARAM);
+        CheckUtil.check(Validator.isNotNull(bean.getInstCode()),MsgEnum.STATUS_CE000001);
         //校验签名
         CheckUtil.check(this.verifyRequestSign(bean,BaseDefine.ORGANIZATION_LIST),MsgEnum.ERR_SIGN);
         // 获取信息

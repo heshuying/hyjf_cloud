@@ -8,6 +8,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.pandect.PandectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,11 +28,11 @@ import java.util.Map;
  * @author zhangqingqing
  * @version PandectController, v0.1 2018/6/21 14:31
  */
-@Api(value = "web端账户总览",description = "web端-账户总览")
+@Api(value = "web端账户总览",tags = "web端-账户总览")
 @CrossOrigin(origins = "*")
 @Controller
 @RequestMapping("/hyjf-web/user")
-public class PandectController {
+public class PandectController extends BaseUserController{
     private static final Logger logger = LoggerFactory.getLogger(PandectController.class);
 
     @Autowired
@@ -52,6 +53,7 @@ public class PandectController {
             JSONObject map = pandectService.pandect(user);
             result.setData(map);
             model.addAttribute("datas",result);
+            logger.info("pandect:"+result);
         return "pandect";
     }
 }

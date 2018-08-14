@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.BankSettingClient;
 import com.hyjf.admin.service.BankSettingService;
 import com.hyjf.am.response.admin.AdminBankSettingResponse;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
 public class BankSettingServiceImpl implements BankSettingService {
 
     @Autowired
-    private BankSettingClient bankSettingClient;
+    private AmConfigClient amConfigClient;
 
     @Value("${file.domain.url}")
     private String FILEDOMAILURL;
@@ -49,7 +50,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public AdminBankSettingResponse selectBankSettingList(AdminBankSettingRequest request) {
-        return bankSettingClient.selectBankSettingList(request);
+        return amConfigClient.selectBankSettingList(request);
     }
 
     /**
@@ -59,7 +60,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public AdminBankSettingResponse getRecord(AdminBankSettingRequest request) {
-        return bankSettingClient.getRecord(request);
+        return amConfigClient.getRecord(request);
     }
 
     /**
@@ -71,7 +72,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public List<JxBankConfigVO> getRecordList(JxBankConfigVO bank, int limitStart, int limitEnd) {
-        return bankSettingClient.getRecordList(bank, limitStart, limitEnd);
+        return amConfigClient.getRecordList(bank, limitStart, limitEnd);
     }
 
     /**
@@ -81,7 +82,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public AdminBankSettingResponse insertRecord(AdminBankSettingRequest request) {
-        return bankSettingClient.insertRecord(request);
+        return amConfigClient.insertRecord(request);
     }
 
     /**
@@ -91,7 +92,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public AdminBankSettingResponse updateRecord(AdminBankSettingRequest request) {
-        return bankSettingClient.updateRecord(request);
+        return amConfigClient.updateRecord(request);
     }
 
     /**
@@ -101,7 +102,7 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public AdminBankSettingResponse deleteRecord(AdminBankSettingRequest request) {
-        return bankSettingClient.deleteRecord(request);
+        return amConfigClient.deleteRecord(request);
     }
 
     /**
@@ -111,13 +112,12 @@ public class BankSettingServiceImpl implements BankSettingService {
      */
     @Override
     public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
-        //ShiroHttpServletRequest shiroRequest = (ShiroHttpServletRequest) request;
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultipartHttpServletRequest multipartRequest = commonsMultipartResolver.resolveMultipart(request);
+
         String fileDomainUrl = UploadFileUtils.getDoPath(FILEDOMAILURL);
         String filePhysicalPath = UploadFileUtils.getDoPath(FILEPHYSICALPATH);
         String fileUploadTempPath = UploadFileUtils.getDoPath(FILEUPLOADTEMPPATH);
-
         String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
 
         File logoSaveFile = new File(logoRealPathDir);
@@ -133,7 +133,7 @@ public class BankSettingServiceImpl implements BankSettingService {
 
         while (itr.hasNext()) {
             multipartFile = multipartRequest.getFile(itr.next());
-            String fileRealName = String.valueOf(new Date().getTime());
+            String fileRealName = String.valueOf(System.currentTimeMillis());
             String originalFilename = multipartFile.getOriginalFilename();
             fileRealName = fileRealName + UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
 
@@ -163,7 +163,6 @@ public class BankSettingServiceImpl implements BankSettingService {
             files.add(fileMeta);
         }
         return JSONObject.toJSONString(files, true);
-
     }
 
 }

@@ -12,9 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ import java.util.List;
  * @author fuqiang
  * @version MailTemplateController, v0.1 2018/6/25 14:46
  */
-@Api(value = "邮件模板", description = "邮件模板")
+@Api(value = "邮件模板", tags = "邮件模板")
 @RestController
 @RequestMapping("/hyjf-admin/mail/template")
 public class MailTemplateController {
@@ -38,7 +36,7 @@ public class MailTemplateController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询所有邮件配置模板", notes = "查询所有邮件配置模板")
-	@RequestMapping("/findAll")
+	@GetMapping("/findAll")
 	public JSONObject findAll() {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsMailTemplateVO> voList = mailTemplateService.findAll();
@@ -52,7 +50,7 @@ public class MailTemplateController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据条件查询邮件配置模板", notes = "根据条件查询邮件配置模板")
-	@RequestMapping("/findMailTemplate")
+	@PostMapping("/findMailTemplate")
 	public JSONObject findMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsMailTemplateVO> voList = mailTemplateService.findMailTemplate(request);
@@ -67,7 +65,7 @@ public class MailTemplateController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增邮件模板", notes = "新增邮件模板")
-	@RequestMapping("/insertMailTemplate")
+	@PostMapping("/insertMailTemplate")
 	public JSONObject insertMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {

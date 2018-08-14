@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @author jijun
  * @date 20180719
  */
-@Api(value = "提现管理",description = "提现管理")
+@Api(value = "提现管理",tags = "提现管理")
 @RestController
 @RequestMapping("/finance/withdraw")
 public class WithdrawController extends BaseController {
@@ -120,11 +121,13 @@ public class WithdrawController extends BaseController {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("userName", loginUser);
 		param.put("ip", ip);
+		param.put("userId",String.valueOf(userId));
+		param.put("nid",nid);
 		// 确认充值 ; 0表示充值失败
 		boolean isAccountUpdate = false;
 		if (status == 1) {
 			try {
-				isAccountUpdate = this.withdrawService.updateAccountAfterWithdraw(userId, nid, param);
+				isAccountUpdate = this.withdrawService.updateAccountAfterWithdraw(param);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -180,7 +183,7 @@ public class WithdrawController extends BaseController {
 			recordList=recordListResponse.getResultList();
 		}
 
-		String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
 		String[] titles = new String[] { "序号", "用户名", "电子帐号", "资金托管平台", "流水号", "手机号", "用户角色", "用户属性（当前）", "用户所属一级分部（当前）", "用户所属二级分部（当前）", "用户所属团队（当前）", "推荐人用户名（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）",
 				"推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "订单号", "提现金额", "手续费", "到账金额", "实际出账金额", "提现银行", "提现方式", "提现银行卡号", "提交时间", "提现平台", "处理状态" ,"发送日期" ,"发送时间" ,"系统跟踪号" };

@@ -1,17 +1,12 @@
 package com.hyjf.cs.trade.client;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.resquest.user.BankAccountBeanRequest;
-import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -109,8 +104,6 @@ public interface AmUserClient {
      */
     boolean updateFirstUtmReg(Map<String,Object> params);
 
-	List<MyInviteListCustomizeVO> selectMyInviteList(MyInviteListRequest requestBean);
-
 	/**
 	 * 判断是否51老客户
 	 * @param userId
@@ -118,11 +111,6 @@ public interface AmUserClient {
 	 */
     boolean checkIs51UserCanInvest(Integer userId);
 
-    /**
-     * 插入VIPuser
-     * @param para
-     */
-	boolean insertVipUserTender(JSONObject para);
 
 	/**
 	 * 获取用户投资数量
@@ -232,33 +220,11 @@ public interface AmUserClient {
 	 */
 	BankCardVO getBankCardByCardNo(Integer userId, String cardNo);
 
-    CouponConfigVO selectCouponConfig(String couponCode);
-
 
     BestCouponListVO selectBestCoupon(MyCouponListRequest request);
 
 
     Integer countAvaliableCoupon(MyCouponListRequest request);
-
-    /**
-     * 查询汇计划最优优惠券
-     * @param request
-     * @return
-     */
-    BestCouponListVO selectHJHBestCoupon(MyCouponListRequest request);
-
-    /**
-     *
-     * @param couponCode
-     * @return
-     */
-    Integer checkCouponSendExcess(String couponCode);
-    /**
-     * 查询HJH可用优惠券数量
-     * @param request
-     * @return
-     */
-    Integer countHJHAvaliableCoupon(MyCouponListRequest request);
 
 
     /**
@@ -285,4 +251,45 @@ public interface AmUserClient {
 
 
 	UtmPlatVO selectUtmPlatByUserId(Integer userId);
+
+	/**
+	 * 获取用户信息
+	 *
+	 * @param truename
+	 * @param idcard
+	 * @return
+	 */
+	UserInfoVO selectUserInfoByNameAndCard(String truename, String idcard);
+
+	/**
+	 * 获取用户的数据
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserVO selectUsersById(Integer userId);
+
+	/**
+	 * 通过用户名获得用户的详细信息
+	 *
+	 * @param userName
+	 * @return
+	 */
+	UserVO selectUserInfoByUsername(String userName);
+
+	/**
+	 * 通过用户id获得用户真实姓名和身份证号
+	 *
+	 * @param userId
+	 * @return
+	 */
+	UserInfoVO selectUserInfoByUserId(Integer userId);
+
+	/**
+	 * 查看用户对应的企业编号
+	 *
+	 * @param userName
+	 * @return
+	 */
+	CorpOpenAccountRecordVO selectUserBusiNameByUsername(String userName);
 }

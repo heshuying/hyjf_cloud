@@ -42,7 +42,7 @@ import java.util.*;
  * @author libin
  * @version AssetListController, v0.1 2018/6/27 15:16
  */
-@Api(value = "资产列表",description = "资产列表")
+@Api(value = "资产列表",tags = "资产列表")
 @RestController
 @RequestMapping("/hyjf-admin/assetcenter")
 public class AssetListController extends BaseController {
@@ -150,7 +150,7 @@ public class AssetListController extends BaseController {
 		List<AdminAssetListCustomizeVO> volist = null;
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		// 查询不改动是因为多出有调用
+		// 查询不改动是因为多处有调用
 		AssetListCustomizeResponse response = assetListService.findAssetList(form);
 		if(response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -249,7 +249,7 @@ public class AssetListController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "资产列表";
 		// 文件名称
-		String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 封装查询条件
 		AssetListRequest form = new AssetListRequest();
 		// 初始化查询列表
@@ -258,11 +258,11 @@ public class AssetListController extends BaseController {
 		BeanUtils.copyProperties(viewRequest, form);
 		// 获取查询的列表
 		AssetListCustomizeResponse res = assetListService.findAssetList(form);
-		if(response != null) {
+		if(res != null) {
 			assetList = res.getResultList();
 		}
 		// 列头
-		String[] titles = new String[] { "序号", "资产编号", "资产来源", "产品类型", "项目编号", "计划编号", "用户名", "手机号", "银行电子账号", "开户状态", "姓名", "身份证号", "借款金额（元）", "借款期限", "审核状态", "项目状态", "推送时间" };
+		String[] titles = new String[] { "序号", "资产编号", "资产来源", "产品类型", "项目编号", "计划编号", "用户名", "手机号", "银行电子账号", "借款类型", "开户状态", "姓名", "身份证号", "借款金额（元）", "借款期限", "还款方式", "审核状态", "项目状态", "标的标签", "推送时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -302,21 +302,27 @@ public class AssetListController extends BaseController {
 						cell.setCellValue(data.getMobile());
 					} else if (celLength == 8) {// 银行电子账号
 						cell.setCellValue(data.getAccountId());
-					} else if (celLength == 9) {// 开户状态
+					} else if (celLength == 9) {// 借款类型
+						cell.setCellValue(data.getUserType());
+					} else if (celLength == 10) {// 开户状态
 						cell.setCellValue(data.getBankOpenAccount());
-					} else if (celLength == 10) {// 姓名
+					} else if (celLength == 11) {// 姓名
 						cell.setCellValue(data.getTruename());
-					} else if (celLength == 11) {// 身份证号
+					} else if (celLength == 12) {// 身份证号
 						cell.setCellValue(data.getIdcard());
-					} else if (celLength == 12) {// 借款金额（元）
+					} else if (celLength == 13) {// 借款金额（元）
 						cell.setCellValue(data.getAccount());
-					} else if (celLength == 13) {// 借款期限
+					} else if (celLength == 14) {// 借款期限
 						cell.setCellValue(data.getBorrowPeriod());
-					} else if (celLength == 14) {// 审核状态
+					} else if (celLength == 15) {// 还款方式
+						cell.setCellValue(data.getBorrowStyleName());
+					} else if (celLength == 16) {// 审核状态
 						cell.setCellValue(data.getVerifyStatus());
-					} else if (celLength == 15) {// 项目状态
+					} else if (celLength == 17) {// 项目状态
 						cell.setCellValue(data.getStatus());
-					} else if (celLength == 16) {// 推送时间
+					} else if (celLength == 18) {// 标的标签
+						cell.setCellValue(data.getLabelName());
+					} else if (celLength == 19) {// 推送时间
 						cell.setCellValue(data.getRecieveTime());
 					}
 				}

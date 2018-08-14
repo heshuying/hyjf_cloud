@@ -1,7 +1,9 @@
 package com.hyjf.am.market.service;
 
 import com.hyjf.am.market.dao.model.auto.ActivityList;
+import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.market.ActivityListBeanVO;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -50,4 +52,38 @@ public interface ActivityService {
      * @return
      */
     Map<String, Object> deleteActivity(int id);
+
+    /**
+     * 获取有效活动
+     * @param request
+     * @return
+     */
+    List<ActivityListCustomize> selectRecordListValid(ActivityListCustomize request, int i, int i1);
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP根据条件查询活动列表总数
+     * @Date 13:50 2018/7/26
+     * @Param activityListRequest
+     * @return
+     */
+    Integer queryactivitycount(ActivityListRequest activityListRequest);
+
+    /**
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP根据条件分页查询数据
+     * @Date 13:50 2018/7/26
+     * @Param activityListRequest
+     * @return
+     */
+    List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest);
+    /**
+     * 根据日期条件查询活动列表
+     * @return
+     */
+    public List<ActivityList> getActivity(int day);
+
+    List<ActivityList> getActivityList();
 }

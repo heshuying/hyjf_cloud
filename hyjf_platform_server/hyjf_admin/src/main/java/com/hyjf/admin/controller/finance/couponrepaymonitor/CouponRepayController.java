@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version CouponRepayController, v0.1 2018/7/9 11:12
  */
-@Api(value = "加息券还款统计")
+@Api(value = "加息券还款统计",tags ="加息券还款统计")
 @RestController
 @RequestMapping("/hyjf-admin/finance/couponrepaymonitor")
 public class CouponRepayController extends BaseController {
@@ -126,7 +128,7 @@ public class CouponRepayController extends BaseController {
      */
     @ApiOperation(value = "数据导出",notes = "数据导出")
     @RequestMapping("/exportAction")
-    public void exportAction(HttpServletResponse response, CouponRepayRequest form)  {
+    public void exportAction(HttpServletResponse response, CouponRepayRequest form) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "优惠券还款监测";
 
@@ -138,7 +140,7 @@ public class CouponRepayController extends BaseController {
             paraMap.put("timeEndSrch", form.getTimeEndSrch());
         }
         List<AdminCouponRepayMonitorCustomizeVO> resultList = this.couponRepayService.selectRecordList(form);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] { "序号", "日期", "星期", "加息券待还统计", "加息券实际还款", "差额（实际-预测）"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();

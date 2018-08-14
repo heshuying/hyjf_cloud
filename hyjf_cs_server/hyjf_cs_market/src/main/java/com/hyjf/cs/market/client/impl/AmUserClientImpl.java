@@ -5,7 +5,7 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.market.UtmRegResponse;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.trade.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.CreditTenderResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
@@ -383,6 +383,19 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 修改短信与邮件是否开启状态
+	 * @param userId
+	 * @param smsOpenStatus
+	 * @param emailOpenStatus
+	 * @return
+	 */
+    @Override
+    public Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus) {
+		Integer result = restTemplate.getForObject("http://AM-USER/am-user/user/updateStatusByUserId/" + userId + "/" + smsOpenStatus + "/" + emailOpenStatus, Integer.class);
+		return result;
+    }
+
+    /**
 	 * 获取渠道用户userid集合
 	 * @param type 0无主单 1有主单
 	 * @return

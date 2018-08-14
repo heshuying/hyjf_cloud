@@ -1,7 +1,9 @@
 package com.hyjf.cs.user.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.BaseBean;
@@ -18,21 +20,6 @@ public interface BaseUserService extends BaseService{
 	 * @return
 	 */
 	 boolean existUser(String mobile);
-	/**
-	 * @Description 根据token查询user
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:34
-	 */
-	WebViewUserVO getUsersByToken(String token);
-
-	/**
-	 * @Description 查询用户对象
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:50
-	 */
-	UserVO getUsers(String token);
 
 	/**
 	 * @Description 根据手机号查询user
@@ -62,7 +49,7 @@ public interface BaseUserService extends BaseService{
 	 * @param ckcodeYiyan1
 	 * @return
 	 */
-	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1);
+	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
 
 	/**
 	 * 验证外部请求签名
@@ -79,7 +66,9 @@ public interface BaseUserService extends BaseService{
 	 */
     BankOpenAccountVO getBankOpenAccount(Integer userId);
 
-	/**
+    BankOpenAccountVO getBankOpenAccountByAccount(String accountId);
+
+    /**
 	 * 校验用户是否已开户
 	 * @param userId
 	 * @return
@@ -119,6 +108,14 @@ public interface BaseUserService extends BaseService{
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
 	/**
+	 * @Description 根据token查询user
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/12 10:34
+	 */
+	WebViewUserVO getUserFromCache(int userId);
+
+	/**
 	 * 设置token
 	 * @param
 	 * @param webViewUserVO
@@ -134,6 +131,13 @@ public interface BaseUserService extends BaseService{
 	UserInfoVO getUserInfo(int userId);
 
 	/**
+	 * 更新用户缓存信息
+	 * @param webViewUserVO
+	 * @return
+	 */
+    WebViewUserVO updateUserToCache(WebViewUserVO webViewUserVO);
+
+    /**
 	 * 登录
 	 * @param userId
 	 * @return
@@ -150,4 +154,10 @@ public interface BaseUserService extends BaseService{
     String getBankReturnErrorMsg(String retCode);
 
     String strEncode(String str);
+
+	JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey);
+
+	AccountVO getAccountByUserId(Integer userId);
+
+    String getBankRetMsg(String retCode);
 }

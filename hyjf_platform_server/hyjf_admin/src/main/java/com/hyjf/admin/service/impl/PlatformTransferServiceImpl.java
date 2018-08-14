@@ -3,15 +3,17 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmConfigClient;
-import com.hyjf.admin.client.AmDataCollectClient;
+import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.mq.AccountWebListProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlatformTransferService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.resquest.admin.PlatformTransferRequest;
 import com.hyjf.am.vo.admin.AccountRechargeVO;
@@ -24,6 +26,8 @@ import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -31,8 +35,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author: sunpeikai
@@ -50,7 +53,6 @@ import java.util.List;
  */
 @Service
 public class PlatformTransferServiceImpl extends BaseServiceImpl implements PlatformTransferService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -59,7 +61,10 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private AmDataCollectClient amDataCollectClient;
+    private SystemConfig systemConfig;
+
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
 
     @Value("${hyjf.handrecharge.password}")
     private String HYJF_HANDRECHARGE_PASSWORD;
@@ -443,7 +448,19 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         accountWebListVO.setCreateTime(time);
         accountWebListVO.setOperator(loginUserName);
         accountWebListVO.setFlag(1);
-        ret += amDataCollectClient.insertAccountWebList(accountWebListVO);
+       // ret += csMessageClient.insertAccountWebList(accountWebListVO);
+
+        try {
+            boolean b = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
+            if (b) {
+                ret++;
+            }
+        } catch (MQException e) {
+            e.printStackTrace();
+            throw new RuntimeException("平台转账 发生异常，用户userId" + platformTransferRequest.getUserId() + ",accountId：" + accountId);
+        }
+
+
 
         // 添加红包账户明细
         BankMerchantAccountVO bankMerchantAccountVO = amTradeClient.searchBankMerchantAccountByAccountId(Integer.valueOf(bankBean.getAccountId()));

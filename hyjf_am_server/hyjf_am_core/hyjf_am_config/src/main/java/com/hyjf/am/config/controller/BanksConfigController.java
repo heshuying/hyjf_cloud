@@ -1,9 +1,7 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.dao.model.auto.BankConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfig;
-import com.hyjf.am.config.dao.model.auto.BankReturnCodeConfigExample;
-import com.hyjf.am.config.dao.model.auto.ParamName;
+import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.dao.model.customize.NewAppQuestionCustomize;
 import com.hyjf.am.config.dao.model.customize.QuestionCustomize;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.QuestionService;
@@ -14,9 +12,11 @@ import com.hyjf.am.response.config.BankConfigResponse;
 import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -29,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -120,6 +121,17 @@ public class BanksConfigController extends BaseConfigController{
         return response;
     }
 
+    @RequestMapping("/getNewAppQuestionList")
+    public NewAppQuestionCustomizeResponse getNewAppQuestionList() {
+        NewAppQuestionCustomizeResponse response = new NewAppQuestionCustomizeResponse();
+        List<NewAppQuestionCustomize> questionCustomizes = questionService.getNewAppQuestionList();
+        if(!CollectionUtils.isEmpty(questionCustomizes)){
+            List<NewAppQuestionCustomizeVO> questionCustomizeVOS = CommonUtils.convertBeanList(questionCustomizes,NewAppQuestionCustomizeVO.class);
+            response.setResultList(questionCustomizeVOS);
+        }
+        return response;
+    }
+
     @RequestMapping("/countScore")
     public int countScore(@RequestBody  AnswerRequest answerList) {
         int countScore = questionService.countScore(answerList.getResultList());
@@ -138,6 +150,25 @@ public class BanksConfigController extends BaseConfigController{
             //代表成功
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+
+
+    /**
+     * 获取快捷支付银行
+     */
+    @RequestMapping("/getRechargeQuotaLimit")
+    public BanksConfigResponse getRechargeQuotaLimit(){
+        BanksConfigResponse response = new BanksConfigResponse();
+        List<JxBankConfig> listBankConfig = bankConfigService.getRechargeQuotaLimit(1);
+        if(null!=listBankConfig&&listBankConfig.size()>0){
+            List<BanksConfigVO> listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BanksConfigVO.class);
+            response.setResultList(listBanksConfig);
+        }else{
+            response.setResultList(new ArrayList<BanksConfigVO>());
+        }
+        //代表成功
+        response.setRtn(Response.SUCCESS);
         return response;
     }
     /**
@@ -180,6 +211,19 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
+
+    @GetMapping("/getParamName/{other1}")
+    public ParamNameResponse getParamName(@PathVariable String other1) {
+        ParamNameResponse response = new ParamNameResponse();
+        List<ParamName> paramNameList = bankConfigService.getParamName(other1);
+        if (CollectionUtils.isNotEmpty(paramNameList)) {
+            List<ParamNameVO> paramNameVOList = CommonUtils.convertBeanList(paramNameList,ParamNameVO.class);
+            response.setResultList(paramNameVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
     /**
      * 分页查询银行配置列表
      */
@@ -210,8 +254,9 @@ public class BanksConfigController extends BaseConfigController{
                 response.setResultList(banksConfigVOList);
                 response.setRecordTotal(banksConfigVOList.size());
                 response.setRtn(Response.SUCCESS);
+                return response;
             }
-            return response;
+            return null;
         }
         return null;
     }
@@ -259,10 +304,10 @@ public class BanksConfigController extends BaseConfigController{
         AdminBankConfigResponse res =new AdminBankConfigResponse();
         int result = bankConfigService.updadteBankConfig(adminBankConfigRequest);
         if(result >0){
-            res.setRtn("SUCCESS");
+            res.setRtn(Response.SUCCESS);
             return res;
         }
-        res.setRtn("FAIL");
+        res.setRtn(Response.FAIL);
         return res;
     }
     /**
@@ -274,9 +319,9 @@ public class BanksConfigController extends BaseConfigController{
         AdminBankConfigResponse res =new AdminBankConfigResponse();
         try{
             this.bankConfigService.deleteBankConfigById(id);
-            res.setRtn("SUCCESS");
+            res.setRtn(Response.SUCCESS);
         }catch (Exception e){
-            res.setRtn("FAIL");
+            res.setRtn(Response.FAIL);
         }
         return  res;
     }
@@ -295,19 +340,19 @@ public class BanksConfigController extends BaseConfigController{
             if (bankConfig.getId() != null) {
                 Boolean hasnot = true;
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getId() == bankConfig.getId()) {
+                    if (list.get(i).getId().equals(bankConfig.getId())) {
                         hasnot = false;
                         break;
                     }
                 }
                 if (hasnot) {
-                    res.setRtn("FAIL");
+                    res.setRtn(Response.FAIL);
                     res.setMessage("银行名称或银行代码不可重复添加");
                 } else {
-                    res.setRtn("SUCCESS");
+                    res.setRtn(Response.SUCCESS);
                 }
             } else {
-                res.setRtn("FAIL");
+                res.setRtn(Response.FAIL);
                 res.setMessage("银行名称或银行代码不可重复添加");
             }
         }
@@ -331,5 +376,21 @@ public class BanksConfigController extends BaseConfigController{
         }
         return response;
     }
-
+    /**
+     * 获取银行卡配置信息
+     * @auth sunpeikai
+     * @param bankId 主键id
+     * @return
+     */
+    @GetMapping("/getBankConfigByBankId/{bankId}")
+    public BankConfigResponse getBankConfigByBankId(@PathVariable Integer bankId){
+        BankConfigResponse response = new BankConfigResponse();
+        BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
+        if(null != bankConfig){
+            BankConfigVO bankConfigVO = CommonUtils.convertBean(bankConfig,BankConfigVO.class);
+            response.setResult(bankConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }

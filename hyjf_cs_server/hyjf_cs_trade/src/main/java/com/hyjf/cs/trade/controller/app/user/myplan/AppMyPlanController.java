@@ -5,20 +5,19 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.bean.app.MyPlanDetailResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AppMyPlanService;
+import com.hyjf.cs.trade.service.myplan.AppMyPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -32,7 +31,7 @@ import java.util.List;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的计划接口",description = "app端用户我的计划接口")
+@Api(value = "app端用户我的计划接口",tags = "app端用户我的计划接口")
 @Controller
 @RequestMapping("/hyjf-app/user/plan")
 public class AppMyPlanController extends BaseTradeController {
@@ -45,14 +44,17 @@ public class AppMyPlanController extends BaseTradeController {
     @Autowired
     private AppMyPlanService appMyPlanService;
     /**
-     * 微信端获取首页散标详情
-     * @author zhangyk
+     * 微信端获取首页散标列表
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyPlanList", produces = "application/json; charset=utf-8")
-    public MyPlanListResultBean getMyPlanList( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    @ResponseBody
+    public MyPlanListResultBean getMyPlanList( HttpServletRequest request,
+                                               @RequestHeader(value = "token", required = false) String token,
+                                               @RequestHeader(value = "userId", required = false) Integer userId) {
         MyPlanListResultBean result = new MyPlanListResultBean();
+        result.setRequest("/hyjf-app/user/plan/getMyPlanList");
         result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
 
@@ -66,15 +68,6 @@ public class AppMyPlanController extends BaseTradeController {
             result.setStatusDesc(ILLEGAL_PARAMETER_STATUS_DESC);
             return result;
         }
-        Integer userId = null;
-        try {
-            WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-            userId = webViewUserVO.getUserId();
-        } catch (Exception e) { // token失效
-            result.setStatus(CustomConstants.APP_STATUS_FAIL);
-            result.setStatusDesc(TOKEN_ISINVALID_STATUS);
-            return result;
-        }
         if (userId == null) {
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
             result.setStatusDesc(TOKEN_ISINVALID_STATUS);
@@ -84,7 +77,7 @@ public class AppMyPlanController extends BaseTradeController {
 
         // 构建查询条件
         AssetManageBeanRequest params = buildQueryParameter(request);
-        params.setUserId(userId+"");
+        params.setUserId(userId);
         params.setType(type);
         AccountVO accountVO=appMyPlanService.getAccountByUserId(userId);
         // 待收金额
@@ -116,8 +109,9 @@ public class AppMyPlanController extends BaseTradeController {
         List<MyPlanListResultBean.ProjectList> projectList = new ArrayList<>();
         MyPlanListResultBean.ProjectList project;
 
-        if (CollectionUtils.isEmpty(customizeProjectList))
+        if (CollectionUtils.isEmpty(customizeProjectList)) {
             return projectList;
+        }
 
         for (AppMyPlanCustomizeVO entity : customizeProjectList) {
             project = new MyPlanListResultBean.ProjectList();
@@ -169,11 +163,24 @@ public class AppMyPlanController extends BaseTradeController {
      */
     private AssetManageBeanRequest buildQueryParameter(HttpServletRequest request) {
         AssetManageBeanRequest params = new AssetManageBeanRequest();
-        Integer page = Integer.parseInt(request.getParameter("page"));
-        Integer pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Integer page = Integer.parseInt(request.getParameter("page")==null?"1":request.getParameter("page"));
+        Integer pageSize = Integer.parseInt(request.getParameter("pageSize")==null?"10":request.getParameter("pageSize"));
         params.setLimitStart((page - 1) * pageSize);
         params.setLimitEnd(pageSize);
         return params;
     }
 
+
+    /**
+     * App端:获取我的计划详情
+     * @author zhangyk
+     * @date 2018/7/30 18:27
+     * 原接口：com.hyjf.app.user.plan.MyPlanController.getMyPlanDetail()
+     */
+    @ApiOperation(value = "App端:获取我的计划详情", notes = "App端:获取我的计划详情")
+    @PostMapping(value = "/{orderId}", produces = "application/json; charset=utf-8")
+    public MyPlanDetailResultBean getMyPlanList(@RequestParam Integer couponType, @RequestParam String type, @PathVariable String orderId, HttpServletRequest request, @RequestHeader(value = "userId", required = false) String userId) {
+        MyPlanDetailResultBean result = appMyPlanService.getMyPlanDetail(couponType,type,orderId,request,userId);
+        return  result;
+    }
 }

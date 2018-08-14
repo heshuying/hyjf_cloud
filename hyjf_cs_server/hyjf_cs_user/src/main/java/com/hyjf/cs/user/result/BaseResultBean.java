@@ -1,37 +1,85 @@
-/*
- * Copyright(c) 2012-2016 JD Pharma.Ltd. All Rights Reserved.
- */
 package com.hyjf.cs.user.result;
+
+import com.hyjf.cs.user.util.ResultEnum;
 
 import java.io.Serializable;
 
-import com.hyjf.common.util.CustomConstants;
-
-/**
- * app接口返回数据的几类
- * @author renxingchen
- * @version hyjf 1.0
- * @since hyjf 1.0 2016年2月19日
- * @see 14:23:01
- */
 public class BaseResultBean implements Serializable {
 
-    /**
-     * 此处为属性说明
-     */
-    private static final long serialVersionUID = -3589570872364671096L;
+    private static final long serialVersionUID = -2899752944266497051L;
 
-    public BaseResultBean(String request) {
-        super();
-        this.status = CustomConstants.APP_STATUS_FAIL;
-        this.request = request;
+    private String status;
+    private String statusDesc;
+    private String request;
+    //是否最后一页0不是最后一页  1为最后一页
+    private Integer endPage;
+
+
+    private Integer currentPage;//当前页
+    private Integer pageSize;//每页显示条数
+    // 角色是否允许投资
+    private Boolean isAllowedTender;
+    // 缴费授权状态
+    private Integer paymentAuthStatus;
+
+    public Integer getPageSize() {
+        return pageSize;
     }
 
-    public BaseResultBean(String status,String statusDesc) {
-        super();
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+    public Integer getEndPage() {
+        return endPage;
+    }
+
+    public void setEndPage(Integer endPage) {
+        this.endPage = endPage;
+    }
+    public Boolean getIsAllowedTender() {
+        return isAllowedTender;
+    }
+
+    public void setIsAllowedTender(Boolean isAllowedTender) {
+        this.isAllowedTender = isAllowedTender;
+    }
+
+    public Integer getPaymentAuthStatus() {
+        return paymentAuthStatus;
+    }
+
+    public void setPaymentAuthStatus(Integer paymentAuthStatus) {
+        this.paymentAuthStatus = paymentAuthStatus;
+    }
+
+    public BaseResultBean() {
+        this.status = ResultEnum.SUCCESS.getStatus();
+        this.statusDesc = ResultEnum.SUCCESS.getStatusDesc();
+    }
+
+    public BaseResultBean(String status, String statusDesc) {
         this.status = status;
         this.statusDesc = statusDesc;
     }
+
+    public BaseResultBean(ResultEnum item) {
+        this.status = item.getStatus();
+        this.statusDesc = item.getStatusDesc();
+    }
+
+    public BaseResultBean(String request) {
+        super();
+        this.status = ResultEnum.FAIL.getStatus();
+        this.setRequest(request);
+    }
+
     public String getStatus() {
         return status;
     }
@@ -48,18 +96,31 @@ public class BaseResultBean implements Serializable {
         this.statusDesc = statusDesc;
     }
 
+    // 设置枚举
+    public BaseResultBean setEnum(ResultEnum item) {
+        this.status = item.getStatus();
+        this.statusDesc = item.getStatusDesc();
+        return this;
+    }
+
+    /**
+     * request
+     *
+     * @return the request
+     */
+
     public String getRequest() {
         return request;
+
     }
+
+    /**
+     * @param request
+     *            the request to set
+     */
 
     public void setRequest(String request) {
         this.request = request;
+
     }
-
-    private String status;
-
-    private String statusDesc;
-
-    private String request;
-
 }

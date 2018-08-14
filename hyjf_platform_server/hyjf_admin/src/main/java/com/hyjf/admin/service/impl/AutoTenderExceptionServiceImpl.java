@@ -182,7 +182,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     @Override
     public boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean){
-        return amTradeClient.updateBorrowForAutoTender(borrow,hjhAccede,bean);
+        return amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(),bean);
     }
     /**
      * 更新
@@ -212,7 +212,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     @Override
     public boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap){
-        return amTradeClient.updateCreditForAutoTender(credit,hjhAccede,hjhPlan,bean,tenderUsrcustid,sellerUsrcustid,resultMap);
+        return amTradeClient.updateCreditForAutoTender(credit.getCreditNid(), hjhAccede.getAccedeOrderId(), hjhPlan.getPlanNid(),bean,tenderUsrcustid,sellerUsrcustid,resultMap);
     }
 
     /**
@@ -288,9 +288,9 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     logger.info(("查询投资请求成功:" + hjhPlanBorrowTmp.getOrderId())+ " 状态 "+state);
                     // 1：投标中； 2：计息中；4：本息已返还；9：已撤销；
                     if (StringUtils.isNotBlank(state)) {
-                        if (state.equals("1")) {
+                        if ("1".equals(state)) {
                             bankQueryisOK = true;
-                        } else if (state.equals("2")) {
+                        } else if ("2".equals(state)) {
                         }
                     }
                 }

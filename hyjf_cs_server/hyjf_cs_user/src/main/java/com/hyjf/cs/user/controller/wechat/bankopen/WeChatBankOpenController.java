@@ -30,7 +30,7 @@ import javax.validation.Valid;
 /**
  * @author sunss
  */
-@Api(value = "微信端用户开户",description = "weChat端-用户开户")
+@Api(value = "微信端用户开户",tags = "weChat端-用户开户")
 @RestController
 @RequestMapping("/hyjf-wechat/user/open")
 public class WeChatBankOpenController extends BaseUserController {
@@ -47,10 +47,11 @@ public class WeChatBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
     @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
-    public WeChatResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        logger.info("openAccount userInfo start, token is :{}", token);
+    @ResponseBody
+    public WeChatResult<String> userInfo(@RequestHeader(value = "userId") int userId, HttpServletRequest request) {
+        logger.info("openAccount userInfo start, userId is :{}", userId);
         WeChatResult<String> result = new WeChatResult<String>();
-        UserVO userVO = bankOpenService.getUsers(token);
+        UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
             logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
@@ -68,14 +69,13 @@ public class WeChatBankOpenController extends BaseUserController {
 
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/openBankAccount")
-    public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    @ResponseBody
+    public ModelAndView openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         ModelAndView reuslt = new ModelAndView();
-        if (token == null) {
-            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
+
         // 获取登录信息
-        UserVO user = bankOpenService.getUsers(token);
+        UserVO user = bankOpenService.getUsersById(userId);
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
         // 拼装参数 调用江西银行

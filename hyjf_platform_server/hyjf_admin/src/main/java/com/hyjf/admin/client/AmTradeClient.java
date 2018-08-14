@@ -4,28 +4,39 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
+import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.account.AccountTradeResponse;
+import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
+import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.BorrowCreditVO;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
+import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
+import com.hyjf.am.vo.admin.TenderCommissionVO;
+import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.ParamName;
-import com.hyjf.am.vo.trade.AccountTradeVO;
-import com.hyjf.am.vo.trade.BankCreditEndVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
+import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
+import com.hyjf.am.vo.admin.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -564,7 +575,7 @@ public interface AmTradeClient {
      * 子账户类型 查询
      * @return
      */
-    public List<ParamName> getParamNameList(String code);
+    public List<ParamNameVO> getParamNameList(String code);
     /**
      *
      * 根据子账户名称检索
@@ -631,7 +642,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateBorrowForAutoTender(BorrowVO borrow, HjhAccedeVO hjhAccede, BankCallBean bean);
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
 
     List<ManualReverseCustomizeVO> getManualReverseList(ManualReverseCustomizeRequest requestBean);
 
@@ -652,8 +663,7 @@ public interface AmTradeClient {
      * @return
      * @author nxl
      */
-    boolean updateCreditForAutoTender(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, HjhPlanVO hjhPlan, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
-
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,String tenderUsrcustid, String sellerUsrcustid, Map<String, Object> resultMap);
     /**
      * 根据机构编号获取机构列表
      * @return
@@ -723,13 +733,6 @@ public interface AmTradeClient {
      * @param borrowFireRequest
      */
     boolean updateOntimeRecord(BorrowFireRequest borrowFireRequest);
-
-    /**
-     * 加入计划
-     *
-     * @param borrowFireRequest
-     */
-    boolean sendToMQ(BorrowFireRequest borrowFireRequest);
 
     /**
      * 借款复审总条数
@@ -927,11 +930,10 @@ public interface AmTradeClient {
 
     /**
      * 标的备案
-     * @param borrowNid
-     * @param currUserId
-     * @param currUserName
+     * @param request
+     * @return
      */
-    AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
+    AdminResult updateBorrowRegist(BorrowRegistUpdateRequest request);
 
     /**
      * 资产来源
@@ -1038,7 +1040,7 @@ public interface AmTradeClient {
      * 插入标签配置列表
      * @param request
      */
-    void insertHjhLabelRecord(HjhLabelInfoRequest request);
+    int insertHjhLabelRecord(HjhLabelInfoRequest request);
     
 	/**
      * 更新标签配置列表
@@ -1555,6 +1557,58 @@ public interface AmTradeClient {
      * @return
      */
     int updateAccountList(AccountListRequest accountListRequest);
+    /**
+     * 查找汇付银行开户记录列表
+     *
+     * @param request
+     * @return
+     */
+    PushMoneyResponse findPushMoneyList(PushMoneyRequest request);
+
+
+
+
+    /**
+     * 计划退出查询判断标的是否还款
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowApicronVO> selectBorrowApicronListByBorrowNid(String borrowNid);
+
+    /**
+     * 根据项目编号取得borrowTender表
+     * @param nid
+     * @return
+     */
+    List<BorrowTenderVO> getBorrowTenderListByNid(String nid);
+
+    /**
+     * 获取计算提成数据
+     * @param request
+     * @return
+     */
+    Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request);
+
+    /**
+     * 更新借款API表
+     * @param apicornId
+     * @return
+     */
+    Integer  updateBorrowApicronByPrimaryKeySelective(String apicornId);
+
+    /**
+     * 添加提成数据
+     * @param request
+     * @return
+     */
+    int saveTenderCommission(TenderCommissionRequest request);
+
+    /**
+     * 獲取銀行開戶信息
+     * @param userId
+     * @return
+     */
+    BankOpenAccountVO getBankOpenAccount(Integer userId);
 
     /**
      * 查询数据中心优惠券数据
@@ -1564,13 +1618,25 @@ public interface AmTradeClient {
      */
     DataCenterCouponResponse getDataCenterCouponList(DadaCenterCouponRequestBean requestBean, String type);
 
+    /**
+     * 根据筛选条件查询银行账务明细list
+     * @param
+     * @return
+     */
+    List<BankAleveVO> queryBankAleveList(BankAleveRequest request);
+
+    /**
+     * 根据筛选条件查询银行账务明细list
+     * @param
+     * @return
+     */
+    List<BankEveVO> queryBankEveList(BankEveRequest request);
+
 
     //董泽杉
     /**
      * 迁移到详细画面
      *
-     * @param request
-     * @param form
      * @return
      */
     BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
@@ -1578,8 +1644,7 @@ public interface AmTradeClient {
     /**
      * 添加信息
      *
-     * @param request
-     * @param form
+     * @param borrowCommonRequest
      * @return
      * @throws Exception
      */
@@ -1589,7 +1654,7 @@ public interface AmTradeClient {
     /**
      * 用户是否存在
      *
-     * @param request
+     * @param userId
      * @return
      */
     int isExistsUser(String userId);
@@ -1598,16 +1663,13 @@ public interface AmTradeClient {
     /**
      * 获取最新的借款预编码
      *
-     * @param request
      * @return
      */
-
     String getBorrowPreNid();
 
     /**
      * 获取现金贷的借款预编号
      *
-     * @param request
      * @return
      */
     String getXJDBorrowPreNid();
@@ -1615,7 +1677,7 @@ public interface AmTradeClient {
     /**
      * 借款预编码是否存在
      *
-     * @param request
+     * @param borrowPreNid
      * @return
      */
     boolean isExistsBorrowPreNidRecord(String borrowPreNid);
@@ -1623,7 +1685,7 @@ public interface AmTradeClient {
     /**
      * 获取融资服务费率 & 账户管理费率
      *
-     * @param request
+     * @param borrowCommonRequest
      * @return
      */
     String getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
@@ -1631,8 +1693,6 @@ public interface AmTradeClient {
     /**
      * 根据资产编号查询该资产下面的产品类型
      *
-     * @param request
-     * @param attr
      * @param instCode
      * @return
      */
@@ -1641,12 +1701,825 @@ public interface AmTradeClient {
     /**
      * 受托用户是否存在
      *
-     * @param request
+     * @param userName
      * @return
      */
 
     int isEntrustedExistsUser(String userName);
 
+    /**
+     * 获取加息券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
+     * 获取计划列表无分页
+     * @return
+     */
+ 	HjhPlanResponse getHjhPlanListByParamWithoutPage(PlanListRequest form);
+	public HjhAccedeResponse canCancelAuth(Integer userId);
+
+    /**
+     * 获取平台子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountVO getBankMerchantAccount(String accountCode);
+
+    /**
+     * 获取代金券回款列表
+     * @param dataCenterCouponCustomize
+     * @return
+     */
+    List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+    /**
+     * 获取子账户信息
+     * @param accountCode
+     * @return
+     */
+    BankMerchantAccountInfoVO getBankMerchantAccountInfoByCode(String accountCode);
+
+    /**
+     * 更新子账户信息已设置交易密码
+     * @param accountId
+     * @param flag
+     */
+    void updateBankMerchantAccountIsSetPassword(String accountId, int flag);
 
 
+    /**
+     * 汇计划 - 计划还款 - 统计
+     * @param repayRequest
+     * @return
+     * @Author : huanghui
+     */
+    Integer getRepayCount(HjhRepayRequest repayRequest);
+    /**
+     * 获取汇计划 -  计划还款(计划退出)列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    public List<HjhRepayVO> selectByExample(HjhRepayRequest request);
+
+    /**
+     * 指定指端检索 计划还款列表
+     * @param accedeOrderId
+     * @return
+     * @Author : huanghui
+     */
+    public List<HjhRepayVO> selectByAccedeOrderId(String accedeOrderId);
+
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 总条数
+     * @param data
+     * @param planNid
+     * @return
+     */
+    Integer getHjhReInvestDetailListCount(String data, String planNid);
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param data
+     * @param planNid
+     * @return
+     * @Author : huanghui
+     */
+    List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid);
+
+    /**
+     * 汇计划按天转让记录
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request);
+
+    /**
+     *
+     * @author zhangyk
+     * @date 2018/8/7 16:37
+     */
+    Integer getBankMerchantAccountListByOrderId(String orderId);
+
+
+    CouponConfigCustomizeResponse getRecordList(CouponConfigRequest couponConfigRequest);
+
+    CouponConfigResponse getCouponConfig(CouponConfigRequest couponConfigRequest);
+
+    CouponConfigResponse saveCouponConfig(CouponConfigRequest request);
+
+    CouponConfigResponse insertAction(CouponConfigRequest couponConfigRequest);
+
+    CouponConfigResponse deleteAction(CouponConfigRequest couponConfigRequest);
+
+    CouponConfigResponse getAuditInfo(CouponConfigRequest ccfr);
+
+    CouponConfigResponse updateAuditInfo(CouponConfigRequest couponConfigRequest);
+
+    CouponUserResponse getIssueNumber(CouponUserRequest cur);
+
+    CouponTenderResponse countRecordHzt(CouponTenderRequest couponTenderRequest);
+
+    CouponTenderResponse queryInvestTotalHzt(CouponTenderRequest couponTenderRequest);
+
+    CouponTenderResponse getRecordListHzt(CouponTenderRequest couponTenderRequest);
+
+    CouponTenderResponse getCouponTenderDetailCustomize(Map<String, Object> paramMap);
+
+    CouponTenderResponse getCouponRecoverCustomize(Map<String, Object> paramMap);
+
+    CouponTenderResponse countRecordHjh(CouponTenderRequest couponTenderRequest);
+
+    CouponTenderResponse queryInvestTotalHjh(CouponTenderRequest couponTenderRequest);
+
+    CouponTenderResponse getRecordListHjh(CouponTenderRequest couponTenderRequest);
+
+    CouponTenderResponse getHjhCouponTenderDetailCustomize(Map<String, Object> paramMap);
+
+    CouponTenderResponse getHjhCouponRecoverCustomize(Map<String, Object> paramMap);
+
+    CouponTenderResponse countRecordHztDJ(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse getRecordListHztDJ(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse queryHztInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse queryHztRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse countRecordHztTY(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse getRecordListHztTY(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse countRecordHztJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse getRecordListHztJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse countRecordHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse getRecordListHjhDJ(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse queryHjhInvestTotal(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse queryHjhRecoverInterestTotle(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse countRecordHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse getRecordListHjhTY(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse countRecordHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    CouponTenderResponse getRecordListHjhJX(CouponBackMoneyCustomize couponBackMoneyCustomize);
+
+    /**
+     * 圈存异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/7 18:53
+     */
+    Boolean updateAccountCallbackRecharge(Map<String,Object> params);
+
+    /**
+     * 圈提异步回调业务处理
+     * @author zhangyk
+     * @date 2018/8/8 16:41
+     */
+    Boolean updateAccountCallbackWithdraw(Map<String,Object> params);
+
+    /**
+     * 更新明细表为失败状态
+     * @author zhangyk
+     * @date 2018/8/8 10:22
+     */
+    Boolean updateBankAccountListFailByOrderId(String orderId);
+
+	/**
+	 * 汇计划提成列表查询
+	 *
+	 * @param
+	 * @param form
+	 * @return HjhCommissionResponse
+	 */
+    HjhCommissionResponse selectHjhCommissionList(HjhCommissionRequest form);
+
+    /**
+     * 更新BankMerchantAccount
+     * @param bankMerchantAccount
+     * @return
+     */
+    int updateBankMerchantAccountByCode(BankMerchantAccountVO bankMerchantAccount);
+
+    /**
+     * 查询金额总计
+     * @author libin
+     * @param id
+     * @return
+     */
+    HjhCommissionResponse selecthjhCommissionTotal(HjhCommissionRequest form);
+
+    /**
+     * 发起平台账户分佣
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    JSONObject subCommission(SubCommissionRequest request);
+
+    /**
+     * 校验发提成状态是不是已经发放
+     * @author libin
+     * @param id
+     * @return
+     */
+    TenderCommissionVO queryTenderCommissionByPrimaryKey(int ids);
+
+    /**
+     * 复投承接债权列表
+     * @param request
+     * @return
+     */
+    HjhReInvestDebtResponse hjhReInvestDebtList(HjhReInvestDebtRequest request);
+
+    List<BorrowCreditVO> getBorrowCreditList(BorrowCreditAmRequest request);
+
+    Integer getBorrowCreditCount(BorrowCreditAmRequest request);
+
+    BorrowCreditSumVO getBorrwoCreditTotalSum(BorrowCreditAmRequest request);
+
+    BorrowCreditInfoSumVO sumBorrowCreditInfoData(BorrowCreditAmRequest request);
+
+    /**
+     * 更新用户账户信息
+     * @param accountVO
+     * @return
+     */
+    Integer updateAccountManage(AccountVO accountVO);
+
+    /**
+     * 手动银行对账
+     * @param userId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    String updateAccountCheck(Integer userId, String startTime, String endTime);
+
+    /**
+     * 查询配置中心平台账户配置 余额监控
+     * @param adminRequest
+     * @return
+     */
+    AdminAccountBalanceMonitoringResponse selectAccountBalanceMonitoringByPage(AdminAccountBalanceMonitoringRequest adminRequest);
+
+    /**
+     * 编辑画面检索列表
+     * @param adminRequest
+     * @return
+     */
+    AdminAccountBalanceMonitoringResponse selectaccountBalanceMonitoringById(AdminAccountBalanceMonitoringRequest adminRequest);
+
+    /**
+     * 查询配置中心平台账户配置 余额监控
+     * @param adminRequest
+     * @return
+     */
+    List<AccountBalanceMonitoringRequestBean> searchMerchantAccountList(AdminAccountBalanceMonitoringRequest adminRequest);
+    /**
+     * 数据更新 平台账户设置
+     * @param adminRequest
+     * @return
+     */
+    AdminAccountBalanceMonitoringResponse updateMerchantAccountList(List<AccountBalanceMonitoringRequestBean> adminRequest);
+
+    /**
+     * 项目类型
+     *
+     * @return
+     */
+    public List<BorrowProjectTypeVO> borrowProjectTypeList(String borrowTypeCd);
+
+    /**
+     * 资金来源
+     * @param instCode
+     * @return
+     */
+    public List<HjhInstConfigVO> hjhInstConfigList(String instCode);
+
+    /**
+     * 根据表的类型,期数,项目类型检索管理费件数
+     * @author liubin
+     * @param instCode assetType
+     * @return
+     */
+    public int countRecordByPK(String instCode, Integer assetType);
+    /**
+     * 根据资金来源查询产品类型
+     * @param instCode
+     * @return
+     */
+    public List<HjhAssetTypeVO> hjhAssetTypeList(String instCode);
+    /**
+     * 分页查询
+     * @param adminRequest
+     * @return
+     */
+    AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest);
+    /**
+     * 详情
+     * @param adminRequest
+     * @return
+     */
+    public AdminBorrowFlowResponse selectBorrowFlowInfo(AdminBorrowFlowRequest adminRequest);
+
+    /**
+     * 添加
+     * @param adminRequest
+     * @return
+     */
+    void insertRecord(AdminBorrowFlowRequest adminRequest);
+
+    /**
+     * 修改
+     * @param adminRequest
+     * @return
+     */
+    void updateRecord(AdminBorrowFlowRequest adminRequest);
+
+    /**
+     * 删除
+     * @param adminRequest
+     * @return
+     */
+    void deleteRecord(AdminBorrowFlowRequest adminRequest);
+
+    /**
+     *（条件）列表查询
+     * @param adminRequest
+     * @return
+     */
+    BorrowProjectTypeResponse selectProjectTypeList(BorrowProjectTypeRequest adminRequest);
+
+    /**
+     * 画面迁移
+     * @param adminRequest
+     * @return
+     */
+    BorrowProjectTypeResponse selectProjectTypeRecord(BorrowProjectTypeRequest adminRequest);
+    /**
+     * 根据主键判断汇直投项目类型维护中数据是否存在
+     * @return
+     */
+    public boolean isExistsRecord(BorrowProjectTypeVO record);
+
+    /**
+     * 获取单个汇直投项目类型维护
+     * @return
+     */
+    public BorrowProjectTypeVO getRecord(BorrowProjectTypeVO record);
+
+    /**
+     * 根据项目编号查询还款方式
+     * @param str
+     */
+    public List<BorrowProjectRepayVO> selectRepay(String str);
+    /**
+     * 查询类型表
+     */
+    public List<BorrowStyleVO> selectStyles();
+
+    /**
+     * 汇直投项目类型维护插入
+     *
+     * @param record
+     */
+    public BorrowProjectTypeResponse insertRecord(BorrowProjectTypeRequest record);
+    /**
+     * 汇直投项目类型维护插入
+     *
+     * @param record
+     */
+    public BorrowProjectTypeResponse updateRecord(BorrowProjectTypeRequest record);
+    /**
+     *  汇直投项目类型维护删除
+     * @param adminRequest
+     */
+    public BorrowProjectTypeResponse deleteProjectType( BorrowProjectTypeRequest adminRequest);
+    /**
+     * 检查项目名称唯一性
+     * @param borrowCd
+     * @return
+     */
+    public int borrowCdIsExists(BorrowProjectTypeRequest borrowCd);
+
+    /**
+     * 查询配置中心还款方式
+     *
+     * @return
+     */
+    public AdminBorrowStyleResponse borrowStyelInit(AdminBorrowStyleRequest adminRequest);
+
+    /**
+     * 根据id查询还款方式
+     *
+     * @return
+     */
+    public AdminBorrowStyleResponse searchBorrowStyleInfo(AdminBorrowStyleRequest adminRequest);
+    /**
+     * 保存还款方式
+     *
+     * @return
+     */
+    public AdminBorrowStyleResponse insertBorrowStyle(AdminBorrowStyleRequest adminRequest);
+    /**
+     * 修改还款方式
+     *
+     * @return
+     */
+    public AdminBorrowStyleResponse updateBorrowStyle(AdminBorrowStyleRequest adminRequest);
+    /**
+     * 修改还款方式
+     *
+     * @return
+     */
+    public AdminBorrowStyleResponse deleteBorrowStyle(Integer id);
+    /**
+     * 修改还款方式
+     *
+     * @return
+     */
+    public AdminBorrowStyleResponse modifyBorrowStyle(Integer id);
+    /**
+     * 根据主键判断权限维护中权限是否存在
+     *
+     * @return
+     */
+
+    public boolean validatorFieldCheck(AdminBorrowStyleRequest adminRequest);
+
+    List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode);
+
+    HjhReInvestDetailResponse getHjhReInvestDetailList(HjhReInvestDetailRequest request);
+
+    /**
+     * 查询配置中心保证金配置
+     *
+     * @return
+     */
+    public AdminInstConfigDetailResponse instConfigInit(AdminInstConfigListRequest adminRequest);
+
+    /**
+     * 查询详情
+     * @param adminRequest
+     * @return
+     */
+    public AdminInstConfigDetailResponse searchInstConfigInfo(AdminInstConfigListRequest adminRequest);
+
+    /**
+     * 编辑保存保证金配置
+     * @return
+     */
+    public AdminInstConfigListResponse saveInstConfig(AdminInstConfigListRequest req);
+
+    /**
+     * 修改保证金配置
+     * @return
+     */
+    public AdminInstConfigListResponse updateInstConfig(AdminInstConfigListRequest req);
+
+    /**
+     * 删除保证金配置
+     * @return
+     */
+    public AdminInstConfigListResponse deleteInstConfig(AdminInstConfigListRequest req);
+
+    /**
+     * 查询协议列表
+     *
+     * @param request
+     * @return
+     */
+    FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request);
+
+    /**
+     * 添加协议列表
+     *
+     * @param requestBean
+     * @return
+     */
+    FddTempletCustomizeResponse insertAction(ProtocolsRequestBean requestBean);
+
+    /**
+     * 修改协议列表
+     *
+     * @param requestBean
+     * @return
+     */
+    FddTempletCustomizeResponse updateAction(ProtocolsRequestBean requestBean);
+
+    /**
+     * 获取提成配置列表
+     *
+     * @return
+     */
+    PushMoneyResponse getRecordList();
+
+    /**
+     * 添加提成配置
+     *
+     * @param requestBean
+     * @return
+     */
+    PushMoneyResponse insertPushMoney(PushMoneyRequestBean requestBean);
+
+    /**
+     * 修改提成配置
+     *
+     * @param requestBean
+     * @return
+     */
+    PushMoneyResponse updatePushMoney(PushMoneyRequestBean requestBean);
+
+    /**
+     * 查询流程配置中的发标/复审
+     * @param adminRequest
+     * @return
+     */
+    public BorrowSendTypeResponse selectBorrowSendList(BorrowSendTypeRequest adminRequest);
+    /**
+     * 查询流程配置中的发标/复审页面
+     * @param sendCd
+     * @return
+     */
+    public BorrowSendTypeVO getBorrowSendInfo(String sendCd);
+
+    /**
+     * 数据插入
+     * @param adminRequest
+     */
+    public BorrowSendTypeResponse insertBorrowSend(BorrowSendTypeRequest adminRequest);
+
+    /**
+     * 数据修改
+     * @param adminRequest
+     */
+    public BorrowSendTypeResponse updateBorrowSend(BorrowSendTypeRequest adminRequest);
+    /**
+     * 删除
+     * @param sendCd
+     */
+    public BorrowSendTypeResponse daleteBorrowSend(String sendCd);
+
+    /**
+     * 受托支付白名单列表
+     *
+     * @return
+     */
+    STZHWhiteListResponse selectSTZHWhiteList(STZHWhiteListRequestBean requestBean);
+
+    /**
+     * 添加受托支付白名
+     *
+     * @param requestBean
+     * @return
+     */
+    STZHWhiteListResponse insertSTZHWhiteList(STZHWhiteListRequestBean requestBean);
+
+    /**
+     * 修改受托支付白名
+     *
+     * @param requestBean
+     * @return
+     */
+    STZHWhiteListResponse updateSTZHWhiteList(STZHWhiteListRequestBean requestBean);
+
+    /**
+     * 获取机构信息
+     * @param instcode
+     * @return
+     */
+    HjhInstConfigVO selectHjhInstConfig(String instcode);
+
+    /**
+     * 批量审核优惠券
+     * @param params
+     * @param params
+     * @return
+     */
+    JSONObject getBatchCoupons(Map<String, String> params);
+
+    /**
+     * 根据条件查询PC统计明细
+     *
+     * @param request
+     * @return
+     */
+    ChannelStatisticsDetailResponse searchChannelStatisticsDetail(ChannelStatisticsDetailRequest request);
+
+    /**
+     * 根据订单号查询提现订单
+     * @param nid
+     * @param userId
+     * @return
+     */
+    AccountWithdrawVO queryAccountwithdrawByNid(String nid, Integer userId);
+
+    /**
+     * 提现成功后,更新用户账户信息,提现记录
+     * @param param
+     * @return
+     */
+    boolean updateAccountAfterWithdraw(Map<String,String> param);
+
+    /**
+     * 提现失败后,更新用户的提现记录
+     * @param userId
+     * @param nid
+     * @return
+     */
+    boolean updateAccountAfterWithdrawFail(Integer userId, String nid);
+    
+	/**
+	 * 获取部门列表
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+    OADepartmentResponse getCrmDepartmentList(HjhCommissionRequest form);
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getPushMoneyListCount(PushMoneyRequest request);
+
+    /**
+     * 直投提成列表list
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<PushMoneyVO> searchPushMoneyList(PushMoneyRequest request);
+
+    /**
+     * 直投提成列表查询总金额
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    Map<String,Object> queryPushMoneyTotle(PushMoneyRequest request);
+
+    /**
+     * 根据userid查询 crm  cuttype
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+/*
+    int queryCrmCuttype(Integer userId);
+*/
+
+    /**
+     * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int updateTenderCommissionRecord(PushMoneyRequest pushMoneyRequest);
+    /**
+     * 查询列表
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse selectSubConfigListByParam(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 页面详情
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse selectSubConfigInfo(AdminSubConfigRequest adminRequest);
+    /**
+     *  分账名单配置添加
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse insertSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     * 分账名单配置修改
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse updateSubConfig(AdminSubConfigRequest adminRequest);
+    /**
+     * 分账名单配置删除
+     * @param adminRequest
+     * @return
+     */
+    AdminSubConfigResponse deleteSubConfig(AdminSubConfigRequest adminRequest);
+
+    /**
+     * 查询配置中心操作日志配置
+     * @param adminRequest
+     * @return
+     */
+    public List<FeerateModifyLogVO> selectInstAndAssertType(AdminOperationLogRequest adminRequest);
+    /**
+     * 产品类型   asset_type  asset_type_name资产类型名称
+     *
+     * @param
+     * @return List<HjhAssetTypeVO>
+     */
+    List<HjhAssetTypeVO> getHjhAssetType();
+
+
+
+    /**
+     * 查询用户充值记录
+     * @param userId
+     * @return
+     */
+    List<AccountRechargeVO> getAccountRecharge(int userId);
+
+	/**
+	 * 根据userId获取提成方式
+	 * 此方法后期可以做成基类的方法
+	 * @return
+	 */
+    Integer queryCrmCuttype(Integer userId);
+
+	/**
+     * 发提成
+     * @auth libin
+     * @param accountVO 账户信息
+     * @return
+     */
+    Integer updateTenderCommissionRecord(CommissionComboRequest request);
+
+    CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest);
+
+    CouponUserCustomizeResponse deleteById(int id, String remark, String userId);
+
+    List<CouponConfigCustomizeVO> getCouponConfigCustomize(CouponConfigRequest request);
+
+    CouponConfigResponse selectCouponConfig(String couponCode);
+
+    CouponUserResponse insertCouponUser(CouponUserRequest couponUserRequest);
+
+    CouponUserResponse getCouponUserByCouponCode(String couponCode);
+
+    CouponUserCustomizeResponse selectCouponUserById(Integer couponUserId);
+
+    CouponUserCustomizeResponse auditRecord(AdminCouponUserRequestBean adminCouponUserRequestBean);
+
+    /**
+     * 查询优惠券已发行数量
+     * @param param
+     * @return
+     */
+    CouponRecoverCustomizeResponse checkCouponSendExcess(String couponCode);
+    BorrowCustomizeResponse selectBorrowAllList(BorrowBeanRequest form);
+
+    /**
+     * 查询列表
+     * @param adminRequest
+     * @return
+     */
+    FinmanChargeNewResponse selectFinmanChargeList(FinmanChargeNewRequest adminRequest);
+    /**
+     * 根据manChargeCd查询费率配置 详情
+     * @author xiehuili
+     * @param manChargeCd
+     * @return
+     */
+     FinmanChargeNewResponse getRecordInfo(String manChargeCd);
+    /**
+     * 插入费率配置
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public FinmanChargeNewResponse insertFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest);
+    /**
+     * 修改费率配置
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public FinmanChargeNewResponse updateFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest);
+    /**
+     * 删除费率配置
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public FinmanChargeNewResponse deleteFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest);
+    /**
+     *
+     * 根据表的类型,期数,项目类型检索管理费件数
+     * @author xiehuili
+     * @param adminRequest
+     * @return
+     */
+    public int countRecordByProjectType(FinmanChargeNewRequest adminRequest);
 }
+

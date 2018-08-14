@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountDirectionalTransferController, v0.1 2018/7/4 16:51
  */
-@Api(value = "资金中心-定向转账-定向转账",description = "资金中心-定向转账-定向转账")
+@Api(value = "资金中心-定向转账-定向转账",tags ="资金中心-定向转账-定向转账")
 @RestController
 @RequestMapping("/am-trade/accountdirectionaltransfer")
 public class AccountDirectionalTransferController extends BaseController {
@@ -50,7 +51,7 @@ public class AccountDirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping("/searchdirectionaltransferlist")
-    public AccountDirectionalTransferResponse searchDirectionalTransferList(DirectionalTransferListRequest request){
+    public AccountDirectionalTransferResponse searchDirectionalTransferList(@RequestBody DirectionalTransferListRequest request){
         AccountDirectionalTransferResponse response = new AccountDirectionalTransferResponse();
         Integer count = accountDirectionalTransferService.getDirectionalTransferCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页

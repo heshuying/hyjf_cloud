@@ -39,7 +39,7 @@ import java.util.List;
  * @author tanyy
  * @version AdminUtmReadPermissionsController, v0.1 2018/7/18 16:03
  */
-@Api(value = "渠道帐号管理")
+@Api(value = "渠道帐号管理",tags ="渠道帐号管理")
 @RestController
 @RequestMapping("/hyjf-admin/adminutmreadpermissions")
 public class AdminUtmReadPermissionsController extends BaseController {

@@ -27,13 +27,14 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-import static com.hyjf.am.trade.service.impl.task.issuerecover.AutoIssueRecoverServiceImpl.LABEL_MAIL_KEY;
+import static com.hyjf.am.trade.service.task.issuerecover.impl.AutoIssueRecoverServiceImpl.LABEL_MAIL_KEY;
 
 /**
  * @Auther: walter.limeng
@@ -49,6 +50,14 @@ public class AutoIssueMessageConsumer extends Consumer {
     private AutoIssueMessageService autoIssueMessageService;
     @Autowired
     private MailProducer mailProducer;
+    @Value("${hyjf.env.test}")
+    private Boolean env_test;
+
+    @Value("${hyjf.alerm.email.test}")
+    private static String emailList1;
+
+    @Value("${hyjf.alerm.email}")
+    private static String emaillist2;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -200,24 +209,13 @@ public class AutoIssueMessageConsumer extends Consumer {
                             emailmsg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
                             emailmsg.append("错误信息：").append("该债转没有匹配标签！").append("<br/>");
                             // 邮箱集合
-                            String[] toMail = new String[] {};
-
-                            // 线上用
-/*						toMail = new String[] {
-								"liyuanshen@shizitegong.com",
-								"duyang@shizitegong.com",
-								"zhulili@shizitegong.com",
-								"yuanyuling@hyjf.com",
-								"zhouduo@hyjf.com",
-								"tanglei@hyjf.com" };*/
-                            // 测试用
-                            toMail = new String[] {
-                                    "jiangying@hyjf.com",
-                                    "liudandan@hyjf.com",
-                                    "caoyi@hyjf.com",
-                                    "zhangshuang@hyjf.com",
-                                    "dongqing@hyjf.com",
-                                    "zhangkaili@hyjf.com" };
+                            String emailList= "";
+                            if (env_test){
+                                emailList = emailList1;
+                            }else{
+                                emailList = emaillist2;
+                            }
+                            String [] toMail = emailList.split(",");
                             MailMessage mailMessage = new MailMessage(null, null, "债转编号为：" + autoIssuerecoverVO.getCreditNid(), emailmsg.toString(), null, toMail, null,
                                     MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                             try {

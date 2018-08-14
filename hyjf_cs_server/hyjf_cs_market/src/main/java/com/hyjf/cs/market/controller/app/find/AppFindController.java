@@ -11,13 +11,13 @@ import com.hyjf.cs.market.bean.AppContentArticleBean;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,21 +28,25 @@ import java.util.Map;
  * @author fq
  * @version AppFindController, v0.1 2018/7/20 9:29
  */
-@Api(value = "app发现页", description = "app发现页")
+@Api(description = "app发现页", tags = "app发现页")
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppFindController extends BaseMarketController {
+    private static final Logger logger = LoggerFactory.getLogger(AppFindController.class);
     @Autowired
     private AppFindService appFindService;
 
-    @RequestMapping("/contentArticle/getContentArticleListByType")
-    public JSONObject getContentArticleListByType(HttpServletRequest request, AppContentArticleBean form) {
+    @ApiOperation(value = "知识列表", httpMethod = "POST", notes = "知识列表")
+    @PostMapping(value = "/contentArticle/getContentArticleListByType")
+    @ApiParam(required = true, name = "form", value = "查询条件")
+    @ResponseBody
+    public JSONObject getContentArticleListByType(@ModelAttribute AppContentArticleBean form) {
+        logger.info(AppFindController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
         ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleListByType");
         try {
-
             // 检查参数正确性
             if (Validator.isNull(form.getVersion()) || Validator.isNull(form.getPlatform())){
                 ret.put("status", "1");
@@ -50,7 +54,7 @@ public class AppFindController extends BaseMarketController {
                 return ret;
             }
             // 检查参数正确性
-            if (form.getSize()<0||form.getPage()<0){
+            if (form.getSize() < 0 || form.getPage() < 0){
                 ret.put("status", "1");
                 ret.put("statusDesc", "分页参数非法");
                 return ret;
@@ -84,10 +88,62 @@ public class AppFindController extends BaseMarketController {
             ret.put("statusDesc", "系统异常请稍后再试");
             ret.put("messageCount", "0");
             ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
+            logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
             return ret;
         }
+        logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
         return ret;
 
+    }
+
+    @ApiOperation(value = "上下翻页", httpMethod = "POST", notes = "上下翻页")
+    @PostMapping(value = "/contentArticle/getContentArticleFlip")
+    @ApiParam(required = true, name = "form", value = "查询条件")
+    @ResponseBody
+    public JSONObject getContentArticleFlip(@ModelAttribute AppContentArticleBean form) {
+        logger.info(AppFindController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/getContentArticleFlip");
+        JSONObject ret = new JSONObject();
+        ret.put("status", "0");
+        ret.put("statusDesc", "请求成功");
+        ret.put("request", "/hyjf-app/find/contentArticle/getContentArticleFlip");
+        try {
+
+            // 检查参数正确性
+            if (Validator.isNull(form.getOffset()) || Validator.isNull(form.getMessageId())){
+                ret.put("status", "1");
+                ret.put("statusDesc", "请求参数非法");
+                return ret;
+            }
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("messageId", form.getMessageId());
+            params.put("type", form.getType());
+            // 查询总数
+            ContentArticleCustomizeVO contentArticleCustomize = appFindService.getContentArticleFlip(params,form.getOffset());
+
+            if(contentArticleCustomize!=null){
+                ret.put("messageId", contentArticleCustomize.getMessageId());
+                ret.put("messageUrl", contentArticleCustomize.getMessageUrl());
+                ret.put("shareTitle", contentArticleCustomize.getTitle());
+                ret.put("shareContent", contentArticleCustomize.getShareContent());
+                ret.put("sharePicUrl", contentArticleCustomize.getSharePicUrl());
+                ret.put("shareUrl", contentArticleCustomize.getShareUrl());
+            }else{
+                ret.put("messageId", "");
+                ret.put("messageUrl", "");
+                ret.put("shareTitle", "");
+                ret.put("shareContent", "");
+                ret.put("sharePicUrl", "");
+                ret.put("shareUrl", "");
+            }
+        } catch (Exception e) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "系统异常请稍后再试");
+            ret.put("messageCount", "0");
+            ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
+            return ret;
+        }
+        logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleFlip");
+        return ret;
     }
 
     @RequestMapping("/contentArticle/{type}/{contentArticleId}")

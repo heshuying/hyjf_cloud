@@ -3,9 +3,14 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.user.EvalationResponse;
+import com.hyjf.admin.beans.response.EvalationInitResponseBean;
+import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
+import com.hyjf.am.vo.user.UserEvalationQuestionVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
+import com.hyjf.am.vo.user.UserVO;
+
+import java.util.List;
 
 /**
  * @author nxl
@@ -16,7 +21,7 @@ public interface EvalationService {
      * 查找用户测评数据
      * @return
      */
-    EvalationResponse selectUserEvalationResultList(EvalationRequest request);
+    EvalationResultResponse selectUserEvalationResultList(EvalationRequest request);
 
     /**
      * 查找用户测评结果
@@ -24,4 +29,22 @@ public interface EvalationService {
      * @return
      */
     UserEvalationResultVO selectUserEvalationResultByUserId(String userId);
+    /**
+     * 用户测评初始化
+     * @return
+     */
+    public EvalationInitResponseBean initUserManaget();
+    /**
+     * 根据用户id查找用户信息
+     * @param strUserId
+     * @return
+     */
+    UserVO getUserVOByUserId(String  strUserId);
+
+    /**
+     * 根据id查找用户测评的问题与答案
+     * @param evalationId
+     * @return
+     */
+    List<UserEvalationQuestionVO> getUserQuestionInfoById(int evalationId);
 }

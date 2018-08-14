@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="protocol_id" property="protocolId" jdbcType="VARCHAR" />
+    <result column="protocol_name" property="protocolName" jdbcType="VARCHAR" />
+    <result column="display_name" property="displayName" jdbcType="VARCHAR" />
+    <result column="protocol_type" property="protocolType" jdbcType="VARCHAR" />
+    <result column="version_number" property="versionNumber" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="protocol_url" property="protocolUrl" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, protocol_id, protocol_name, display_name, protocol_type, version_number, `status`, 
+    protocol_url, img_url, remarks, create_time, create_user_id, update_time, update_user_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplateExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_protocol_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_protocol_template
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_protocol_template
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplateExample" >
+    delete from ht_protocol_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_protocol_template (protocol_id, protocol_name, display_name, 
+      protocol_type, version_number, `status`, 
+      protocol_url, img_url, remarks, 
+      create_time, create_user_id, update_time, 
+      update_user_id)
+    values (#{protocolId,jdbcType=VARCHAR}, #{protocolName,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, 
+      #{protocolType,jdbcType=VARCHAR}, #{versionNumber,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{protocolUrl,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_protocol_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="protocolId != null" >
+        protocol_id,
+      </if>
+      <if test="protocolName != null" >
+        protocol_name,
+      </if>
+      <if test="displayName != null" >
+        display_name,
+      </if>
+      <if test="protocolType != null" >
+        protocol_type,
+      </if>
+      <if test="versionNumber != null" >
+        version_number,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="protocolUrl != null" >
+        protocol_url,
+      </if>
+      <if test="imgUrl != null" >
+        img_url,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="protocolId != null" >
+        #{protocolId,jdbcType=VARCHAR},
+      </if>
+      <if test="protocolName != null" >
+        #{protocolName,jdbcType=VARCHAR},
+      </if>
+      <if test="displayName != null" >
+        #{displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="protocolType != null" >
+        #{protocolType,jdbcType=VARCHAR},
+      </if>
+      <if test="versionNumber != null" >
+        #{versionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="protocolUrl != null" >
+        #{protocolUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplateExample" resultType="java.lang.Integer" >
+    select count(*) from ht_protocol_template
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_protocol_template
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.protocolId != null" >
+        protocol_id = #{record.protocolId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.protocolName != null" >
+        protocol_name = #{record.protocolName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.displayName != null" >
+        display_name = #{record.displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.protocolType != null" >
+        protocol_type = #{record.protocolType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versionNumber != null" >
+        version_number = #{record.versionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.protocolUrl != null" >
+        protocol_url = #{record.protocolUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgUrl != null" >
+        img_url = #{record.imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remarks != null" >
+        remarks = #{record.remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUserId != null" >
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null" >
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_protocol_template
+    set id = #{record.id,jdbcType=INTEGER},
+      protocol_id = #{record.protocolId,jdbcType=VARCHAR},
+      protocol_name = #{record.protocolName,jdbcType=VARCHAR},
+      display_name = #{record.displayName,jdbcType=VARCHAR},
+      protocol_type = #{record.protocolType,jdbcType=VARCHAR},
+      version_number = #{record.versionNumber,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      protocol_url = #{record.protocolUrl,jdbcType=VARCHAR},
+      img_url = #{record.imgUrl,jdbcType=VARCHAR},
+      remarks = #{record.remarks,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate" >
+    update ht_protocol_template
+    <set >
+      <if test="protocolId != null" >
+        protocol_id = #{protocolId,jdbcType=VARCHAR},
+      </if>
+      <if test="protocolName != null" >
+        protocol_name = #{protocolName,jdbcType=VARCHAR},
+      </if>
+      <if test="displayName != null" >
+        display_name = #{displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="protocolType != null" >
+        protocol_type = #{protocolType,jdbcType=VARCHAR},
+      </if>
+      <if test="versionNumber != null" >
+        version_number = #{versionNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="protocolUrl != null" >
+        protocol_url = #{protocolUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.ProtocolTemplate" >
+    update ht_protocol_template
+    set protocol_id = #{protocolId,jdbcType=VARCHAR},
+      protocol_name = #{protocolName,jdbcType=VARCHAR},
+      display_name = #{displayName,jdbcType=VARCHAR},
+      protocol_type = #{protocolType,jdbcType=VARCHAR},
+      version_number = #{versionNumber,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      protocol_url = #{protocolUrl,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

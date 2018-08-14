@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.app.password;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -18,19 +19,16 @@ import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
-import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,11 +46,11 @@ import java.util.regex.Pattern;
 /**
  * @author wangc
  */
-@Api(value = "app端密码相关服务",description = "app端-密码相关服务")
+@Api(value = "app端密码相关服务",tags = "app端-密码相关服务")
 @Controller
 @RestController
-@RequestMapping("/hyjf-app")
-public class AppPassWordController {
+@RequestMapping("/")
+public class AppPassWordController extends BaseUserController {
 
     @Autowired
     BankOpenService bankOpenService;
@@ -74,7 +72,7 @@ public class AppPassWordController {
      */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @ResponseBody
-    @RequestMapping(value = "/appUser/updatePasswordAction", method = RequestMethod.POST)
+    @RequestMapping(value = "/hyjf-app/appUser/updatePasswordAction", method = RequestMethod.POST)
     public JSONObject updatePasswordAction(@RequestHeader(value = "key") String key, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
 
         JSONObject ret = new JSONObject();
@@ -128,7 +126,7 @@ public class AppPassWordController {
      * @return
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
-    @PostMapping(value = "/setTeaderPassword")
+    @PostMapping(value = "/bank/user/transpassword/setPassword.do")
     public ModelAndView setPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -144,10 +142,10 @@ public class AppPassWordController {
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 同步调用路径
         String retUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURL_SYN_PASSWORD_ACTION ;
+                + CommonConstant.RETURL_SYN_PASSWORD_ACTION+ ".do" ;
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_PASSWORD_ACTION ;
+                + CommonConstant.RETURN_ASY_PASSWORD_ACTION+ ".do" ;
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET);
@@ -195,7 +193,7 @@ public class AppPassWordController {
      * @param response
      * @return
      */
-    @RequestMapping("/passwordReturn")
+    @RequestMapping("/bank/user/transpassword/passwordReturn.do")
     public ModelAndView passwordReturn(HttpServletRequest request, HttpServletResponse response,
                                        @ModelAttribute BankCallBean bean) {
         ModelAndView modelAndView = new ModelAndView();
@@ -258,14 +256,13 @@ public class AppPassWordController {
     /**
      * 设置交易密码异步回调
      *
-     * @param request
-     * @param response
+     * @param
+     * @param
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "passwordBgreturn")
-    public String passwordBgreturn(HttpServletRequest request, HttpServletResponse response,
-                                   @ModelAttribute BankCallBean bean) {
+    @RequestMapping(value = "/bank/user/transpassword/passwordBgreturn.do")
+    public String passwordBgreturn(@ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         bean.convert();
         LogAcqResBean acqes = bean.getLogAcqResBean();
@@ -294,7 +291,7 @@ public class AppPassWordController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/resetPassword")
+    @RequestMapping(value = "/bank/user/transpassword/resetPassword.do")
     public ModelAndView resetPassword(@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request, HttpServletResponse response) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView = new ModelAndView("/jumpHTML");
@@ -310,10 +307,10 @@ public class AppPassWordController {
         UserInfoVO usersInfo= passWordService.getUserInfo(userId);
         // 同步调用路径
         String retUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURL_SYN_RESETPASSWORD_ACTION ;
+                + CommonConstant.RETURL_SYN_RESETPASSWORD_ACTION + ".do";
         // 异步调用路
         String bgRetUrl = systemConfig.getAppHost() + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
-                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION ;
+                + CommonConstant.RETURN_ASY_RESETPASSWORD_ACTION+ ".do" ;
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
@@ -362,7 +359,7 @@ public class AppPassWordController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/resetPasswordReturn")
+    @RequestMapping(value = "/bank/user/transpassword/resetPasswordReturn.do")
     public ModelAndView resetPasswordReturn(HttpServletRequest request, HttpServletResponse response,
                                             @ModelAttribute BankCallBean bean) {
 
@@ -394,7 +391,7 @@ public class AppPassWordController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "resetPasswordBgreturn")
+    @RequestMapping(value = "/bank/user/transpassword/resetPasswordBgreturn.do")
     public String resetPasswordBgreturn(HttpServletRequest request, HttpServletResponse response,
                                         @ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
@@ -413,7 +410,7 @@ public class AppPassWordController {
      */
     @ResponseBody
     @ApiOperation(value = "找回密码",notes = "找回密码")
-    @RequestMapping(value = "/appUser/getBackPasswordAction", method = RequestMethod.POST)
+    @RequestMapping(value = "/hyjf-app/appUser/getBackPasswordAction", method = RequestMethod.POST)
     public JSONObject getBackPasswordAction(@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/hyjf-app/appUser/getBackPasswordAction");
@@ -503,7 +500,7 @@ public class AppPassWordController {
                     return ret;
                 }
                 String verificationType = CommonConstant.PARAM_TPL_ZHAOHUIMIMA;
-                int cnt = passWordService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                int cnt = passWordService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
                 if (cnt == 0) {
                     ret.put("status", "1");
                     ret.put("statusDesc", "验证码无效");

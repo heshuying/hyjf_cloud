@@ -4,17 +4,17 @@
 package com.hyjf.cs.user.controller.app.regist;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
-import com.hyjf.cs.user.service.regist.RegistService;
-import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +35,7 @@ import java.net.URLEncoder;
  * @author zhangqingqing
  * @version RegistController, v0.1 2018/6/11 14:42
  */
-@Api(value = "app端用户注册接口",description = "app端-用户注册接口")
+@Api(value = "app端用户注册接口",tags = "app端-用户注册接口")
 @RestController
 @RequestMapping("/hyjf-app/appUser")
 public class AppRegistController extends BaseUserController {
@@ -43,7 +43,7 @@ public class AppRegistController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppRegistController.class);
 
     @Autowired
-    private RegistService registService;
+    private RegisterService registService;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -108,12 +108,13 @@ public class AppRegistController extends BaseUserController {
         register.setPassword(password);
         register.setReffer(reffer);
         register.setVerificationCode(verificationCode);
+        register.setPlatform(platform);
         try{
             ret = registService.appCheckParam(register);
         }catch (Exception e){
             return ret;
         }
-        if(ret!=null){
+        if(ret.get(CustomConstants.APP_STATUS)!=null){
             return ret;
         }
         registService.register(register, GetCilentIP.getIpAddr(request));
@@ -134,7 +135,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", "");
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
@@ -162,7 +163,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", operationUrl);
-            baseMapBean.setCallBackAction(systemConfig.getAppHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());

@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
-@Api(value = "产品中心-汇转让-承接信息" , description = "产品中心-汇转让-承接信息")
+@Api(value = "产品中心-汇转让-承接信息" , tags = "产品中心-汇转让-承接信息")
 @RestController
 @RequestMapping("/borrow/creditTender")
 public class AdminBorrowCreditTenderController {
@@ -34,7 +35,7 @@ public class AdminBorrowCreditTenderController {
     @ApiOperation(value = "承接信息导出", notes = "承接信息导出")
     @PostMapping("/exportData")
     @ResponseBody
-    public void exportBorrowCreditTender( BorrowCreditTenderRequest request, HttpServletResponse response){
+    public void exportBorrowCreditTender( BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         borrowCreditTenderService.exportCreditTenderList(request,response);
     }
 

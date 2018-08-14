@@ -42,7 +42,7 @@ import java.util.List;
  * @author nxl
  * @version UserCenterController, v0.1 2018/6/19 15:08
  */
-@Api(value = "会员中心-用户画像接口", description = "会员中心-用户画像接口")
+@Api(value = "会员中心-用户画像接口", tags = "会员中心-用户画像接口")
 @RestController
 @RequestMapping("/hyjf-admin/userPortrait")
 public class UserPortraitController extends BaseController {
@@ -110,8 +110,8 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "修改用户画像", notes = "修改用户画像")
     @PostMapping(value = "/updateUserPortrait")
     @ResponseBody
-    public AdminResult updateUserPortrait(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
-        if (StringUtils.isNotBlank(userPortraitRequestBean.getUserId())) {
+    public AdminResult updateUserPortrait(@RequestBody UserPortraitRequestBean userPortraitRequestBean) {
+        if (null==userPortraitRequestBean.getUserId()) {
             return new AdminResult<>(FAIL, "请输入用户id");
         }
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
@@ -128,13 +128,13 @@ public class UserPortraitController extends BaseController {
      *
      * @param request
      */
-    @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
+    @ApiOperation(value = "导出用户画像户", notes = "导出用户画像")
     @PostMapping(value = "/exportLoancover")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) throws Exception {
         // 表格sheet名称
         String sheetName = "用户画像";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
                 + CustomConstants.EXCEL_EXT;
         //解决IE浏览器导出列表中文乱码问题
         String userAgent = request.getHeader("user-agent").toLowerCase();

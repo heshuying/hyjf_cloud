@@ -4,6 +4,7 @@
 package com.hyjf.am.response.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.response.AdminResponse;
 
@@ -21,6 +22,13 @@ public class BorrowCustomizeResponse extends AdminResponse<BorrowCustomizeVO> {
 	private List<HjhInstConfigVO> hjhInstConfig;
 	private List<BorrowProjectTypeVO> borrowProjectType;
 	private List<BorrowStyleVO> borrowStyle;
+	private Map<String, String> st;
+	public Map<String, String> getSt() {
+		return st;
+	}
+	public void setSt(Map<String, String> st) {
+		this.st = st;
+	}
 	public List<HjhInstConfigVO> getHjhInstConfig() {
 		return hjhInstConfig;
 	}

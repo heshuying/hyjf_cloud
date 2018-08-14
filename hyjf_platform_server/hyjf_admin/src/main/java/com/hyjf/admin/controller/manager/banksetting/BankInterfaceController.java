@@ -21,7 +21,7 @@ import java.util.Date;
 /**
  * @author by xiehuili on 2018/7/19.
  */
-@Api(value = "配置中心银行配置 接口切换")
+@Api(value = "配置中心银行配置--接口切换", tags = "配置中心银行配置--接口切换")
 @RestController
 @RequestMapping("/hyjf-admin/config/banksetting/bankinterface")
 public class BankInterfaceController extends BaseController {
@@ -30,8 +30,8 @@ public class BankInterfaceController extends BaseController {
     @Autowired
     private BankInterfaceService bankInterfaceService;
 
-    @ApiOperation(value = "配置中心银行配置 接口切换", notes = "查询配置中心接口切换")
-    @RequestMapping("/init")
+    @ApiOperation(value = "查询接口切换", notes = "查询接口切换")
+    @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult bankInterfaceInit(@RequestBody BankInterfaceRequest adminRequest) {
         BankInterfaceResponse response=bankInterfaceService.bankInterfaceInit(adminRequest);
@@ -45,8 +45,8 @@ public class BankInterfaceController extends BaseController {
         return new AdminResult<ListResult<BankInterfaceVO>>(ListResult.build(response.getResultList(), response.getResultList().size())) ;
     }
 
-    @ApiOperation(value = "配置中心银行配置 接口切换", notes = "查询配置中心接口切换详情页面")
-    @RequestMapping("/infoAction")
+    @ApiOperation(value = "查询配置中心接口切换详情页面", notes = "查询配置中心接口切换详情页面")
+    @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult bankInterfaceInfo(@RequestBody BankInterfaceRequest adminRequest) {
         BankInterfaceResponse response=null;
@@ -64,7 +64,7 @@ public class BankInterfaceController extends BaseController {
     }
 
 
-    @ApiOperation(value = "配置中心银行配置 接口切换 禁用", notes = "接口切换 禁用")
+    @ApiOperation(value = "接口切换 禁用", notes = "接口切换 禁用")
     @PostMapping("/useAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult updateUseAction(@RequestBody  BankInterfaceRequest adminRequest)  {
@@ -91,7 +91,7 @@ public class BankInterfaceController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心银行配置 快捷充值限额", notes = "快捷充值限额修改")
+    @ApiOperation(value = "快捷充值限额修改", notes = "快捷充值限额修改")
     @PostMapping("/updateAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankRechargeConfig(@RequestBody  BankInterfaceRequest adminRequest)  {
@@ -113,7 +113,7 @@ public class BankInterfaceController extends BaseController {
         }
         return new AdminResult<>();
     }
-    @ApiOperation(value = "配置中心快捷充值限额", notes = "快捷充值限额删除")
+    @ApiOperation(value = "快捷充值限额删除", notes = "快捷充值限额删除")
     @PostMapping("/deleteAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankInterfaceConfig(@RequestBody BankInterfaceRequest adminRequest)  {

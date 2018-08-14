@@ -8,7 +8,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangqingqing
  * @version LoginController, v0.1 2018/6/11 13:56
  */
-@Api(value = "web端-用户登录接口", description = "web端-用户登录接口")
+@Api(value = "web端-用户登录接口", tags = "web端-用户登录接口")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-web/user")
@@ -75,14 +75,14 @@ public class WebLoginController extends BaseUserController {
      */
     @ApiOperation(value = "登出", notes = "web端-登出")
     @PostMapping(value = "logout")
-    public WebResult<Object> loginout(@RequestHeader(value = "token") String token){
+    public WebResult<Object> loginout(@RequestHeader(value = "userId") int userId){
         WebResult<Object> result = new WebResult<>();
         JSONObject ret = new JSONObject();
         ret.put("request", "/user/logout");
         // 退出到首页
         result.setData("index");
         try {
-            RedisUtils.del(RedisKey.USER_TOKEN_REDIS + token);
+            RedisUtils.del(RedisConstants.USERID_KEY + userId);
         }catch (Exception e){
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc("退出失败");

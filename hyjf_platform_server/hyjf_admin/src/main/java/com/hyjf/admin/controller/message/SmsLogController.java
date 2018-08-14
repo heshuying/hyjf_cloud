@@ -5,9 +5,7 @@ package com.hyjf.admin.controller.message;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
@@ -20,7 +18,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version SmsLogController, v0.1 2018/6/23 15:09
  */
-@Api(value = "短信统计", description = "短信统计")
+@Api(value = "短信统计", tags = "短信统计")
 @RestController
 @RequestMapping("/hyjf-admin/message/smsLog")
 public class SmsLogController extends BaseController {
@@ -29,13 +27,13 @@ public class SmsLogController extends BaseController {
     private SmsLogService smsLogService;
 
     @ApiOperation(value = "查询消息中心短信发送记录", notes = "查询消息中心短信发送记录")
-    @RequestMapping("/smsLogList")
+    @GetMapping("/smsLogList")
     public JSONObject smsLogList() {
         return smsLogService.smsLogList();
     }
 
     @ApiOperation(value = "根据条件查询消息中心短信发送记录", notes = "根据条件查询消息中心短信发送记录")
-    @RequestMapping("/findSmsLog")
+    @PostMapping("/findSmsLog")
     public JSONObject findSmsLog(@RequestBody SmsLogRequest request) {
         return smsLogService.findSmsLog(request);
     }

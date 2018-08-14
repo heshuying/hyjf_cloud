@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,9 @@ import java.util.Map;
  * @version BorrowLogController, v0.1 2018/7/11 9:50
  */
 
-@Api(value = "借款操作日志",description="借款操作日志")
+@Api(value = "借款操作日志",tags ="借款操作日志")
 @RestController
-@RequestMapping("/borrow/borrowlog")
+@RequestMapping("/hyjf-admin/borrow/borrowlog")
 public class BorrowLogController extends BaseController {
 
     /** 查看权限 */
@@ -93,7 +94,7 @@ public class BorrowLogController extends BaseController {
         // 表格sheet名称
         String sheetName = "借款操作日志列表";
         // 文件名称
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 查询
         List<BorrowLogCustomizeVO> resultList = this.borrowLogService.exportBorrowLogList(copyForm);
         // 列头

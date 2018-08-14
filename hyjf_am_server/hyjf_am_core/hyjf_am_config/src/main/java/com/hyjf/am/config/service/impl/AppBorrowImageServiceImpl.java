@@ -26,6 +26,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      *
      * @return
      */
+    @Override
     public List<AppBorrowImage> getRecordList(AppBorrowImage config, int limitStart, int limitEnd) {
         AppBorrowImageExample example = new AppBorrowImageExample();
         AppBorrowImageExample.Criteria crt =example.createCriteria();
@@ -86,6 +87,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
      * @param record
      * @throws Exception
      */
+    @Override
     public void updateRecord(AppBorrowImage record) throws Exception {
         //int updatetime = GetDate.getNowTime10();
         record.setUpdateTime(new Date());
@@ -99,6 +101,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
     /**
      * 删除
      **/
+    @Override
     public boolean deleteRecord(Integer id) {
         AppBorrowImageExample example = new AppBorrowImageExample();
         AppBorrowImageExample.Criteria crt =example.createCriteria();

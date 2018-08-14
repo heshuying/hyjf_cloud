@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
  * @author fuqiang
  * @version ContentQualifyController, v0.1 2018/7/11 9:23
  */
-@Api(value = "公司管理-资质荣誉", description = "公司管理-资质荣誉")
+@Api(value = "公司管理-资质荣誉", tags = "公司管理-资质荣誉")
 @RestController
 @RequestMapping("/hyjf-admin/content/contentqualify")
 public class ContentQualifyController extends BaseController {

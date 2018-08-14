@@ -20,7 +20,7 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
-import com.hyjf.cs.user.service.BaseUserServiceImpl;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -59,7 +59,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     public boolean checkForMobileModify(String newMobile, String smsCode) {
         String verificationType = CommonConstant.PARAM_TPL_BDYSJH;
         int cnt = amUserClient.checkMobileCode(newMobile, smsCode, verificationType, CommonConstant.CLIENT_PC,
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED);
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         CheckUtil.check(cnt > 0, MsgEnum.ERR_OBJECT_INVALID,"验证码");//无效的验证码
         return true;
     }

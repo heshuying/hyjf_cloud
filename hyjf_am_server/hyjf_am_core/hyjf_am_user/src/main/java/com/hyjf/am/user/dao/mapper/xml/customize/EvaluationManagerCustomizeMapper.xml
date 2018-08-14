@@ -4,13 +4,13 @@
     <sql id="Where_Clause">
         <where>
             <if test="userName != null and userName !=''">
-                AND hydu.username LIKE CONCAT('%', #{userName}, '%')
+                AND hydu.username LIKE CONCAT(#{userName}, '%')
             </if>
             <if test="realName != null and realName != ''">
-                AND hydui.truename LIKE CONCAT('%', #{realName}, '%')
+                AND hydui.truename LIKE CONCAT( #{realName}, '%')
             </if>
             <if test="mobile != null and mobile != ''">
-                AND hydu.mobile LIKE CONCAT('%', #{mobile}, '%')
+                AND hydu.mobile LIKE CONCAT(#{mobile}, '%')
             </if>
             <if test="userProperty != null and userProperty != ''">
                 AND pna.name_cd= #{userProperty,jdbcType=INTEGER}
@@ -34,7 +34,7 @@
                 AND hydu.evaluation_expired_time <![CDATA[<=]]> NOW()
             </if>
             <if test="evaluationType != null and evaluationType != ''">
-                AND huer.type = #{evaluationType,jdbcType=INTEGER}
+                AND huer.eval_type = #{evaluationType,jdbcType=INTEGER}
             </if>
         </where>
     </sql>
@@ -45,20 +45,12 @@
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
         <result column="account_status" property="accountStatus" jdbcType="VARCHAR" />
-        <result column="is51_cd" property="is51" jdbcType="INTEGER" />
         <result column="evaluation_status" property="evaluationStatus" jdbcType="VARCHAR" />
         <result column="evaluation_type" property="evaluationType" jdbcType="VARCHAR" />
         <result column="evaluation_score" property="evaluationScore" jdbcType="VARCHAR" />
         <result column="createtime" property="createtime" jdbcType="VARCHAR" />
         <result column="lasttime" property="lasttime" jdbcType="VARCHAR" />
         <result column="evalationTime" property="evalationTime" jdbcType="VARCHAR" />
-    </resultMap>
-
-
-    <resultMap id="UserEvalationPOMap" type="com.hyjf.am.user.dao.model.customize.EvalationResultCustomize">
-        <result column="question" property="question" jdbcType="VARCHAR" />
-        <result column="answer" property="answer" jdbcType="VARCHAR" />
-        <result column="score" property="score" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectUserEvalationResultList" resultMap="UserEvalationResultListPOMap" parameterType="Map">
@@ -71,18 +63,19 @@
         hydui.attribute AS user_property,
         hydui.attribute AS user_property_id,
         hydu.bank_open_account AS account_status,
+        CASE IFNULL(huer.user_id,0)
+        WHEN 0 THEN "未测评"
+        ELSE IF(hydu.evaluation_expired_time <![CDATA[<=]]> NOW()=0,"已测评","已过期") END evaluation_status,
         huer.eval_type as evaluation_type,
         huer.score_count evaluation_score,
-        DATE_FORMAT(huer.create_time, '%Y-%m-%d %H:%i:%S') createtime,
-        DATE_FORMAT(huer.lasttime, '%Y-%m-%d %H:%i:%S') lasttime,
-        DATE_FORMAT(hydu.evaluation_expired_time, '%Y-%m-%d %H:%i:%S') as evalationTime
+        date_format(huer.create_time, '%Y-%c-%d %h:%i:%s') createtime,
+        date_format(huer.lasttime, '%Y-%c-%d %h:%i:%s') lasttime,
+        date_format(hydu.evaluation_expired_time, '%Y-%c-%d %h:%i:%s') as evalationTime
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
         LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
-        --         LEFT JOIN hyjf_param_name pna ON cast(hydui.attribute AS CHAR) = pna.name_cd AND pna.name_class = 'USER_PROPERTY'
-        --         LEFT JOIN hyjf_param_name pnac ON cast(hydu.bank_open_account AS CHAR) = pnac.name_cd AND pnac.name_class = 'ACCOUNT_STATUS'
         LEFT JOIN ht_user_evalation_result huer on hydu.user_id=huer.user_id
         <include refid="Where_Clause" />
         <if test="limitStart != null and limitEnd !=null" >
@@ -101,5 +94,16 @@
         <include refid="Where_Clause" />
     </select>
 
-
+    <resultMap id="UserEvalationPOMap" type="com.hyjf.am.user.dao.model.customize.UserEvalationQuestionCustomize">
+        <result column="question_id" property="question" jdbcType="VARCHAR" />
+        <result column="answer_id" property="answer" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="getUserEvalation" resultMap="UserEvalationPOMap" parameterType="java.lang.Integer">
+        select
+        hue.question_id,
+        hue.answer_id
+        from ht_user_evalation hue
+        where hue.er_id=#{id,jdbcType=INTEGER}
+        ORDER BY hue.question_id
+    </select>
 </mapper>

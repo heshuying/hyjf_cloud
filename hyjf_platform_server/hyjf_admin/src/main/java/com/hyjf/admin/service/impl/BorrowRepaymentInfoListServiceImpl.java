@@ -19,14 +19,12 @@ import java.util.List;
  */
 @Service
 public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoListService {
-    @Autowired
-    private HjhInstConfigClient hjhInstConfigClient;
 
     @Autowired
     private AmTradeClient amTradeClient;
     @Override
     public List<HjhInstConfigVO> selectHjhInstConfigByInstCode(String instCode) {
-        List<HjhInstConfigVO> list = hjhInstConfigClient.selectHjhInstConfigByInstCode(instCode);
+        List<HjhInstConfigVO> list = amTradeClient.selectHjhInstConfigByInstCode(instCode);
         return list;
     }
 
@@ -46,7 +44,7 @@ public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoLi
             BorrowRepaymentInfoListCustomizeVO sumObject = this.amTradeClient.sumBorrowRepaymentInfoList(request);
             bean.setSumObject(sumObject);
         }
-        return null;
+        return bean;
     }
 
     @Override

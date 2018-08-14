@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.admin.coupon;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
 import com.hyjf.am.resquest.trade.DataCenterCouponRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.customize.admin.DataCenterCouponCustomize;
+import com.hyjf.am.trade.dao.model.customize.DataCenterCouponCustomize;
 import com.hyjf.am.trade.service.admin.coupon.DataCenterCouponService;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.common.util.CommonUtils;

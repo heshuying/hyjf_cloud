@@ -21,13 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * @author by xiehuili on 2018/7/16.
  */
-@Api(value = "配置中心节假日配置")
+@Api(value = "配置中心节假日配置",tags ="配置中心节假日配置")
 @RestController
 @RequestMapping("/hyjf-admin/config/holidaysconfig")
 public class HolidaysConfigController  extends BaseController {
@@ -37,9 +36,9 @@ public class HolidaysConfigController  extends BaseController {
     @Autowired
     private HolidaysConfigService holidaysConfigService;
 
-    @ApiOperation(value = "配置中心节假日配置", notes = "查询配置中心节假日配置")
-    @RequestMapping("/init")
-//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ApiOperation(value = "查询配置中心节假日配置", notes = "查询配置中心节假日配置")
+    @PostMapping("/init")
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)---原代码中没有权限管理
     public AdminResult initHolidaysConfig(@RequestBody HolidaysConfigRequestBean holidaysConfigRequestBean) {
         AdminHolidaysConfigRequest adminRequest= new AdminHolidaysConfigRequest();
         //可以直接使用
@@ -55,11 +54,11 @@ public class HolidaysConfigController  extends BaseController {
         return new AdminResult<ListResult<HolidaysConfigVO>>(ListResult.build(response.getResultList(), response.getRecordTotal())) ;
     }
 
-    @ApiOperation(value = "配置中心节假日配置", notes = "节假日配置详情页面")
+    @ApiOperation(value = "节假日配置详情页面", notes = "节假日配置详情页面")
     @PostMapping("/infoAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult instConfigInfo(@RequestBody HolidaysConfigRequestBean holidaysConfigRequestBean) {
-        HolidaysConfigResponse adminResponse=null;
+        HolidaysConfigResponse adminResponse=new HolidaysConfigResponse();
         AdminHolidaysConfigRequest adminRequest= new AdminHolidaysConfigRequest();
         //可以直接使用
         BeanUtils.copyProperties(holidaysConfigRequestBean, adminRequest);
@@ -68,9 +67,8 @@ public class HolidaysConfigController  extends BaseController {
             adminResponse = this.holidaysConfigService.getHolidaysConfigById(id);
         }else {
             HolidaysConfigVO record = new HolidaysConfigVO();
-            String data=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//            record.setStatrTime(data);
-//            record.setEndTime(data);
+            record.setCreateTime(new Date());
+            record.setUpdateTime(new Date());
             adminResponse.setResult(record);
         }
         if (adminResponse == null) {
@@ -81,7 +79,7 @@ public class HolidaysConfigController  extends BaseController {
         }
         return new AdminResult<HolidaysConfigVO>(adminResponse.getResult()) ;
     }
-    @ApiOperation(value = "配置中心节假日配置", notes = "节假日配置添加")
+    @ApiOperation(value = "节假日配置添加", notes = "节假日配置添加")
     @PostMapping("/insertAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertHolidaysConfig( @RequestBody HolidaysConfigRequestBean holidaysConfigRequestBean) {
@@ -105,7 +103,7 @@ public class HolidaysConfigController  extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "配置中心节假日配置", notes = "节假日配置修改")
+    @ApiOperation(value = "节假日配置修改", notes = "节假日配置修改")
     @PostMapping("/updateAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult updateHolidaysConfig( @RequestBody HolidaysConfigRequestBean holidaysConfigRequestBean) {

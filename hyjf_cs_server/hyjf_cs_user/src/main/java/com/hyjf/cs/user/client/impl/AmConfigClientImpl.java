@@ -5,12 +5,10 @@ import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.BanksConfigResponse;
+import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.config.SmsConfigVO;
-import com.hyjf.am.vo.config.UserCornerVO;
-import com.hyjf.am.vo.config.VersionVO;
+import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.BanksConfigVO;
@@ -84,6 +82,17 @@ public class AmConfigClientImpl implements AmConfigClient {
     public List<QuestionCustomizeVO> getNewQuestionList() {
         QuestionCustomizeResponse response = restTemplate
                 .getForEntity(configService+"/config/getNewQuestionList", QuestionCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<NewAppQuestionCustomizeVO> getNewAppQuestionList() {
+        NewAppQuestionCustomizeResponse response = restTemplate
+                .getForEntity(configService+"/config/getNewAppQuestionList", NewAppQuestionCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -246,5 +255,31 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getSuccessCount();
         }
         return 0;
+    }
+
+    @Override
+    public BankConfigVO getBankConfigById(Integer id) {
+        BankConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/getBankConfigByBankId/" + id, BankConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据bankId查询BankRechargeConfig
+     * @auth sunpeikai
+     * @param bankId
+     * @return
+     */
+    @Override
+    public BankRechargeConfigVo getBankRechargeConfigByBankId(Integer bankId) {
+        BankRechargeConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/bankrecharge/getBankRechargeConfigByBankId/" + bankId, BankRechargeConfigResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
     }
 }

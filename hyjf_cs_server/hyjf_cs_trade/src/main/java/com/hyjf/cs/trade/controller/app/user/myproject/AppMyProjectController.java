@@ -1,24 +1,17 @@
 package com.hyjf.cs.trade.controller.app.user.myproject;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.RedisKey;
-import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.AppMyProjectService;
-import com.hyjf.cs.trade.service.AssetManageService;
-import com.hyjf.cs.trade.service.WechatMyProjectService;
+import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -38,7 +32,7 @@ import java.util.*;
  * @version WechatMyAssetController, v0.1 2018/7/24 12:02
  */
 
-@Api(value = "app端用户我的散标接口",description = "app端用户我的散标接口")
+@Api(value = "app端用户我的散标接口",tags = "app端用户我的散标接口")
 @Controller
 @RequestMapping("/hyjf-app/user/invest")
 public class AppMyProjectController extends BaseTradeController {
@@ -46,16 +40,18 @@ public class AppMyProjectController extends BaseTradeController {
     @Autowired
     private AppMyProjectService appMyProjectService;
     /**
-     * 微信端获取首页散标详情
-     * @author zhangyk
+     * 微信端获取首页散标列表
      * @date 2018/7/2 16:27
      */
     @ApiOperation(value = "App端:获取我的散标信息", notes = "App端:获取我的散标信息")
     @PostMapping(value = "/getMyProject", produces = "application/json; charset=utf-8")
-    public MyProjectResponse queryScatteredProject( HttpServletRequest request,@RequestHeader(value = "token", required = false) String token) {
+    @ResponseBody
+    public MyProjectResponse queryScatteredProject( HttpServletRequest request,
+                                                    @RequestHeader(value = "token", required = false) String token,
+                                                    @RequestHeader(value = "userId", required = false) Integer userId) {
 
         MyProjectResponse response = new MyProjectResponse();
-
+        response.setRequest("/hyjf-app/user/invest/getMyProject");
         // 状态：1为当前持有，2为已回款，3为转让记录
         String type = request.getParameter("type");
         // 唯一标识
@@ -68,12 +64,9 @@ public class AppMyProjectController extends BaseTradeController {
             response.setStatusDesc("参数非法");
             return response;
         }
-        WebViewUserVO webViewUserVO = RedisUtils.getObj(RedisKey.USER_TOKEN_REDIS + token, WebViewUserVO.class);
-        Integer userId = webViewUserVO.getUserId();
-        //Integer userId = Integer.valueOf(request.getParameter("userId"));
         // 构建查询条件
         AssetManageBeanRequest  params = buildQueryParameter(request);
-        params.setUserId(userId+"");
+        params.setUserId(userId);
         // 构建分页查询条件
         this.buildQueryParameter(request);
         // 这2个不用了，在返回的时候拼接
@@ -145,8 +138,9 @@ public class AppMyProjectController extends BaseTradeController {
             List<CurrentHoldObligatoryRightListCustomizeVO> customizes, HttpServletRequest request, Integer userId) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(customizes))
+        if (CollectionUtils.isEmpty(customizes)) {
             return vos;
+        }
         String investStatusDesc = "";
         for (CurrentHoldObligatoryRightListCustomizeVO entity : customizes) {
             vo = new MyProjectVo();
@@ -224,8 +218,9 @@ public class AppMyProjectController extends BaseTradeController {
             List<AppAlreadyRepayListCustomizeVO> appAlreadyRepayListCustomizes, HttpServletRequest request) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes))
+        if (CollectionUtils.isEmpty(appAlreadyRepayListCustomizes)) {
             return vos;
+        }
         for (AppAlreadyRepayListCustomizeVO entity : appAlreadyRepayListCustomizes) {
             vo = new MyProjectVo();
             BeanUtils.copyProperties(entity, vo);
@@ -264,8 +259,9 @@ public class AppMyProjectController extends BaseTradeController {
                                                       HttpServletRequest request) {
         List<MyProjectVo> vos = new ArrayList<>();
         MyProjectVo vo = null;
-        if (CollectionUtils.isEmpty(projectList))
+        if (CollectionUtils.isEmpty(projectList)) {
             return vos;
+        }
         for (AppTenderCreditRecordListCustomizeVO customize : projectList) {
             vo = new MyProjectVo();
             vo.setBorrowTheFirst(customize.getCreditCapital() + "元");
@@ -298,8 +294,9 @@ public class AppMyProjectController extends BaseTradeController {
      * @return
      */
     private String concatInvestDetailUrl(String borrowNid, String orderId, String type, String couponType, String assignNid, String investStatusDesc) {
-        if (StringUtils.isEmpty(couponType))
+        if (StringUtils.isEmpty(couponType)) {
             couponType = "0";
+        }
         String url = "" + "/" + borrowNid + "?orderId=" + orderId + "&type=" + type
                 + "&couponType=" + couponType + "&assignNid=" + assignNid +"&investStatusDesc=" + investStatusDesc;
         return url;
@@ -321,7 +318,7 @@ public class AppMyProjectController extends BaseTradeController {
         AssetManageBeanRequest  params=new AssetManageBeanRequest();
         params.setBorrowNid(borrowNid);
         params.setTenderNid(tenderNid);
-        params.setUserId(userId+"");
+        params.setUserId(userId);
         params.setNowTime((int)(System.currentTimeMillis() / 1000));
         params.setLimitStart(0);
         params.setLimitEnd(1);
@@ -338,8 +335,8 @@ public class AppMyProjectController extends BaseTradeController {
      */
     private AssetManageBeanRequest buildQueryParameter(HttpServletRequest request) {
         AssetManageBeanRequest params = new AssetManageBeanRequest();
-        Integer page = Integer.parseInt(request.getParameter("page"));
-        Integer pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Integer page = Integer.parseInt(request.getParameter("page")==null?"1":request.getParameter("page"));
+        Integer pageSize = Integer.parseInt(request.getParameter("pageSize")==null?"10":request.getParameter("pageSize"));
         params.setLimitStart((page - 1) * pageSize);
         params.setLimitEnd(pageSize);
         return params;

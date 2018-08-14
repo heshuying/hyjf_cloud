@@ -6,7 +6,6 @@ package com.hyjf.am.trade.controller.admin.exception;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
-import com.hyjf.am.response.admin.TenderExceptionSolveResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
 import com.hyjf.am.response.trade.HjhPlanBorrowTmpResponse;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
@@ -14,7 +13,7 @@ import com.hyjf.am.resquest.admin.TenderExceptionSolveRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
-import com.hyjf.am.trade.dao.model.customize.admin.AdminPlanAccedeListCustomize;
+import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
 import com.hyjf.am.vo.admin.AdminPlanAccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -58,9 +57,9 @@ public class AutoTenderExceptionController  extends BaseController {
             mapParam.put("limitStart", 0);
             mapParam.put("limitEnd", 0);
         }
-        List<AdminPlanAccedeListCustomize> userManagerCustomizeList = autoTenderExceptionService.selectAccedeRecordList(mapParam);
         response.setCount(intCountAccede);
         if (intCountAccede > 0) {
+            List<AdminPlanAccedeListCustomize> userManagerCustomizeList = autoTenderExceptionService.selectAccedeRecordList(mapParam);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<AdminPlanAccedeListCustomizeVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, AdminPlanAccedeListCustomizeVO.class);
                 response.setResultList(userVoList);

@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.productcenter.borrow.batchcenter.batchborrowre
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -28,19 +32,21 @@ import java.util.List;
  * @Date:2018/7/12
  * @Description:
  */
-@Api(value = "Admin端产品中心-批次中心-批次还款",description="Admin端产品中心-批次中心-批次还款")
+@Api(value = "Admin端产品中心-批次中心-批次还款",tags ="Admin端产品中心-批次中心-批次还款")
 @RestController
 @RequestMapping("/hyjf-admin/batchBorrowRepay")
 public class BatchBorrowRepayController extends BaseController{
 
     private static final String NAME_CLASS = "REPAY_STATUS";
 
+    private static final String PERMISSIONS = "HjhDebtCredit";
 
     @Autowired
     private BatchBorrowRecoverService batchBorrowRecoverService;
 
     @ApiOperation(value = "批次中心-批次还款页面初始化", notes = "页面初始化")
     @PostMapping(value = "/batchBorrowRepayInit")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject batchBorrowRepayInit() {
         JSONObject jsonObject = batchBorrowRecoverService.initPage(NAME_CLASS);
@@ -52,6 +58,7 @@ public class BatchBorrowRepayController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ResponseBody
     public JSONObject querybatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request) {
         request.setApiType(1);
@@ -67,6 +74,7 @@ public class BatchBorrowRepayController extends BaseController{
             @ApiResponse(code = 200, message = "成功")
     })
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ApiImplicitParam(name = "apicronID",value = "任务ID")
     public JSONObject querybatchBorrowRepayBankInfoList(@RequestBody String apicronID) {
         JSONObject jsonObject;
@@ -84,8 +92,9 @@ public class BatchBorrowRepayController extends BaseController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功")
     })
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     @ResponseBody
-    public JSONObject exportBatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response){
+    public JSONObject exportBatchBorrowRepayList(@RequestBody BatchBorrowRecoverRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
         // 表格sheet名称
         String sheetName = "批次还款列表";
 
@@ -96,7 +105,7 @@ public class BatchBorrowRepayController extends BaseController{
             this.fail("暂时没有符合条件的数据！");
         }
         List<BatchBorrowRecoverVo> recordList = (List<BatchBorrowRecoverVo>) jsonObject.get(LIST);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 序号   借款编号    批次号 还款角色    还款用户名   当前还款期数  总期数 借款金额    应收服务费   应还款 已还款 总笔数 成功笔数    成功金额    失败笔数    失败金额    提交时间    更新时间    批次状态    银行回执说明
         String[] titles = new String[] {"序号 ","借款编号","资产来源","批次号","还款角色","还款用户名","当前还款期数","总期数","借款金额","还款服务费",
                 "应还款","已还款","总笔数","成功笔数","成功金额","失败笔数","失败金额","提交时间","更新时间","批次状态","银行回执说明"};

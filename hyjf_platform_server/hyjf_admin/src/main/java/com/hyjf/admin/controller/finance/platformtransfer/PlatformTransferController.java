@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: PlatformTransferController, v0.1 2018/7/9 10:13
  */
-@Api(value = "资金中心-转账管理-平台转账",description = "资金中心-转账管理-平台转账")
+@Api(value = "资金中心-转账管理-平台转账",tags = "资金中心-转账管理-平台转账")
 @RestController
 @RequestMapping(value = "/hyjf-admin/platformtransfer")
 public class PlatformTransferController extends BaseController {
@@ -103,7 +105,7 @@ public class PlatformTransferController extends BaseController {
 
     @ApiOperation(value = "平台转账-导出excel",notes = "平台转账-导出excel")
     @PostMapping(value = "/platformtransferlist")
-    public void exportPlatformTransferList(HttpServletResponse response, @RequestBody PlatformTransferListRequest platformTransferListRequest){
+    public void exportPlatformTransferList(HttpServletResponse response, @RequestBody PlatformTransferListRequest platformTransferListRequest) throws UnsupportedEncodingException {
         // currPage<0 为全部,currPage>0 为具体某一页
         platformTransferListRequest.setCurrPage(-1);
         // 表格sheet名称
@@ -120,7 +122,7 @@ public class PlatformTransferController extends BaseController {
         //BeanUtils.copyProperties(platformTransferListRequest, rechargeCustomize);
         //rechargeCustomize.setTypeSearch("ADMIN");
         //List<RechargeCustomize> rechargeCustomizes = this.rechargeService.queryRechargeList(rechargeCustomize);
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // String[] titles = new String[] { "用户名", "订单号", "充值渠道", "充值银行",
         // "银行卡号", "充值金额", "手续费", "垫付手续费" , "到账金额", "充值状态", "充值平台", "充值时间" };
