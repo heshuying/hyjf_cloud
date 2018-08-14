@@ -1,31 +1,25 @@
 package com.hyjf.admin.service.impl;
 
-import com.hyjf.admin.beans.ApplyAgreementRequestBean;
-import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
-import com.hyjf.admin.beans.BorrowRepayAgreementRequestBean;
-import com.hyjf.admin.beans.request.ApplyAgreementRequest;
-import com.hyjf.admin.beans.request.BorrowRepayAgreementRequest;
+import com.hyjf.admin.beans.request.ApplyAgreementRequestBean;
+import com.hyjf.admin.beans.request.BorrowRepayAgreementRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.service.ApplyAgreementService;
 import com.hyjf.admin.utils.Page;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.ApplyAgreemenResponse;
-import com.hyjf.am.response.trade.BorrowCreditTenderResponse;
+import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
-import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.ApplyAgreementAmRequest;
-import com.hyjf.am.resquest.admin.BorrowCreditRepayAmRequest;
+import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
-import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
+import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
-import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.service.BaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -33,6 +27,7 @@ import java.util.List;
  * @version ApplyAgreementServiceImpl, v0.1 2018/8/9 16:51
  * @Author: Zha Daojian
  */
+@Service
 public class ApplyAgreementServiceImpl implements ApplyAgreementService {
 
     @Autowired
@@ -49,8 +44,14 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     /*垫付协议申请明细列表页count*/
     public static final String AGREEMENT_COUNT_URL = BASE_URL + "/getApplyAgreementCount";
 
+    /*垫付协议申请列表-分期*/
+    public static final String ADD_AGREEMENT_LIST_URL_PLAN = BASE_URL + "/getAddApplyAgreementPlanList";
+
+    /*垫付协议申请明细列表页-不分期count*/
+    public static final String ADD_AGREEMENT_COUNT_URL_PLAN = BASE_URL + "/getAddApplyAgreementPlanCount";
+
     /*垫付协议申请列表*/
-    public static final String ADD_AGREEMENT_LIST_URL = BASE_URL + "/getAddApplyAgreementList";
+    public static final String ADD_AGREEMENT_LIST_URL= BASE_URL + "/getAddApplyAgreementList";
 
     /*垫付协议申请明细列表页count*/
     public static final String ADD_AGREEMENT_COUNT_URL = BASE_URL + "/getAddApplyAgreementCount";
@@ -68,10 +69,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         ApplyAgreementAmRequest req = CommonUtils.convertBean(request, ApplyAgreementAmRequest.class);
         req.setLimitStart(page.getOffset());
         req.setLimitEnd(page.getLimit());
-        ApplyAgreemenResponse response = baseClient.postExe(AGREEMENT_COUNT_URL, request, ApplyAgreemenResponse.class);
+        ApplyAgreementResponse response = baseClient.postExe(AGREEMENT_COUNT_URL, request, ApplyAgreementResponse.class);
         Integer count = response.getCount();
         if (count > 0) {
-            response = baseClient.postExe(AGREEMENT_LIST_URL, request, ApplyAgreemenResponse.class);
+            response = baseClient.postExe(AGREEMENT_LIST_URL, request, ApplyAgreementResponse.class);
             List<ApplyAgreementVO> list = response.getResultList();
             bean.setRecordList(list);
         }
@@ -104,14 +105,19 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             // 是否分期(true:分期, false:不分期)
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
+            String countUrl = "";//查询列表数量url
+            String ListUrl = "";//查询列表url
             if(isMonth) {//分期
+                countUrl =ADD_AGREEMENT_COUNT_URL_PLAN;
+                ListUrl =ADD_AGREEMENT_LIST_URL_PLAN;
             }else{//不分期
-
+                countUrl =ADD_AGREEMENT_COUNT_URL;
+                ListUrl =ADD_AGREEMENT_LIST_URL;
             }
-            BorrowRepayAgreementResponse response = baseClient.postExe(ADD_AGREEMENT_COUNT_URL, req, BorrowRepayAgreementResponse.class);
+            BorrowRepayAgreementResponse response = baseClient.postExe(countUrl, req, BorrowRepayAgreementResponse.class);
             Integer count = response.getCount();
             if (count > 0) {
-                response = baseClient.postExe(ADD_AGREEMENT_LIST_URL, req, BorrowRepayAgreementResponse.class);
+                response = baseClient.postExe(ListUrl, req, BorrowRepayAgreementResponse.class);
                 List<BorrowRepayAgreementVO> list = response.getResultList();
                 bean.setRecordList(list);
             }

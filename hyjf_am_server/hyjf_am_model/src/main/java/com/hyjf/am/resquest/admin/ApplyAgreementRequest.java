@@ -1,16 +1,14 @@
-package com.hyjf.admin.beans.request;
+package com.hyjf.am.resquest.admin;
 
-import com.hyjf.admin.beans.BaseRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.io.Serializable;
 
 /**
  * @version ApplyAgreementRequest, v0.1 2018/8/9 17:05
  * @Author: Zha Daojian
  */
-public class ApplyAgreementRequest extends BaseRequest implements Serializable {
+public class ApplyAgreementRequest extends BasePage {
 
     /**
      * 检索条件 借款编号
@@ -114,7 +112,7 @@ public class ApplyAgreementRequest extends BaseRequest implements Serializable {
     /**
      * 列表画面自定义标签上的用翻页对象：paginator
      */
-    private com.hyjf.common.paginator.Paginator paginator;
+    private Paginator paginator;
 
     public int getPaginatorPage() {
         if (paginatorPage == 0) {

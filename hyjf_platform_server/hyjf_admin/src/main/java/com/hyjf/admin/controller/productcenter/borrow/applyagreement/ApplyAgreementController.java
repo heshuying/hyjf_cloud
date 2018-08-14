@@ -1,10 +1,10 @@
 package com.hyjf.admin.controller.productcenter.borrow.applyagreement;
 
-import com.hyjf.admin.beans.request.ApplyAgreementRequest;
-import com.hyjf.admin.beans.request.BorrowRepayAgreementRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ApplyAgreementService;
+import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
+import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ public class ApplyAgreementController  extends BaseController {
 
     @Autowired
     private ApplyAgreementService applyAgreementService;
+
 
 
     @ApiOperation(value = "垫付协议申请列表", notes = "垫付协议申请列表")

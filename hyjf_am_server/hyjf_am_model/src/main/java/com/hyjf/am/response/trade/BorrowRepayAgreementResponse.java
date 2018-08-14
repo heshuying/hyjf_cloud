@@ -5,7 +5,7 @@ import com.hyjf.am.vo.trade.BorrowRepayAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
 
 /**
- * @version ApplyAgreemenResponse, v0.1 2018/8/10 14:22
+ * @version ApplyAgreementResponse, v0.1 2018/8/10 14:22
  * @Author: Zha Daojian
  */
 public class BorrowRepayAgreementResponse extends Response<BorrowRepayAgreementVO> {

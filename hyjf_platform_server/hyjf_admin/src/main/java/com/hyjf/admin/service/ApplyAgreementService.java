@@ -1,8 +1,8 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.request.ApplyAgreementRequest;
-import com.hyjf.admin.beans.request.BorrowRepayAgreementRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
+import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 
 /**
  * @version ApplyAgreementService, v0.1 2018/8/9 16:51

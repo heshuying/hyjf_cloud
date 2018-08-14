@@ -1,15 +1,13 @@
-package com.hyjf.admin.beans.request;
+package com.hyjf.am.resquest.admin;
 
-import com.hyjf.admin.beans.BaseRequest;
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.io.Serializable;
 
 /**
  * @version BorrowRepayAgreementRequest, v0.1 2018/8/10 15:05
  * @Author: Zha Daojian
  */
-public class BorrowRepayAgreementRequest extends BaseRequest implements Serializable {
+public class BorrowRepayAgreementRequest extends BasePage {
     @ApiModelProperty(value = "借款编号")
     private String borrowNidSrch;
 
