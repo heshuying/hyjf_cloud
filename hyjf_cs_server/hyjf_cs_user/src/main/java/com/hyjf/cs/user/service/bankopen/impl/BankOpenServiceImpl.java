@@ -191,7 +191,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError"+"?logOrdId="+openAccoutBean.getLogOrderId();
         String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) +"/user/openSuccess";
         // 异步调用路
-        String bgRetUrl = systemConfig.getWebHost() + "/user/secure/open/bgReturn?phone=" + openBean.getMobile();
+        String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile();
         openAccoutBean.setRetUrl(retUrl);
         openAccoutBean.setSuccessfulUrl(successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
