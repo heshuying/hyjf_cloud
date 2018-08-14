@@ -1465,4 +1465,35 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+	/**
+	 * 修改短信与邮件是否开启状态
+	 * @param userId
+	 * @param smsOpenStatus
+	 * @param emailOpenStatus
+	 * @return
+	 */
+	@Override
+	public Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus) {
+		User user = usersMapper.selectByPrimaryKey(userId);
+		if (user != null) {
+			if("0".equals(emailOpenStatus)){
+				user.setIsSmtp(1);
+			}else{
+				user.setIsSmtp(0);
+			}
+			if("0".equals(smsOpenStatus)){
+				user.setWithdrawSms(1);
+				user.setInvestSms(1);
+				user.setRechargeSms(1);
+				user.setRecieveSms(1);
+			}else{
+				user.setWithdrawSms(0);
+				user.setInvestSms(0);
+				user.setRechargeSms(0);
+				user.setRecieveSms(0);
+			}
+		}
+		return usersMapper.updateByPrimaryKeySelective(user);
+	}
 }
