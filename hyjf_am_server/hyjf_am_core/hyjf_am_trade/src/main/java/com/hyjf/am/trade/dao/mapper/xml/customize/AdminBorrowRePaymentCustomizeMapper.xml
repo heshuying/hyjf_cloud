@@ -20,10 +20,6 @@
 			<if test="borrowUserName != null and borrowUserName != ''">
 				AND b.borrow_user_name LIKE CONCAT('%', #{borrowUserName}, '%')
 			</if>
-			<!-- 借款标题 -->
-			<if test="borrowName != null and borrowName != ''">
-				AND binfo.name LIKE CONCAT('%', #{borrowName}, '%')
-			</if>
 
 			<!-- 还款方式 -->
 			<if test="repayStyleType != null and repayStyleType != ''">
@@ -114,7 +110,7 @@
 		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
 		<result column="regist_user_name" property="registUserName" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
+	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
 		br.borrow_nid AS borrowNid,
 		b.user_id AS userId,
@@ -165,8 +161,6 @@
 		LEFT JOIN  ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
 		LEFT JOIN  ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status  <![CDATA[<>]]>  6
 		LEFT JOIN  ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
-		ORDER BY
-		br.id DESC
 		<include refid="Where_Clause" />
 		ORDER BY
 		br.id DESC
@@ -177,7 +171,7 @@
 
 
 
-	<select id="countBorrowRepayment" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
+	<select id="countBorrowRepayment" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
 		COUNT(1)
 		FROM ht_borrow AS b
@@ -188,23 +182,23 @@
 		<include refid="Where_Clause" />
 	</select>
 
-	<select id="sumBorrowRepayment" resultType="com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize" parameterType="com.hyjf.am.resquest.admin.BorrowRecoverRequest">
+	<select id="sumBorrowRepayment" resultType="com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
 		SUM(b.borrow_account_yes) AS borrowAccountYes,
 		SUM(b.repay_account_all) AS repayAccountAll,
 		SUM(br.repay_fee) AS
 		repayFee
 		FROM
-		huiyingdai_borrow AS b
-		INNER JOIN huiyingdai_borrow_repay AS br on
+		ht_borrow AS b
+		INNER JOIN ht_borrow_repay AS br on
 		b.borrow_nid=br.borrow_nid
-		LEFT JOIN huiyingdai_users u ON b.user_id =
+		LEFT JOIN ht_r_user u ON b.user_id =
 		u.user_id
 		LEFT JOIN
-		huiyingdai_borrow_style AS bs on
+		ht_borrow_style AS bs on
 		b.borrow_style=bs.nid
-		LEFT JOIN huiyingdai_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN huiyingdai_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
 		<include refid="Where_Clause" />
 	</select>
 

@@ -5,11 +5,13 @@ package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
+
 /**
  * @author fuqiang
  * @version PlatformCountCustomizeVO, v0.1 2018/7/18 19:02
  */
-public class PlatformCountCustomizeVO extends BaseVO {
+public class PlatformCountCustomizeVO extends BaseVO implements Serializable {
     /**
      * serialVersionUID:
      */

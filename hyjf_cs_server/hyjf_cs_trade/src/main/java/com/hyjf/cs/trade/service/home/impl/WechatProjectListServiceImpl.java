@@ -759,6 +759,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
+        result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
+        result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
     }
 

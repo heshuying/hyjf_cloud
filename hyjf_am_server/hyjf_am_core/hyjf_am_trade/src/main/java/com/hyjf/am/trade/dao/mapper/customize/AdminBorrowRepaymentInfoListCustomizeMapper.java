@@ -10,9 +10,9 @@ import java.util.List;
  * @version AdminBorrowRepaymentInfoListCustomizeMapper, v0.1 2018/7/10 11:26
  */
 public interface AdminBorrowRepaymentInfoListCustomizeMapper {
-    int selectBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request);
+    List<AdminBorrowRepaymentInfoListCustomize> selectBorrowRepaymentInfoListList(BorrowRepaymentInfoListRequset request);
 
-    List<AdminBorrowRepaymentInfoListCustomize> countBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
+    int  countBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
 
     AdminBorrowRepaymentInfoListCustomize sumBorrowRepaymentInfoList(BorrowRepaymentInfoListRequset request);
 }

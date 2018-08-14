@@ -86,7 +86,7 @@
 
   <sql id="Where_Clause_Log">
     <where>
-      hydual.`del_flag` = 0
+      1=1
       <if test="userName != null and userName !='' ">
         AND hydual.user_name LIKE CONCAT('%', #{userName}, '%')
       </if>
@@ -154,28 +154,24 @@
     COUNT(hydual.user_id)
     FROM
     ht_hjh_user_auth_log hydual
-    LEFT JOIN ht_param_name pamop ON pamop.name_cd = hydual.operate_esb AND pamop.name_class = 'CLIENT'
-    LEFT JOIN ht_param_name pamtp ON pamtp.name_cd = hydual.auth_type AND pamtp.name_class = 'AUTO_INVER_TYPE'
     <include refid="Where_Clause_Log" />
   </select>
 
   <select id="selectUserAuthLogList" resultMap="BaseResultLogMap" parameterType="Map">
     SELECT
-    hydual.order_id AS orderId,
+    hydual.order_id AS order_id,
     hydual.user_name AS user_name,
-    pamtp.name AS authType,
      CASE
     WHEN hydual.order_status = 0
     THEN '初始'
     WHEN hydual.order_status = 1
     THEN '成功'
-    ELSE '失败' END AS orderStatus,
-    pamop.name AS operateEsb,
-    FROM_UNIXTIME( hydual.auth_create_time, '%Y-%m-%d %H:%i:%s' ) AS creditTime
+    ELSE '失败' END AS order_status,
+    hydual.auth_type AS auth_type,
+    hydual.operate_esb AS operate_esb,
+    FROM_UNIXTIME( hydual.auth_create_time, '%Y-%m-%d %H:%i:%s' ) AS auth_create_time
     FROM
     ht_hjh_user_auth_log hydual
-    LEFT JOIN ht_param_name pamop ON pamop.name_cd = hydual.operate_esb AND pamop.name_class = 'CLIENT'
-    LEFT JOIN ht_param_name pamtp ON pamtp.name_cd = hydual.auth_type AND pamtp.name_class = 'AUTO_INVER_TYPE'
     <include refid="Where_Clause_Log" />
     ORDER BY hydual.create_time DESC
     <if test="limitStart != null and limitEnd !=null" >

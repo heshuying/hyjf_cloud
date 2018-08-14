@@ -769,4 +769,18 @@ public class UserController extends BaseController {
         response.setMessage(Response.FAIL_MSG);
         return response;
     }
+
+    /**
+     * 修改短信与邮件是否开启状态
+     * @param userId
+     * @param smsOpenStatus
+     * @param emailOpenStatus
+     * @return
+     */
+    @GetMapping("/updateStatusByUserId/{userId}/{smsOpenStatus}/{emailOpenStatus}")
+    public Integer updateStatusByUserId(@PathVariable Integer userId,
+                                        @PathVariable String smsOpenStatus,
+                                        @PathVariable String emailOpenStatus){
+        return userService.updateStatusByUserId(userId, smsOpenStatus, emailOpenStatus);
+    }
 }

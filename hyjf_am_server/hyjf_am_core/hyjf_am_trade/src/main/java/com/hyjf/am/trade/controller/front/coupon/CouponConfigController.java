@@ -122,18 +122,20 @@ public class CouponConfigController extends BaseController {
             if (StringUtils.isNotEmpty(configRequest.getId())) {
                 CouponConfig couponConfig = new CouponConfig();
                 BeanUtils.copyProperties(configRequest, couponConfig);
+                couponConfig.setId(Integer.valueOf(configRequest.getId()));
                 Map<String, Object> resultMap = couponConfigService.saveCouponConfig(couponConfig);
                 if ((Boolean) resultMap.get("success")) {
                     return ccr;
                 } else {
-                    ccr.setRtn("failed");
-                    ccr.setMessage((String) resultMap.get("msg"));
+                    ccr.setRtn(Response.FAIL);
+                    ccr.setMessage("保存失败");
                     return ccr;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        ccr.setRtn(Response.FAIL);
         ccr.setMessage("校验失败");
         return ccr;
     }

@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TradeDetailBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.trade.TradeDetailService;
@@ -39,14 +40,15 @@ public class TradeDetailController  extends BaseTradeController {
      */
     @ApiOperation(value = "初始化交易类型列表", notes = "初始化交易类型列表")
     @PostMapping(value = "/getAccountTradeList")
-    public Map<String,Object> getAccountTradeList( HttpServletRequest request) {
+    public WebResult<Object> getAccountTradeList( HttpServletRequest request) {
+
         logger.info("web初始化交易类型列表");
-        Map<String,Object> result = new HashMap<>();
+        WebResult<Object> result=new WebResult<Object>();
         // 交易类型列表
         List<AccountTradeVO> trades = this.tradeDetailService.selectTradeTypes();
-        result.put("trades", trades);
-        result.put("status", BaseResult.SUCCESS);
-        result.put("statusDesc", BaseResult.SUCCESS_DESC);
+        result.setData(trades);
+        result.setStatus(BaseResult.SUCCESS);
+        result.setStatusDesc(BaseResult.SUCCESS_DESC);
         return result;
     }
 

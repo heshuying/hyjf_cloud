@@ -1,18 +1,20 @@
 package com.hyjf.am.response.admin;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
 
-import java.util.List;
+/**
+ * @Author : huanghui
+ */
+public class DayCreditDetailResponse extends Response<DayCreditDetailVO> {
 
-public class DayCreditDetailResponse {
+    private  Integer  count;
 
-    private List<DayCreditDetailVO> ResultList;
-
-    public List<DayCreditDetailVO> getResultList() {
-        return ResultList;
+    public Integer getCount() {
+        return count;
     }
 
-    public void setResultList(List<DayCreditDetailVO> resultList) {
-        ResultList = resultList;
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

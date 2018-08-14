@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
+import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -1828,5 +1829,53 @@ public class AmUserClientImpl implements AmUserClient {
 			return utmResponse;
 		}
 		return null;
+	}
+
+	/**
+	 * 查询手机号同步数量  用于前端分页显示
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int countBankOpenAccountUser(MobileSynchronizeRequest request) {
+		String url = userService + "/mobilesynchronize/countBankOpenAccountUser";
+		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 查询手机号同步列表
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<MobileSynchronizeCustomizeVO> selectBankOpenAccountUserList(MobileSynchronizeRequest request) {
+		String url = userService + "/mobilesynchronize/selectBankOpenAccountUserList";
+		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 同步手机号
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public boolean updateMobile(MobileSynchronizeRequest request) {
+		String url = userService + "/mobilesynchronize/updateMobile";
+		MobileSynchronizeResponse response = restTemplate.postForEntity(url,request, MobileSynchronizeResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.isUpdate();
+		}
+		return false;
 	}
 }

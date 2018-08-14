@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
+import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentService;
@@ -26,17 +27,17 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
 
 
     @Override
-    public int countBorrowRecover(BorrowRecoverRequest request) {
+    public int countBorrowRecover(BorrowRepaymentRequest request) {
         return this.borrowRepaymentCustomizeMapper.countBorrowRepayment(request);
     }
 
     @Override
-    public List<AdminBorrowRepaymentCustomize> selectBorrowRecoverList(BorrowRecoverRequest request) {
+    public List<AdminBorrowRepaymentCustomize> selectBorrowRepaymentList(BorrowRepaymentRequest request) {
         return this.borrowRepaymentCustomizeMapper.selectBorrowRepaymentList(request);
     }
 
     @Override
-    public AdminBorrowRepaymentCustomize sumBorrowRecoverList(BorrowRecoverRequest request) {
+    public AdminBorrowRepaymentCustomize sumBorrowRecoverList(BorrowRepaymentRequest request) {
         return this.borrowRepaymentCustomizeMapper.sumBorrowRepayment(request);
     }
 

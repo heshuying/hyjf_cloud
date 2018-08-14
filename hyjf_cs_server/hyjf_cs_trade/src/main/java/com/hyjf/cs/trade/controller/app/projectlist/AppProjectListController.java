@@ -16,6 +16,7 @@ import com.hyjf.cs.trade.util.ProjectConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -134,8 +135,13 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端债转详情", notes = "APP端债转详情")
     @GetMapping(value = "/transfer/{transferId}", produces = "application/json; charset=utf-8")
-    public Object getCreditDetail(@PathVariable String transferId , @RequestHeader(value = "userId", required = false) int userId) {
-        JSONObject result= appProjectListService.getAppCreditDetail(transferId, userId);
+    public Object getCreditDetail(@PathVariable String transferId , @RequestHeader(value = "userId", required = false) String userId) {
+        JSONObject result;
+        if (StringUtils.isNotBlank(userId)){
+            result = appProjectListService.getAppCreditDetail(transferId, Integer.valueOf(userId));
+        }else{
+            result = appProjectListService.getAppCreditDetail(transferId, null);
+        }
         return result;
     }
 
@@ -183,8 +189,13 @@ public class AppProjectListController extends BaseTradeController {
      */
     @ApiOperation(value = "APP端计划详情", notes = "APP端计划详情")
     @GetMapping(value ="/plan/{planId}", produces = "application/json; charset=utf-8")
-    public Object getPlanDetail(@PathVariable @Valid String planId , @RequestHeader(value = "userId", required = false) int userId) {
-         JSONObject result = appProjectListService.getAppPlanDetail(planId, userId);
+    public Object getPlanDetail(@PathVariable @Valid String planId , @RequestHeader(value = "userId", required = false) String userId) {
+        JSONObject result;
+        if (StringUtils.isNotBlank(userId)){
+            result = appProjectListService.getAppPlanDetail(planId, Integer.valueOf(userId));
+        }else{
+            result = appProjectListService.getAppPlanDetail(planId, null);
+        }
         return result;
     }
 

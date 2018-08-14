@@ -6,9 +6,11 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -118,7 +120,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     @Override
     public void buildUserAccountInfo(Integer userId, UserAccountInfoVO userAccountInfo) {
         UserVO users = this.getUsersById(userId);
-        CheckUtil.check(users == null, MsgEnum.ERR_USER_NOT_EXISTS, userId);
+        CheckUtil.check(users != null, MsgEnum.ERR_USER_NOT_EXISTS, userId);
         //Preconditions.checkArgument(users != null, userId + "用户不存在！");
         //是否绑定邮箱
         userAccountInfo.setSetEmail(!Strings.isNullOrEmpty(users.getEmail()));
@@ -188,7 +190,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
     public void buildOutInfo(Integer userId, MyProfileVO myProfileVO) {
 
         AccountVO account = this.amTradeClient.getAccount(userId);
-        CheckUtil.check(account == null, MsgEnum.ERR_BANK_ACCOUNT_NOT_EXIST, userId);
+        CheckUtil.check(account != null, MsgEnum.ERR_BANK_ACCOUNT_NOT_EXIST, userId);
         //Preconditions.checkArgument(account != null, "userId=【" + userId + "】没有账户信息！");
 
         //资产总额
@@ -397,32 +399,29 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
      * @return
      */
     @Override
-    public String getUserCouponsData(String couponStatus, Integer page,
-                                     Integer pageSize, Integer userId, String host) {
-        String SOA_INTERFACE_KEY = systemConfig.getAopAccesskey();
-        String GET_USERCOUPONS = "coupon/getUserCoupons.json";
+    public List<CouponUserForAppCustomizeVO> getUserCouponsData(String couponStatus, Integer page,
+                                                                Integer pageSize, Integer userId, String host) {
 
-        String timestamp = String.valueOf(GetDate.getNowTime10());
-        String chkValue = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + couponStatus + page + pageSize + timestamp + SOA_INTERFACE_KEY));
+        List<CouponUserForAppCustomizeVO> couponList = this.getMyCoupon(userId, page, pageSize, couponStatus);
+        return couponList;
+    }
 
-        Map<String, String> params = new HashMap<String, String>();
-        // 时间戳
-        params.put("timestamp", timestamp);
-        // 签名
-        params.put("chkValue", chkValue);
-        // 用户id
-        params.put("userId", String.valueOf(userId));
-        // 商品id
-        params.put("couponStatus", couponStatus);
-        params.put("page", String.valueOf(page));
-        params.put("pageSize", String.valueOf(pageSize));
-        params.put("host", host);
-
-        // 请求路径
-        String requestUrl = systemConfig.getApiWebUrl() + GET_USERCOUPONS;
-        // 0:成功，1：失败
-        String date = HttpClientUtils.post(requestUrl, params);
-        return date;
+    /**
+     * 获取我的优惠券
+     *
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @param couponStatus
+     * @return
+     */
+    private List<CouponUserForAppCustomizeVO> getMyCoupon(Integer userId, Integer page, Integer pageSize, String couponStatus) {
+        MyCouponListRequest requestBean = new MyCouponListRequest();
+        requestBean.setUserId(userId + "");
+        requestBean.setUsedFlag(couponStatus);
+        requestBean.setLimitStart((page - 1) * pageSize);
+        requestBean.setLimitEnd(page * pageSize);
+        return amTradeClient.getMyCoupon(requestBean);
     }
 
 

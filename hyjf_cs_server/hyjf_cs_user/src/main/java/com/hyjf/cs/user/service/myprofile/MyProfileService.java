@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.myprofile;
 
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.service.BaseService;
@@ -51,6 +52,6 @@ public interface MyProfileService extends BaseUserService {
      * @param host
      * @return
      */
-	String getUserCouponsData(String couponStatus, Integer page, Integer pageSize, Integer userId, String host);
+    List<CouponUserForAppCustomizeVO> getUserCouponsData(String couponStatus, Integer page, Integer pageSize, Integer userId, String host);
 
 }

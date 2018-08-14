@@ -45,18 +45,20 @@
 			<if test="platformSrch != null and platformSrch != ''">
 				AND hdpa.client = #{platformSrch}
 			</if>
-			<if test="searchStartDate != null and searchStartDate !='' ">
-				AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
-			</if>
-			<if test="searchEndDate != null and searchEndDate !='' ">
-				AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
-			</if>
-			<if test="countInterestTimeStartDate != null and countInterestTimeStartDate !='' ">
-				AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{countInterestTimeStartDate}
-			</if>
-			<if test="countInterestTimeEndDate != null and countInterestTimeEndDate !='' ">
-				AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{countInterestTimeEndDate}
-			</if>
+			
+			<if test="searchStartDate != null and searchStartDate != ''">
+	            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+	        </if>
+	        <if test="searchEndDate != null and searchEndDate != ''">
+	            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	        </if>
+	        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+	            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+	        </if>
+	        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+	            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+	        </if>
+			
 			<if test="matchDatesSrch != null and matchDatesSrch != ''">
 				AND hdpa.match_dates = #{matchDatesSrch}
 			</if>
@@ -266,7 +268,6 @@
 			  	hdpa.invest_counts AS investCounts,
 			  	hdpa.match_dates AS matchDates
 				
-				
 			FROM
 				ht_hjh_accede hdpa
 			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  
@@ -307,18 +308,20 @@
 				<if test="platformSrch != null and platformSrch != ''">
 					AND hdpa.client = #{platformSrch}
 				</if>
-				<if test="searchStartDate != null and searchStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
-				</if>
-				<if test="searchEndDate != null and searchEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
-				</if>
-				<if test="countInterestTimeStartDate != null and countInterestTimeStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{countInterestTimeStartDate}
-				</if>
-				<if test="countInterestTimeEndDate != null and countInterestTimeEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{countInterestTimeEndDate}
-				</if>
+
+				<if test="searchStartDate != null and searchStartDate != ''">
+		            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="searchEndDate != null and searchEndDate != ''">
+		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+				
 				<if test="matchDatesSrch != null and matchDatesSrch != ''">
 					AND hdpa.match_dates = #{matchDatesSrch}
 				</if>
@@ -390,32 +393,29 @@
 				<if test="platformSrch != null and platformSrch != ''">
 					AND hdpa.client = #{platformSrch}
 				</if>
-				<if test="searchStartDate != null and searchStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{searchStartDate}
-				</if>
-				<if test="searchEndDate != null and searchEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.add_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{searchEndDate}
-				</if>
-				
-				
-				
 				<if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
 					AND hdpa.lock_period = #{debtLockPeriodSrch}
 				</if>
-				<if test="countInterestTimeStartDate != null and countInterestTimeStartDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{countInterestTimeStartDate}
-				</if>
-				<if test="countInterestTimeEndDate != null and countInterestTimeEndDate !='' ">
-					AND FROM_UNIXTIME( hdpa.count_interest_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{countInterestTimeEndDate}
-				</if>
+				
+				<if test="searchStartDate != null and searchStartDate != ''">
+		            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="searchEndDate != null and searchEndDate != ''">
+		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[>=]]> STR_TO_DATE(#{countInterestTimeStartDate}, '%Y-%m-%d %H:%i:%s')
+		        </if>
+		        <if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+		            AND hdpa.count_interest_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{countInterestTimeEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+		        </if>
+				
 				<if test="matchDatesSrch != null and matchDatesSrch != ''">
 					AND hdpa.match_dates = #{matchDatesSrch}
 				</if>
 				<if test="investCountsSrch != null and investCountsSrch != ''">
 					AND hdpa.invest_counts = #{investCountsSrch}
 				</if>
-	
-	
 			</where>
 	</select>
 	

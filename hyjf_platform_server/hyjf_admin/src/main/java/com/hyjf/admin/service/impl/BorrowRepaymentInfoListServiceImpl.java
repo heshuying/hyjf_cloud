@@ -44,7 +44,7 @@ public class BorrowRepaymentInfoListServiceImpl implements BorrowRepaymentInfoLi
             BorrowRepaymentInfoListCustomizeVO sumObject = this.amTradeClient.sumBorrowRepaymentInfoList(request);
             bean.setSumObject(sumObject);
         }
-        return null;
+        return bean;
     }
 
     @Override

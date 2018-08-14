@@ -7,6 +7,7 @@ import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
 import com.hyjf.am.response.trade.BorrowRepayResponse;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
+import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
@@ -42,7 +43,7 @@ public class AdminBorrowRepaymentController extends BaseController {
     AdminBorrowRepaymentService adminBorrowRepaymentService;
 
     @RequestMapping(value = "/countBorrowRepayment")
-    public AdminBorrowRepaymentResponse countBorrowRepayment(@RequestBody @Valid BorrowRecoverRequest request){
+    public AdminBorrowRepaymentResponse countBorrowRepayment(@RequestBody @Valid BorrowRepaymentRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
         int count = this.adminBorrowRepaymentService.countBorrowRecover(request);
@@ -52,11 +53,11 @@ public class AdminBorrowRepaymentController extends BaseController {
     }
 
     @RequestMapping(value = "/selectBorrowRepaymentList")
-    public AdminBorrowRepaymentResponse selectBorrowRepaymentList(@RequestBody @Valid BorrowRecoverRequest request){
+    public AdminBorrowRepaymentResponse selectBorrowRepaymentList(@RequestBody @Valid BorrowRepaymentRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
 
-        List<AdminBorrowRepaymentCustomize> list = adminBorrowRepaymentService.selectBorrowRecoverList(request);
+        List<AdminBorrowRepaymentCustomize> list = adminBorrowRepaymentService.selectBorrowRepaymentList(request);
         if(!CollectionUtils.isEmpty(list)){
             List<BorrowRepaymentCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowRepaymentCustomizeVO.class);
             response.setResultList(voList);
@@ -65,7 +66,7 @@ public class AdminBorrowRepaymentController extends BaseController {
     }
 
     @RequestMapping(value = "/sumBorrowRepaymentInfo")
-    public AdminBorrowRepaymentResponse sumBorrowRepaymentInfo(@RequestBody @Valid BorrowRecoverRequest request){
+    public AdminBorrowRepaymentResponse sumBorrowRepaymentInfo(@RequestBody @Valid BorrowRepaymentRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
 

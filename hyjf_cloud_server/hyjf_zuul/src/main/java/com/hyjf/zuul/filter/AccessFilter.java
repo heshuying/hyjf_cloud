@@ -142,9 +142,8 @@ public class AccessFilter extends ZuulFilter {
 				}
 				this.appNomalRequestProcess(request, ctx, sign);
 
-				if (secureVisitFlag) {
-					this.setUserIdByToken(request, ctx, secureVisitFlag, APP_CHANNEL);
-				}
+				this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
+
 			} else {
 				// app打开初始化操作
 				this.initServer(request, ctx);
@@ -154,22 +153,23 @@ public class AccessFilter extends ZuulFilter {
 			// app自带hyjf-app 直接返回即可
 			return null;
 		} else if (requestUrl.contains(WECHAT_CHANNEL)) {
-			if (secureVisitFlag) {
-				this.wechatSetUserIdProcess(request, ctx);
-			}
+			this.wechatSetUserIdProcess(request, ctx, secureVisitFlag);
 			// wechat自带hyjf-wechat 直接返回即可
 			return null;
-		} else if (requestUrl.contains(WEB_CHANNEL)) {
-			if (secureVisitFlag) {
-				ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
-			}
+		}
+
+		if (requestUrl.contains(WEB_CHANNEL)) {
+			ctx = this.setUserIdByToken(request, ctx, secureVisitFlag, WEB_CHANNEL);
 			prefix = WEB_VISIT_URL;
 		} else if (requestUrl.contains(API_CHANNEL)) {
 			prefix = API_VISIT_URL;
 		} else {
+			logger.error("error channel...");
 			// 不对其进行路由
-			return this.buildErrorRequestContext(ctx, 502, "illegal visit!");
+			this.buildErrorRequestContext(ctx, 502, "illegal visit!");
+			return null;
 		}
+
 		// 增加请求前缀识别渠道
 		String modifiedRequestPath = prefix + originalRequestPath;
 		ctx.put(FilterConstants.REQUEST_URI_KEY, modifiedRequestPath);
@@ -272,7 +272,7 @@ public class AccessFilter extends ZuulFilter {
 		ctx.setSendZuulResponse(false);
 		ctx.setResponseStatusCode(gatewayCode);
 		ctx.setResponseBody(errorMessage);
-		return null;
+		return ctx;
 	}
 
 	/**
@@ -293,35 +293,61 @@ public class AccessFilter extends ZuulFilter {
 			token = request.getHeader(TOKEN);
 		}
 
-		if (StringUtils.isBlank(token) && isNecessary) {
+		// 需要安全访问的请求，token空不路由，否则直接返回
+		if (StringUtils.isBlank(token)) {
 			logger.error("token is empty...");
-			// 不对其进行路由
-			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
-			return ctx;
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		}
 
 		// jwt解析token
 		AccessToken accessToken = JwtHelper.parseToken(token);
 		if (accessToken == null) {
-			if (isNecessary) {
-				logger.error("user is not exist...");
-				// 不对其进行路由
-				this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
-				return ctx;
-			} else {
-				return ctx;
-			}
+			logger.error("user is not exist...");
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		} else {
 			Integer userId = accessToken.getUserId();
 			WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 			if (user == null) {
 				// 登陆过期
 				logger.error("login is invalid...");
-				return ctx;
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 			}
 			ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
 			logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));
 		}
+		return ctx;
+	}
+
+	/**
+	 * token无效情况下判断是否安全访问执行不同策略
+	 * 
+	 * @param ctx
+	 * @param isNecessary
+	 * @return
+	 */
+	private RequestContext buildReturnContextOfTokenInvalid(RequestContext ctx, boolean isNecessary) {
+		if (isNecessary) {
+			// 不对其进行路由
+			this.buildErrorRequestContext(ctx, 400, "TokenInvalid");
+		}
+		return ctx;
+	}
+
+	/**
+	 * @Author walter.limeng
+	 * @user walter.limeng
+	 * @Description  app特殊处理
+	 * @Date 10:35 2018/8/14
+	 * @Param
+	 * @return
+	 */
+	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
+		Integer userId = SecretUtil.getUserId(sign);
+		if (userId == null) {
+			logger.error("TokenInvalid");
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
+		}
+		ctx.addZuulRequestHeader("userId", userId + "");
 		return ctx;
 	}
 
@@ -332,30 +358,29 @@ public class AccessFilter extends ZuulFilter {
 	 * @param ctx
 	 * @return
 	 */
-	private Object wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx) {
+	private RequestContext wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx, boolean isNecessary) {
 		String sign = request.getParameter(SIGN);
-		Integer userId = null;
-		String accountId = null;
 		if (StringUtils.isBlank(sign)) {
 			sign = (String) request.getAttribute(SIGN);
 		}
 		if (StringUtils.isNotBlank(sign)) {
 			// 获取用户ID
 			AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-			if (appUserToken != null) {
-				userId = appUserToken.getUserId();
-				accountId = appUserToken.getAccountId();
+			if (appUserToken == null || appUserToken.getUserId()==null) {
+				logger.error("TokenInvalid");
+				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 			}
-			if (userId != null && userId > 0) {
-				// 需要刷新 sign
-				SecretUtil.refreshSign(sign);
-			}
+
+			Integer userId = appUserToken.getUserId();
+			String accountId = appUserToken.getAccountId();
+			// 需要刷新 sign
+			SecretUtil.refreshSign(sign);
 			request.setAttribute("userId", userId);
 			request.setAttribute("accountId", accountId);
 			ctx.addZuulRequestHeader("userId", userId + "");
 			ctx.addZuulRequestHeader("accountId", accountId);
 		} else {
-			this.buildErrorRequestContext(ctx, 400, "sign is empty!");
+			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		}
 		return ctx;
 	}
