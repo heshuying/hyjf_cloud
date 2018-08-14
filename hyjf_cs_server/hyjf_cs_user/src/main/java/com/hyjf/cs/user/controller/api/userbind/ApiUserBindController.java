@@ -1,17 +1,5 @@
 package com.hyjf.cs.user.controller.api.userbind;
 
-import java.net.URLEncoder;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -29,14 +17,23 @@ import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.vo.LoginRequestVO;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 
 /**
  * @author dongzeshan
  */
-@Api(value = "汇晶社查询用户信息",tags = "汇晶社查询用户信息")
+@Api(value = "汇晶社查询用户信息",tags = "api端-汇晶社查询用户信息")
 @RestController
 @RequestMapping("/api/user")
 public class ApiUserBindController extends BaseUserController {
@@ -51,7 +48,7 @@ public class ApiUserBindController extends BaseUserController {
     
 	/**
 	 * 授权按钮
-	 * @param form
+	 * @param
 	 * @return
 	 * @throws Exception 
 	 */
@@ -168,9 +165,9 @@ public class ApiUserBindController extends BaseUserController {
     }
 	/**
 	 * 错误页跳转用，初期化结果页数据（错误信息除外）
-	 * @param request
-	 * @param response
-	 * @param ex
+	 * @param
+	 * @param
+	 * @param
 	 * @return
 	 * @author liubin
 	 */
