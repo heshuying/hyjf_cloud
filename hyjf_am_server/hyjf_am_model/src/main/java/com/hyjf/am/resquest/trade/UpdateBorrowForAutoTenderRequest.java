@@ -4,8 +4,6 @@
 package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 
 /**
  * @author liubin
