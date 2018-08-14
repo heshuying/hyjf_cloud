@@ -4,8 +4,11 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
+import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.am.response.admin.MessagePushTemplateStaticsResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
@@ -157,4 +160,17 @@ public interface CsMessageClient {
      */
     List<HjhPlanCapitalVO> getPlanCapitalList(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 
+    /**
+     * 获取消息模板统计报表
+     * @param request
+     * @return
+     */
+    MessagePushTemplateStaticsResponse selectTemplateStatics(MessagePushTemplateStaticsRequest request);
+
+    /**
+     * 获取消息平台统计报表
+     * @param request
+     * @return
+     */
+    MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request);
 }

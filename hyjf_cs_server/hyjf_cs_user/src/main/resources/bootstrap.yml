@@ -21,3 +21,5 @@ server:
 
 logging:
   file: cs-user.log
+swagger:
+ enable: true

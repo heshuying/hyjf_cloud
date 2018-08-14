@@ -28,4 +28,8 @@ public interface WithdrawCustomizeMapper {
      * @return
      */
     List<UserWithdrawRecordCustomize> getThirdPartyUserWithdrawRecord(Map<String, Object> param);
+    /**
+     * todo 接口用到时再做实现
+     * LEFT JOIN hyjf_param_name statusname ON statusname.name_class = 'WITHDRAW_STATUS' AND statusname.name_cd = haw.`status` AND statusname.del_flag = '0'
+     */
 }
