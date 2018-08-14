@@ -22,7 +22,7 @@ import java.math.BigDecimal;
  */
 @Api(value = "安全保障数据", tags = "安全保障数据")
 @RestController
-@RequestMapping("/hyjf-wechat/find")
+@RequestMapping("/hyjf-wechat/wx/find")
 public class WechatSecurityController extends BaseController {
     /** 平台上线时间 */
     private static final String PUT_ONLINE_TIME = "2013-12";
