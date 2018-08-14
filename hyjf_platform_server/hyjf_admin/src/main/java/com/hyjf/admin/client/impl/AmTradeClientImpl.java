@@ -49,6 +49,7 @@ import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -5210,6 +5211,12 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/config/finmanchargenew/insert";
         FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
         if (response != null) {
+            int count =restTemplate.postForEntity("http://AM-CONFIG/am-config/feerateModifyLog/insert",adminRequest,int.class).getBody();
+            if(count > 0){
+                response.setRtn(Response.SUCCESS);
+                return response;
+            }
+            response.setRtn(Response.FAIL);
             return response;
         }
         return null;
@@ -5225,6 +5232,12 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/config/finmanchargenew/update";
         FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
         if (response != null) {
+            int count =restTemplate.postForEntity("http://AM-CONFIG/am-config/feerateModifyLog/update",adminRequest,int.class).getBody();
+            if(count > 0){
+                response.setRtn(Response.SUCCESS);
+                return response;
+            }
+            response.setRtn(Response.FAIL);
             return response;
         }
         return null;
@@ -5237,9 +5250,22 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public FinmanChargeNewResponse deleteFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
-        String url = "http://AM-TRADE/am-trade/config/finmanchargenew/delete";
-        FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
-        if (response != null) {
+        FinmanChargeNewResponse response = null;
+        //根据manChargeCd查询费率配置
+        FinmanChargeNewResponse selectResponse = restTemplate.getForEntity("http://AM-TRADE/am-trade/config/finmanchargenew/getRecordInfo/"+adminRequest.getManChargeCd(),FinmanChargeNewResponse.class)
+                .getBody();
+        if (selectResponse != null) {
+            BorrowFinmanNewChargeVO vo = selectResponse.getResult();
+            adminRequest = CommonUtils.convertBean(vo,FinmanChargeNewRequest.class);
+        }
+        //此处删除是插入日志，记录新动作而不是修改原动作
+         int count =restTemplate.postForEntity("http://AM-CONFIG/am-config/feerateModifyLog/delete",adminRequest,int.class).getBody();
+        if(count > 0){
+            response = restTemplate.postForEntity("http://AM-TRADE/am-trade/config/finmanchargenew/delete",adminRequest,FinmanChargeNewResponse.class).getBody();
+            if (response != null) {
+                response.setRtn(Response.SUCCESS);
+                return response;
+            }
             return response;
         }
         return null;

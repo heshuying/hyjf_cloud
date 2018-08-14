@@ -34,7 +34,7 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
         List<HjhInstConfigVO> hjhInstConfigList = hjhInstConfigList("");
         response.setHjhInstConfigList(hjhInstConfigList);
         // 产品类型
-        List<HjhAssetTypeVO> assetTypeList = hjhAssetTypeList(response.getResult().getInstCode());
+        List<HjhAssetTypeVO> assetTypeList = hjhAssetTypeList(adminRequest.getInstCodeSrch());
         response.setAssetTypeList(assetTypeList);
         return response;
    }
