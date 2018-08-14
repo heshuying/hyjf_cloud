@@ -6,6 +6,7 @@ package com.hyjf.cs.user.client;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
+import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
@@ -14,6 +15,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
+import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
@@ -275,4 +277,11 @@ public interface AmTradeClient {
     List<AppTenderCreditRepayPlanListCustomizeVO> selectTenderCreditRepayRecoverPlanList(AppRepayPlanListBeanRequest params);
 
     List<AppTenderToCreditListCustomizeVO> selectTenderToCreditList(Map<String,Object> params);
+
+    /**
+     * APP获取我的优惠券分页数据
+     * @param requestBean 参数
+     * @return List<CouponUserForAppCustomizeVO>
+     */
+    List<CouponUserForAppCustomizeVO> getMyCoupon(MyCouponListRequest requestBean);
 }

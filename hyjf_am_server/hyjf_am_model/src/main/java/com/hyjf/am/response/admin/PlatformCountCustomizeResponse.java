@@ -8,7 +8,7 @@ import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 
 /**
  * @author fuqiang
- * @version PlatformCountCustomizeResponse, v0.1 2018/7/18 19:06
+ * @version PlatformUserCountCustomizeResponse, v0.1 2018/7/18 19:06
  */
 public class PlatformCountCustomizeResponse extends Response<PlatformCountCustomizeVO> {
     private int count;

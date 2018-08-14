@@ -53,12 +53,10 @@ public class WebBindCardController extends BaseUserController {
 
 	/**
 	 *  我的银行卡页面数据
-	 * @param bindCardVO
-	 * @return
 	 */
 	@ApiOperation(value = "我的银行卡页面数据", tags = "我的银行卡页面数据")
 	@PostMapping(value = "/mycard", produces = "application/json; charset=utf-8")
-	public WebResult<Object> myCardInit(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO) {
+	public WebResult<Object> myCardInit(@RequestHeader(value = "userId") int userId) {
 		WebResult<Object> result = new WebResult<Object>();
 		Map<String,Object> resultMap = new HashMap<>();
 		WebViewUserVO user = bindCardService.getUserFromCache(userId);
@@ -76,7 +74,7 @@ public class WebBindCardController extends BaseUserController {
 
 		BankCardVO bankCardVO = bindCardService.queryUserCardValid(String.valueOf(user.getUserId()),null);
 		if(bankCardVO == null){
-			result.setStatus(WebResult.ERROR);
+//			result.setStatus(WebResult.ERROR);
 			result.setStatusDesc("用户未绑卡");
 			//未绑卡
 			resultMap.put("bindType", 0);

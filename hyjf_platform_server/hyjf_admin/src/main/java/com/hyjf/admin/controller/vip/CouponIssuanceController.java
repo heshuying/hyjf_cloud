@@ -27,10 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +39,7 @@ import javax.validation.Valid;
  */
 @Api(value = "优惠券发行",tags = "优惠券发行" )
 @RestController
-@RequestMapping("/coupon/issuance")
+@RequestMapping("/hyjf-admin/coupon/issuance")
 public class CouponIssuanceController extends BaseController {
     /**
      * 权限名称
@@ -70,10 +67,10 @@ public class CouponIssuanceController extends BaseController {
 
 
     @ApiOperation(value = "优惠券发行", notes = "修改页面信息")
-    @PostMapping("/updateAction")
+    @PostMapping("/updateAction/{id}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     @ApiImplicitParam(name = "id", value = "主键")
-    public AdminResult<CouponConfigVO> updateCouponConfig(@RequestBody String id) {
+    public AdminResult<CouponConfigVO> updateCouponConfig(@PathVariable String id) {
         CouponConfigRequest couponConfigRequest = new CouponConfigRequest();
         couponConfigRequest.setId(id);
         CouponConfigResponse ccr = couponConfigService.getCouponConfig(couponConfigRequest);
@@ -90,9 +87,9 @@ public class CouponIssuanceController extends BaseController {
     @ApiOperation(value = "优惠券发行", notes = "保存修改信息")
     @PostMapping("/saveAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-    public AdminResult saveCouponConfig(@RequestBody CouponConfigRequestBean requestBean) {
-        CouponConfigRequest request = new CouponConfigRequest();
-        BeanUtils.copyProperties(requestBean, request);
+    public AdminResult saveCouponConfig(@RequestBody CouponConfigRequest request) {
+//        CouponConfigRequest request = new CouponConfigRequest();
+//        BeanUtils.copyProperties(requestBean, request);
         CouponConfigResponse ccr = couponConfigService.saveCouponConfig(request);
         if (ccr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

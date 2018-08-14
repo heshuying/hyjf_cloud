@@ -61,6 +61,7 @@ public class CouponController extends BaseTradeController {
             resultMap.put("couponList",couponList);
             resultMap.put("request","/hyjf-app/coupon/getUserCoupons");
             result.setData(resultMap);
+            result.setStatus("0");
         }else{
             result.setStatus(WebResult.FAIL);
             result.setStatusDesc("用户未登录");
@@ -111,9 +112,12 @@ public class CouponController extends BaseTradeController {
 
 
     /**
-     * APP,PC散标投资获取我的优惠券列表
-     * @param request
-     * @return
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP,PC散标投资获取我的优惠券列表
+     * @Date 17:15 2018/8/13
+     * @Param 
+     * @return 
      */
     @ApiOperation(value = "APP散标投资获取我的优惠券列表", notes = "APP散标投资获取我的优惠券列表")
     @PostMapping("/getborrowcoupon")
@@ -136,9 +140,12 @@ public class CouponController extends BaseTradeController {
     }
 
     /**
-     * APP,PC加入计划获取我的优惠券列表
-     * @param request
-     * @return
+     * @Author walter.limeng
+     * @user walter.limeng
+     * @Description  APP,PC加入计划获取我的优惠券列表
+     * @Date 17:15 2018/8/13
+     * @Param 
+     * @return 
      */
     @ApiOperation(value = "APP加入计划获取我的优惠券列表", notes = "APP加入计划获取我的优惠券列表")
     @PostMapping("/getplancoupon")

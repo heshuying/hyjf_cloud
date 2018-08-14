@@ -10,6 +10,7 @@ import com.hyjf.am.vo.admin.ProtocolLogVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class ProtocolLogController extends BaseController {
      * @return
      */
     @ApiOperation(value = "配置中心-协议模板日志管理", notes = "配置中心-协议模板日志管理 分页显示")
-    @RequestMapping("/search")
+    @PostMapping("/search")
     public AdminResult<ListResult<ProtocolLogVO>> search(ProtocolLogRequest request) {
         ProtocolLogResponse response = new ProtocolLogResponse();
         response = protocolLogService.searchPage(request);

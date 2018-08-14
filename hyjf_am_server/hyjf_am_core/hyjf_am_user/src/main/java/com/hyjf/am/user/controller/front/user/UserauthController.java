@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.front.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,6 @@ public class UserauthController extends BaseController {
 			AdminUserAuthListResponse aualr = new AdminUserAuthListResponse();
 			List<AdminUserAuthListVO> avo = CommonUtils.convertBeanList(recordList,AdminUserAuthListVO.class);
 			if (recordList != null) {
-				BeanUtils.copyProperties(recordList, avo);
 				aualr.setResultList(avo);
 				aualr.setRecordTotal(recordTotal);
 				aualr.setRtn(Response.SUCCESS);
@@ -213,9 +213,8 @@ public class UserauthController extends BaseController {
 	        if (recordTotal > 0) {
 	            Paginator paginator = new Paginator(form.getCurrPage(),recordTotal,form.getPageSize());
 	            List<AdminUserAuthLogListCustomize> recordList = this.userauthService.getRecordListLog(authUser, paginator.getOffset(), paginator.getLimit());
-	            List<AdminUserAuthLogListVO> avo = null;
-				BeanUtils.copyProperties(recordList, avo);
-	            ap.setResultList(avo);
+
+	            ap.setResultList(CommonUtils.convertBeanList(recordList,AdminUserAuthLogListVO.class));
 	            ap.setRecordTotal(recordTotal);
 	            ap.setRtn(Response.SUCCESS);
 	            return ap;

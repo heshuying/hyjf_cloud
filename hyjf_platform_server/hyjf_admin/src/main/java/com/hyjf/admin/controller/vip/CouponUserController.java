@@ -63,7 +63,7 @@ import java.util.Map;
  */
 @Api(value = "优惠券用户列表", tags = "优惠券用户列表")
 @RestController
-@RequestMapping("/hyjf-admin/couponUser")
+@RequestMapping("/hyjf-admin/couponuser")
 public class CouponUserController extends BaseController {
 
     /**

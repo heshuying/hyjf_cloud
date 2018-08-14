@@ -3527,6 +3527,50 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 转让详情列表
+     *
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request) {
+        DayCreditDetailResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhDayCreditDetail/hjhDayCreditList/", request, DayCreditDetailResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 列表
+     * @param data
+     * @param planNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<HjhReInvestDetailVO> getHjhReInvestDetailList(String data, String planNid) {
+        HjhReInvestDetailResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestInfo/" + data + "/"+ planNid, HjhReInvestDetailResponse.class).getBody();
+
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 汇计划 -> 资金计划 -> 复投原始标的 总数
+     * @param data
+     * @param planNid
+     * @return
+     */
+    @Override
+    public Integer getHjhReInvestDetailListCount(String data, String planNid) {
+        return restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlanCapital/hjhPlanCapitalReinvestCount/" + data + "/"+ planNid, Integer.class).getBody();
+    }
+
     @Override
     public AdminBorrowFlowResponse selectBorrowFlowList(AdminBorrowFlowRequest adminRequest) {
         return restTemplate.postForEntity("http://AM-TRADE/am-trade/config/borrowflow/selectBorrowFlowList", adminRequest, AdminBorrowFlowResponse.class)
@@ -4356,22 +4400,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-
-    /**
-     * 转让详情列表
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    public DayCreditDetailResponse hjhDayCreditDetailList(DayCreditDetailRequest request) {
-        DayCreditDetailResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/hjhDayCreditDetail/hjhDayCreditList", request, DayCreditDetailResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
-
 
     /**
      * 指定指端检索 计划还款列表

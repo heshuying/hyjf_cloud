@@ -8,6 +8,7 @@ import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -82,6 +83,9 @@ public class BorrowFirstController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_BORROW_BAIL)
     public AdminResult insertBorrowBail(HttpServletRequest request, @PathVariable String borrowNid) {
         AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
         return borrowFirstService.insertBorrowBail(borrowNid, currUser.getId());
     }
 

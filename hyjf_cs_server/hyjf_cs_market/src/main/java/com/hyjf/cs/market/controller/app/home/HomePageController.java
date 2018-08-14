@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class HomePageController extends BaseMarketController {
     @Autowired
     private HomePageService homePageService;
 
-    //TODO @Value("${file.domain.url}")
+    //TODO @Value("${file.domain.head.url}")
     private String HOST_URL;
 
     /** @RequestMapping值 */
@@ -53,7 +54,7 @@ public class HomePageController extends BaseMarketController {
     @ResponseBody
     @ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
     @ApiParam(required = true, name = "request", value = "查询条件")
-    @PostMapping(value = "/getStartPage")
+    @PostMapping(START_PAGE_ACTION)
     public JSONObject getStartPage(HttpServletRequest request) {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getStartPage");
         JSONObject result = new JSONObject();
@@ -66,8 +67,7 @@ public class HomePageController extends BaseMarketController {
             Map<String, Object> ads = new HashMap<String, Object>();
             ads.put("limitStart",0 );
             ads.put("limitEnd", 1);
-            //TODO ads.put("host", HOST_URL);
-            ads.put("host", "http://cdn.huiyingdai.com/");
+            ads.put("host", "http://micro.file.hyjf.com");
             ads.put("code", "startpage");
             if ("2".equals(platform)) {
                 ads.put("platformType","1");
