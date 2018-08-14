@@ -32,11 +32,9 @@ public class MsgMailController {
     @ResponseBody
     @ApiOperation(value = "修改短信与邮件是否开启",  notes = "修改短信与邮件是否开启")
     @PostMapping(value = "/setmsgmail/setStatus")
-    public JSONObject setStatus(@RequestHeader(value = "userId" )Integer userId, @RequestBody MsgMailRequest msgMailRequest) {
+    public JSONObject setStatus(@RequestHeader(value = "userId" )Integer userId,  @RequestParam("smsOpenStatus") String smsOpenStatus, @RequestParam("emailOpenStatus") String emailOpenStatus) {
         JSONObject ret = new JSONObject();
         ret.put("request", REQUEST_MAPPING + SET_STATUS);
-        String smsOpenStatus = msgMailRequest.getSmsOpenStatus();
-        String emailOpenStatus = msgMailRequest.getEmailOpenStatus();
         logger.info("短信开启状态:{}, 邮件开启状态:{}", smsOpenStatus, emailOpenStatus);
         try {
             msgMailService.updateStatusByUserId(userId, smsOpenStatus, emailOpenStatus);
