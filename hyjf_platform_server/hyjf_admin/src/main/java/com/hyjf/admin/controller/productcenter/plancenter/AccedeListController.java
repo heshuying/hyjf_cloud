@@ -22,6 +22,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
+import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
@@ -171,26 +172,12 @@ public class AccedeListController extends BaseController{
 		HjhAccedeSumVO sumVO = this.accedeListService.getCalcSumByParam(form);
 		if(sumVO != null){
 			jsonObject.put("sumAccedeAccount", sumVO.getSumAccedeAccount());
-			jsonObject.put("sumAccedeAccount", "加入金额合计");
-			
-			jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
-			jsonObject.put("sumWaitTotal", "待(收)还总额合计");
-			
-			jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());
-			jsonObject.put("sumWaitCaptical", "待(收)还本金合计");
-			
-			jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());
-			jsonObject.put("sumWaitInterest", "待(收)还利息合计");
-			
+			/*jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());*/
+			/*jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());*/
+			/*jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());*/
 			jsonObject.put("sumAvailableInvestAccount", sumVO.getSumAvailableInvestAccount());
-			jsonObject.put("sumAvailableInvestAccount", "剩余可投金额合计");
-			
 			jsonObject.put("sumFrostAccount", sumVO.getSumFrostAccount());
-			jsonObject.put("sumFrostAccount", "冻结金额合计");
-			
 			jsonObject.put("sumFairValue", sumVO.getSumFairValue());
-			jsonObject.put("sumFairValue", "公允价值合计");
-			
 			jsonObject.put("status", SUCCESS);
 		} else {
 			jsonObject.put("msg", "查询为空");
@@ -200,7 +187,7 @@ public class AccedeListController extends BaseController{
 	}
     
 	/**
-	 * 导出功能
+	 * 导出功能     已测试
 	 * 
 	 * @param request
 	 * @param modelAndView
@@ -458,7 +445,7 @@ public class AccedeListController extends BaseController{
 					}
 					// 加入时间
 					else if (celLength == 37) {
-						if (StringUtils.isNotEmpty(planAccedeDetail.getCreateTime())) {
+						if (planAccedeDetail.getCreateTime() != null) {
 							cell.setCellValue(planAccedeDetail.getCreateTime());
 						}
 					}
@@ -691,6 +678,7 @@ public class AccedeListController extends BaseController{
     private String resendMessageAction(String userid, String planOrderId, String debtPlanNid,String sendEmail){
     	AccedeListRequest request = new AccedeListRequest();
 		try {
+			PdfGenerator pdfGenerator = new PdfGenerator();
 			// 向每个投资人发送邮件
 			if (Validator.isNotNull(userid) && NumberUtils.isNumber(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
@@ -734,8 +722,7 @@ public class AccedeListController extends BaseController{
 					UserHjhInvistDetailVO userHjhInvistDetailCustomize = this.accedeListService.selectUserHjhInvistDetail(request);
 					contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
 					// 依据模板生成内容------旧的协议下载的组建还未做好
-					/*String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);*/
-					String pdfUrl = "";
+					String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
 					if (StringUtils.isNotEmpty(pdfUrl)) {
 						File path = new File(filePath);
 						if (!path.exists()) {

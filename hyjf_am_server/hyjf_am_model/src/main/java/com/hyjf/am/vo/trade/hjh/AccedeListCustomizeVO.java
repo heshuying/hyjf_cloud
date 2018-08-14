@@ -5,6 +5,7 @@ package com.hyjf.am.vo.trade.hjh;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.hyjf.am.vo.BaseVO;
 
@@ -82,7 +83,7 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	/**
 	 * 加入时间
 	 */
-	private String createTime;
+	private Date createTime;
 	/**
 	 * 计息时间
 	 */
@@ -421,11 +422,11 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 		this.orderStatus = orderStatus;
 	}
 
-	public String getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 

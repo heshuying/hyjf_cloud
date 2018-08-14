@@ -26,7 +26,7 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	private T object;
 	public WeChatResult() {
 	}
 
@@ -51,5 +51,13 @@ public class WeChatResult<T> extends BaseResult<T> implements Serializable {
 		weChatResult.setStatus(msgEnum.getCode());
 		weChatResult.setStatusDesc(msgEnum.getMsg());
 		return weChatResult;
+	}
+
+	public T getObject() {
+		return object;
+	}
+
+	public void setObject(T object) {
+		this.object = object;
 	}
 }
