@@ -1,17 +1,17 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.admin;
+package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;
 
 /**
- * @author fuqiang
- * @version PlatformCountCustomizeVO, v0.1 2018/7/18 19:02
+ * @author fq
+ * @version PlatformCountRequest, v0.1 2018/8/10 9:50
  */
-public class PlatformCountCustomizeVO extends BaseVO implements Serializable {
+public class PlatformCountRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID:
      */

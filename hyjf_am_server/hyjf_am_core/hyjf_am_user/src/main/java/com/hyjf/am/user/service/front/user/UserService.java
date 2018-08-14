@@ -245,5 +245,12 @@ public interface UserService extends BaseService {
 	 */
 	CorpOpenAccountRecord selectUserBusiNameByUsername(String userName);
 
-
+	/**
+	 * 修改短信与邮件是否开启状态
+	 * @param userId
+	 * @param smsOpenStatus
+	 * @param emailOpenStatus
+	 * @return
+	 */
+	Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus);
 }
