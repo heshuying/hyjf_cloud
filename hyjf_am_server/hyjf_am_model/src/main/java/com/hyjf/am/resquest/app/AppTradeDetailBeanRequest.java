@@ -6,13 +6,13 @@ import com.hyjf.am.vo.BasePage;
  * @author pangchengchao
  * @version AppTradeDetailBeanRequest, v0.1 2018/8/6 14:21
  */
-public class AppTradeDetailBeanRequest extends BasePage {
+public class  AppTradeDetailBeanRequest extends BasePage {
     /**
      *
      */
     private static final long serialVersionUID = 3458197418404401541L;
     /** 用户id */
-    private String userId;
+    private Integer userId;
     /** 交易类型 */
     private String tradeType;
     /** 交易年 */
@@ -27,11 +27,11 @@ public class AppTradeDetailBeanRequest extends BasePage {
         super();
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
