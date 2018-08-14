@@ -85,6 +85,16 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
     }
 
     /**
+     * 取得全部汇计划列表
+     * @return
+     */
+    @Override
+    public List<HjhPlan> selectHjhPlanList() {
+        HjhPlanExample example = new HjhPlanExample();
+        return this.hjhPlanMapper.selectByExample(example);
+    }
+
+    /**
      * 插入计划明细表
      *
      * @param accedeVO
