@@ -366,7 +366,7 @@ public class AccessFilter extends ZuulFilter {
 		if (StringUtils.isNotBlank(sign)) {
 			// 获取用户ID
 			AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-			if (appUserToken == null) {
+			if (appUserToken == null || appUserToken.getUserId()==null) {
 				logger.error("TokenInvalid");
 				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 			}
