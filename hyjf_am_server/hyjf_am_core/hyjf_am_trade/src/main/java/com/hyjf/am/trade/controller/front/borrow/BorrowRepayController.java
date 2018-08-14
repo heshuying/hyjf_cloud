@@ -36,9 +36,13 @@ public class BorrowRepayController extends BaseController {
      * @return
      */
     @GetMapping("/selectBorrowRepayList/{borrowNid}/{repaySmsReminder}")
-    public BorrowRepayResponse selectBorrowRepayList(@PathVariable String borrowNid,@PathVariable Integer repaySmsReminder) {
+    public BorrowRepayResponse selectBorrowRepayList(@PathVariable String borrowNid,@PathVariable String repaySmsReminder) {
         BorrowRepayResponse response = new BorrowRepayResponse();
-        List<BorrowRepay> borrowRepays = borrowRepayService.selectBorrowRepayList(borrowNid ,repaySmsReminder);
+        Integer repayTimes = null ;
+        if (!"000".equals(repaySmsReminder)){
+            repayTimes = Integer.valueOf(repaySmsReminder);
+        }
+        List<BorrowRepay> borrowRepays = borrowRepayService.selectBorrowRepayList(borrowNid ,repayTimes);
         if(borrowRepays != null){
             List<BorrowRepayVO> borrowRepayVO = CommonUtils.convertBeanList(borrowRepays,BorrowRepayVO.class);
             response.setResultList(borrowRepayVO);

@@ -55,7 +55,7 @@ import java.util.Map;
  * @version WithdrawController, v0.1 2018/7/19 14:01
  */
 
-@Api(value = "融东风提现接口")
+@Api(value = "api端_融东风提现接口",tags = "api端_融东风提现接口")
 @Controller
 @RequestMapping("/hyjf-api/surong/withdraw")
 public class WithdrawController extends BaseController {

@@ -78,9 +78,6 @@ public class FinmanChargeNewController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult finmanChargeInfo(@RequestBody FinmanChargeNewRequest adminRequest) {
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
-
-//        BorrowFinmanNewChargeVO record = new BorrowFinmanNewChargeVO();
-//        record.setManChargeTimeType("month");
         if (StringUtils.isNotEmpty(adminRequest.getManChargeCd())) {
             response = this.finmanChargeNewService.getRecordInfo(adminRequest.getManChargeCd());
         }
@@ -103,12 +100,11 @@ public class FinmanChargeNewController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest){
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
-        BorrowProjectTypeVO borrowProjectTypeVO = new BorrowProjectTypeVO();
         // 表单校验(双表校验)
         ModelAndView model = new ModelAndView();
         //表单字段校验
-        this.validatorFieldCheck(model, adminRequest);
-        if (ValidatorFieldCheckUtil.hasValidateError(model)) {
+        String message = this.validatorFieldCheck(model, adminRequest);
+        if (StringUtils.isNotBlank(message)) {
             // 汇直投项目列表
             List<BorrowProjectTypeVO> borrowProjectTypeList = this.finmanChargeNewService.borrowProjectTypeList("HZT");
             response.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -118,18 +114,12 @@ public class FinmanChargeNewController extends BaseController {
             List<HjhInstConfigVO> hjhInstConfigList = this.finmanChargeNewService.hjhInstConfigList("");
             response.setHjhInstConfigList(hjhInstConfigList);
             // 产品类型
-            List<HjhAssetTypeVO> assetTypeList = this.finmanChargeNewService.hjhAssetTypeList(response.getResult().getInstCode());
+            List<HjhAssetTypeVO> assetTypeList = this.finmanChargeNewService.hjhAssetTypeList(adminRequest.getInstCode());
             response.setAssetTypeList(assetTypeList);
             response.setRtn(Response.FAIL);
             response.setMessage("输入内容验证失败");
             return new AdminResult<FinmanChargeNewResponse>(response);
         }
-//        // 插入(双表插入)
-//        int cot = this.finmanChargeNewService.insertRecord(adminRequest);
-//        // added by libin 当变更成功后(插入记录数>0)，操作日志表
-//        if( cot > 0){
-//            response= this.finmanChargeNewService.insertLogRecord(adminRequest);
-//        }
         //插入
         response= this.finmanChargeNewService.insertRecord(adminRequest);
         if (response == null) {
@@ -175,12 +165,12 @@ public class FinmanChargeNewController extends BaseController {
      * @param modelAndView
      * @param form
      */
-    private void validatorFieldCheck(ModelAndView modelAndView, FinmanChargeNewRequest form) {
+    private String validatorFieldCheck(ModelAndView modelAndView, FinmanChargeNewRequest form) {
+        String message ="";
         // 类型
         ValidatorFieldCheckUtil.validateRequired(modelAndView, "chargeTimeType", form.getManChargeTimeType());
         // 期限
-        ValidatorFieldCheckUtil
-                .validateRequired(modelAndView, "manChargeTime", String.valueOf(form.getManChargeTime()));
+        ValidatorFieldCheckUtil.validateRequired(modelAndView, "manChargeTime", String.valueOf(form.getManChargeTime()));
         //项目类型
         ValidatorFieldCheckUtil.validateRequired(modelAndView, "projectType", form.getProjectType());
         //资产来源
@@ -200,18 +190,12 @@ public class FinmanChargeNewController extends BaseController {
         // 状态
         ValidatorFieldCheckUtil.validateRequired(modelAndView, "status", String.valueOf(form.getStatus()));
         // 检查唯一性
-        int cnt =
-                this.finmanChargeNewService.countRecordByProjectType(form.getManChargeTimeType(),
-                        form.getManChargeTime(), form.getInstCode(),form.getAssetType());
+        int cnt = this.finmanChargeNewService.countRecordByProjectType(form.getManChargeTimeType(), form.getManChargeTime(), form.getInstCode(),form.getAssetType());
         if (cnt > 0) {
-            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "mancharge.time.type.repeat");
+//            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "mancharge.time.type.repeat");
+            message =  "重复添加";
         }
-        // added by libin
-        // 检查费率配置Log表的唯一性(by: inst_code资产来源, asset_type产品类型,borrow_period借款期限 定位一条记录)
-/*        int count = this.finmanChargeNewService.countRecordByItems(form.getManChargeTime(), form.getInstCode(),form.getAssetType());
-        if (count > 0) {
-            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "mancharge.time.type.repeat");
-        }*/
+        return message;
     }
 
 }

@@ -47,6 +47,12 @@ public interface HjhPlanService {
     HjhPlan getHjhPlanByNid(String planNid);
 
     /**
+     * 取得全部汇计划列表
+     * @return
+     */
+    List<HjhPlan> selectHjhPlanList();
+
+    /**
      * 插入计划明细表
      * @param planAccede
      * @param userAccount
