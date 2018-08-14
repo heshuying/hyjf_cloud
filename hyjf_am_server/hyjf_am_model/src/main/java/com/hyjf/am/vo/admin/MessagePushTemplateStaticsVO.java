@@ -1,21 +1,15 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.am.vo.admin;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.Serializable;
+import com.hyjf.am.vo.BaseVO;
 
 /**
- * 消息推送-模板消息统计报表
- * @author fuqiang
- * @version MessagePushTemplateStatics, v0.1 2018/6/22 9:25
+ * @author fq
+ * @version MessagePushTemplateStaticsVO, v0.1 2018/8/14 14:36
  */
-@Document(collection = "ht_message_push_template_statics")
-public class MessagePushTemplateStatics implements Serializable {
-    @Id
+public class MessagePushTemplateStaticsVO extends BaseVO {
     private Integer id;
 
     private Integer msgId;

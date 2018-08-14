@@ -1337,11 +1337,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
 
             // 是否是新手0新手 1老手
-            if (userVO.getInvestflag() == 0) {
+          /*  if ( null != userVO.getInvestflag() && userVO.getInvestflag() == 0) {
                 userValidation.put("investflag", true);
             } else {
                 userValidation.put("investflag", false);
-            }
+            }*/
             //0未锁定,1锁定
             if (userVO.getStatus() == 0) {
                 userValidation.put("isAllowed", true);

@@ -1,32 +1,26 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.am.vo.admin;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.Serializable;
+import com.hyjf.am.vo.BaseVO;
 
 /**
- * 消息推送-模板消息统计报表
- * @author fuqiang
- * @version MessagePushTemplateStatics, v0.1 2018/6/22 9:25
+ * @author fq
+ * @version MessagePushPlatStaticsVO, v0.1 2018/8/14 16:13
  */
-@Document(collection = "ht_message_push_template_statics")
-public class MessagePushTemplateStatics implements Serializable {
-    @Id
+public class MessagePushPlatStaticsVO extends BaseVO {
     private Integer id;
-
-    private Integer msgId;
 
     private Integer tagId;
 
-    private String msgTitle;
+    private Integer staDate;
 
-    private String msgCode;
+    private Integer destinationCount;
 
-    private Integer sendTime;
+    private Integer sendCount;
+
+    private Integer readCount;
 
     private Integer iosDestinationCount;
 
@@ -40,8 +34,6 @@ public class MessagePushTemplateStatics implements Serializable {
 
     private Integer androidReadCount;
 
-    private Integer createTime;
-
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -52,14 +44,6 @@ public class MessagePushTemplateStatics implements Serializable {
         this.id = id;
     }
 
-    public Integer getMsgId() {
-        return msgId;
-    }
-
-    public void setMsgId(Integer msgId) {
-        this.msgId = msgId;
-    }
-
     public Integer getTagId() {
         return tagId;
     }
@@ -68,28 +52,36 @@ public class MessagePushTemplateStatics implements Serializable {
         this.tagId = tagId;
     }
 
-    public String getMsgTitle() {
-        return msgTitle;
+    public Integer getStaDate() {
+        return staDate;
     }
 
-    public void setMsgTitle(String msgTitle) {
-        this.msgTitle = msgTitle == null ? null : msgTitle.trim();
+    public void setStaDate(Integer staDate) {
+        this.staDate = staDate;
     }
 
-    public String getMsgCode() {
-        return msgCode;
+    public Integer getDestinationCount() {
+        return destinationCount;
     }
 
-    public void setMsgCode(String msgCode) {
-        this.msgCode = msgCode == null ? null : msgCode.trim();
+    public void setDestinationCount(Integer destinationCount) {
+        this.destinationCount = destinationCount;
     }
 
-    public Integer getSendTime() {
-        return sendTime;
+    public Integer getSendCount() {
+        return sendCount;
     }
 
-    public void setSendTime(Integer sendTime) {
-        this.sendTime = sendTime;
+    public void setSendCount(Integer sendCount) {
+        this.sendCount = sendCount;
+    }
+
+    public Integer getReadCount() {
+        return readCount;
+    }
+
+    public void setReadCount(Integer readCount) {
+        this.readCount = readCount;
     }
 
     public Integer getIosDestinationCount() {
@@ -138,13 +130,5 @@ public class MessagePushTemplateStatics implements Serializable {
 
     public void setAndroidReadCount(Integer androidReadCount) {
         this.androidReadCount = androidReadCount;
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
     }
 }

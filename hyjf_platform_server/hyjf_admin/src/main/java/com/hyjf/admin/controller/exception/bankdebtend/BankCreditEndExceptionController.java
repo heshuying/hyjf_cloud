@@ -1,9 +1,10 @@
 package com.hyjf.admin.controller.exception.bankdebtend;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.utils.Page;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.BankCreditEndService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BankCreditEndUpdateRequest;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
@@ -37,7 +38,7 @@ public class BankCreditEndExceptionController extends BaseController {
      */
     @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
     @PostMapping("/list")
-    public JSONObject getList(@RequestBody BankCreditEndListRequest requestBean){
+    public AdminResult<ListResult<BankCreditEndVO>> getList(@RequestBody BankCreditEndListRequest requestBean){
         Integer count = bankCreditEndService.getCreditEndCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         page.setTotal(count);
@@ -46,8 +47,7 @@ public class BankCreditEndExceptionController extends BaseController {
 
         List<BankCreditEndVO> recordList = bankCreditEndService.getCreditEndList(requestBean);
 
-        JSONObject jsonObject = this.success(String.valueOf(count),recordList);
-        return jsonObject;
+        return new AdminResult<>(ListResult.build(recordList, count));
     }
 
     /**
@@ -57,24 +57,24 @@ public class BankCreditEndExceptionController extends BaseController {
      */
     @ApiOperation(value = "结束债权(新)同步", notes = "结束债权(新)同步")
     @PostMapping("/update_frombank")
-    public JSONObject updateFromBank(@RequestBody BankCreditEndUpdateRequest requestBean){
+    public AdminResult updateFromBank(@RequestBody BankCreditEndUpdateRequest requestBean){
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdate(requestBean);
         if(!checkResult){
-            return this.fail("请求参数错误");
+            return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         List<BankCallBean> queryList = bankCreditEndService.queryBatchDetails(requestBean);
         if(queryList == null){
-            return this.fail("请求银行接口失败");
+            return new AdminResult<>(FAIL, "请求银行接口失败");
         }
 
         boolean updateResult = bankCreditEndService.updateBankCreditEndFromBankQuery(queryList);
         if(!updateResult){
-            return this.fail("更新数据库失败");
+            return new AdminResult<>(FAIL, "更新数据库失败");
         }
 
-        return this.success();
+        return new AdminResult();
     }
 
     /**
@@ -84,24 +84,24 @@ public class BankCreditEndExceptionController extends BaseController {
      */
     @ApiOperation(value = "结束债权(新)更新为初始状态", notes = "结束债权(新)更新为初始状态")
     @PostMapping("/update_forinitial")
-    public JSONObject updateForInitial(@RequestBody BankCreditEndUpdateRequest requestBean){
+    public AdminResult updateForInitial(@RequestBody BankCreditEndUpdateRequest requestBean){
         //请求参数校验
         boolean checkResult = bankCreditEndService.checkForUpdateInitial(requestBean);
         if(!checkResult){
-            return this.fail("请求参数错误");
+            return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         BankCreditEndVO creditEndVO = bankCreditEndService.getCreditEndByOrderId(requestBean.getOrderId());
         if(creditEndVO == null){
-            return this.fail("更新状态失败，没有记录");
+            return new AdminResult<>(FAIL, "更新状态失败，没有记录");
         }
 
         boolean updateResult = bankCreditEndService.updateCreditEndForInitial(creditEndVO);
         if(!updateResult){
-            return this.fail("更新数据库失败");
+            return new AdminResult<>(FAIL, "更新数据库失败");
         }
 
-        return this.success();
+        return new AdminResult();
 
     }
 }
