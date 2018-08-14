@@ -21,6 +21,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -337,6 +338,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
+    @ApiImplicitParam(name = "nid", value = "投资订单号", required = true, dataType = "String")
     @GetMapping("/pdf_preview/{nid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
     public AdminResult<BorrowInvestResponseBean> pdfPreview(@PathVariable String nid) {

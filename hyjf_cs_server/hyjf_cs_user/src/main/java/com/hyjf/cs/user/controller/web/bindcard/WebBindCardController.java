@@ -1,13 +1,11 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.ClientConstants;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +51,7 @@ public class WebBindCardController extends BaseUserController {
 	/**
 	 *  我的银行卡页面数据
 	 */
-	@ApiOperation(value = "我的银行卡页面数据", tags = "我的银行卡页面数据")
+	@ApiOperation(value = "我的银行卡页面数据", notes = "我的银行卡页面数据")
 	@PostMapping(value = "/mycard", produces = "application/json; charset=utf-8")
 	public WebResult<Object> myCardInit(@RequestHeader(value = "userId") int userId) {
 		WebResult<Object> result = new WebResult<Object>();

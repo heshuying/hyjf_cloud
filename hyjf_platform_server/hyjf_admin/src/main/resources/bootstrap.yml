@@ -29,3 +29,6 @@ file:
    upload:
       temp:
          path:/data/upfiles/filetemp/image
+#swagger启用开关
+swagger:
+ enable: true

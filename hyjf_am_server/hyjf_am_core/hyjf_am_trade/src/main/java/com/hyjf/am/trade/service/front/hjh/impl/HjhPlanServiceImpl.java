@@ -85,6 +85,16 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
     }
 
     /**
+     * 取得全部汇计划列表
+     * @return
+     */
+    @Override
+    public List<HjhPlan> selectHjhPlanList() {
+        HjhPlanExample example = new HjhPlanExample();
+        return this.hjhPlanMapper.selectByExample(example);
+    }
+
+    /**
      * 插入计划明细表
      *
      * @param accedeVO
@@ -259,6 +269,24 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         return planAccedeList;
     }
 
+    /**
+     * 更新显示的计划开启或者关闭
+     * 1 开启计划 2 关闭计划
+     * @param status
+     * @return
+     */
+    @Override
+    public int updateHjhPlanForJoinSwitch(int status) {
+        // 更新条件（只更新显示的计划开启或者关闭）
+        HjhPlanExample example = new HjhPlanExample();
+        HjhPlanExample.Criteria cra = example.createCriteria();
+        cra.andPlanDisplayStatusEqualTo(1);
+        // 更新内容（计划开启或者关闭）
+        HjhPlanWithBLOBs hjhPlanBLOBs = new HjhPlanWithBLOBs();
+        hjhPlanBLOBs.setPlanInvestStatus(status);
+        // 更新
+        return this.hjhPlanMapper.updateByExampleSelective(hjhPlanBLOBs, example);
+    }
 
     /**
      * 插入资金明细表

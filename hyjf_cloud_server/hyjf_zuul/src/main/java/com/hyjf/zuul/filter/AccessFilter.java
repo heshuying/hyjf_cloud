@@ -207,6 +207,7 @@ public class AccessFilter extends ZuulFilter {
 	 */
 	private Object initServer(HttpServletRequest request, RequestContext ctx) {
 		ctx.addZuulRequestHeader(VERSION, request.getParameter(VERSION));
+		ctx.addZuulRequestHeader(SIGN, request.getParameter(SIGN));
 		ctx.addZuulRequestHeader(PLATFORM, request.getParameter(PLATFORM));
 		ctx.addZuulRequestHeader(RANDOM_STRING, request.getParameter(RANDOM_STRING));
 		ctx.addZuulRequestHeader(SECRET_KEY, request.getParameter(SECRET_KEY));
@@ -342,12 +343,12 @@ public class AccessFilter extends ZuulFilter {
 	 * @return
 	 */
 	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
-		AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-		if (appUserToken == null || appUserToken.getUserId()==null) {
+		Integer userId = SecretUtil.getUserId(sign);
+		if (userId == null) {
 			logger.error("TokenInvalid");
 			return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 		}
-		ctx.addZuulRequestHeader("userId", appUserToken.getUserId() + "");
+		ctx.addZuulRequestHeader("userId", userId + "");
 		return ctx;
 	}
 
@@ -366,7 +367,7 @@ public class AccessFilter extends ZuulFilter {
 		if (StringUtils.isNotBlank(sign)) {
 			// 获取用户ID
 			AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
-			if (appUserToken == null) {
+			if (appUserToken == null || appUserToken.getUserId()==null) {
 				logger.error("TokenInvalid");
 				return buildReturnContextOfTokenInvalid(ctx, isNecessary);
 			}

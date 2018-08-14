@@ -375,10 +375,10 @@ public class SecretUtil {
         if (null != token) {
             appUserToken = JSON.parseObject(DES.decodeValue(signValue.getKey(), token), AppUserToken.class);
         } else {
-            throw new RuntimeException("用户未登陆");
+            return null;
         }
         if(appUserToken.getUserId()==null){
-            throw new RuntimeException("用户未登陆");
+            return null;
         }
         return appUserToken.getUserId();
     }

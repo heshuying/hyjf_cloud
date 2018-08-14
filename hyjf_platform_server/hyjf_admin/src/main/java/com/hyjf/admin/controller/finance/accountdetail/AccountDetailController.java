@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.finance.accountdetail;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
 import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -64,12 +63,19 @@ public class AccountDetailController extends BaseController {
     @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = null;
+    public AdminResult<List<Map<String,Object>>> userManagerInit() {
         List<AccountTradeVO> accountTradeVOList = accountDetailService.selectTradeTypes();
-        // List<AccountDetailVO> listAccountDetail =  accountDetailService.findAccountDetailList();
+        List<Map<String,Object>> listMap = new ArrayList<Map<String,Object>>();
+        if(null!=accountTradeVOList&&accountTradeVOList.size()>0){
+            for(AccountTradeVO accountTradeVO:accountTradeVOList){
+                Map<String,Object> mapParam = new HashMap<>();
+                mapParam.put("key",accountTradeVO.getId());
+                mapParam.put("value",accountTradeVO.getName());
+                listMap.add(mapParam);
+            }
 
-        return jsonObject;
+        }
+        return new AdminResult<List<Map<String,Object>>>(listMap);
     }
 
     @ApiOperation(value = "资金明细", notes = "资金明细页面列表显示")
@@ -88,7 +94,6 @@ public class AccountDetailController extends BaseController {
         }
 
         List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-        Integer recordCount = accountDetailResponse.getRecordTotal();
         if (null != listAccountDetail && listAccountDetail.size() > 0) {
             for (AccountDetailVO accountDetailVO : listAccountDetail) {
                 //根据用户id获取用户信息
