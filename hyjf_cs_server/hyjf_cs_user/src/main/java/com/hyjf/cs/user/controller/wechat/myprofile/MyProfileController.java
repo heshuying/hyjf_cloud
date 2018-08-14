@@ -72,7 +72,7 @@ public class MyProfileController extends BaseUserController {
         //设置用户账户信息
         myProfileService.buildOutInfo(userId, myProfileVO);
 
-        result.setData(myProfileVO);
+        result.setObject(myProfileVO);
 
         this.getIconUrl(userId, myProfileVO);
 

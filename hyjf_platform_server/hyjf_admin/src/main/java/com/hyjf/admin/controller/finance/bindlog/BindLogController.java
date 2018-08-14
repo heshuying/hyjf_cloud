@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-定向转账-绑定日志",tags ="资金中心-定向转账-绑定日志")
 @RestController
-@RequestMapping(value = "/hyjf-admin/bindlog")
+@RequestMapping(value = "/hyjf-admin/finance/bindlog")
 public class BindLogController extends BaseController {
 
     @Autowired
