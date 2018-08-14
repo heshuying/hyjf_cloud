@@ -184,8 +184,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
         WebResult webResult = new WebResult();
-        detailCsVO.setOther(other);
-        webResult.setData(detailCsVO);
+       // detailCsVO.setOther(other);
+        webResult.setData(other);
         return webResult;
     }
 
@@ -1018,21 +1018,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             int recordTotal = 0;
             //可用优惠券张数
             int availableCouponListCount = 0;
-            if (StringUtils.isNotBlank(userId)) {
-                /** 获取用户是否是vip 开始 pccvip 1是vip 0不是vip */
-               /* UsersInfo usersInfo = planService.getUsersInfoByUserId(loginUser.getUserId());
-                if (usersInfo.getVipId() != null && usersInfo.getVipId() != 0) {
-                    result.put("ifVip", 1);
-                    String returl = HOST_URL + VIPManageDefine.REQUEST_MAPPING + "/" + VIPManageDefine.INIT_ACTION + ".do";
-                    result.put("returl", returl);
-                } else {
-                    result.put("ifVip", 0);
-                    String returl = HOST_URL + ApplyDefine.REQUEST_MAPPING + ApplyDefine.INIT + ".do";
-                    result.put("returl", returl);
 
-                }*/
-                /** 获取用户是否是vip 结束 pccvip */
-            }
             /*优惠券模块开始 */ // TODO: 2018/6/28 优惠券后期处理
             /*couponConfig = planService.getUserOptimalCoupon(couponId, planNid, loginUser.getUserId(), null, "0");
             recordTotal = planService.countCouponUsers(0, loginUser.getUserId());
