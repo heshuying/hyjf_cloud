@@ -22,6 +22,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
+import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
@@ -677,6 +678,7 @@ public class AccedeListController extends BaseController{
     private String resendMessageAction(String userid, String planOrderId, String debtPlanNid,String sendEmail){
     	AccedeListRequest request = new AccedeListRequest();
 		try {
+			PdfGenerator pdfGenerator = new PdfGenerator();
 			// 向每个投资人发送邮件
 			if (Validator.isNotNull(userid) && NumberUtils.isNumber(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
@@ -720,8 +722,7 @@ public class AccedeListController extends BaseController{
 					UserHjhInvistDetailVO userHjhInvistDetailCustomize = this.accedeListService.selectUserHjhInvistDetail(request);
 					contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
 					// 依据模板生成内容------旧的协议下载的组建还未做好
-					/*String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);*/
-					String pdfUrl = "";
+					String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
 					if (StringUtils.isNotEmpty(pdfUrl)) {
 						File path = new File(filePath);
 						if (!path.exists()) {
