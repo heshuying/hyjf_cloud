@@ -14,9 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -37,7 +35,7 @@ public class WechatFindController extends BaseMarketController {
     private AppFindService appFindService;
 
     @ApiOperation(value = "根据类型获取文章", notes = "根据类型获取文章")
-    @RequestMapping("/contentArticle/getContentArticleListByType")
+    @PostMapping("/contentArticle/getContentArticleListByType")
     public JSONObject getContentArticleListByType(HttpServletRequest request, AppContentArticleBean form) {
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
@@ -93,7 +91,7 @@ public class WechatFindController extends BaseMarketController {
     }
 
     @ApiOperation(value = "根据类型和文章编号查找文章", notes = "根据类型和文章编号查找文章")
-    @RequestMapping("/contentArticle/{type}/{contentArticleId}")
+    @GetMapping("/contentArticle/{type}/{contentArticleId}")
     public JSONObject contentArticle (@PathVariable Integer type,
                                       @PathVariable Integer contentArticleId) {
         JSONObject ret = new JSONObject();

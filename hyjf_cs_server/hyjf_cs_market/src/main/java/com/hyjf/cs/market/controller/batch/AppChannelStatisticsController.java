@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppChannelStatisticsService;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author fuqiang
  * @version AppChannelStatisticsController, v0.1 2018/7/16 14:13
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-market/appchannelstatistics")
 public class AppChannelStatisticsController extends BaseMarketController {

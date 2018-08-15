@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.BorrowUserStatisticsService;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author fuqiang
  * @version BorrowUserStatisticsController, v0.1 2018/7/18 15:42
  */
+@ApiIgnore
 @RestController
 @RequestMapping("/cs-market/statisticsoperationreport")
 public class BorrowUserStatisticsController extends BaseMarketController {

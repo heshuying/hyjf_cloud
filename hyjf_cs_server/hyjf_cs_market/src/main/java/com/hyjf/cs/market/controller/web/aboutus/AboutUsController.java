@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +47,7 @@ public class AboutUsController extends BaseController {
 
 
 	@ApiOperation(value = "信息披露", notes = "关于我们")
-	@RequestMapping("/about")
+	@GetMapping("/about")
 	public WebResult<Map<String, Object>> aboutus() {
 		logger.info("web端获取关于我们数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -76,7 +77,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "合作伙伴")
-	@RequestMapping("/partners")
+	@GetMapping("/partners")
 	public WebResult<Map<String, Object>> partners() {
 		logger.info("web端获取合作伙伴数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -101,7 +102,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "公司历程")
-	@RequestMapping("/events")
+	@GetMapping("/events")
 	public WebResult<Map<String, Object>> events() {
 		logger.info("web端获取公司历程数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -120,7 +121,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "网站公告列表")
-	@RequestMapping("/getNoticeListPage")
+	@GetMapping("/getNoticeListPage")
 	public WebResult<Map<String, Object>> getNoticeListPage() {
 		logger.info("web端获取网站公告列表数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -139,7 +140,7 @@ public class AboutUsController extends BaseController {
 	}
 
 	@ApiOperation(value = "信息披露", notes = "根据id获取网站公告")
-	@RequestMapping("/events/{id}")
+	@GetMapping("/events/{id}")
 	public WebResult<Map<String, Object>> getCompanyNoticeDetail(@PathVariable Integer id) {
 		logger.info("web端根据id获取网站公告数据开始...");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
@@ -163,7 +164,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "招贤纳士", notes = "招贤纳士列表查询")
-	@RequestMapping("/recurit")
+	@GetMapping("/recurit")
 	public WebResult<List<JobsVo>> getRecurit(){
 		List<JobsVo> jobsList = aboutUsService.getJobsList();
 		WebResult webResult = new WebResult(jobsList);
@@ -177,7 +178,7 @@ public class AboutUsController extends BaseController {
 	 */
 
 	@ApiOperation(value = "联系我们", notes = "联系我们查询")
-	@RequestMapping("/contactus")
+	@GetMapping("/contactus")
 	public WebResult<List<ContentArticleVO>> contactus(){
 		ContentArticleVO contactUs = aboutUsService.getContactUs();
 		WebResult webResult = new WebResult(contactUs);
@@ -189,7 +190,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "网贷知识", notes = "查询网贷知识信息")
-	@RequestMapping("/getKnowReportList")
+	@GetMapping("/getKnowReportList")
 	public WebResult<List<ContentArticleVO>> getKnowReportList(ContentArticleRequest request ){
 		request.setNoticeType("3");
 		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList(request);
@@ -203,7 +204,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "风险教育", notes = "查询风险教育信息")
-	@RequestMapping("/getFXReportList")
+	@GetMapping("/getFXReportList")
 	public WebResult<List<ContentArticleVO>> getFXReportList(ContentArticleRequest request ){
 		request.setNoticeType("101");
 		List<ContentArticleVO> homeNoticeList = aboutUsService.getHomeNoticeList(request);
@@ -218,7 +219,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "帮助中心：注册登录", notes = "帮助中心：注册登录")
-	@RequestMapping("/index")
+	@GetMapping("/index")
 	public WebResult<List<ContentArticleVO>> help_index(ContentArticleRequest request ){
 		List<ContentArticleVO> homeNoticeList = aboutUsService.getIndex(request);
 		WebResult webResult = new WebResult(homeNoticeList);
@@ -232,7 +233,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "新手指引(新手进阶)请求", notes = "新手指引(新手进阶)请求")
-	@RequestMapping("/fresher")
+	@GetMapping("/fresher")
 	public WebResult<TotalMessageVO> noviceGuide() {
 		WebResult webResult = new WebResult();
 
@@ -267,7 +268,7 @@ public class AboutUsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "服务中心", notes = "服务中心")
-	@RequestMapping("/getSecurityPage")
+	@GetMapping("/getSecurityPage")
 	public WebResult<BanksConfigVO>  getSecurityPage(HttpServletRequest request) {
 		WebResult webResult=null;
 		//ModelAndView modelAndView=null;
