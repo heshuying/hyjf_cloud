@@ -152,6 +152,8 @@ public class WithdrawController extends BaseController {
         ret.put("statusDesc", "成功");
         return ret;
     }
+
+
     @RequestMapping(value = "/cash",method = RequestMethod.GET)
     public ModelAndView hello(HttpServletRequest request, HttpServletResponse response){
 

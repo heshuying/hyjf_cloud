@@ -1168,7 +1168,7 @@ public class NewAgreementController extends BaseTradeController{
 
     @ApiOperation(value = "查看协议模板接口", httpMethod = "POST", notes = "查看协议模板接口")
     @ResponseBody
-    @PostMapping("/getdisplayNameDynamic")
+    @GetMapping("/getdisplayNameDynamic")
     public AppResult getdisplayNameDynamic(@RequestParam String aliasName) {
         logger.info("*******************************查看协议模板接口************************************");
         AppNewAgreementResponse response = new AppNewAgreementResponse();

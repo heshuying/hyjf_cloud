@@ -14,6 +14,8 @@ public class BorrowStyleVO extends BaseVO implements Serializable {
     private Integer status;
 
     private String name;
+    //前端页面显示用
+    private String label;
 
     private String title;
 
@@ -57,5 +59,13 @@ public class BorrowStyleVO extends BaseVO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
+    }
+
+    public String getLabel() {
+        return name;
+    }
+
+    public void setLabel(String label) {
+        this.name = label;
     }
 }

@@ -34,7 +34,7 @@ import java.util.Map;
  * @author yaoyong
  * @version UserPortraitScoreController, v0.1 2018/8/9 11:06
  */
-@Api(value = "会员中心-用户画像评分",description = "会员中心-用户画像评分")
+@Api(tags = "会员中心-用户画像评分",description = "会员中心-用户画像评分")
 @RestController
 @RequestMapping("hyjf-admin/userPortrait")
 public class UserPortraitScoreController extends BaseController {

@@ -49,4 +49,19 @@ public class BankCardExceptionServiceImpl extends BaseAdminServiceImpl implement
     public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
         return amUserClient.searchBankCardExceptionList(request);
     }
+
+    /**
+     * 更新银行卡
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public String updateAccountBankByUserId(Integer userId) {
+        List<BankConfigVO> bankConfigVOList = amConfigClient.selectBankConfigList();
+        BankCardExceptionRequest request = new BankCardExceptionRequest();
+        request.setUserId(String.valueOf(userId));
+        request.setBankConfigVOList(bankConfigVOList);
+        return amUserClient.updateAccountBankByUserId(request);
+    }
 }

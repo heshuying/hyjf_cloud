@@ -1022,4 +1022,12 @@ public interface AmUserClient {
      * @return
      */
     List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request);
+
+    /**
+     * 更新银行卡(admin后台异常中心-银行卡异常用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    String updateAccountBankByUserId(BankCardExceptionRequest request);
 }

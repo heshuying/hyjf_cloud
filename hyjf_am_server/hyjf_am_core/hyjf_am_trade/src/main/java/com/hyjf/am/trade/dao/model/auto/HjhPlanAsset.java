@@ -114,6 +114,12 @@ public class HjhPlanAsset implements Serializable {
 
     private Date updateTime;
 
+    private String address;
+
+    private String corporateCode;
+
+    private String registrationAddress;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -554,5 +560,29 @@ public class HjhPlanAsset implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address == null ? null : address.trim();
+    }
+
+    public String getCorporateCode() {
+        return corporateCode;
+    }
+
+    public void setCorporateCode(String corporateCode) {
+        this.corporateCode = corporateCode == null ? null : corporateCode.trim();
+    }
+
+    public String getRegistrationAddress() {
+        return registrationAddress;
+    }
+
+    public void setRegistrationAddress(String registrationAddress) {
+        this.registrationAddress = registrationAddress == null ? null : registrationAddress.trim();
     }
 }
