@@ -57,6 +57,7 @@ import com.hyjf.am.resquest.user.UserChangeLogRequest;
 import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
+import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
@@ -1005,4 +1006,20 @@ public interface AmUserClient {
      * @return
      */
     boolean updateMobile(MobileSynchronizeRequest request);
+
+    /**
+     * 银行卡异常count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int getBankCardExceptionCount(BankCardExceptionRequest request);
+
+    /**
+     * 银行卡异常列表
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request);
 }

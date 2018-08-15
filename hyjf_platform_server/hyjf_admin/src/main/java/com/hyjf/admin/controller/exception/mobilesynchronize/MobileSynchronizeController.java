@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Api(value = "手机号同步",tags = "手机号同步")
 @RestController
-@RequestMapping(value = "/exception/mobilesynchronize")
+@RequestMapping(value = "/hyjf-admin/exception/mobilesynchronize")
 public class MobileSynchronizeController extends BaseController {
 
     @Autowired

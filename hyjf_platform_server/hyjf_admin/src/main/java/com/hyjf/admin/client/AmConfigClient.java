@@ -1193,4 +1193,26 @@ public interface AmConfigClient {
 	 * @author: nxl
 	 */
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
+
+	/**
+	 * 查询数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request);
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request);
 }

@@ -38,7 +38,7 @@ import java.util.Map;
  * @version: AccountExceptionController, v0.1 2018/7/11 15:02
  */
 @RestController
-@RequestMapping("/hyjf-admin/accountexception")
+@RequestMapping("/hyjf-admin/exception/accountexception")
 @Api(value = "异常中心-汇付对账",tags = "异常中心-汇付对账")
 public class AccountExceptionController extends BaseController {
 

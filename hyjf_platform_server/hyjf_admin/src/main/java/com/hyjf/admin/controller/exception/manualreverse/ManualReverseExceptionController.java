@@ -1,12 +1,15 @@
 package com.hyjf.admin.controller.exception.manualreverse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.exception.ManualReverseExceptionService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
 import com.hyjf.am.resquest.admin.ManualReverseCustomizeRequest;
 import com.hyjf.am.vo.admin.ManualReverseCustomizeVO;
+import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +37,7 @@ public class ManualReverseExceptionController extends BaseController {
      */
     @ApiOperation(value = "手动冲正列表", notes = "手动冲正列表")
     @PostMapping("/list")
-    public JSONObject getList(@RequestBody ManualReverseCustomizeRequest requestBean){
+    public AdminResult<ListResult<ManualReverseCustomizeVO>> getList(@RequestBody ManualReverseCustomizeRequest requestBean){
         Integer count = manualReverseExceptionService.getManualReverseCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         page.setTotal(count);
@@ -43,8 +46,7 @@ public class ManualReverseExceptionController extends BaseController {
 
         List<ManualReverseCustomizeVO> recordList = manualReverseExceptionService.getManualReverseList(requestBean);
 
-        JSONObject jsonObject = this.success(String.valueOf(count),recordList);
-        return jsonObject;
+        return new AdminResult<>(ListResult.build(recordList, count));
     }
 
     /**
@@ -54,19 +56,19 @@ public class ManualReverseExceptionController extends BaseController {
      */
     @ApiOperation(value = "手动冲正更新", notes = "手动冲正更新")
     @PostMapping("/update_manualreverse")
-    public JSONObject manualReverse(@RequestBody ManualReverseAddRequest requestBean){
+    public AdminResult manualReverse(@RequestBody ManualReverseAddRequest requestBean){
 
         // 请求参数校验
         boolean checkResult = manualReverseExceptionService.checkForManualReverse(requestBean);
         if(!checkResult){
-            return this.fail("请求参数错误");
+            return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         boolean updateResult = manualReverseExceptionService.updateManualReverse(requestBean);
         if(!updateResult){
-            return this.fail("手动冲正更新失败");
+            return new AdminResult<>(FAIL, "手动冲正更新失败");
         }
-        return this.success();
+        return new AdminResult<>();
     }
 
     /**
@@ -76,23 +78,19 @@ public class ManualReverseExceptionController extends BaseController {
      */
     @ApiOperation(value = "根据用户名获取accountId", notes = "根据用户名获取accountId")
     @GetMapping("/get_accountid_byusername/{userName}")
-    public JSONObject getAccountIdAction(@PathVariable String userName){
+    public AdminResult getAccountIdAction(@PathVariable String userName){
         logger.info("根据用户名获取accountId，{}", userName);
         if(StringUtils.isBlank(userName)){
-            return this.fail("请求参数错误");
+            return new AdminResult<>(FAIL, "请求参数错误");
         }
 
         // 查询电子账号
         String accountId = manualReverseExceptionService.getAccountIdByUserName(userName);
         if(StringUtils.isBlank(accountId)){
             logger.info("未获取到用户的电子账号");
-            return this.fail("未获取到用户的电子账号");
+            return new AdminResult<>(FAIL, "未获取到用户的电子账号");
         }
 
-        JSONObject info = new JSONObject();
-        info.put(STATUS, SUCCESS);
-        info.put(MSG, "成功");
-        info.put(RECORD, accountId);
-        return info;
+        return new AdminResult(accountId);
     }
 }
