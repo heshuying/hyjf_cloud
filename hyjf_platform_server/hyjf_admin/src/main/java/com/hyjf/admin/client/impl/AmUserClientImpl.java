@@ -11,6 +11,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
@@ -1877,5 +1878,53 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.isUpdate();
 		}
 		return false;
+	}
+
+	/**
+	 * 银行卡异常count
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public int getBankCardExceptionCount(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/getBankCardExceptionCount";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	/**
+	 * 银行卡异常列表
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
+		String url = userService + "/bankcardexception/searchBankCardExceptionList";
+		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 更新银行卡(admin后台异常中心-银行卡异常用)
+	 * @auth sunpeikai
+	 * @param
+	 * @return
+	 */
+	@Override
+	public String updateAccountBankByUserId(Integer userId) {
+		String url = userService + "/bankcardexception/updateAccountBankByUserId/" + userId;
+		AdminBankCardExceptionResponse response = restTemplate.getForEntity(url, AdminBankCardExceptionResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultMsg();
+		}
+		return "";
 	}
 }

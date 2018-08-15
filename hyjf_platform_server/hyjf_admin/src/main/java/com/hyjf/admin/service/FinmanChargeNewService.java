@@ -87,7 +87,6 @@ public interface FinmanChargeNewService {
      * @param manChargeTime
      * @return
      */
-    public int countRecordByProjectType(String manChargeType, Integer manChargeTime,
-                                        String instCode, Integer assetType);
+    public int countRecordByProjectType(String manChargeType, Integer manChargeTime, String instCode, Integer assetType);
 
 }

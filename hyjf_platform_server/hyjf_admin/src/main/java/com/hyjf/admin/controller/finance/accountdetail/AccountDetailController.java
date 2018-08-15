@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.finance.accountdetail;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AccountDetailRequestBean;
 import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
@@ -64,12 +63,19 @@ public class AccountDetailController extends BaseController {
     @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
-    public JSONObject userManagerInit() {
-        JSONObject jsonObject = null;
+    public AdminResult<List<Map<String,Object>>> userManagerInit() {
         List<AccountTradeVO> accountTradeVOList = accountDetailService.selectTradeTypes();
-        // List<AccountDetailVO> listAccountDetail =  accountDetailService.findAccountDetailList();
+        List<Map<String,Object>> listMap = new ArrayList<Map<String,Object>>();
+        if(null!=accountTradeVOList&&accountTradeVOList.size()>0){
+            for(AccountTradeVO accountTradeVO:accountTradeVOList){
+                Map<String,Object> mapParam = new HashMap<>();
+                mapParam.put("key",accountTradeVO.getId());
+                mapParam.put("value",accountTradeVO.getName());
+                listMap.add(mapParam);
+            }
 
-        return jsonObject;
+        }
+        return new AdminResult<List<Map<String,Object>>>(listMap);
     }
 
     @ApiOperation(value = "资金明细", notes = "资金明细页面列表显示")
@@ -88,7 +94,6 @@ public class AccountDetailController extends BaseController {
         }
 
         List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
-        Integer recordCount = accountDetailResponse.getRecordTotal();
         if (null != listAccountDetail && listAccountDetail.size() > 0) {
             for (AccountDetailVO accountDetailVO : listAccountDetail) {
                 //根据用户id获取用户信息
@@ -148,14 +153,15 @@ public class AccountDetailController extends BaseController {
         AdminAccountDetailDataRepairResponse adminAccountDetailDataRepairResponse = accountDetailService.queryAccountDetailErrorUserList();
         if (null != adminAccountDetailDataRepairResponse) {
             List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList = adminAccountDetailDataRepairResponse.getResultList();
-            List<Map<String, Object>> mapReturnList = getAccountId(adminAccountDetailDataRepairVOList);
-            if (null != mapReturnList&&mapReturnList.size()>0) {
-                for(Map<String, Object>mapReturn:mapReturnList){
-                    Integer userId = Integer.parseInt(mapReturn.get("userId").toString());
-                    Integer accountId = Integer.parseInt(mapReturn.get("accountId").toString());
-                    strRepayDate = this.repayDataRepair(userId, accountId);
-                    if(StringUtils.isNotBlank(strRepayDate)){
-                        return new AdminResult<>(FAIL, strRepayDate);
+            //
+            if (null!=adminAccountDetailDataRepairVOList&&adminAccountDetailDataRepairVOList.size()>0){
+                for(AdminAccountDetailDataRepairVO adminAccountDetailDataRepairVO:adminAccountDetailDataRepairVOList){
+                    Integer userId = adminAccountDetailDataRepairVO.getUserId();
+                    // 查询交易明细最小的id
+                    AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.accountdetailDataRepair(userId);
+                    if(null!=accountdetailDataRepair&& null!=accountdetailDataRepair.getResult()){
+                        Integer accountListId = Integer.parseInt(accountdetailDataRepair.getResult().getId());
+                        this.repayDataRepair(userId, accountListId);
                     }
                 }
             }
@@ -166,6 +172,7 @@ public class AccountDetailController extends BaseController {
     }
 
     private String repayDataRepair(Integer userId, Integer accountListId) {
+        // 根据Id查询此条交易明细
         AccountListResponse accountListResponse = accountDetailService.selectAccountById(accountListId);
         if (null != accountListResponse && null != accountListResponse.getResult()) {
             AccountListVO accountListVO = accountListResponse.getResult();
@@ -173,8 +180,10 @@ public class AccountDetailController extends BaseController {
             BigDecimal balance = accountListVO.getBalance();
             // 查询此用户的下一条交易明细
             AccountListResponse accountListResponseNext = accountDetailService.selectNextAccountList(accountListId, userId);
+            // 如果下一条交易明细不为空
             if (null != accountListResponseNext && null != accountListResponseNext.getResult()) {
                 AccountListVO accountListVOnext = accountListResponseNext.getResult();
+                // 根据查询用交易类型查询用户操作金额
                 AccountTradeResponse accountTradeResponse = accountDetailService.selectAccountTradeByValue(accountListVOnext.getTrade());
                 if (null != accountTradeResponse && null != accountTradeResponse.getResult()) {
                     AccountTradeVO accountTradeVO = accountTradeResponse.getResult();
@@ -202,7 +211,7 @@ public class AccountDetailController extends BaseController {
                         return "交易明细更新失败,交易明细ID:" + accountListVOnext.getId();
                     }
                 } else {
-                    return "查询huiyingdai_account_trade交易类型失败,交易明细Value:" + accountListVOnext.getTrade();
+                    return "查询ht_account_trade交易类型失败,交易明细Value:" + accountListVOnext.getTrade();
                 }
 
             } else {
@@ -212,28 +221,6 @@ public class AccountDetailController extends BaseController {
             return "获取交易明细失败" + accountListId;
         }
         return null;
-    }
-
-    private List<Map<String, Object>> getAccountId(List<AdminAccountDetailDataRepairVO> adminAccountDetailDataRepairVOList) {
-        List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-        if (adminAccountDetailDataRepairVOList != null && adminAccountDetailDataRepairVOList.size() > 0) {
-            for (AdminAccountDetailDataRepairVO adminAccountDetailDataRepairCustomize : adminAccountDetailDataRepairVOList) {
-                Map<String, Object> mapReturn = new HashMap<String, Object>();
-                Integer userId = adminAccountDetailDataRepairCustomize.getUserId();
-                mapReturn.put("userId", userId);
-                // 查询交易明细最小的id
-                AdminAccountDetailDataRepairResponse accountdetailDataRepair = accountDetailService.accountdetailDataRepair(userId);
-                if (null != accountdetailDataRepair) {
-                    AdminAccountDetailDataRepairVO accountList = accountdetailDataRepair.getResult();
-                    if (accountList != null) {
-                        Integer accountListId = Integer.parseInt(accountList.getId());
-                        mapReturn.put("accountId", accountListId);
-                    }
-                }
-                listMap.add(mapReturn);
-            }
-        }
-        return listMap;
     }
 
     /**

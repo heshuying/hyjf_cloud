@@ -380,7 +380,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         UserExample example = new UserExample();
         example.createCriteria().andUserIdEqualTo(userId);
         List<User> usersList = this.userMapper.selectByExample(example);
-        if (usersList != null && usersList.size() > 0) {
+        if (null!= usersList && usersList.size() > 0) {
             return usersList.get(0);
         }
         return null;

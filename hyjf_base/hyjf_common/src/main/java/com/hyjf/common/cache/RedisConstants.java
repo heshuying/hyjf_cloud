@@ -191,7 +191,7 @@ public class RedisConstants {
     /**
      * 用户token令牌前缀
      */
-    public static final String USERID_KEY = "userId_";
+    public static final String USERID_KEY = "userId:";
 
     /**
      * 放款批次号key
@@ -273,4 +273,6 @@ public class RedisConstants {
 	 */
 	public static final String CLIENT = "CLIENT";
 
+    //某计划连续开放额度不同次数
+    public static final String CONT_WARN_OF_HJH_ACCOUNT = "contWarnOfHjhAccount:";
 }

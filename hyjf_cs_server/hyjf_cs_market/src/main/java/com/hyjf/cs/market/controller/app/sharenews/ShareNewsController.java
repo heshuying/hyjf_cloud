@@ -1,19 +1,18 @@
 package com.hyjf.cs.market.controller.app.sharenews;
 
 import com.hyjf.am.response.market.ShareNewsResponse;
-import com.hyjf.am.resquest.market.ShareNewsRequest;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.market.config.SystemConfig;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.ShareNewsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @Auther: walter.limeng
@@ -31,7 +30,7 @@ public class ShareNewsController extends BaseMarketController {
 
     @ApiOperation(value = "分享信息", notes = "app-分享信息")
     @PostMapping("/getNews")
-    public ShareNewsResponse init(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
+    public ShareNewsResponse init(@RequestHeader(value = "userId") Integer userId){
         ShareNewsResponse response = new ShareNewsResponse();
 
         ShareNewsBeanVO shareNewsBean = this.shareNewsService.queryShareNews();

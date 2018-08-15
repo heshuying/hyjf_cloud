@@ -847,9 +847,9 @@ public class AccedeListController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		// 用户ID
-		String userid = request.getParameter("userId");
+		String userid = String.valueOf(viewRequest.getUserId());
 		// 计入加入订单号
-		String planOrderId = request.getParameter("planOrderId");
+		String planOrderId = viewRequest.getAccedeOrderIdSrch();
 		// 参数判断
 		if(StringUtils.isBlank(userid) || StringUtils.isBlank(planOrderId)){
 			ret.put("result", "请求参数为空");
@@ -871,14 +871,12 @@ public class AccedeListController extends BaseController{
 			ret.put("status", FAIL);
 			return ret;
 		}
-		
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 		if(users == null ){
 			ret.put("result", "用户不存在");
 			ret.put("status", FAIL);
 			return ret;
 		}
-		
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
 		tenderAgreement = tenderAgreementList.get(0);
 		if(tenderAgreement != null && tenderAgreement.getStatus() == 2){

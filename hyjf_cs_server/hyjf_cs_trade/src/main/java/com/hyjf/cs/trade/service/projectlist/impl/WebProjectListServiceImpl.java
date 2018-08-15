@@ -184,8 +184,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
         WebResult webResult = new WebResult();
-        detailCsVO.setOther(other);
-        webResult.setData(detailCsVO);
+       // detailCsVO.setOther(other);
+        webResult.setData(other);
         return webResult;
     }
 
@@ -735,38 +735,38 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 资产列表
             JSONArray json = new JSONArray();
             // 基础信息
-            String baseTableData = "";
+            List<BorrowDetailBean>  baseTableData = new ArrayList<>();
             // 资产信息
-            String assetsTableData = "";
+            List<BorrowDetailBean>  assetsTableData = new ArrayList<>();
             // 项目介绍
-            String intrTableData = "";
+            List<BorrowDetailBean>  intrTableData = new ArrayList<>();
             // 信用状况
-            String credTableData = "";
+            List<BorrowDetailBean>  credTableData = new ArrayList<>();
             // 审核信息
-            String reviewTableData = "";
+            List<BorrowDetailBean>  reviewTableData = new ArrayList<>();
             //其他信息
-            String otherTableData = "";
+            List<BorrowDetailBean>  otherTableData = new ArrayList<>();
             // 借款类型
             int borrowType = Integer.parseInt(comOrPer);
             if (borrowType == 1 && borrowUsers != null) {
                 // 基础信息
-                baseTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 1, borrowType, projectDetail.getBorrowLevel()));
+                baseTableData = ProjectConstant.packDetail(borrowUsers, 1, borrowType, projectDetail.getBorrowLevel());
                 // 信用状况
-                credTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 4, borrowType, projectDetail.getBorrowLevel()));
+                credTableData = ProjectConstant.packDetail(borrowUsers, 4, borrowType, projectDetail.getBorrowLevel());
                 // 审核信息
-                reviewTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 5, borrowType, projectDetail.getBorrowLevel()));
+                reviewTableData = ProjectConstant.packDetail(borrowUsers, 5, borrowType, projectDetail.getBorrowLevel());
                 //其他信息
-                otherTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel()));
+                otherTableData = ProjectConstant.packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
             } else {
                 if (borrowManinfo != null) {
                     // 基础信息
-                    baseTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 1, borrowType, projectDetail.getBorrowLevel()));
+                    baseTableData = ProjectConstant.packDetail(borrowManinfo, 1, borrowType, projectDetail.getBorrowLevel());
                     // 信用状况
-                    credTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 4, borrowType, projectDetail.getBorrowLevel()));
+                    credTableData= ProjectConstant.packDetail(borrowManinfo, 4, borrowType, projectDetail.getBorrowLevel());
                     // 审核信息
-                    reviewTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 5, borrowType, projectDetail.getBorrowLevel()));
+                    reviewTableData = ProjectConstant.packDetail(borrowManinfo, 5, borrowType, projectDetail.getBorrowLevel());
                     //其他信息
-                    otherTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel()));
+                    otherTableData = ProjectConstant.packDetail(borrowManinfo, 6, borrowType, borrow.getBorrowLevel());
                 }
             }
             // 资产信息
@@ -780,9 +780,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     json.add(ProjectConstant.packDetail(borrowCarinfo, 2, borrowType, projectDetail.getBorrowLevel()));
                 }
             }
-            assetsTableData = json.toString();
             // 项目介绍
-            intrTableData = JSONObject.toJSONString(ProjectConstant.packDetail(projectDetail, 3, borrowType, projectDetail.getBorrowLevel()));
+            intrTableData = ProjectConstant.packDetail(projectDetail, 3, borrowType, projectDetail.getBorrowLevel());
             // 基础信息
             result.put("baseTableData", baseTableData);
             // 资产信息
@@ -797,10 +796,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             if (borrow.getStatus() >= 4 && borrowRepay != null) {
                 //其他信息
                 result.put("otherTableData", otherTableData);
-                result.put("updateTime", ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime()));
+                Date createDate = borrowRepay.getCreateTime();
+                Integer startLong= null ;
+                if (null != createDate){
+                    startLong = Integer.valueOf(String.valueOf(createDate.getTime()/1000));
+                }
+                result.put("updateTime", ProjectConstant.getUpdateTime(startLong, borrowRepay.getRepayYestime() == null ? null :borrowRepay.getRepayYestime()));
             } else {
                 //其他信息
-                result.put("otherTableData", JSONObject.toJSONString(new ArrayList<BorrowDetailBean>()));
+                result.put("otherTableData", new ArrayList<BorrowDetailBean>());
             }
         }
         // 剩余可承接金额
@@ -1014,21 +1018,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             int recordTotal = 0;
             //可用优惠券张数
             int availableCouponListCount = 0;
-            if (StringUtils.isNotBlank(userId)) {
-                /** 获取用户是否是vip 开始 pccvip 1是vip 0不是vip */
-               /* UsersInfo usersInfo = planService.getUsersInfoByUserId(loginUser.getUserId());
-                if (usersInfo.getVipId() != null && usersInfo.getVipId() != 0) {
-                    result.put("ifVip", 1);
-                    String returl = HOST_URL + VIPManageDefine.REQUEST_MAPPING + "/" + VIPManageDefine.INIT_ACTION + ".do";
-                    result.put("returl", returl);
-                } else {
-                    result.put("ifVip", 0);
-                    String returl = HOST_URL + ApplyDefine.REQUEST_MAPPING + ApplyDefine.INIT + ".do";
-                    result.put("returl", returl);
 
-                }*/
-                /** 获取用户是否是vip 结束 pccvip */
-            }
             /*优惠券模块开始 */ // TODO: 2018/6/28 优惠券后期处理
             /*couponConfig = planService.getUserOptimalCoupon(couponId, planNid, loginUser.getUserId(), null, "0");
             recordTotal = planService.countCouponUsers(0, loginUser.getUserId());
