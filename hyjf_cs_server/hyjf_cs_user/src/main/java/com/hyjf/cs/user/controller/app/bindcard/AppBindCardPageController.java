@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 @Api(value = "app端-绑卡",tags = "app端-绑卡")
 @RestController
 @RequestMapping("/hyjf-app/bank/user/bindCardPage")
-public class AppBindCardController extends BaseUserController {
+public class AppBindCardPageController extends BaseUserController {
     @Autowired
     BindCardService bindCardService;
     @Autowired
