@@ -44,7 +44,7 @@ public class WeChatSynBalanceController extends BaseUserController {
     RequestUtil requestUtil;
 
     @ApiOperation(value = "wechat端我的-刷新", notes = "wechat端我的-刷新")
-    @PostMapping(value = "/init", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/init")
     public BaseResultBean synBalance(@RequestHeader(value = "userId") Integer userId) {
         logger.info("请求用户ID：" + userId);
         WxSynBalanceResultBean result = new WxSynBalanceResultBean();

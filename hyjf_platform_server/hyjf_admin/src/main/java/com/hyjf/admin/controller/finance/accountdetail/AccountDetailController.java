@@ -85,15 +85,14 @@ public class AccountDetailController extends BaseController {
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
         AccountDetailResponse accountDetailResponse = accountDetailService.findAccountDetailList(requestAccountDetail);
-        List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if(accountDetailResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(accountDetailResponse)) {
             return new AdminResult<>(FAIL, accountDetailResponse.getMessage());
         }
-
         List<AccountDetailVO> listAccountDetail = accountDetailResponse.getResultList();
+        List<AccountDetailVO> listAccountDtaileShow = new ArrayList<AccountDetailVO>();
         if (null != listAccountDetail && listAccountDetail.size() > 0) {
             for (AccountDetailVO accountDetailVO : listAccountDetail) {
                 //根据用户id获取用户信息
@@ -111,27 +110,10 @@ public class AccountDetailController extends BaseController {
                     accountDetailVO.setReferrerName(userSpreads.getUsername());
                     accountDetailVO.setReferrerId(userSpreads.getUserId().toString());
                 }
-                //根据推荐人姓名筛选
-                if (null != accountDetailRequestBean.getReferrerName()) {
-                    String referrerNameSearch = requestAccountDetail.getReferrerName().toString();
-                    UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(referrerNameSearch);
-                    String userRefer = userReferrerSearch.getUserId().toString();
-                    if (userRefer.equals(accountDetailVO.getReferrerId())) {
-                        listAccountDtaileShow.add(accountDetailVO);
-                    }
-                } else {
-                    listAccountDtaileShow.add(accountDetailVO);
-                }
-                //根据用户名查找
-                if (null != accountDetailRequestBean.getUsername()) {
-                    String userNameSearch = requestAccountDetail.getUsername().toString();
-                    UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(userNameSearch);
-                    String userRefer = userReferrerSearch.getUserId().toString();
-                    if (userRefer.equals(accountDetailVO.getUserId())) {
-                        listAccountDtaileShow.add(accountDetailVO);
-                    }
-                } else {
-                    listAccountDtaileShow.add(accountDetailVO);
+                //根据筛选条件判断
+                AccountDetailVO accountDetailVoDefine = SearchParan(accountDetailRequestBean,accountDetailVO);
+                if(null!=accountDetailVoDefine){
+                    listAccountDtaileShow.add(accountDetailVoDefine);
                 }
             }
         }
@@ -142,6 +124,34 @@ public class AccountDetailController extends BaseController {
         return new AdminResult<ListResult<AccountDetailCustomizeVO>>(ListResult.build(accountDetailCustomizeVOList, accountDetailResponse.getRecordTotal())) ;
     }
 
+    private AccountDetailVO SearchParan(AccountDetailRequestBean accountDetailRequestBean,AccountDetailVO accountDetailVO) {
+        AccountDetailVO accountDetailVoDefine = new AccountDetailVO();
+        //根据推荐人姓名筛选
+        if (null != accountDetailRequestBean.getReferrerName()) {
+            String referrerNameSearch = accountDetailRequestBean.getReferrerName().toString();
+            UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(referrerNameSearch);
+            if (null != userReferrerSearch &&accountDetailVO.getReferrerId().equals(userReferrerSearch.getUserId().toString())) {
+                BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+            }else{
+                return null;
+            }
+        } else {
+            BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+        }
+        //根据用户名查找
+        if (null != accountDetailRequestBean.getUsername()) {
+            String userNameSearch = accountDetailRequestBean.getUsername().toString();
+            UserVO userReferrerSearch = userCenterService.selectUserByRecommendName(userNameSearch);
+            if (null != userReferrerSearch && accountDetailVO.getUserId().equals(userReferrerSearch.getUserId())) {
+                BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+            }else{
+                return null;
+            }
+        } else {
+            BeanUtils.copyProperties(accountDetailVO,accountDetailVoDefine);
+        }
+        return accountDetailVoDefine;
+    }
 
 
     @ApiOperation(value = "交易明细修复", notes = "交易明细修复")
