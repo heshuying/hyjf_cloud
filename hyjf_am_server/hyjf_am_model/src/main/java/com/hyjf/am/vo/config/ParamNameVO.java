@@ -17,6 +17,8 @@ public class ParamNameVO extends BaseVO implements Serializable {
 
     private String name;
 
+    private String nameClass;
+
     private String other1;
 
     private String other2;
@@ -39,6 +41,14 @@ public class ParamNameVO extends BaseVO implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getNameClass() {
+        return nameClass;
+    }
+
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
     }
 
     public void setName(String name) {

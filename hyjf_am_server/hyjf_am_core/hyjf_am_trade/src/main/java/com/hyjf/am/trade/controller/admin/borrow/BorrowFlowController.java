@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBorrowFlowResponse;
 import com.hyjf.am.response.admin.HjhAssetTypeResponse;
+import com.hyjf.am.response.trade.BorrowProjectTypeResponse;
+import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFlowService;
@@ -40,17 +42,29 @@ public class BorrowFlowController {
      * @return
      */
     @RequestMapping("/borrowProjectTypeList/{borrowTypeCd}")
-    public List<BorrowProjectTypeVO> selectBorrowProjectTypeList(@PathVariable String borrowTypeCd) {
+    public BorrowProjectTypeResponse selectBorrowProjectTypeList(@PathVariable String borrowTypeCd) {
         logger.info("项目类型..." + JSONObject.toJSON(borrowTypeCd));
-        return borrowFlowService.selectBorrowProjectTypeList(borrowTypeCd);
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
+        List<BorrowProjectTypeVO> vo =borrowFlowService.selectBorrowProjectTypeList(borrowTypeCd);
+        if(CollectionUtils.isEmpty(vo)){
+            return null;
+        }
+        response.setResultList(vo);
+        return response;
     }
     /**
      * 资金来源
      * @return
      */
     @RequestMapping("/hjhInstConfigList")
-    public List<HjhInstConfigVO> hjhInstConfigList(){
-        return borrowFlowService.hjhInstConfigList("");
+    public HjhInstConfigResponse hjhInstConfigList(){
+        List<HjhInstConfigVO> vo =borrowFlowService.hjhInstConfigList("");
+        HjhInstConfigResponse response = new HjhInstConfigResponse();
+        if(CollectionUtils.isEmpty(vo)){
+            return null;
+        }
+        response.setResultList(vo);
+        return response;
     }
 
     /**
