@@ -38,4 +38,26 @@ public class ModifyInfoServiceImpl extends BaseAdminServiceImpl implements Modif
     public List<AccountMobileSynchVO> searchModifyInfoList(AccountMobileSynchRequest request) {
         return amUserClient.searchModifyInfoList(request);
     }
+
+    /**
+     * 添加信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public Integer insertAccountMobileSynch(AccountMobileSynchRequest request) {
+        return amUserClient.insertAccountMobileSynch(request);
+    }
+
+    /**
+     * 根据主键id删除一条信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public Integer deleteAccountMobileSynch(AccountMobileSynchRequest request) {
+        return amUserClient.deleteAccountMobileSynch(request);
+    }
 }

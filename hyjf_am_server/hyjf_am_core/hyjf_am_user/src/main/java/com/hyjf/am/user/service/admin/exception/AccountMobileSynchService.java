@@ -30,4 +30,20 @@ public interface AccountMobileSynchService extends BaseService {
      * @return
      */
     List<AccountMobileSynch> searchModifyInfoList(AccountMobileSynchRequest request);
+
+    /**
+     * 添加信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int insertAccountMobileSynch(AccountMobileSynchRequest request);
+
+    /**
+     * 根据主键id删除一条信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int deleteAccountMobileSynch(AccountMobileSynchRequest request);
 }
