@@ -62,7 +62,7 @@ public class AppRechargeController extends BaseUserController {
     private final Integer AMOUNT_UNIT = 10000;
 
     @ApiOperation(value = "短信充值发送验证码", notes = "短信充值发送验证码")
-    @RequestMapping("/sendCode")
+    @PostMapping("/sendCode")
     public AppRechargeInfoResult sendCode(HttpServletRequest request, HttpServletResponse response) {
         logger.info("短信充值发送验证码开始......");
         AppRechargeInfoResult result = new AppRechargeInfoResult("/hyjf-app/user/bank/recharge/sendCode");

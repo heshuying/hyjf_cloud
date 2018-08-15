@@ -3,17 +3,11 @@
  */
 package com.hyjf.cs.user.controller.wechat.myprofile;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -39,7 +33,7 @@ import java.util.List;
  * @author jun
  * @version MyProfileController, v0.1 2018/7/3 15:52
  */
-@Api(value = "wechat端账户总览",tags = "wechat端账户总览")
+@Api(value = "weChat端-账户总览",tags = "weChat端-账户总览")
 @RestController
 @RequestMapping("/hyjf-wechat/myprofile")
 public class MyProfileController extends BaseUserController {
