@@ -1,5 +1,7 @@
 package com.hyjf.am.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 封装前端传参需要的参数
  * @author zhangyk
@@ -10,11 +12,13 @@ public class BasePage {
     /**
      * 当前页码
      */
+    @ApiModelProperty(value = "当前页")
     private int currPage;
 
     /**
      * 当前页条数
      */
+    @ApiModelProperty(value = "当前页条数")
     private int pageSize;
 
     public int getCurrPage() {

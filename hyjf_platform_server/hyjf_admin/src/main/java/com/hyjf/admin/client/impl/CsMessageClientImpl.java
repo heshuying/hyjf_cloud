@@ -10,6 +10,7 @@ import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
@@ -223,6 +224,38 @@ public class  CsMessageClientImpl  implements CsMessageClient {
                 .postForEntity("http://CS-MESSAGE/cs-message/messagepush_template_statics/select_template_statics",
                         request, MessagePushPlatStaticsResponse.class)
                 .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * (条件)查询 APP消息推送 异常处理 列表
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request) {
+        MessagePushErrorResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/getListByConditions",
+                        request, MessagePushErrorResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    @Override
+    public MessagePushErrorResponse update(MessagePushErrorRequest request) {
+        MessagePushErrorResponse response = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/request",
+                        request, MessagePushErrorResponse.class).getBody();
         if (response != null) {
             return response;
         }

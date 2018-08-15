@@ -4,7 +4,9 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.MessagePushErrorResponse;
 import com.hyjf.am.response.admin.MessagePushPlatStaticsResponse;
+import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.response.admin.AccountWebListResponse;
@@ -173,4 +175,18 @@ public interface CsMessageClient {
      * @return
      */
     MessagePushPlatStaticsResponse selectPushPlatTemplateStatics(MessagePushPlatStaticsRequest request);
+
+    /**
+     * (条件)查询 APP消息推送 异常处理 列表
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse getListByConditions(MessagePushErrorRequest request);
+
+    /**
+     * 数据修改 APP消息推送 异常处理
+     * @param request
+     * @return
+     */
+    MessagePushErrorResponse update(MessagePushErrorRequest request);
 }
