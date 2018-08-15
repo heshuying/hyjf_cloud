@@ -15,6 +15,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowFirstService;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -56,10 +57,10 @@ public class BorrowFirstController extends BaseController {
         BorrowFirstResponseBean responseBean = borrowFirstService.getBorrowFirstList(borrowFirstRequest);
         // 资产来源
         List<HjhInstConfigVO> hjhInstConfigList = adminCommonService.selectHjhInstConfigList();
-        responseBean.setHjhInstConfigList(hjhInstConfigList);
+        responseBean.setHjhInstConfigList(ConvertUtils.convertListToDropDown(hjhInstConfigList,"id","instName"));
         // 初审状态
         Map<String, String> borrowStatusList = adminCommonService.getParamNameMap(CustomConstants.VERIFY_STATUS);
-        responseBean.setBorrowStatusList(borrowStatusList);
+        responseBean.setBorrowStatusList(ConvertUtils.convertParamMapToDropDown(borrowStatusList));
         return new AdminResult(responseBean);
     }
 
