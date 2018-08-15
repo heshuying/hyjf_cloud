@@ -42,7 +42,7 @@ import java.util.Map;
  */
 @Api(value = "资金中心-转账管理-用户转账",tags = "资金中心-转账管理-用户转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/customertransfer")
+@RequestMapping(value = "/hyjf-admin/finance/customertransfer")
 public class CustomerTransferController extends BaseController {
 
     @Autowired

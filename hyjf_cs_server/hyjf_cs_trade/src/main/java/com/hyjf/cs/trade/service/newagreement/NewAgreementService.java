@@ -23,6 +23,7 @@ import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
+ * APP端协议Service
  * @author libin
  * @version NewAgreementService.java, v0.1 2018年7月25日 下午2:21:43
  */

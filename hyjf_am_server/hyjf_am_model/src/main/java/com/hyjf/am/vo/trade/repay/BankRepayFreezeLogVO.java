@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.trade.repay;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,16 +15,17 @@ public class BankRepayFreezeLogVO extends BaseVO {
 
     private Integer userId;
 
+    @ApiModelProperty(value = "客户号")
     private String account;
-
+    @ApiModelProperty(value = "订单号")
     private String orderId;
-
+    @ApiModelProperty(value = "冻结金额")
     private BigDecimal amount;
-
+    @ApiModelProperty(value = "用户名")
     private String userName;
-
+    @ApiModelProperty(value = "标的编号")
     private String borrowNid;
-
+    @ApiModelProperty(value = "删除标示：0 未删除，1 已删除")
     private Integer delFlag;
 
     private Date createTime;

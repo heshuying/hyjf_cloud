@@ -27,7 +27,7 @@ import java.util.List;
  * 后台管理系统，异常中心->自动投资债转授权异常
  */
 @RestController
-@RequestMapping("/hyjf-admin/user_auth_exception")
+@RequestMapping("/hyjf-admin/exception/user_auth_exception")
 @Api(value = "自动投资债转授权异常",tags = "自动投资债转授权异常")
 public class UserAuthExceptionController extends BaseController {
 

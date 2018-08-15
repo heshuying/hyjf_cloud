@@ -919,7 +919,12 @@ public class AmConfigClientImpl implements AmConfigClient {
                 contentArticleRequestBean, ContentArticleResponse.class);
     }
 
-    @Override
+	@Override
+	public ContentArticleResponse findById(Integer id) {
+		return restTemplate.getForObject("http://AM-CONFIG/am-config/content/contentarticle/findbyId/" + id, ContentArticleResponse.class);
+	}
+
+	@Override
     public ContentArticleResponse updateAction(ContentArticleRequest contentArticleRequestBean) {
         return restTemplate.postForObject("http://AM-CONFIG/am-config/content/contentarticle/updateaction",
                 contentArticleRequestBean, ContentArticleResponse.class);
@@ -1905,5 +1910,35 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+	/**
+	 * 查询短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse initSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 添加短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse insertSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/insertSmsConfig",request, SmsConfigResponse.class).getBody();
+	}
+	/**
+	 * 修改短信加固数据
+	 * @param request
+	 * @author xiehuili
+	 * @return
+	 */
+	@Override
+	public SmsConfigResponse updateSmsConfig(SmsConfigRequest request){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/updateSmsConfig",request, SmsConfigResponse.class).getBody();
 	}
 }

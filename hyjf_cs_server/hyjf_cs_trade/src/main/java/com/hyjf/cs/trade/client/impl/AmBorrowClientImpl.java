@@ -158,7 +158,12 @@ public class AmBorrowClientImpl implements AmBorrowClient {
 		}
 		return null;
 	}
-
+	
+    /**
+     * 会计划投资详情
+     * @param params
+     * @return
+     */
 	@Override
 	public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params) {
 		String url = "http://AM-TRADE/am-trade/hjhPlan/selectUserHjhInvistDetail";

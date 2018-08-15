@@ -44,7 +44,7 @@ public class AppContentArticleController extends BaseMarketController {
     public AppResult getContentArticleById(@PathVariable("articleId") Integer contentArticleId, @PathVariable("articleType") Integer type) {
         logger.info(AppContentArticleController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         AppContentArticleResponse response = new AppContentArticleResponse();
-        response.setRtn(AppContentArticleResponse.SUCCESS);
+        response.setRtn("000");
         response.setMessage(AppContentArticleResponse.SUCCESS_MSG);
         response.setTopTitle(getTopTitle(type));
         try {
@@ -58,14 +58,14 @@ public class AppContentArticleController extends BaseMarketController {
                 response.setDetails(details);
             }
         } catch (Exception e) {
-            response.setRtn(FAIL);
+            response.setRtn("99");
             response.setMessage(AppContentArticleResponse.FAIL_MSG);
         }
         if(response == null) {
-            return new AppResult<>(FAIL, FAIL_DESC);
+            return new AppResult<>("99", FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
-            return new AppResult<>(FAIL, response.getMessage());
+            return new AppResult<>("99", response.getMessage());
         }
         logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
         return new AppResult<>(response) ;

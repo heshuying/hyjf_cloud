@@ -565,6 +565,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
 
         BestCouponListVO couponConfig = new BestCouponListVO();
@@ -694,6 +699,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(tender.getBorrowNid());
+        if (null == borrowInfo) {
+            // 标的不存在
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
         WebViewUserVO loginUser = RedisUtils.getObj(RedisConstants.USERID_KEY +tender.getUserId(), WebViewUserVO.class);
         // 可用优惠券张数
         MyCouponListRequest request = new MyCouponListRequest();
@@ -704,9 +714,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.setCouponAvailableCount(couponAvailableCount + "");
         // 优惠券总张数
         recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
-        //---------------------------------------------------------------------
         investInfo.setBorrowApr(borrow.getBorrowApr() + "%");
         investInfo.setPaymentOfInterest("");
+        // 是否使用优惠券
+        investInfo.setIsUsedCoupon("0");
         // 检查优惠券可不可用
         CouponUserVO couponConfig = null;
         Integer userId = loginUser.getUserId();
@@ -781,8 +792,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (balanceWait == null || balanceWait.equals("")) {
             balanceWait = "0";
         }
+        if( money == null ){
+            money = "0";
+        }
         // 剩余可投小于起投，计算收益按照剩余可投计算
-        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrow.getTenderAccountMin())) < 0) {
+        if ((StringUtils.isBlank(money) || money.equals("0")) && new BigDecimal(balanceWait).compareTo(new BigDecimal(borrowInfo.getTenderAccountMin())) < 0) {
             money = new BigDecimal(balanceWait).intValue() + "";
         }
 
@@ -856,20 +870,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         AccountVO account = amTradeClient.getAccount(userId);
         BigDecimal balance = account.getBankBalance();
         investInfo.setBalance(CommonUtils.formatAmount(null, balance));
-        investInfo.setInitMoney(borrow.getTenderAccountMin() + "");
+        investInfo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
         investInfo.setIncreaseMoney(String.valueOf(borrow.getBorrowIncreaseMoney()));
-        investInfo.setInvestmentDescription(borrow.getTenderAccountMin() + "元起投," + borrow.getBorrowIncreaseMoney() + "元递增");
+        investInfo.setInvestmentDescription(borrowInfo.getTenderAccountMin() + "元起投," + borrowInfo.getBorrowIncreaseMoney() + "元递增");
         // 可用余额的递增部分
-        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).divide(new BigDecimal(borrow.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
-                .multiply(new BigDecimal(borrow.getBorrowIncreaseMoney())).add(new BigDecimal(borrow.getTenderAccountMin()));
-        if (balance.subtract(new BigDecimal(borrow.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
+        BigDecimal tmpmoney = balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).divide(new BigDecimal(borrowInfo.getBorrowIncreaseMoney()), 0, BigDecimal.ROUND_DOWN)
+                .multiply(new BigDecimal(borrowInfo.getBorrowIncreaseMoney())).add(new BigDecimal(borrowInfo.getTenderAccountMin()));
+        if (balance.subtract(new BigDecimal(borrowInfo.getTenderAccountMin())).compareTo(new BigDecimal("0")) < 0) {
             // 可用余额<起投金额 时 investAllMoney 传 -1
             // 全投金额
             investInfo.setInvestAllMoney("-1");
         } else {
             String borrowAccountWaitStr = investInfo.getBorrowAccountWait().replace(",", "");
             if (new BigDecimal(borrow.getTenderAccountMax()).compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
-                investInfo.setInvestAllMoney(borrow.getTenderAccountMax() + "");
+                investInfo.setInvestAllMoney(borrowInfo.getTenderAccountMax() + "");
             } else if (tmpmoney.compareTo(new BigDecimal(borrowAccountWaitStr)) < 0) {
                 // 全投金额
                 investInfo.setInvestAllMoney(tmpmoney + "");
@@ -879,7 +893,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
 
             //计算全投金额 modify by cwyang 2017-8-17
-            String result = getMinAmount(borrow.getTenderAccountMax(),tmpmoney,borrowAccountWaitStr);
+            String result = getMinAmount(borrowInfo.getTenderAccountMax(),tmpmoney,borrowAccountWaitStr);
             if (result != null) {
                 investInfo.setInvestAllMoney(result);
             }
@@ -887,6 +901,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         investInfo.setBorrowAccountWait(CommonUtils.formatAmount(borrow.getBorrowAccountWait()) + "");
         investInfo.setAnnotation("");
+
+        // 设置无用的东西 不给app返回null
+        investInfo.setProspectiveEarnings("");
+        investInfo.setEndTime("");
+        investInfo.setDesc1("");
+        investInfo.setButtonWord("");
+        investInfo.setStandardValues("");
         AppResult<AppInvestInfoResultVO> result = new AppResult();
         result.setData(investInfo);
         return result;

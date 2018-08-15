@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemConfig {
 
-    @Value("{hyjf.wechat.qrcode.url}")
+    @Value("${hyjf.wechat.qrcode.url}")
     private String wechatQrcodeUrl;
 
     public String getWechatQrcodeUrl() {

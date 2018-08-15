@@ -4,10 +4,13 @@
 package com.hyjf.am.config.controller.admin.content;
 
 import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.service.ContentArticleService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.admin.ContentArticleResponse;
 import com.hyjf.am.resquest.config.ContentArticleRequest;
+import com.hyjf.am.vo.config.ContentArticleVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +49,25 @@ public class ContentArticleManageController extends BaseConfigController{
     public ContentArticleResponse insertAction(@RequestBody ContentArticleRequest requestBean){
         ContentArticleResponse response = new ContentArticleResponse();
         contentArticleService.insertAction(requestBean);
+        response.setRtn(AdminResponse.SUCCESS);
+        return response;
+    }
+
+    /**
+     * 通过id查询数据
+     * @return
+     */
+    @RequestMapping("/findbyId/{id}")
+    public ContentArticleResponse findById(@PathVariable Integer id){
+        ContentArticleResponse response = new ContentArticleResponse();
+        ContentArticleVO vo = new ContentArticleVO();
+        ContentArticle contentArticle = contentArticleService.getArticleById(id);
+        if(contentArticle == null){
+            response.setRtn(AdminResponse.ERROR);
+            return response;
+        }
+        BeanUtils.copyProperties(contentArticle,vo);
+        response.setResult(vo);
         response.setRtn(AdminResponse.SUCCESS);
         return response;
     }

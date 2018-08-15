@@ -35,6 +35,15 @@ public class FinmanChargeNewRequest extends BasePage {
 
     /** 状态 */
     private String statusSear;
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
 
     /**
      * 翻页机能用的隐藏变量
@@ -319,5 +328,21 @@ public class FinmanChargeNewRequest extends BasePage {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }
