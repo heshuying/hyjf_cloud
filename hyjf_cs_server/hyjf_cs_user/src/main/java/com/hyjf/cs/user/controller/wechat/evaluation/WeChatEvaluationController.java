@@ -75,8 +75,8 @@ public class WeChatEvaluationController {
     }
 
     @ApiOperation(value = "计算测评结果",notes = "计算测评结果")
-    @PostMapping(value = "/sumitResult.do", produces = "application/json; charset=utf-8")
-    public WXBaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, @RequestBody FinancialAdvisorSumitQO qo) {
+    @PostMapping(value = "/sumitResult.do")
+    public WXBaseResultBean sumitResult(@RequestHeader(value = "userId") Integer userId, FinancialAdvisorSumitQO qo) {
         SimpleResultBean<UserEvalationResultVO> resultBean = new SimpleResultBean();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
         //答案 "13_48,14_52"

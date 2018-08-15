@@ -183,6 +183,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         } else {
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
+        other.put("paymentAuthStatus","");
         WebResult webResult = new WebResult();
        // detailCsVO.setOther(other);
         webResult.setData(other);
