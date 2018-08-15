@@ -42,6 +42,7 @@
     <result column="is_overdue" property="isOverdue" jdbcType="VARCHAR" />
     <result column="is_complaint" property="isComplaint" jdbcType="VARCHAR" />
     <result column="is_punished" property="isPunished" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -107,7 +108,7 @@
     litigation, is_card, is_income, is_credit, is_asset, is_vehicle, is_driving_license, 
     is_vehicle_registration, is_merry, is_work, is_account_book, annual_income, overdue_report, 
     debt_situation, other_borrowed, is_funds, is_managed, is_ability, is_overdue, is_complaint, 
-    is_punished
+    is_punished, address
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowManinfoExample" >
     select
@@ -158,7 +159,8 @@
       is_account_book, annual_income, overdue_report, 
       debt_situation, other_borrowed, is_funds, 
       is_managed, is_ability, is_overdue, 
-      is_complaint, is_punished)
+      is_complaint, is_punished, address
+      )
     values (#{name,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{old,jdbcType=TINYINT}, 
       #{merry,jdbcType=TINYINT}, #{pro,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
       #{position,jdbcType=VARCHAR}, #{credit,jdbcType=INTEGER}, #{size,jdbcType=VARCHAR}, 
@@ -171,7 +173,8 @@
       #{isAccountBook,jdbcType=TINYINT}, #{annualIncome,jdbcType=VARCHAR}, #{overdueReport,jdbcType=VARCHAR}, 
       #{debtSituation,jdbcType=VARCHAR}, #{otherBorrowed,jdbcType=VARCHAR}, #{isFunds,jdbcType=VARCHAR}, 
       #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, 
-      #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR})
+      #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowManinfo" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -296,6 +299,9 @@
       <if test="isPunished != null" >
         is_punished,
       </if>
+      <if test="address != null" >
+        address,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="name != null" >
@@ -414,6 +420,9 @@
       </if>
       <if test="isPunished != null" >
         #{isPunished,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -546,6 +555,9 @@
       <if test="record.isPunished != null" >
         is_punished = #{record.isPunished,jdbcType=VARCHAR},
       </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -592,7 +604,8 @@
       is_ability = #{record.isAbility,jdbcType=VARCHAR},
       is_overdue = #{record.isOverdue,jdbcType=VARCHAR},
       is_complaint = #{record.isComplaint,jdbcType=VARCHAR},
-      is_punished = #{record.isPunished,jdbcType=VARCHAR}
+      is_punished = #{record.isPunished,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -717,6 +730,9 @@
       <if test="isPunished != null" >
         is_punished = #{isPunished,jdbcType=VARCHAR},
       </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -760,7 +776,8 @@
       is_ability = #{isAbility,jdbcType=VARCHAR},
       is_overdue = #{isOverdue,jdbcType=VARCHAR},
       is_complaint = #{isComplaint,jdbcType=VARCHAR},
-      is_punished = #{isPunished,jdbcType=VARCHAR}
+      is_punished = #{isPunished,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
