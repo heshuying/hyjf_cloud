@@ -1020,18 +1020,22 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             int availableCouponListCount = 0;
 
             /*优惠券模块开始 */ // TODO: 2018/6/28 优惠券后期处理
-            /*couponConfig = planService.getUserOptimalCoupon(couponId, planNid, loginUser.getUserId(), null, "0");
-            recordTotal = planService.countCouponUsers(0, loginUser.getUserId());
-            availableCouponListCount = planService.getUserCouponAvailableCount(planNid, loginUser.getUserId(), "0", "0");
-            *//** 获取用户优惠券总张数开始 pccvip *//*
+            MyCouponListRequest myCouponListRequest = new MyCouponListRequest();
+            myCouponListRequest.setMoney("0");
+            myCouponListRequest.setPlatform("0");
+            myCouponListRequest.setUserId(userId);
+            myCouponListRequest.setBorrowNid(planNid);
+           // BestCouponListVO bestCouponList = amTradeClient.selectHJHBestCoupon(myCouponListRequest);
+            availableCouponListCount = amTradeClient.countAvaliableCoupon(myCouponListRequest);
+            /** 获取用户优惠券总张数开始 pccvip */
             result.put("recordTotal", recordTotal);
-            *//** 获取用户优惠券总张数结束 pccvip *//*
-             *//** 可用优惠券张数开始 pccvip *//*
+            /** 获取用户优惠券总张数结束 pccvip */
+             /** 可用优惠券张数开始 pccvip */
             result.put("couponAvailableCount", availableCouponListCount);
-            *//** 可用优惠券张数结束 pccvip *//*
+            /** 可用优惠券张数结束 pccvip */
             BigDecimal couponInterest = BigDecimal.ZERO;
             result.put("interest", BigDecimal.ZERO);
-            if (couponConfig != null) {
+           /* if (couponConfig != null) {
                 result.put("isThereCoupon", 1);
 
                 couponInterest = planService.getCouponInterest(couponConfig.getUserCouponId(), planNid, "0");
@@ -1047,8 +1051,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }*/
 
             /*优惠券模块结束 */
-
-            result.put("couponConfig", couponConfig);
+            result.put("isThereCoupon", 0);
+            //result.put("couponConfig", couponConfig);
             /** 计算最优优惠券结束 */
             /** 汇添金优惠券使用结束 pcc */
 
