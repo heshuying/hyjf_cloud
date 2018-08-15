@@ -91,7 +91,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "第三方端用户同步回调", notes = "api端-用户开户")
+    @ApiOperation(value = "第三方端用户同步回调", notes = "用户开户")
     @PostMapping(value = "/return")
     public Map<String, String> returnPage(HttpServletRequest request) {
         String isSuccess = request.getParameter("isSuccess");
