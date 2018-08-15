@@ -3,12 +3,14 @@
  */
 package com.hyjf.am.trade.controller.front.trade;
 
+import com.hyjf.am.trade.dao.model.auto.PushMoney;
+import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.borrow.PlanLockQuitService;
+import com.hyjf.am.vo.trade.HjhLockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author wangjun
@@ -19,13 +21,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlanLockQuitController {
     @Autowired
     PlanLockQuitService planLockQuitService;
+
+    @Autowired
+    CommisionComputeService commisionComputeService;
+
     /**
      * 计划锁定更新操作
-     * @param accedeOrderId
+     * @param hjhLockVo
      */
-    @GetMapping("/updateLockRepayInfo/{accedeOrderId}")
-    public void updateLockRepayInfo(@PathVariable String accedeOrderId){
-        planLockQuitService.updateLockRepayInfo(accedeOrderId);
+    @GetMapping("/updateLockRepayInfo")
+    public void updateLockRepayInfo(@RequestBody HjhLockVo hjhLockVo){
+        planLockQuitService.updateLockRepayInfo(hjhLockVo);
+    }
+
+    /**
+     * 获取配置信息
+     * @param map
+     */
+    @GetMapping("/getCommisionConfig")
+    public Integer getCommisionConfig(@RequestBody Map map){
+
+        Integer projectType  = (Integer) map.get("projectType");
+        String userType  = (String) map.get("userType");
+        PushMoney commisionConfig = commisionComputeService.getCommisionConfig(projectType, userType);
+        Integer rewardSend = commisionConfig.getRewardSend();
+        return rewardSend;
     }
 
     /**

@@ -11,15 +11,15 @@ import com.hyjf.cs.common.service.BaseService;
 public interface MyProjectService extends BaseService {
 
 
-    void selectCurrentHoldObligatoryRightList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo);
+    void selectCurrentHoldObligatoryRightList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo);
 
-    void selectRepaymentList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo);
+    void selectRepaymentList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo);
 
-    void selectCreditRecordList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo);
+    void selectCreditRecordList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo);
 
-    void selectCurrentHoldPlanList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo);
+    void selectCurrentHoldPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo);
 
-    void selectRepayMentPlanList(String userId, int currentPage, int pageSize, QueryMyProjectVO vo);
+    void selectRepayMentPlanList(Integer userId, int currentPage, int pageSize, QueryMyProjectVO vo);
 
     AccountVO getAccount(Integer userId);
 }

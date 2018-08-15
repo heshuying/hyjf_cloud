@@ -674,7 +674,7 @@ WHERE
 		  <if test="col != null and col != '' and sort != null and sort != ''">
 		   ${col} ${sort},
 		  </if>
-		  b.addtime DESC, b.id DESC
+		  b.create_time DESC, b.id DESC
 		  <if test="limitStart >= 0">
 		   LIMIT #{limitStart} , #{limitEnd}
 		  </if>
@@ -682,6 +682,19 @@ WHERE
 		  <select id="sumAccount" resultType="java.math.BigDecimal" parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
 		    SELECT
 		      SUM(b.account)
+		    FROM
+		   ht_borrow b
+		   LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
+		   LEFT JOIN ht_hjh_label label ON b.label_id = label.id
+		   LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+		   LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(
+		   b.project_type AS CHAR )
+		   LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
+		  <include refid="Where_Clause" />
+		 </select>
+		 <select id="countBorrow" resultType="java.lang.Long" parameterType="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
+		    SELECT
+		      count(b.account)
 		    FROM
 		   ht_borrow b
 		   LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid

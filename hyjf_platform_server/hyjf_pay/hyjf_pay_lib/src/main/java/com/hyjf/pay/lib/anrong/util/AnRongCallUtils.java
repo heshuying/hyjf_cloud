@@ -87,4 +87,30 @@ public class AnRongCallUtils implements Serializable {
 		}
 		return ret;
 	}
+	/**
+	 * 调用接口
+	 *
+	 * @param bean
+	 * @return
+	 * @throws Exception
+	 */
+	public static String callApiBgSend( Map<String, String> params ) {
+
+		String ret = null;
+		try {
+			log.info("[调用接口开始, 消息类型:" + (params == null ? "" : params.toString()) + "]");
+			// bean转换成参数
+	
+			// 调用安融接口
+			//String result = HttpDeal.post(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams);
+			String result = restTemplate
+				.postForEntity(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, params, String.class).getBody();
+			ret = result;
+		} catch (Exception e) {
+			log.error(String.valueOf(e));
+		} finally {
+			log.debug("[调用接口结束, 消息类型:" + (params == null ? "" : params.toString()) + "]");
+		}
+		return ret;
+	}
 }

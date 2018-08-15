@@ -13,21 +13,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+
 /**
  * @Auther: walter.limeng
  * @Date: 2018/7/27 09:18
  * @Description: ShareNewsController
  */
 @RestController
-@RequestMapping("/am-config/sharenews")
+@RequestMapping("/am-config/article")
 public class ShareNewsController extends BaseConfigController {
     private static final Logger logger = LoggerFactory.getLogger(ShareNewsController.class);
 
+    @Resource
     private ShareNewsService shareNewsService;
 
     /**
      * @Author walter.limeng
-     * @user walter.limeng
      * @Description  获取分享信息
      * @Date 9:26 2018/7/27
      * @Param
@@ -37,7 +39,7 @@ public class ShareNewsController extends BaseConfigController {
     public ShareNewsResponse queryShareNews() {
         ShareNewsResponse response = new ShareNewsResponse();
         ShareNewsBeanVO shareNewsBeanVO = shareNewsService.queryShareNews();
-        response.setData(shareNewsBeanVO);
+        response.setResult(shareNewsBeanVO);
         return response;
     }
 }

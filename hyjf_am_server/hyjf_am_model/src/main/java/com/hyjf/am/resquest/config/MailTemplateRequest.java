@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.resquest.config;
 
-import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 
 import java.io.Serializable;
 
@@ -11,8 +11,20 @@ import java.io.Serializable;
  * @author fuqiang
  * @version MailTemplateRequest, v0.1 2018/6/25 14:52
  */
-public class MailTemplateRequest extends Request implements Serializable {
+public class MailTemplateRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = -2804856326536538472L;
+
+    /**
+     * 序号拼接字段
+     */
+    private String ids;
+
+    /**
+     * 模块标识
+     */
+    private String templateCode;
+
+    private Integer id;
 
     private String mailValue;
 
@@ -72,5 +84,29 @@ public class MailTemplateRequest extends Request implements Serializable {
 
     public void setMailContent(String mailContent) {
         this.mailContent = mailContent;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

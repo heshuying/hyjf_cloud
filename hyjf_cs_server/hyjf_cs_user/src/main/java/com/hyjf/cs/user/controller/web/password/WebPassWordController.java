@@ -20,6 +20,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.PasswordRequest;
@@ -45,7 +46,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-web/user/password")
-public class WebPassWordController {
+public class WebPassWordController extends BaseUserController{
     private static final Logger logger = LoggerFactory.getLogger(WebPassWordController.class);
 
     @Autowired
@@ -87,9 +88,9 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/transaction", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> setTransaction(@RequestHeader(value = "token") String token) {
+    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId) {
         WebResult<Object> result = new WebResult<Object>();
-        UserVO user = this.passWordService.getUsers(token);
+        UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
         Map<String,Object> map = passWordService.setPassword(user);
         result.setData(map);
@@ -134,9 +135,9 @@ public class WebPassWordController {
      */
     @ApiOperation(value = "重置交易密码", notes = "重置交易密码")
     @PostMapping(value = "/resetTeaderPassword", produces = "application/json; charset=utf-8")
-    public WebResult<Object>  resetPassword(@RequestHeader(value = "token") String token) {
+    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId) {
         WebResult<Object> result = new WebResult<Object>();
-        UserVO user = this.passWordService.getUsers(token);
+        UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
         Map<String,Object> map = passWordService.resetPassword(user);
         result.setData(map);
@@ -160,10 +161,10 @@ public class WebPassWordController {
     @ApiOperation(value = "修改交易密码发送短信验证码", notes = "修改交易密码发送短信验证码")
     @ApiImplicitParam(name = "param",value = "{mobile: string}", dataType = "Map")
     @PostMapping(value = "/setPasswordSendCode", produces = "application/json; charset=utf-8")
-    public WebResult<Object> setPasswordSendCode(@RequestHeader(value = "token") String token,@RequestBody Map<String,String> param) {
+    public WebResult<Object> setPasswordSendCode(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param) {
         logger.info("web端-交易密码发送短信验证码, param :{}", param);
         WebResult<Object> result = new WebResult<Object>();
-        UserVO user = passWordService.getUsers(token);
+        UserVO user = passWordService.getUsersById(userId);
         CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
         CheckUtil.check(null!=param && StringUtils.isNotBlank(param.get("mobile")), MsgEnum.ERR_PARAM_TYPE);
         String srvTxCode = BankCallConstant.TXCODE_MOBILE_MODIFY_PLUS;
@@ -366,12 +367,13 @@ public class WebPassWordController {
      * @Author
      */
     @ApiOperation(value = "we端-调用银行失败原因", notes = "web端-调用银行失败原因")
-    @RequestMapping("/searchFiledMess")
+    @PostMapping("/searchFiledMess")
+    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public WebResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
-        logger.info("调用银行失败原因start,logOrdId:{}", logOrdId);
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+        logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
-        String retMsg = passWordService.getFiledMess(logOrdId);
+        String retMsg = passWordService.getFiledMess(param.get("logOrdId"));
         Map<String,String> map = new HashedMap();
         map.put("error",retMsg);
         result.setData(map);

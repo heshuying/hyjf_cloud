@@ -1,15 +1,17 @@
 package com.hyjf.cs.user.controller.web.bindcard;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.bank.LogAcqResBean;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.BankCardUtil;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -27,7 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * web端用户解绑卡接口
@@ -41,21 +44,70 @@ public class WebBindCardController extends BaseUserController {
 	private static final Logger logger = LoggerFactory.getLogger(WebBindCardController.class);
 
 	@Autowired
+	SystemConfig systemConfig;
+	@Autowired
 	BindCardService bindCardService;
-	
+
+	/**
+	 *  我的银行卡页面数据
+	 */
+	@ApiOperation(value = "我的银行卡页面数据", notes = "我的银行卡页面数据")
+	@PostMapping(value = "/mycard", produces = "application/json; charset=utf-8")
+	public WebResult<Object> myCardInit(@RequestHeader(value = "userId") int userId) {
+		WebResult<Object> result = new WebResult<Object>();
+		Map<String,Object> resultMap = new HashMap<>();
+		WebViewUserVO user = bindCardService.getUserFromCache(userId);
+
+		if(user == null){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc("用户未登录");
+			return result;
+		}
+		if(!user.isOpenAccount()){
+			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc("用户未开户");
+			return result;
+		}
+
+		BankCardVO bankCardVO = bindCardService.queryUserCardValid(String.valueOf(user.getUserId()),null);
+		if(bankCardVO == null){
+//			result.setStatus(WebResult.ERROR);
+			result.setStatusDesc("用户未绑卡");
+			//未绑卡
+			resultMap.put("bindType", 0);
+			result.setData(resultMap);
+			return result;
+		}
+
+		BankConfigVO bankConfigVO = bindCardService.getBankConfigById(bankCardVO.getBankId());
+		//已绑卡
+		resultMap.put("bindType", 1);
+		resultMap.put("bankicon", systemConfig.getWebHost() +bankConfigVO.getLogo());
+		resultMap.put("bankname", bankConfigVO.getName());
+		resultMap.put("bankcard", BankCardUtil.getCardNo(bankCardVO.getCardNo()));
+		resultMap.put("cardId", bankCardVO.getId());
+
+		result.setData(resultMap);
+		return result;
+	}
+
+	/**
+	 *  用户绑卡发送短信验证码
+	 * @param bindCardVO
+	 * @return
+	 */
 	@ApiOperation(value = "用户绑卡发送短信验证码", notes = "用户绑卡发送短信验证码")
 	@PostMapping(value = "/bindCardSendCode", produces = "application/json; charset=utf-8")
-	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO) {
+	public WebResult<Object> bindCardSendCode(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO) {
 		logger.info("绑卡发送验证码开始, mobile :{}，cardNo:{}", bindCardVO.getMobile(), bindCardVO.getCardNo());
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUserVO user = bindCardService.getUsersByToken(token);
-        
-        bindCardService.checkParamSendcode(user.getUserId(), bindCardVO.getMobile(), bindCardVO.getCardNo());
+
+        bindCardService.checkParamSendcode(userId, bindCardVO.getMobile(), bindCardVO.getCardNo());
         // 请求银行绑卡接口
         BankCallBean bankBean = null;
 		try {
-			bankBean = bindCardService.callSendCode(user.getUserId(),bindCardVO.getMobile(), BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,bindCardVO.getCardNo());
+			bankBean = bindCardService.callSendCode(userId,bindCardVO.getMobile(), BankCallMethodConstant.TXCODE_CARD_BIND_PLUS, ClientConstants.CHANNEL_PC,bindCardVO.getCardNo());
 		} catch (Exception e) {
 			result.setStatus(ApiResult.ERROR);
 			result.setStatusDesc(MsgEnum.ERR_BANK_CALL.getMsg());
@@ -77,15 +129,22 @@ public class WebBindCardController extends BaseUserController {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * 用户绑卡
+	 * @param bindCardVO
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@ApiOperation(value = "用户绑卡", notes = "用户绑卡")
 	@PostMapping(value = "/bindCard", produces = "application/json; charset=utf-8")
-	public WebResult<Object> bindCard(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
+	public WebResult<Object> bindCard(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BindCardVO bindCardVO, HttpServletRequest request,
 			HttpServletResponse response) {
 		logger.info("绑卡开始, bindCardVO :{}", JSONObject.toJSONString(bindCardVO));
 		WebResult<Object> result = new WebResult<Object>();
 		
-		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USER_TOKEN_REDIS+token, WebViewUserVO.class);
+		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
         String userIp = GetCilentIP.getIpAddr(request);
         
         bindCardService.checkParamBindCard(bindCardVO, user.getUserId());

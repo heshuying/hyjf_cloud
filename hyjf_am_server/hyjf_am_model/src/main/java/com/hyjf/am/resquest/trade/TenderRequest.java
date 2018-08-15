@@ -6,6 +6,7 @@ package com.hyjf.am.resquest.trade;
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -45,10 +46,10 @@ public class TenderRequest extends BaseVO {
      */
     @ApiModelProperty(value = "投资平台 app需要上送")
     private String platform;
-    // 登录的token
-    private String token;
-    // 登录的用户对象
-    private WebViewUserVO user;
+    // 登录的userId
+    private Integer userId;
+    // 当前登录user对象
+    private UserVO user;
     /**
      * 投资金额
      */
@@ -130,19 +131,19 @@ public class TenderRequest extends BaseVO {
         this.platform = platform;
     }
 
-    public String getToken() {
-        return token;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public WebViewUserVO getUser() {
+    public UserVO getUser() {
         return user;
     }
 
-    public void setUser(WebViewUserVO user) {
+    public void setUser(UserVO user) {
         this.user = user;
     }
 

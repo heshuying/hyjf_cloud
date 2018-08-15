@@ -46,8 +46,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
     public ObligatoryRightAjaxBean createCurrentHoldObligatoryRightListPage(AssetManageBeanRequest form) {
         ObligatoryRightAjaxBean result = new ObligatoryRightAjaxBean();
         AssetManageBeanRequest request=new AssetManageBeanRequest();
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
-        request.setUserId(userId);
+        request.setUserId(form.getUserId());
         request.setStartDate(form.getStartDate());
         request.setEndDate(form.getEndDate());
         request.setOrderByFlag(form.getOrderByFlag());
@@ -102,8 +101,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
 
         ObligatoryRightAjaxBean result = new ObligatoryRightAjaxBean();
         AssetManageBeanRequest request=new AssetManageBeanRequest();
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
-        request.setUserId(userId);
+        request.setUserId(form.getUserId());
         request.setStartDate(form.getStartDate());
         request.setEndDate(form.getEndDate());
         request.setOrderByFlag(form.getOrderByFlag());
@@ -135,8 +133,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
     public ObligatoryRightAjaxBean getCreditRecordList(AssetManageBeanRequest form) {
         ObligatoryRightAjaxBean result = new ObligatoryRightAjaxBean();
         AssetManageBeanRequest request=new AssetManageBeanRequest();
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
-        request.setUserId(userId);
+        request.setUserId(form.getUserId());
         // 查询标签页显示数量
         searchListCount(result, request);
         // 查询相应的汇消费列表的总数
@@ -161,8 +158,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
     public PlanAjaxBean getCurrentHoldPlan(AssetManageBeanRequest form) {
         PlanAjaxBean result=new PlanAjaxBean();
         AssetManageBeanRequest request=new AssetManageBeanRequest();
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
-        request.setUserId(userId);
+        request.setUserId(form.getUserId());
         request.setStartDate(form.getStartDate());
         request.setEndDate(form.getEndDate());
         request.setOrderByFlag(form.getOrderByFlag());
@@ -192,8 +188,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
 
         PlanAjaxBean result=new PlanAjaxBean();
         AssetManageBeanRequest request=new AssetManageBeanRequest();
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
-        request.setUserId(userId);
+        request.setUserId(form.getUserId());
         request.setStartDate(form.getStartDate());
         request.setEndDate(form.getEndDate());
         request.setOrderByFlag(form.getOrderByFlag());

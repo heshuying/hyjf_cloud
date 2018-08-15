@@ -10,10 +10,10 @@
 				AND hydat.`value`= #{trade,jdbcType=VARCHAR}
 			</if>
 			<if test="startDate != null and startDate != ''">
-				AND hydal.create_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+				AND unix_timestamp(hydal.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND hydal.create_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+				AND unix_timestamp(hydal.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
 			</if>
 		</where>
 	</sql>
@@ -88,10 +88,10 @@
 			hydar.user_id = #{userId,jdbcType=INTEGER}
 			AND  hydar.`status` = 2
 			<if test="startDate != null and startDate != ''">
-				AND hydar.create_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+				AND unix_timestamp(hydar.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND hydar.create_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+				AND unix_timestamp(hydar.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
 			</if>
 		</where>
 	</sql>
@@ -135,10 +135,10 @@
 			hydaw.user_id = #{userId,jdbcType=INTEGER}
 			AND hydaw.`status` = 2
 			<if test="startDate != null and startDate != ''">
-				AND hydaw.create_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+				AND unix_timestamp(hydaw.create_time) <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
 			</if>
 			<if test="endDate != null and endDate != ''">
-				AND hydaw.create_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+				AND unix_timestamp(hydaw.create_time) <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
 			</if>
 		</where>
 	</sql>

@@ -109,7 +109,7 @@ public class WeChatBindCardController extends BaseUserController {
      * @param bean
      * @return
      */
-    @RequestMapping("/return")
+    @PostMapping("/return")
     public ModelAndView bindCardReturn(HttpServletRequest request, HttpServletResponse response,
                                        @ModelAttribute BankCallBean bean) {
 

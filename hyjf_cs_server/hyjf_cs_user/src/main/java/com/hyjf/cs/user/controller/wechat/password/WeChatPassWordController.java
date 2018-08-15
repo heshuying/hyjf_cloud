@@ -21,9 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,9 +45,8 @@ public class WeChatPassWordController {
      */
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/wx/user/resetpwd/modify.do")
-    public JSONObject updateLoginPassWD(HttpServletRequest request){
+    public JSONObject updateLoginPassWD(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
         JSONObject ret = new JSONObject();
-        Integer userId = (Integer) request.getAttribute("userId");
         // 新密码
         String newPassword = request.getParameter("newPassword");
         // 旧密码
@@ -63,6 +60,8 @@ public class WeChatPassWordController {
             return ret;
         }
         passWordService.updatePassWd(user,newPassword);
+        ret.put("status", "000");
+        ret.put("statusDesc", "修改密码成功");
         return ret;
     }
 
@@ -73,7 +72,7 @@ public class WeChatPassWordController {
      * @return
      */
     @ApiOperation(value = " 重置登录密码",notes = " 重置登录密码")
-    @PostMapping(value = "/wx/user/resetpwd/resetLoginPassword")
+    @GetMapping(value = "/wx/user/resetpwd/resetLoginPassword")
     public JSONObject displayPhone(HttpServletRequest request, SendSmsVO sendSmsVo) {
         JSONObject ret = new JSONObject();
         String sign = sendSmsVo.getSign();
@@ -155,6 +154,7 @@ public class WeChatPassWordController {
      * @param sendSmsVO
      * @return
      */
+    @ApiOperation(value = "微信端获取短信验证码",notes = "微信端获取短信验证码")
     @PostMapping(value = "/wx/user/resetpwd/sendVerificationCode.do")
     public JSONObject sendVerificationCode(SendSmsVO sendSmsVO) {
         return passWordService.sendCode(sendSmsVO);
@@ -167,7 +167,8 @@ public class WeChatPassWordController {
      * @param sendSmsVo
      * @return
      */
-    @RequestMapping(value = "/wx/user/resetpwd/validateVerificationCodeAction.do")
+    @ApiOperation(value = "微信端验证短信验证码",notes = "微信端验证短信验证码")
+    @PostMapping(value = "/wx/user/resetpwd/validateVerificationCodeAction.do")
     public JSONObject validateVerificationCoden(SendSmsVO sendSmsVo) {
         return passWordService.validateVerificationCoden(sendSmsVo,false);
     }

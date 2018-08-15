@@ -262,9 +262,21 @@
 		SELECT
 		<include refid="Base_Column_List" />
 		FROM
-		huiyingdai_account_trade hat
+		ht_account_trade hat
 		WHERE
 		lower(hat.value) = lower(#{trade})
 		AND hat.status = 1
+	</select>
+	<select id="selectNextAccountList" resultType="com.hyjf.am.trade.dao.model.auto.AccountList" parameterType="java.util.Map">
+		SELECT
+		*
+		FROM
+		ht_account_list hal
+		WHERE
+		hal.user_id = #{userId}
+		AND hal.id > #{id}
+		ORDER BY
+		hal.id ASC
+		LIMIT 1;
 	</select>
 </mapper>

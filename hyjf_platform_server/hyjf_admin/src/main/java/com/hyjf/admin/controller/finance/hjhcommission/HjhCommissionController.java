@@ -32,7 +32,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BankAccountManageService;
 import com.hyjf.admin.service.BankMerchantAccountService;
 import com.hyjf.admin.service.HjhCommissionService;
-import com.hyjf.admin.service.TransferExceptionLogService;
+import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
@@ -91,7 +91,7 @@ public class HjhCommissionController extends BaseController{
     private BankMerchantAccountService bankMerchantAccountService;
     
     @Autowired
-    private TransferExceptionLogService transferLogService;
+    private AdminTransferExceptionLogService transferLogService;
     
 	@Autowired
 	private SystemConfig systemConfig;
@@ -501,7 +501,7 @@ public class HjhCommissionController extends BaseController{
             // cuttype 提成发放方式（3线上2线下）
             Integer cuttype = this.hjhCommissionService.queryCrmCuttype(userId);
             if (usersInfo.getAttribute() != null && usersInfo.getAttribute() > 1) {
-                if (usersInfo.getAttribute() != cuttype) {
+                if (!usersInfo.getAttribute().equals(cuttype)) {
                     ret.put("status", "error");
                     ret.put("result", "该用户属性异常！");
                     logger.error(THIS_CLASS, "/confirmpushmoney", new Exception("该用户平台属性与CRM 不符！[userId=" + userId + "]"));              

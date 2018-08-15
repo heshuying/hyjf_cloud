@@ -1,13 +1,17 @@
 package com.hyjf.admin.client.impl;
 
-import java.util.List;
-
+import com.hyjf.admin.client.AmMarketClient;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
 import com.hyjf.am.response.admin.ContentAdsResponse;
+import com.hyjf.am.response.admin.CouponTenderResponse;
+import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hyjf.admin.client.AmMarketClient;
-import com.hyjf.am.response.admin.CouponTenderResponse;
-import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.vo.market.ActivityListVO;
+import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -173,12 +174,34 @@ public class AmMarketClientImpl implements AmMarketClient {
 	}
 
 	@Override
+	public ContentAdsResponse getAdsTypeList() {
+		return restTemplate.postForObject("http://AM-MARKET/am-market/content/contentads/getadstypelist",
+				null, ContentAdsResponse.class);
+	}
+
+	@Override
 	public CouponTenderResponse getActivityById(Integer activityId) {
 
 		String url = "http://AM-MARKET/am-market/activity/hztgetactivitytitle/" + activityId;
 		CouponTenderResponse response = restTemplate.getForEntity(url, CouponTenderResponse.class).getBody();
 		if (response != null) {
 			return response;
+		}
+		return null;
+	}
+
+	/**
+	 * 获取有效活动列表
+	 *
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request) {
+		String url = "http://AM-MARKET/am-market/activity/selectRecordListValid";
+		ActivityListCustomizeResponse response = restTemplate.postForEntity(url, request, ActivityListCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
 		}
 		return null;
 	}

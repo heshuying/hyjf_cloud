@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
@@ -10,6 +11,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
@@ -36,9 +38,12 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.cs.trade.bean.repay.ProjectBean;
+import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -297,6 +302,8 @@ public interface AmTradeClient {
     Integer countPreapysList(Map<String, Object> requestBean);
 
     Boolean updateBorrowApicron(ApiCronUpdateRequest requestBean);
+
+    Boolean updateBorrowCreditStautus(String borrowNid);
 
     BorrowApicronVO selectBorrowApicron(String bankSeqNO);
 
@@ -1171,7 +1178,7 @@ public interface AmTradeClient {
      * @Param transferExceptionLog
      * @return
      */
-    Integer insertTransferExLog(TransferExceptionLogWithBLOBsVO transferExceptionLog);
+    Integer insertTransferExLog(TransferExceptionLogVO transferExceptionLog);
 
     /**
      * 判断用户所处的渠道如果不允许债转，可债转金额为0  start
@@ -1606,4 +1613,26 @@ public interface AmTradeClient {
      * @date 2018/8/10 15:21
      */
     BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
+
+    JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean);
+
+    RepayBean getRepayBean(Map<String, String> paraMap);
+
+    ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
+
+    /**
+     * 根据订单号获取汇计划加入明细
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId);
+
+
+    /**
+     * 获取提成配置信息
+     * @param map
+     * @return
+     */
+    Integer getCommisionConfig(HashMap map);
 }

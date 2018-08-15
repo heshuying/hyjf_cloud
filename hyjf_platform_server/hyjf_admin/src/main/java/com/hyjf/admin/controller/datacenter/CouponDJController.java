@@ -36,7 +36,7 @@ import java.util.List;
  * @author fuqiang
  * @version CouponDJController, v0.1 2018/7/18 18:18
  */
-@Api(value = "数据中心-加息券", tags = "数据中心-加息券")
+@Api(value = "数据中心-代金券", tags = "数据中心-代金券")
 @RestController
 @RequestMapping("/hyjf-admin/datacenter/coupon_dj")
 public class CouponDJController extends BaseController {

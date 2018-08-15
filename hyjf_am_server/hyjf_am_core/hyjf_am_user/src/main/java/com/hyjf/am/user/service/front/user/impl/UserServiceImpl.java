@@ -2,6 +2,7 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
@@ -849,10 +850,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		String[] answer = userAnswer.split(",");
 		List<String> answerList = new ArrayList<String>();
 		List<String> questionList = new ArrayList<String>();
-		for (String string : answer) {
-			if (string.split("_").length == 2) {
-				questionList.add(string.split("_")[0]);
-				answerList.add(string.split("_")[1]);
+		if (!Strings.isNullOrEmpty(userAnswer)) {
+			for (String string : answer) {
+				if (string.split("_").length == 2) {
+					questionList.add(string.split("_")[0]);
+					answerList.add(string.split("_")[1]);
+				}
 			}
 		}
 		AnswerRequest answerRequest = new AnswerRequest();
@@ -1464,5 +1467,36 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}else{
 			return null;
 		}
+	}
+
+	/**
+	 * 修改短信与邮件是否开启状态
+	 * @param userId
+	 * @param smsOpenStatus
+	 * @param emailOpenStatus
+	 * @return
+	 */
+	@Override
+	public Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus) {
+		User user = usersMapper.selectByPrimaryKey(userId);
+		if (user != null) {
+			if("0".equals(emailOpenStatus)){
+				user.setIsSmtp(1);
+			}else{
+				user.setIsSmtp(0);
+			}
+			if("0".equals(smsOpenStatus)){
+				user.setWithdrawSms(1);
+				user.setInvestSms(1);
+				user.setRechargeSms(1);
+				user.setRecieveSms(1);
+			}else{
+				user.setWithdrawSms(0);
+				user.setInvestSms(0);
+				user.setRechargeSms(0);
+				user.setRecieveSms(0);
+			}
+		}
+		return usersMapper.updateByPrimaryKeySelective(user);
 	}
 }

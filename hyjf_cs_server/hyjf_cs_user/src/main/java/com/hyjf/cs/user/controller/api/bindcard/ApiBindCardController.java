@@ -148,7 +148,7 @@ public class ApiBindCardController extends BaseUserController {
      * @param response
      * @return
      */
-    @RequestMapping("/bindCardReturn")
+    @PostMapping("/bindCardReturn")
     public ModelAndView openAccountReturn(HttpServletRequest request, HttpServletResponse response,
                                           @ModelAttribute BankCallBean bean) {
         BindCardPageResultBean repwdResult = new BindCardPageResultBean();
@@ -193,8 +193,7 @@ public class ApiBindCardController extends BaseUserController {
      * @param response
      * @return
      */
-    @ResponseBody
-    @RequestMapping("/bindCardBgreturn")
+    @PostMapping("/bindCardBgreturn")
     public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
                                    @ModelAttribute BankCallBean bean) {
         // 上送的异步地址里面有

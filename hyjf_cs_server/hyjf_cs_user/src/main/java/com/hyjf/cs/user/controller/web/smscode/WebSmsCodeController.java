@@ -39,7 +39,7 @@ public class WebSmsCodeController extends BaseUserController {
 	/**
 	 * 发送短信验证码 范围：注册，修改手机号(验证原手机，修改新手机)
 	 * @param param 修改手机号码验证原手机号：validCodeType=TPL_YZYSJH  绑定新手机号：validCodeType=TPL_BDYSJH
-	 * @param token
+	 * @param
 	 * @param request
 	 * @return
 	 * @throws MQException
@@ -48,7 +48,7 @@ public class WebSmsCodeController extends BaseUserController {
 	@PostMapping(value = "/send", produces = "application/json; charset=utf-8")
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public WebResult sendSmsCode(@RequestBody Map<String,String> param,
-								 @RequestHeader(value = "token", required = false)String token,
+								 @RequestHeader(value = "userId", required = false) Integer userId,
 								 HttpServletRequest request)
 			throws MQException {
 		logger.info("web端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
@@ -56,7 +56,7 @@ public class WebSmsCodeController extends BaseUserController {
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		WebResult resultBean = new WebResult();
-		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, token, GetCilentIP.getIpAddr(request));
+		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, userId, GetCilentIP.getIpAddr(request));
 		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, GetCilentIP.getIpAddr(request));
 		return resultBean;
 	}

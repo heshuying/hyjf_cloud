@@ -1,18 +1,5 @@
 package com.hyjf.cs.user.controller.web.bankopen;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -30,9 +17,19 @@ import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * 
@@ -52,11 +49,11 @@ public class WebBankOpenController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
 
-    @ApiOperation(value = "web端获取开户信息", notes = "web端-获取开户信息")
+    @ApiOperation(value = "获取开户信息", notes = "获取开户信息")
 	@GetMapping(value = "/init")
     @ResponseBody
-	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
-        UserVO user = this.bankOpenService.getUsers(token);
+	public WebResult<Object> init(@RequestHeader(value = "userId") int userId) {
+        UserVO user = this.bankOpenService.getUsersById(userId);
         WebResult<Object> result = new WebResult<Object>();
         if(user==null){
             throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
@@ -77,17 +74,13 @@ public class WebBankOpenController extends BaseUserController {
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "web端用户开户", notes = "web端-用户开户")
+    @ApiOperation(value = "用户开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
     @ResponseBody
-	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+	public WebResult<Object> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("web  openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WebResult<Object> result = new WebResult<Object>();
-        // 验证请求参数
-        if (token == null) {
-            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
-        UserVO user = this.bankOpenService.getUsers(token);
+        UserVO user = this.bankOpenService.getUsersById(userId);
         // 检查请求参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
 
@@ -123,8 +116,8 @@ public class WebBankOpenController extends BaseUserController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "web端页面开户异步处理", notes = "web端页面开户异步处理")
-    @RequestMapping("/bgReturn")
+    @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
+    @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
@@ -137,8 +130,8 @@ public class WebBankOpenController extends BaseUserController {
      * @Description 查询开户失败原因
      * @Author sunss
      */
-    @ApiOperation(value = "we端开户查询开户失败原因", notes = "web端-查询开户失败原因")
-    @RequestMapping("/seachFiledMess")
+    @ApiOperation(value = "查询开户失败原因", notes = "查询开户失败原因")
+    @PostMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);

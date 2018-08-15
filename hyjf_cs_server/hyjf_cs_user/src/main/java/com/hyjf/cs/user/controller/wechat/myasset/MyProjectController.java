@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * 我的资产接口，散标、计划......
  *  jijun on 20180727
  */
-@Api(value = "wechat端我的资产",tags = "wechat端我的资产")
+@Api(value = "weChat端-我的资产",tags = "weChat端-我的资产")
 @Controller
 @RequestMapping("/hyjf-wechat/myproject")
 public class MyProjectController extends BaseUserController {
@@ -62,15 +62,15 @@ public class MyProjectController extends BaseUserController {
 
         switch (type) {
             case CustomConstants.CURRENTHOLD_TYPE:
-                myProjectService.selectCurrentHoldObligatoryRightList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectCurrentHoldObligatoryRightList(userId, currentPage, pageSize, vo);
                 break;
 
             case CustomConstants.REPAYMENT_TYPE:
-                myProjectService.selectRepaymentList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectRepaymentList(userId, currentPage, pageSize, vo);
                 break;
 
             case CustomConstants.CREDITRECORD_TYPE:
-                myProjectService.selectCreditRecordList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectCreditRecordList(userId, currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);
@@ -111,10 +111,10 @@ public class MyProjectController extends BaseUserController {
 
         switch (type) {
             case CustomConstants.HOLD_PLAN_TYPE:
-                myProjectService.selectCurrentHoldPlanList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectCurrentHoldPlanList(userId, currentPage, pageSize, vo);
                 break;
             case CustomConstants.REPAYMENT_PLAN_TYPE:
-                myProjectService.selectRepayMentPlanList(String.valueOf(userId), currentPage, pageSize, vo);
+                myProjectService.selectRepayMentPlanList(userId, currentPage, pageSize, vo);
                 break;
             default:
                 throw new IllegalArgumentException("not support type=" + type);

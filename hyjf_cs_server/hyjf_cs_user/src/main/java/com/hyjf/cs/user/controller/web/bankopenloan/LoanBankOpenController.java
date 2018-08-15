@@ -49,11 +49,11 @@ public class LoanBankOpenController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
 
-    @ApiOperation(value = "web端获取开户信息", notes = "web端-获取开户信息")
+    @ApiOperation(value = "获取开户信息", notes = "获取开户信息")
 	@GetMapping(value = "/init")
     @ResponseBody
-	public WebResult<Object> init(@RequestHeader(value = "token", required = true) String token) {
-        UserVO user = this.bankOpenService.getUsers(token);
+	public WebResult<Object> init(@RequestHeader(value = "userId") int userId) {
+        UserVO user = this.bankOpenService.getUsersById(userId);
         WebResult<Object> result = new WebResult<Object>();
         if(user==null){
             throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
@@ -74,17 +74,14 @@ public class LoanBankOpenController extends BaseUserController {
 	 * @Version v0.1
 	 * @Date 2018/6/12 10:17
 	 */
-    @ApiOperation(value = "web端-借款人开户", notes = "用户开户")
+    @ApiOperation(value = "借款人开户", notes = "用户开户")
 	@PostMapping(value = "/openBankAccount")
     @ResponseBody
-	public WebResult<Object> openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+	public WebResult<Object> openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("web  借款人开户 start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         WebResult<Object> result = new WebResult<Object>();
-        // 验证请求参数
-        if (token == null) {
-            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
-        UserVO user = this.bankOpenService.getUsers(token);
+
+        UserVO user = this.bankOpenService.getUsersById(userId);
         // 检查请求参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
 
@@ -120,8 +117,8 @@ public class LoanBankOpenController extends BaseUserController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "web端-页面开户异步处理", notes = "web端-页面开户异步处理")
-    @RequestMapping("/bgReturn")
+    @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
+    @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(BankCallBean bean, @RequestParam("phone") String mobile) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
@@ -134,8 +131,8 @@ public class LoanBankOpenController extends BaseUserController {
      * @Description 查询开户失败原因
      * @Author sunss
      */
-    @ApiOperation(value = "web端借款人开户查询开户失败原因", notes = "查询开户失败原因")
-    @RequestMapping("/seachFiledMess")
+    @ApiOperation(value = "借款人开户查询开户失败原因", notes = "查询开户失败原因")
+    @PostMapping("/seachFiledMess")
     @ResponseBody
     public WebResult<Object> seachFiledMess(@RequestParam("logOrdId") String logOrdId) {
         logger.info("查询开户失败原因start,logOrdId:{}", logOrdId);

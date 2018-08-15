@@ -3,17 +3,17 @@
  */
 package com.hyjf.cs.message.bean.mc;
 
-import java.io.Serializable;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
 
 /**
  * 消息推送-模板消息统计报表
  * @author fuqiang
  * @version MessagePushTemplateStatics, v0.1 2018/6/22 9:25
  */
-@Document(collection = "ht_message_push_statics")
+@Document(collection = "ht_message_push_template_statics")
 public class MessagePushTemplateStatics implements Serializable {
     @Id
     private Integer id;

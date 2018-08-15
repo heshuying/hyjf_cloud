@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.service.home;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.cs.trade.bean.HjhPlanBorrowResultBean;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
+import com.hyjf.cs.trade.bean.WechatPlanBorrowResultBean;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +18,7 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 11:33
      */
-    public JSONObject getProjectDetail(String borrowId,String type,String token);
+    public JSONObject getProjectDetail(String borrowId,String type,Integer userId);
 
 
     /**
@@ -33,14 +33,14 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/2 15:39
      */
-    public JSONObject getPlanDetail(String planId, String token);
+    public JSONObject getPlanDetail(String planId, Integer userId);
 
     /**
      * 获取计划标的组成
      * @author zhangyk
      * @date 2018/7/30 11:09
      */
-    public HjhPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize);
+    public WechatPlanBorrowResultBean getPlanBorrowList(String planId, int currPage, int pageSize);
 
     /**
      * 获取计划标的加入记录
@@ -62,5 +62,5 @@ public interface WechatProjectListService {
      * @author zhangyk
      * @date 2018/7/24 10:46
      */
-    public WechatHomePageResult  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,String token);
+    public WechatHomePageResult  getHomeProejctList(int currPage,int pageSize,String showPlanFlag,Integer userId);
 }

@@ -3,13 +3,12 @@ package com.hyjf.cs.trade.service.consumer.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.trade.TransferExceptionLogWithBLOBsVO;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
+import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.BankMerchantAccountListVO;
@@ -919,7 +918,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             return;
         }
         int nowTime = GetDate.getNowTime10();
-        TransferExceptionLogWithBLOBsVO transferExceptionLog = new TransferExceptionLogWithBLOBsVO();
+        TransferExceptionLogVO transferExceptionLog = new TransferExceptionLogVO();
         transferExceptionLog.setUuid(CreateUUID.createUUID());
         // 订单编号
         transferExceptionLog.setSeqNo(fromBean.getSeqNo());
@@ -1156,8 +1155,12 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         return borrowTenderClient.selectNidForCouponOnly(new CouponRepayRequest());
     }
 
+    /**
+     * 体验金按收益期限还款
+     * @param recoverNidList
+     */
     @Override
     public void couponOnlyRepay(List<String> recoverNidList) {
-        borrowTenderClient.couponOnlyRepay(recoverNidList);
+            borrowTenderClient.couponOnlyRepay(recoverNidList);
     }
 }

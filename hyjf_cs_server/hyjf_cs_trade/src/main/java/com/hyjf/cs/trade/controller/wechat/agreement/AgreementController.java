@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
  * @author libin
  * @version AgreementController.java, v0.1 2018年7月27日 上午10:26:08
  */
-@Api(tags = "微信端协议接口")
+@Api(tags = "Wechat端协议接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/agreement")
 public class AgreementController extends BaseTradeController{
@@ -48,7 +48,7 @@ public class AgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "微信端协议接口", notes = "跳转协议")
     @ResponseBody
-    @PostMapping("/goDetail")
+    @GetMapping(value = "/goDetail/{pageType}.do", produces = "application/json; charset=utf-8")
     public ModelAndView goDetail(String pageType) {
         ModelAndView modeAndView = null;
         if ("wx_hjh_contract".equals(pageType)) {
@@ -72,7 +72,7 @@ public class AgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "微信端协议接口", notes = "通过模板名字或者协议模板HTML")
     @ResponseBody
-    @PostMapping("/goAgreementImg")
+    @GetMapping(value = "/goAgreementImg.do", produces = "application/json; charset=utf-8")
     public JSONObject getUrl(@RequestParam String aliasName) {
         JSONObject jsonObject = new JSONObject();
         if (StringUtils.isEmpty(aliasName)) {

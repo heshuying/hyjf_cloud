@@ -75,4 +75,11 @@ public interface UserInfoService extends BaseService{
      * @return
      */
     UserInfo selectUserInfoByUserId(Integer userId);
+
+    /**
+     * 获取部门信息
+     * @param userId
+     * @return
+     */
+    List<UserInfoCustomize> queryDepartmentInfoByUserId(Integer userId);
 }

@@ -8,6 +8,7 @@ import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsWithBLOBsVO;
 
@@ -82,9 +83,17 @@ public interface AmMarketClient {
     ContentAdsResponse deleteById(Integer id);
 
     /**
+     * 获取广告类型下拉列表
+     * @return
+     */
+    ContentAdsResponse getAdsTypeList();
+
+    /**
      * 根据活动ID获取活动title
      * @param activityId 活动ID
      * @return title
      */
     CouponTenderResponse getActivityById(Integer activityId);
+
+    List<ActivityListCustomizeVO> getActivityList(ActivityListCustomizeVO request);
 }

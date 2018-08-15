@@ -63,7 +63,7 @@ import java.util.Map;
  */
 @Api(value = "优惠券用户列表", tags = "优惠券用户列表")
 @RestController
-@RequestMapping("/hyjf-admin/couponUser")
+@RequestMapping("/hyjf-admin/couponuser")
 public class CouponUserController extends BaseController {
 
     /**
@@ -147,13 +147,11 @@ public class CouponUserController extends BaseController {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         //根据用户名获取用户id
         String userName = couponUserBeanRequest.getUserName();
-        UserResponse userResponse = couponUserService.getUser(userName);
-        UserVO userVO = userResponse.getResult();
+        UserVO userVO = couponUserService.getUser(userName);
         Integer userId = userVO.getUserId();
 
         //根据用户id获取用户详情信息
-        UserInfoResponse userInfoResponse = couponUserService.getUserInfo(userId);
-        UserInfoVO userInfoVO = userInfoResponse.getResult();
+        UserInfoVO userInfoVO = couponUserService.getUserInfo(userId);
 
         //根据用户id获取注册时渠道名
         UtmResponse utmResponse = couponUserService.getChannelName(userId);
@@ -207,12 +205,12 @@ public class CouponUserController extends BaseController {
             response.setMessage(message);
             return new AdminResult<>(FAIL,FAIL_DESC);
         }
-        UserResponse userResponse = couponUserService.getUser(userName);
-        if (userResponse.getResult() == null) {
+        UserVO user = couponUserService.getUser(userName);
+        if (user == null) {
             String message = "用户名不存在";
             response.setMessage(message);
             return new AdminResult<>(FAIL,FAIL_DESC);
-        } else if (userResponse.getResult().getStatus() != null && userResponse.getResult().getStatus() == 1) {
+        } else if (user.getStatus() != null && user.getStatus() == 1) {
             String message = "用户已锁定";
             response.setMessage(message);
             return new AdminResult<>(FAIL,FAIL_DESC);

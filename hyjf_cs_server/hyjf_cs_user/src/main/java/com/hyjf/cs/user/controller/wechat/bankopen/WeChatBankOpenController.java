@@ -46,12 +46,12 @@ public class WeChatBankOpenController extends BaseUserController {
      * @Author: sunss
      */
     @ApiOperation(value = "微信端获取开户信息", notes = "微信端获取开户信息")
-    @PostMapping(value = "/userInfo", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/userInfo")
     @ResponseBody
-    public WeChatResult<String> userInfo(@RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
-        logger.info("openAccount userInfo start, token is :{}", token);
+    public WeChatResult<String> userInfo(@RequestHeader(value = "userId") int userId) {
+        logger.info("openAccount userInfo start, userId is :{}", userId);
         WeChatResult<String> result = new WeChatResult<String>();
-        UserVO userVO = bankOpenService.getUsers(token);
+        UserVO userVO = bankOpenService.getUsersById(userId);
         if (userVO != null) {
             logger.info("openAccount userInfo, success, userId is :{}", userVO.getUserId());
             String mobile = userVO.getMobile();
@@ -70,14 +70,12 @@ public class WeChatBankOpenController extends BaseUserController {
     @ApiOperation(value = "微信端用户开户", notes = "微信端用户开户")
     @PostMapping(value = "/openBankAccount")
     @ResponseBody
-    public ModelAndView openBankAccount(@RequestHeader(value = "token", required = true) String token, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
+    public ModelAndView openBankAccount(@RequestHeader(value = "userId") int userId, @RequestBody @Valid BankOpenVO bankOpenVO, HttpServletRequest request) {
         logger.info("wechat openBankAccount start, bankOpenVO is :{}", JSONObject.toJSONString(bankOpenVO));
         ModelAndView reuslt = new ModelAndView();
-        if (token == null) {
-            throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
-        }
+
         // 获取登录信息
-        UserVO user = bankOpenService.getUsers(token);
+        UserVO user = bankOpenService.getUsersById(userId);
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
         // 拼装参数 调用江西银行

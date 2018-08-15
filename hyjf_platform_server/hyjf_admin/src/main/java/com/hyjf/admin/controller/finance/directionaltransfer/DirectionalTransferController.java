@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Api(value = "资金中心-定向转账-定向转账",tags = "资金中心-定向转账-定向转账")
 @RestController
-@RequestMapping(value = "/hyjf-admin/directionaltransfer")
+@RequestMapping(value = "/hyjf-admin/finance/directionaltransfer")
 public class DirectionalTransferController extends BaseController {
 
     @Autowired

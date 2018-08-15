@@ -264,6 +264,10 @@ public class MailHandle {
 		prop.put(CustomConstants.MAIL_SMTP_AUTH, setting.getSmtpVerify() == 1 ? "true" : "false");
 		prop.put(CustomConstants.MAIL_SMTP_TIMEOUT, smtpTimeout);
 		prop.put(CustomConstants.MAIL_SMTP_STARTTLS_ENABLE, setting.getSmtpSsl() == 1 ? "true" : "false");
+		prop.put(CustomConstants.MAIL_SMTP_SOCKETFACTORY_CLASS, CustomConstants.MAIL_SMTP_SOCKETFACTORY_CLASS_VALUE);
+		prop.put(CustomConstants.MAIL_SMTP_SOCKETFACTORY_FALLBACK, CustomConstants.MAIL_SMTP_SOCKETFACTORY_FALLBACK_VALUE);
+		prop.put(CustomConstants.MAIL_SMTP_PORT, CustomConstants.MAIL_SMTP_SOCKETFACTORY_PORT_VALUE);
+		prop.put(CustomConstants.MAIL_SMTP_SOCKETFACTORY_PORT, CustomConstants.MAIL_SMTP_SOCKETFACTORY_PORT_VALUE);
 		MyAuthenticator auth = new MyAuthenticator(setting.getSmtpUsername(), setting.getSmtpPassword());
 		Session session = Session.getDefaultInstance(prop, auth);
 		senderImpl.setSession(session);

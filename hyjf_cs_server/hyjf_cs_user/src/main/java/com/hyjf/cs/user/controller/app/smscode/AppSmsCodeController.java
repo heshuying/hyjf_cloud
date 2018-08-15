@@ -2,7 +2,6 @@ package com.hyjf.cs.user.controller.app.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
@@ -154,29 +153,20 @@ public class AppSmsCodeController extends BaseUserController {
      * 发送验证码
      *
      * @param request
-     * @param response
+     * @param
      * @return
      */
     @ResponseBody
     @ApiOperation(value = "发送短信",notes = "发送短信")
-    @RequestMapping(value = "/sendVerificationCodeAction")
-    public JSONObject sendVerificationCodeAction(@RequestHeader(value = "token", required = false) String token,HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping(value = "/sendVerificationCodeAction")
+    public JSONObject sendVerificationCodeAction(@RequestHeader(value = "userId", required = false) Integer userId,
+                                                 @RequestHeader(value = "key") String key,
+                                                 @RequestHeader(value = "version") String version,
+                                                 @RequestHeader(value = "platform") String platform,
+                                                 HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         ret.put("bankCode", "");
         ret.put("request", "/hyjf-app/appUser/sendVerificationCodeAction");
-
-        // 版本号
-        String version = request.getParameter("version");
-        // 网络状态
-        String netStatus = request.getParameter("netStatus");
-        // 平台
-        String platform = request.getParameter("platform");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // 随机字符串
-        String randomString = request.getParameter("randomString");
-        // Order
-        String order = request.getParameter("order");
 
         // 验证码类型
         String verificationType = request.getParameter("verificationType");
@@ -187,20 +177,7 @@ public class AppSmsCodeController extends BaseUserController {
         if(isNeedUPdate){
             return ret;
         }
-        // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
 
-        // 取得加密用的Key
-        String key = SecretUtil.getKey(sign);
-        if (Validator.isNull(key)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "请求参数非法");
-            return ret;
-        }
         // 业务逻辑
         try {
             // 解密
@@ -220,18 +197,16 @@ public class AppSmsCodeController extends BaseUserController {
                 ret.put("statusDesc", "请输入您的真实手机号码");
                 return ret;
             }
-            smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, token, GetCilentIP.getIpAddr(request));
+            smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, userId, GetCilentIP.getIpAddr(request));
 
             if(!verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
                 //判断用户是否登录
-                UserVO userVO = smsCodeService.getUsers(token);
+                //UserVO userVO = smsCodeService.getUsersById(userId);
                 // 发送短信
                 smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
                     ret.put("status", "0");
                     ret.put("statusDesc", "发送验证码成功");
             }else{
-                //判断用户是否登录
-                Integer userId = SecretUtil.getUserId(sign);
                 // 判断是否开户  假如未开户  发送平台的验证码  假如已开户  发送江西银行的验证码
                 BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
                 if (bankAccount == null) {

@@ -22,6 +22,7 @@ import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
+import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
@@ -66,6 +67,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -122,6 +124,8 @@ public class AccedeListController extends BaseController{
 		List<AdminAccedeListCustomizeVO> volist = null;
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
+		java.math.BigDecimal num;
+		java.math.BigDecimal hundred = new java.math.BigDecimal(100);
     	// 画面检索条件无需初始化  订单状态 与 操作平台都在JSP option 写好
     	// 根据删选条件获取加入计划列表
     	AccedeListResponse response = this.accedeListService.getAccedeListByParam(form);
@@ -132,6 +136,16 @@ public class AccedeListController extends BaseController{
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		if(CollectionUtils.isNotEmpty(response.getResultList())){
+			for (AccedeListCustomizeVO accedeListCustomizeVO : response.getResultList()) {
+				// 自动投标进度=已投资金额/加入金额（不考虑复投）
+				// 确定分母不为0
+				if(accedeListCustomizeVO.getJalreadyInvest() == null &&  accedeListCustomizeVO.getjAccedeAccount() == null && accedeListCustomizeVO.getjAccedeAccount().equals(BigDecimal.ZERO)){
+					accedeListCustomizeVO.setAutoBidProgress("0");
+				} else {
+					num = accedeListCustomizeVO.getJalreadyInvest().divide(accedeListCustomizeVO.getjAccedeAccount(), 2);
+					accedeListCustomizeVO.setAutoBidProgress(num.multiply(hundred).toString().replace(".00", ""));
+				}
+			}
 			volist = CommonUtils.convertBeanList(response.getResultList(), AdminAccedeListCustomizeVO.class);
 			return new AdminResult<ListResult<AdminAccedeListCustomizeVO>>(ListResult.build(volist, response.getCount()));
 		} else {
@@ -158,10 +172,12 @@ public class AccedeListController extends BaseController{
 		HjhAccedeSumVO sumVO = this.accedeListService.getCalcSumByParam(form);
 		if(sumVO != null){
 			jsonObject.put("sumAccedeAccount", sumVO.getSumAccedeAccount());
-			jsonObject.put("sumAlreadyInvest", sumVO.getSumAlreadyInvest());
-			jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());
-			jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());
-			jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());
+			/*jsonObject.put("sumWaitTotal", sumVO.getSumWaitTotal());*/
+			/*jsonObject.put("sumWaitCaptical", sumVO.getSumWaitCaptical());*/
+			/*jsonObject.put("sumWaitInterest", sumVO.getSumWaitInterest());*/
+			jsonObject.put("sumAvailableInvestAccount", sumVO.getSumAvailableInvestAccount());
+			jsonObject.put("sumFrostAccount", sumVO.getSumFrostAccount());
+			jsonObject.put("sumFairValue", sumVO.getSumFairValue());
 			jsonObject.put("status", SUCCESS);
 		} else {
 			jsonObject.put("msg", "查询为空");
@@ -171,7 +187,7 @@ public class AccedeListController extends BaseController{
 	}
     
 	/**
-	 * 导出功能
+	 * 导出功能     已测试
 	 * 
 	 * @param request
 	 * @param modelAndView
@@ -183,9 +199,13 @@ public class AccedeListController extends BaseController{
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws Exception {
 		// 表格sheet名称
 		String sheetName = "加入明细";
+		java.math.BigDecimal num;
+		java.math.BigDecimal hundred = new java.math.BigDecimal(100);
 		@SuppressWarnings("deprecation")
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };
+		/*String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };*/
+		String[] titles = new String[] { "序号","计划订单号", "计划编号",  "计划名称","锁定期", "预期年化收益率","用户名（投资人）","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", 
+				"自动投标进度","可用余额(元) ", "冻结金额(元) ","公允价值(元) ","实际年化收益率","操作平台","订单状态","匹配期", "锁定时间", "加入时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -227,24 +247,28 @@ public class AccedeListController extends BaseController{
 					else if (celLength == 2) {
 						cell.setCellValue(planAccedeDetail.getDebtPlanNid());
 					}
-					// 锁定期
+					// 计划名称
 					else if (celLength == 3) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getDebtLockPeriod()) ? StringUtils.EMPTY : planAccedeDetail.getDebtLockPeriod() + "天");
+						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getDebtPlanName()) ? StringUtils.EMPTY : planAccedeDetail.getDebtPlanName());
 					}
-					// 预定利率
+					// 锁定期
 					else if (celLength == 4) {
+						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getDebtLockPeriod()) ? StringUtils.EMPTY : planAccedeDetail.getDebtLockPeriod());
+					}
+					// 预期年化收益率
+					else if (celLength == 5) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
 					}
 					// 用户名
-					else if (celLength == 5) {
+					else if (celLength == 6) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getUserName()) ? StringUtils.EMPTY : planAccedeDetail.getUserName());
 					}
 					// 投资人id
-					else if (celLength == 6) {
+					else if (celLength == 7) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getUserId()) ? StringUtils.EMPTY : planAccedeDetail.getUserId());
 					}
 					// 投资人当前属性
-					else if (celLength == 7) {
+					else if (celLength == 8) {
 						if ("0".equals(planAccedeDetail.getUserAttribute())) {
 							cell.setCellValue("无主单");
 						} else if ("1".equals(planAccedeDetail.getUserAttribute())) {
@@ -256,50 +280,49 @@ public class AccedeListController extends BaseController{
 						}else {
 							cell.setCellValue(planAccedeDetail.getUserAttribute());
 						}
-
-					}
-					// 投资人公司
-					else if (celLength == 8) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionname2());
 					}
 					// 投资人公司
 					else if (celLength == 9) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchname2());
+						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionname2());
 					}
 					// 投资人公司
 					else if (celLength == 10) {
+						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchname2());
+					}
+					// 投资人公司
+					else if (celLength == 11) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentname2());
 					}
 					// 推荐人（当前）
-					else if (celLength == 11) {
+					else if (celLength == 12) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getRefereeUserName()) ? StringUtils.EMPTY : planAccedeDetail.getRefereeUserName());
 					}
 					// 推荐人（当前）
-					else if (celLength == 12) {
+					else if (celLength == 13) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getRefereeUserId()) ? StringUtils.EMPTY : planAccedeDetail.getRefereeUserId());
 					}
-					else if (celLength == 13) {
+					else if (celLength == 14) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getRefereeTrueName()) ? StringUtils.EMPTY : planAccedeDetail.getRefereeTrueName());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 14) {
+					else if (celLength == 15) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getRecommendAttr()) ? StringUtils.EMPTY : planAccedeDetail.getRecommendAttr());
 					}
 
-					else if (celLength == 15) {
+					else if (celLength == 16) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionname1()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionname1());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 16) {
+					else if (celLength == 17) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchname1()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchname1());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 17) {
+					else if (celLength == 18) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentname1()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentname1());
 					}
 					
 					// 投资人当前属性
-					else if (celLength == 18) {
+					else if (celLength == 19) {
 						if ("0".equals(planAccedeDetail.getAttribute())) {
 							cell.setCellValue("无主单");
 						} else if ("1".equals(planAccedeDetail.getAttribute())) {
@@ -314,54 +337,74 @@ public class AccedeListController extends BaseController{
 
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 19) {
+					else if (celLength == 20) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteName());
 					}
-					else if (celLength == 20) {
+					else if (celLength == 21) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserId()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserId());
 					}
-					else if (celLength == 21) {
+					else if (celLength == 22) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteTrueName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteTrueName());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 22) {
+					else if (celLength == 23) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserAttributeName()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserAttributeName());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 23) {
+					else if (celLength == 24) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionname()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionname());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 24) {
+					else if (celLength == 25) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchname()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchname());
 					}
 					// 推荐人用户属性（当前）
-					else if (celLength == 25) {
+					else if (celLength == 26) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentname()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentname());
 					}
 					// 加入金额
-					else if (celLength == 26) {
+					else if (celLength == 27) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getAccedeAccount()) ? StringUtils.EMPTY : planAccedeDetail.getAccedeAccount());
 					}
-					// 已投资金额
-					else if (celLength == 27) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getAlreadyInvest()) ? StringUtils.EMPTY : planAccedeDetail.getAlreadyInvest());
-					}
-					// 待收总额
+					// 自动投标进度
 					else if (celLength == 28) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getWaitTotal()) ? StringUtils.EMPTY : planAccedeDetail.getWaitTotal());
+						if(planAccedeDetail.getJalreadyInvest() == null &&  planAccedeDetail.getjAccedeAccount() == null && planAccedeDetail.getjAccedeAccount().equals(BigDecimal.ZERO)){
+							cell.setCellValue("0%");
+						} else {
+							num = planAccedeDetail.getJalreadyInvest().divide(planAccedeDetail.getjAccedeAccount(), 2);
+							cell.setCellValue(num.multiply(hundred).toString().replace(".00", "") + "%");
+						}
 					}
-					// 待收本金
+					// 可用余额
 					else if (celLength == 29) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getWaitCaptical()) ? StringUtils.EMPTY : planAccedeDetail.getWaitCaptical());
+						if(planAccedeDetail.getAvailableInvestAccount() != null){
+							cell.setCellValue(planAccedeDetail.getAvailableInvestAccount());
+						} else {
+							cell.setCellValue("0.0");
+						}
 					}
-					// 待收利息
+					// 冻结金额
 					else if (celLength == 30) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getWaitInterest()) ? StringUtils.EMPTY : planAccedeDetail.getWaitInterest());
+						if(planAccedeDetail.getFrostAccount() != null){
+							cell.setCellValue(planAccedeDetail.getFrostAccount());
+						} else {
+							cell.setCellValue("0.0");
+						}
 					}
-
-					// 平台
+					// 公允价值
 					else if (celLength == 31) {
+						if(planAccedeDetail.getFairValue()!= null){
+						   cell.setCellValue(planAccedeDetail.getFairValue());
+						} else {
+							cell.setCellValue("0.0");
+						}
+					}
+					// 实际年化收益率
+					else if (celLength == 32) {
+						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getActualApr()) ? StringUtils.EMPTY : planAccedeDetail.getActualApr() + "%");
+					}
+					// 平台
+					else if (celLength == 33) {
 						if ("0".equals(planAccedeDetail.getPlatform())) {
 							cell.setCellValue("PC");
 						} else if ("1".equals(planAccedeDetail.getPlatform())) {
@@ -373,7 +416,7 @@ public class AccedeListController extends BaseController{
 						}
 					}
 					// 订单状态
-					else if (celLength == 32) {
+					else if (celLength == 34) {
 						if (0 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
 							cell.setCellValue("自动投标中");
 						} else if (2 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
@@ -388,32 +431,22 @@ public class AccedeListController extends BaseController{
 							cell.setCellValue("自动投资异常");
 						}
 					}
-					// 计息时间
-					else if (celLength == 33) {
+					// 匹配期
+					else if (celLength == 35) {
+						if (StringUtils.isNotEmpty(planAccedeDetail.getMatchDates())) {
+							cell.setCellValue(planAccedeDetail.getMatchDates() + "天");
+						}
+					}
+					// 锁定时间
+					else if (celLength == 36) {
 						if (StringUtils.isNotEmpty(planAccedeDetail.getCountInterestTime())) {
 							cell.setCellValue(planAccedeDetail.getCountInterestTime());
 						}
 					}
 					// 加入时间
-					else if (celLength == 34) {
-						if (StringUtils.isNotEmpty(planAccedeDetail.getCreateTime())) {
+					else if (celLength == 37) {
+						if (planAccedeDetail.getCreateTime() != null) {
 							cell.setCellValue(planAccedeDetail.getCreateTime());
-						}
-					}
-					// 预期年化
-					else if (celLength == 35) {
-						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
-					}
-					// 用户属性（当前）
-					else if (celLength == 36) {
-						if ("0".equals(planAccedeDetail.getUserAttribute())) {
-							cell.setCellValue("无主单");
-						} else if ("1".equals(planAccedeDetail.getUserAttribute())) {
-							cell.setCellValue("有主单");
-						} else if ("2".equals(planAccedeDetail.getUserAttribute())) {
-							cell.setCellValue("线下员工");
-						} else if ("3".equals(planAccedeDetail.getUserAttribute())) {
-							cell.setCellValue("线上员工");
 						}
 					}
 				}
@@ -465,7 +498,7 @@ public class AccedeListController extends BaseController{
 			form.setAccedeOrderIdSrch(planOrderId);
 			// 调用
 			List<AccedeListCustomizeVO> resultList = this.accedeListService.getAccedeListByParamWithoutPage(form);
-			if(resultList.size()>0){
+			if(CollectionUtils.isNotEmpty(resultList) && resultList.size()>0){
 				AccedeListCustomizeVO accede = resultList.get(0);
 				if(accede != null){
 					jsonObject.put("accedeOrderId", accede.getPlanOrderId());
@@ -476,6 +509,8 @@ public class AccedeListController extends BaseController{
 					jsonObject.put("orderStatus", accede.getOrderStatus());
 					jsonObject.put("createTime", accede.getCreateTime());
 				}
+			} else {
+				jsonObject.put("error", "该计划订单号查询的记录不存在！" + planOrderId);
 			}
 		}
 		// 查询用户信息放到画面上
@@ -542,16 +577,31 @@ public class AccedeListController extends BaseController{
 			// 原发送旧协议 
 			msg = this.resendMessageAction(String.valueOf(userid), planOrderId, debtPlanNid, email);
 		}
-		if (msg == null) {
+		if("用户不存在".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if ("用户邮箱不存在".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if ("系统异常".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败".equals(msg)){
+			jsonObject.put("result", msg);
+			jsonObject.put("status", "error");
+		} else if("发送状态已修改".equals(msg)){
 			jsonObject.put("result", "操作完成");
 			jsonObject.put("status", "success");
+		}
+/*		if (msg == null && "发送状态已修改".equals(msg)) {
+
 		} else if (!"系统异常".equals(msg)) {
 			jsonObject.put("result", msg);
 			jsonObject.put("status", "error");
 		} else {
 			jsonObject.put("result", "异常纪录，请刷新后后重试");
 			jsonObject.put("status", "error");
-		}
+		}*/
     	return jsonObject;
     }
 
@@ -625,14 +675,13 @@ public class AccedeListController extends BaseController{
 				if(flg> 0 ){
 					return "发送状态已修改";
 				}
-				return null; 
 			} else {
 				return "系统异常";
 			}
 		} catch (Exception e) {
 			_log.info(AccedeListController.class.getName(), "sendMail", e);
 		}
-		return "系统异常";
+		return "";
     }
     
 	/**
@@ -645,6 +694,7 @@ public class AccedeListController extends BaseController{
     private String resendMessageAction(String userid, String planOrderId, String debtPlanNid,String sendEmail){
     	AccedeListRequest request = new AccedeListRequest();
 		try {
+			PdfGenerator pdfGenerator = new PdfGenerator();
 			// 向每个投资人发送邮件
 			if (Validator.isNotNull(userid) && NumberUtils.isNumber(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
@@ -688,8 +738,7 @@ public class AccedeListController extends BaseController{
 					UserHjhInvistDetailVO userHjhInvistDetailCustomize = this.accedeListService.selectUserHjhInvistDetail(request);
 					contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
 					// 依据模板生成内容------旧的协议下载的组建还未做好
-					/*String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);*/
-					String pdfUrl = "";
+					String pdfUrl = pdfGenerator.generateLocal(fileName, CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
 					if (StringUtils.isNotEmpty(pdfUrl)) {
 						File path = new File(filePath);
 						if (!path.exists()) {
@@ -712,26 +761,27 @@ public class AccedeListController extends BaseController{
 					if(flg> 0 ){
 						return "发送状态已修改";
 					}
-					return null;
+					/*return null;*/
 				}
 			} else {
-				System.out.println("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。");
-				return "计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败。";
+				_log.info("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败");
+				return "计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败";
 			}
 		} catch (Exception e) {
 			_log.info(AccedeListController.class.getName(), "sendMail", e);
+			return "系统异常";
 		}
-		return "系统异常";
+		return "";
     }
     
 	/**
-	 * 带参跳转投资明细列表初始化下拉菜单   已测试
+	 * 带参跳转投资明细列表初始化下拉菜单   直接带参数请求汇直投的投资明细接口
 	 * 
 	 * @param request
 	 * @param form
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+/*	@SuppressWarnings("unchecked")
 	@ApiOperation(value = "汇计划加入明细列表", notes = "跳转投资明细列表初始化以及查询")
 	@PostMapping(value = "/tenderinfo")
 	@ResponseBody
@@ -759,7 +809,7 @@ public class AccedeListController extends BaseController{
         Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);
-	}
+	}*/
 
 	/**
 	 * PDF脱敏图片预览     已测试
@@ -814,9 +864,9 @@ public class AccedeListController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		// 用户ID
-		String userid = request.getParameter("userId");
+		String userid = String.valueOf(viewRequest.getUserId());
 		// 计入加入订单号
-		String planOrderId = request.getParameter("planOrderId");
+		String planOrderId = viewRequest.getAccedeOrderIdSrch();
 		// 参数判断
 		if(StringUtils.isBlank(userid) || StringUtils.isBlank(planOrderId)){
 			ret.put("result", "请求参数为空");
@@ -838,14 +888,12 @@ public class AccedeListController extends BaseController{
 			ret.put("status", FAIL);
 			return ret;
 		}
-		
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 		if(users == null ){
 			ret.put("result", "用户不存在");
 			ret.put("status", FAIL);
 			return ret;
 		}
-		
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
 		tenderAgreement = tenderAgreementList.get(0);
 		if(tenderAgreement != null && tenderAgreement.getStatus() == 2){

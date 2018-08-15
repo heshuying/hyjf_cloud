@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author jijun
- * @version AdminTransferExceptionLogRequest, v0.1 2018/07/10
+ * @version AdminTransferExceptionLogAPIRequest, v0.1 2018/07/10
  */
 public class AdminTransferExceptionLogAPIRequest extends BaseRequest implements Serializable {
 

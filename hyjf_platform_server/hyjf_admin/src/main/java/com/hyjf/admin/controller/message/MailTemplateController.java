@@ -12,9 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class MailTemplateController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询所有邮件配置模板", notes = "查询所有邮件配置模板")
-	@RequestMapping("/findAll")
+	@GetMapping("/find_all")
 	public JSONObject findAll() {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsMailTemplateVO> voList = mailTemplateService.findAll();
@@ -52,7 +50,7 @@ public class MailTemplateController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据条件查询邮件配置模板", notes = "根据条件查询邮件配置模板")
-	@RequestMapping("/findMailTemplate")
+	@PostMapping("/find_mail_template")
 	public JSONObject findMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		List<SmsMailTemplateVO> voList = mailTemplateService.findMailTemplate(request);
@@ -67,7 +65,7 @@ public class MailTemplateController {
 	 * @return
 	 */
 	@ApiOperation(value = "新增邮件模板", notes = "新增邮件模板")
-	@RequestMapping("/insertMailTemplate")
+	@PostMapping("/insert_mail_template")
 	public JSONObject insertMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -80,6 +78,63 @@ public class MailTemplateController {
             jsonObject.put("status", "99");
             jsonObject.put("statusDesc", "添加邮件模板失败");
             return jsonObject;
+		}
+	}
+
+	/**
+	 * 修改邮件模板
+	 *
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "修改邮件模板", notes = "修改邮件模板")
+	@PostMapping("/update_mailTemplate")
+	public JSONObject updateMailTemplate(@RequestBody MailTemplateRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			mailTemplateService.updateMailTemplate(request);
+			jsonObject.put("status", "000");
+			jsonObject.put("statusDesc", "添加邮件模板成功");
+			return jsonObject;
+		} catch (Exception e) {
+			logger.error("添加邮件模板失败......", e);
+			jsonObject.put("status", "99");
+			jsonObject.put("statusDesc", "添加邮件模板失败");
+			return jsonObject;
+		}
+	}
+
+	@ApiOperation(value = "关闭模板", notes = "关闭模板")
+	@PostMapping("/close_action")
+	public JSONObject closeAction(@RequestBody MailTemplateRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			mailTemplateService.closeAction(request);
+			jsonObject.put("status", "000");
+			jsonObject.put("statusDesc", "关闭模板成功");
+			return jsonObject;
+		} catch (Exception e) {
+			logger.error("关闭模板失败......", e);
+			jsonObject.put("status", "99");
+			jsonObject.put("statusDesc", "添加邮件模板失败");
+			return jsonObject;
+		}
+	}
+
+	@ApiOperation(value = "启用模板", notes = "启用模板")
+	@PostMapping("/open_action")
+	public JSONObject openAction(@RequestBody MailTemplateRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			mailTemplateService.openAction(request);
+			jsonObject.put("status", "000");
+			jsonObject.put("statusDesc", "启用模板成功");
+			return jsonObject;
+		} catch (Exception e) {
+			logger.error("添加邮件模板失败......", e);
+			jsonObject.put("status", "99");
+			jsonObject.put("statusDesc", "启用模板失败");
+			return jsonObject;
 		}
 	}
 }

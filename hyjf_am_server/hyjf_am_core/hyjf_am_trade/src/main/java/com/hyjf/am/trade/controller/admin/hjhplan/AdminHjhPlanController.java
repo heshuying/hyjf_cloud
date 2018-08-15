@@ -227,12 +227,10 @@ public class AdminHjhPlanController {
 	public HjhPlanResponse getHjhPlanListByParamWithoutPage(@RequestBody @Valid PlanListRequest request){
 		HjhPlanResponse response = new HjhPlanResponse();
 		List<HjhPlanVO> list = adminHjhPlanService.selectHjhPlanListWithoutPage(request);
-        if(list.size() > 0){
-            if (!CollectionUtils.isEmpty(list)) {
-                response.setResultList(list);
-                //代表成功
-                response.setRtn(Response.SUCCESS);
-            }
+        if(!CollectionUtils.isEmpty(list)&&list.size() > 0){
+			response.setResultList(list);
+			//代表成功
+			response.setRtn(Response.SUCCESS);
         }
 		return response;
 	}

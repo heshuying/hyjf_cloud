@@ -3,9 +3,6 @@
  */
 package com.hyjf.am.vo.admin;
 
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.am.vo.trade.TransferExceptionLogVO;
-
 import java.io.Serializable;
 
 /**

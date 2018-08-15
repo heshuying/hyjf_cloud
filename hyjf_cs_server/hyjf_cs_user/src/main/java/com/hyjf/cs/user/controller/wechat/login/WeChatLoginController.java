@@ -53,7 +53,7 @@ public class WeChatLoginController extends BaseUserController {
      */
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
-    @PostMapping(value = "/doLogin.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/doLogin.do")
     public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
         LoginResultBean result = new LoginResultBean();
@@ -99,7 +99,7 @@ public class WeChatLoginController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "登出", notes = "登出")
-    @RequestMapping(value = "/doLoginOut.do")
+    @PostMapping(value = "/doLoginOut.do")
     public BaseResultBean doLoginOut( String sign) {
         LoginResultBean result = new LoginResultBean();
         result.setStatus(ResultEnum.SUCCESS.getStatus());

@@ -473,6 +473,7 @@
         <result column="credit_discount" property="creditDiscount" jdbcType="VARCHAR" />
         <result column="credit_capital" property="creditCapital" jdbcType="VARCHAR" />
         <result column="bid_name" property="bidName" jdbcType="VARCHAR" />
+        <result column="credit_inProgress" property="creditInProgress" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--债权转让查询data -->
@@ -483,17 +484,20 @@
         INNER JOIN ht_borrow ON ht_borrow_credit.bid_nid = ht_borrow.borrow_nid
 	    INNER JOIN ht_borrow_style hbs ON ht_borrow.borrow_style = hbs.nid
 	    <include refid="Credit_Common_Where_Column"/>
-        ORDER BY credit_inProgress DESC,
-        <if test="discountSort != null and discountSort != ''">
+        ORDER BY ht_borrow_credit.credit_order DESC ,credit_inProgress DESC,
+        <!--6月22号后需求(债转排序优化) mod by nxl start -->
+        <!--<if test="discountSort != null and discountSort != ''">
             credit_discount ${discountSort},
-        </if>
+        </if>-->
         <if test="termSort != null and termSort != ''">
             credit_term  ${termSort},
         </if>
-        <if test="capitalSort != null and capitalSort != ''">
+        add_time ASC
+        <!--<if test="capitalSort != null and capitalSort != ''">
             credit_capital ${capitalSort},
         </if>
-        ht_borrow_credit.create_time DESC
+        ht_borrow_credit.create_time DESC-->
+        <!--6月22号后需求(债转排序优化) mod by nxl end -->
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
@@ -1041,6 +1045,11 @@
         hydc.credit_capital_assigned AS credit_capital_assigned,
         hydc.bid_apr AS borrow_apr,
         hydc.credit_capital-hydc.credit_capital_assigned AS credit_inProgress,
+        <!-- add by nxl 债转记录排序用-->
+        CASE
+        WHEN hydc.credit_capital > hydc.credit_capital_assigned AND TRUNCATE (hydc.credit_capital_assigned / hydc.credit_capital * 100,2) = 100.00 	THEN	99
+        ELSE TRUNCATE (hydc.credit_capital_assigned / hydc.credit_capital * 100,2) END AS credit_inProgressOrdery,
+        <!-- add by nxl 债转记录排序用 End-->
         CASE
         WHEN hydc.credit_capital >= 10000 THEN
         CASE
@@ -1096,7 +1105,11 @@
         ON ht_borrow.borrow_style = hbs.nid
         <include refid="Credit_Common_Where_Column"/>
         ORDER BY
-        borrow_schedule DESC, borrow_period DESC
+        <!--borrow_schedule DESC, borrow_period DESC-->
+        <!--mod by nxl 修改债转列表排序-->
+        credit_inProgressOrdery DESC,
+        borrow_period DESC,
+        add_time ASC
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
